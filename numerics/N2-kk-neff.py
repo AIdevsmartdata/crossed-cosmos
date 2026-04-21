@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# FIXED (track A, 2026-04-21): guard ell_limit=None formatting when all ℓ excluded.
 """
 N2-kk-neff.py
 ==============
@@ -232,7 +233,10 @@ plt.savefig(outfile, dpi=150)
 
 print()
 print("VERDICT:")
-print(f"  For c'=0.05 and ℓ ≤ {ell_limit:.2f} μm: ΔN_eff < ACT DR6 3σ bound.")
-print(f"  The paper value c'~0.05 with ℓ ~ few μm is {'compatible' if ell_limit and ell_limit >= 1.0 else 'marginally excluded'}.")
+if ell_limit is not None:
+    print(f"  For c'=0.05 and ℓ ≤ {ell_limit:.2f} μm: ΔN_eff < ACT DR6 3σ bound.")
+else:
+    print(f"  For c'=0.05: ALL tested ℓ ∈ [0.1,10] μm exceed the ACT DR6 3σ bound under the simplified estimator used here.")
+print(f"  The paper value c'~0.05 with ℓ ~ few μm is {'compatible' if ell_limit and ell_limit >= 1.0 else 'marginally excluded (simplified estimator; see paper for full Boltzmann calc)'}.")
 print(f"Saved: {outfile}")
 print("=" * 60)

@@ -1,0 +1,42 @@
+── D5: Persistent Homology scaffold ────────────────────────────────
+
+── 1. Filtration value on smoothed GRF ─────────────────────────────
+
+  σ_n²(R) = ∫ d³k/(2π)³  k^(2n) P(k) exp(−k²R²)
+
+  Sublevel set:  X_ν = { x : φ_R(x) ≤ ν σ_0 }
+
+  Vietoris-Rips radius at threshold ν (heuristic):
+    r(ν) ≃ (σ_0 / σ_1) × √(2 ln(1/Φ(ν)))       [Φ = Gaussian CDF]
+
+  <χ(ν)>_G (d=3, up to prefactor) ∝ (\nu**2 - 1)*exp(-\nu**2/2)
+
+── 2. Leading fNL correction to <PH_k> at peak ─────────────────────
+
+  Local fNL model:  φ(x) = φ_G(x) + fNL (φ_G² − <φ_G²>)
+
+  H_3(ν) = \nu**3 - 3*\nu
+
+  δ<χ(ν)>/⟨χ⟩_G  =  σ_0 · f_NL · H_3(ν) · S_3^prim / 6
+  Leading form (S_3^prim absorbed): \nu*\sigma_0*f_{NL}*(\nu**2 - 3)*(\nu**2 - 1)*exp(-\nu**2/2)/2
+
+  Peak shift:  <β_k(ν_*)>_NG = <β_k(ν_*)>_G · [1 + c_k fNL]
+  Yip+24 (arXiv:2403.13985) Fig 5:  c_1 ≃ 2·10^−4 / fNL at R=10 Mpc/h
+
+── LaTeX (paste into paper) ─────────────────────────────────────────
+  \langle \beta_k(\nu_*) \rangle_{f_{NL}} = \langle \beta_k(\nu_*) \rangle_G \left[ 1 + c_k(\nu_*, R)\, f_{NL} \right]
+  c_k \simeq \frac{\sigma_0(R)\, H_3(\nu_*)\, S_3^{\rm prim}(R)}{6}
+
+── 3. Numpy demo: χ(ν) curve, 64×64 2D field ───────────────────────
+  fNL=0   : χ range = [-8.0, 15.0]
+  fNL=100 : χ range = [-7.0, 15.0]
+  Max |Δχ| = 2.00
+
+  Plot saved: /home/remondiere/crossed-cosmos/derivations/figures/D5-euler-char.pdf
+
+Status: SCAFFOLD — Euler-characteristic demo functional.
+TODO  : Full β_0, β_1, β_2 via GUDHI SimplexTree on 3D N-body snapshot;
+        numerical calibration of c_k(ν_*, R) at R ∈ {5,10,20} Mpc/h;
+        Fisher matrix σ(fNL) forecast cross-checked vs Yip+24 Table 2.
+
+--- STDERR ---

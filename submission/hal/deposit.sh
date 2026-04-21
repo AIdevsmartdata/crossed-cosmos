@@ -25,7 +25,7 @@
 set -euo pipefail
 
 SWORD_URL="${SWORD_URL:-https://api-preprod.archives-ouvertes.fr/sword/hal}"
-TEI="eci.tei.xml"
+TEI="eci.xml"
 PDF="../../paper/eci.pdf"
 BUNDLE="eci-hal-bundle.zip"
 

@@ -1,0 +1,142 @@
+% section_3_5_constraints.tex — ECI v4.1 scientific payload (D7)
+% To be \input{} into eci.tex as a new subsection of §3 "Phenomenology".
+% Standalone compile: see comments at EOF.
+
+\subsection{Solar-system and background constraints on $\xi_\chi$}\label{sec:xi_constraints}
+
+We close two gaps identified in the dark-energy phenomenology subsection (\S\,DESI DR2): the Cassini
+post-Newtonian bound on the non-minimal coupling $\xi_\chi$, and the analytic NMC generalisation
+of the Scherrer--Sen thawing relation needed to assess whether Prediction~1
+(Sec.~\ref{sec:pred}) actually discriminates ECI from \(w\)CDM at DESI~DR2 precision.
+The full symbolic derivation is in \texttt{derivations/D7-ppn-xi-bound.py}; we quote only the
+end results here.
+
+\paragraph{PPN $\gamma-1$ from the $\xi_\chi R\chi^2/2$ coupling.}
+The action  $S=\int d^4x\sqrt{-g}\left[\tfrac{M_P^2}{2}R-\tfrac12(\partial\chi)^2-V(\chi)
+-\tfrac{\xi_\chi}{2} R\chi^2\right]$ is a scalar--tensor theory with
+$F(\chi)=M_P^2-\xi_\chi\chi^2$ multiplying $R/2$ and canonical kinetic term $Z=1$.
+Applying the weak-field, quasi-static result of Damour \& Esposito-Far\`ese
+(\emph{Phys.\ Rev.\ D} 48, 3436 (1993); see also Chiba, \emph{Phys.\ Lett.\ B} 575, 1 (2003);
+Hwang \& Noh, \emph{Phys.\ Rev.\ D} 71, 063536 (2005)) gives, at the local scalar background
+$\chi_0$,
+\begin{equation}
+  \gamma-1 \;=\; -\,\frac{F'(\chi_0)^2}{Z\,F(\chi_0)+\tfrac{3}{2}F'(\chi_0)^2}
+           \;=\; -\,\frac{4\,\xi_\chi^{2}\,\chi_0^{2}}
+                          {\,M_P^{2}+\xi_\chi\chi_0^{2}(6\xi_\chi-1)\,}.
+  \label{eq:gamma_PPN_full}
+\end{equation}
+Expanding for $|\xi_\chi|\ll 1$ and $\chi_0\lesssim M_P$,
+\begin{equation}
+  \boxed{\;\gamma-1 \;\simeq\; -\,\frac{4\,\xi_\chi^{2}\,\chi_0^{2}}{M_P^{2}}
+                              \;+\;\mathcal{O}(\xi_\chi^{3}).\;}
+  \label{eq:gamma_PPN_lead}
+\end{equation}
+The limit $\xi_\chi\to 0$ returns $\gamma=1$ (General Relativity), as verified symbolically.
+
+Combining (\ref{eq:gamma_PPN_lead}) with the Cassini constraint~\cite{BertottiIessTortora2003}
+$|\gamma-1|\lesssim 2.3\times 10^{-5}$ ($1\sigma$ envelope) yields
+\begin{equation}
+  |\xi_\chi|\,\frac{\chi_0}{M_P}\;\lesssim\;
+  \tfrac12\sqrt{|\gamma-1|_{\max}}
+  \;\approx\; 2.4\times 10^{-3}.
+  \label{eq:xi_bound}
+\end{equation}
+For a slow-rolling thawing background with $\chi_0\!\sim\! M_P/10$ (characteristic thawing
+excursion in the last $e$-fold),
+\begin{equation}
+  |\xi_\chi|\;\lesssim\;\xi_{\max}\;\approx\;2.4\times 10^{-2}.
+  \label{eq:xi_max_numeric}
+\end{equation}
+The bound tightens to $|\xi_\chi|\lesssim 2\times 10^{-3}$ if $\chi_0\sim M_P$; it weakens
+linearly for smaller $\chi_0$. Values $\xi_\chi\gtrsim 10^{-1}$ are thus only admissible if the
+quintessence field is strongly subdominant at $z=0$, or if a screening mechanism suppresses the
+local coupling.
+
+\paragraph{NMC extension of Scherrer--Sen.}
+At minimal coupling, thawing quintessence lies on the one-parameter track
+$w_a=-A(\Omega_\Lambda)(1+w_0)$ with $A\!\to\! 24/7$ in matter domination and
+$A(0.7)\simeq 1.58$ today~\cite{ScherrerSen2008}. Inserting the NMC modification to the
+Klein--Gordon equation, $3H\dot\chi=-V'-\xi_\chi R\chi$, and expanding to first order in
+$\xi_\chi$ around the slow-roll exponential $V(\chi)=V_0e^{-\alpha\chi/M_P}$ with
+$\alpha=\sqrt{3(1+w_0)}$ yields (\texttt{derivations/D4-wa-w0-nmc.py} for the matter-era
+coefficient, \texttt{D7-ppn-xi-bound.py} for the $\Omega_\Lambda$-dependence)
+\begin{equation}
+  \boxed{\;w_a\;=\;-A(\Omega_\Lambda)\,(1+w_0)
+                 \;+\;B(\Omega_\Lambda)\,\xi_\chi\,\sqrt{1+w_0}\,
+                      \frac{\chi_0}{M_P}\;+\;\mathcal{O}(\xi_\chi^{2}),\;}
+  \label{eq:wa_NMC}
+\end{equation}
+with $B(\Omega_\Lambda)=(8/\sqrt{3})\,A(\Omega_\Lambda)$, hence
+$A(0.7)\simeq 1.58$, $B(0.7)\simeq 7.30$.
+The limit $\xi_\chi\to 0$ reproduces $w_a=-1.58\,(1+w_0)$ as required.
+
+\paragraph{Combined constraint on the $(w_0,w_a)$ plane.}
+Figure~\ref{fig:D7} overlays three ingredients: (i) an approximate $1\sigma$ and
+$2\sigma$ DESI~DR2 contour centred on $(w_0,w_a)=(-0.75,-0.86)$ with
+$\sigma_{w_0}\!\simeq\!0.20$, $\sigma_{w_a}\!\simeq\!0.80$, $\rho\!\simeq\!-0.8$~\cite{DESIDR2};
+(ii) the minimal-coupling Scherrer--Sen line; (iii) the ECI band swept by
+$|\xi_\chi|\le\xi_{\max}$ from Eq.~(\ref{eq:xi_max_numeric}) at $\chi_0=M_P/10$.
+The half-width of the ECI band at $w_0=-0.75$ is
+\begin{equation}
+  \Delta w_a^{\rm ECI}
+    = B(0.7)\,\xi_{\max}\sqrt{1+w_0}\,(\chi_0/M_P)
+    \;\approx\;8.8\times 10^{-3},
+\end{equation}
+to be compared with $\sigma_{w_a}\!\simeq\!0.8$, i.e.\ about $1.1\%$ of the DESI~DR2 $1\sigma$
+width. The band is therefore thinner than the figure linewidth of the unmodified Scherrer--Sen
+track and lies entirely inside the DESI~DR2 $1\sigma$ contour.
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.95\columnwidth]{../derivations/figures/D7-xi-w0-wa.pdf}
+\caption{NMC thawing quintessence in the $(w_0,w_a)$ plane. Orange ellipses: DESI~DR2
+$1\sigma$ and $2\sigma$ contours (approximate, from the quoted $w_0w_a$CDM covariance).
+Blue line: minimal-coupling Scherrer--Sen relation for $\Omega_\Lambda=0.7$. Green band:
+ECI NMC prediction with $|\xi_\chi|\le\xi_{\max}\approx 2.4\!\times\!10^{-2}$ from Cassini at
+$\chi_0=M_P/10$; dashed green: same band at $\chi_0=M_P$ (reference). Black dot: $\Lambda$CDM.
+The ECI band is $\sim\!10^{-2}\sigma_{w_a}$ wide, hence \emph{indistinguishable} from
+minimal-coupling $w$CDM at DESI~DR2 precision.}
+\label{fig:D7}
+\end{figure}
+
+\paragraph{Honest caveats.}
+\begin{enumerate}
+\item Eq.~(\ref{eq:gamma_PPN_full}) assumes a \emph{quasi-static} scalar with Compton wavelength
+  large compared with the solar system ($m_\chi^{-1}\gg 1\,$AU), which is automatic for the
+  ultra-light thawing mass $m_\chi\sim H_0\sim 10^{-33}$\,eV. It also assumes no screening; if
+  a chameleon or symmetron mechanism operates, the local $\chi_0$ entering
+  (\ref{eq:gamma_PPN_lead}) can differ from the cosmological background and the bound weakens.
+\item The NMC Scherrer--Sen extension (\ref{eq:wa_NMC}) is first-order in $\xi_\chi$ and
+  therefore \emph{invalid} near the conformal point $\xi_\chi=1/6$, where the expansion breaks
+  down and the scalar-tensor sector must be treated non-perturbatively (Einstein-frame
+  mapping). Within the Cassini-allowed range $|\xi_\chi|\lesssim 2.4\times 10^{-2}\ll 1/6$
+  the linear expansion is controlled.
+\item The DESI~DR2 covariance used here is an approximate reconstruction from the
+  published $w_0w_a$CDM parameters; the true ellipse is mildly non-Gaussian and the values
+  $\sigma_{w_0}\!=\!0.20$, $\sigma_{w_a}\!=\!0.80$, $\rho\!=\!-0.8$ should be read as
+  order-of-magnitude. The conclusion (ECI band $\ll\sigma_{w_a}$) is robust to a factor of
+  several in these numbers.
+\item \textbf{Null result, stated plainly.} The ECI band produced by the Cassini-allowed
+  coupling range lies entirely inside the DESI~DR2 $1\sigma$ contour and is narrower than the
+  minimal-coupling Scherrer--Sen line itself. We therefore cannot claim that Prediction~1
+  (Sec.~\ref{sec:pred}) discriminates ECI from $w$CDM with DESI~DR2 data. The discriminative
+  observable moves to DESI~DR3 (forecast $\sigma_{w_a}\!\sim\!0.25$) and LSST~Y10
+  (forecast $\sigma_{w_a}\!\sim\!0.08$), where the \emph{shape} of the thawing track
+  --- not its distance from $\Lambda$CDM --- becomes the falsifiable handle through
+  cross-correlation with structure growth.
+\end{enumerate}
+
+The PPN bound (\ref{eq:xi_bound}) is however itself a falsifier: a detection
+$|\gamma-1|>10^{-6}$ by the upcoming LATOR or BEACON-class missions, or a mismatch between
+$\dot G/G$ from LLR~\cite{Biskupek2021} and the CMB-inferred scalar evolution, would directly
+constrain $\xi_\chi(\chi_0/M_P)$ at the $10^{-4}$ level and feed back on the admissible ECI
+thawing amplitude.
+
+% -----------------------------------------------------------------------------
+% Standalone compile (for checking only):
+%   \documentclass[aps,prd,reprint]{revtex4-2}
+%   \usepackage{graphicx,amsmath,amssymb,hyperref,physics}
+%   \begin{document}\input{section_3_5_constraints}\end{document}
+% The \cite{BertottiIessTortora2003}, \cite{ScherrerSen2008}, \cite{DESIDR2},
+% \cite{Biskupek2021} keys are defined in eci.bib.
+% -----------------------------------------------------------------------------

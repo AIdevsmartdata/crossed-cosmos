@@ -29,11 +29,11 @@ SWORD_URL=https://api.archives-ouvertes.fr/sword/hal ./deposit.sh
 - HAL returns HTTP 201 immediately if the bundle is well-formed.
 - The deposit enters **moderation queue** (humans at HAL CCSD curate every first-time deposit, ~1–5 business days).
 - You'll receive an email when the deposit is accepted; the record gets a permanent `hal-XXXXXXXX` ID and a public URL `https://hal.science/hal-XXXXXXXX`.
-- If rejected, the email explains what to fix in the TEI. Iterate on `eci.tei.xml` and re-run `deposit.sh`.
+- If rejected, the email explains what to fix in the TEI. Iterate on `eci.xml` and re-run `deposit.sh`.
 
 ## Files
 
-- `eci.tei.xml` — TEI-HAL metadata (title, author, ORCID, abstract, keywords, domain `phys.astr.co` + `phys.grqc`, CC-BY licence, Zenodo DOI cross-ref).
+- `eci.xml` — TEI-HAL metadata (title, author, ORCID, abstract, keywords, domain `phys.astr.co` + `phys.grqc`, CC-BY licence, Zenodo DOI cross-ref).
 - `deposit.sh` — curl wrapper, credential-safe (netrc tempfile, `read -s` for password).
 - `response.xml` — created by `deposit.sh` after each run; contains the server's SWORD deposit receipt.
 - `eci-hal-bundle.zip` — ephemeral, rebuilt on every run.

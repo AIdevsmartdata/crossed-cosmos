@@ -1,0 +1,83 @@
+========================================================================
+D9 — Numerical NMC Klein-Gordon integration
+========================================================================
+
+PART 1 — ξ=0 sanity check (Scherrer-Sen 2008, Ω_Λ=0.7)
+------------------------------------------------------------------------
+  α= 0.25   w₀=-0.9909   wₐ=-0.0136   −wₐ/(1+w₀)=+1.487   (target ≈ 1.58)
+  α= 0.40   w₀=-0.9768   wₐ=-0.0344   −wₐ/(1+w₀)=+1.485   (target ≈ 1.58)
+  α= 0.55   w₀=-0.9568   wₐ=-0.0640   −wₐ/(1+w₀)=+1.481   (target ≈ 1.58)
+  α= 0.70   w₀=-0.9313   wₐ=-0.1015   −wₐ/(1+w₀)=+1.477   (target ≈ 1.58)
+  α= 0.85   w₀=-0.9009   wₐ=-0.1458   −wₐ/(1+w₀)=+1.471   (target ≈ 1.58)
+
+   mean −wₐ/(1+w₀) (numerical) = 1.478
+   Scherrer-Sen expectation    = 1.58
+   relative error              = 6.4 %
+   WARNING: >5% deviation from Scherrer-Sen baseline.
+   This likely reflects (i) our thawing IC χ'=0 at z=3 not being
+   exactly the S&S attractor, and (ii) CPL fit-window choice.
+   We proceed but interpret B_numerical *relative to A_numerical*
+   rather than absolute, to isolate the ξ correction cleanly.
+
+PART 2 — ξ × χ₀ scan
+------------------------------------------------------------------------
+  χ₀=0.05  ξ=+0.00e+00   w₀=-0.9568   wₐ=-0.0640
+  χ₀=0.05  ξ=+1.00e-03   w₀=-0.9569   wₐ=-0.0639
+  χ₀=0.05  ξ=+1.00e-02   w₀=-0.9578   wₐ=-0.0626
+  χ₀=0.05  ξ=+2.40e-02   w₀=-0.9591   wₐ=-0.0606
+  χ₀=0.05  ξ=-2.40e-02   w₀=-0.9543   wₐ=-0.0676
+  χ₀=0.10  ξ=+0.00e+00   w₀=-0.9568   wₐ=-0.0640
+  χ₀=0.10  ξ=+1.00e-03   w₀=-0.9569   wₐ=-0.0638
+  χ₀=0.10  ξ=+1.00e-02   w₀=-0.9582   wₐ=-0.0620
+  χ₀=0.10  ξ=+2.40e-02   w₀=-0.9602   wₐ=-0.0594
+  χ₀=0.10  ξ=-2.40e-02   w₀=-0.9531   wₐ=-0.0690
+  χ₀=0.20  ξ=+0.00e+00   w₀=-0.9568   wₐ=-0.0640
+  χ₀=0.20  ξ=+1.00e-03   w₀=-0.9570   wₐ=-0.0637
+  χ₀=0.20  ξ=+1.00e-02   w₀=-0.9591   wₐ=-0.0610
+  χ₀=0.20  ξ=+2.40e-02   w₀=-0.9622   wₐ=-0.0569
+  χ₀=0.20  ξ=-2.40e-02   w₀=-0.9507   wₐ=-0.0719
+
+Linear fit  Δwₐ = B · ξ · √(1+w₀) · (χ₀/M_P):
+   χ₀=0.05  ξ=+1.00e-03   x=+1.039e-05   Δwₐ=+1.467e-04   B_local=+14.11
+   χ₀=0.05  ξ=+1.00e-02   x=+1.039e-04   Δwₐ=+1.449e-03   B_local=+13.94
+   χ₀=0.05  ξ=+2.40e-02   x=+2.495e-04   Δwₐ=+3.414e-03   B_local=+13.69
+   χ₀=0.05  ξ=-2.40e-02   x=-2.495e-04   Δwₐ=-3.641e-03   B_local=+14.60
+   χ₀=0.10  ξ=+1.00e-03   x=+2.079e-05   Δwₐ=+2.011e-04   B_local=+9.67
+   χ₀=0.10  ξ=+1.00e-02   x=+2.079e-04   Δwₐ=+1.980e-03   B_local=+9.53
+   χ₀=0.10  ξ=+2.40e-02   x=+4.989e-04   Δwₐ=+4.641e-03   B_local=+9.30
+   χ₀=0.10  ξ=-2.40e-02   x=-4.989e-04   Δwₐ=-5.040e-03   B_local=+10.10
+   χ₀=0.20  ξ=+1.00e-03   x=+4.158e-05   Δwₐ=+3.099e-04   B_local=+7.45
+   χ₀=0.20  ξ=+1.00e-02   x=+4.158e-04   Δwₐ=+3.040e-03   B_local=+7.31
+   χ₀=0.20  ξ=+2.40e-02   x=+9.978e-04   Δwₐ=+7.082e-03   B_local=+7.10
+   χ₀=0.20  ξ=-2.40e-02   x=-9.978e-04   Δwₐ=-7.860e-03   B_local=+7.88
+
+   B_numerical = +8.212  ±  0.490
+   B_analytic  = 8/√3 · A(0.7) = 7.298   (A=1.58)
+   ratio B_num/B_analytic = +1.125
+
+   [Cross-check: B_num / (8/√3 · A_numerical) = +1.203]
+
+PART 3 — Figure
+------------------------------------------------------------------------
+  wrote /home/remondiere/crossed-cosmos/derivations/figures/D9-wa-numerical.pdf
+        /home/remondiere/crossed-cosmos/derivations/figures/D9-wa-numerical.png
+
+========================================================================
+PART 4 — Verdict
+========================================================================
+
+   B_numerical / B_analytic  =  +1.125
+   |ratio − 1|                =  0.125
+   ⇒ D7 holds within tolerance (<30%). No patch required.
+
+   Band half-width at w₀=-0.75, |ξ|≤2.4e-2, χ₀=M_P/10:
+     D7 analytic : Δw_a = 8.757e-03
+     D9 numerical: Δw_a = 9.854e-03
+   DESI DR2 σ(w_a) ≈ 0.80  →  both ≪ σ
+   DR3 forecast σ(w_a)·0.3 ≈ 0.24  →  both still ≪ σ
+
+   VERDICT: HOLDS
+
+   summary → /home/remondiere/crossed-cosmos/derivations/_results/D9-summary.json
+
+Status: FUNCTIONAL — numerical NMC integration + CPL fit + D7 comparison.

@@ -62,7 +62,7 @@ chmod 600 "$NETRC"
 
 curl --netrc-file "$NETRC" \
     -H "Content-Type: application/zip" \
-    -H "Content-Disposition: attachment; filename=$BUNDLE" \
+    -H "Content-Disposition: attachment; filename=$TEI" \
     -H "Packaging: http://purl.org/net/sword-types/AOfr" \
     -H "X-Packaging: http://purl.org/net/sword-types/AOfr" \
     -H "X-Allow-Completion: false" \

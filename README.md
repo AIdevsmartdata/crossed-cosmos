@@ -3,6 +3,7 @@
 **ECI — Entanglement, Complexity, Information.** A framework paper threading six independently-established results (2022–2026) into a single predictive canvas: type-II observer-dependent von Neumann algebras, non-minimally coupled thawing quintessence (DESI DR2), Early Dark Energy, the Dark Dimension, Cryptographic Censorship, and persistent-homology cosmology.
 
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.19686399.svg)](https://doi.org/10.5281/zenodo.19686399)
+[![HAL](https://img.shields.io/badge/HAL-hal--05598836-blue)](https://hal.science/hal-05598836)
 [![License: CC BY 4.0](https://img.shields.io/badge/License-CC_BY_4.0-lightgrey.svg)](https://creativecommons.org/licenses/by/4.0/)
 [![ORCID](https://img.shields.io/badge/ORCID-0009--0008--2443--7166-a6ce39)](https://orcid.org/0009-0008-2443-7166)
 

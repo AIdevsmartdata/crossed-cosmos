@@ -65,7 +65,6 @@ curl --netrc-file "$NETRC" \
     -H "Content-Disposition: attachment; filename=$TEI" \
     -H "Packaging: http://purl.org/net/sword-types/AOfr" \
     -H "X-Packaging: http://purl.org/net/sword-types/AOfr" \
-    -H "X-Allow-Completion: false" \
     --data-binary "@$BUNDLE" \
     "$SWORD_URL" \
     -o response.xml -w "HTTP %{http_code}\n"

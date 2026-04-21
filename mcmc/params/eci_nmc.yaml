@@ -1,0 +1,115 @@
+# ============================================================================
+# ECI v4 — Cobaya input
+# Datasets : Planck 2018 (lowl TT/EE + Plik-lite TTTEEE) + DESI DR2 BAO
+#            + Pantheon+ SN Ia  (ACT DR6 optional, commented out)
+# Theory   : CLASS (3.2+) — NMC ξ_χ patch REQUIRED for xi_chi to affect C_ell
+# Sampler  : Metropolis MCMC, 4 chains, R-1 < 0.05
+# ============================================================================
+
+theory:
+  classy:
+    extra_args:
+      # Cosmological baselines
+      output: tCl,pCl,lCl,mPk
+      lensing: "yes"
+      N_ur: 2.0328
+      N_ncdm: 1
+      m_ncdm: 0.06
+      # ------------------------------------------------------------------
+      # ECI v4 extra knobs — these keys are CONSUMED BY THE NMC PATCH
+      # (see mcmc/nmc_patch/). Plain CLASS will ignore them.
+      # ------------------------------------------------------------------
+      nmc_xi_chi: 0.0          # non-minimal coupling ξ_χ (placeholder)
+      Omega_fld: 0.0           # handled via w0wa fluid below
+      use_ppf: "yes"
+
+likelihood:
+  planck_2018_lowl.TT:
+  planck_2018_lowl.EE:
+  planck_2018_highl_plik.TTTEEE_lite:
+  bao.desi_dr2:
+  sn.pantheon_plus:
+  # act_dr6_lenslike.ACTDR6LensLike:   # optional — enable after cobaya-install
+
+params:
+  # ---------- Standard ΛCDM-ish ----------
+  H0:
+    prior: {min: 55, max: 85}
+    ref:   {dist: norm, loc: 67.4, scale: 0.5}
+    proposal: 0.5
+    latex: H_0
+  omega_b:
+    prior: {min: 0.017, max: 0.027}
+    ref:   {dist: norm, loc: 0.02237, scale: 0.00015}
+    proposal: 0.00015
+    latex: \Omega_\mathrm{b} h^2
+  omega_cdm:
+    prior: {min: 0.09, max: 0.15}
+    ref:   {dist: norm, loc: 0.1200, scale: 0.0012}
+    proposal: 0.0012
+    latex: \Omega_\mathrm{c} h^2
+  n_s:
+    prior: {min: 0.9, max: 1.05}
+    ref:   {dist: norm, loc: 0.9649, scale: 0.0042}
+    proposal: 0.0042
+    latex: n_\mathrm{s}
+  A_s:
+    prior: {min: 1.5e-9, max: 3.5e-9}
+    ref:   {dist: norm, loc: 2.1e-9, scale: 0.03e-9}
+    proposal: 0.03e-9
+    latex: A_\mathrm{s}
+  tau_reio:
+    prior: {min: 0.02, max: 0.12}
+    ref:   {dist: norm, loc: 0.0544, scale: 0.0073}
+    proposal: 0.0073
+    latex: \tau_\mathrm{reio}
+
+  # ---------- w0-wa CPL dark energy ----------
+  w0_fld:
+    prior: {min: -1.2, max: -0.5}
+    ref:   {dist: norm, loc: -1.0, scale: 0.05}
+    proposal: 0.05
+    latex: w_0
+  wa_fld:
+    prior: {min: -2.0, max:  0.0}
+    ref:   {dist: norm, loc: 0.0, scale: 0.1}
+    proposal: 0.1
+    latex: w_a
+
+  # ---------- ECI v4 non-minimal coupling ----------
+  nmc_xi_chi:
+    prior: {min: -0.1, max: 0.1}
+    ref:   {dist: norm, loc: 0.0, scale: 0.01}
+    proposal: 0.01
+    latex: \xi_\chi
+
+  # ---------- Early dark energy ----------
+  f_EDE:
+    prior: {min: 0.0, max: 0.2}
+    ref:   {dist: norm, loc: 0.05, scale: 0.02}
+    proposal: 0.02
+    latex: f_\mathrm{EDE}
+
+  # ---------- Derived ----------
+  sigma8:
+    latex: \sigma_8
+  Omega_m:
+    latex: \Omega_\mathrm{m}
+
+sampler:
+  mcmc:
+    burn_in: 0
+    max_tries: 1000
+    covmat: auto
+    proposal_scale: 1.9
+    Rminus1_stop: 0.05
+    Rminus1_cl_stop: 0.2
+    learn_proposal: true
+    learn_proposal_Rminus1_max: 2.0
+    drag: false
+    oversample_power: 0.4
+
+output: chains/eci_nmc
+
+# Run with: cobaya-run -r params/eci_nmc.yaml
+# 4 MPI ranks × 5 OMP threads on i5-14600KF → ~3 days to R-1 < 0.05

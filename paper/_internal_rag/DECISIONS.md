@@ -7,6 +7,27 @@ reviews, and the D*/V* derivation reports.
 
 ---
 
+**2026-04-22 — §1.5 unifying thesis = observer-dependent cosmology (Team B, Bridge verdict)**
+- Decision: §1.5 (`section_1_5_thesis_B.tex`, \input after §1, before §2)
+  adopts Hypothesis B (observer-dependent cosmology, scoped to late-time
+  quasi-dS $\Omega_\Lambda\gtrsim 0.7$). Team A (complexity-growth / UCG)
+  conceded in its own defence memo. Frame qualifiers propagated to §3.5
+  (solar-system-frame on Cassini bound), §3.6 (causal-diamond regime on
+  EFT heuristic), §A6 (observer ensemble average on Matsubara form),
+  Appendix A (QRF-subregion link for A3 working-conjecture status).
+  Abstract clause (v) updated to link A3 explicitly to the observer-
+  dependent reading of A1. No equation moved; no numerical value changed.
+  Ma--Huang PRU citation upgraded from "effective existence" to "existence
+  constructed from quantum one-way functions" at the CFT level; the
+  cosmological transposition of A3 remains a working conjecture.
+- Alternatives: Hypothesis A (UCG, Team A); fallback "§1.5 open" framing.
+- Justification: `paper/thesis_bridge.md` §4. Team A's defence memo
+  concedes the strong reading and recommends B if the weak reading is
+  thin; Team B's scope match covers every quantitative §3 prediction
+  without overreach. Ma--Huang arXiv:2410.10116 (STOC'25) constructs PRUs
+  from qOWF — upgrade flagged by `paper/exotic_physics_scan.md` Domain 2.
+- Pushed back: bridge coordinator (A conceded); no external disagreement.
+
 **2026-04-21 — A3 downgraded to "working conjecture" in the axiom list**
 - Decision: eci.tex line 50 replaces "A3 — Cryptographic Censorship" as
   a standalone axiom with "A3 (working conjecture) — Cryptographic

@@ -1,40 +1,108 @@
-# Cobaya input for the ECINMCTheory plugin smoke-test MCMC.
-# 2 chains x 200 steps; a trivial Gaussian likelihood on a derived quantity
-# just to exercise the plugin end-to-end. R-1 < 1 is the only convergence
-# goal — this is NOT a physics run.
+# ============================================================================
+# ECI v5.0 — Cobaya input (PLUGIN ROUTE)
+# ---------------------------------------------------------------------------
+# Production YAML for DESI DR2 BAO + Pantheon+ SN via the Python `ECINMCTheory`
+# plugin. No CMB (hi_class NMC patch required for that; see v5.1 roadmap).
+#
+# Architecture:
+#   - `classy` (vanilla CLASS) delivers H(z), D_A(z), rdrag for BAO/SN.
+#   - `ECINMCTheory` consumes (xi_chi, chi_initial) and exposes the derived
+#     parameter `wa_nmc_correction` (D14 / D13 closed-form) so the MCMC
+#     samples the NMC sector without needing any C-level patch.
+#
+# For a full physics MCMC that back-reacts NMC on H(z), switch to the
+# hi_class C-patch route (mcmc/params/eci_nmc.yaml, v5.1).
+# ============================================================================
 
 theory:
+  classy:
+    extra_args:
+      output: mPk
+      N_ur: 2.0328
+      N_ncdm: 1
+      m_ncdm: 0.06
+      Omega_Lambda: 0
+      use_ppf: "yes"
   eci_nmc_theory.ECINMCTheory:
-    python_path: ./
+    python_path: ./mcmc/cobaya_nmc/
 
 likelihood:
-  # Trivial analytic gaussian on xi_chi and chi_initial — exercises the
-  # theory/sampler plumbing without needing Planck/DESI data files.
-  smoke:
-    external: "lambda xi_chi, chi_initial: -0.5*(xi_chi/0.02)**2 - 0.5*((chi_initial-0.1)/0.02)**2"
-    input_params: [xi_chi, chi_initial]
+  bao.desi_dr2.desi_bao_all:
+  sn.pantheonplus:
 
 params:
+  # ---------- Standard LCDM-ish ----------
+  H0:
+    prior: {min: 55, max: 85}
+    ref:   {dist: norm, loc: 67.4, scale: 0.5}
+    proposal: 0.5
+    latex: H_0
+  omega_b:
+    prior: {min: 0.017, max: 0.027}
+    ref:   {dist: norm, loc: 0.02237, scale: 0.00015}
+    proposal: 0.00015
+    latex: \Omega_\mathrm{b} h^2
+  omega_cdm:
+    prior: {min: 0.09, max: 0.15}
+    ref:   {dist: norm, loc: 0.1200, scale: 0.0012}
+    proposal: 0.0012
+    latex: \Omega_\mathrm{c} h^2
+  n_s:
+    prior: {min: 0.9, max: 1.05}
+    ref:   {dist: norm, loc: 0.9649, scale: 0.0042}
+    proposal: 0.0042
+    latex: n_\mathrm{s}
+  logA:
+    prior: {min: 2.5, max: 3.5}
+    ref:   {dist: norm, loc: 3.044, scale: 0.014}
+    proposal: 0.014
+    drop: True
+    latex: \log(10^{10} A_\mathrm{s})
+  A_s:
+    value: "lambda logA: 1e-10*np.exp(logA)"
+    latex: A_\mathrm{s}
+
+  # ---------- w0-wa CPL dark energy (classy Omega_fld sector) ----------
+  w0_fld:
+    prior: {min: -1.2, max: -0.5}
+    ref:   {dist: norm, loc: -1.0, scale: 0.05}
+    proposal: 0.05
+    latex: w_0
+  wa_fld:
+    prior: {min: -2.0, max: 0.0}
+    ref:   {dist: norm, loc: 0.0, scale: 0.1}
+    proposal: 0.1
+    latex: w_a
+
+  # ---------- ECI v5 non-minimal coupling (plugin sector) ----------
   xi_chi:
-    prior: {min: -0.05, max: 0.05}
-    ref: {dist: norm, loc: 0.0, scale: 0.005}
-    proposal: 0.005
+    prior: {min: -0.1, max: 0.1}
+    ref:   {dist: norm, loc: 0.0, scale: 0.01}
+    proposal: 0.01
     latex: \xi_\chi
   chi_initial:
     prior: {min: 0.05, max: 0.20}
-    ref: {dist: norm, loc: 0.10, scale: 0.01}
+    ref:   {dist: norm, loc: 0.10, scale: 0.01}
     proposal: 0.01
     latex: \chi_\mathrm{ini}
+
+  # ---------- Derived ----------
   wa_nmc_correction:
     derived: true
     latex: \Delta w_a^\mathrm{NMC}
+  Omega_m:
+    latex: \Omega_\mathrm{m}
 
 sampler:
   mcmc:
     burn_in: 0
-    max_samples: 400
-    max_tries: 200
-    Rminus1_stop: 1.0
-    learn_proposal: false
+    max_samples: 20000
+    max_tries: 1000
+    covmat: auto
+    proposal_scale: 1.9
+    Rminus1_stop: 0.05
+    Rminus1_cl_stop: 0.2
+    learn_proposal: true
+    learn_proposal_Rminus1_max: 2.0
 
-output: chains/eci_nmc_plugin_smoke
+output: chains/eci_nmc_plugin

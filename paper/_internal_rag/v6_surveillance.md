@@ -17,4 +17,5 @@ Each Monday: grep arXiv listings (astro-ph.CO, hep-th, gr-qc) for author+keyword
 | Date | Pedraza-group | Caputa-group | Bianconi | Notes |
 |---|---|---|---|---|
 | 2026-04-22 | (no check — v6 just starting) | — | — | baseline |
+| 2026-04-22 | 2503.20943 (landscape of complexity measures in 2D gravity, Mar 2026) — not a scoop, orthogonal | **2602.02675** (Vardian, Feb 2026) — modular Krylov for boundary reconstruction of area operator via OAQEC. **NOT A SCOOP**: complementary (no dS/dτ, no PH_k, no GSL). Supports M1′ traction; could be cited as programmatic future direction if space permits. | 2510.22545 (Thermodynamics of GfE, Bianconi, updated Jan 2026) — discusses GQRE entropy-growth + complexity reconciliation; close territory but distinct statement (action-level vs differential-inequality-level) — already handled by our §3 Bianconi footnote | Pre-deposit surveillance. All clear for arXiv deposit. |
 

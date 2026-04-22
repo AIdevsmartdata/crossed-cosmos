@@ -1,109 +1,161 @@
-% section_3_6_swampland_cross.tex — ECI v4.2 scientific payload (D8)
+% section_3_6_swampland_cross.tex — ECI v4.2.1 scientific payload (D8, V1-corrected)
 % To be \input{} into eci.tex as a new subsection of §3 "Phenomenology",
 % immediately after \input{section_3_5_constraints}.
 
 \subsection{Swampland $\times$ NMC cross-constraint}\label{sec:swampland_cross}
 
-Axioms A4 and A5 were presented as independent. They are not, if the thawing
-scalar $\chi$ and the KK tower of the Dark Dimension originate from the
-\emph{same} higher-dimensional sector --- a natural hypothesis, since both
-are postulated as microscopic ingredients of the dark sector. In that case
-both must respect a common effective field theory cutoff $\Lambda$, and the
-two axioms are tied by a single consistency condition. The derivation is in
-\texttt{derivations/D8-swampland-nmc-cross.py}; we quote only the result.
+Axioms A4 (non-minimally coupled thawing scalar $\chi$ with coupling
+$\xi_\chi R\chi^2/2$) and A5 (Dark Dimension KK tower with a species-scale
+EFT cutoff) were presented as independent. They share an effective field
+theory description --- and therefore a common cutoff $\Lambda$ --- if $\chi$
+is interpreted as a bulk mode of the same higher-dimensional sector that
+carries the KK tower. That identification is an \emph{interpretation}, not
+a consequence of the axioms: we state it, draw out its consequence, and
+return below to the three model-building resolutions it leaves open.
+The full symbolic setup is in \texttt{derivations/D8-swampland-nmc-cross.py};
+we quote the end results here.
 
-\paragraph{Shared cutoff.}
-The Dark Dimension scenario~\cite{Bedroya2025} relates the EFT cutoff to
-the Hubble scale through a Swampland Distance Conjecture exponent,
+\paragraph{The species-scale cutoff.}
+The Dark Dimension construction of Montero, Vafa \& Valenzuela (arXiv:2205.12293)
+and the low-scale gravity variant of Anchordoqui, Antoniadis \& L\"ust
+(arXiv:2306.16491)
+% TODO-BIB: Montero2022 — arXiv:2205.12293, species-scale derivation
+% TODO-BIB: AAL2023 — arXiv:2306.16491, Dark Dimension low-scale gravity
+% RAG-PENDING: verify the species-scale exponent quoted below against
+% paper/_rag/Montero2022.txt and paper/_rag/AAL2023.txt once INDEX.md lands.
+identify the relevant EFT cutoff with the \emph{species scale}, at which
+a tower of KK states becomes light enough that 4D effective gravity
+breaks down. In that regime the cutoff admits a log-distance parametrisation
 \begin{equation}
-  \Lambda \;\sim\; M_P\,\bigl(H/M_P\bigr)^{c'},\qquad c'\simeq 0.05\pm 0.01.
+  \Lambda(H)\;\sim\;M_P\,\bigl(H/M_P\bigr)^{c'},
+  \qquad
+  c' \;=\; \tfrac{1}{6}\;\simeq\;0.167
+  \quad\text{(Dark Dimension species scale).}
   \label{eq:Lambda_SDC}
 \end{equation}
-If the non-minimal operator $(\xi_\chi/2)R\chi^2$ is generated inside the same
-EFT, its contribution to the effective reduced Planck mass,
-$\delta M_P^{2}=\xi_\chi\chi_0^{2}$, cannot exceed the cutoff squared,
-otherwise the operator would repair physics above its own range of validity:
+At the present-day Hubble scale $H_0 \simeq 1.5\times 10^{-33}\,\mathrm{eV}$
+and $M_P \simeq 2.4\times 10^{18}\,\mathrm{GeV}$, this evaluates to
+$\Lambda(H_0)\simeq 2.2\times 10^{8}\,\mathrm{GeV}$, i.e.\ the standard
+Dark-Dimension species scale $\sim 10^{9}$\,GeV. The alternative value
+$c'\simeq 0.05$ that appears in some moduli-potential discussions refers
+to the \emph{de Sitter--slope} Swampland bound on $V(\chi)$ and not to the
+tower cutoff; we do not use it as the primary input.
+% source: derivations/D8-swampland-nmc-cross.py
+% TODO-DERIV: update D8 script for c'=1/6 primary case (current numerics
+% are tabulated at c'=0.05; the 16-orders-of-magnitude reinterpretation
+% below is from V1-D8-verification.md §4, which recomputes with c'=1/6
+% at χ₀=M_P/10 and reproduces the arithmetic to 0.1%). Deferred to v4.3.
+
+\paragraph{Heuristic EFT bound on $\xi_\chi$.}
+The non-minimal operator $(\xi_\chi/2)R\chi^2$ shifts the effective reduced
+Planck mass by $\delta M_P^2 = \xi_\chi\chi_0^2$ at the local scalar
+background $\chi_0$. A \emph{heuristic} EFT self-consistency requirement ---
+that the coupling-induced correction to the kinetic coefficient of
+gravitons not exceed the square of the EFT cutoff --- gives
 \begin{equation}
-  \xi_\chi\,\chi_0^{2}\;\le\;\Lambda^{2}
+  \xi_\chi\,\chi_0^{2}\;\lesssim\;\Lambda^{2}
   \quad\Longleftrightarrow\quad
-  \xi_\chi\,(\chi_0/M_P)^{2}\;\le\;(H_0/M_P)^{2c'}.
+  |\xi_\chi|\,(\chi_0/M_P)^{2}\;\lesssim\;(H_0/M_P)^{2c'}.
   \label{eq:eft_bulk}
 \end{equation}
-Combined with the Cassini PPN bound derived in \S\ref{sec:xi_constraints},
-$|\xi_\chi|(\chi_0/M_P)\le 2.4\times 10^{-3}$, Eq.~(\ref{eq:eft_bulk}) yields
-at the fiducial thawing amplitude $\chi_0=M_P/10$ and the paper's A5
-fiducial $c'=0.05\pm 0.01$
+We emphasise that Eq.~(\ref{eq:eft_bulk}) is a \emph{heuristic, model-dependent}
+order-of-magnitude estimate, not a theorem: $\xi_\chi$ is a dimensionless
+Wilson coefficient and carries no intrinsic UV cutoff, so the inequality
+is the statement that no single insertion of the operator can generate a
+background contribution parametrically larger than the cutoff where the
+EFT itself ceases to make sense. Equality is saturated when $\chi$ is
+displaced to the cutoff with $\xi_\chi=\mathcal{O}(1)$.
+At the fiducial thawing amplitude $\chi_0 = M_P/10$ and with
+$c' = 1/6$, Eq.~(\ref{eq:eft_bulk}) evaluates to
 \begin{equation}
-  \boxed{\;|\xi_\chi|\;\lesssim\;9.5\times 10^{-5}
-    \quad(c'=0.05,\ \chi_0=M_P/10),\;}
+  \boxed{\;|\xi_\chi|\;\lesssim\;8.4\times 10^{-19}
+    \quad(c'=1/6,\ \chi_0=M_P/10),\;}
   \label{eq:xi_crossbound}
 \end{equation}
-with an overall range $[5.9\times 10^{-6},\,1.5\times 10^{-3}]$ spanned by
-$c'=0.04$--$0.06$. This is a factor $\sim\!250$ tightening over the
-Cassini-only result (\ref{eq:xi_max_numeric}).
+to be compared with the Cassini PPN bound~\eqref{eq:xi_max_numeric} of
+$|\xi_\chi|\lesssim 2.4\times 10^{-2}$ from \S\ref{sec:xi_constraints}:
+the Swampland-EFT constraint is \emph{sixteen orders of magnitude} tighter
+than the solar-system bound. As a point of comparison, the de-Sitter--slope
+value $c'\simeq 0.05$ would give $|\xi_\chi|\lesssim 9.5\times 10^{-5}$ at
+the same $\chi_0$, i.e.\ a far milder $\sim\!250\times$ tightening; the
+choice of which Swampland exponent to use therefore materially changes the
+phenomenology, and we take $c'=1/6$ as the primary value dictated by the
+Dark Dimension species scale.
+Under~\eqref{eq:xi_crossbound} the NMC contribution to $w_a$ in
+Eq.~(\ref{eq:wa_NMC}), which scales linearly with $\xi_\chi$, is
+$\Delta w_a \sim 10^{-19}$ at $\chi_0 = M_P/10$ --- effectively forbidding
+any observable NMC signature in the dark-energy sector.
 
-\paragraph{Limits.}
-Both limits verified symbolically in \texttt{D8-swampland-nmc-cross.py}:
-$\xi_\chi\!\to\!0$ removes the operator (GR recovered); $c'\!\to\!0$ sends
-$\Lambda\!\to\!M_P$ so that (\ref{eq:eft_bulk}) reduces to the no-ghost
-condition $\xi_\chi\chi_0^{2}<M_P^{2}$ already stated in A4, and the D7
-Cassini bound is recovered exactly.
+\paragraph{Model-building resolutions.}
+The tightness of~\eqref{eq:xi_crossbound} under the bulk-mode hypothesis
+forces an explicit choice of UV completion before the A4+A5 combination
+can be reconciled with the thawing-DE phenomenology of \S\ref{sec:xi_constraints}.
+Three resolutions are compatible with the axioms.
+(i) The thawing scalar $\chi$ is a 4D zero-mode of a sector logically
+distinct from the Dark Dimension KK tower --- for example a brane-localised
+quintessence field in a warped compactification. Under this choice the
+species-scale cutoff of A5 does not apply to the operator $\xi_\chi R\chi^2/2$,
+Eqs.~(\ref{eq:eft_bulk})--(\ref{eq:xi_crossbound}) do not constrain $\xi_\chi$,
+and the Cassini bound~(\ref{eq:xi_bound}) is the sole remaining limit.
+A4 and A5 then remain logically independent at the price of abandoning the
+unified-cutoff motivation that makes them tempting to combine in the first place.
+(ii) A screening mechanism --- chameleon or symmetron --- decouples the
+local $\chi_0$ entering~\eqref{eq:eft_bulk} from its cosmological background
+value, so that the \emph{cosmological} $\xi_\chi$ can satisfy the Swampland
+bound at bulk scales while the \emph{local} $\xi_\chi$ evades it inside the
+solar system. This requires explicit model-building of the screening
+potential and is not a consequence of the axioms themselves.
+(iii) $\xi_\chi$ saturates the Swampland bound at $\sim 10^{-19}$. In that
+case the NMC correction to the Scherrer--Sen track collapses below any
+foreseeable observational threshold, the $(w_0,w_a)$ prediction of ECI
+becomes indistinguishable from the minimal-coupling thawing relation
+already analysed in \S\ref{sec:xi_constraints}, and the architectural
+content of A4 is preserved while its phenomenological signature is lost.
+Our primary analysis in \S\ref{sec:xi_constraints} proceeds under choice~(i);
+choice~(ii) is the open model-building direction; choice~(iii) makes
+ECI's NMC signature indistinguishable from $w$CDM by this constraint alone.
 
 \begin{figure}[h]
 \centering
 \includegraphics[width=0.95\columnwidth]{../derivations/figures/D8-c-xi-overlap.pdf}
+% FIGURE-UPDATE-PENDING: regenerate for c'=1/6 as the primary marked
+% exponent rather than c'=0.05 (current figure sweeps c' ∈ [0.01, 0.5]
+% and marks c'=0.05, c'=0.51; the sweep itself is correct but the
+% annotation should highlight c'=1/6 per Montero2022/AAL2023). Deferred
+% to v4.3.
 \caption{Allowed region in the $(c',\xi_\chi)$ plane at $\chi_0=M_P/10$.
 Red: Cassini exclusion (horizontal, independent of $c'$). Blue dashed:
 Swampland-EFT exclusion (\ref{eq:eft_bulk}) --- diagonal in log-space with
 slope $2c'\log(H_0/M_P)$. Green shading: overlap admitted by both
-constraints. The A5 fiducial $c'=0.05$ and the meV-equivalent value
-$c'\!\simeq\!0.51$ are marked.}
+constraints. The Dark-Dimension species-scale value $c'=1/6$ (primary)
+sits deep in the Swampland-excluded region, corresponding to
+$|\xi_\chi|\lesssim 8.4\times 10^{-19}$; the de-Sitter--slope value
+$c'\simeq 0.05$ and the meV-equivalent value $c'\simeq 0.51$ are shown
+for comparison.}
 \label{fig:D8}
 \end{figure}
 
-\paragraph{Phenomenological tension.}
-A stronger statement runs in the reverse direction. Thawing dark energy
-requires $\chi_0/M_P\sim 0.1$--$1$ to drive late-time acceleration. The
-bulk-mode condition (\ref{eq:eft_bulk}) at the Cassini-saturating value
-$|\xi_\chi|=2.4\!\times\!10^{-2}$ and $c'=0.05$ forces
-$\chi_0/M_P\le 6.3\!\times\!10^{-3}$, already an order of magnitude below
-what A4 requires. With the literal Dark Dimension cutoff $\Lambda\sim$ meV
-(which the formula (\ref{eq:Lambda_SDC}) reproduces for $c'\simeq 0.51$,
-not $0.05$; both conventions appear in the literature) the bound collapses
-to $\chi_0/M_P\le 3\!\times\!10^{-30}$ and thawing phenomenology is
-excluded outright.
-
-\paragraph{Architectural consequence.}
-A4 and A5 are compatible \emph{only} under one of the following model-
-building choices, any of which must be made explicit in any UV completion:
-(i) $\chi$ is a 4D zero-mode localised on a brane, not a bulk mode of the
-same sector as the KK tower, in which case the shared-cutoff hypothesis
-does not apply; (ii) a chameleon/symmetron mechanism screens the local
-$\chi_0$ away from its cosmological value, weakening the Cassini leg; or
-(iii) $|\xi_\chi|$ sits at the sharpened bound (\ref{eq:xi_crossbound})
-rather than the Cassini-only value (\ref{eq:xi_max_numeric}). The ECI
-framework does not prefer one of the three, but their distinct
-phenomenologies are observationally separable: option (iii) suppresses the
-ECI band in $(w_0,w_a)$ by a further factor $\sim\!250$ relative to the
-already-narrow D7 band, and cuts the $|\dot G/G|$ signature at LLR by the
-same factor. A detection of $|\dot G/G|\gtrsim 10^{-17}\,\mathrm{yr}^{-1}$
-would rule out option (iii) and force either (i) or (ii).
-
 \paragraph{Honest caveats.}
 \begin{enumerate}
-\item The EFT self-consistency condition $\delta M_P^{2}\le\Lambda^{2}$ is
-  order-of-magnitude; an $O(1)$ coefficient could shift
-  (\ref{eq:xi_crossbound}) by a factor $2$, but the qualitative conclusion
-  ($\gg 30\%$ tightening) is robust.
-\item The form (\ref{eq:Lambda_SDC}) is written with $H$ as the distance
-  proxy along the moduli space; the equivalent Bedroya form uses the
-  cosmological constant density directly and yields $c'\!\simeq\!1/2$
-  for $\Lambda\!=\!$\,meV. The sign of the tightening is independent of
-  this choice.
+\item The EFT self-consistency condition $\delta M_P^{2}\le\Lambda^{2}$
+  used in~\eqref{eq:eft_bulk} is an order-of-magnitude heuristic, not a
+  theorem: an $\mathcal{O}(1)$ coefficient could shift~\eqref{eq:xi_crossbound}
+  by a factor of a few, but not its qualitative consequence --- a
+  Swampland-EFT bound $|\xi_\chi|\ll 10^{-2}$ already renders the NMC
+  signature observationally invisible under any bulk-mode reading of A4+A5.
+\item The exponent $c'=1/6$ in~\eqref{eq:Lambda_SDC} is the species-scale
+  value in the Dark Dimension and is the primary input. The KK-scale value
+  $c'=1/2$ (with $\Lambda\sim m_{\rm KK}\sim\mathrm{meV}$) would give an
+  even tighter, essentially trivial bound $|\xi_\chi|\lesssim 10^{-58}$.
+  The de-Sitter--slope value $c'\simeq 0.05$ refers to the scalar potential
+  and not to the tower cutoff; we quote it only as a parenthetical
+  comparison.
 \item The cross-constraint is \emph{conditional} on the shared-cutoff
-  hypothesis. Its falsifier is, precisely, the discovery of a UV completion
-  in which $\chi$ and the KK tower belong to different sectors; in that
-  case §\ref{sec:xi_constraints} remains the strongest bound.
+  hypothesis --- the hypothesis that the thawing $\chi$ of A4 is a bulk
+  mode of the Dark-Dimension sector of A5. The falsifier is precisely the
+  discovery of a UV completion in which $\chi$ and the KK tower belong to
+  different sectors (choice (i) above); in that case
+  \S\ref{sec:xi_constraints} remains the strongest bound.
 \end{enumerate}
 
 % -----------------------------------------------------------------------------
@@ -111,5 +163,8 @@ would rule out option (iii) and force either (i) or (ii).
 %   \documentclass[aps,prd,reprint]{revtex4-2}
 %   \usepackage{graphicx,amsmath,amssymb,hyperref,physics}
 %   \begin{document}\input{section_3_5_constraints}\input{section_3_6_swampland_cross}\end{document}
-% All \cite{} keys used here (Bedroya2025) are defined in eci.bib.
+% \cite{} keys used here: currently NONE (pending TODO-BIB additions for
+% Montero2022 + AAL2023); \cite{Bedroya2025} was removed per V1-D8 audit
+% (misattribution: 2503.19898 is a DESI NMC paper, not the intended
+% species-scale Swampland reference).
 % -----------------------------------------------------------------------------

@@ -1,0 +1,2433 @@
+                                               Prepared for submission to JCAP
+
+
+
+
+                                               Cosmology with Persistent Homology: a
+                                               Fisher Forecast
+
+                                               Jacky H. T. Yip,a Matteo Biagetti,b,c,d Alex Cole,e,f,g Karthik
+                                               Viswanathan,f,g and Gary Shiu.a
+arXiv:2403.13985v2 [astro-ph.CO] 26 Aug 2024
+
+
+
+
+                                               a Department of Physics, University of Wisconsin-Madison, Madison, WI 53706, USA
+
+                                               b AREA Science Park, Padriciano 99, 34149 Trieste, Italy
+
+                                               c Institute for Fundamental Physics of the Universe, Via Beirut 2, 34151 Trieste, Italy
+
+                                               d Scuola Internazionale Superiore di Studi Avanzati, Via Bonomea 265, 34136 Trieste, Italy
+
+                                               e Gravitation Astroparticle Physics Amsterdam, University of Amsterdam, Science Park 904, 1098
+
+                                                XH Amsterdam, The Netherlands
+                                               f Delta Institute for Theoretical Physics, Science Park 904, PO Box 94485, 1090 GL Amsterdam,
+
+                                                The Netherlands
+                                               g Institute of Physics, University of Amsterdam, Science Park 904, PO Box 94485, 1090 GL Ams-
+
+                                                terdam, The Netherlands
+                                                E-mail: hyip2@wisc.edu, matteo.biagetti@areasciencepark.it, acole1221@gmail.com,
+                                                k.viswanathan@uva.nl, shiu@physics.wisc.edu
+
+                                               Abstract. Persistent homology naturally addresses the multi-scale topological characteristics of
+                                               the large-scale structure as a distribution of clusters, loops, and voids. We apply this tool to
+                                               the dark matter halo catalogs from the Quijote simulations, and build a summary statistic for
+                                               comparison with the joint power spectrum and bispectrum statistic regarding their information
+                                               content on cosmological parameters and primordial non-Gaussianity. Through a Fisher analysis,
+                                               we find that constraints from persistent homology are tighter for 8 out of the 10 parameters by
+                                               margins of 13 − 50%. The complementarity of the two statistics breaks parameter degeneracies,
+                                               allowing for a further gain in constraining power when combined. We run a series of consistency
+                                               checks to consolidate our results, and conclude that our findings motivate incorporating persistent
+                                               homology into inference pipelines for cosmological survey data.
+
+
+                                               Keywords: cosmological parameters from LSS, cosmic web, cosmological simulations, physics of
+                                               the early universe
+Contents
+
+1 Introduction                                                      2
+
+2 Dataset                                                           4
+
+3 From Dark Matter Halos to Persistence Diagrams                    6
+  3.1   Coarse-graining                                             7
+  3.2   Topology of simplicial complexes                            8
+  3.3   Coarse-graining via filtration                              8
+  3.4   Persistence diagrams and images                            13
+
+4 From Persistence Diagrams to Summary Statistic                   13
+  4.1   Description of the data vector                             14
+  4.2   Covariance                                                 17
+
+5 From Summary Statistic to Cosmological Constraints               18
+  5.1   Constraints on cosmological parameters                     19
+  5.2   Constraints on primordial non-Gaussianity                  22
+
+6 Conclusions and Future Directions                                22
+
+A Numerical Derivatives                                            25
+
+B On Choice of Nbin and Fisher Analysis Consistency Checks         25
+
+C Independent Information from Each Component of the Data Vector   28
+
+D On Applicability to the Sancho Suite of Galaxy Catalogs          31
+
+E Additional Plots                                                 32
+
+
+
+
+                                            –1–
+Figure 1: Topological data analysis of the large-scale structure. Cosmic structures natu-
+rally correspond to topological features of various dimensions. Halo clusters (bottom right), filament
+loops (top left), and cosmic voids (top right) are 0-, 1-, and 2-cycles in topology respectively.
+
+
+1   Introduction
+
+One of the ongoing challenges in modern precision cosmology is identifying and characterizing
+statistical summaries to extract the maximum amount of information from late-time observables.
+This task is complicated by the non-linearity of gravitational evolution, which takes initial fluctu-
+ations close to Gaussian to highly non-Gaussian structures. Therefore, optimal summary statistics
+are context-specific. Nevertheless, up to theoretical errors, methods of computing low-order cor-
+relation functions at large scales from perturbation theory techniques do provide access to some
+information. This approach has proven successful, particularly in the last few years, through the
+systematic analysis of BOSS data using predictions of the redshift space galaxy power spectrum
+and bispectrum up to one-loop order [1–10]. These studies demonstrated the constraining power of
+galaxy surveys, providing competitive constraints as compared to those from the power spectrum
+of temperature anisotropies of the Cosmic Microwave Background (CMB) [11–13]. On the other
+hand, these statistics do not exhaust the information regarding our universe’s initial conditions
+and dynamics. Moreover, statistics defined in Fourier space obscure consequences of position space
+locality, so that local perturbations to the data can have large effects. Most dramatically, some
+local effects (e.g., galaxy bias) cannot be distinguished from non-local physics (e.g., primordial
+non-Gaussianity) with these statistics (see [14] for a review and references therein, and [15, 16] for
+a recent take on the topic).
+   Given these issues and because of the steady progress in computational techniques, a plethora of
+methods alternative to low-order correlation functions have been proposed in the last few years. A
+promising approach is that of field-level inference, which performs Bayesian inference of the initial
+
+
+
+
+                                                –2–
+conditions, as well as cosmological parameters, directly on voxels of the cosmic field [17–29]. The
+advantage of this approach is that it exploits, at least in principle, all the available information
+in a given map. The difficulty in its implementation is that it requires sampling a very high-
+dimensional parameter space: current generation survey volumes, such as Euclid and DESI, are
+of the order of 10 (Gpc/h)3 and resolve scales down to a few Mpc/h. This implies sampling in
+a space of 106 − 108 dimensions, or more. Recent advances in samplers based on microcanonical
+Hamiltonian or Langevin Monte Carlo attempt to address this problem [28, 30, 31]. In a more
+general context, parameter estimation based on directly simulating the observables is a rapidly
+advancing field often referred to as simulation-based inference [32–37] (see [38] for a recent review
+and [39–49] for cosmological applications).
+   Instead of aiming at the full field-level information, one may construct by hand a suitable
+summary statistic, such that it contains more information than low-order correlation functions and
+retains a degree of physical interpretability of the observable. For inference, one can then build a
+neural network to map the statistic to parameters. The drawback of this is that irrespective of the
+neural network doing a perfect job, the summary itself is likely going to be, to a certain extent, a
+sub-optimal compression.
+    This approach can also be viewed as having a hard-coded layer for preprocessing the data before
+it is fed into an inference model, ensuring that only worthy information, which respects aspects
+such as symmetries, is used for inference. It is often desirable to use robust information against
+certain unknown physics, in other words, to use “nuisance-hardened” information [50]. It was
+advocated in [39] that in the context of cosmological inference, one performs a two-step compression
+process where the data is first summarized into well-understood hand-crafted statistics, and a neural
+network follows for inference, trained to extract maximum information from these summaries.
+   Hence, in recent years, there has been a surge in exploring new interpretable summary statistics
+that go beyond low-order correlations. Notable among these are marked fields [51–58], skew-spectra
+[59–64], void statistics [65], one-point PDFs [66–71], nearest neighbor distributions [72–74], pair-
+connectedness functions [75], and wavelet scattering transforms [76–78]—a list far from exhaustive.
+   Along these lines, several of the present authors have proposed in [79] an approach based on
+computational topology (see [80] for an inference pipeline, and [81, 82] for earlier applications to
+the CMB and the string theory landscape). Namely, [79] constructed summary statistics from
+persistent homology (see [83] for a review). The tool was used to quantify the large-scale structure
+morphology, via discrete and biased tracers of the matter field, as a distribution of clusters, loops,
+and voids across scales. Parametric tests were used to detect primordial non-Gaussianity of the local
+type in distributions of dark matter halos from N-body simulations, and the topological summaries
+were found to provide a level of sensitivity on par with the standard method of scale-dependent
+bias in the tracer’s power spectrum. Furthermore, the topological signals were captured at mildly
+non-linear length scales, complementary to the long-wavelength modes relevant to scale-dependent
+bias. This indicates promising potential of the large-scale structure’s topology for alternative non-
+Gaussianities. Of this sort, in [84], lower-dimensional summaries enabled the calculation of (the
+inverse of) the covariance matrix and the Fisher information for the local and equilateral types of
+primordial non-Gaussianity, also showing promising results. In parallel, similar methods have been
+applied to matter fields [85] and weak lensing maps [86, 87] to derive parameter constraints.
+
+
+
+
+                                                –3–
+Figure 2: Flow of this paper. We explain the machinery of persistent homology and detail the
+filtration designed for dark matter halos. The raw outputs of a persistent homology analysis are
+persistence diagrams, which we summarize into a histogram-based statistic. Applying this pipeline
+to the entire suite of halo catalogs, we compute the Fisher information matrix and report our
+cosmological constraints, which are generally tighter in comparison with the joint power spectrum
+and bispectrum statistic.
+
+
+   One good aspect of taking this approach is that statistics derived from this tool are naturally
+functions of distance, and may thus be recognized as syntheses of information from a range of high-
+order correlators “filtered” through topology. This is evident when considering that each topological
+feature originates from varying numbers of halos as vertices, which we will explain later. To this
+end, persistent homology for cosmology deserves a more thorough analysis. In this work, we further
+expand the power of the previous setups by varying the nearest-neighbor parameter k in the coarse-
+graining scheme to emphasize topological features of different scales. Then we apply our pipeline
+to the Quijote halo catalogs [88–90], and compute constraints via the Fisher information matrix
+for 7 cosmological parameters and 3 primordial non-Gaussianity amplitudes.
+   The flow of this paper is presented in Figure 2. Section 2 introduces the dataset, specifically the
+dark matter halo catalogs from Quijote in redshift space. In Section 3, we review the essential
+aspects of persistent homology, with a focus on the tailored coarse-graining scheme for halos. In
+Section 4, we describe the building of our summary statistic from the outputs of a persistent
+homology computation. The results of our Fisher analysis are presented in Section 5, where we
+discuss them in comparison with conventional statistics of low-order correlation functions. Finally
+in Section 6, we give our conclusions and outlook for future research directions.
+
+
+2       Dataset
+
+Our method of persistent homology is well-defined for any point cloud, such as positions of dark
+matter halos or galaxies. In this work, we apply our pipeline to dark matter halos. The halo
+catalogs at redshift z = 0.5 in real space are taken from the Quijote and Quijote-PNG suites
+[88, 89] (hereafter collectively referred to as Quijote). The choice of z = 0.5 is relatable to
+galaxies observed in surveys such as the BOSS CMASS sample [91, 92].1 The Quijote N-body
+    1
+    We have tried with considerable efforts to use the Sancho mock galaxy dataset, previously used in [93], which is
+modeled to mock CMASS galaxies. However, we found that key assumptions necessary for the Fisher analysis break
+down for this dataset. See Appendix D for details.
+
+
+
+
+                                                       –4–
+simulations are run with GADGET-III, each having 5123 dark matter particles in a 1 (Gpc/h)3 box,
+and the halo catalogs are generated from snapshots with the friends-of-friends algorithm. We use
+halos that are composed of at least 50 particles, which corresponds to a minimum halo mass of
+Mmin = 3.28 × 1013 M⊙ and an average halo number density of n̄ ≈ 9.88 × 10−5 (h/Mpc)3 at the
+fiducial cosmology.
+   The halo catalogs, originally available in real space, are converted to catalogs in redshift space
+using the distant-observer approximation. We apply
+                                                             v · n̂
+                                               x→x+                 n̂                                            (2.1)
+                                                           a(z)H(z)
+
+to each halo position x, where v is the halo’s peculiar velocity, n̂pis the line-of-sight, a(z) =
+(1 + z)−1 is the scale factor, and the Hubble parameter H(z) = 100 Ωm a−3 + (1 − Ωm )a−3(1+w)
+in (km/s)(h/Mpc) depends on the specific cosmology of the catalog. We process each catalog
+along each of the three axes (z-axis only for the fiducial catalogs), following [94]. Hence, there are
+effectively (500 N-body) × (3 RSD axes) = 1500 realizations for each non-fiducial cosmology and
+145002 realizations for the fiducial cosmology (Table 1).3
+   The fiducial cosmological parameters4 are Ωm = 0.3175, Ωb = 0.049, h = 0.6711, ns = 0.9624,
+            P
+σ8 = 0.834,    mν = 0.0 eV, and w = −1. In the non-fiducial cosmologies5 , these values are varied
+by a step ∆θ above and below:
+
+                 {∆Ωm , ∆Ωb , ∆h, ∆ns , ∆σ8 , ∆w} = {0.01, 0.002, 0.02, 0.02, 0.015, 0.05}.
+                                          P
+As for the total mass of neutrinos,           mν , there are three non-fiducial values of 0.1, 0.2, and 0.4 eV.
+   The realizations from Quijote-PNG have initial conditions with different shapes of primordial
+non-Gaussianity: local [95], equilateral [96], and orthogonal-LSS [97] (these shapes are special cases
+of the bispectrum for general single field inflation computed in [98]). The steps for them are all
+∆fNL = 100.
+
+Power spectrum and bispectrum measurements. We measure the halo auto power spectrum
+monopole and quadrupole (Pℓ=0 and Pℓ=2 ), and the bispectrum monopole (Bℓ=0 ), using the public
+code PBI4 [99]. The code uses a fourth-order density interpolation and interlacing scheme as
+described in [100]. Bins have a width of ∆k = 2kf , where kf = 0.006 h/Mpc is the fundamental
+frequency of the 1 (Gpc/h)3 box, and measurements are taken up to kmax = 0.3 h/Mpc, beyond
+which the shot-noise, assumed to be Poissonian6 , strongly dominates7 . This results in 24 bins in each
+   2
+      We skip the first 500 of the 15000 fiducial simulations available in Quijote as they share the same initial random
+seeds with the non-fiducial simulations. This ensures that the covariance and derivative estimations are completely
+independent.
+    3
+      Hereafter we use the terms “catalog”, “simulation”, and “realization” interchangeably; they all refer to a simu-
+lated set of halo positions in redshift space.
+    4                                P
+      The total mass of neutrinos      mν and the dark energy equation of state parameter w are nominally included
+in what we refer to as the set of cosmological parameters.
+    5
+      Contrary to Quijote, we define the w+ cosmology as the one with the less negative w value.
+    6
+      While this is a standard assumption, the actual shot-noise might tend to be sub-Poissonian as the halos used in
+this work fall into the higher-mass end. The authors thank the Referee for pointing this out.
+    7
+      The signal-to-noise ratio drops below 0.5 beyond kmax = 0.3 h/Mpc for P0 .
+
+
+
+
+                                                        –5–
+      N-body suite            Cosmology            Varying parameter value      Number of realizations
+                                 Fiducial                      -                         14500
+                                   Ω+m                      0.3275                       1500
+                                   Ω−m                      0.3075                       1500
+                                   Ω+b                       0.051                       1500
+                                   Ω−b                       0.047                       1500
+                                   h+                       0.6911                       1500
+                                   h−                       0.6511                       1500
+                                   n+s                      0.9824                       1500
+         Quijote                   n−s                      0.9424                       1500
+                                   σ8+                       0.849                       1500
+                                   σ−                        0.819                       1500
+                               P 8
+                              ( mν )+++                       0.4                        1500
+                               ( mν )++
+                                P
+                                                              0.2                        1500
+                                ( mν )+
+                                 P
+                                                              0.1                        1500
+                         Fiducial (Zeldovich IC)               -                         1500
+                                   w+                       −0.95                        1500
+                                   w−                       −1.05                        1500
+                                 local+
+                                fNL                           100                        1500
+                                 local−
+                                fNL                          −100                        1500
+                                 equil+
+                                fNL                           100                        1500
+      Quijote-PNG                equil−
+                                fNL                          −100                        1500
+                                 ortho+
+                                fNL                           100                        1500
+                                 ortho−
+                                fNL                          −100                        1500
+                                                             Total                       47500
+
+                         Table 1: Organization of all realizations used.
+
+
+of P0 and P2 , and 1522 triangles for B0 . We subtract shot-noise from the monopole measurements,
+except for the fiducial measurements which are used for estimating the covariance. The Poisson
+shot-noise terms are 1/n̄ for P0 and n̄12 + P0 (k1 )+P0 (k
+                                                        n̄
+                                                           2 )+P0 (k3 )
+                                                                        for B0 (k1 , k2 , k3 ). Since the focus
+of this work is not on these conventional low-order correlation statistics, we do not show further
+details about these measurements; the reader may refer to [90, 94].
+
+
+3   From Dark Matter Halos to Persistence Diagrams
+
+At large scales, dark matter is organized in a cosmic web of clusters, filaments, and voids of
+different sizes and shapes [101]. The goal of our method is to characterize these cosmic structures
+by applying persistent homology to dark matter halo positions, then quantify the information
+content on parameters of the ΛCDM cosmological model and primordial non-Gaussianity.
+    The main concepts of a persistent homology computation can be summarized in simple words as
+follows. From a point cloud of halos, we build a series of simplicial complexes by adding simplices
+one after another according to their length scale. Each topological feature, as a “hole” in the series
+of complexes, only exists and “persists” over a continuous range of scales, since the simplices that
+assemble or destroy the feature have not been added at the two scales that define this range. We
+then collect this data from all topological features and construct a statistical summary informative
+for cosmology.
+   In this section, after reviewing basic topology, we explain the process described above in detail,
+in particular how diagrams of topological features are built from a halo catalog. While in this
+
+
+
+
+                                                    –6–
+Figure 3: Life of a topological feature. The blue point cloud represents projected redshift
+space positions of halos in a 300 × 300 × 100 (Mpc/h)3 subbox within a fiducial realization. We
+illustrate the “life” of an underdensity (enclosed by the red boundary) as a topological feature in
+the evolving simplicial complex as the filtration parameter ν grows (analogously the coarse-graining
+scale). Left: At a small scale, the simplicial complex contains none of the simplices that mark out
+the underdensity. Middle: At an intermediate scale, all the relevant edges have just been added.
+Born as a “hole” in the complex, the underdensity can be associated to a topological feature, a
+member of a homology class of 1-cycles. Right: At a later stage, the hole is completely filled with
+triangular faces—the feature has died.
+
+
+paper we work with simulated halos in a cubic box that might not be observationally realistic, we
+emphasize that our pipeline is also well-defined for actual data, e.g., galaxies in a lightcone with
+a given survey geometry and window function. Nevertheless, this work is a proof of concept that
+reveals the amount of information statistics from persistent homology can contain for cosmology,
+which serves as the basis for further developing parameter inference pipelines.
+
+3.1    Coarse-graining
+
+Before defining the kind of operations we would like to perform on a set of halos based on topology,
+we build the cosmologist’s intuition through coarse-graining concepts. As noted above, the large-
+scale structure of the universe is a complex hierarchy of clusters, filament loops, and cosmic voids
+across length scales. These physical objects naturally correspond to the features that arise from a
+topological computation on the 3-dimensional spatial distribution of halos (Figure 1). The multi-
+scale nature of the distribution implies that a feature may be distinguishable only within a restricted
+range of coarse-graining scales.8 For example, two clusters separated by a distance L will no longer
+be distinct once we coarse-grain to a length scale greater than L. Similarly, a cosmic void only
+appears when the tracers defining its boundary are connected, and it will diminish and ultimately
+vanish when its interior fills up as the length scale increases further. This interplay between the
+coarse-graining scale and the births and deaths of features is illustrated in Figure 3.
+   8
+      At this point we rely on an intuitive picture of coarse-graining. We define specific coarse-graining schemes
+(filtrations) in Section 3.3.
+
+
+
+
+                                                      –7–
+   Our approach in this work is to use persistent homology to track the distribution of topological
+features across length scales. The formalism of persistent homology lets us compute the statistics
+of the scales at which these features are created and destroyed (and the difference between these
+two, i.e., a given feature’s “persistence”).
+
+3.2     Topology of simplicial complexes
+
+Topology investigates the set of properties of a mathematical space that are preserved under con-
+tinuous deformations. To define a topological space for data represented as a point cloud, i.e., a
+set of discrete points, we seek a way of linking the points, embedding the data within a simplicial
+complex. A simplicial complex is an assembly of n-simplices which, in our 3-dimensional context,
+includes vertices (n = 0), edges (n = 1), triangles (n = 2), and tetrahedra (n = 3). For instance,
+consider four points where point A and point C are connected by a line segment, and point B and
+D are disconnected. We may define a simplicial complex as the set that includes all the simplices,
+i.e., the four vertices (A, B, C and D) and the one edge, AC. Subsets of this set are also simplicial
+(sub)complexes, e.g., the subset that contains only the four vertices. These sets are built to be
+closed under the intersection of simplices and under taking faces (e.g., if an edge is present, the two
+vertices making up its boundary are also present).
+    Given a simplicial complex built on a point cloud, we would like to identify deformation-invariant
+objects. This is done by defining linear operators ∂p that take a collection of p-simplices to its (p−1)-
+dimensional boundary. In words, a topological feature corresponds to a collection of p-simplices
+with vanishing boundaries that are not themselves the boundary of a collection of (p + 1)-simplices.
+The identification of a feature is done by finding the boundary of appropriate combinations of
+(p + 1)-simplices. In particular, it is useful to define the quotient group Hp ≡ ker ∂p /im∂p+1 ,
+i.e., the p-th homology group of the complex. Each element of Hp is an independent “hole” of
+dimension p. More formally, the elements of Hp are equivalence classes of p-cycles—collections of
+p-simplices with vanishing boundaries.9 The intuitive connection to deformation-invariance is that
+two cycles belonging to the same homology class, as an equivalence class, can deform into each
+other. Consequently, cycles that envelop distinct holes cannot be in the same homology class. As
+an explicit example, there are only three homology classes of 1-cycles in Figure 4 (two small holes
+adjacent to each other on the left, a bigger one on the right), while one may identify many closed
+paths that circle each of them. For clarity, we point out that the addition of a p-simplex leads to
+either the birth of a new homology class of p-cycles, or the death of an existing homology class of
+(p − 1)-cycles. We refer the reader to [102, 103] for more mathematical details.
+
+3.3     Coarse-graining via filtration
+
+A single simplicial complex is insufficient to encapsulate the step-by-step details of the coarse-
+graining procedure described earlier in Section 3.1. A family of complexes is required to capture
+the evolving topology through the coarse-graining scales. Such a family is called a filtration, with the
+coarse-graining scale represented by the non-negative filtration parameter, also called the filtration
+time, ν. The filtration parameter can be used to track the time νbirth at which a homology class
+    9
+     In plain language, a 0-cycle is a collection of connected simplices, a 1-cycle is a loop, and a 2-cycle is an enclosed
+cavity.
+
+
+
+
+                                                          –8–
+Figure 4: Emergence of topological features. A filtration is a nested family of simplicial
+complexes. Shown here is the simplicial complex at a particular filtration time in the α-DTMℓ-
+filtration of a point cloud (here we ignore the fact that vertices have non-trivial birth times and plot
+all of them for illustrative purposes). Vertices, edges, triangles, and tetrahedra (n-simplices) from
+the Delaunay triangulation of the point cloud are gradually added to the complex, at designated
+filtration times determined by their sizes and the distributions of their surrounding neighbors.
+Topological features as (p + 1)-dimensional holes, formally known as equivalence classes of p-cycles,
+emerge and vanish throughout the filtration.
+
+
+is born, and the time νdeath at which it dies later at a larger scale. The persistence νpersist is the
+difference between the two, i.e., νpersist ≡ νdeath − νbirth .
+    An intuitive example of a filtration is the Vietoris-Rips (VR) filtration. Let us consider a generic
+point cloud X embedded in a N -dimensional metric space equipped with a distance function d(x, y).
+The set of vertices of each simplicial complex in this filtration is the point cloud itself, X. The
+criterion to include an edge connecting two vertices is that their separation satisfies d ≤ 2ν. The
+intuitive picture here is that we can draw a growing N -ball of radius ν around each vertex. Any
+time when, or after, two balls touch, the associated edge is included in the simplical complex.
+Higher-dimensional simplices are included if all necessary faces are present. Although intuitive, the
+VR filtration does not suit our point clouds because the inclusion scheme is rather inefficient: as
+ν → ∞ there is an edge for every pair of vertices, a triangle for every triplet of vertices, and so
+on. The computational cost becomes prohibitively expensive for large datasets like ours. In the
+following, we focus on filtrations that are similar in spirit to the VR filtration, but computationally
+more efficient.
+
+α-filtration. Our method is based on the intuitive α-filtration [104]. In contrast with the VR
+filtration, the embedding of the point cloud is done via its Delaunay triangulation rather than
+to universally allow for an edge between any two vertices. Then, the simplicial complexes at
+
+
+
+
+                                                 –9–
+different times in an α-filtration are subcomplexes of the Delaunay complex [104].10 The appealing
+aspect of Delaunay subcomplexes is the dramatic reduction in the total number of simplices. This
+reduction offsets the computational overhead involved in finding these complexes, making the overall
+algorithm more computationally efficient than the VR filtration.11
+    The fact that every point is treated equally in the α-filtration, in the sense that it makes no
+difference to the algorithm whether or not a point is in a sparsely populated region, is perhaps an
+unappealing property. As an example, consider a large, empty void that dies at ν ′ . If we put a
+point in its center, the feature will die at ν ′ /2 instead. This is not desirable as this single point
+should be considered as an outlier, not impacting significantly the defining length scale of the void.
+That is to say, the α-filtration is not stable against the addition of outliers. In light of this, we
+introduce the α-DTMℓ-filtration.12
+
+α-DTMℓ-filtration. To lessen this disproportionate effect of outliers, the filtration time at which
+a simplex is added should be postponed depending on how much of an outlier each of the vertices
+involved is. Recall that, in the VR filtration, a 1-simplex is added when the imaginary balls around
+two vertices touch. In the α-DTMℓ-filtration [107], instead of using ν as the uniform radius, we
+employ the point-specific radius function
+
+                                             rx (ν) = (ν q − f (x)q )1/q ,                                        (3.1)
+
+i.e., the radius of the ball around point x at a given ν depends on a function f of the point itself, and
+a parameter q that controls the mixing between ν and f (x). The parameter q could be made tunable
+to investigate how to maximize (minimized) certain desired (undesired) aspects of the filtration.
+Here we choose q = 2 and devote a thorough investigation into an optimal choice to future work.
+Note that f (x) accounts for the “unimportance” of the point x and impedes the growth of its ball
+as shown in Figure 5. Hence, f (x) should take a large value for a halo that lives in a sparsely
+populated region, and vice versa. The Distance-to-Measure (DTM) function suits this purpose:
+                                                                                   1/p
+                                                          1     X
+                               f (x) = DTM(x) ≡                           ∥x − Xi ∥p                            (3.2)
+                                                          k
+                                                              Xi ∈Nk (x)
+
+where Nk (x) is the set of k-nearest neighbors to x, and p is a mixing parameter. For Eq. (3.1) to
+properly describe a radius, any point x is added to the simplicial complex at ν = f (x). As a result,
+   10
+       The Delaunay complex can be defined in the following way. Given a set of points X ⊂ Rd , the Voronoi cell of
+a point x ∈ X is defined as Vx = {y ∈ Rd | ||x − y|| ≤ ||z − y|| ∀z ∈ X}. Informally, Vx includes all points in Rd to
+which x is the nearest (or tied as the nearest) among all other points in X. The collection of these cells triangulates
+the space in which the point cloud is embedded and constitutes the Voronoi diagram of X. The Delaunay complex
+is defined via the Voronoi diagram by {σ ⊆ X | ∩x∈σ Vx ̸= ∅}.
+    11
+       This is related to the fact that the Delaunay triangulation is inherently geometric, as opposed to the VR complex
+in which the number of simplices is very large, yet many are “unphysical”.
+    12
+       Note that in a cosmological sense, no halo or galaxy is an “outlier”. Nevertheless, as we show below, introducing
+a weight on each point based on its neighbors effectively helps extract information from different scales. In fact, it
+is reasonable to expect that topological signals of interesting physics may be recovered more optimally by tuning a
+local bias-like parameter. For example, underdense features like voids are sensitive to diffuse sources such as massive
+neutrinos [105]. Moreover, it has been shown that it might be interesting to select outlier galaxies inside voids [106].
+Our approach can be modified to investigate these ideas in more detail; these studies are reserved for future work.
+
+
+
+
+                                                        – 10 –
+Figure 5: α-filtration vs. α-DTMℓ-filtration. Here we use as an example a 1-cycle (the
+circular loop) with an outlier (a point) in the center. Left: The growing ball around every point
+has a uniform radius that is equal to the filtration time ν. Right: Characterized by the Distance-
+to-Measure function f , the more outlying a point is, the more impeded the growth of its ball
+is. Therefore, edges and higher-dimensional simplices that trivialize this 1-cycle are added at
+postponed times, i.e., the 1-cycle survives longer. Hence, the α-DTMℓ-filtration is more stable
+against the addition of outliers.
+
+
+νbirth values of 0-cycles become nontrivial and contain information on the local density of the point
+cloud. As before, high-dimensional simplices are added when all faces are present.
+    Heuristically, DTM(x) calculates the average distance from x to its k-nearest neighbors when
+p = 1. Again, k and p are tunable parameters in principle. While we choose p = 2 in this
+work such that DTM(x) is the root mean square distance, it turns out that the nearest-neighbor
+parameter k significantly impacts the filtration. In Figure 6, we show snapshots of the simplicial
+complex at different times (early to late from left to right) in the filtration for k = 1, 15, and 60
+(top to bottom). Note that to fairly compare k values (snapshots in the same column), we must
+also vary the filtration time ν. This is because f (x) which controls the birth times of vertices
+increases monotonically with k, then in general birth and death times of all topological features are
+positively offset when a larger k is used. From the comparison, we observe that fewer small-scale
+features emerge across all stages in the filtration for a larger k, suggesting that a large-k filtration
+encompasses the persistent homology of large-scale features. This is no surprise, as increasing k
+effectively increases the average volume within which the algorithm explores for the densest regions
+to populate with simplices. Hence, when k is set to be larger, some regions are deemed no longer
+dense enough for early population, leaving space for larger holes (features) to emerge.
+    Given a single value of k, whether the features tracked are considered large depends on the
+volume and the number density of the point cloud. On this account, we vary k and make use of
+all the resulting filtrations to maximize the amount of topological information we extract. This is
+done by concatenating the data vectors, each from one filtration, which we discuss in the following
+sections.
+
+
+
+
+                                                – 11 –
+Figure 6: Effect of k on the α-DTMℓ-filtration. Left to Right: Early, middle, and late stages
+in the α-DTMℓ-filtration of a sample of Quijote halos (for clarity, all halos are plotted regardless
+of their birth times as 0-cycles). Top to Bottom: Increasing value of the nearest-neighbor parameter
+k. For a fair comparison between k values in each column, the filtration time ν at which we inspect
+the simplicial complex varies with k, since birth (and death) times of features are positively offset
+when a larger k is used. Across all stages, there are fewer small-scale 0- and 1-cycles in the larger-k
+setups. This suggests that a large-k filtration encompasses the persistent homology of large-scale
+topological features, and vice versa. We encourage the reader to watch the filtrations in action:
+https://youtu.be/_phgkiZmY0c.
+
+
+
+                                                – 12 –
+3.4       Persistence diagrams and images
+
+When applying persistent homology to 3-dimensional spatial distributions of dark matter halos, the
+outputs from a single filtration are three lists of (νbirth , νpersist ) pairs,13 one for each of the three
+homological dimensions. They can be presented in the form of persistence diagrams. In Figure 7,
+we show persistence diagrams representative of the fiducial Quijote halo catalogs along with their
+corresponding persistence images. A persistence image is obtained by first applying a smoothing
+kernel to every point in a persistence diagram, after which we discretize the birth-persistence plane
+and sum up all kernel contributions within each pixel. Given that most features are short-lived, we
+customarily weigh each point by its persistence to emphasize the more persistent features.
+   Persistence images are useful for intuitively understanding how changes in the point cloud, due
+to parameters relevant to cosmology in our context, affect the persistence diagrams and, thus,
+the topology. Specifically, for a parameter θ, we can calculate the difference between the mean
+persistence images from the “plus” (θ+ ) and “minus” (θ− ) cosmologies. In Figure 8, we show two
+examples: Ωm on the left and fNL local on the right, both for 1-cycles. The most distinctive change in
+
+the number of features is observed within a range of birth scales. For instance, when Ωm is above
+(below) its fiducial value, more (fewer) 1-cycles tend to form at around 27 Mpc/h and fewer (more)
+                                                                               local .14 This motivates
+at scales smaller or larger than that. The opposite behavior is observed for fNL
+the construction of a data vector of feature counts in birth (and death) scale bins as our statistic,
+which we explain in the next section.
+
+Software. We use the public code15 developed in [79] to compute α-DTMℓ-filtrations of halo cat-
+alogs, as detailed in the previous sections, and GUDHI [108] to perform the persistence calculations.
+
+
+4        From Persistence Diagrams to Summary Statistic
+
+A persistence diagram needs to be vectorized to generate a data vector, as it is a 2D multiset
+with a variable number of points that are not ordered. The vectorization results in a summary
+statistic, which is generally a compression of the information originally contained. It is desirable that
+the compression remains sensitive to cosmological parameter changes, i.e., it retains a substantial
+amount of cosmological information.
+    One may flatten the persistence images and concatenate the resulting vectors, but it is unclear
+if this statistic has a Gaussian likelihood which is required for our Fisher forecast setup16 . The
+high dimensionality (number of pixels) of the images also poses difficulties in the estimation of
+the covariance matrix and the convergence of the forecast constraints due to the limited number
+of available simulations. Hence, we attempt to devise simpler summary statistics. The triangular
+pattern of each persistence diagram (Figures 7 and 8) suggests the following statistics recently
+studied in the literature:
+    13
+      We exclude short-lived topological features with νpersist ≤ 0.01 Mpc/h.
+    14
+      Plots for all parameters and homological dimensions are shown in Appendix E.
+   15
+      https://gitlab.com/mbiagetti/persistent_homology_lss
+   16
+      See [80] for a less restricted scenario of using persistence images in combination with a convolutional neural
+network model for cosmological parameter estimation.
+
+
+
+
+                                                      – 13 –
+Figure 7: Persistence diagrams and images. Top Panel: Persistence diagrams of 0-, 1-, and
+2-cycles from the filtration of a Quijote halo catalog with k = 15 at the fiducial cosmology. Np is
+the total number of p-cycles in each diagram, i.e., the total number of p-cycles once existed in the
+filtration. Bottom Panel: Corresponding persistence images from “pixelating” the diagrams.
+
+
+      • 1-dimensional curves: In [79], we scanned each persistence diagram in different directions,
+        thereby defining empirical distribution functions of ν. For example, along the birth axis, the
+        function is the count of all features born at scales larger than ν.
+
+      • Histograms of births and deaths: In [84], we used histograms of νbirth and νdeath values. These
+        are summaries simpler than the 1-dimensional curves since counts from different scales are
+        not stacked, and their responses to changes in the cosmology typically converge better.
+
+   In other contexts, there exist several proposals for this map [109–112]. A promising approach
+would be to parameterize the map by a neural network, imposing that the network is permutation
+invariant to the input topological features [113, 114]. While these techniques require detailed
+investigations of their applications to real datasets, in this paper, we opt for the simpler approach
+of constructing histograms, being aware that this method of compression is likely suboptimal.
+
+4.1     Description of the data vector
+
+We build our histogram data vector by counting the number of features in birth and death bins.
+From a single filtration, a set of 6 histograms17 can be obtained: 3 from the birth distributions of
+  17
+     Note that the minimum and maximum scales probed by these histograms are fixed regardless of the cosmology,
+and we remove values above the 99.9th percentile (also death values below the 0.01th percentile) to avoid effects due
+to sparsity.
+
+
+
+
+                                                      – 14 –
+                                                             1-cycles
+                                           −                                                      local+    local−
+                                     Ω+
+                                      m − Ωm          ×102                                       fNL     − fNL     ×102
+                                                             5                                                            5
+                              15                                                            15
+
+        Persistence (Mpc/h)
+
+
+
+
+                                                                      Persistence (Mpc/h)
+                              10                                                            10
+                                                             0                                                            0
+                               5                                                             5
+
+                                                             −5                                                           −5
+                               0                                                             0
+                                   15      30    45                                              15      30    45
+                                    Birth (Mpc/h)                                                 Birth (Mpc/h)
+
+
+
+Figure 8: Persistence image difference. To intuitively understand how a cosmological param-
+eter impacts the topology, we can compare two persistence diagrams by computing the persistence
+image difference. Here, with k = 15 and using 100 catalogs, we subtract the mean persistence image
+of the minus (θ− ) cosmology from that of the plus (θ+ ) cosmology for Ωm (left) and fNL
+                                                                                       local (right).
+                                                         +
+Regions in blue (red) have more (fewer) 1-cycles in the θ cosmology. The triangular pattern hints
+that statistics built from birth and death counts would be informative about the cosmology. Plots
+for all parameters and homological dimensions are shown in Appendix E.
+
+
+the 0-, 1-, and 2-cycles (B0 , B1 , B2 ), and the other 3 from the death distributions (D0 , D1 , D2 ).
+As elaborated in Section 3.3, we vary the nearest-neighbor parameter k (Eq. (3.2)) and use the
+joint vector of 6 sets of these histograms, corresponding to 6 values of k ∈ {1, 5, 15, 30, 60, 100}.
+Although this construction of the data vector is intentionally kept generic and not optimized for
+the tightest possible constraints in this work, we can show that each component contributes a fair
+amount of independent information, see Appendix C.
+   For visualization, we show
+
+   • The full data vector for the fiducial cosmology (Figure 9), which is the concatenation of the
+     6 × 6 = 36 histograms, averaged over 14500 realizations.
+
+   • The subset of the data vector corresponding to k = 15 for the fiducial and varying Ωm
+     cosmologies (Figure 10), averaged over 14500 (fiducial) and 1500 (Ω±     m ) realizations. As shown
+     in the figure, within each k, the histograms of birth and death values are concatenated in the
+     order of {B0 , B1 , B2 , D0 , D1 , D2 }. The lower panel shows the percentage deviations of the Ω±m
+     cosmologies from the fiducial one.
+
+We have tested various data vector sizes, ranging from 360 to 11160 for the total number of bins Nbin .
+We choose Nbin = 1260 for our reported results, a decision driven by balancing the Gaussianity of
+our statistic, the convergence of the numerical derivatives, and the need for powerful constraints.
+We expand on these considerations in Appendix B.
+
+
+
+
+                                                                 – 15 –
+                                                                  Fiducial
+                10000              k=1         k=5         k = 15           k = 30         k = 60          k = 100
+Count
+
+
+
+
+                        5000
+
+
+
+                           0
+                               1         210         420             630             840            1050             1260
+                                                                    Bin #
+
+Figure 9: Full data vector. Displayed here for the fiducial cosmology is our full data vec-
+tor, which is the concatenation of 6 sets of histograms with the nearest-neighbor parameter
+k ∈ {1, 5, 15, 30, 60, 100}. For each value of k, that subset of the data vector contains a total
+of 6 histograms: one from the birth distribution and another from death for each of the 3 homo-
+logical dimensions.
+
+
+
+
+                                                                    k = 15
+                        4000
+                                                                                                             Fiducial
+                        3000                                                                                 Ω+
+                                                                                                              m
+        Countθ
+
+
+
+
+                                                                                                             Ω−
+                                                                                                              m
+                        2000
+
+                        1000
+ Countθ /CountFid − 1
+
+
+
+
+                          0
+                        10%
+                           0
+               −10%
+                               1   B0    35     B1   70      B2      105      D0     140     D1      175      D2        210
+                                                                    Bin #
+
+Figure 10: Varying cosmologies. Top Panel: Subset of the full data vector corresponding to
+k = 15 for the fiducial (dotted black), Ω+                      −
+                                         m (solid green), and Ωm (solid red) cosmologies, averaged
+                                  ±
+over 14500 (fiducial) and 1500 (Ωm ) realizations. Vertical dashed lines separate histograms of the
+birth (Bp ) and death (Dp ) values for p-dimensional cycles. Bottom Panel: Percentage deviations
+of the Ω±
+        m cosmologies from the fiducial one.
+
+
+
+
+                                                              – 16 –
+                                                            Fiducial
+                                                                                        k=1              k = 30
+        10000                                                                           k=5              k = 60
+                                                                                        k = 15           k = 100
+         7500
+Count
+
+
+
+
+         5000
+
+         2500
+
+            0
+                1   B0     35      B1       70         B2      105      D0      140      D1        175   D2        210
+                                                              Bin #
+
+
+Figure 11: Varying k values. Displayed here are subsets of the fiducial full data vector corre-
+sponding to k = 1, 5, 15, 30, 60, and 100. The skewness of the histograms varies and the peaks
+become lower as k increases.
+
+
+Impact of k. In Figure 11 we compare the 6 sets of histograms from filtrations with the different
+values of the nearest-neighbor parameter k. As k increases, the skewness of the histograms varies,
+and the peaks become lower in accordance with Figure 6 that a larger k value causes persistent
+homology to track fewer but larger-scale features. Note that the histograms do not share the
+same bins across k values, otherwise we would also see the peaks shift towards the larger-scale
+bins (to the right) as k increases. The 6 values of k are chosen empirically, while in theory the
+information maximizing combination of values can be found from optimizing the forecast result,
+which is addressed in the related work [115].
+
+4.2       Covariance
+
+In Figure 12 we show the correlation matrix of our full data vector at the fiducial cosmology, defined
+as
+                                                   Cij
+                                         rij = p          ,                                      (4.1)
+                                                  Cii Cjj
+where Cij is the covariance matrix
+                                            N
+                                            Xsim
+                                    1
+                         Cij =                     [(DFid )i − ⟨DFid ⟩i ][(DFid )j − ⟨DFid ⟩j ],               (4.2)
+                                 Nsim − 1
+                                            N =1
+
+with Nsim = 14500 fiducial realizations and ⟨DFid ⟩ being the mean data vector over those realiza-
+tions. The diagonal stripe pattern in the figure is due to the fact that the 36 peaks (one from each
+histogram) in the data vector shift together across bins. For example, delays in the births of 0-cycles
+in general cause delays in their deaths, as well as in the births and deaths of higher-dimensional
+
+
+
+
+                                                         – 17 –
+             1260                                                                                                 1.0
+
+         k = 100
+
+             1050
+
+         k = 60                                                                                                   0.5
+
+              840
+
+         k = 30
+ Bin #
+
+
+
+
+              630                                                                                                 0.0
+                                                                                                                        √ Cij
+         k = 15                                                                                                           CiiCjj
+
+              420
+
+          k=5                                                                                                     −0.5
+
+              210
+
+          k=1
+
+                   1                                                                                              −1.0
+                       1         210         420            630            840            1050             1260
+                           k=1         k=5         k = 15         k = 30         k = 60          k = 100
+                                                        Bin #
+
+Figure 12: Correlation matrix of the full data vector at the fiducial cosmology. Positive
+(negative) correlations are in blue (red). Each block, outlined by dashed lines, contains the cor-
+relations between two subsets of the data vector corresponding to the same or different k values.
+Larger-k bins are more strongly correlated, indicating that the amount of information extractable
+is saturating.
+
+features. We also observe that the larger k bins are more strongly correlated, indicating that the
+amount of information extractable by including more larger values of k is getting saturated.
+
+5        From Summary Statistic to Cosmological Constraints
+
+The Quijote suite is designed for numerically evaluating the information content of a summary
+statistic via the Fisher information matrix at the fiducial cosmology. If the likelihood function of a
+data vector D is Gaussian, the Fisher matrix elements are18
+                                                           T
+                                                    Fij = D,θ i
+                                                                C −1 D,θj                                                       (5.1)
+    18
+     Note that we conservatively neglect the dependence of the covariance matrix on the parameters, see footnote 9
+of [84] for a detailed explanation.
+
+
+
+
+                                                             – 18 –
+where C −1 is the inverse of the covariance matrix, and D,θi denotes the derivative of D with re-
+spect to the parameter θi . C −1 and D,θi are computed numerically using the fiducial and varying
+cosmologies of Quijote, respectively.19 Therefore, this symmetric matrix is of the size 7 × 7 for
+                                                              P
+our 7 cosmological parameters θcosmo = {Ωm , Ωb , h, ns , σ8 , mν , w}. When considering primordial
+non-Gaussianity, the size is 10 × 10, since we include all three shapes at the same time and also
+marginalize over the cosmological parameters. The diagonal of the inverse of the Fisher matrix
+contains (the lower bound on) the variance of, hence the marginalized constraints on, the parame-
+ters.
+   The focus of this work is to compare persistent homology against the conventional low-order
+correlation functions, i.e., the 2- and 3-point statistics. Specifically, the two data vectors are, respec-
+tively, from our persistent homology pipeline (hereafter labeled as P H) and from combining, up to
+k = 0.3 h/Mpc, the power spectrum monopole and quadrupole as well as the bispectrum monopole
+(labeled as P0 + P2 + B0 ). We run consistency checks on our results and various components of the
+calculations, which we present in Appendix B.
+
+5.1     Constraints on cosmological parameters
+
+We show the confidence contours for the cosmological parameters in Figure 13.20 Note that each
+contour is marginalized over all other cosmological parameters, and the three primordial non-
+Gaussianity amplitudes are fixed at their fiducial value 0. The 1-σ constraints from persistent
+homology are tighter than those from the joint power spectrum and bispectrum statistic by 23−50%
+for all cosmological parameters except Ωm .21 We claim that this is primarily due to persistent
+homology assessing information of high-order correlators, as topological features are built from
+associating multiple points.
+    While it is unclear how we can assign to our summary statistic the precise range of scales
+it probes, we propose that most of the information comes from scales above 2π/(0.3 h/Mpc) =
+21 Mpc/h, which is the minimum scale for the joint power spectrum and bispectrum statistic. This
+is evident when examining the persistence images in Figure 7, where most 1- and 2-cycles are born
+between νbirth ≈ 25 − 40 Mpc/h. As detailed in Section 3.3, νbirth corresponds to half of the length
+of the 1-simplex22 that triggers the creation of a cycle. The length scale of the created cycle is
+expected to be larger than that of the 1-simplex; therefore, the scales of the 1- and 2-cycles from
+which we extract information exceed 2νbirth ≈ 50 − 80 Mpc/h.23 For the 0-cycles, νbirth instead
+                                                                                       −1              −Nbin −2 −1
+   19
+      We include the Hartlap factor [116] for the unbiased estimation of C −1 , i.e., Cunbiased = Nsim
+                                                                                                     Nsim −1
+                                                                                                               C . For
+the numerical estimation of D,θi , see Appendix A.
+   20
+      The attentive reader may have noticed that we are allowing for unphysical negative values of the total neutrino
+mass. To obtain physically sound posteriors from sampling, one should discard samples that are associated with
+negative total neutrino masses. This implies that the resulting posteriors will all be non-Gaussian, strictly speaking.
+In practice, we have verified that this procedure modifies the contours for other parameters only negligibly. Therefore,
+we stick to symmetrical distributions of total neutrino mass values for illustrative purposes.
+   21
+      The percentage improvement is defined as (σP0 +P2 +B0 − σP H )/σP0 +P2 +B0 .
+   22
+      The filtration parameter ν is roughly the radius of the growing ball around each vertex, and a 1-simplex is added
+to the simplicial complex when two balls touch.
+   23
+      Strictly speaking, since νbirth values in an α-DTMℓ-filtration are delayed by the DTM function (Eq. 3.1), the
+range of minimum scales quoted here is an overestimation. Nevertheless, as stated the length scales of the cycles are
+expected to be larger than 2νbirth , and there is also a considerable margin between 21 and 50 Mpc/h.
+
+
+
+
+                                                        – 19 –
+                                                                                               PH
+                 06
+               0.
+
+
+
+
+                                                                                               P0 + P2 + B 0
+      Ωb
+                 05
+               0.
+
+
+
+
+                                                                                               P H + P0 + P2 + B 0
+                 04
+               0.
+                  7
+                0.
+      h
+                  6
+                0.
+               1.
+                 00
+      ns
+                 95
+               0.
+                 85 90
+               0. 0.
+                 84
+      σ8
+               0.
+                 83
+               0.
+     mν (eV)
+                 1 2
+               0. 0. 8
+                  0
+                0.
+   P
+                  1
+                0.
+           −
+                  9
+                0.
+           −
+      w
+                  0
+                1.
+           −
+                  1
+                1.
+           −
+
+
+
+                          0
+
+                               5
+
+                                       0
+                                      04
+
+
+                                           05
+
+
+                                                 06
+                                                   6
+
+
+                                                           7
+
+
+                                                                90
+
+                                                                     95
+
+                                                                           00
+
+                                                                                82
+
+                                                                                     83
+
+                                                                                          84
+
+                                                                                                −.85
+                                                                                                     1
+
+
+                                                                                                          0
+
+
+                                                                                                               1
+
+                                                                                                                    1
+
+                                                                                                                         0
+
+                                                                                                                              9
+                         30
+
+                              32
+
+                                    35
+
+
+
+
+                                                0.
+
+
+                                                       0.
+
+
+
+
+                                                                                                  0.
+
+
+                                                                                                          0.
+
+
+                                                                                                               0.
+
+                                                                                                                    1.
+
+                                                                                                                         1.
+
+                                                                                                                              0.
+
+                                                                                                 P
+                                   0.
+
+
+                                           0.
+
+
+                                                0.
+
+
+
+
+                                                               0.
+
+                                                                     0.
+
+                                                                          1.
+
+                                                                                0.
+
+                                                                                     0.
+
+                                                                                          0.
+
+                                                                                                0
+
+
+
+
+                                                                                                                    −
+
+                                                                                                                         −
+
+                                                                                                                              −
+                         0.
+
+                              0.
+
+                                   0.
+
+
+
+
+                              Ωm           Ωb          h              ns              σ8                 mν (eV)         w
+
+
+Figure 13: Confidence contours for cosmological parameters. A comparison of the
+marginalized contours marking the 68% and 95% confidence regions from persistent homology
+(P H), redshift space halo power spectrum monopole and quadrupole and bispectrum monopole
+(P0 + P2 + B0 ), and combining the two (P H + P0 + P2 + B0 ). The degeneracy directions differ for
+the two statistics, and as a result contours from combining are considerably more constraining for
+most of the parameters.
+
+
+
+
+                                                               – 20 –
+                                                                       PH
+                                                                       P0 + P2 + B 0
+                                                                       P H + P0 + P2 + B 0
+                        0
+                      50
+              equil
+             fNL
+                       0
+                       0
+                      50
+                  −
+                       0
+                      20
+              ortho
+             fNL
+                       00
+                      20
+                  −
+
+
+                            0
+
+
+                                  0
+
+
+
+                                            0
+
+
+                                                   0
+
+                                                         0
+
+
+                                                                 0
+
+
+                                                                        0
+
+
+                                                                                 0
+
+
+
+                                                                                            0
+                            20
+
+
+
+
+                                          20
+
+
+                                                 50
+
+
+
+
+                                                                 50
+
+
+                                                                       20
+
+
+
+
+                                                                                          20
+                           −
+
+
+
+
+                                                −
+
+
+
+
+                                                                      −
+
+
+
+                                  local                  equil                  ortho
+                                 fNL                    fNL                    fNL
+
+Figure 14: Confidence contours for primordial non-Gaussianity amplitudes. A compar-
+ison of the marginalized contours marking the 68% and 95% confidence regions from persistent
+homology (P H), redshift space halo power spectrum monopole and quadrupole and bispectrum
+monopole (P0 + P2 + B0 ), and combining the two (P H + P0 + P2 + B0 ).
+
+
+corresponds inversely to the number density around a halo. Given that from Figure 7 most 0-
+cycles are born between νbirth ≈ 20 − 25 Mpc/h, they are consistent with information from scales
+≳ 21 Mpc/h.24 .
+    Another observation is that the parameter degeneracies for our statistic are in directions fairly
+different from those for the joint power spectrum and bispectrum statistic. This implies that we
+can break degeneracies by combining the two statistics and obtain constraints that are tightened
+by 12 − 33%. We show the contours from combining in orange in the same Figure and summarize
+all 1-σ constraints in Table 2. Here we point out a few major observations:
+  24
+     The analysis here focuses on values from Figure 7 where the nearest-neighbor parameter is k = 15. Yet the
+argument applies to the other k values, except for the 0-cycles from k = 1 and 5, which indeed have small νbirth
+values. However, there is no cause for alarm, as they contribute only limitedly to our data vector (see Appendix C).
+
+
+
+
+                                                       – 21 –
+      • P H shows stronger degeneracies in the σ8 -Ωm , h-Ωm , and w-Ωm planes with respect to P0 +
+        P2 + B0 . This might be due to the fact that persistent homology is more sensitive to the local
+        number density of points (or more specifically the inter-halo distance), which changes in a
+        degenerate way for these parameters.
+
+      • P H shows weaker degeneracies in the σ8 -w, Ωb -h, and Ωb -ns planes. They allow for the gains
+        in constraining power from combining the statistics and deserve future investigations.
+                                           P
+      • Overall, constraints on σ8 , w and mν are considerably improved with respect to P0 +P2 +B0 .
+        We reiterate that given the simplistic setup, these constraints should not be taken at face
+        value, but only in the relative sense. Nevertheless, especially in the case of massive neutrinos,
+        such an improvement may be expected given the higher sensitivity of our statistic to mildly
+        non-linear scales, as noted above.
+
+5.2     Constraints on primordial non-Gaussianity
+
+We show the confidence contours for the primordial non-Gaussianity amplitudes in Figure 14. Each
+contour is marginalized over all cosmological parameters and the one primordial non-Gaussianity
+amplitude remaining. While the volume of the Quijote catalogs is insufficient to give interest-
+ing constraints for these non-Gaussianity shapes, our analysis sheds light on whether a summary
+statistic that contains information of high-order correlators helps for the equilateral and orthogonal
+shapes, which do not have a strong scale dependence at large scales unlike the local one (see [14]
+for a recent review on the effect of primordial non-Gaussianity on biased tracers). We observe in
+                                                                                  equil      ortho . On
+Figure 14 that constraints from persistent homology are indeed tighter for fNL          and fNL
+the other hand, fNLlocal is as expected best constrained by the joint power spectrum and bispectrum
+
+statistic, since most information is in the large scales, while there are only so many large-scale
+holes for persistent homology to track. As for breaking parameter degeneracies, combining the two
+statistics tightens the constraints by 11−17%, which are more modest improvements in comparison
+to those for the cosmological parameters.
+
+
+6     Conclusions and Future Directions
+
+In a series of recent papers [79, 80, 84], we have explored a class of summary statistics based on
+persistent homology, a formalism within the field of computational topology, which we customize for
+quantifying the morphology of the cosmic web as a distribution of clusters, loops, and voids across
+scales. In this work, with a histogram-based statistic, we have measured its information content
+through a Fisher analysis and reported constraints on cosmological parameters and primordial
+non-Gaussianity amplitudes.
+   We have presented a comparison between these constraints from persistent homology and those
+from statistics currently used in cosmological survey analyses, namely the power spectrum and the
+bispectrum. We have found that persistent homology outperforms the conventional statistics for
+8 out of the 10 parameters by margins of 13 − 50%. Combining the methods breaks degeneracies
+between parameters and further tightens the constraints. We claim that this is expected, since
+persistent homology probes high-order correlations complementary to the 2- and 3-point statistics
+
+
+
+
+                                                  – 22 –
+       θ         Fiducial          PH                   P0 + P2 + B0          P H + P0 + P2 + B0
+     Ωm         0.3175           ±0.012                    ±0.010                   ±0.008
+     Ωb         0.049            ±0.003                    ±0.004                   ±0.002
+      h         0.6711           ±0.029                    ±0.040                   ±0.022
+     ns         0.9624           ±0.024                    ±0.031                   ±0.019
+     σ8         0.834            ±0.005                    ±0.008                   ±0.004
+  P
+    mν (eV)        0             ±0.034                    ±0.063                   ±0.030
+     w            −1             ±0.051                    ±0.101                   ±0.042
+      local
+     fNL            0             ±69                       ±36                      ±30
+      equil
+     fNL            0             ±142                      ±233                     ±126
+      ortho
+     fNL            0             ±61                       ±70                      ±51
+
+Table 2: 1-σ constraints. 1-σ Fisher constraints from persistent homology (P H), redshift space
+halo power spectrum monopole and quadrupole and bispectrum monopole (P0 + P2 + B0 ), and
+combining the two (P H + P0 + P2 + B0 ). These results are for a 1 (Gpc/h)3 volume at z = 0.5 for
+tracers with a number density of n̄ ≈ 9.88×10−5 (h/Mpc)3 . The cosmological parameter constraints
+are marginalized over all parameters except the three primordial non-Gaussianity amplitudes, which
+are set to 0. Constraints on primordial non-Gaussianity amplitudes are marginalized over all
+parameters.
+
+
+through topological features constructed from many vertices. Our results strongly motivate further
+investigations of utilizing persistent homology in constraining parameters with actual survey data.
+   In this perspective, this work suggests several directions for future work:
+
+   • Maximizing information. Data compression with persistent homology is subject to various
+     choices leading to the final summary statistic. There is the freedom to choose a specific filtra-
+     tion, set the hyperparameters within the filtration, and then define a vectorization strategy.
+     Many of these are “discrete” choices, i.e., there are finitely many options in, e.g., choosing
+     a particular filtration or vectorization. There are also hyperparameters to fine tune, such
+     as the nearest-neighbor parameter k relevant to this work. To determine the best choices
+     and values, we should optimize the analysis pipeline for maximized information, by defining
+     a well-behaved figure of merit that measures the information content, and an algorithm to
+     update the pipeline towards the optimal compression. Then it seems natural to use (the neg-
+     ative of) the Fisher information as the loss function of a neural network that parameterizes
+     the pipeline, as proposed in the recent work [117]. We are currently implementing similar
+     methods to optimize the mixing parameters q and p in the α-DTMℓ-filtration [115].
+
+   • Inference pipeline. The Fisher constraints obtained in this work are only parameter uncer-
+     tainty estimates. When analyzing real data, we would want to infer parameter values from
+     our summary statistic measured on the dataset. As a recent example, [80] implemented a
+     pipeline utilizing a convolutional neural network model to map persistence images to σ8 and
+     Ωm , and the result is encouraging and in agreement with ours. However, to include many
+     more parameters for a full-fledged pipeline appears computationally infeasible, as it would
+
+
+
+
+                                               – 23 –
+     require an enormous number of simulations, either for the training dataset or for numerically
+     evaluating the likelihood function in a more standard setup. While this has always been a
+     problem for any simulation-based inference approaches like ours, we suggest mitigating it by
+     employing persistent homology for data compression. For instance, it may be as reasonably
+     effective but overall much less costly, to first calculate persistence diagrams and then to use
+     them as inputs for a much smaller machine learning model, than to have a huge model trained
+     directly on catalogs each containing hundreds of thousands of halo positions. Additionally,
+     various stability theorems state that persistent homology outputs are stable against small per-
+     turbations in the input data [118], which may justify the use of fast simulations to drastically
+     reduce computational time. To summarize, we propose incorporating persistent homology
+     into inference pipelines for increased efficiency.
+
+   • Realistic galaxy survey data. The construction of our statistic from persistent homology
+     is well-defined and can be readily applied to any cosmological point cloud simulated in a box,
+     such as a galaxy catalog at a particular redshift. However, in reality, galaxies are observed in
+     lightcones and each survey is characterized by its geometry and systematics. As an example,
+     analyses of the BOSS survey data are plagued by so-called fiber collisions, which affect the
+     determination of redshifts and, consequently, the modeling of the galaxy redshift space power
+     spectrum [119]. On the other hand, persistent homology might be insensitive to certain
+     systematics; we expect those that merely cause slight displacements of galaxies at the map
+     level will not significantly affect our statistic, thanks to the stability theorems mentioned
+     earlier. However, other ones that lead to systematic removal or addition of vertices could
+     have substantial, unmitigable impacts. In general, a thorough survey-specific study of the
+     systematics is necessary when working with real data. Moreover, it might be beneficial to
+     characterize in detail our framework as a function of galaxy properties, such as luminosity,
+     color, and mass, and determine the effects of assembly bias on our statistic.
+
+   As a final comment, we must be aware that our method suffers the same challenge of robustness
+that all simulation-based methods do: the information we extract from a model is only as reliable as
+the simulations themselves are, and it is difficult to distinguish cosmological from non-cosmological
+information at scales close to the accuracy scale of the simulations. This problem is likely worsened
+when we include baryons. A recent example in [41], where convolutional neural networks are trained
+on gas temperature maps for cosmological parameter inference, found that a network trained on
+one simulation, the IllustrisTNG [120], fails dramatically when applied to maps generated from
+another simulation suite, the simba simulations [121].
+
+Acknowledgements
+
+The authors thank Emilio Bellini and Juan Calles for their help in testing the galaxy mock catalogs,
+which did not make the final cut of this project as explained in Appendix D. The authors thank
+William Coulton for discussions on the convergence of Fisher forecasts. The work of J.H.T.Y.
+and G.S. is supported by the U.S. Department of Energy, Office of Science, Office of High Energy
+Physics under Award Numbers DE-SC-0023719 and DE-SC-0017647. M.B. is supported by the
+Programma Nazionale della Ricerca (PNR) grant J95F21002830001 with title “FAIR-by-design”.
+
+
+
+
+                                               – 24 –
+    Numerical computations were performed 1) under the NWO project “Topological echoes of
+primordial physics in cosmological observables.” on the Dutch National Computing facilities, and
+2) using the computing resources and assistance of the University of Wisconsin-Madison Center for
+High Throughput Computing (CHTC) [122] in the Department of Computer Sciences. The CHTC
+is supported by UW-Madison, the Advanced Computing Initiative, the Wisconsin Alumni Research
+Foundation, the Wisconsin Institutes for Discovery, and the National Science Foundation, and is
+an active member of the OSG Consortium, which is supported by the National Science Foundation
+and the U.S. Department of Energy’s Office of Science.
+
+
+A     Numerical Derivatives
+
+The data vector derivatives required for the Fisher matrix (Eq. (5.1)) are computed via the finite
+difference scheme:
+                                             ⟨Dθ+ ⟩ − ⟨Dθ− ⟩
+                                       D,θ =                                                (A.1)
+                                                   ∆θ
+where ⟨Dθ± ⟩ are the mean data vectors from the varying cosmologies for the parameter θ, averaged
+over the 1500 realizations. Eq. (A.1) is used for all cosmological and primordial non-Gaussianity
+                    P
+parameters but not     mν , for which we use
+
+                          ⟨DP mν =0.4 ⟩ − 12⟨DP mν =0.2 ⟩ + 32⟨DP mν =0.1 ⟩ − 21⟨DP mν =0 ⟩
+             D ,P m ν =                                                                         (A.2)
+                                                      12(0.1)
+
+instead, as advised in [88]. ⟨DP mν =0 ⟩ is measured from the fiducial simulations with Zeldovich
+initial conditions in consistency with the other quantities involving massive neutrinos. We plot the
+derivatives in Figure 15.
+
+
+B    On Choice of Nbin and Fisher Analysis Consistency Checks
+
+Unlike the power spectrum and the bispectrum, our statistic that supposedly probes a range of
+high-order correlators is not explicitly constrained by a low number of modes, and we may capture
+more information by having more bins in our data vector, until the point where the gain in signal
+is outweighed by the amount of noise introduced (Figure 16). In other words, increasing Nbin leads
+to tightened parameter constraints that are also generally less converged, given that the number
+of realizations available is limited. On the other hand, our way of estimating the Fisher matrix
+(Eq. (5.1)) requires that our statistic has a Gaussian likelihood. Since our data vector is built from
+feature counts, it will deviate from Gaussianity if the counts are low for a sufficiently large Nbin .
+   All things considered, we find Nbin = 1260 to be a suitable choice for making our point that
+persistent homology yields powerful statistics, as well as for trustworthy forecast estimates. We
+report on the following consistency checks:
+
+Gaussianity.    We perform two tests:
+
+    1. Kolmogorov-Smirnov test: This test checks the Gaussianity of each bin. We draw 50 random
+       realizations and average over 20 draws. For all parameters, we find that > 96% of all the
+
+
+
+
+                                                 – 25 –
+                                                                   k = 15
+                1.0
+
+
+                0.5
+D,θ (scaled)
+
+
+
+
+                0.0
+
+
+               −0.5                                                                                                      local
+                                                                                            Ωm           σ8             fNL
+                                                                                                         P
+                                                                                            Ωb                mν         equil
+                                                                                                                        fNL
+                                                                                            h            w               ortho
+                                                                                                                        fNL
+               −1.0                                                                         ns
+
+                      1   B0      35          B1     70      B2      105     D0     140          D1      175       D2            210
+                                                                    Bin #
+
+
+Figure 15: Numerical derivatives of the data vector. The numerical derivatives (k = 15)
+displayed here are scaled between [−1, 1] for illustrative purposes.
+
+
+                                                                    Nderiv = 1500 (reported)
+                                      0.020
+                                                                    Nderiv = 6000 (extrapolated)
+
+                                      0.015
+                               σ Ωm
+
+
+
+
+                                      0.010
+
+                                      0.005
+                                          360 1260        3600      5400    7200     9000        10800
+                                                                     Nbin
+
+Figure 16: Diminishing marginal return in information with Nbin . Here we show, taking
+Ωm as an example, that the 1-σ marginalized constraint tightens and eventually plateaus as we
+use more bins in our data vector. The blue line is (would be) the reported constraint from using
+all the existent 1500 realizations in the estimation of the derivatives, while the orange marks
+the extrapolated constraint if 6000 realizations were available, as explained in Appendix B. The
+dashed line marks our final choice of Nbin = 1260, which is conservatively decided to preserve the
+Gaussianity of the statistic and warrant that the constraints are reasonably converged.
+
+
+                1260 bins pass the test within the 95% confidence interval. We also visually inspect the bins,
+                and the histograms for 20 randomly selected bins are presented in Figure 17.
+
+
+
+
+                                                                 – 26 –
+             Bin 120             Bin 141            Bin 161              Bin 287             Bin 319
+
+
+
+
+             Bin 345             Bin 400            Bin 426              Bin 467             Bin 495
+
+
+
+
+             Bin 511             Bin 550            Bin 632              Bin 789             Bin 918
+
+
+
+
+             Bin 959             Bin 964            Bin 989             Bin 1076            Bin 1235
+
+
+
+
+Figure 17: Gaussianity of each bin. Displayed here are histograms for 20 bins, each randomly
+selected from the full fiducial data vector and containing 14500 data points. Dashed lines in red
+are Gaussian fits. Visually there is no significant deviation from Gaussianity.
+
+
+  2. Henze-Zirkler multivariate normality test [123]: We implement this more general test that
+     takes into account the Gaussianity across bins, using the pingouin library. Our data vector
+     passes the test within the 95% confidence interval for all parameters.
+
+   As previously mentioned, non-Gaussianity arises from low feature count, and in practice we may
+manually remove low-count bins to push for a larger Nbin . However, we have chosen to maintain
+the simple, non-ad hoc construction of our data vector, as the aim of this work is not to fine-tune
+for the tightest possible Fisher constraints, but rather to provide a proof of concept for follow-up
+studies on using persistent homology for generic tasks.
+
+Convergence. We check the convergence of the numerical covariance and derivatives. Similar
+to [64, 94], we calculate the ratio of σθ (Nsim ), the 1-σ marginalized constraint on θ from Nsim
+realizations, to the constraint from all available realizations. Each convergence curve is the mean
+over 50 random orderings of the realizations, and each error bar indicates one standard deviation
+above and below.
+   The estimation of the covariance converges very quickly with the number of fiducial realizations
+used, for both our statistic as well as the joint power spectrum and bispectrum statistic (Figure
+18). On the other hand, as found in recent works on Fisher analysis testing new summary statistics
+[64, 89, 90, 94, 124–126], the convergence of the derivatives is not ideal. In short, for half of the
+parameter set, it requires more simulations than we have available to moderately average out the
+numerical noise in the derivatives (Figure 19). This issue is more thoroughly addressed in a recent
+
+
+
+
+                                               – 27 –
+σθ (Ncov)/σθ (Ncov = 10000)
+                                1.05
+                                                 PH                              Ωm
+                                                                                       1.05
+                                                                                                        P0 + P2 + B 0
+                                                                                 Ωb
+                                                                                 h
+                                1.00                                             ns    1.00
+                                                                                 σ8
+                                                                                 P
+                                                                                    mν
+                                0.95                                                   0.95
+                                       4500   7000   9500   12000 14500          w               4500    7000   9500   12000 14500
+                                1.05                                                      1.05
+                                                                                  local
+                                                                                 fNL
+                                                                                  equil
+                                1.00                                             fNL    1.00
+                                                                                  ortho
+                                                                                 fNL
+                                0.95                                                      0.95
+                                       4500   7000   9500   12000 14500                          4500    7000   9500   12000 14500
+                                                 Ncov                                                       Ncov
+Figure 18: Convergence of the numerical covariance. Left Panel: Our summary statistic
+from persistent homology. Right Panel: Joint power spectrum and bispectrum statistic. The
+convergence curves are functions of the number of fiducial realizations Ncov used in estimating
+the covariance. Each error bar indicates one standard deviation above and below the mean from
+50 random orderings of the realizations. The fast convergence implies that the covariance is well
+estimated.
+
+
+paper [127]. In our case, we choose to estimate the uncertainty in our reported Fisher constraints
+by extrapolating the convergence curves to a large number of realizations, as done in [64, 84]. We
+employ the following parameterization
+
+                                                            σθ (Nsim ) = a1 a−a
+                                                                             2
+                                                                               3 Nsim
+                                                                                      + a4 ,                                 (B.1)
+
+where the constants ai are determined by fitting to each convergence curve using optimize.curve fit
+in the scipy library, taking into account the scatter around the mean from the 50 orderings. The
+asymptotic value of a fit is then the predicted constraint given infinitely many realizations. We
+observe that the reported constraints from persistent homology are biased low and are expected to
+loosen by ∼ 16% on average. We apply the same treatment to the power spectrum and bispectrum
+and show the extrapolated constraints in Table 3. The “extrapolated result” is identical to the
+reported result—constraints from persistent homology are tighter for all parameters except Ωm and
+  local . Hence, the conclusions of this work based on the reported constraints remain valid under
+fNL
+the above consideration.
+
+
+C                             Independent Information from Each Component of the Data Vector
+
+As mentioned throughout the paper, in this work as a proof of concept, we do not fine-tune our setup
+for the tightest possible constraints, so the composition of our data vector should not be deemed
+optimal. Nevertheless, it is meaningful to gain an idea of how much non-overlapping information
+each part of the data vector contributes. We investigate this by computing the percentage increase
+
+
+
+
+                                                                        – 28 –
+                                                PH                                         P0 + P2 + B 0
+                                 1.0                                            1.0
+
+                                 0.8                                            0.8
+σθ (Nderiv)/σθ (Nderiv = 6000)
+
+                                 0.6                Ωm          σ8              0.6                Ωm          σ8
+                                                                P                                              P
+                                                    Ωb               mν                            Ωb               mν
+                                 0.4                h           w               0.4                h           w
+                                                    ns                                             ns
+                                 0.2                                            0.2
+                                   100   1500    3000    4500            6000     100   1500    3000    4500            6000
+
+                                 1.0                                            1.0
+
+                                 0.8                                            0.8
+
+                                 0.6                                            0.6
+                                                                 local                                          local
+                                                                fNL                                            fNL
+                                                                 equil                                          equil
+                                 0.4                            fNL             0.4                            fNL
+                                                                 ortho                                          ortho
+                                                                fNL                                            fNL
+                                 0.2                                            0.2
+                                   100   1500    3000    4500            6000     100   1500    3000    4500            6000
+                                                Nderiv                                         Nderiv
+Figure 19: Convergence of the numerical derivatives. Left Panel: Our summary statis-
+tic from persistent homology. Right Panel: Joint power spectrum and bispectrum statistic. The
+convergence curves are functions of the number of realizations Nderiv used in estimating the deriva-
+tives. Each error bar indicates one standard deviation above and below the mean from 50 random
+orderings of the realizations. Dashed colored lines are extrapolations using Eq. (B.1). Vertical
+dotted lines in gray separate the existent realizations (to the left) from the hypothetical ones (to
+the right).
+
+
+in the 1-σ marginalized constraints from excluding various parts of the full data vector. A significant
+increase implies that the excluded part contains much independent information.
+   We consider three schemes: excluding a nearest-neighbor parameter k value, excluding a homo-
+logical dimension p, and excluding all birth Bi or death Di histograms. The percentage increases
+are listed in Table 4. We observe that all the k’s are similarly informative, with the exception of
+k = 1 for σ8 and w. On the other hand, the 0-cycles are in general more informative than the 1-
+and 2-cycles, especially for σ8 and w (again). For birth and death histograms, they appear to be
+comparably important.
+    The percentages from excluding k = 1 and 5 back up our claim in the footnote24 under Section
+5, in the sense that, if we exclude 0-cycles for those two k’s, constraints from persistent homology
+are still generally tighter, and our conclusions remain unchanged.
+
+
+
+
+                                                                     – 29 –
+                                  Nderiv = 1500 (reported)                  Nderiv = 6000 (extrapolated)
+       θ        Fiducial
+                                   PH            P0 + P2 + B0                 PH             P0 + P2 + B0
+    Ωm          0.3175            ±0.012                ±0.010                  ±0.014             ±0.010
+    Ωb          0.049             ±0.003                ±0.004                  ±0.004             ±0.004
+     h          0.6711            ±0.029                ±0.040                  ±0.036             ±0.043
+    ns          0.9624            ±0.024                ±0.031                  ±0.029             ±0.033
+    σ           0.834             ±0.005                ±0.008                  ±0.005             ±0.009
+  P 8
+   mν (eV)         0              ±0.034                ±0.063                  ±0.038             ±0.065
+    w             −1              ±0.051                ±0.101                  ±0.062             ±0.113
+     local
+    fNL            0              ±69                    ±36                     ±72                ±37
+     equil
+    fNL            0              ±142                   ±233                    ±163               ±250
+     ortho
+    fNL            0              ±61                    ±70                     ±62                ±70
+
+Table 3: Extrapolated constraints. The third and fourth columns are constraints from using
+all existent realizations, as reported in Table 2. The rightmost two columns are the extrapolated
+constraints if 6000 realizations were available. Both results are the same—constraints from persis-
+tent homology are tighter for all parameters except Ωm and fNL local . Hence, conclusions based on the
+
+reported constraints hold true under this consideration.
+
+                                       Exclude k                            Exclude p-cycles     Exclude all Bi /Di
+       θ
+                 k=1       k=5      k = 15   k = 30   k = 60   k = 100   p=0      p=1     p=2    all Bi     all Di
+
+    Ωm           +13%      +8%      +9%      +10%     +8%      +10%      +33%     +18%    +22%   +43%      +34%
+    Ωb           +8%       +7%     +11%      +8%      +10%     +13%      +23%     +20%    +23%   +38%      +40%
+     h           +8%       +11%    +10%      +14%     +8%      +11%      +23%     +24%    +23%   +49%      +45%
+    ns           +11%      +8%      +8%      +8%      +7%      +10%      +34%     +17%    +17%   +35%      +38%
+    σ            +35%      +7%      +4%      +5%      +4%       +5%      +81%     +11%    +10%   +24%      +22%
+  P 8
+   mν (eV)       +8%       +10%    +10%      +11%     +12%      +9%      +28%     +22%    +19%   +49%      +51%
+    w            +49%      +7%      +7%      +7%      +5%       +6%      +104%    +13%    +14%   +29%      +26%
+      local
+     fNL         +6%       +4%      +4%      +4%      +3%       +5%      +25%     +9%     +9%    +16%      +18%
+      equil
+     fNL         +8%       +6%      +7%      +8%      +9%       +7%      +22%     +18%    +17%   +27%      +26%
+      ortho
+     fNL         +11%      +7%      +5%      +3%      +2%       +2%      +45%     +17%    +8%    +57%      +60%
+
+
+Table 4: Excluding data vector parts. Each percentage shown is the increase in the 1-σ
+marginalized constraint when a part of the data vector is excluded. A significant increase implies
+that the excluded part contains much independent information about that parameter. We consider
+three schemes: excluding a nearest-neighbor parameter k value, excluding a homological dimension
+p, and excluding all birth Bi or death Di histograms.
+
+
+
+
+                                                      – 30 –
+D        On Applicability to the Sancho Suite of Galaxy Catalogs
+
+The Sancho suite25 , based on Quijote, contains a total of 240000 galaxy catalogs at the fidu-
+cial and varying cosmologies primarily designed for Fisher analyses. Sancho allows for studying
+the Halo Occupation Distribution (HOD) model parameters [128] in addition to the parameters
+surveyed in this work, and its integrity has been verified against a theoretical model based on the
+effective field theory of large-scale structure.
+    We have spent substantial time and efforts on applying our pipeline to Sancho. We could not
+trust the forecast, however, because our data vector from Sancho does not pass the Gaussianity
+tests: the distribution of data is bimodal for most bins. While the data vector can be made Gaussian
+by subsampling the galaxy catalogs, i.e., randomly removing galaxies such that the number density
+is uniform across catalogs, it happens that the data vector then responds to parameter change non-
+linearly (for the ∆θ values inherited from Quijote), rendering the numerical derivatives unreliable.
+   Even though our statistic computed on Sancho cannot warrant a Fisher analysis because of the
+intractable likelihood that it seems to have, we emphasize that it can be used for inference tasks,
+e.g., training a neural network to map our statistic to cosmological parameters.
+
+
+
+
+    25
+     https://quijote-simulations.readthedocs.io/en/latest/sancho.html, developed by Matteo Biagetti, Juan
+Calles, Jacky H. T. Yip, and Emilio Bellini.
+
+
+
+
+                                                 – 31 –
+E                         Additional Plots
+
+
+                                                                                             0-cycles
+                                                                                                    −
+                                   Ω+    −
+                                    m − Ωm          ×102                                      Ω+
+                                                                                               b − Ωb          ×102                                      h+ − h−          ×102
+                          15                                                          15                                                         15
+    Persistence (Mpc/h)
+
+
+
+
+                                                                Persistence (Mpc/h)
+
+
+
+
+                                                                                                                           Persistence (Mpc/h)
+                                                           5                                                          2                                                          5
+                          10                                                          10                                                         10
+                                                           0                                                          0                                                          0
+                           5                                                           5                                                          5
+                                                           −5                                                         −2                                                         −5
+
+                           0                                                           0                                                          0
+                                15      30     45                                          15      30     45                                          15      30     45
+                                 Birth (Mpc/h)                                              Birth (Mpc/h)                                              Birth (Mpc/h)
+
+                                   n+    −
+                                    s − ns          ×103                                      σ8+ − σ8−        ×103                                      w+ − w−          ×102
+                                                                                                                      2
+                          15                                                          15                                                         15
+    Persistence (Mpc/h)
+
+
+
+
+                                                                Persistence (Mpc/h)
+
+
+
+
+                                                                                                                           Persistence (Mpc/h)
+                                                           1
+                                                                                                                                                                                 2.5
+                          10                                                          10                                                         10
+                                                           0                                                          0                                                          0.0
+                           5                                                           5                                                          5
+                                                                                                                                                                                 −2.5
+                                                           −1
+                           0                                                           0                              −2                          0
+                                15      30     45                                          15      30     45                                          15      30     45
+                                 Birth (Mpc/h)                                              Birth (Mpc/h)                                              Birth (Mpc/h)
+
+                                                                                            local+    local−                                           equil+    equil−
+                               Mν+++ − Fiducial ×103                                       fNL     − fNL     ×102                                     fNL     − fNL     ×102
+                          15                               1                          15                                                         15
+    Persistence (Mpc/h)
+
+
+
+
+                                                                Persistence (Mpc/h)
+
+
+
+
+                                                                                                                           Persistence (Mpc/h)
+                                                                                                                      5                                                          2
+
+                          10                                                          10                                                         10
+                                                           0                                                          0                                                          0
+                           5                                                           5                                                          5
+                                                                                                                      −5                                                         −2
+                                                           −1
+                           0                                                           0                                                          0
+                                15      30     45                                          15      30     45                                          15      30     45
+                                 Birth (Mpc/h)                                              Birth (Mpc/h)                                              Birth (Mpc/h)
+
+                                ortho+    ortho−
+                               fNL     − fNL     ×102
+                          15
+    Persistence (Mpc/h)
+
+
+
+
+                                                           2
+                          10
+                                                           0
+                           5
+                                                           −2
+                           0
+                                15      30     45
+                                 Birth (Mpc/h)
+
+
+
+Figure 20: 0-cycle mean persistence image differences for all parameters (averaged over 100 real-
+izations, k = 15).
+
+
+
+
+                                                                                               – 32 –
+                                                                                           1-cycles
+                                                                                                 −
+                                Ω+    −
+                                 m − Ωm          ×102                                      Ω+
+                                                                                            b − Ωb         ×102                                      h+ − h−         ×102
+                        15                              5                          15                                                        15
+  Persistence (Mpc/h)
+
+
+
+
+                                                             Persistence (Mpc/h)
+
+
+
+
+                                                                                                                       Persistence (Mpc/h)
+                                                                                                                                                                            5
+                                                                                                                  2
+                        10                                                         10                                                        10
+                                                        0                                                         0                                                         0
+                         5                                                          5                                                         5
+                                                                                                                  −2
+                                                        −5                                                                                                                  −5
+                         0                                                          0                                                         0
+                              15      30    45                                          15      30    45                                          15      30    45
+                               Birth (Mpc/h)                                             Birth (Mpc/h)                                             Birth (Mpc/h)
+
+                                 n+    −
+                                  s − ns         ×102                                      σ8+ − σ8−       ×103                                      w+ − w−         ×102
+                                                                                                                                                                            5
+                        15                                                         15                                                        15
+  Persistence (Mpc/h)
+
+
+
+
+                                                             Persistence (Mpc/h)
+
+
+
+
+                                                                                                                       Persistence (Mpc/h)
+                                                        5                                                         1
+
+                        10                                                         10                                                        10
+                                                        0                                                         0                                                         0
+                         5                                                          5                                                         5
+                                                        −5                                                        −1
+                         0                                                          0                                                         0                             −5
+                              15      30    45                                          15      30    45                                          15      30    45
+                               Birth (Mpc/h)                                             Birth (Mpc/h)                                             Birth (Mpc/h)
+
+                                                                                         local+    local−                                          equil+    equil−
+                             Mν+++ − Fiducial ×102                                      fNL     − fNL     ×102                                    fNL     − fNL     ×102
+                                                                                                                  5
+                        15                                                         15                                                        15
+  Persistence (Mpc/h)
+
+
+
+
+                                                             Persistence (Mpc/h)
+
+
+
+
+                                                                                                                       Persistence (Mpc/h)
+                                                                                                                                                                            2
+                                                        5
+                        10                                                         10                                                        10
+                                                        0                                                         0                                                         0
+                         5                                                          5                                                         5
+                                                        −5
+                                                                                                                                                                            −2
+                         0                                                          0                             −5                          0
+                              15      30    45                                          15      30    45                                          15      30    45
+                               Birth (Mpc/h)                                             Birth (Mpc/h)                                             Birth (Mpc/h)
+
+                              ortho+    ortho−
+                             fNL     − fNL     ×102
+                        15
+  Persistence (Mpc/h)
+
+
+
+
+                                                        2
+                        10
+                                                        0
+                         5
+                                                        −2
+                         0
+                              15      30    45
+                               Birth (Mpc/h)
+
+
+
+Figure 21: 1-cycle mean persistence image differences for all parameters (averaged over 100 real-
+izations, k = 15).
+
+
+
+
+                                                                                            – 33 –
+                                                                                              2-cycles
+                                                                                                    −
+                                Ω+    −
+                                 m − Ωm           ×102                                        Ω+
+                                                                                               b − Ωb           ×102                                       h+ − h−          ×102
+                        15                                                            15                                                          15
+  Persistence (Mpc/h)
+
+
+
+
+                                                                Persistence (Mpc/h)
+
+
+
+
+                                                                                                                            Persistence (Mpc/h)
+                                                                                                                       2
+                                                         2.5                                                                                                                       2.5
+                        10                                                            10                                                          10
+                                                         0.0                                                           0                                                           0.0
+                         5                                                             5                                                           5
+                                                         −2.5                                                                                                                      −2.5
+                                                                                                                       −2
+                         0                                                             0                                                           0
+                             15       30     45                                            15       30     45                                          15       30     45
+                               Birth (Mpc/h)                                                 Birth (Mpc/h)                                               Birth (Mpc/h)
+
+                                 n+    −
+                                  s − ns          ×102                                         σ8+ − σ8−        ×102                                      w+ − w−           ×102
+                        15                                                            15                                                          15
+  Persistence (Mpc/h)
+
+
+
+
+                                                                Persistence (Mpc/h)
+
+
+
+
+                                                                                                                            Persistence (Mpc/h)
+                                                         5                                                                                                                         2
+                                                                                                                       5
+                        10                                                            10                                                          10
+                                                         0                                                             0                                                           0
+                         5                                                             5                                                           5
+                                                                                                                       −5
+                                                         −5                                                                                                                        −2
+                         0                                                             0                                                           0
+                             15       30     45                                            15       30     45                                          15       30     45
+                               Birth (Mpc/h)                                                 Birth (Mpc/h)                                               Birth (Mpc/h)
+
+                                                                                            local+    local−                                            equil+    equil−
+                             Mν+++ − Fiducial ×102                                         fNL     − fNL        ×102                                   fNL     − fNL        ×102
+                        15                                                            15                                                          15
+  Persistence (Mpc/h)
+
+
+
+
+                                                                Persistence (Mpc/h)
+
+
+
+
+                                                                                                                            Persistence (Mpc/h)
+                                                         2                                                             2                                                           1
+                        10                                                            10                                                          10
+                                                         0                                                             0                                                           0
+                         5                                                             5                                                           5
+                                                         −2                                                            −2                                                          −1
+
+                         0                                                             0                                                           0
+                             15       30     45                                            15       30     45                                          15       30     45
+                               Birth (Mpc/h)                                                 Birth (Mpc/h)                                               Birth (Mpc/h)
+
+                              ortho+    ortho−
+                             fNL     − fNL     ×102
+                        15                               2
+  Persistence (Mpc/h)
+
+
+
+
+                        10
+                                                         0
+                         5
+
+                         0                               −2
+                             15       30     45
+                               Birth (Mpc/h)
+
+
+
+Figure 22: 2-cycle mean persistence image differences for all parameters (averaged over 100 real-
+izations, k = 15).
+
+
+
+
+                                                                                               – 34 –
+References
+  [1] G. D’Amico, J. Gleyzes, N. Kokron, K. Markovic, L. Senatore, P. Zhang, F. Beutler, and
+      H. Gil-Marı́n, “The Cosmological Analysis of the SDSS/BOSS data from the Effective Field Theory
+      of Large-Scale Structure,” JCAP 05 (2020) 005, arXiv:1909.05271 [astro-ph.CO].
+  [2] M. M. Ivanov, M. Simonović, and M. Zaldarriaga, “Cosmological Parameters from the BOSS Galaxy
+      Power Spectrum,” JCAP 05 (2020) 042, arXiv:1909.05277 [astro-ph.CO].
+  [3] M. M. Ivanov, M. Simonović, and M. Zaldarriaga, “Cosmological Parameters and Neutrino Masses
+      from the Final Planck and Full-Shape BOSS Data,” Phys. Rev. D 101 no. 8, (2020) 083504,
+      arXiv:1912.08208 [astro-ph.CO].
+  [4] T. Colas, G. D’amico, L. Senatore, P. Zhang, and F. Beutler, “Efficient Cosmological Analysis of the
+      SDSS/BOSS data from the Effective Field Theory of Large-Scale Structure,” JCAP 06 (2020) 001,
+      arXiv:1909.07951 [astro-ph.CO].
+  [5] P. Zhang, G. D’Amico, L. Senatore, C. Zhao, and Y. Cai, “BOSS Correlation Function analysis from
+      the Effective Field Theory of Large-Scale Structure,” JCAP 02 no. 02, (2022) 036,
+      arXiv:2110.07539 [astro-ph.CO].
+  [6] G. Cabass, M. M. Ivanov, O. H. E. Philcox, M. Simonović, and M. Zaldarriaga, “Constraints on
+      Single-Field Inflation from the BOSS Galaxy Survey,” arXiv:2201.07238 [astro-ph.CO].
+  [7] G. D’Amico, M. Lewandowski, L. Senatore, and P. Zhang, “Limits on primordial non-Gaussianities
+      from BOSS galaxy-clustering data,” arXiv:2201.11518 [astro-ph.CO].
+  [8] G. Cabass, M. M. Ivanov, O. H. E. Philcox, M. Simonović, and M. Zaldarriaga, “Constraints on
+      multifield inflation from the BOSS galaxy survey,” Phys. Rev. D 106 no. 4, (2022) 043506,
+      arXiv:2204.01781 [astro-ph.CO].
+  [9] G. D’Amico, Y. Donath, M. Lewandowski, L. Senatore, and P. Zhang, “The BOSS bispectrum
+      analysis at one loop from the Effective Field Theory of Large-Scale Structure,” arXiv:2206.08327
+      [astro-ph.CO].
+ [10] M. M. Ivanov, O. H. E. Philcox, G. Cabass, T. Nishimichi, M. Simonović, and M. Zaldarriaga,
+      “Cosmology with the galaxy bispectrum multipoles: Optimal estimation and application to BOSS
+      data,” Phys. Rev. D 107 no. 8, (2023) 083515, arXiv:2302.04414 [astro-ph.CO].
+ [11] Planck Collaboration, N. Aghanim et al., “Planck 2018 results. VI. Cosmological parameters,”
+      arXiv:1807.06209 [astro-ph.CO].
+ [12] Planck Collaboration, Y. Akrami et al., “Planck 2018 results. X. Constraints on inflation,”
+      arXiv:1807.06211 [astro-ph.CO].
+ [13] Planck Collaboration, Y. Akrami et al., “Planck 2018 results. IX. Constraints on primordial
+      non-Gaussianity,” Astron. Astrophys. 641 (2020) A9, arXiv:1905.05697 [astro-ph.CO].
+ [14] M. Biagetti, “The Hunt for Primordial Interactions in the Large Scale Structures of the Universe,”
+      Galaxies 7 no. 3, (2019) 71, arXiv:1906.12244 [astro-ph.CO].
+ [15] D. Baumann and D. Green, “The Power of Locality: Primordial Non-Gaussianity at the Map Level,”
+      arXiv:2112.14645 [astro-ph.CO].
+ [16] G. Cabass, M. Simonović, and M. Zaldarriaga, “Cosmological Information in Perturbative Forward
+      Modeling,” arXiv:2307.04706 [astro-ph.CO].
+ [17] J. Jasche and B. D. Wandelt, “Bayesian physical reconstruction of initial conditions from large scale
+      structure surveys,” Mon. Not. Roy. Astron. Soc. 432 (2013) 894, arXiv:1203.3639 [astro-ph.CO].
+
+
+
+
+                                                 – 35 –
+[18] H. Wang, H. J. Mo, X. Yang, and F. C. v. d. Bosch, “Reconstructing the Initial Density Field of the
+     Local Universe: Methods and Tests with Mock Catalogs,” Astrophys. J. 772 (2013) 63,
+     arXiv:1301.1348 [astro-ph.CO].
+[19] M. Ata, F.-S. Kitaura, and V. Müller, “Bayesian inference of cosmic density fields from non-linear,
+     scale-dependent, and stochastic biased tracers,” Mon. Not. Roy. Astron. Soc. 446 no. 4, (2015)
+     4250–4259, arXiv:1408.2566 [astro-ph.CO].
+[20] M. Schmittfull, M. Simonović, V. Assassi, and M. Zaldarriaga, “Modeling Biased Tracers at the
+     Field Level,” Phys. Rev. D 100 no. 4, (2019) 043514, arXiv:1811.10640 [astro-ph.CO].
+[21] F. Elsner, F. Schmidt, J. Jasche, G. Lavaux, and N.-M. Nguyen, “Cosmology inference from a biased
+     density field using the EFT-based likelihood,” JCAP 01 (2020) 029, arXiv:1906.07143
+     [astro-ph.CO].
+[22] G. Cabass and F. Schmidt, “The EFT Likelihood for Large-Scale Structure,” JCAP 04 (2020) 042,
+     arXiv:1909.04022 [astro-ph.CO].
+[23] G. Cabass and F. Schmidt, “The Likelihood for LSS: Stochasticity of Bias Coefficients at All
+     Orders,” JCAP 07 (2020) 051, arXiv:2004.00617 [astro-ph.CO].
+[24] F. Schmidt, G. Cabass, J. Jasche, and G. Lavaux, “Unbiased Cosmology Inference from Biased
+     Tracers using the EFT Likelihood,” JCAP 11 (2020) 008, arXiv:2004.06707 [astro-ph.CO].
+[25] G. Cabass, “The EFT Likelihood for Large-Scale Structure in Redshift Space,” JCAP 01 (2021) 067,
+     arXiv:2007.14988 [astro-ph.CO].
+[26] M. Schmittfull, M. Simonović, M. M. Ivanov, O. H. E. Philcox, and M. Zaldarriaga, “Modeling
+     Galaxies in Redshift Space at the Field Level,” JCAP 05 (2021) 059, arXiv:2012.03334
+     [astro-ph.CO].
+[27] A. Andrews, J. Jasche, G. Lavaux, and F. Schmidt, “Bayesian field-level inference of primordial
+     non-Gaussianity using next-generation galaxy surveys,” Mon. Not. Roy. Astron. Soc. 520 no. 4,
+     (2023) 5746–5763, arXiv:2203.08838 [astro-ph.CO].
+[28] A. E. Bayer, U. Seljak, and C. Modi, “Field-Level Inference with Microcanonical Langevin Monte
+     Carlo,” in 40th International Conference on Machine Learning. 7, 2023. arXiv:2307.09504
+     [astro-ph.CO].
+[29] N.-M. Nguyen, F. Schmidt, B. Tucci, M. Reinecke, and A. Kostić, “How much information can be
+     extracted from galaxy clustering at the field level?,” arXiv:2403.03220 [astro-ph.CO].
+[30] J. Robnik, G. B. De Luca, E. Silverstein, and U. Seljak, “Microcanonical Hamiltonian Monte Carlo,”
+     arXiv:2212.08549 [stat.CO].
+[31] J. Robnik and U. Seljak, “Microcanonical Langevin Monte Carlo,” arXiv:2303.18221 [hep-lat].
+[32] D. Greenberg, M. Nonnenmacher, and J. Macke, “Automatic posterior transformation for
+     likelihood-free inference,” in International Conference on Machine Learning, pp. 2404–2414, PMLR.
+     2019.
+[33] G. Papamakarios, D. Sterratt, and I. Murray, “Sequential neural likelihood: Fast likelihood-free
+     inference with autoregressive flows,” in The 22nd International Conference on Artificial Intelligence
+     and Statistics, pp. 837–848, PMLR. 2019.
+[34] J. Hermans, V. Begy, and G. Louppe, “Likelihood-free mcmc with amortized approximate ratio
+     estimators,” in International Conference on Machine Learning, pp. 4239–4248, PMLR. 2020.
+
+
+
+
+                                                 – 36 –
+[35] B. K. Miller, A. Cole, P. Forré, G. Louppe, and C. Weniger, “Truncated Marginal Neural Ratio
+     Estimation,” arXiv:2107.01214 [stat.ML].
+[36] N. Anau Montel, J. Alvey, and C. Weniger, “Scalable inference with Autoregressive Neural Ratio
+     Estimation,” arXiv:2308.08597 [astro-ph.IM].
+[37] L. Heinrich, S. Mishra-Sharma, C. Pollard, and P. Windischhofer, “Hierarchical Neural
+     Simulation-Based Inference Over Event Ensembles,” arXiv:2306.12584 [stat.ML].
+[38] K. Cranmer, J. Brehmer, and G. Louppe, “The frontier of simulation-based inference,” Proceedings
+     of the National Academy of Sciences 117 no. 48, (2020) 30055–30062.
+[39] J. Alsing, T. Charnock, S. Feeney, and B. Wandelt, “Fast likelihood-free cosmology with neural
+     density estimators and active learning,” Mon. Not. Roy. Astron. Soc. 488 no. 3, (2019) 4440–4458,
+     arXiv:1903.00007 [astro-ph.CO].
+[40] F. Villaescusa-Navarro et al., “Robust marginalization of baryonic effects for cosmological inference
+     at the field level,” arXiv:2109.10360 [astro-ph.CO].
+[41] F. Villaescusa-Navarro et al., “Multifield Cosmology with Artificial Intelligence,” arXiv:2109.09747
+     [astro-ph.CO].
+[42] T. L. Makinen, T. Charnock, J. Alsing, and B. D. Wandelt, “Lossless, scalable implicit likelihood
+     inference for cosmological fields,” JCAP 11 no. 11, (2021) 049, arXiv:2107.07405 [astro-ph.CO].
+[43] A. Cole, B. K. Miller, S. J. Witte, M. X. Cai, M. W. Grootes, F. Nattino, and C. Weniger, “Fast and
+     Credible Likelihood-Free Cosmology with Truncated Marginal Neural Ratio Estimation,”
+     arXiv:2111.08030 [astro-ph.CO].
+[44] P. Lemos, M. Cranmer, M. Abidi, C. Hahn, M. Eickenberg, E. Massara, D. Yallup, and S. Ho,
+     “Robust simulation-based inference in cosmology with Bayesian neural networks,” Mach. Learn. Sci.
+     Tech. 4 no. 1, (2023) 01LT01, arXiv:2207.08435 [astro-ph.CO].
+[45] C. Hahn, M. Eickenberg, S. Ho, J. Hou, P. Lemos, E. Massara, C. Modi, A. Moradinezhad Dizgah,
+     B. R.-S. Blancard, and M. M. Abidi, “SimBIG: mock challenge for a forward modeling approach to
+     galaxy clustering,” JCAP 04 (2023) 010, arXiv:2211.00660 [astro-ph.CO].
+[46] B. Tucci and F. Schmidt, “EFTofLSS meets simulation-based inference: σ8 from biased tracers,”
+     arXiv:2310.03741 [astro-ph.CO].
+[47] F. List, N. Anau Montel, and C. Weniger, “Bayesian Simulation-based Inference for Cosmological
+     Initial Conditions,” in 37th Conference on Neural Information Processing Systems. 10, 2023.
+     arXiv:2310.19910 [astro-ph.CO].
+[48] C. Modi, S. Pandey, M. Ho, C. Hahn, B. Régaldo-Saint Blancard, and B. Wandelt, “Sensitivity
+     Analysis of Simulation-Based Inference for Galaxy Clustering,” arXiv:2309.15071 [astro-ph.CO].
+[49] C. Modi and O. H. E. Philcox, “Hybrid SBI or How I Learned to Stop Worrying and Learn the
+     Likelihood,” arXiv:2309.10270 [astro-ph.CO].
+[50] J. Alsing and B. Wandelt, “Nuisance hardened data compression for fast likelihood-free inference,”
+     Mon. Not. Roy. Astron. Soc. 488 no. 4, (2019) 5093–5103, arXiv:1903.01473 [astro-ph.CO].
+[51] M. C. Neyrinck, I. Szapudi, and A. S. Szalay, “Rejuvenating the matter power spectrum: restoring
+     information with a logarithmic density mapping,” Astrophys. J. Lett. 698 (2009) L90–L93,
+     arXiv:0903.4693 [astro-ph.CO].
+[52] M. White, “A marked correlation function for constraining modified gravity models,” JCAP 11
+     (2016) 057, arXiv:1609.08632 [astro-ph.CO].
+
+
+
+
+                                                 – 37 –
+[53] S. Satpathy, R. A. C. Croft, S. Ho, and B. Li, “Measurement of marked correlation functions in
+     SDSS-III Baryon Oscillation Spectroscopic Survey using LOWZ galaxies in Data Release 12,” Mon.
+     Not. Roy. Astron. Soc. 484 no. 2, (2019) 2148–2165, arXiv:1901.01447 [astro-ph.CO].
+[54] A. Aviles, K. Koyama, J. L. Cervantes-Cota, H. A. Winther, and B. Li, “Marked correlation
+     functions in perturbation theory,” JCAP 01 (2020) 006, arXiv:1911.06362 [astro-ph.CO].
+[55] E. Massara, F. Villaescusa-Navarro, S. Ho, N. Dalal, and D. N. Spergel, “Using the Marked Power
+     Spectrum to Detect the Signature of Neutrinos in Large-Scale Structure,” Phys. Rev. Lett. 126
+     no. 1, (2021) 011301, arXiv:2001.11024 [astro-ph.CO].
+[56] O. H. E. Philcox, A. Aviles, and E. Massara, “Modeling the Marked Spectrum of Matter and Biased
+     Tracers in Real- and Redshift-Space,” JCAP 03 (2021) 038, arXiv:2010.05914 [astro-ph.CO].
+[57] O. H. E. Philcox, E. Massara, and D. N. Spergel, “What does the marked power spectrum measure?
+     Insights from perturbation theory,” Phys. Rev. D 102 no. 4, (2020) 043516, arXiv:2006.10055
+     [astro-ph.CO].
+[58] E. Massara, F. Villaescusa-Navarro, C. Hahn, M. M. Abidi, M. Eickenberg, S. Ho, P. Lemos,
+     A. Moradinezhad Dizgah, and B. R.-S. Blancard, “Cosmological Information in the Marked Power
+     Spectrum of the Galaxy Field,” Astrophys. J. 951 no. 1, (2023) 70, arXiv:2206.01709
+     [astro-ph.CO].
+[59] M. Schmittfull, T. Baldauf, and U. Seljak, “Near optimal bispectrum estimators for large-scale
+     structure,” Phys. Rev. D 91 no. 4, (2015) 043530, arXiv:1411.6595 [astro-ph.CO].
+[60] A. Moradinezhad Dizgah, H. Lee, M. Schmittfull, and C. Dvorkin, “Capturing non-Gaussianity of
+     the large-scale structure with weighted skew-spectra,” JCAP 04 (2020) 011, arXiv:1911.05763
+     [astro-ph.CO].
+[61] J.-P. Dai, L. Verde, and J.-Q. Xia, “What Can We Learn by Combining the Skew Spectrum and the
+     Power Spectrum?,” JCAP 08 (2020) 007, arXiv:2002.09904 [astro-ph.CO].
+[62] M. Schmittfull and A. Moradinezhad Dizgah, “Galaxy skew-spectra in redshift-space,” JCAP 03
+     (2021) 020, arXiv:2010.14267 [astro-ph.CO].
+[63] P. Chakraborty, S.-F. Chen, and C. Dvorkin, “Skewing the CMB×LSS: a fast method for bispectrum
+     analysis,” JCAP 07 no. 07, (2022) 038, arXiv:2202.11724 [astro-ph.CO].
+[64] J. Hou, A. Moradinezhad Dizgah, C. Hahn, and E. Massara, “Cosmological information in skew
+     spectra of biased tracers in redshift space,” JCAP 03 (2023) 045, arXiv:2210.12743
+     [astro-ph.CO].
+[65] A. Pisani et al., “Cosmic voids: a novel probe to shed light on our Universe,” arXiv:1903.05161
+     [astro-ph.CO].
+[66] Q. Mao, A. A. Berlind, C. K. McBride, R. J. Scherrer, R. Scoccimarro, and M. Manera,
+     “Constraining Primordial Non-Gaussianity with Moments of the Large Scale Density Field,” Mon.
+     Not. Roy. Astron. Soc. 443 no. 2, (2014) 1402–1415, arXiv:1404.3725 [astro-ph.CO].
+[67] C. Uhlemann, E. Pajer, C. Pichon, T. Nishimichi, S. Codis, and F. Bernardeau, “Hunting high and
+     low: Disentangling primordial and late-time non-Gaussianity with cosmic densities in spheres,” Mon.
+     Not. Roy. Astron. Soc. 474 no. 3, (2018) 2853–2870, arXiv:1708.02206 [astro-ph.CO].
+[68] A. Nusser, M. Biagetti, and V. Desjacques, “Abundance of peaks and dips in 3D mass and halo
+     density fields: a test for cosmology,” Mon. Not. Roy. Astron. Soc. 480 no. 2, (2018) 1599–1606,
+     arXiv:1804.05328 [astro-ph.CO].
+
+
+
+
+                                                – 38 –
+[69] O. Friedrich, C. Uhlemann, F. Villaescusa-Navarro, T. Baldauf, M. Manera, and T. Nishimichi,
+     “Primordial non-Gaussianity without tails – how to measure fNL with the bulk of the density PDF,”
+     Mon. Not. Roy. Astron. Soc. 498 no. 1, (2020) 464–483, arXiv:1912.06621 [astro-ph.CO].
+[70] C. Uhlemann, O. Friedrich, F. Villaescusa-Navarro, A. Banerjee, and S. Codis, “Fisher for
+     complements: Extracting cosmology and neutrino mass from the counts-in-cells PDF,” Mon. Not.
+     Roy. Astron. Soc. 495 no. 4, (2020) 4006–4027, arXiv:1911.11158 [astro-ph.CO].
+[71] C. Uhlemann, O. Friedrich, A. Boyle, A. Gough, A. Barthelemy, F. Bernardeau, and S. Codis, “It
+     takes two to know one: Computing accurate one-point PDF covariances from effective two-point
+     PDF models,” Open J. Astrophys. 6 (10, 2022) 2023, arXiv:2210.07819 [astro-ph.CO].
+[72] A. Banerjee and T. Abel, “Nearest neighbour distributions: New statistical measures for
+     cosmological clustering,” Mon. Not. Roy. Astron. Soc. 500 no. 4, (2020) 5479–5499,
+     arXiv:2007.13342 [astro-ph.CO].
+[73] A. Banerjee and T. Abel, “Cosmological cross-correlations and nearest neighbour distributions,”
+     Mon. Not. Roy. Astron. Soc. 504 no. 2, (2021) 2911–2923, arXiv:2102.01184 [astro-ph.CO].
+[74] A. Banerjee, N. Kokron, and T. Abel, “Modeling Nearest Neighbor distributions of biased tracers
+     using Hybrid Effective Field Theory,” arXiv:2107.10287 [astro-ph.CO].
+[75] O. H. E. Philcox and S. Torquato, “Disordered Heterogeneous Universe: Galaxy Distribution and
+     Clustering across Length Scales,” Phys. Rev. X 13 no. 1, (2023) 011038, arXiv:2207.00519
+     [astro-ph.CO].
+[76] G. Valogiannis and C. Dvorkin, “Towards an optimal estimation of cosmological parameters with the
+     wavelet scattering transform,” Phys. Rev. D 105 no. 10, (2022) 103534, arXiv:2108.07821
+     [astro-ph.CO].
+[77] M. Eickenberg et al., “Wavelet Moments for Cosmological Parameter Estimation,”
+     arXiv:2204.07646 [astro-ph.CO].
+[78] G. Valogiannis and C. Dvorkin, “Going beyond the galaxy power spectrum: An analysis of BOSS
+     data with wavelet scattering transforms,” Phys. Rev. D 106 no. 10, (2022) 103509,
+     arXiv:2204.13717 [astro-ph.CO].
+[79] M. Biagetti, A. Cole, and G. Shiu, “The Persistence of Large Scale Structures I: Primordial
+     non-Gaussianity,” JCAP 04 (2021) 061, arXiv:2009.04819 [astro-ph.CO].
+[80] J. H. T. Yip, A. Rouhiainen, and G. Shiu, “Learning from Topology: Cosmological Parameter
+     Estimation from the Large-scale Structure,” arXiv:2308.02636 [astro-ph.CO].
+[81] A. Cole and G. Shiu, “Persistent Homology and Non-Gaussianity,” JCAP 1803 no. 03, (2018) 025,
+     arXiv:1712.08159 [astro-ph.CO].
+[82] A. Cole and G. Shiu, “Topological Data Analysis for the String Landscape,” JHEP 03 (2019) 054,
+     arXiv:1812.06960 [hep-th].
+[83] N. Otter, M. A. Porter, U. Tillmann, P. Grindrod, and H. A. Harrington, “A roadmap for the
+     computation of persistent homology,” EPJ Data Science 6 no. 1, (Aug., 2017) 17.
+     https://doi.org/10.1140/epjds/s13688-017-0109-5.
+[84] M. Biagetti, J. Calles, L. Castiblanco, A. Cole, and J. Noreña, “Fisher forecasts for primordial
+     non-Gaussianity from persistent homology,” JCAP 10 (2022) 002, arXiv:2203.08262
+     [astro-ph.CO].
+[85] M. H. J. Kanafi, S. Ansarifard, and S. M. S. Movahed, “Imprint of massive neutrinos on Persistent
+     Homology of large-scale structure,” arXiv:2311.13520 [astro-ph.CO].
+
+
+
+
+                                                  – 39 –
+ [86] S. Heydenreich, B. Brück, P. Burger, J. Harnois-Déraps, S. Unruh, T. Castro, K. Dolag, and
+      N. Martinet, “Persistent homology in cosmic shear - II. A tomographic analysis of DES-Y1,” Astron.
+      Astrophys. 667 (2022) A125, arXiv:2204.11831 [astro-ph.CO].
+ [87] S. Heydenreich, B. Brück, and J. Harnois-Déraps, “Persistent homology in cosmic shear:
+      constraining parameters with topological data analysis,” arXiv:2007.13724 [astro-ph.CO].
+ [88] F. Villaescusa-Navarro et al., “The Quijote simulations,” Astrophys. J. Suppl. 250 no. 1, (2020) 2,
+      arXiv:1909.05273 [astro-ph.CO].
+ [89] W. R. Coulton, F. Villaescusa-Navarro, D. Jamieson, M. Baldi, G. Jung, D. Karagiannis, M. Liguori,
+      L. Verde, and B. D. Wandelt, “Quijote-PNG: Simulations of Primordial Non-Gaussianity and the
+      Information Content of the Matter Field Power Spectrum and Bispectrum,” Astrophys. J. 943 no. 1,
+      (2023) 64, arXiv:2206.01619 [astro-ph.CO].
+ [90] W. R. Coulton, F. Villaescusa-Navarro, D. Jamieson, M. Baldi, G. Jung, D. Karagiannis, M. Liguori,
+      L. Verde, and B. D. Wandelt, “Quijote-PNG: The Information Content of the Halo Power Spectrum
+      and Bispectrum,” Astrophys. J. 943 no. 2, (2023) 178, arXiv:2206.15450 [astro-ph.CO].
+ [91] SDSS-III Collaboration, S. Alam et al., “The Eleventh and Twelfth Data Releases of the Sloan
+      Digital Sky Survey: Final Data from SDSS-III,” Astrophys. J. Suppl. 219 no. 1, (2015) 12,
+      arXiv:1501.00963 [astro-ph.IM].
+ [92] B. Reid et al., “SDSS-III Baryon Oscillation Spectroscopic Survey Data Release 12: galaxy target
+      selection and large scale structure catalogues,” Mon. Not. Roy. Astron. Soc. 455 no. 2, (2016)
+      1553–1573, arXiv:1509.06529 [astro-ph.CO].
+ [93] G. Gambardella, M. Biagetti, C. Moretti, and E. Sefusatti, “On the range of validity of perturbative
+      models for galaxy clustering and its uncertainty,” arXiv:2311.04608 [astro-ph.CO].
+ [94] C. Hahn, F. Villaescusa-Navarro, E. Castorina, and R. Scoccimarro, “Constraining Mν with the
+      bispectrum. Part I. Breaking parameter degeneracies,” JCAP 03 (2020) 040, arXiv:1909.11107
+      [astro-ph.CO].
+ [95] D. S. Salopek and J. R. Bond, “Nonlinear evolution of long wavelength metric fluctuations in
+      inflationary models,” Phys. Rev. D42 (1990) 3936–3962.
+ [96] P. Creminelli, A. Nicolis, L. Senatore, M. Tegmark, and M. Zaldarriaga, “Limits on non-gaussianities
+      from wmap data,” JCAP 05 (2006) 004, arXiv:astro-ph/0509029.
+ [97] L. Senatore, K. M. Smith, and M. Zaldarriaga, “Non-Gaussianities in Single Field Inflation and their
+      Optimal Limits from the WMAP 5-year Data,” JCAP 1001 (2010) 028, arXiv:0905.3746
+      [astro-ph.CO].
+ [98] X. Chen, M.-x. Huang, S. Kachru, and G. Shiu, “Observational signatures and non-Gaussianities of
+      general single field inflation,” JCAP 0701 (2007) 002, arXiv:hep-th/0605045 [hep-th].
+ [99] M. Biagetti, F. Verdiani, and E. Sefusatti, “PBI4.” https://zenodo.org/records/10008045.
+[100] E. Sefusatti, M. Crocce, R. Scoccimarro, and H. Couchman, “Accurate Estimators of Correlation
+      Functions in Fourier Space,” Mon. Not. Roy. Astron. Soc. 460 no. 4, (2016) 3624–3636,
+      arXiv:1512.07295 [astro-ph.CO].
+[101] J. R. Bond, L. Kofman, and D. Pogosyan, “How filaments are woven into the cosmic web,” Nature
+      380 (1996) 603–606, arXiv:astro-ph/9512141.
+[102] A. Hatcher, Algebraic topology. Cambridge University Press, Cambridge, 2002.
+
+
+
+
+                                                  – 40 –
+[103] T. K. Dey and Y. Wang, Computational Topology for Data Analysis. Cambridge University Press,
+      2022.
+[104] H. Edelsbrunner and E. P. Mücke, “Three-dimensional alpha shapes,” ACM Transactions on
+      Graphics (TOG) 13 no. 1, (1994) 43–72.
+[105] G. Zhang, Z. Li, J. Liu, D. N. Spergel, C. D. Kreisch, A. Pisani, and B. D. Wandelt, “Void halo mass
+      function: A promising probe of neutrino mass,” Phys. Rev. D 102 no. 8, (2020) 083537,
+      arXiv:1910.07553 [astro-ph.CO].
+[106] B. Y. Wang and A. Pisani, “Cosmology from one galaxy in voids?,” arXiv:2405.04447
+      [astro-ph.CO].
+[107] F. Chazal, B. Fasy, F. Lecci, B. Michel, A. Rinaldo, and L. Wasserman, “Robust topological
+      inference: Distance to a measure and kernel distance,” The Journal of Machine Learning Research
+      18 no. 1, (2017) 5845–5884.
+[108] The GUDHI Project, GUDHI User and Reference Manual. GUDHI Editorial Board, 3.3.0 ed., 2020.
+      https://gudhi.inria.fr/doc/3.3.0/.
+[109] M. Carrière, S. Y. Oudot, and M. Ovsjanikov, “Stable topological signatures for points on 3d
+      shapes,” in Computer graphics forum, vol. 34, pp. 1–12, Wiley Online Library. 2015.
+[110] P. Bubenik et al., “Statistical topological data analysis using persistence landscapes.” J. Mach.
+      Learn. Res. 16 no. 1, (2015) 77–102.
+[111] H. Adams, T. Emerson, M. Kirby, R. Neville, C. Peterson, P. Shipman, S. Chepushtanova,
+      E. Hanson, F. Motta, and L. Ziegelmeier, “Persistence images: A stable vector representation of
+      persistent homology,” The Journal of Machine Learning Research 18 no. 1, (2017) 218–252.
+[112] S. Kališnik, “Tropical coordinates on the space of persistence barcodes,” Foundations of
+      Computational Mathematics 19 no. 1, (2019) 101–129.
+[113] M. Zaheer, S. Kottur, S. Ravanbakhsh, B. Poczos, R. R. Salakhutdinov, and A. J. Smola, “Deep
+      sets,” Advances in neural information processing systems 30 (2017) .
+[114] M. Carrière, F. Chazal, Y. Ike, T. Lacombe, M. Royer, and Y. Umeda, “Perslay: A neural network
+      layer for persistence diagrams and new graph topological signatures,” in International Conference on
+      Artificial Intelligence and Statistics, pp. 2786–2796, PMLR. 2020.
+[115] K. Viswanathan, M. Biagetti, A. Cole, and J. H. T. Yip, “Information-maximizing persistent
+      homology,” to appear in 2024 .
+[116] J. Hartlap, P. Simon, and P. Schneider, “Why your model parameter confidences might be too
+      optimistic: Unbiased estimation of the inverse covariance matrix,” Astron. Astrophys. 464 (2007)
+      399, arXiv:astro-ph/0608064.
+[117] T. Charnock, G. Lavaux, and B. D. Wandelt, “Automatic physical inference with information
+      maximizing neural networks,” Physical Review D 97 no. 8, (Apr, 2018) .
+      http://dx.doi.org/10.1103/PhysRevD.97.083004.
+[118] D. Cohen-Steiner, H. Edelsbrunner, and J. Harer, “Stability of persistence diagrams,” Discrete &
+      Computational Geometry 37 no. 1, (2007) 103–120.
+[119] C. Hahn, R. Scoccimarro, M. R. Blanton, J. L. Tinker, and S. A. Rodrı́guez-Torres, “The effect of
+      fibre collisions on the galaxy power spectrum multipoles,” Mon. Not. Roy. Astron. Soc. 467 no. 2,
+      (2017) 1940–1956, arXiv:1609.01714 [astro-ph.CO].
+
+
+
+
+                                                  – 41 –
+[120] A. Pillepich et al., “Simulating Galaxy Formation with the IllustrisTNG Model,” Mon. Not. Roy.
+      Astron. Soc. 473 no. 3, (2018) 4077–4106, arXiv:1703.02970 [astro-ph.GA].
+[121] R. Davé, D. Anglés-Alcázar, D. Narayanan, Q. Li, M. H. Rafieferantsoa, and S. Appleby, “Simba:
+      Cosmological Simulations with Black Hole Growth and Feedback,” Mon. Not. Roy. Astron. Soc. 486
+      no. 2, (2019) 2827–2849, arXiv:1901.10203 [astro-ph.GA].
+[122] Center for High Throughput Computing, “Center for high throughput computing,” 2006.
+      https://chtc.cs.wisc.edu/.
+[123] N. Henze and B. Zirkler, “A class of invariant consistent tests for multivariate normality,”
+      Communications in Statistics - Theory and Methods 19 no. 10, (1990) 3595–3617,
+      https://doi.org/10.1080/03610929008830400. https://doi.org/10.1080/03610929008830400.
+[124] C. Hahn and F. Villaescusa-Navarro, “Constraining Mν with the bispectrum. Part II. The
+      information content of the galaxy bispectrum monopole,” JCAP 04 (2021) 029, arXiv:2012.02200
+      [astro-ph.CO].
+[125] E. Paillas, C. Cuesta-Lazaro, P. Zarrouk, Y.-C. Cai, W. J. Percival, S. Nadathur, M. Pinon,
+      A. de Mattia, and F. Beutler, “Constraining νΛCDM with density-split clustering,” Mon. Not. Roy.
+      Astron. Soc. 522 no. 1, (2023) 606–625, arXiv:2209.04310 [astro-ph.CO].
+[126] G. Jung et al., “Quijote-PNG: The Information Content of the Halo Mass Function,”
+      arXiv:2305.10597 [astro-ph.CO].
+[127] W. R. Coulton and B. D. Wandelt, “How to estimate Fisher information matrices from simulations,”
+      arXiv:2305.08994 [stat.ME].
+[128] Z. Zheng, A. L. Coil, and I. Zehavi, “Galaxy Evolution from Halo Occupation Distribution Modeling
+      of DEEP2 and SDSS Galaxy Clustering,” Astrophys. J. 667 (2007) 760–779,
+      arXiv:astro-ph/0703457.
+
+
+
+
+                                                – 42 –
+

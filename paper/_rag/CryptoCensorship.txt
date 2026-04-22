@@ -1,0 +1,3071 @@
+                                                           Cryptographic Censorship
+                                               Netta Engelhardt,1 Åsmund Folkestad,1 Adam Levine,1 Evita Verheijden,1,2
+                                                                          and Lisa Yang 1,3
+arXiv:2402.03425v3 [hep-th] 11 Feb 2026
+
+
+
+
+                                                    1 Center for Theoretical Physics, Massachusetts Institute of Technology,
+
+                                                                         Cambridge, MA 02139, USA
+                                                                 2 Black Hole Initiative at Harvard University,
+
+                                                                20 Garden Street, Cambridge, MA 02138, USA
+                                                           3 Computer Science and Artificial Intelligence Laboratory,
+
+                                                      Massachusetts Institute of Technology, Cambridge, MA 02139, USA
+
+                                             engeln@mit.edu, afolkest@mit.edu, arlevine@mit.edu, evitamhv@mit.edu,
+                                                                       lisayang@mit.edu
+
+                                          Abstract: We formulate and take two large strides towards proving a quantum version
+                                          of the weak cosmic censorship conjecture. We first prove “Cryptographic Censorship”:
+                                          a theorem showing that when the time evolution operator of a holographic CFT is
+                                          approximately pseudorandom (or Haar random) on some code subspace, then there
+                                          must be an event horizon in the corresponding bulk dual. This result provides a gen-
+                                          eral condition that guarantees (in finite time) event horizon formation, with minimal
+                                          assumptions about the global spacetime structure. Our theorem relies on an exten-
+                                          sion of a recent quantum learning no-go theorem and is proved using new techniques
+                                          of pseudorandom measure concentration. To apply this result to cosmic censorship,
+                                          we separate singularities into classical, semi-Planckian, and Planckian types. We illus-
+                                          trate that classical and semi-Planckian singularities are compatible with approximately
+                                          pseudorandom CFT time evolution; thus, if such singularities are indeed approximately
+                                          pseudorandom, by Cryptographic Censorship, they cannot exist in the absence of event
+                                          horizons. This result provides a sufficient condition guaranteeing that seminal holo-
+                                          graphic results on quantum chaos and thermalization, whose general applicability relies
+                                          on typicality of horizons, will not be invalidated by the formation of naked singularities
+                                          in AdS/CFT.
+Contents
+1 Introduction                                                                        1
+  1.1 Preliminaries                                                                  12
+
+2 Warmup: QESs Lie Behind Horizons                                                   16
+
+3 Crytographic Censorship                                                            20
+  3.1 Review: pseudorandomness and complexity of learning                            21
+  3.2 Complexity of learning in holography                                           25
+  3.3 Pseudorandomness implies horizons                                              28
+  3.4 Possible subspaces with pseudorandom time evolution                            34
+
+4 From Cryptographic to Cosmic Censorship                                            37
+  4.1 The size of singularities                                                      38
+  4.2 Accommodating gravitational pseudorandomness                                   43
+  4.3 Quantum cosmic censorship                                                      48
+
+5 Discussion                                                                         49
+
+A Proof of Theorem 3                                                                 54
+
+B Proof of Corollary 3.1                                                             62
+
+
+
+
+1    Introduction
+Curvature singularities are ubiquitous in General Relativity: the evolution of smooth
+initial data generically results in such singularities [1–3]. Observationally, however,
+evidence for singularity formation from generic gravitational processes (such as matter
+collapse) remains at best indirect. This apparent absence of directly-observable sin-
+gularities is often explained by the general expectation that the formation of horizons
+is likewise generic: so singularities are usually cloaked behind event horizons. This
+hypothesis — that singularities resulting from initial data evolution should be generi-
+cally hidden behind horizons — is known as the Weak Cosmic Censorship Conjecture
+(WCCC) [4]. It is a cornerstone assumption of almost all results in modern gravita-
+tional physics, from classical theorems such as the Hawking area law [5], to key results
+
+
+
+                                         –1–
+from the general “it from qubit” program. In particular, the expectation that CFT
+thermalization corresponds to black hole equilibration, and more generally that black
+hole statistics are reflected in CFT thermal states, crucially depends on the assumption
+that states with horizons are typical in some measure.1 If the WCCC were false, naked
+singularities could be as typical as black holes; our understanding of quantum chaos,
+eigenstate thermalization, and black hole information in holography would be called
+into question.
+     Surprisingly, it turns out that naked singularities do exist in solutions to the Ein-
+stein equation satisfying various energy conditions and regular initial data, and these
+states do not constitute a measure zero set. There is by now a large repertoire of
+counterexamples to the WCCC: in more than four spacetime dimensions, the studies of
+Gregory–Laflamme type instabilities of [7] have illustrated the existence of “pinch-off”
+singularities as the end-stage of certain black holes (e.g., the black string [8]) — see [9]
+for a review; more recently, [10–13] constructed extended naked singularities in asymp-
+totically AdS4 spacetimes with various matter profiles; see also [14]. A similar mech-
+anism was used by [15] to construct a likely counterexample in the four-dimensional
+asymptotically flat setting.
+     It thus appears that horizons and singularities are not related in any trivial or
+obvious way: curvature singularities may form outside (or in the absence) of any hori-
+zons, and horizons may form without singularities behind them [16]. There is no extant
+formulation of WCCC that is (1) not violated and (2) sufficient to guarantee the con-
+sistency of seminal results in AdS/CFT such as the universality of the saturation of
+the chaos bound and the bulk manifestation of the CFT thermal partition function.
+     Some progress towards understanding cosmic censorship in quantum gravity was
+made in [10–12], where it was noted that many (though not quite all) of the counterex-
+amples also violate the Weak Gravity Conjecture [17], suggesting the possibility that
+the WCCC in four dimensions is valid in the landscape but violated in the swampland.
+Further evidence in favor of this conclusion was presented in [14], which constructed
+large sets of AdS4 initial data satisfying the gravitational constraints and the null en-
+ergy condition whose future development must include naked singularities, but these
+theories violated properties required of theories admitting a UV completion via holog-
+raphy [18]. This hypothesis would suggest that while classical General Relativity may
+violate the WCCC, the semiclassical limit of quantum gravity does not.
+     However, this naı̈ve “swampland censorship” scenario is clearly incomplete. In
+higher dimensions, the Gregory–Laflamme instability is not excluded by any known
+swampland constraints; moreover the inclusion of quantum corrections is expected to
+  1
+      This is not identical to the firewall sense of typicality of [6]. See footnote 6 on page 6.
+
+
+
+
+                                                    –2–
+Figure 1: The evaporation point of a black hole is, in some sense that we make precise
+in Sec. 4.1, “small”.
+
+
+lead to black hole evaporation, which also violates the WCCC. However, the absence
+of naked singularities in the observable universe together with the top down arguments
+from quantum gravity suggest that some version of WCCC remains valid: intuitively,
+a commonality between the Gregory–Laflamme instability and the evaporating black
+hole is that there is a heuristic sense, which in this article we will make precise, that
+the naked part of the singularities is “small”. See Fig. 1. That is, naked singularities
+can exist, but they must only be visible to asymptotic observers for a “short” period
+of time. Furthermore, they can only exist in spacetimes that have horizons — so that
+the bulk of the singularity can remain hidden.
+     A formulation of such a “quantum gravitational” version of cosmic censorship –
+which we propose later in this article – and its subsequent proof would require as sine
+qua non both (1) a condition that can guarantee the formation of horizons in broad
+generality, and (2) a definition of a “small” naked singularity.
+     Point (1) is a notoriously difficult open problem. Event horizons are by definition
+teleological: an event horizon is defined with reference to future infinity. Consequently,
+very few extant results can guarantee the existence of such a global construct even
+under very restrictive assumptions (and none guarantee that a given event horizon will
+successfully hide the full extent of a curvature singularity). See [19–21] for a series
+of failed attempts to construct criteria to this effect. Addressing point (1) would also
+have the potential to shed light on a number of other research programs, such as
+thermalization in AdS/CFT (see e.g. [22] for a review) and the firewall problem [6, 23,
+24]. Point (2) has seen various approaches (see [25]), but none of those have successfully
+made contact with the generic existence of horizons, since (1) has thus far remained
+unresolved.
+
+
+
+                                          –3–
+    Here we accomplish both (1) and (2) in the context of AdS/CFT: we give a general
+guarantee for the existence of event horizons at finite time, and criteria for the size of a
+singularity that make contact with the guarantee for event horizons. In particular, we
+classify singularities into three categories: classical, semi-Planckian and Planck-sized,
+and we motivate an assumption on the behavior of singularities that would guarantee
+the existence of horizons at finite time — via point (1) — in spacetimes containing such
+classical or semi-Planckian singularities. In the rest of this section, we give a rough
+outline of the central ingredients of (1) and (2).
+
+A General Guarantee for Horizon Formation
+Under the standard assumption of global hyperbolicity,2 which guarantees various con-
+sistency results such as unitary invariance of the von Neumann entropy and entangle-
+ment wedge nesting, there are various sufficient conditions that may guarantee existence
+of an event horizon, such as exponential reconstruction complexity or chaos. However,
+global hyperbolicity implies the WCCC as a consequence: almost all results ensuring
+consistency of the AdS/CFT dictionary assume cosmic censorship — even though it is
+known that cosmic censorship can be violated in perfectly reasonable AdS/CFT setups
+(e.g., the evaporating AdS black hole). This strongly suggests that while the WCCC is
+sufficient for consistency, it is not in fact necessary. We will argue for a more minimal-
+istic form of censorship, which is necessary;3 it remains to be seen whether this version
+is also sufficient.
+     Our goal is to find a cosmic censorship conjecture that follows directly from con-
+sistency of the AdS/CFT dictionary. Clearly, an essential part of a holographic formu-
+lation of cosmic censorship is the holographic dual of an event horizon: we are looking
+for the boundary dual to the process of bulk horizon formation. This specifically means
+that we are interested in the existence of a region outside of the causal wedge of the en-
+tire asymptotic boundary. The separation between the causal (or simple [27–29]) wedge
+and the entanglement wedge has been previously linked in [29–31] to the separation
+between polynomial and exponential quantum complexity classes in the dual theory
+(see also [32] and footnote 9). Our approach to finding a guarantee for the formation
+of event horizons will thus focus on reconstruction restrictions by complexity class.
+     More concretely, we ask when there is a guarantee for the existence of some operator
+Q in the large-N limit that cannot be reconstructed from knowledge of the causal wedge
+   2
+     We really mean AdS hyperbolicity here, which is essentially global hyperbolicity when the asymp-
+totic boundary is included. See [26] for the precise definition.
+   3
+     We hope that this sentence is not taken out of context.
+
+
+
+
+                                               –4–
+alone, given that the latter can be reconstructed efficiently, e.g., by jumping into the
+bulk, making a measurement, and sailing back towards the boundary.4
+     In [33], two of us provided such a guarantee at large but finite N under certain
+assumptions. The full statement of the relevant theorem will be reviewed at length
+in Sec. 3.1; here we provide a heuristic statement only, starting with the most signifi-
+cant assumption: that the action of the fundamental time evolution operator U of the
+system is well modeled on our code subspace by a pseudorandom unitary [34] (we use
+“fundamental” to refer to the full quantum description of the gravitational system, as
+in [31]). In AdS/CFT, this assumption is valid whenever the time evolution of the
+CFT on a particular choice of code subspace is well approximated by a pseudorandom
+unitary at any finite value of N ;5 this is not dissimilar from the assumption of e.g. [35]
+that the fundamental time evolution of a black hole is well modeled by a two-design
+or as in [31, 36] by a (pseudo)random unitary. Pseudorandom unitaries are operators
+drawn from an ensemble {Uk } that are indistinguishable from Haar random unitaries
+by any efficient quantum algorithm. Our results below also hold for Haar random uni-
+taries, but the advantage of pseudorandom unitaries over Haar random unitaries is that
+by definition they can be constructed by an efficient process. While existence of pseu-
+dorandom unitaries has not been explicitly demonstrated yet, candidate constructions
+have appeared in, e.g., [34]. We will not make use of any such explicit constructions.
+     Under this first assumption of pseudorandom unitary (PRU) dynamics, the theorem
+of [33] considers any efficient quantum algorithm A that:
+
+  (a) Prepares polynomially complex states |φ⟩ and has access to the action of the
+      time evolution operator U on the expectation values of polynomially complex
+      observables in such states;
+
+ (b) Uses the information in (a) to attempt to learn U (or a circuit representation of
+     U ), the pseudorandom time evolution operator, thereby producing some operator
+     U
+     b;
+
+  (c) After completing (b), is handed the actual state of the system |ψ⟩ and is asked
+      to predict U acting on |ψ⟩ using the outcome of (b).
+   4
+      By an efficient reconstruction, we mean one that can be implemented by a quantum circuit whose
+size is polynomially bounded in the logarithm of the dimension of the code subspace under consider-
+ation.
+    5
+      We will eventually work at strictly infinite N , but then we will work only with time-evolved states
+rather than the unitary operator that generates that time evolution, since the aforementioned unitary
+operator is not well-defined in the strict infinite N limit.
+
+
+
+
+                                                 –5–
+    The theorem states that on average — and as we will show in Sec. 3.2, for typical
+pseudorandom states and unitaries6 — any efficient algorithm will fail to produce an
+accurate guess for U acting on |ψ⟩.7 That is, an efficient algorithm’s best guess U
+                                                                                  b for
+U will satisfy:
+                                    b † U |ψ⟩ |2 ≤ 1 − α ,
+                              | ⟨ψ| U                                             (1.1)
+where α is an O(1) constant, independent of the size of the Hilbert space in which |ψ⟩
+lives. This result in particular guarantees the existence of a distinguishing operator Q
+whose expectation value differs between U  b |ψ⟩ and U |ψ⟩ by at least 2α.
+     We now apply this result to our gravitational setup using the fact that reconstruc-
+tion is a particular type of learning. We will consider code subspaces Hcode of dimension
+     a
+eO(GN ) , where −1 ≤ a < 0, which do not necessarily have horizons in typical states. For
+example, a microcanonical window of width O(N ); another example is a set of states
+where the leading order contribution to the geometry is the same for all of the states
+at least for a time of O(G0N ). We will show that it is easy to prepare candidates for
+such code subspaces without obviously incurring horizons. We next assume that the
+time evolution is gravitationally pseudorandom: we will define this term more precisely
+in Sec. 3.2, but roughly speaking it denotes an O(GaN ) amount of pseudorandomness;
+we find that this amount of pseudorandomness is generally compatible with an Hcode
+             a
+of size eO(GN ) , which are the code subspaces that we consider. Next, we argue for the
+existence of an efficient algorithm that, as part of the learning phase, can reconstruct
+the causal wedge of any efficiently-preparable state in this code subspace. Under cer-
+tain technical assumptions, there is an algorithm that, given access to some CFT data,
+is able to output a guess U  b for the time evolution of the initial state that accurately
+reproduces the expectation values of all operators in the causal wedge. However, the
+theorem of [33] guarantees that the fidelity between the predicted time evolution and
+the actual time evolved state is low, which implies that there exists a distinguishing
+operator Q whose expectation values differ at O(1) between the actual time evolved
+state and the predicted time evolution of the state.
+   6
+      Caution: this is not the typical use of ‘typical’. Here we will use the qualifier typical specifically
+for states in the code subspace to which measure concentration applies; this depends on the choice
+of distribution of states under consideration. For example, we may consider “typical Haar random
+states” or “typical pseudorandom states”. We will always note the distribution under discussion. This
+nomenclature is not to be confused with the previously used ‘generic’, which refers to an open subset
+of the space of solutions to the Einstein equation.
+    7
+      Note that prima facie, the fact that we extend Theorem 2 of [33] to any fixed, typical U and ψ
+appears to contradict some of the statements in the introduction of [33], i.e., that randomness is a
+sine qua non for a quantum learning no-go theorem. This appears to be the case because if U = U0
+is fixed, there exists a trivial AU that just exactly outputs U0 . The point is that U0 is here ‘atypical’,
+and the algorithm will fail for all other U ̸= U0 .
+
+
+
+
+                                                  –6–
+    Since there exists a learning algorithm that can accurately reconstruct the time
+evolution of all operators in the causal wedge but cannot accurately reconstruct the
+expectation value of some operator Q, which we show exists in the large-N limit,
+we immediately find that the dual to Q lies outside of the causal wedge. Thus, the
+boundary of the causal wedge is nontrivial and an event horizon must exist.
+    We call this result Cryptographic Censorship:
+
+          (Pseudo)random dynamics guarantee event horizon formation in typical
+                               (pseudo)random states.
+
+     This is the first general condition that guarantees the formation of horizons without
+requiring asymptotic time evolution, thus addressing the first task above: the prescrip-
+tion of a broadly applicable quantum complexity theoretic diagnostic of event horizon
+formation.8 This result can be thought of as a quantum instability of generic asymp-
+totically AdS spacetimes, assuming that typical pseudorandom dynamics are a good
+model for (sufficiently long) time evolution of generic spacetimes. We may apply this
+result to our two examples of code subspaces: microcanonical windows of width O(N )
+and states with an identical leading order geometry at some fixed time. In the case of
+the former, we find that pseudorandom (respectively, random) states in a given micro-
+canonical window are exponentially (respectively, doubly exponentially) likely to have
+horizons. In the case of the latter, we find that whenever it is possible to squeeze a
+gravitational amount of pseudorandomness into an O(1) time band on the boundary,
+an event horizon must form.
+     Before we address the second task mentioned above — classifying the size of a
+singularity — let us motivate why pseudorandom time evolution is natural in strongly
+gravitating systems. There is a general expectation that some amount of (approximate)
+randomness is crucial for understanding black hole dynamics: due to scrambling, many
+aspects of black holes appear to be well modeled by Haar random unitary dynamics
+or sometimes by the weaker notion of k-designs [35]. The chaotic nature of black hole
+physics [37–39] and the connection between randomness and chaos [40] have strength-
+ened this expectation. However, we also expect that time evolution in quantum gravity
+can be efficiently implemented. Haar random unitaries and (exact) k-designs do not
+have this property. We thus find pseudorandom unitaries to be a well-motivated model
+of black hole dynamics. On the boundary side of the AdS/CFT duality, many holo-
+graphic CFTs are known to exhibit chaotic dynamics in typical (high energy) states.
+Here, we will show that sufficiently pseudorandom unitary (boundary) time evolution
+  8
+      Here we are defining an event horizon as ∂J − [I ], so this includes holographic cosmologies in AdS.
+
+
+
+
+                                                  –7–
+in fact guarantees the existence of an event horizon in typical states (and thus, by
+definition, of a black hole).9
+    Thus far we have argued that pseudorandomness is a valid model for time evolution
+of strongly gravitating systems using established facts about black holes. We shall
+postpone motivating pseudorandomness as a model for time evolution in the context of
+naked singularities until we have defined what we mean by “large” and “small” naked
+singularities. We therefore proceed to give an overview of this second task.
+
+Size of a Naked Singularity
+Intuitively, the naked singularities that we would like quantum gravity to exclude are
+classically extended with divergent curvatures, and emitting large amounts of observ-
+able, causally propagating radiation as prescribed by some fundamental quantum grav-
+ity evolution.
+     In many cases, such large curvatures create (quantum) trapped surfaces and (quan-
+tum) extremal surfaces. In [41], unitary invariance of SvN in the dual CFT was used to
+prove that classical extremal (and trapped) surfaces resulting from classical singulari-
+ties that do not “evaporate” must lie behind horizons in AdS/CFT. As a warmup, we
+will prove that even upon inclusion of quantum corrections and under no restrictions
+on the behavior of the singularity, quantum extremal surfaces (QESs) generically lie
+behind horizons. The argument makes essential use of the geometrization of regions
+of high- and low-reconstruction complexity: the causal wedge, and more generally the
+wedge of the outermost QES, admits an efficient reconstruction — i.e., subexponen-
+tially complex in log dim Hcode , where Hcode is as before the code subspace on which
+reconstruction is taking place [30], while the complementary wedge — the so-called
+Python’s Lunch — does not [42]. See Fig. 2. In particular, acting on the Python’s
+Lunch is an exponentially difficult (in log dim Hcode ) task in the boundary theory. If
+any QES lies in causal contact of the boundary, it is possible to act on the lunch by
+throwing in some timelike probe, as illustrated in Fig. 3. This is a simple task, and
+thus cannot happen: QESs — minimal or otherwise — must therefore lie outside of
+   9
+    At this point it is worth noting that [32] also discussed pseudorandomness in the context of
+reconstruction complexity: they showed that an easily prepared set of black hole microstates —
+specifically black holes formed by collapse together with the application of some randomly chosen
+shocks — should form a pseudorandom ensemble, and that as a consequence, boundary reconstruction
+of the volume of the black hole interior (for a code subspace containing all these states) must be
+exponentially complex. Our aim here is notably different: crucially, we do not start with an ensemble
+of black hole microstates, but instead show that gravitational pseudorandom boundary dynamics
+implies the existence of an event horizon.
+
+
+
+
+                                               –8–
+Figure 2: A spacetime with a Python’s Lunch. In the Penrose diagram on the left, the
+lunch, causal wedge (WC ) and the wedge of the outermost QES (WO ) are indicated.
+The left and right green dots are the minimal and outermost QES, respectively. The
+right panel depicts a timeslice.
+
+
+the causal wedge10 of the relevant region.11
+     However, singularities are not always associated with (quantum) trapped or (quan-
+tum) extremal surfaces. In these cases, the aforementioned result showing that extremal
+surfaces imply horizons will not be useful. However, if a singularity could be shown
+to be associated to a gravitational amount of pseudorandomness, then Cryptographic
+Censorship ensures that these singularities induce horizons. But how can we know
+which singularities are “severe enough” to accommodate gravitational pseudorandom-
+ness? As a first step towards this question, we give a precise definition of the size
+of a naked singularity Γ, denoted |Γ|. This quantity measures the minimal amount
+of CFT time evolution required to prescribe (or equivalently, obtain) all information
+about the singularity. For a timelike singularity, we furthermore show that this quan-
+tity also measures how many modes within the semiclassical EFT can interact with the
+singularity. Of course, the dynamics of the singularity itself would not be semiclassical,
+  10
+     For those readers who have previously seen the Quantum Focusing Conjecture (QFC) used to
+justify why QESs lie behind horizons [43, 44], note that all such proofs to date have assumed cosmic
+censorship (in the form of global hyperbolicity). We prove this result using the holographic dictionary
+instead of using the QFC.
+  11
+     Any readers confused about the islands outside the horizon phenomenon [45, 46] should recall that
+the horizons of [45, 46] are not the horizons of the system for which the island is quantum extremal
+but are rather the horizons of a smaller system.
+
+
+
+
+                                                –9–
+   Figure 3: A forbidden situation: a QES in causal contact with the boundary.
+
+
+but we argue that in the ℓPl → 0 limit, from the perspective of weakly backreacting
+probe fields, a timelike singularity might reasonably be conjectured to act primarily
+as a complicated UV-sensitive boundary condition for their evolution. Then we show
+that if |Γ| does not go to zero as ℓPl → 0, or if it goes to zero sufficiently slowly,
+then the singularity is compatible with inducing gravitational pseudorandomness in
+the dynamics. With this in mind, we classify singularities into three groups: classical,
+semi-Planckian, and Planckian. We speculate that classical naked singularities, and
+possibly semi-Planckian ones, are forbidden by Cryptographic Censorship. Compat-
+ibility with gravitational pseudorandomness is of course necessary but not sufficient
+to guarantee actual gravitational pseudorandomness in the dynamics. We of course
+cannot give a top-down derivation that the unitary dynamics of a holographic CFT
+are approximately pseudorandom on such code subspaces, but we shall motivate this
+as a reasonable assumption for generic classical timelike singularities. Cryptographic
+Censorship, together with this expectation, is the basis of our subsequent conjecture
+of Quantum Cosmic Censorship: that classical (and perhaps semi-Planckian) singular-
+ities must be hidden behind horizons; only Planckian singularities may be visible to
+the asymptotic observer.
+     Let us now motivate the assumption of pseudorandomness as a model for singu-
+larity dynamics (which we have previously motivated for black holes; see also [33, 36]).
+A natural source of pseudorandom dynamics associated to a singularity is due to the
+Planckian physics at the singularity itself — what we described above as a UV-sensitive
+boundary condition. We expect such a boundary condition cannot be predicted by ef-
+
+
+
+                                        – 10 –
+fective field theory. We will argue in more detail in Sec. 4.2 that this UV-sensitive
+boundary condition at the singularity could plausibly be the effect of pseudorandom-
+ness in the fundamental dynamics. We expect that in many cases, pseudorandomness
+is an accurate model for the boundary dynamics describing a singularity. When this
+criterion is satisfied, the theorem of [33] together with the argument outlined above
+guarantees that the spacetime has an event horizon.12 It immediately follows that
+whenever the fundamental dynamics of a singularity are well approximated by a pseu-
+dorandom unitary, the singularity incurs an event horizon.
+     It is worth mentioning another potential source of pseudorandom dynamics associ-
+ated to a singularity: spacetime dynamics in the vicinity of the singularity might induce
+chaos in the probe fields. The paradigmatic example of chaos in classical gravity —
+other than event horizons via the butterfly effect — is the BKL phenomenon [47]. This
+phenomenon, which involves chaotically oscillating metric components, is expected to
+be generic in the descent to a spacelike singularity [48]. BKL behavior is however only
+established for spacelike singularities; it is possible that certain timelike singularities
+could induce similar chaos upon approach (see, e.g., [49]), though we remain agnostic
+on the plausibility of this potential source of pseudorandomness.
+     We emphasize here that throughout this paper we will be considering pseudoran-
+domness in the boundary dynamics. Readers interested in understanding what happens
+in the situation of bulk pseudorandomness should refer to Sec. 5.
+     We now briefly summarize the paper. We begin in the next subsection by setting up
+notations and conventions. In Sec. 2, we prove that nonminimal QESs must lie behind a
+horizon. In Sec. 3 we prove that when the time evolution in the fundamental description
+is sufficiently pseudorandom, the bulk spacetime contains an event horizon. We then
+apply this to the microcanonical window and a code subspace representing states with
+the same (leading order) geometry for times of O(G0N ). In Sec. 4, we provide a definition
+that quantifies the size of (the naked part of) a singularity, and we show that classical
+(and semi-Planckian) singularities can accommodate gravitational pseudorandomness.
+By Cryptographic Censorship, this would then imply that such singularities must incur
+horizons. In Sec. 4, we also speculate on how Cryptographic Censorship can be used to
+prove a version of cosmic censorship. We end with a conjecture for a new, inherently
+quantum gravitational form of cosmic censorship that may be consistent with known
+counterexamples to the standard WCCC, including the evaporating black hole. In
+Sec. 5, we end with a short discussion of our aspirations and a few possible future
+  12
+    Note that our argument does not guarantee that the singularity lies behind the event horizon, nor
+should it: we expect that small singularities can exist outside of horizons. Our techniques do suggest
+that it may be possible to limit the extent to which a singularity can lie outside of a horizon, but we
+leave a detailed investigation of this question to future work.
+
+
+
+
+                                               – 11 –
+directions. In Apps. A and B, we provide proof details for the statements of Sec. 3.
+
+1.1      Preliminaries
+Assumptions. Unlike much of the AdS/CFT literature, we will not be imposing the
+assumption of global hyperbolicity on the bulk spacetimes under consideration, as this
+is tantamount to assuming weak (and strong) cosmic censorship. This means that,
+even in the GN → 0 limit, QFT in curved spacetime (including linearized gravitons)
+cannot be utilized for time evolution. However, we will still assume that QFT in
+curved spacetime is valid within causal diamonds that contain no singularities. We will
+further assume that any spacetime under consideration admits an initial data slice Σ
+with an everywhere defined and nowhere vanishing continuous timelike unit normal; in
+particular, we require that D[Σ] contains an open set containing Σ. Any singularity
+in the spacetime will be assumed to act as a UV-sensitive boundary condition that
+determines the relation between the algebras of different causal diamonds.13 Finally,
+we will take a conformal frame which is taken to be fixed at any value of N , including
+in the large-N limit.
+
+Assumptions on the semiclassical limit. We will also often implicitly use the
+framework of asymptotically isometric codes for discussing the notion of “geometric”
+states in the boundary theory. This framework was inspired by the work of [50, 51].
+By “a geometric state,” we really have in mind that our bulk state is described by a
+sequence of boundary states, |ψN ⟩ ∈ HN , labeled by an index N , which controls 1/GN
+in the bulk. The Hilbert space HN is that of the boundary theory at finite N . In the
+case where the boundary theory is N = 4 SYM, we have in mind that N is the rank of
+the gauge group, but more generally it is just some parameter in the boundary theory.
+    We now state what we mean by an asymptotically isometric code for our work.
+These assumptions are only a slight modification of those listed in [52].
+
+Assumption 1. The bulk Hilbert space is given by a direct sum H = Hg1 ⊕ Hg2 ⊕
+..., where Hgi is the Hilbert space of QFT states defined perturbatively about a fixed
+background manifold Mgi . Furthermore, the algebra of bounded operators on this Hilbert
+space, B(H), breaks up into a direct sum over bounded operators on each Hilbert space
+                      L
+individually, B(H) = i B(Hgi ).
+
+  13
+    The singularity only has an effect on the relation between two diamonds D1 and D2 when the set
+[J (D1 ) ∪ J − (D1 )] ∩ [J + (D2 ) ∪ J − (D2 )] contains part of the singularity. If this set does not contain
+  +
+
+a part of the singularity, the EFT can be used to relate the algebra of observables in D1 and D2 .
+
+
+
+
+                                                   – 12 –
+Assumption 2. There exists a sequence of bounded linear maps VN : H → HN such
+that for all |ψ⟩ , |ϕ⟩ ∈ H
+
+                               lim ⟨ψ|VN† VN |ϕ⟩ = ⟨ψ|ϕ⟩ ,                         (1.2)
+                              N →∞
+
+where HN is the full boundary Hilbert space. From the results of [50], we will just need
+that for every bulk state ρ on B(H) and every operator O ∈ B(H), there is a sequence
+of states ρN and boundary operators ON ∈ B(HN ) such that
+
+                                 lim ρN (ON ) = ρ(O),                              (1.3)
+                                 N →∞
+
+
+and where ρN and ON are related by conjugation by VN to their bulk duals, ρ = VN† ρN VN
+and ON = VN OVN† .
+
+     Given these assumptions, we can more carefully define what we mean by a boundary
+“geometric” state in the context of an asymptotically isometric code. Namely, we say
+that a sequence of states {ψN : ψN ∈ HN } is geometric if there exists |ψ⟩ ∈ H such
+that ||VN |ψ⟩ − |ψN ⟩ ||1 = 1/ exp(N ). In such a situation, we will sometimes say that
+the states |ψN ⟩ labeled by N are “represented” by the asymptotically isometric code.
+     In what follows, we will be concerned with whether or not bulk observables lie in
+the causal wedge. We will denote the algebra associated to the causal wedge as Ncw .
+This algebra is a subalgebra of B(H) ⊇ Ncw . Whether this inclusion is strict or not
+is the essential point of this work. If B(H) ⊋ Ncw , then there exists a horizon by
+definition.
+     In what follows, we will make various assumptions about the time evolution of
+the boundary theory. To conform with the standard expectations of AdS/CFT, we
+will assume that whenever we have an asymptotically isometric code, then bulk time
+evolution is boundary time evolution on the code subspace. We can encapsulate this
+in the following assumption.
+
+Assumption 3. Let Hbulk be the bulk Hamiltonian acting on H. Furthermore, let HN
+be the boundary Hamiltonian at finite N acting on HN . Then
+
+                               VN† e−iHN t VN = e−iHbulk t .                       (1.4)
+
+Notation and conventions. We now proceed to introduce and review some lan-
+guage and notation from the quantum computing literature, which will be important
+for the formulation of Cryptographic Censorship. The rest of this section contains
+notation that will mostly be used in Sec. 3. We will use H to denote Hilbert spaces
+and for a pure state |ψ⟩, we will use ψ to denote the density matrix |ψ⟩ ⟨ψ|. When we
+
+
+
+                                         – 13 –
+write x ← X , we mean a variable x is drawn from a distribution X . For example, by
+U ← µ, we mean to draw a unitary U (from the unitary group U(H)) using the Haar
+measure µ; we will also use µ to denote the distribution of Haar random states, e.g.,
+when we write |ψ⟩ ← µ. We use Pr to denote taking the probability of some outcome
+                                      x←X
+occurring for x drawn from X . We will often work with a parameter k, which in the
+cryptographic literature is called a “key”. This should be thought of as some small
+amount of random classical information that can be used to encode or decode data.
+Concretely, it is a bit string that is sampled uniformly from a key space K, a set of bit
+strings. The dimension of K scales with a parameter κ, which is frequently referred
+to in the literature as the “security parameter”. We will always have in mind that we
+are scaling log dim H = poly(κ) and will eventually take the κ → ∞ limit. A function
+f (x) is said to be negligible in its parameter x if for any constant c > 0, |f (x)| ≤ x−c
+for any sufficiently large x. We will say that a quantity f (x) is O(g(x)), denoted by
+f (x) ∼ O(g(x)), if for some positive constants c1 , c2 and for any sufficiently large x,
+c1 g(x) ≤ |f (x)| ≤ c2 g(x).14 Finally, we will call an operator V approximately norm-
+preserving if it approximately preserves state norms, i.e., for any state |ψ⟩, ⟨ψ| V † V |ψ⟩
+is exponentially close to 1 for sufficiently large κ. This of course includes any unitary
+operators.
+     Our results will make heavy use of quantum algorithms, which we now define. A
+quantum algorithm A is a map from an input Hilbert space Hin to some output set
+C. Note that the set C can be a Hilbert space, a classical space, or some other set
+altogether. For example, a quantum algorithm could take as input a quantum state
+|ψ⟩ ∈ Hin and output a classical bit representation of an operator O (e.g., the coeffi-
+cients of the representation of O in some fixed choice of basis). A quantum algorithm A
+acting on some Hin is said to be efficient, polynomially complex, or equivalently compu-
+tationally bounded if it can be implemented by a quantum circuit of size no greater than
+polynomial in log dim Hin .15 Here we will typically take Hin to be the code subspace
+under consideration. We will often drop the reference to log dim Hin when describing
+complexity or efficiency of such algorithms.
+     Consider now an efficient algorithm designed to take in a state |ψ⟩ and output 0 if
+it determines that |ψ⟩ was sampled from distribution µ1 and 1 if it determines |ψ⟩ came
+from µ2 . In this case, we say the two ensembles are computationally indistinguishable
+— which we define precisely for general algorithms below — if any efficient algorithm
+succeeds at this task with probability upper bounded by 1/2 up to negligible corrections.
+  14
+     In computer science literature this is denoted by f = Θ(g(x)).
+  15
+     This involves some canonical choice of gates; however, this choice does not change the scaling in
+log dim Hin .
+
+
+
+
+                                               – 14 –
+It should be clear that this is equivalent to saying that the quantum algorithm outputs
+1 (or equivalently 0) with almost the same probability when acting on both µ1 and µ2 .
+     Note that the authors of [34], whose definitions of pseudorandom unitaries and
+states we will use, demand that pseudorandom ensembles are indistinguishable from
+the Haar ensemble even if the algorithm is allowed a reasonable (polynomial) number
+of copies of the state. Having multiple copies of the state is essential to allow the
+algorithm to probe coherent information about the quantum state.
+     With this intuition, we present the exact definition of computational indistinguisha-
+bility of ensembles of states for general quantum algorithms:
+
+Definition 1 (Computational Indistinguishability). Two ensembles of states, S1 and
+S2 , in some Hilbert space H, with size parameterized by a parameter κ, are com-
+putationally indistinguishable if for any efficient quantum algorithm A and for all
+m = poly(κ),
+
+                       A(|ψ1 ⟩⊗m ) = 1 −              A(|ψ2 ⟩⊗m ) = 1
+                                                                       
+              Pr                             Pr                             = negl(κ) .   (1.5)
+            |ψ1 ⟩←S1                       |ψ2 ⟩←S2
+
+
+     When we write A = 1, we are considering that the algorithm is given some binary
+task (e.g., deciding whether a state is pseudorandom or not), and outputs either 0 or
+1; we write A = 1 to indicate that it outputs 1.
+     The specific quantum algorithms that we will consider are learning algorithms;
+these are efficient algorithms that take certain data as input, implement some processing
+with the goal of learning some outcome, and finally produce their best guess for the
+outcome. In our particular context, the learning algorithms will aim to learn a circuit
+(or algebraic) representation of a unitary operator U . During the initial learning phase,
+the algorithms are given “oracle access” to some unknown unitary U , denoted by AU :
+this means that the algorithms have the ability to query U a polynomial number of
+times on a polynomial number of (efficiently preparable) states |φi ⟩ ∈ H to obtain
+U |φi ⟩ during its learning phase. During this phase, the algorithms can perform any
+polynomially complex computation between queries, on both the U |φi ⟩ from its queries
+thus far, and on its own registers. At the end of this phase, the algorithms’ oracle
+access to U is terminated, and they are tasked with producing a maximally accurate
+representation of U or a particular aspect or feature of it: e.g., U acting on some initial
+state |ψinitial ⟩ which would now be given to the algorithm.
+     Let us briefly make a note on the different parameters and dimensions used through-
+out this paper. In the context of AdS/CFT, we will be working with code subspaces of
+dimension dim Hcode = 2κ , where the security parameter κ = poly(N ). For concrete-
+ness, we will consider GN ∼ 1/N 2 , but the relation between GN and N can be changed
+
+
+
+                                            – 15 –
+Figure 4: An example where null geodesics fired from χ are geodesically incomplete,
+but there is no horizon.
+
+
+to the reader’s liking. We will often use N instead of κ to parameterize functions, e.g.,
+for negligible functions we will write η(N ).
+    Note that theorems and proofs in this paper are well above the physics level of
+rigor but fall short of a mathematician’s level of rigor in a few places. We identify
+these gaps where possible and leave a fully rigorous formulation thereof to the curious
+mathematician.
+
+
+2       Warmup: QESs Lie Behind Horizons
+We will show in this section that if χ is a nonempty QES homologous to I in a space-
+time (M, g), then it lies behind both past and future event horizons. The quantum
+focusing conjecture (QFC) [53] with reflecting boundary conditions at I guarantees
+by the quantum singularity theorem [54] that at least one null geodesic fired from χ
+is geodesically incomplete.16 However, in the absence of a stringent causality assump-
+tion such as AdS hyperbolicity, null geodesic incompleteness does not guarantee the
+existence of horizons. See Fig. 4 for an illustration.
+     When χ is the minimal (and nonempty) QES for I in M , it immediately follows
+from the QES formula relating Sgen [χ] to SvN [ρI ] that bulk perturbations locally prop-
+agating from I (future- or past-directed) cannot modify Sgen [χ] and thus cannot reach
+ 16
+      Strictly speaking, the restricted QFC [55] is sufficient to guarantee this.
+
+
+
+
+                                                  – 16 –
+Figure 5: A QES outside the horizon, leading to a contradiction with the unitary
+invariance of von Neumann entropy: SvN [ρI ] = SvN [U † ρI U ].
+
+
+χ: in this case, χ ∩ I ± [I ] = ∅.17 See Fig. 5 for a review of the argument, originally
+presented in [43].
+     However, from the perspective of cosmic censorship, global minimality of a QES is of
+little relevance. We expect that a similar result should apply to any QES independently
+of its global properties. In [41] some strides were made towards this end by CPT-
+conjugating the spacetime around the nonminimal QES χ to generate a new spacetime
+in which χ was minimal. This allowed [41] to prove that a large class of extremal
+surfaces and trapped surfaces must lie behind horizons. These results, however, relied
+on an assumption that we aim to relax in this section: that there can be no “evaporating
+singularities” (see [41] for the precise definition).
+     To relax this assumption, we will instead assume the Python’s Lunch proposal [29,
+42, 56] in addition to the QES formula to argue that (quantum) extremal surfaces must
+generically be hidden behind both past and future horizons.18 Or more precisely, if they
+lie outside a horizon, this distance must shrink to zero in the GN → 0 limit. Let us
+briefly review some facts about the Python’s Lunch proposal. A Python’s Lunch L
+with respect to a conformal boundary I is a region of spacetime defined by (at least)
+three mutually spacelike separated QESs homologous to I : χmin , χbulge , and χaptz . The
+first is the globally minimal QES, while χaptz is a candidate QES, but having larger
+generalized entropy than χmin . The surfaces χmin and χaptz are so-called throats: QESs
+whose generalized entropy is roughly locally minimal in space and locally maximal in
+time (see [56] for details). The bulge surface χbulge is also a QES, but it is locally
+maximal in time and space (see again [56] for details). The region L is defined as
+  17
+     Note that we have excluded the future horismos ∂I ± [I ] from this conclusion, as i± are not
+precluded from null communication with χ.
+  18
+     Note that the assumption of the Python’s Lunch proposal applies to this section only; it will not
+be used in the proof of Cryptographic Censorship in Sec. 3.3.
+
+
+
+
+                                               – 17 –
+the domain of dependence of any spacelike slice bounded by χmin and χaptz , and the
+Python’s Lunch proposal conjectures that the CFT computational complexity required
+to implement any operator in L scales as
+                                                              
+                                Sgen [χbulge ] − Sgen [χaptz ]
+                          exp                                    .             (2.1)
+                                               2
+We will only identify a Python’s Lunch in a portion of spacetime that is globally
+hyperbolic, and we will make the reasonable assumption that the presence of potential
+spacetime singularities away from L does not make operator reconstruction any easier.
+    Besides the Python’s Lunch proposal, our assumptions in this section (and this
+section only) are as follows.
+
+Assumptions and Definitions. We assume the following in addition to our general
+assumptions stated at the beginning of Sec. 1.1:
+
+   • (M, g) has reflecting boundary conditions at each connected boundary component
+     I.
+
+   • Smooth initial data: (M, g) has a smooth inextendible timeslice Σ0 containing
+     two QESs χmin and χ homologous to I , and where χmin is the QES of minimal
+     generalized entropy that is homologous to I .
+
+   • A generic condition: if χ′ is a bulge QES and χ′′ a throat QES, then their asso-
+     ciated generalized entropies satisfy Sgen [χ′ ] − Sgen [χ′′ ] ∼ O(G−1
+                                                                        N ).
+
+   • In any globally hyperbolic region of spacetime that we consider, the (restricted)
+     QFC holds, and the quantum maximin [26, 57] and maximinimax [42] prescrip-
+     tions converge.
+
+   • We denote by WO [χ] the outer wedge of a QES χ [28, 58].
+
+   • We define t = 0 at I as Σ0 ∩ I .
+
+   • If a point p in the bulk is such that any future (past) directed causal curve from p
+     to I arrives at I at a boundary time that diverges to +∞ (−∞) in the GN → 0
+     limit, or if no curve to I exists, we say that p is behind an “effective future
+     (past) horizon”.
+
+Theorem 1. Let (M, g) be a spacetime as above. Assuming the Python’s Lunch con-
+jecture for complexity of operator reconstruction, the QES χ lies behind past and future
+effective horizons.
+
+
+
+                                         – 18 –
+Proof. Consider first working strictly within the globally hyperbolic spacetime given by
+the domain of dependence of Σ0 within M , denoted as D[Σ0 ]. By Proposition 1 of [30],
+there always exists an outermost minimal QES χaptz that lies in WO [χ] ∩ WO [χmin ].19
+This surface may or may not coincide with χ itself. Let now H be a spatial slice with
+∂H = χaptz ∪ χmin , which exists since χaptz ⊂ WO [χmin ], and let L = D[H]. See Fig. 6
+for an illustration. By the maximinimax construction in the appendix of [42], there
+is another QES χbulge in L that is of the bulge type, and so L must be a Python’s
+Lunch (χbulge = χ is allowed). L must contain χ, since there exists a choice of H that
+contains χmin , χ, and χaptz . If χ is equal to χaptz or χbulge , this is trivial. If χ is neither
+of these surfaces, then we construct H by gluing together two pieces. The first piece is
+the subset of Σ0 lying between χmin and χ. The second is any spacelike slice between
+χ and χaptz which exist by global hyperbolicity of D[Σ0 ] and the fact that χaptz lies
+strictly in the outer wedge of χ.
+     Let us now return to the full spacetime M . Define a code subspace Hcode consisting
+of all low energy perturbative quantum states that backreact on Σ0 at subleading order
+in GN . By the genericity assumption, we have Sgen [χbulge ] − Sgen [χaptz ] ∼ O(G−1     N ) so by
+the Python’s Lunch proposal, the complexity of reconstructing operators in Hcode with
+support in L scales as exp(cG−1 N ) for some constant c > 0. Assume now for contradiction
+that χ lies outside the effective past horizon. Then there exists a future-directed causal
+curve γ from I to χ that is fired from I at a time t ∼ O(G0N ). Then we can find a
+simple operator Φ that modifies the quantum fields at χ. Just let Φ be an operator that
+injects a perturbative amount of matter with rocket boosters near I , so that the matter
+travels along the curve γ. Because this matter reaches χ in a time that does not scale
+with GN , this matter backreacts on Σ0 only at subleading order, and so it acts within
+the code subspace. Φ can be constructed in two steps: an injection of matter near the
+boundary using HKLL [59–61] followed by an O(G0N ) amount of CFT time evolution.
+Neither is exponentially hard, and so we reach a contradiction with reconstruction
+complexity of operators with support in L. The argument excluding χ from intersecting
+the exterior of the effective future horizon proceeds mutatis mutandis.
+
+    Note that there are setups where islands [45, 46], and thus QESs χ, lie outside of
+event horizons. A universal aspect of these constructions is that the QES in question is
+a QES of a different subsystem than the one whose horizon is under consideration. We
+may also comment more specifically on each example: first, Ref. [45] found an island
+outside of the black hole horizon when the CFT at I was coupled to a reservoir. In
+this case boundary conditions were not reflecting, which was assumed in our result.
+  19
+    Outermost minimal means that there is no surface in the outer wedge WO [χmin ] homologous to
+χmin with less Sgen .
+
+
+
+
+                                             – 19 –
+Figure 6: The setup in the proof of Theorem 1 where χ is nonminimal, and where H
+is chosen to contain χ.
+
+
+Furthermore, by virtue of the coupling, time evolution of the black hole system alone
+is no longer unitary. Thus, while a signal sent from I initially can be turned near the
+boundary with a unitary, propagating it to χ requires a non-unitary operation on the
+CFT, and so the entropy is expected to change. Additionally, decoupling the CFT from
+the auxiliary system produces a shockwave that alters the spacetime at leading order,
+which does push the island behind the horizon. Next, in [46] an island was found lying
+                 √
+a distance of O( ℓPl rhor ) outside the horizon. In this case the island was associated to
+angular momentum modes in the bulk, but qualitatively this construction is the same
+as Ref. [45] as far as it relates to the above theorem.
+
+
+3    Crytographic Censorship
+In this section we introduce and prove our main result: that on any sufficiently large
+code subspace, (pseudo)random dynamics guarantee event horizon formation in typical
+(pseudo)random states with a semiclassical bulk dual. The precise statement (The-
+orem 5: Cryptographic Censorship) is given in Sec. 3.3. In presenting and proving
+this theorem, we will be agnostic about the types of code subspaces that in a gravita-
+tional theory could correspond to this degree of pseudorandomness; in Sec. 3.4 we will
+give two examples of code subspaces in gravity that are compatible with sufficiently
+pseudorandom dynamics.
+     Intuitively, pseudorandom unitary ensembles are ensembles of unitaries that are
+computationally indistinguishable from the Haar ensemble. As an example, upon evo-
+lution for some time longer than a scrambling time, a chaotic system is generally
+expected to become approximately pseudorandom. Our argument for the existence
+
+
+
+
+                                         – 20 –
+of a horizon hinges upon the assumption that the fundamental time evolution is well
+modeled by a unitary that is sufficiently pseudorandom on the code subspace. In a
+sense described below, we will require the unitary to be pseudorandom by an amount
+that scales inversely with GN , which we will call gravitationally pseudorandom.
+     How is this assumption of gravitational pseudorandomness sufficient to guarantee
+the existence of event horizons? We will outline the logic here while omitting many of
+the technicalities (which we leave to Apps. A and B); the rest of this section is devoted
+to the technical points necessary for the proof of Cryptographic Censorship and its
+application to gravitational code subspaces.
+     Recall that observables in the causal — and more generally, simple [28, 30, 58]
+— wedge of the boundary are computationally simple to reconstruct. This is a non-
+trivial aspect of bulk reconstruction in AdS/CFT [28, 62].20 We argue that, given some
+reasonable technical assumptions outlined in Sec. 3.3, there exists a learning algorithm
+ACW that can reconstruct the causal wedge of any geometric state in a code subspace
+             a
+of size eO(GN ) for some −1 ≤ a < 0. However, a theorem of [33] (see Theorem 2
+below for its precise statement) combined with results from measure concentration
+guarantees (roughly) that all efficient quantum algorithms must fail at predicting the
+expectation value of some operator Q, which we show exists in the large-N limit,
+after pseudorandom time evolution. It then immediately follows that for the algorithm
+ACW , there exists an operator Q that ACW cannot reconstruct and therefore must lie
+outside of the causal wedge; in other words, an exterior to the causal wedge exists —
+by extension, a boundary to the causal wedge exists. Since the boundary of the causal
+wedge of I coincides with the event horizon, an event horizon must exist. In Sec. 3.3,
+we will formalize this rough argument into a proof.
+     We start by briefly reviewing pseudorandom unitaries, as well as the appropriate
+learning result in [33] that we will use, in Sec. 3.1. We then explain the required
+alterations and extensions necessary to apply the learning result to the holographic,
+N → ∞ setting in Sec. 3.2. In Sec. 3.3 we state and prove our theorem of Cryptographic
+Censorship. Finally, in Sec. 3.4 we comment on two code subspaces to which our
+theorem applies.
+
+3.1     Review: pseudorandomness and complexity of learning
+Pseudorandom states and unitaries will play an important role in what follows, so we
+will briefly review these concepts. Within the context of quantum cryptography, pseu-
+  20
+    For the likely limited number of readers who believe in the Quantum Extended Church-Turing
+(QECT) thesis outside of horizons but are skeptical of arguments relying on AdS/CFT, we note that
+the QECT thesis by itself also implies that causal observables must be simple.
+
+
+
+
+                                             – 21 –
+dorandom states were first defined in [34]. Informally, an ensemble of quantum states
+is pseudorandom if the states are efficiently constructible, but indistinguishable from
+Haar random by any polynomially bounded quantum algorithm — even if that algo-
+rithm is given polynomially many copies of the state. A pseudorandom state generator
+G is a map from some space K into a Hilbert space H. For each element k ∈ K, it
+outputs G(k) = |ψk ⟩ ∈ H. The intuitive goal of the definition is to say that the action
+of feeding a random sample from K to G to get a state |ψk ⟩ is indistinguishable from
+sampling the Haar random distribution of states (in the computational sense defined
+in Sec. 1.1). The technical definition is as follows:
+
+Definition 2 (Pseudorandom State Ensemble (PRS); Definition 2 in [34]). Consider
+an ensemble of states Ψ = {|ψk ⟩ ∈ H}k∈K , labeled by a parameter k drawn from a key
+space K, where both H and K are parameterized by a security parameter κ. Then the
+ensemble Ψ is a pseudorandom state ensemble if
+
+   • The states can be efficiently generated: there is an efficient quantum algorithm G
+     that generates the state |ψk ⟩ given k as input. That is, for all k ∈ K, G(k) = |ψk ⟩.
+
+   • The states are computationally indistinguishable from Haar random: for any poly-
+     nomially many copies of |ψk ⟩ with the same k ∈ K and any efficient quantum
+     algorithm A, there exists a negligible function negl(κ) such that
+            h                 i     h              i
+          Pr A |ψk ⟩⊗poly(κ) = 1 − Pr A |ψ⟩⊗poly(κ) = 1 = negl(κ) ,                  (3.1)
+         k←K                            |ψ⟩←µ
+
+     where µ is the Haar measure on H.
+
+    We can define pseudorandom unitaries as in [34] in a similar fashion:
+
+Definition 3 (Pseudorandom Unitary Ensemble (PRU); Definition 5 in [34]). Consider
+an ensemble of unitaries, U = {Uk ∈ U(H)}k∈K , labeled by a parameter k drawn from
+a key space K, where both K and H are parameterized by a security parameter κ. We
+say U is a pseudorandom unitary ensemble if
+
+   • The unitaries are efficiently representable: there is an efficient quantum algorithm
+     Q such that for every k ∈ K and any |ψ⟩ ∈ H, Q(k, |ψ⟩) = Uk |ψ⟩.
+
+   • The unitaries are computationally indistinguishable from Haar random: for any
+     efficient quantum algorithm AU given oracle access to some U , there exists a
+     negligible function negl(κ) such that
+
+                          Pr AUk = 1 − Pr AU = 1 = negl(κ) .
+                                             
+                                                                                     (3.2)
+                         k←K               U ←µ
+
+
+
+
+                                         – 22 –
+     We note that technically, PRSs and PRUs are actually sequences of ensembles, Ψ =
+{Ψκ }κ and U = {Uκ }κ , respectively, each parametrized by κ ∈ N, and the guarantees
+in the above definitions are for large κ. Since we will take κ = poly(N ) in Sec. 3.2 and
+later sections, this aligns well with the framework of asymptotically isometric codes
+outlined in Sec. 1.1. For ease of notation, we will instead simply write Ψ and U, as in
+the above definitions, where the key k should be understood to be drawn from a key
+space Kκ where κ is sufficiently large. We will make an exception to this rule in some
+parts of the proof in App. B, where it will be convenient to make the dependence on
+the security parameter explicit to take the κ → ∞ limit.
+     Finally, we remark that while explicit constructions of PRSs exist (and were given
+first in [34]), there are currently no known constructions of PRUs, although candidate
+constructions were proposed in [34]. We will not require any explicit constructions of
+either PRSs or PRUs in this work.
+
+Pseudorandom states vs. k-designs. For the reader familiar with the related no-
+tion of a k-design, we briefly comment on the two main differences with PRSs. First,
+the associated notion of indistinguishability is much stronger for k-designs: the states
+need to be indistinguishable from Haar random even to computationally unbounded
+observers, e.g., algorithms of exponential complexity. However, k-designs only require
+that the moments of these ensembles are indistinguishable up to a certain value (k),
+whereas PRS ensembles are computationally indistinguishable for any poly(κ) number
+of moments. In this sense, PRSs are comparable to a high-order k-design but with a
+parametrically weaker notion of indistinguishability. Note that k-designs are less rele-
+vant for our purposes as they apply to unbounded observers, whereas our focus here is
+on bounded computations.
+
+We now state the learning result of [33], which was briefly reviewed at a lower level of
+detail in Sec. 1. This result (and our Cryptographic Censorship result) also holds for
+Haar random U and |ψ⟩, but we will focus on pseudorandom states and unitaries as we
+believe they present a more realistic characterization of the time evolution of physical
+systems.
+
+Theorem 2 (Complexity of Learning Pseudorandom Unitaries, Theorem 2 of [33]).
+Let κ ∈ N be the security parameter, and let U be any pseudorandom unitary ensemble
+and Ψ be any pseudorandom state ensemble in a Hilbert space H where |H| = 2κ .
+For any quantum algorithm A of poly(κ) complexity that, given oracle access to the
+pseudorandom unitary U ← U, produces (a circuit representation of ) an approximately
+
+
+
+
+                                         – 23 –
+norm-preserving operator21 Ub as its best guess for U , there exists a constant α > 0
+independent of κ such that for any κ > κ0 , the following quantity is bounded:
+                               h                i
+                          avg F U |ψ⟩ , U |ψ⟩ ≤ 1 − α .
+                                    b
+                                  U ←U
+                                 |ψ⟩←Ψ
+                                 b ←AU
+                                 U
+
+
+Here, F (U                      b † U |ψ⟩ |2 which is the fidelity when U
+          b |ψ⟩ , U |ψ⟩) = | ⟨ψ|U                                       b is unitary. In
+this context, it is approximately the fidelity since we are working with approximately
+norm-preserving operators.
+
+     This theorem shows that it is impossible for any efficient quantum learning algo-
+rithm to use oracle access to a pseudorandom U to produce a polynomially complex
+circuit or (succinct) algebraic expression that accurately implements U on a pseudo-
+random state |ψ⟩. As we will explain in more detail in the next section, we will be
+                                                                          (κ)
+interested in applying this result to a sequence of code subspaces {Hcode }κ each of
+               (κ)
+dimension |Hcode | = 2κ , where we will take κ = poly(N ).
+     We now comment on two aspects of this theorem that will appear extensively
+in the subsequent section. First, Theorem 2 implies that, on average, there exists a
+distinguishing operator that the learning algorithm fails to predict (see Appendix B
+in [33] for an explanation).22 In particular, when the fidelity between U
+                                                                        b |ψ⟩ and U |ψ⟩
+is 1 − O(1), then there exists an operator Q such that23
+
+                          avg tr(QU   b )† ) − tr(QU ψ(U )† ) ≥ O(1) .
+                                  b ψ(U                                                              (3.3)
+                         b ←AU
+                         U
+
+In the next section, we will use measure concentration to show that for nearly all of
+the unitaries in the ensemble U, such a fidelity bound holds and thus there is a distin-
+guishing operator.24 This operator will play a crucial role in the proof of Cryptographic
+Censorship.
+  21
+     We note that [33] showed this result for a wider class of algorithms — those producing any operator
+U with column norms bounded above by ≈ 1 — which includes the algorithms here. We will not need
+b
+this more general result in this paper.
+  22
+     As a difference of language, [33] writes this as the distinguishing “POVM” and lower bounds the
+distance between measurement outcomes obtained via this POVM.
+  23
+     Note that the quantum algorithm AU , as a result of, e.g., intrinsic randomness in the outcome of
+measurements during the learning process, generally outputs a U      b that is not a deterministic function
+of U . Therefore, we average over the algorithm’s output U ← AU .
+                                                             b
+  24
+     The result on average in [33] only implies that a constant fraction of the unitaries in U have such
+an operator, whereas we will show this holds for a fraction of the unitaries that goes to 1 as κ → ∞.
+
+
+
+
+                                                 – 24 –
+      Second, it immediately follows from Theorem 2 that
+                                   h             i
+                        sup avg F U |ψ⟩ , U |ψ⟩ ≤ 1 − α ,
+                                        b                                             (3.4)
+                        κ→∞ U ←U
+                            |ψ⟩←Ψ
+                           Ub ←AU
+
+
+which crucially depends on the upper bound of 1 − α being independent of κ. This will
+be important in extending and applying this result to holography, where we will take
+the large κ (or equivalently, large N ) limit, and want the guarantee that the large N
+limits of these states also have fidelity at most 1 − α, and thus a distinguishing operator
+exists.
+
+3.2     Complexity of learning in holography
+We now turn to the application of this learning result to holography. Since our goal
+is to constrain semiclassical gravitational phenomena, our focus will be on the large-N
+limit in general and on quantities that scale with N in this limit in particular. For
+concreteness, and without loss of generality, we use GN ∼ 1/N 2 , and consider code
+                                     a
+subspaces Hcode of dimension eO(GN ) , where −1 ≤ a < 0. To this end, we will take
+the security parameter κ = poly(N ) such that our code subspace Hcode is of dimension
+2κ . Unitary operators that are pseudorandom on such code subspaces at any large but
+finite N will be called gravitationally pseudorandom (defined precisely below); we will
+also resolve various technical challenges that follow from taking the large-N limit (e.g.,
+with regards to the existence of certain quantities). We begin with a formal definition
+of gravitational pseudorandomness.
+
+Definition 4 (Gravitationally Pseudorandom Unitary Ensemble (GPRU)). Let U =
+{Uk ∈ U(H)}k∈K be a pseudorandom unitary ensemble, with key space K parameterized
+by a security parameter κ, where H is the Hilbert space of a large N , holographic
+                              −1/2
+quantum system where N ∼ GN , with GN the bulk Newton’s constant. We say that
+U is a gravitationally pseudorandom unitary ensemble (GPRU) if κ = poly(N ).
+
+     As noted previously, at strictly infinite N there is no notion of pseudorandom
+unitaries. When discussing operators we shall be primarily interested in asymptotic
+scaling at large N rather than the actual operators at infinite N . When working in the
+actual infinite N regime, we will only discuss limits of pseudorandom states, using the
+asymptotically isometric codes framework outlined in Sec. 1.1.
+     Recall that we aim to apply the results of [33] to the holographic setup. The careful
+reader may have by now noticed two potential points of concern: first, Theorem 2 was
+proved on average for a PRU ensemble rather than for some typical instance; second,
+
+
+
+
+                                          – 25 –
+it is not obvious that in the large-N limit, for a typical PRU, a distinguishing operator
+exists. Let us briefly elaborate on each concern before proceeding to state and prove
+our generalization of Theorem 2 that addresses both.
+      On the first concern, the learning result of [33] is a statement about the average
+fidelity between the evolution of a pseudorandom state (PRS) evolved with the actual
+PRU and the same state evolved with the algorithm’s best guess. The averaging is over
+the unitary drawn from any PRU ensemble U, the state drawn from any PRS ensemble
+Ψ, and over the output of any quantum learning algorithm A.
+      While much of the literature (see, e.g., for a few instances [35, 63, 64]) does model
+gravitational systems via randomly sampled states or dynamics, this approach is in
+some tension with the fact that there is just one (fixed) unitary operator that describes
+the time evolution of N = 4 SYM. We therefore generalize the bound from an average
+to a typical pseudorandom unitary and state by bounding the fluctuations of typical
+members of the ensemble, first for Haar random unitaries and states and then for
+pseudorandom unitaries and states. We emphasize that this means a learning bound
+applies to any single fixed unitary and state that are both typical, as we state below in
+Theorem 3.
+      The second concern, involving the existence of a “non-simple observable” — i.e., the
+distinguishing observable that the algorithm fails to predict — for typical instances of
+the ensemble at large-N , is a bit more subtle. As a corollary to our theorem for learning
+typical pseudorandom unitaries at large but finite N , we prove, under a reasonable
+assumption on the limit of states as N → ∞, that our theorem also bounds the fidelity
+at N → ∞. Consequently, our theorem guarantees that for any simple boundary
+algorithm, there exists a semiclassical observable that cannot be reconstructed by the
+algorithm.
+
+We now state the holographic version of Theorem 2, incorporating the generalizations
+advertised above. We will subsequently use this version in Sec. 3.3 to prove Crypto-
+graphic Censorship.
+    Consider a CFT with a large but finite UV energy cutoff, so that when N is finite
+the dimension of the Hilbert space is finite.25 We prove the theorem below for any
+large but finite value of N , under the assumption that the algorithm’s output as a
+function of U is (randomized) K-Lipschitz for some fixed constant K. We will describe
+this assumption in greater length in App. A, but it boils down to a certain notion
+of continuity controlled by a parameter K of the algorithm as a function of U .26 We
+  25
+    We are free to consider other ways of regulating the dimension of the Hilbert space if needed.
+  26
+    It is possible that this assumption actually follows directly from our other assumptions; we leave
+determination of this question to future work.
+
+
+
+
+                                               – 26 –
+subsequently state and prove a corollary of this theorem for infinite-dimensional Hilbert
+spaces, under a class of assumptions. To increase readability, we postpone both of the
+proofs to Apps. A and B.
+
+Theorem 3 (Complexity of Learning for Typical Pseudorandom Unitaries). Let κ =
+poly(N ) and consider a code subspace of dimension 2κ . Consider any (gravitation-
+ally) pseudorandom unitary ensemble U, any pseudorandom state ensemble Ψ, and any
+constant ϵ > 0. For any (randomized) K-Lipschitz quantum algorithm A of poly(N )
+complexity that has oracle access to U ← U and produces an approximately norm-
+preserving operator Ub as its best guess for U , and for any sufficiently large N , the
+following holds: for a fraction ≥ 1 − e−ϵ 2 /(48(1+K) ) − e−ϵ 2 /192 − negl′ (N ) of U ∈ U
+                                         2 κ         2       2 κ
+
+
+and |ψ⟩ ∈ Ψ, we have that:
+
+  1. the following quantity is bounded
+                          h               i
+                     avg F U |ψ⟩ , U  b |ψ⟩ ≤ 1 − α + 2ϵ + negl(N ) ,                (3.5)
+                     b ←AU
+                     U
+
+     where α is a constant independent of N , and
+
+  2. there exists an operator Q (which may depend on U , |ψ⟩, and U
+                                                                  b ) such that
+
+                 avg tr(QU   b )† ) − tr(QU ψ(U )† ) ≥ 2α − 4ϵ − negl(N ) .
+                         b ψ(U                                                       (3.6)
+                b ←AU
+                U
+
+
+Proof. See App. A.
+
+    We now extend this theorem to infinite-dimensional Hilbert spaces. For this pur-
+pose, in what follows, we reinstate the sequences of PRSs and PRUs to make the
+N -dependence explicit. We now assume that for every N we have a code subspace HN
+on which the time evolution operator e−iHN t of the CFT, for some t (possibly scaling
+with N ), has the same matrix elements on the code subspace as another unitary op-
+erator UN : HN → HN , up to exponential corrections. As in Assumption 2, we also
+assume that there exists an asymptotically isometric code with map VN from the bulk
+Hilbert space, H, to HN . Furthermore, we assume there exists a (gravitationally) PRU
+ensemble {UN }N and some N0 such that for all N ≥ N0 , the ensemble UN contains UN
+as a typical member.
+    Next, we assume there exists a sequence of pseudorandom states {|ψN ⟩ ∈ HN }N
+that are represented on the code. Namely, there exists a |ξ⟩ ∈ H such that for every
+|ψN ⟩ in the sequence with sufficiently large N , |ψN ⟩ = VN |ξ⟩ up to exponentially small
+corrections in the one-norm. Finally, letting the learning algorithm’s best guess for UN
+
+
+
+                                         – 27 –
+be UbN , we assume that U   bN |ψN ⟩ is also represented by the asymptotically isometric
+                           ˆ
+code, i.e., there exists a ξ such that U               ˆ We also assume that the subset
+                                        bN |ψN ⟩ = VN |ξ⟩.
+of states at finite N that are the fraction of states that are typical converge to a subset
+of states in the infinite-N Hilbert space that is of measure 1 (as the fraction of typical
+states limits to 1 as N → ∞ in Theorem 3).
+
+Corollary 3.1 (Distinguishing Operator at N → ∞). Let {UN |ψN ⟩}N and {U     bN |ψN ⟩}N
+be two sequences of states that are represented on the code, namely there exist |ξ⟩ and
+ ˆ such that UN |ψN ⟩ = VN |ξ⟩ and U
+|ξ⟩                                                     ˆ Furthermore, assume that
+                                        bN |ψN ⟩ = VN |ξ⟩.
+{UN |ψN ⟩}N and {UbN |ψN ⟩}N satisfy the assumptions stated above, then both 1. and 2.
+                                                ˆ In particular, by taking the constant
+in Theorem 3 also hold for the states |ξ⟩ and |ξ⟩.
+                                 ˆ the existence of an operator Q ∈ B(H) such that
+ϵ to be < α/2, we have for any |ξ⟩
+
+                                     ˆ − tr(Qξ) ≥ O(1) .
+                             avg tr(Qξ)
+                              ξb
+
+
+Proof. See App. B.
+
+
+3.3    Pseudorandomness implies horizons
+We are now ready to argue that when time evolution in the boundary theory is suffi-
+ciently (i.e., gravitationally) pseudorandom, the bulk has an event horizon. Recall that
+the logic in this argument is that for a typical pseudorandom time evolution opera-
+tor U , (a) efficient quantum learning algorithms cannot accurately compute the time
+evolution of ⟨Q⟩ for some operator Q that may depend on U , and (b) there exists an
+efficient quantum algorithm that can accurately compute the time evolution of all local
+operators — i.e., operators in the causal wedge — under U . Point (a) follows directly
+from Corollary 3.1.
+     Point (b) is in a sense obvious holographically given the developments on complex-
+ity of reconstruction in AdS/CFT. The general expectation following from [30] is that
+a simple quantum algorithm should be able to reconstruct the causal wedge. We might
+worry that the existence of a naked singularity complicates this story, but there is a
+simple physical argument suggesting otherwise. To measure an operator in the causal
+wedge, we can send rocket ships from the conformal boundary that travel into the bulk,
+carry out measurements anywhere in the causal wedge, and then travel back out to the
+boundary with the result. Since we are only interested in measuring operators that
+survive at strictly infinite N , the complexity to implement these rocket ships from the
+
+
+
+
+                                          – 28 –
+Figure 7: In the leftmost and middle panels, the reconstruction of operators inside the
+green wedge (which is globally hyperbolic) can be done using the HKLL protocol, which
+should be simple, insofar as we can compute the expectation values of local operators
+in the boundary theory on the time band ∆t. We can keep doing this for subsequent
+time bands until we have reconstructed the full causal wedge, as in the rightmost panel.
+We use this as an ingredient to motivate the existence of an algorithm that can output
+an operator V which reproduces the time evolution of operators in the causal wedge.
+
+
+CFT should not scale exponentially with N .27 Under the assumption that there exists
+an efficient process that can produce a guess V for the time evolution operator U using
+these measurements, we can then combine this with point (a) above to formulate our
+theorem of Cryptographic Censorship, Theorem 5 below.
+     In many cases, we can motivate this assumption — the existence of an efficient
+learning algorithm that can produce such a guess V — from a computer science point of
+view. For instance, consider first a domain of dependence corresponding to a boundary
+time band. If we have access to the time-evolved expectation values of single-trace
+operators in that time band, we can use the HKLL protocol [59–61] to reconstruct this
+domain of dependence. See Fig. 7. In the case where the causal wedge can be generated
+from a union of such wedges, and if there exists a simple algorithm that can aggregate
+all these reconstructed wedges into a guess for the time evolution operator, then we
+can efficiently reconstruct the full causal wedge. There is in fact a learning algorithm
+that comes close to providing such a guess V , as we will explain in more detail below;
+this thus provides strong motivation that learning the causal wedge is simple, even in
+  27
+     One might worry that the bulk measurements take too long for the rocket ships to be able to
+get back out to the boundary. Again, this should not be the case for bulk operators that survive the
+infinite N limit.
+
+
+
+
+                                              – 29 –
+Figure 8: The region of spacetime inside this cylindrical naked singularity does not
+lie inside of any HKLL wedge. It is possible, however, for a rocket ship to enter the
+region behind the singularity and come back out to the boundary.
+
+
+the presence of such naked singularities.
+    However, it is possible that there exist naked singularities with unusual topologies
+where this reasoning falls short and we cannot use this ‘progressive HKLL’ protocol
+combined with the aforementioned existing learning algorithm. An illustration of such a
+hypothetical singularity is given in Fig. 8, where the interior of a cylindrical singularity
+does not lie inside any HKLL wedge. In such cases, however, we revert to our initial
+holographic reasoning to motivate our assumption: we can still use rocket ships to
+measure operators in the entire causal wedge.
+    For the case where HKLL in progressive wedges does work, we will now illustrate
+more precisely that under a mild technical assumption, there exists a quantum learning
+algorithm satisfying the assumptions of Theorem 2 that, given oracle access to U , can
+output an operator V where V |ψ⟩ can accurately reproduce the expectation values
+of all simple operators in the state U |ψ⟩. Applicability to our strengthened version,
+Theorem 3, does not immediately follow and would require techniques from measure
+concentration. This falls outside the scope of the current work, but we expect that this
+may go through if the algorithm in [65] satisfies certain assumptions. Readers willing
+to accept the existence of the relevant algorithm — i.e., an efficient algorithm for
+reconstructing the causal wedge — can skip directly to the statement of Cryptographic
+Censorship, Theorem 5 below.
+
+Efficiently learning the causal wedge. The starting point for our argument for
+(b) is the learning algorithm of [65], which we review below, together with the assump-
+
+
+
+
+                                          – 30 –
+tion referenced above that allows us to bridge the gap between [65]’s work and our
+Theorem 2.
+    Given an n-qubit system with n large, the authors of [65] showed that there exists
+an efficient learning algorithm that can learn a bounded degree representation of any
+unknown operator O(unk) . The bounded degree representation O(k) takes the form of
+                                          X
+                                  O(k) =       αP P ,                            (3.7)
+                                          P :|P |≤k
+
+where P is a Pauli operator given by a string of Pauli operators X, Y , Z, or I at each
+site, and k is a constant (independent of n). By |P | we mean the number of qubits
+that are acted on non-trivially by P . A bounded-degree operator is then just a sum of
+individual Pauli operators with |P | not scaling with n in any way.
+     The algorithm of [65] works by forming a guess for the coefficients of the unknown
+operator O(unk) in the Pauli basis, using a polynomial or subexponential number of
+measurements involving the operator. The authors show that this guess O(k) for the
+operator reproduces the correct expectation values in certain distributions of quantum
+states. Quantitatively:
+
+Theorem 4 (Theorem 13 of [65]). There exists an algorithm that, for any n, ε, δ > 0,
+any unknown n-qubit observable O(unk) and any n-qubit state distribution D that is
+                                                                          
+invariant under single qubit gates, given training data {ρℓ , tr O(unk) ρℓ }M
+                                                                            ℓ=1 of size
+                                      n           1
+                             M = log        2O(log( ε ) log(n)) ,                     (3.8)
+                                        δ
+the algorithm is of poly(M ) complexity and can learn a function h(ρ) that achieves a
+prediction error
+                                             2              2
+                       avg h(ρ) − tr O(unk) ρ ≤ ε O(unk) ,                      (3.9)
+                       ρ ←D
+
+
+with probability at least 1 − δ. Here, O(unk) is the operator norm of O(unk) . In
+particular, the algorithm produces a bounded-degree operator O(k) = P :|P |≤k αP P and
+                                                                   P
+
+thereby learns h(ρ) := tr(O(k) ρ).
+
+One example of such a distribution D is the distribution of Haar random states, which
+is of particular relevance to our setting.
+     In general, a bounded-degree operator is any operator of the form in (3.7). In the
+context of AdS/CFT, we expect that bounded-degree operators correspond to local op-
+erators in the CFT. In particular, expectation values of these operators fully determine
+the causal wedge of the entire boundary in the large-N limit. Recall that our aim is the
+
+
+
+                                          – 31 –
+illustration of an algorithm that falls under the purview of Theorem 2 and can learn a
+V that approximates the time-evolved expectation values of bounded-degree operators
+under U . Taking O(unk) = U , the algorithm in the above theorem (given the specified
+training data) learns an operator U (k) such that
+
+                                          tr(U (k) ρ) ≈ tr(U ρ)                                 (3.10)
+
+(on average over ρ). Note that this algorithm requires access to training data comprised
+of expectation values of the unknown operator O(unk) = U in a collection of states {ρℓ }.
+We expect that there exists an efficient algorithm to estimate the expectation values
+of U in this collection of efficiently preparable states given oracle access to U so that
+the learning algorithm in Theorem 4 then falls under the purview of Theorem 2.
+     In order to obtain a guarantee that this U (k) is such a V , we will make a mild
+assumption that (3.10) holds when multiple operators are concatenated. In general,
+we may expect that for any operators O1 , O2 , O3 , using the learning algorithm in the
+                               (k)   (k)   (k)
+theorem above to produce O1 , O2 , O3 , the following holds:
+                                    (k)   (k)   (k)
+                              tr(O1 O2 O3 ρ) ≈ tr(O1 O2 O3 ρ) .
+
+However, to bridge the gap to Theorem 2, it suffices that the U (k) produced by the
+algorithm satisfies the following for any bounded-degree operator O:
+
+                               tr((U (k) )† OU (k) ρ) ≈ tr(U † OU ρ) ,                          (3.11)
+
+where the error scales with 1/N if the algorithm complexity is subexponential in N ,
+which is a complexity to which Theorem 2 (and its strengthening Theorem 3) can be
+applied.28 The upshot is that under the assumption (3.11) above, there is an efficient
+algorithm that obeys the assumptions of Theorem 229 and outputs a guess V = U (k)
+for the time evolution unitary U , which correctly predicts expectation values of local
+operators in the CFT, up to polynomial corrections in 1/N .
+    To summarize: we use the above (and expectations from holography) to motivate
+that there exists an algorithm, which we will call ACW , that can always learn time
+evolution within the causal wedge but falls under the purview of Theorem 2, which
+guarantees that for pseudorandom time evolution, this algorithm cannot learn the time
+  28
+     Note that although in previous sections we have considered polynomial complexity algorithms, we
+expect our results there to also apply to algorithms of subexponential complexity.
+  29
+     Note that strictly speaking, Theorem 2 only applies to this algorithm if V is approximately norm-
+preserving. By taking e.g. O = I in (3.11) (which holds for most ρ in the Haar distribution), we expect
+that the guess V should satisfy this condition.
+
+
+
+
+                                                 – 32 –
+evolution of all operators. This forms the basis of our theorem of Cryptographic Cen-
+sorship. Under the assumptions above, which simply boil down to the existence of
+ACW , together with the assumptions of Section 1.1, we have the following theorem:
+
+Theorem 5 (Cryptographic Censorship). As in Assumption 3, let Ufund,N = VN Ubulk VN†
+where Ubulk is the time evolution operator of the bulk quantum fields acting on H. Fur-
+thermore, assume that Ufund,N is well approximated on VN H ⊆ HN by a unitary UN
+which is typical in a gravitationally pseudorandom unitary ensemble, UN . Assume
+also (as motivated above) that there exists an efficient algorithm for causal wedge re-
+construction that is (randomized) K-Lipschitz for some K > 0, and which outputs
+(approximately) norm-preserving operators. Let |ψN (t)⟩ be a state at any time t whose
+complete time evolution is dual to a strongly causal geometric bulk (M, g).30 Under the
+assumption that UN |ψN (t)⟩ is itself the image of a bulk state |ψ(t′ )⟩ under VN , then if
+there exists a single time t such that UN |ψN (t)⟩ is typical in the pseudorandom state
+ensemble Ψ = UN |ψN (t)⟩,31 then there is an event horizon in (M, g).
+
+Proof. Let UN be the pseudorandom unitary approximating VN e−iHbulk ∆t VN† over a time
+∆t. Let the fundamental quantum state of the system be |ψN (t)⟩ at some initial
+time t, and |ψN (t′ )⟩ = UN |ψN (t)⟩ at some time t′ = t + ∆t. Let the bulk duals be
+|ψ(t)⟩ and |ψ(t′ )⟩ such that |ψN (t)⟩ = VN |ψ(t)⟩ and |ψN (t′ )⟩ = VN |ψ(t′ )⟩. See Fig. 9.
+By assumption, we can find a t such that |ψN (t′ )⟩ is typical in the PRS ensemble
+Ψ = UN |ψN (t)⟩.
+     Consider a particular (possibly randomized) algorithm, AUCW    N
+                                                                      , which by the rea-
+soning and assumptions above based on Theorem 4 we can choose to correctly predict
+the values of all operators O that are in the causal wedge algebra Ncw for any output
+bN ← AUN . By Corollary 3.1, on average over the U
+U                                                          bN there exists a distinguish-
+           CW
+ing bulk operator, Q∗ ∈ B(H), which distinguishes between the bulk states |ψ(t′ )⟩ and
+ b ′ )⟩ such that UN |ψN (t)⟩ = VN |ψ(t′ )⟩ and U
+|ψ(t                                                               b ′ )⟩. Thus there must
+                                                bN |ψN (t)⟩ = VN |ψ(t
+exist at least one UbN for which the corresponding Q∗ distinguishes between |ψ(t′ )⟩ and
+ b ′ )⟩. Note that since B(H) is the set of all bulk quantum field theory operators,
+|ψ(t
+we are guaranteed that Q∗ is itself a good semiclassical operator. Since, by construc-
+tion, AUCW can correctly predict all causal wedge operators, the operator Q∗ must have
+support in a bulk spacetime region that is outside the causal wedge. Thus a horizon
+exists.
+  30
+       When we say that |ψN (t)⟩ is dual to a geometric state, we have in mind the definition in Ass. 2.
+                                                               2 κ         2
+                                                        1−e−ϵ 2 /(48(1+K) ) −e−ϵ 2 /192 −negl′ (N ) = 1
+                                                                                 2 κ
+  31
+       Recall that the typical states constitute a lim
+                                                   N →∞
+(recall κ = poly(N )) fraction of states in Ψ, and similarly for typical U ∈ U.
+
+
+
+
+                                                 – 33 –
+Figure 9: By assumption, the time evolution operator Ufund,N = e−iHN ∆t on Hcode over
+a time ∆t is well approximated by some UN ← UN , such that |ψN (t′ )⟩ is typical in the
+PRS ensemble Ψ = UN |ψN (t)⟩. In this case, Theorem 5 guarantees the existence of a
+distinguishing operator Q∗ that has support outside the causal wedge: there must be
+a horizon (indicated by the green dotted line).
+
+    We end this section by pointing out that we in fact get a more general result: the
+proof of Theorem 5 goes through for any time evolution operator U that cannot be
+predicted (in the sense of Theorem 3) by efficient quantum algorithms. In particular,
+the diagnostic does not have to be pseudorandomness: our theorem holds for any U
+that is exponentially complex to learn.
+
+3.4    Possible subspaces with pseudorandom time evolution
+We now discuss possible code subspaces which accommodate gravitationally pseudo-
+random dynamics. We will outline two cases of interest. First, we consider a micro-
+canonical window about some energy above the black hole threshold. Second, we will
+argue that there can exist a code subspace where all the states have the same classical
+geometry, with low energy modes on top of it, and for which it is possible to obtain
+gravitational pseudorandomness within an O(1) time on the boundary.
+
+The microcanonical window
+An obvious candidate for a subspace in a holographic quantum system which admits
+pseudorandom time evolution is a microcanonical window about some energy E0 ∼ N 2
+
+
+
+                                        – 34 –
+with energy width ∆E ∼ O(N ). The microcanonical ensemble defined by this window
+is known to have a stationary two-sided black hole dual [66]. Here we are interested in
+applying our result to any state in this energy window with a semiclassical geometric
+bulk description.
+     For holographic theories that exhibit maximal chaos, it is an interesting question
+how large T needs to be for U (T ) = e−iHT to be well approximated by a pseudorandom
+unitary ensemble. A related (but different) question is how large T needs to be in
+a maximally chaotic system for the unitary to be well approximated by a unitary
+k-design. For k = 2, this question was answered in [67] by directly relating out-of-time-
+order (OTO) correlators to the question of how close a given ensemble is to a unitary
+2-design. The authors found that if the (square of the) 2-point OTO correlator is small
+when averaged over all possible operators, then the time evolution is well modeled by
+a 2-design.32
+     As discussed above, k-designs are a different but related notion from pseudorandom
+unitary ensembles. That said, this intuition suggests that the time T at which U (T )
+becomes well modeled by a pseudorandom unitary is at least the scrambling time for
+chaotic quantum systems, since this is the time when the OTO is expected to match
+those of a 2-design. Note that if U (T ) is ever going to be modeled by a pseudorandom
+unitary, it better be at times T sub-exponential in the entropy, otherwise U will not be
+efficiently generated. Thus, the expectation is that U (T ) should become pseudorandom
+on the microcanonical subspace for sufficiently large T larger than the scrambling time.
+It would of course be nice to know what exactly this timescale is in certain systems.
+     Applying Theorem 5 to this subspace, we then see that for any state in the micro-
+canonical window, |ψ0 ⟩, that is both dual to a geometric state and is also typical in the
+pseudorandom state ensemble, then with a probability that is negligibly (in N ) close
+to one there must exist a horizon in the bulk dual to |ψ0 ⟩. It is natural to ask what
+fraction of the states in the microcanonical window this corresponds to. We cannot
+give a definitive answer to this question in the case of pseudorandom ensembles; let
+us just note that for Haar random unitaries and states, this would include all but a
+doubly-exponentially small fraction of the states. However, since it is not clear whether
+typical Haar random states can have semiclassical geometric duals,33 we prefer to use
+pseudorandom ensembles. It is not implausible that a similar fraction of the states in
+  32
+     The authors proved this statement for an n-qubit system and the average is over all Pauli operators
+on this n-qubit Hilbert space, which provide a basis for all operators.
+  33
+     Note that if the fraction of geometric states which violate our theorem is much larger than doubly
+exponentially small, then there would need to be a conspiracy between having a geometry and the
+ability to reconstruct all operators. Since we expect spacetimes with horizons to be much more
+“numerous” than those without, this would be rather surprising.
+
+
+
+
+                                                – 35 –
+some pseudorandom ensemble would obey this property, but we shall remain agnostic
+on this point in the absence of a proof of this statement.
+
+A code subspace for O(1) time bands on the boundary
+We will now consider a different subspace, where we restrict to O(1) time bands on
+the boundary in order to preserve the geometry of states in our code subspace within
+exponentially suppressed errors. We will start by making some assumptions that will
+apply to what follows, as well as in Sec. 4. These assumptions will describe how we
+construct a code subspace to describe time evolution of probe fields for O(1) times
+around geometries with naked singularities.
+     Consider a CFT labeled by a parameter N , such that the theory in the N → ∞
+limit is dual to Einstein gravity coupled to matter.34 By this we mean that the theory
+participates in an asymptotically isometric code given by VN : H → H  bN , where H is the
+bulk Hilbert space of Einstein gravity perturbatively coupled to matter and H   bN is the
+finite-N Hilbert space of the CFT. We are now going to consider a finite-dimensional
+subspace HN of H   bN that we will assume to have certain properties. This will formalize
+assumptions often implicitly made in the study of AdS/CFT, but since we will (1)
+study somewhat exotic setups, and (2) apply certain rigorous theorems, we are careful
+to state our assumptions.
+             i
+     Take |ψN  ⟩ to be a basis of HN labeled by i. We will assume that there exists a
+one-parameter family of unitary operators
+
+                                         UN (t) : HN → HN                                       (3.12)
+
+such that for all t ∼ O(N 0 ),
+
+                                      VN |ψ i (t)⟩ = UN (t) |ψN
+                                                              i
+                                                                ⟩                               (3.13)
+
+with |ψ i (t)⟩ ∈ H a bulk state, time-evolved using the bulk Hamiltonian. In other words,
+|ψ i (t)⟩ is a good bulk semiclassical state. Next, we will assume that if e−iHN t is the
+true time evolution operator in the full CFT at finite N , then for any fixed t ∼ O(N 0 )
+and any state |φ⟩ ∈ H  bN ,
+                                                                            a
+                          ⟨φ| e−iHN t |ψN
+                                        i                  i
+                                          ⟩ = ⟨φ| UN (t) |ψN ⟩ + O(e−cG )                       (3.14)
+
+for some c > 0, a < 0. For |φ⟩ in the orthogonal complement of HN , the first term
+is identically zero, so our statement implies that at large N , CFT time evolution for
+an O(1) amount of time preserves our code subspace HN , up to exponentially small
+ 34
+      We always assume that any effective ’t Hooft coupling in the theory has been taken to infinity.
+
+
+
+
+                                                – 36 –
+corrections. This is just the usual intuition that different geometries have exponen-
+tially small overlaps, so unless we work to exponential precision, we can consider time
+evolution to preserve our code subspace. Instead of working with e−iHt , we replace this
+operator by a unitary that genuinely acts on HN .
+     Then, under the above assumptions, Theorem 5 implies the following. Consider
+an asymptotically AdS spacetime (M, g) where the boundary dynamics in an O(1)
+time band evolve according to a unitary Ufund = e−iHN t and as in the above, can be
+approximated by UN (t) which is a typical gravitationally pseudorandom unitary (as
+defined in Def. 4). Let the state dual to (M, g) be typical in a pseudorandom state
+ensemble. Then there must be an event horizon in (M, g).
+     This is the version of Cryptographic Censorship that we will use in the next section.
+
+
+4    From Cryptographic to Cosmic Censorship
+In Section 3.4, we adapted our main result — Cryptographic Censorship — to code
+subspaces of states that have the same classical geometry and undergo gravitationally
+pseudorandom boundary dynamics in an O(1) time band. In this section we will argue
+that a potential example of such a code subspace is a spacetime with a ‘large’ naked
+singularity. Our goal is to connect Cryptographic Censorship to the more familiar
+notion of cosmic censorship, which is roughly the expectation that naked singularities
+formed from collapse must be hidden behind horizons.
+    Cryptographic Censorship guarantees that singularities that are well-described by
+gravitationally pseudorandom dynamics must incur event horizons. The central task
+in connecting Cryptographic Censorship to cosmic censorship is thus understanding
+whether — or when — singularities are associated with (sufficiently) pseudorandom
+dynamics. If generic singularities formed from matter collapse do indeed require pseu-
+dorandom time evolution, then they cannot exist in horizonless spacetimes. This ver-
+sion of censorship of naked singularities is distinct from the original version of cosmic
+censorship: even when a singularity is associated with pseudorandom dynamics, our
+result does not imply that the singularity is completely hidden. This is not a bug but
+a feature, since certain naked singularities do exist: e.g., the Gregory–Laflamme (GL)
+instability, which occurs when a black string in D > 4 pinches off and fragments into
+multiple black holes [7, 8, 68].
+    In the following, we take some first steps towards connecting a version of cosmic
+censorship to Cryptographic Censorship, culminating in Sec. 4.3, where we state a
+cryptographically-inspired formulation of quantum cosmic censorship. We begin by
+defining a mathematically precise notion of the size of a singularity, and specifically
+
+
+
+
+                                         – 37 –
+identify how large the singularity must be in the GN → 0 limit to accommodate gravi-
+tationally pseudorandom fundamental dynamics. This definition usefully distinguishes
+between a Planckian and a classical naked singularity (and similarly for non-naked
+singularities of large and small sizes). This is in itself useful, as it separates naked
+singularities into classes that are expected to be excluded and those that we expect
+may be permitted in a quantum theory of gravity (e.g., evaporating black holes or
+Gregory–Laflamme instabilities).35 Our second step uses this quantification to provide
+some evidence that large classical singularities can indeed be associated with gravita-
+tionally pseudorandom dynamics and thus incur horizons by Cryptographic Censorship.
+Finally, we propose a Quantum Weak Cosmic Censorship Conjecture, which formally
+requires large naked singularities to be atypical.
+
+4.1     The size of singularities
+We are interested in an unambiguous and diffeomorphism-invariant way of measuring
+the extent of a naked singularity. Since a naked singularity can only be distinguished
+from a cloaked one via access to I , it is clear that this must be defined asymptotically.
+A definition on I would be automatically diffeomorphism-invariant and would more
+readily admit a straightforward dual CFT interpretation. To find this criterion, we will
+leverage the definition of a naked singularity — i.e., causal visibility to I — to define
+what will roughly correspond to the time evolution in the CFT that is necessary, in the
+Schrödinger picture, to reconstruct near-singularity physics.
+    To make this precise, we first use an extant mathematical construction to single
+out the singularity as a set, a nontrivial task given that the singularity is not part of
+the spacetime manifold. Second, we identify the time intervals on I that are causally-
+separated from this set, and finally find the minimal boundary time bands that are
+necessary for a full reconstruction of the singularity. The spacetime volume of these
+time bands in a fixed conformal frame is essentially our definition of the size of the
+singularity in that frame. There is thus a conformal frame ambiguity in our definition of
+singularity size. This, however, is immaterial for our desired application: we shall only
+care about scaling of the singularity size with GN , which is independent of the choice of
+conformal frame. Using this scaling, we separate the singularities into three categories:
+classical, semi-Planckian, and Planckian. The first type survives the GN → 0 limit,
+while the other two do not. These latter two sizes are distinguished via the power of
+  35
+    There is some extant literature dedicated to investigating the size of a singularity; see, e.g., [25].
+These approaches differ from ours, as we are motivated by quantum computational considerations in
+the fundamental quantum description of the system.
+
+
+
+
+                                                 – 38 –
+Figure 10: Example spacetime where the colored sheet represents a singularity. The
+two geodesics γp,v and γp̃,ṽ by definition end on the same singular point, since γp̃,ṽ must
+enter any tubular neighborhood of γp,v , and vice versa.
+
+
+GN by which they vanish. Let us now turn to the details, starting with an identification
+of the set comprising the singularity.
+
+The Singularity Set. The primary difficulty in this task is that singularities are not
+locations in some geodesically-incomplete manifold M but are rather associated to the
+endpoints of incomplete inextendible geodesics in M . However, as shown by [69], it is
+possible to treat singularities as if they are made up of a set of points Γ, although this
+set does not lie in M .36 We will briefly review this construction, as it is instrumental to
+our classification of singularities. The idea is to build an equivalence class of geodesics
+associated to an endpoint. Consider a geodesic γp,v in M fired from a starting point
+p ∈ M along a non-vanishing tangent vector v a at p. We will continue γp,v so it is
+inextendible in the direction of v a (with starting point p). We then identify two distinct
+geodesics γp,v ∼ γp̃,ṽ if γp,v enters and remains inside every tubular neighborhood of
+γp̃,ṽ . Explicitly, if λ ∈ [0, λ0 ) is an affine parameter for γp,v , then for every given
+tubular neighborhood U of γp̃,ṽ , there exist a 0 ≤ λ̂ < λ0 such that γp,v (λ) ∈ U for
+all λ ∈ (λ̂, λ0 ). See Fig. 10. The equivalence classes under ∼ then form the points
+in Γ, and we say that γp,v , γp̃,ṽ are geodesics that end on the singular point [γp,v ] ∈ Γ.
+Importantly, if ps ∈ Γ, the future I + (ps ) and past I − (ps ) of ps in M is well-defined even
+though ps is not in M . Namely, we say that p ∈ I + (ps ) if there is a future-directed
+timelike curve γ through p and with past “endpoint” on ps , where the latter means
+that γ, sufficiently far in its past direction, enters and remains within any tubular
+  36
+       Γ also comes with a natural choice of topology [69].
+
+
+
+
+                                                  – 39 –
+         (a)                               (b)                                (c)
+
+Figure 11: Some examples of spacetimes with (naked) singularities. In (a) the singu-
+larity is timelike and classically naked. Panel (b) depicts the evaporating black hole.
+The non-naked part of the singularity is classical and behind a horizon. For the naked
+part, see Fig. 13a. Panel (c) is Reissner–Nordström-AdS; here |Γ|I = |T− |; note, how-
+ever, that Γn(I ) = ∅, as I ± ∩ I = ∅.
+
+neighborhood of any representative geodesic in ps . Armed with a set identified as the
+singularity, we now extract the part of the singularity that is naked with respect to a
+given conformal boundary I as follows:
+
+               Γn(I ) = {ps ∈ Γ|I + (ps ) ∩ I ̸= ∅ and I − (ps ) ∩ I ̸= ∅}.         (4.1)
+
+If this is nonempty, we say that Γ is naked with respect to I .
+
+The Singularity Size. We now proceed to classify the size of any (possibly improper)
+subset of a singularity. Let Γ̂ be a subset of Γ; below we will mostly be interested in
+taking Γ̂ = Γn(I ) , but it will be useful to take our definition to be more general.
+Consider the sets
+    T+ = {p ∈ I | ∃ an achronal past-directed null geodesic from p to Γ̂} ,
+                                                                                    (4.2)
+    T− = {p ∈ I | ∃ an achronal future-directed null geodesic from p to Γ̂} .
+
+Fig. 11 illustrates some examples of these sets for both naked singularities and ordinary
+singularities behind horizons.
+    We will now define the size of Γ̂ according to properties of T+ , T− . We assume
+that (M, g) is conformal to the Einstein static universe on each conformal boundary,
+
+
+
+                                         – 40 –
+and we choose the unique conformal frame where the boundary metric is identical to
+the Einstein static universe in which the spatial spheres have radius equal to the AdS
+radius.37 This fixes a unique Lorentzian metric on I , and when T+ is nonempty, we
+define |T+ | as the absolute value of the spacetime volume of T+ in this metric; similarly
+for T− . As examples, if T+ is a timeslice or a union of a finite number of points, then
+|T+ | = 0, since these sets are measure zero. We can now define the size |Γ̂|I of Γ̂ with
+respect to I as follows: first, if T+ , T− are both empty, then |Γ̂|I = 0. Second, if only
+one of T+ , T− is nonempty, say T+ , then we define |Γ̂|I = |T+ |. Third, if both T± are
+nonempty, we define |Γ̂|I = min(|T+ |, |T− |). This finally leads us to our definition of
+classical and Planckian singularities, as well as an in-between regime, which we term
+semi-Planckian:
+
+Definition 5. Let (M, g) be a geodesically incomplete spacetime of dimension D = d+1
+with a singularity Γ̂, and let
+                                    |Γ̂|I ∼ O(ℓaPl ).                           (4.3)
+If a ≤ 0, we say that Γ̂ is a classical singularity, while if 0 < a < d − 1, we say that Γ̂
+is a semi-Planckian singularity. Otherwise, it is a Planckian singularity.
+
+Singularity Size from CFT Time Evolution. If |ψ(t)⟩ is the state whose complete
+past and future history is dual to (M, g), then without access to the time evolution
+operator, we can only reconstruct operators at points in spacetime that are not causally
+related to the boundary time slice on which |ψ(t)⟩ lives — i.e., the Wheeler–de Witt
+patch Wt .38 Let us now specialize to a spacetime with a naked singularity Γ. For some
+fixed t, generally only a (possibly empty) subset of Γ will be contained in Wt : to learn
+everything about Γ (for example by reconstruction of all near-singularity correlators),
+a certain amount of boundary time evolution is necessary. More precisely, if T− is
+nonempty, and we are evolving forwards from the past, then the past-most boundary
+of T− corresponds to the earliest time that some part of Γ is encoded in the Wheeler–de
+Witt patch Wt . As we evolve forward through T− , new pieces of Γ enter Wt and are en-
+coded in the time-evolved state. Finally, once we evolve past the futuremost boundary
+of T− , no new parts of Γ enter Wt that we have not already seen, and so further forward
+time evolution reveals nothing new about the singularity. Thus, everything about the
+naked singularity can be learned by carrying out CFT time evolution through the band
+  37
+     For asymptotically locally AdS spacetimes where I has another conformal class, we can also
+define |Γ̂|, once we pick some preferred conformal frame.
+  38
+     This assumes for simplicity that there is only one asymptotic boundary, and that the state of the
+CFT on that boundary is pure — so the entanglement wedge of |ψ⟩ is the entire bulk. If there are
+multiple boundaries or the state on one boundary is mixed for a different reason, we simply take the
+intersection of Wt with the entanglement wedge of |ψ⟩.
+
+
+
+
+                                               – 41 –
+Figure 12: To get all information about the small singularity Γ, we only need to evolve
+the state forwards in a small spatial subregion of the boundary Cauchy slice, such that
+the Wheeler–de Witt patch now includes the singularity. Note that, as our artistic
+capabilities are limited, we here only indicate the future boundaries of the Wheeler–de
+Witt patches for times t and t + δt.
+
+
+T− (plus bulk reconstruction not using the time-evolution operator). For a singularity
+where T+ is also nonempty, everything about the singularity could alternatively have
+been learned by evolving through T+ . So as advertised, |Γ|I = min{|T− |, |T+ |} mea-
+sures the minimal amount of CFT time evolution required to learn everything about
+the naked singularity. Note that |Γ|I has units of spacetime volume rather than time.
+This is a feature: if all information about the singularity is available upon evolution of
+the state forwards in a small spatial subregion of a boundary Cauchy slice, then this
+should be accounted for in the smallness of a singularity. See Fig. 12. Note also that if
+|Γ|I is large, this always is caused by a large amount of time evolution, since timeslices
+have bounded volume.
+     Let us now make a few remarks on our definition, starting with a question. Un-
+der what circumstances do Planckian or semi-Planckian singularities exist? The most
+natural case is that we have limℓPl →0 |Γ̂|I = 0 because the CFT state acquires all in-
+formation about the singularity in a CFT timestep that shrinks to zero as ℓPl → 0. An
+example would be the singularity in the evaporating black hole, illustrated in Fig. 13a,
+or a naked timelike singularity Γ̂ lying behind another naked timelike singularity Γ̃, like
+in Fig. 13b. In this latter case, Γ̂ is such that T+ = T− = ∅, since all causal geodesics
+from the boundary to Γ̂ are necessarily chronal. This latter example shows that we
+probably should not assign much meaning to the size of distinct connected compo-
+
+
+
+                                          – 42 –
+                     (a)                                         (b)
+
+Figure 13: Two examples of limℓPl →0 |Γ̂|I = 0: (a) For the naked part of the singularity
+at the endpoint of black hole evaporation, we expect that T± are just timeslices in the
+GN → 0 limit. (b) A ‘hidden’ naked timelike singularity; here, T± = ∅.
+
+
+nents, and that we instead just should look at the size of the full naked singularity
+Γn(I ) , which by definition contains all connected components.
+
+4.2    Accommodating gravitational pseudorandomness
+Our motivation for classifying a classical singularity via the scaling a ≤ 0 is simple:
+such singularities are visible for a boundary time that diverges or remains O(1) in the
+GN → 0 limit. For the remaining range of a, we have chosen to separate semi-Planckian
+singularities (with 0 < a < d − 1) from Planckian singularities (with a ≥ d − 1). In
+both cases, |Γ̂|I → 0 as GN → 0, but as we will show below, singularities with
+a < d − 1 are compatible with an EFT code subspace which is sufficiently large that it
+can accommodate gravitational pseudorandomness, while singularities with a ≥ d − 1
+are not.
+    We will now show that singularities with a < d−1 are compatible with gravitational
+pseudorandomness. Consider an asymptotically AdS spacetime with a timelike naked
+singularity Γ = Γn(I ) . We will work with large (but possibly finite) N and demand
+only that effective field theory as defined by a bulk UV cutoff be valid in the asymptotic
+region. At finite N we will consider the failure of EFT due to large UV corrections as
+the diagnostic of a singularity.
+    We will decompose our bulk state into modes with energy below the cutoff, and
+
+
+
+
+                                         – 43 –
+Figure 14: From the low-energy perspective, there is an unknown, UV-sensitive
+boundary condition assigned at the singularity.
+
+
+we will focus on modes localized near the boundary, some of which fall into the naked
+singularity. By unitarity, there must also be outgoing occupied modes as well, which can
+be traced back to the singularity. However, the relation between the modes falling into
+the singularity and the modes coming out is dependent on UV physics: it is inaccessible
+within low energy EFT. So while the low energy modes in the asymptotic region could
+be semiclassical as GN → 0, the time evolution operator that relates them is not known
+in the bulk EFT — it cannot be expressed in terms of the low-energy operators. See
+Fig. 14. From the low-energy perspective, there is a boundary condition assigned at
+the singularity whose precise nature is unknown.39
+     In what follows, we will be agnostic about the UV-sensitive boundary condition
+that implements pseudorandomness in the fundamental theory. Our approach instead
+will be to show that once the singularity is of classical or semi-Planckian size, then
+there are enough EFT modes in a code subspace in which all of the states have the
+same leading order geometry to accommodate gravitational pseudorandomness. On
+the other hand, if the singularity is Planckian, we show that we do not expect this.
+As our analysis is asymptotic, we do not require a sharply defined geometry near the
+singularity.
+     We now give a parametric estimate of the number of modes within semiclassical
+EFT that can potentially get scrambled by the naked timelike singularity. That is, we
+want to know the number of EFT modes that are affected by the highly UV-sensitive
+boundary condition. Assume that T+ , T− are nonempty, and assume without loss of
+  39
+   Since quantum gravity is expected to lack global symmetries [70–72], any approximate symmetries
+emergent in the semiclassical EFT should be badly violated by this boundary condition.
+
+
+
+
+                                             – 44 –
+Figure 15: To count the ingoing modes sent from T− , which here is the time band
+[−∆t, 0] × S d−1 , we can simple count the number of modes in the strip indicated by
+the red dotted line.
+
+
+generality |Γn(I ) |I = |T− |. Near I , the leading part of the metric can be written
+
+                                    −dt2 + dρ2 + sin2 ρdΩ2
+                            ds2 =                          + ... ,                          (4.4)
+                                            cos2 ρ
+where we work in units where the AdS radius is unity, and where I lies at ρ = π2 .
+For pedagogical simplicity we take the matter in our theory to be a conformal massless
+scalar and assume that the system is spherically symmetric, so that T− can be taken to
+be a time band [−∆t, 0] × S d−1 without loss of generality. We can now count roughly
+how many ingoing single-particle modes with energy below the cutoff can be sent from
+T− into the singularity. As is clear from Fig. 15, this simply corresponds to the number
+of orthogonal modes in the strip given by ρ ∈ π2 − ∆t, π2 at t = 0.40 As long as ∆t is
+                                                           
+
+less than roughly GN M ∼ O(1) where M is the spacetime mass, we are always restricted
+to an asymptotic range of ρ where the metric is approximately pure AdS, so the number
+of modes can be counted using the pure AdS metric. We always take GN small with
+GN M = fixed, and we are interested in a parametric counting that can only change
+if ∆t → 0 sufficiently fast in GN so we can without loss of generality restrict to this
+regime. Assume now that ũi is a collection of orthonormal flat-space positive frequency
+ingoing wavepackets with mean frequency ωi in the metric −dt2 + dρ2 + sin2 ρdΩ2 ;
+furthermore, we will assume that they are well localized within ρ ∈ ( π2 − ∆t, π2 ) at some
+  40
+    Greybody factors cause some modes to scatter off background curvature before they get close to
+the singularity, but this should not change the parametric counting.
+
+
+
+
+                                             – 45 –
+central ρ = ρ0 . These have total energy approximately equal to ωi , as long as
+                                                          1
+                                          ωi ≫ ∆ω ≥          ,                                    (4.5)
+                                                          ∆t
+where ∆ω is the frequency spread of each wavepacket. Now, since we have a conformally
+coupled scalar, ui = (cos ρ)d−1 ũi is also an orthonormal set of positive frequency mode
+functions in AdS.41 Each wavepacket has a total energy approximately equal to ωi , also
+in AdS.42 Imposing the cutoff ωi ≤ ϵ−1 ,43 we want to count the orthogonal wavepackets.
+This is equivalent to counting orthogonal flat-space modes; this is of the order
+
+                                          ∆t · Vol(S d−1 )
+                                                           .                                      (4.6)
+                                                ϵd
+The numerator is |Γn(I ) |I , and in the absence of spherical symmetry it is clear that
+|Γn(I ) |I is the correct replacement for ∆t · Vol(S d−1 ). So for a general naked timelike
+singularity, we find that an order
+                                         |Γn(I ) |I
+                                                                                      (4.7)
+                                            ϵd
+number of distinct EFT modes can propagate into the singularity from T− . Next, we
+want to take the UV cutoff to scale as ϵ = ℓ1−δ Pl for some δ ∈ (0, 1) so that our modes
+are parametrically below the Planck scale as ℓPl → 0. To be cautious, we demand that
+δ > 1/d, which ensures that the naı̈ve QFT entropy does not exceed the Bekenstein–
+Hawking entropy. To see this, note that if V is the spatial volume occupied by our
+wavepackets in AdS, then we need
+                                      V                V    A
+                                              = cosd ρ0 d ≲ d−1 .                                 (4.8)
+                                   ϵdproper            ϵ   ℓPl
+
+Remembering that volume and surface area of a large shell near the boundary of AdS
+scale the same way as we approach the conformal boundary, we thus need
+
+                                               ϵd
+                                cosd ρ0 < O(1) d−1 = O(1)ℓ1−dδ
+                                                          Pl .                                    (4.9)
+                                              ℓPl
+
+If we take δ < d1 , then wavepackets with mean frequency near the cutoff would give a
+naı̈ve QFT entropy exceeding the Bekenstein–Hawking entropy for any ρ0 < π/2. For
+  41
+      The scaling dimension of the scalar is d−1                                  2
+                                              2 , and the conformal factor is cos ρ.
+  42
+      There might be an overall conformal anomaly, so that HAdS = HMink + Hanomaly , but this is
+irrelevant for our purposes.
+   43
+      This corresponds to a proper length cutoff in AdS of ϵproper ∼ ϵ/ cos ρ0 . We do not scale ρ0 with
+ℓPl , so ϵ, ϵproper scale the same way.
+
+
+
+
+                                                 – 46 –
+δ = d1 we get an O(1) bound on ρ0 that we want to avoid, and so we require δ > d1 . Thus,
+assuming finally that |Γn(I ) |I ∼ O(ℓaPl ), we get that the number of distinct semiclassical
+modes that can probe the naked singularity during time evolution through T− is
+
+                                    |Γn(I ) |I
+                                        d
+                                               ∼ ℓa−d−dδ
+                                                  Pl     .                            (4.10)
+                                       ϵ
+If a < d − 1, there is always some δ > 1/d so that this diverges in the ℓPl → 0 limit.
+Hence, in the regime 0 < a < d − 1, even when the singularity shrinks to zero size as
+ℓPl → 0, the singularity is in principle compatible with influencing an infinite number
+of EFT modes in the GN → 0 limit: it is compatible with a gravitational amount of
+pseudorandomness in the time evolution.
+     Let us now comment on a few well known cases of naked singularities, some of
+which were briefly mentioned in Sec. 1: the singularity at the endpoint of black hole
+evaporation, the Gregory–Laflamme (GL) instability [7, 68], which occurs as the pinch-
+off endpoint of the evolution of higher dimensional extended black strings and other
+black objects, and Choptuik’s critical collapse [73, 74] resulting from a collapsing mass-
+less scalar field which is tuned to lie exactly at the threshold of black hole formation.
+In the case of the endpoint of black hole evaporation, the naked part of the singularity
+is not extended in the GN → 0 limit. See Fig. 13a. Thus the naked part of the sin-
+gularity is measure zero in this limit, so this naked singularity is either Planckian or
+semi-Planckian. In the cases of the Gregory–Laflamme instability and critical collapse,
+it is impossible to evolve past the pinch-off using classical gravity, so in the absence
+of a quantum gravitational description of the system, we cannot ascertain the nature
+of the naked singularity. However, it is quite plausible that these singularities end up
+being Planckian or semi-Planckian. The critical collapse singularity is in a sense a zero
+mass black hole, which within the resolution of semiclassical gravity is indistinguishable
+from a Planck mass black hole. So if we could carry out critical collapse at finite GN
+in full nonperturbative quantum gravity, and then afterwards take the GN → 0 limit,
+it is reasonable to expect that the singularity becomes a Planckian or semi-Planckian
+singularity. The Gregory–Laflamme singularity could plausibly behave similarly: it is
+highly analogous to the fluid pinch-off phenomenon, where only a minimal amount of
+nonperturbative evolution is necessary to re-enter the EFT regime. It is tempting to
+speculate that naked singularities in a holographic theory of quantum gravity can never
+be classical, and possibly not even semi-Planckian. We will formalize a conjecture to
+this effect in the next section.
+     Finally, let us briefly tie this discussion back to our primary theorem of Cryp-
+tographic Censorship. The fact that classical singularities are always compatible (by
+our definition) with gravitational pseudorandomness provides additional motivation for
+
+
+
+                                           – 47 –
+the intuition that the dynamics of strongly gravitating systems in the GN → 0 limit
+may admit a description in terms of pseudorandom unitaries. Under this supposition,
+Cryptographic Censorship guarantees that any such systems — including those with
+naked singularities — must also have event horizons. We leave the quantification of
+the subset of the singularity that is necessarily behind a horizon to future work.
+     We wish to make clear that we do not claim that all classical singularities must
+act as sources of pseudorandomness; a clear counterexample is given by orbifold singu-
+larities in compact dimensions. It is the ones that weak cosmic censorship is supposed
+to rule out — naked classical singularities resulting from the dynamical evolution of
+generic, smooth initial data and matter collapse — that we expect to have, to a large
+extent, gravitationally pseudorandom time evolution. If the singularity is static, the
+mode counting argument in the previous section becomes misleading. In this case, mea-
+suring later modes scattered off the singularity does not provide information we could
+not have already gained from scattering earlier modes, unlike in the case where the sin-
+gularity is evolving. Thus, there might be a significantly smaller amount of data that
+is required to describe scattering off the singularity than what the naı̈ve mode counting
+argument above would suggest, making static singularities less likely candidate sources
+of pseudorandom dynamics.
+
+4.3       Quantum cosmic censorship
+The combination of Cryptographic Censorship and our results above regarding compat-
+ibility of naked singularities with gravitational pseudorandomness suggest a particular
+reformulation of the Weak Cosmic Censorship Conjecture as a quantum gravity conjec-
+ture rather than a classical gravity conjecture. This point bears emphasizing: there is
+no ab initio reason that classical gravity must obey cosmic censorship. Even if there
+had been no known counterexamples, one of the best motivations for the Weak Cos-
+mic Censorship Conjecture is empirical: the apparent absence of naked singularities in
+the night sky. Cosmic censorship is not required by consistency of known theoretical
+structures within General Relativity. By contrast, if naked singularities were typical in
+quantum gravity, then foundational results in AdS/CFT — such as the behavior of the
+CFT thermal state OTOC being precisely attributed to bulk event horizon dynamics —
+would be some remarkable conspiracy: either naked singularities engineer themselves
+to mimic black holes precisely in the OTOC signature, or black holes engineer them-
+selves to mimic naked singularities. A similar coincidence would be required for various
+results on CFT thermalization and its bulk interpretation.44 We therefore find that a
+quantum gravity formulation of cosmic censorship is both theoretically and empirically
+ 44
+      We thank D. Harlow for extensive discussions on this point.
+
+
+
+
+                                                – 48 –
+well-motivated; our results relating horizons to pseudorandomness provide a clear first
+step towards formulating weak cosmic censorship as an emergent phenomenon in terms
+of fundamental quantities in quantum gravity. (For example, this would require replac-
+ing the classical gravity notion of genericity — an open set in the space of solutions to
+the Einstein equation — with typicality.)
+     For completeness, we first state the classical gravity proposal for weak cosmic
+censorship in AdS, which is now known to be violated in classical gravity. (It is also
+trivially violated in quantum gravity due to, e.g., evaporating black holes, although
+this requires violations of classical energy conditions.)
+
+Conjecture 1 (Classical Weak Cosmic Censorship – false). [75, 76] Consider a geodesi-
+cally complete, asymptotically AdS initial data set satisfying the dominant45 energy con-
+dition. The maximal causal development of this initial data under the Einstein equa-
+tion, together with boundary conditions at the AdS boundary, is generically a strongly
+asymptotically predictable asymptotically AdS spacetime.
+
+    Reformulating this proposal in terms of a fundamental quantum description of the
+theory requires a complete revamping of the statement and the scope of its applicability.
+Motivated by our results in this paper, the existing set of counterexamples to cosmic
+censorship, and the top down motivation from thermalization and chaos in AdS/CFT,
+we propose the following formulation of the Weak Cosmic Censorship Conjecture (below
+we work in the Heisenberg picture, so a given state is its entire history):
+
+Conjecture 2 (Quantum Cosmic Censorship). Typical states with an emergent geom-
+etry in quantum gravity do not have classical or semi-Planckian naked singularities.
+
+
+5      Discussion
+Cryptographic Censorship is the first precise and general result identifying concrete
+CFT behavior with bulk horizon formation. (While the vox populi associates CFT
+thermalization to black hole equilibration,46 this hypothetical link is at best estab-
+lished in certain highly symmetric and nearly static black holes.) Our first application
+of the theorem guarantees that in the microcanonical window, under assumption of
+pseudorandomness, states without horizons are exponentially suppressed in probability
+(within their pseudorandom ensemble).
+  45
+     This is the weakest reasonable statement: we could assume only the null energy condition, but
+counterexamples exist even when we demand the dominant energy condition.
+  46
+     Note that black hole equilibration was only recently established in four-dimensional vacuum
+asymptotically flat space [77] for a certain range of spins and remains an open problem in AdS.
+
+
+
+
+                                             – 49 –
+     As an immediate consequence of Cryptographic Censorship, we obtain a partial
+resolution to the black hole teleology problem for AdS spacetimes with a CFT dual.
+Event horizons can be diagnosed, using Cryptographic Censorship, in finite time. The
+implications are significant: first, black hole mechanics in AdS/CFT may admit a
+legitimate thermodynamic interpretation in highly dynamical states. Second, as our
+primary focus in this paper, we establish a typicality result for event horizons, which is
+highly suggestive of a form of Quantum Cosmic Censorship. The fact that naı̈ve models
+of code subspaces containing classical (or semi-Planckian) timelike singularities are
+compatible with a sufficient amount of gravitational pseudorandomness serves as strong
+motivation for our conjecture that typical states do not have naked singularities that
+survive the classical limit. We emphasize that our proof of Cryptographic Censorship in
+fact provides a guarantee for event horizon formation whenever the CFT time evolution
+is exponentially hard to learn; our focus in this article was on complexity of learning as
+a result of pseudorandomness, but any such sufficient source of complexity would result
+in an equivalent theorem under the same proof. Below we will elaborate on potential
+applications of our results and discuss some aspirational expansions thereof.
+
+Towards a Converse
+Since information escapes from the black hole interior under inclusion of quantum cor-
+rections, there is no obvious definition of a quantum event horizon (since all information
+eventually reaches I and causal structures are only emergent in the classical limit). It
+is tempting to use our results to define quantum event horizons — and by extension
+quantum black holes (i.e., at finite N ): states undergoing gravitationally pseudoran-
+dom time evolution with a semiclassical bulk dual in the large-N limit. A definition,
+however, would require a proof of a converse to Cryptographic Censorship: a state-
+ment that CFT states with a semiclassical emergent bulk featuring a horizon typically
+exhibit gravitational pseudorandomness. A proof of such a converse would addition-
+ally facilitate a complete resolution of the teleology problem in AdS. The tentative
+link between chaos, thermalization, and pseudorandomness [35, 67, 78–81] could then
+potentially be used to understand the horizon thermodynamics47 of highly dynami-
+cal black holes and the statistical interpretation of the Hawking area theorem, which
+remains elusive [27, 83].
+
+Gravitational Pseudorandomness from a Bulk Quantum Computer?
+The reader might wonder: what if we put a quantum computer in the bulk, generating
+a large amount of pseudorandomness directly from dynamics of the bulk fields? Must
+  47
+    As opposed to the thermodynamics of the apparent horizon, which are by now well-understood [28,
+58, 82].
+
+
+
+
+                                             – 50 –
+this incur a horizon? If the quantum computer does not incur violations of EFT in
+the causal wedge, then our theorem applies and indeed, a gravitationally pseudoran-
+dom computer must incur a horizon. If the quantum computer generates gravitational
+pseudorandomness in such a way that the causal wedge is no longer described by EFT
+— e.g., if geometric invariants such as the volume scale inversely with GN as in the
+“quantum volatile” spacetimes of [62] — then the assumptions of our theorem are vio-
+lated, namely that the N → ∞ limit is described by QFT in curved space, so a horizon
+is not required to form.
+     It is interesting that bulk processes that source a large amount of pseudorandomness
+(e.g., a bulk quantum computer with the power to do gravitationally pseudorandom
+computations) and do not violate EFT in the causal wedge must typically collapse into
+black holes. Prior descriptions of black hole formation typically involve energetics; to
+our knowledge, this is the first proof establishing a causal relation between bulk quan-
+tum computations and black hole formation (though see, e.g., [84] for a discussion of
+constraints on bulk quantum computations behind horizons). Interestingly, this ap-
+pears to bear some relation to the proposal of [31] that effective field theory requires
+both an energy and a complexity cutoff: a bulk process sourcing large amounts of pseu-
+dorandomness must result in high reconstruction complexity. While pseudorandomness
+is itself not particularly complex to implement, reconstruction of pseudorandom quan-
+tities is by definition of high complexity class. In this case, Cryptographic Censorship
+may act to protect a computationally bounded asymptotic observer from detecting
+large violations of effective field theory due to computational complexity by forcing
+formation of an event horizon, depending on where the event horizon forms.
+
+Stringy and Cosmological Applications
+It would be interesting to consider stringy effects and ask if (and how) our theorem
+might apply to, e.g., the D1-D5 system, or orbifold singularities, which are horizonless
+(see, e.g., [85]). Exact BPS states have trivial dynamics: we expect that to produce
+chaos and pseudorandom dynamics we would need to sufficiently excite these states. If
+it is indeed the case that chaotic, pseudorandom time evolution is produced as a result
+of heavily exciting such states, then our theorem suggests that a horizon will appear.
+More generally, it is not clear that horizonless geometries have any relation to chaos,
+and furthermore such states are probably not typical in the measure concentration
+sense that we are using in this work.
+      Let us also briefly comment on non-AdS cosmological spacetimes. In particular,
+it is interesting to consider why our results fail for flat cosmologies, which do not
+have horizons. An obvious complaint is that our AdS/CFT arguments should not
+necessarily apply. They do not apply, however, in an interesting manner: the relevant
+
+
+
+                                         – 51 –
+                (a)                                                    (b)
+
+Figure 16: The AdS-big-crunch cosmology (a) versus the flat big-bang cosmology (b).
+In the asymptotically flat case, there is no notion of unitary time evolution and no
+horizon. In the AdS case, we have both.
+
+
+feature of AdS/CFT that fails here is the lack of a notion of unitary time evolution
+on the conformal boundary (which in this case is null). Our results crucially rely on a
+fundamental description of the system which is a unitary quantum field theory. This
+in all likelihood does not apply to flat cosmologies. It does, however, apply to AdS
+big-crunch cosmologies, and in those, we do indeed have a horizon. See Fig. 16 for a
+comparison.
+    What about de Sitter? de Sitter cosmologies do have cosmological horizons, al-
+though those are not unambiguous in the same sense as AdS ones. There have been
+some suggestions (most recently [86, 87]) that de Sitter time evolution — insofar as
+such a notion can be defined — is well-modeled by an isometry rather than a unitary. A
+generalization from pseudorandom unitaries to pseudorandom isometries was recently
+proposed by [88]. It would be interesting to see if our results can be generalized to
+accommodate this notion and potentially have some bearing on de Sitter black holes
+and cosmologies; in particular, if there is any sense in which the relaxation to isometries
+could be mapped to the observer-dependence of de Sitter horizons.
+
+Some Open Questions
+Cryptographic Censorship paves the way for several interesting new investigations. We
+have expanded on a few of those above. We briefly enumerate a few others here:
+
+  1. The fact that gravitational pseudorandomness associated to a quantum computer
+     in the bulk spacetime must result in a horizon suggests a relationship between
+     backreaction and computational power. Does such a relation between energy
+     and computation exist, perhaps analogous to a gravitational version of Lloyd’s
+     bound [89]?
+
+
+
+
+                                          – 52 –
+   2. Are singularities in general in fact associated with large amounts of pseudoran-
+      domness?48 This idea features prominently in our models of timelike naked sin-
+      gularities, but has traditionally appeared in the context of postselection models
+      of black hole singularities and dynamics.
+
+   3. Our definition of the size of a singularity admits a middle class of singularities
+      that disappear in the strict large-N limit but which could accommodate gravita-
+      tional pseudorandomness in code subspaces constructed from O(1) time bands.
+      It would be interesting to understand the significance, if any, and frequency of
+      semi-Planckian naked singularity portions.
+
+   4. Explicit constructions of pseudorandom unitary ensembles to date have not been
+      found. Still, as assumed in this work, we expect explicit examples of AdS/CFT
+      to be well modeled by pseudorandom dynamics. Can we use complexity theoretic
+      conjectures and aspects of AdS/CFT to demonstrate that holographic quantum
+      systems like the Sachdev–Ye–Kitaev (SYK) model actually generate a pseudo-
+      random unitary ensemble at long enough times?
+
+   5. Is there anything we can infer about code subspace-dependent cryptographic con-
+      ditions/constructions necessary for pseudorandomness from the holographic man-
+      ifestation of our results? That is, does the existence of subspaces without horizons
+      (e.g., the microcanonical window around the vacuum) have any meaningful im-
+      plication for cryptography?
+
+
+Acknowledgements
+It is a pleasure to thank Chris Akers, Jordan Cotler, Jordan Docter, Roberto Em-
+paran, Daniel Harlow, Gary Horowitz, Hsin-Yuan (Robert) Huang, Andrea Puhm,
+Juan Maldacena, Arvin Shahbazi-Moghaddam, Natalie Paquette, Jon Sorce, Edward
+Witten, and Michelle Xu for valuable discussions. This work is supported in part by
+the Department of Energy under Early Career Award DE-SC0021886 (NE, ÅF, and
+LY) and QuantISED DE-SC0020360 contract no. 578218 (NE), by the Heising-Simons
+Foundation under grant no. 2023-4430 (NE and AL), the Sloan Foundation (NE),
+the Templeton Foundation via the Black Hole Initiative (NE and EV), the Gordon and
+Betty Moore Foundation (EV), the Packard Foundation (AL), and the MIT department
+of physics (NE). The opinions expressed in this publication are those of the authors
+and do not necessarily reflect the views of the John Templeton or Moore Foundations.
+  48
+    See [90] for a unrelated attempt to connect singularities to holographic CA/CV-complexity con-
+jectures.
+
+
+
+
+                                             – 53 –
+A     Proof of Theorem 3
+In this appendix, we prove Theorem 3, introduced in Sec. 3.2. We begin with a definition
+of randomized K-Lipschitz, which we will require our algorithms to satisfy.
+Definition 6 (Randomized K-Lipschitz). An algorithm A is said to be randomized
+K-Lipschitz if it satisfies the following condition: there exists a constant K > 0 such
+that
+                            avg ||Ub1 − U
+                                        b2 ||∞ ≤ K||U1 − U2 ||∞ .                 (A.1)
+                         b1 ←AU1
+                         U
+                         b2 ←AU2
+                         U
+
+When the algorithm is deterministic, i.e., it maps a given unitary U to a single output
+U
+b , we will just refer to this property as K-Lipschitz.
+
+In addition, here we will work with operators that are exactly norm-preserving, i.e.,
+||U
+  b ||∞ = 1. We leave it to the mathematician to confirm that this result applies equally
+well to approximately norm-preserving operators.
+      We now repeat Theorem 3 for the reader’s convenience.
+Theorem 3 (Complexity of Learning for Typical Pseudorandom Unitaries). Let κ =
+poly(N ) and consider a code subspace of dimension 2κ . Consider any (gravitation-
+ally) pseudorandom unitary ensemble U, any pseudorandom state ensemble Ψ, and any
+constant ϵ > 0. For any (randomized) K-Lipschitz quantum algorithm A of poly(N )
+complexity that has oracle access to U ← U and produces an approximately norm-
+preserving operator Ub as its best guess for U , and for any sufficiently large N , the
+following holds: for a fraction ≥ 1 − e−ϵ 2 /(48(1+K) ) − e−ϵ 2 /192 − negl′ (N ) of U ∈ U
+                                         2 κ         2       2 κ
+
+
+and |ψ⟩ ∈ Ψ, we have that:
+
+  1. the following quantity is bounded
+                          h               i
+                     avg F U |ψ⟩ , U  b |ψ⟩ ≤ 1 − α + 2ϵ + negl(N ) ,                (3.5)
+                     b ←AU
+                     U
+
+     where α is a constant independent of N , and
+
+  2. there exists an operator Q (which may depend on U , |ψ⟩, and U
+                                                                  b ) such that
+
+                 avg tr(QU   b )† ) − tr(QU ψ(U )† ) ≥ 2α − 4ϵ − negl(N ) .
+                         b ψ(U                                                       (3.6)
+                b ←AU
+                U
+
+
+Proof. We prove 1. and 2. consecutively for Hilbert spaces of any finite (but sufficiently
+large) dimension d, where we always have in mind that d scales with κ. Note that in the
+theorem above, and in the main body of the paper, we specialized to a code subspace
+of dimension d = 2κ with κ = poly(N ); here we will leave d general.
+
+
+
+                                         – 54 –
+1. Fidelity for typical pseudorandom unitaries. We start by proving that the
+bound on the averaged fidelity in Theorem 2 also holds for typical Haar random uni-
+taries and states, and subsequently prove this for pseudorandom unitaries and states.
+To do so, we employ techniques from measure concentration. An introduction to the
+theory of measure concentration, including numerous references, is given in Appendix
+B of [31]. Here we only need the following lemma for measure concentration on the
+unitary group.
+Lemma 1 (Meckes (Corollary 17 in [91])). Let f : U (d)√→ R be K-Lipschitz in the
+sense that |f (U1 ) − f (U2 )| ≤ K||U1 − U2 ||2 , with ||X||2 ≡ tr X † X. Then in the Haar
+measure on U (d) we have the following concentration inequalities for any ϵ > 0:
+                                                             ϵ2 d
+                                                                 
+                               Pr[f ≥ ⟨f ⟩ + ϵ] ≤ exp −             ,
+                                                           12K 2
+                                                             ϵ2 d
+                                                                 
+                               Pr[f ≤ ⟨f ⟩ − ϵ] ≤ exp −             ,                 (A.2)
+                                                           12K 2
+                                                             ϵ2 d
+                                                                 
+                           Pr[|f − ⟨f ⟩ | ≥ ϵ] ≤ 2 exp −            .
+                                                           12K 2
+      For the purposes of Theorem 3, we are interested in applying this to the function
+F = F (U |ψ⟩ , Ub |ψ⟩) = | ⟨ψ|U † U
+                                  b |ψ⟩ |2 , where we first consider Haar random U and |ψ⟩,
+i.e., U ← µ and |ψ⟩ ← µ, and furthermore U     b is the guess that the algorithm AU outputs.
+Thus, our task is to show that the function F obeys the requirements for Lemma 1 to
+hold, such that fluctuations around the average are exponentially suppressed. That is,
+we need to check that F is K-Lipschitz for some fixed K.
+      Note that the algorithm’s output U   b depends on U . This dependence is complicated:
+                             U
+the quantum algorithm A , as a result of, e.g., intrinsic randomness in the outcome
+of measurements during the learning process, generally outputs a U           b that is not a
+deterministic function of U . In the following, we will start by considering instead a
+deterministic algorithm, i.e., the algorithm is some function A(U ) that maps every
+unitary U to some norm-preserving operator U       b.
+      We then prove the following lemma:
+Lemma 2. Let A(U ) denote any deterministic K-Lipschitz function that maps every
+                                           b . Let |ψ⟩ and |φ⟩ be any two fixed states
+unitary U to some norm-preserving operator U
+in the Hilbert space H. Then the function F (U ) ≡ F (U |ψ⟩ , A(U ) |φ⟩) is (2 + 2K)-
+Lipschitz in U .
+
+Proof. Our aim is to show that
+
+                        |F (U1 ) − F (U2 )| ≤ (2 + 2K)||U1 − U2 ||2 .                 (A.3)
+
+
+
+                                           – 55 –
+To show (A.3), first, notice that we can rewrite
+       F (U ) = F (U |ψ⟩ , A(U ) |φ⟩) = tr A(U ) |φ⟩ ⟨φ| A(U )† U |ψ⟩ ⟨ψ| U †
+                                                                             
+
+              = tr (A(U )† U )† φ A(U )† U ψ
+                                            
+                                                                                               (A.4)
+              = tr (A(U )† U )† ⊗ A(U )† U (φ ⊗ ψ)S .
+                                                    
+
+Here we used φ = |φ⟩ ⟨φ| and ψ = |ψ⟩ ⟨ψ|. In the third line we introduced a second
+copy of the Hilbert space; S is the swap operator. For readability, in what follows, we
+will abbreviate A(Ui ) = Ai . Then, using Hölder’s inequality,
+                             h                                                    i
+                                  †     †     †          †    †     †
+    |F (U1 ) − F (U2 )| = tr (A1 U1 ) ⊗ A1 U1 − (A2 U2 ) ⊗ A2 U2 (φ ⊗ ψ)S
+                                                                                       (A.5)
+                        ≤ ||φ ⊗ ψ||1 ||S (A†1 U1 )† ⊗ A†1 U1 − (A†2 U2 )† ⊗ A†2 U2 ||∞ .
+Since φ ⊗ ψ is a state, its trace norm is 1. Now we can combine submultiplicativity of
+the operator norm with the fact that S is unitary, such that
+     ||S (A†1 U1 )† ⊗ A†1 U1 −(A†2 U2 )† ⊗ A†2 U2 ||∞
+                                                 
+
+                               ≤ ||S||∞ || (A†1 U1 )† ⊗ A†1 U1 − (A†2 U2 )† ⊗ A†2 U2 ||∞
+                                                                                    
+                                                                                         (A.6)
+                                = ||(A†1 U1 )† ⊗ A†1 U1 − (A†2 U2 )† ⊗ A†2 U2 ||∞ .
+Recall that we want to show that this is upper bounded by some K ′ ||U1 −U2 ||2 . Rewrite
+the last line as
+||(A†1 U1 )† ⊗ A†1 U1 − (A†1 U1 )† ⊗ A†2 U2 + (A†1 U1 )† ⊗ A†2 U2 − (A†2 U2 )† ⊗ A†2 U2 ||∞
+   ≤ ||(A†1 U1 )† ⊗ A†1 U1 − (A†1 U1 )† ⊗ A†2 U2 ||∞ + ||(A†1 U1 )† ⊗ A†2 U2 − (A†2 U2 )† ⊗ A†2 U2 ||∞
+   = 2||A†1 U1 − A†2 U2 ||∞ .                                                                  (A.7)
+In the second line we used the triangle inequality; in the third we used ||A ⊗ B|| =
+||A|| ||B||, and for unitaries ||U ||∞ = 1, and we are we are working with exactly norm-
+preserving operators U  b such that also ||U  b ||∞ = 1. We now again use the triangle
+inequality and submultiplicativity of the operator norm to rewrite the final line as
+        2||A†1 U1 − A†2 U2 ||∞ = 2||A†1 U1 − A†2 U1 + A†2 U1 − A†2 U2 ||∞
+                                ≤ 2||A†1 − A†2 ||∞ ||U1 ||∞ + 2||A†2 ||∞ ||U1 − U2 ||∞
+                                                                                               (A.8)
+                                ≤ (2 + 2K)||U1 − U2 ||∞
+                                ≤ (2 + 2K)||U1 − U2 ||2 .
+In the third line we used that A(U ) is K-Lipschitz for some K, and finally we used
+|| · ||∞ ≤ || · ||2 . This completes the proof that the function F (U ) ≡ F (U |ψ⟩ , A(U ) |φ⟩)
+is (2 + 2K)-Lipschitz:
+                          |F (U1 ) − F (U2 )| ≤ (2 + 2K)||U1 − U2 ||2 .                        (A.9)
+
+
+
+                                               – 56 –
+    Then, by Lemma 1 and Lemma 2, we have the following measure concentration
+                                   2          2
+result: that for fraction ≥ 1 − e−ϵ d/(48(1+K) ) of Haar random unitaries,
+
+                  F (U |ψ⟩ , A(U ) |φ⟩) − avg [F (V |ψ⟩ , A(V ) |φ⟩)] < ϵ .                   (A.10)
+                                            V ←µ
+
+
+We now wish to extend this to include measure concentration over Haar random states.
+To this end, we prove the following lemma.
+Lemma 3. Let A(U ) denote any deterministic K-Lipschitz function that maps every
+                                           b . For fraction ≥ 1 − e−ϵ2 d/(48(1+K)2 ) of
+unitary U to some norm-preserving operator U
+                                                      2
+Haar random unitaries U ← µ and fraction ≥ 1 − e−ϵ d/192 of Haar random states
+|ψ⟩ ← µ, we have
+
+                 F (U |ψ⟩ , A(U ) |ψ⟩) − avg [F (V |φ⟩ , A(V ) |φ⟩)] < 2ϵ .                   (A.11)
+                                            V ←µ
+                                           |φ⟩←µ
+
+
+Proof. Consider first fixing some U and A(U ). Let V be a Haar random unitary and
+|ψ0 ⟩ some basis state, such that V |ψ0 ⟩ is a Haar random state. We show that the
+function
+
+         F (V ) ≡ F (U V |ψ0 ⟩ , A(U )V |ψ0 ⟩) = F (V † A(U )† U V |ψ0 ⟩ , |ψ0 ⟩)             (A.12)
+
+is 4-Lipschitz. Following the same methods as in the proof of Lemma 2, we find the
+analogue of (A.7):
+
+                 |F (V1 ) − F (V2 )| ≤ 2||V1† A(U )† U V1 − V2† A(U )† U V2 ||∞ .             (A.13)
+
+Then, by the triangle inequality,
+
+|F (V1 ) − F (V2 )| ≤ 2||V1† A(U )† U V1 − V2† A(U )† U V1 + V2† A(U )† U V1 − V2† A(U )† U V2 ||∞
+                   ≤ 2||V1† − V2† ||∞ ||A(U )† U V1 ||∞ + 2||V2† A(U )† U ||∞ ||V1 − V2 ||∞
+                   ≤ 4||V1 − V2 ||2 .                                                         (A.14)
+
+Note that in the last line we used again that A(U ) is exactly norm-preserving, such
+that ||A(U )† U Vi ||∞ = 1, as well as || · ||∞ ≤ || · ||2 .
+                                              2
+    By Lemma 1, for fraction ≥ 1 − e−ϵ d/192 of |ψ⟩ ≡ V |ψ0 ⟩ ← µ,
+
+                  F (U |ψ⟩ , A(U ) |ψ⟩) − avg [F (U |φ⟩ , A(U ) |φ⟩)] < ϵ .                   (A.15)
+                                            |φ⟩←µ
+
+
+
+
+                                             – 57 –
+We now combine this with measure concentration for Haar random unitaries. Starting
+from (A.10) for two (fixed) states |φ⟩, and then averaging over φ ← µ, we have for
+                  2         2
+fraction ≥ 1 − e−ϵ d/48(1+K) of U ← µ,
+
+               avg [F (U |φ⟩ , A(U ) |φ⟩] − avg [F (V |φ⟩ , A(V ) |φ⟩)] < ϵ .        (A.16)
+               |φ⟩←µ                           V ←µ
+                                              |φ⟩←µ
+
+
+Now add and subtract F (U |ψ⟩ , A(U ) |ψ⟩). This gives
+
+  F (U |ψ⟩ , A(U ) |ψ⟩) − avg [F (V |φ⟩ , A(V ) |φ⟩)]
+                          V ←µ
+                         |φ⟩←µ
+                                                                                     (A.17)
+                       < ϵ + F (U |ψ⟩ , A(U ) |ψ⟩) − avg [F (U |φ⟩ , A(U ) |φ⟩)] .
+                                                        |φ⟩←µ
+
+                                                                                      2
+Now we can use (A.15) to bound the right hand side to 2ϵ for fraction ≥ 1 − e−ϵ d/192
+of |ψ⟩ ← µ. This concludes the proof of Lemma 3.
+
+
+    To prove Theorem 3, it remains to extend the above results to (1) non-deterministic
+functions A(U ), e.g., quantum algorithms AU , and (2) to pseudorandom unitaries and
+states. We first briefly address point (1). We can run the proofs of Lemma 2 and
+Lemma 3 analogously for U  bi ← AUi until we need a smoothness property of U bi . There,
+instead of K-Lipschitz, we use the randomized K-Lipschitz property in Definition 6.
+Furthermore, using the inequality
+
+                  |avg F (U1 ) − avg F (U2 )| ≤ avg |F (U1 ) − F (U2 )| ,       (A.18)
+                                          h                  i
+we have that the function F (V ) = avg F (V |ψ⟩ , Vb |ψ⟩) is itself (2 + 2K)-Lipschitz.
+                                    Vb ←AV
+This allows us to extend our measure concentration results to this function F (V ) where
+previously we proved them for F (U ) = F (U |ψ⟩ , U  b |ψ⟩).
+                                                                          2         2
+     Then we arrive at the following result: that for fraction ≥ 1 − e−ϵ d/(48(1+K) ) of
+                                       2
+U ← µ, and for fraction ≥ 1 − e−ϵ d/192 of |ψ⟩ ← µ (alternatively, we can think of
+                  2          2           2
+this as ≥ 1 − e−ϵ d/192 − e−ϵ d/(48(1+K) ) fraction of U ← µ and |ψ⟩ ← µ), we have the
+following concentration bound:
+                                           "                         #
+             h                 i                  h                i
+         avg F (U |ψ⟩ , Ub |ψ⟩) − avg        avg F (V |φ⟩ , Vb |φ⟩) < 2ϵ .        (A.19)
+       b ←AU
+       U                             V ←µ    Vb ←AV
+                                    |φ⟩←µ
+
+
+    Finally, we address point (2) above, and show that to preserve indistinguishability,
+the above result must also hold for pseudorandom unitaries and states. Intuitively, if the
+
+
+
+                                             – 58 –
+fluctuations around the Haar random averaged fidelity are exponentially suppressed,
+but the fluctuations around the pseudorandom averaged fidelity are not, then one could
+measure these fluctuations and thereby distinguish pseudorandom unitaries and states
+from Haar random ones, breaking the pseudorandomness.
+     We proceed to formally show this below.
+Lemma 4. Let κ = poly(N ) be the security parameter. Let U be any pseudorandom
+unitary (PRU) ensemble and let Ψ be any pseudorandom state (PRS) ensemble. Let
+b be the output of the learning algorithm AU , which we assume to be (randomized)
+U
+K-Lipschitz, and where U ← U. Then the following concentration inequality holds, in
+                                                                         2         2
+the measure induced on U and Ψ, for any ϵ > 0, with probability ≥ 1 − e−ϵ d/48(1+K) −
+   2
+e−ϵ d/192 − negl′ (N ) over U ← U and |ψ⟩ ← Ψ,
+                                                   
+         avg F U |ψ⟩ , U b |ψ⟩ − avg F V |φ⟩ , Vb |φ⟩ < 2ϵ + negl(N ) .
+        b ←AU
+        U                         V ←U
+                                 |φ⟩←Ψ
+                                                                                (A.20)
+                               Vb ←AV
+
+Proof. To prove Lemma 4, we first extend (A.19) to pseudorandom unitaries, and then
+to pseudorandom states.
+    First, let Ψ be any ensemble of states. For ease of notation, we write
+                                        h                i
+                            β := avg F (U |ψ⟩ , U  b |ψ⟩)                    (A.21)
+                                  U ←µ
+                                 |ψ⟩←Ψ
+                                 b ←AU
+                                 U
+
+and                                      h                    i
+                           β ′ := avg        F (U |ψ⟩ , U
+                                                        b |ψ⟩) .               (A.22)
+                                  U ←U
+                                 |ψ⟩←Ψ
+                                 b ←AU
+                                 U
+
+By Lemma 7 of [33], |β − β ′ | ≤ η(N ) where η is a negligible function.
+    Assume towards contradiction that there exists a pseudorandom unitary ensemble
+U, any distribution of states Ψ, and a positive polynomial p such that
+        "                                          #
+                          b |ψ⟩ − β ′ ≥ ϵ + η(N ) ≥ e−ϵ2 d/48(1+K)2 + 1 . (A.23)
+                               
+    Pr     avg F U |ψ⟩ , U
+   U ←U   b ←AU
+          U                                                              p(N )
+  |ψ⟩←Ψ
+
+
+If the above equation holds, then there is a state |ψ0 ⟩ such that this equation holds
+with |ψ⟩ := |ψ0 ⟩:
+       "                                           #
+                          b |ψ0 ⟩ − β ′ ≥ ϵ + η(N ) ≥ e−ϵ2 d/48(1+K)2 + 1 . (A.24)
+                                
+    Pr    avg F U |ψ0 ⟩ , U
+   U ←U b
+         U ←AU                                                         p(N )
+
+
+
+                                         – 59 –
+We now construct an efficient algorithm Dist that uses oracle access to the pseudoran-
+dom unitary U and also can run the learning algorithm AU .49 We show that if our
+assumption (A.23) is true, then Dist can distinguish between U ← µ and U ← U, thus
+breaking the pseudorandomness of U.
+     The distinguisher Dist gets poly(N ) copies of |ψ0 ⟩, and is also handed β.50 Then
+it proceeds as follows:
+
+   1. Dist runs A and simulates the oracle for A: it receives each query from A, sends
+      the query to its oracle U , and returns the response to A.
+
+   2. Dist gives |ψ0 ⟩ to A and receives back U
+                                              b |ψ0 ⟩. It also gives |ψ0 ⟩ to its oracle U
+      and gets back U |ψ0 ⟩.
+
+   3. Dist repeats this poly(N ) times and then uses a quantum algorithm (e.g., [92]) to
+      efficiently estimate β ′′ := F (U |ψ0 ⟩ , U
+                                                b |ψ0 ⟩) up to some additive error ϵ̂ > 0, i.e.,
+         ′′     ′′
+      |βest − β | ≤ ϵ̂.
+          ′′
+   4. If βest − β ≥ ϵ̃, where ϵ̃ > ϵ̂, then Dist outputs 1.
+
+    Note that Dist runs in poly(N )-time since it can efficiently query the oracle, and
+furthermore the quantum algorithm for fidelity estimation is efficient.51
+    We now show that Dist distinguishes between U ← µ and U ← U. For Haar
+random U ← µ as the oracle,
+                               ′′
+          Pr [Dist = 1] = Pr [βest − β ≥ ϵ̃] = Pr [β ′′ − β ≥ ϵ̃ − (βest
+                                                                     ′′
+                                                                         − β ′′ )]
+         U ←µ
+
+                           ≤ Pr [β ′′ − β ≥ ϵ̃ − ϵ̂]                                             (A.25)
+                               −(ϵ̃−ϵ̂)2 d/48(1+K)2
+                           ≤e                         ,
+                     ′′
+where we used −ϵ̂ ≤ βest − β ′′ ≤ ϵ̂ in the second line, and (A.10) (concentration in the
+Haar measure) for ϵ = ϵ̃ − ϵ̂ > 0 in the last line.
+  49
+     Note that the distinguisher can depend on N , as ours does here, since e.g. |ψ0 ⟩ depends on N .
+  50
+     The careful reader might worry that handing the distinguisher (multiple copies of) any state in
+H, or β, breaks the computational boundedness of the algorithm. Note, however, that although the
+algorithms we consider are limited to a polynomial number of queries in log dim H, each query can be
+for any state in H that the algorithm a) can prepare or b) has been given as “advice”. This advice can
+also include quantities like β. Note that the learning algorithm we consider in, e.g, Theorem 3 gets
+only one copy of the physical state |ψ⟩; the distinguisher that we describe here is a different algorithm
+and can receive multiple copies as advice.
+  51
+     For example, the quantum algorithm of [92] runs in poly(1/ϵ̂)-time.
+
+
+
+
+                                                 – 60 –
+    For pseudorandom U ← U as the oracle,
+                        ′′
+   Pr [Dist = 1] = Pr [βest − β ≥ ϵ̃] = Pr [β ′′ − β ′ ≥ ϵ̃ − (βest
+                                                                ′′
+                                                                    − β ′′ ) − (β ′ − β)]
+  U ←U
+
+                   ≥ Pr [β ′′ − β ′ ≥ ϵ̃ + ϵ̂ + η(N )]                                      (A.26)
+                              2          2      1
+                   ≥ e−(ϵ̃+ϵ̂) d/48(1+K) +          ,
+                                              p(N )
+
+where we used −η(N ) ≤ β − β ′ ≤ η(N ) in the third line, and our assumption (A.23)
+in the last line for ϵ = ϵ̃ + ϵ̂.
+    Therefore,
+                                            1         (ϵ̃+ϵ̂)2 d        (ϵ̃−ϵ̂)2 d
+                                                   −                 −
+          Pr [Dist = 1] − Pr [Dist = 1] ≥       +e   48(1+K)    2
+                                                                  −e   48(1+K)    2
+                                                                                    .       (A.27)
+         U ←U            U ←µ             p(N )
+This shows that Dist distinguishes between U ← µ and U ← U. Since Dist runs in
+poly(N ) time, this contradicts the pseudorandomness of U (Definition 3). Thus based
+                                                                   2        2
+on the pseudorandomness of U, we must have that for fraction ≤ e−ϵ d/48(1+K) + η ′ (N )
+of U ← U
+                                                   
+           avg F U |ψ⟩ , Ub |ψ⟩ − avg F V |φ⟩ , Vb |φ⟩ ≥ ϵ + η(N ) ,          (A.28)
+          b ←AU
+          U                               V ←U
+                                         |φ⟩←Ψ
+                                        Vb ←AV
+
+where η ′ (N ) is negligible. In particular, this holds when |ψ⟩ ← Ψ is Haar random.
+    Thus, we have proven a measure concentration result for fluctuations around the av-
+erage fidelity where we average over pseudorandom unitaries (and Haar random states).
+An analogous proof holds for fluctuations around the average fidelity where we average
+over pseudorandom states (and any distribution of unitaries D; in particular, it holds
+for Haar random unitaries U ← µ). It requires Lemma 8 in [33]. This would result
+                                                                         2
+in the following measure concentration result: that for fraction ≤ e−ϵ d/192 + η̃ ′ (N ) of
+|ψ⟩ ← Ψ,
+                                         h               i
+           avg F U |ψ⟩ , U |ψ⟩ − avg F V |φ⟩ , V |φ⟩ ≥ ϵ + η̃(N ) ,
+                           b                            b                           (A.29)
+         b ←AU
+         U                               V ←U
+                                        |φ⟩←Ψ
+                                       Vb ←AV
+
+where we explicated that the negligible functions need not be the same as in (A.28).
+Combining (A.28) and (A.29) concludes the proof of Lemma 4.
+
+    We will now use Lemma 4 to prove the first part of Theorem 3. Consider any
+constant ϵ > 0. Consider any sufficiently large value of N ∈ N so that Theorem 2
+from [33] holds. Let U ← U and |ψ⟩ ← Ψ denote the pseudorandom unitary and
+
+
+
+                                                 – 61 –
+state. Let U  b denote the operator that AU produces. To connect to the learning
+                                                                 b |ψ⟩ ← AU (|ψ⟩).
+result (Theorem 2), we average over the output of the algorithm, U
+We abbreviate this by U  b ← AU . By Lemma 4, we have that with probability ≥
+        2        2     2
+1 − e−ϵ d/48(1+K) − e−ϵ d/192 − negl′ (N ),
+            h                i          h          i
+       avg F U |ψ⟩ , Ub |ψ⟩ − avg F V |φ⟩ , Vb |φ⟩ < 2ϵ + negl(N ) .
+      b ←AU
+      U                           V ←U                                    (A.30)
+                                   |φ⟩←Ψ
+                                  Vb ←AV
+
+We call (U, |ψ⟩) typical if the above equation holds. The complexity of learning result
+(Theorem 2) gives us an upper bound on the average fidelity. Thus we have that for
+any typical (U, |ψ⟩),
+                         h               i
+                   avg F U |ψ⟩ , U   b |ψ⟩ ≤ 1 − α + 2ϵ + negl(N ) .            (A.31)
+                  b ←AU
+                  U
+
+This shows the first part of the theorem (Equation (3.5)).
+
+Haar random unitaries and states.    Note that we obtain a stronger result for Haar
+                                                                2         2     2
+random unitaries and states: namely, that for fraction ≥ 1 − e−ϵ d/48(1+K) − e−ϵ d/192
+of U ← µ and |ψ⟩ ← µ,
+                            h              i
+                       avg F U |ψ⟩ , U b |ψ⟩ ≤ 1 − α + 2ϵ .                   (A.32)
+                          b ←AU
+                          U
+
+Note that for d = 2κ with κ = poly(N ), this means that the above bound is violated
+for only a fraction that is doubly-exponentially suppressed in N .
+
+2. Distinguishing operator. We now show the second part of the theorem. The
+relationship between fidelity and distinguishing measurements is a known result; for
+any finite dimensional Hilbert space, this is given in Appendix B in [33]. Thus, for any
+typical (U, |ψ⟩), there exists an operator Q (for a given U
+                                                          b ) for which
+
+                avg tr(QU  b † ) − tr(QU ψU † ) ≥ 2α − 4ϵ − negl(N ) .
+                        b ψU                                                      (A.33)
+               b ←AU
+               U
+
+This concludes the proof of Theorem 3.
+
+
+
+B     Proof of Corollary 3.1
+In this appendix, we prove Corollary 3.1, the existence of a semiclassical distinguishing
+operator. We repeat Corollary 3.1 here for convenience:
+
+
+
+                                           – 62 –
+Corollary 3.1 (Distinguishing Operator at N → ∞). Let {UN |ψN ⟩}N and {U     bN |ψN ⟩}N
+be two sequences of states that are represented on the code, namely there exist |ξ⟩ and
+ ˆ such that UN |ψN ⟩ = VN |ξ⟩ and U
+|ξ⟩                                                     ˆ Furthermore, assume that
+                                        bN |ψN ⟩ = VN |ξ⟩.
+{UN |ψN ⟩}N and {UbN |ψN ⟩}N satisfy the assumptions stated above, then both 1. and 2.
+                                                ˆ In particular, by taking the constant
+in Theorem 3 also hold for the states |ξ⟩ and |ξ⟩.
+                                 ˆ the existence of an operator Q ∈ B(H) such that
+ϵ to be < α/2, we have for any |ξ⟩
+                                       ˆ − tr(Qξ) ≥ O(1) .
+                               avg tr(Qξ)
+                                ξb
+
+Proof. By the assumptions on the sequences {UN |ψN ⟩}N and {U       bN |ψN ⟩}N , for every
+sufficiently large N , UN |ψN ⟩ and U
+                                    bN |ψN ⟩ satisfy 1. and 2. in Theorem 3.
+     The result (A.31) by definition guarantees that
+
+                         avg ⟨ξ|VN† VN |ξ⟩
+                                        ˆ ≤ 1 − α − negl(N ).                       (B.1)
+                          ξ̂
+
+Taking the limit of both sides and using the definition of an asymptotically isometric
+                                                                ˆ obey the inequality
+code in Assumption 2, we see that the two bulk states |ξ⟩ and |ξ⟩
+as well. Note that to commute the average over ξˆ with the N → ∞ limit we had to
+use the dominated convergence theorem.
+    By the Fuchs–van de Graaf inequality, the overlap of the two states ⟨ξ|ξ⟩ ˆ upper
+and lower bounds their one-norm distance:
+                                     1
+                         q                        q
+                                ˆ           ˆ
+                     1 − F (ξ, ξ) ≤ ||ξ − ξ||1 ≤ 1 − F (ξ, ξ) ˆ .                (B.2)
+                                     2
+When ξ is a pure state, the lower bound can be strengthened:
+                               1       ˆ 1 ≥ 1 − F (ξ, ξ)
+                                                       ˆ .
+                                 ||ξ − ξ||                                          (B.3)
+                               2
+Averaging this inequality over ξˆ and using (B.1), we see that
+                                                    ˆ 1 ≥ 2α.
+                                          avg ||ξ − ξ||                             (B.4)
+                                           ξ̂
+
+The one-norm distance between two states on a general algebra B(H) may be written
+as
+                          ˆ 1=
+                    ||ξ − ξ||       sup                    ˆ
+                                            | tr(aξ) − tr(aξ)|.            (B.5)
+                                          a∈B(H):||a||∞ ≤1
+
+where the operators in the supremum are restricted to be self-adjoint. Combining
+(B.5) and (B.4), we see that there exists some operator Q ∈ B(H), depending on U
+                                                                               b
+              ˆ such that
+and therefore ξ,
+                                       b − tr(Qξ) ≥ 2α .
+                               avg tr(Qξ)                                           (B.6)
+                                     ξb
+
+
+
+
+                                                 – 63 –
+In particular, we get that there exists an operator whose expectation values for ξˆ and
+ξ must differ by a constant. This concludes the proof of Corollary 3.1.
+
+
+References
+ [1] R. Penrose, Gravitational collapse and space-time singularities, Phys. Rev. Lett. 14
+     (1965) 57–59.
+ [2] S. W. Hawking, Singularities in the universe, Phys. Rev. Lett. 17 (Aug, 1966) 444–445.
+ [3] S. W. Hawking and R. Penrose, The Singularities of gravitational collapse and
+     cosmology, Proc. Roy. Soc. Lond. A 314 (1970) 529–548.
+ [4] R. Penrose, Gravitational collapse and space-time singularities, Phys. Rev. Lett. 14
+     (Jan, 1965) 57–59.
+ [5] S. W. Hawking, Gravitational radiation from colliding black holes, Phys. Rev. Lett. 26
+     (1971) 1344–1346.
+ [6] D. Marolf and J. Polchinski, Gauge/Gravity Duality and the Black Hole Interior, Phys.
+     Rev. Lett. 111 (2013) 171301, [arXiv:1307.4706].
+ [7] R. Gregory and R. Laflamme, The Instability of Charged Black Strings and p-Branes,
+     Nucl. Phys. B 428 (1994) 399–434, [hep-th/9404071].
+ [8] L. Lehner and F. Pretorius, Black Strings, Low Viscosity Fluids, and Violation of
+     Cosmic Censorship, Phys. Rev. Lett. 105 (2010) 101102, [arXiv:1006.5960].
+ [9] R. Gregory, The Gregory–Laflamme instability, pp. 29–43. Cambridge University Press,
+     2012. arXiv:1107.5821.
+[10] G. T. Horowitz, J. E. Santos, and B. Way, Evidence for an Electrifying Violation of
+     Cosmic Censorship, Class. Quant. Grav. 33 (2016), no. 19 195007,
+     [arXiv:1604.06465].
+[11] T. Crisford and J. E. Santos, Violating the Weak Cosmic Censorship Conjecture in
+     Four-Dimensional Anti–de Sitter Space, Phys. Rev. Lett. 118 (2017), no. 18 181101,
+     [arXiv:1702.05490].
+[12] T. Crisford, G. T. Horowitz, and J. E. Santos, Testing the Weak Gravity – Cosmic
+     Censorship Connection, Phys. Rev. D 97 (2018), no. 6 066005, [arXiv:1709.07880].
+[13] G. T. Horowitz and J. E. Santos, Further Evidence for the Weak Gravity – Cosmic
+     Censorship Connection, JHEP 06 (2019) 122, [arXiv:1901.11096].
+[14] Å. Folkestad, Penrose Inequality as a Constraint on the Low Energy Limit of Quantum
+     Gravity, Phys. Rev. Lett. 130 (2023), no. 12 121501, [arXiv:2209.00013].
+
+
+
+
+                                           – 64 –
+[15] F. C. Eperon, B. Ganchev, and J. E. Santos, Plausible scenario for a generic violation
+     of the weak cosmic censorship conjecture in asymptotically flat four dimensions, Phys.
+     Rev. D 101 (2020), no. 4 041502, [arXiv:1906.11257].
+[16] J. Bardeen, Non-singular general relativistic gravitational collapse, in Proceedings of
+     the 5th International Conference on Gravitation and the Theory of Relativity, p. 87,
+     Sept., 1968.
+[17] N. Arkani-Hamed, L. Motl, A. Nicolis, and C. Vafa, The string landscape, black holes
+     and gravity as the weakest force, JHEP 06 (2007) 060, [hep-th/0601001].
+[18] N. Engelhardt and G. T. Horowitz, Holographic argument for the Penrose inequality in
+     AdS spacetimes, Phys. Rev. D 99 (2019), no. 12 126009, [arXiv:1903.00555].
+[19] K. S. Thorne, Nonspherical gravitational collapse: a short review, pp. 231–258. W.H.
+     Freeman & Co., 1972.
+[20] S. L. Shapiro and S. A. Teukolsky, Formation of naked singularities: The violation of
+     cosmic censorship, Phys. Rev. Lett. 66 (1991) 994–997.
+[21] M. W. Choptuik and F. Pretorius, Ultra Relativistic Particle Collisions, Phys. Rev.
+     Lett. 104 (2010) 111101, [arXiv:0908.1780].
+[22] P. M. Chesler and W. van der Schee, Early thermalization, hydrodynamics and energy
+     loss in AdS/CFT, Int. J. Mod. Phys. E 24 (2015), no. 10 1530011,
+     [arXiv:1501.04952].
+[23] A. Almheiri, D. Marolf, J. Polchinski, and J. Sully, Black Holes: Complementarity or
+     Firewalls?, JHEP 02 (2013) 062, [arXiv:1207.3123].
+[24] A. Almheiri, D. Marolf, J. Polchinski, D. Stanford, and J. Sully, An Apologia for
+     Firewalls, JHEP 09 (2013) 018, [arXiv:1304.6483].
+[25] R. Emparan, Predictivity lost, predictivity regained: a Miltonian cosmic censorship
+     conjecture, Int. J. Mod. Phys. D 29 (2020), no. 14 2043021, [arXiv:2005.07389].
+[26] A. C. Wall, Maximin Surfaces, and the Strong Subadditivity of the Covariant
+     Holographic Entanglement Entropy, Class.Quant.Grav. 31 (2014), no. 22 225007,
+     [arXiv:1211.3494].
+[27] N. Engelhardt and A. C. Wall, No Simple Dual to the Causal Holographic
+     Information?, JHEP 04 (2017) 134, [arXiv:1702.01748].
+[28] N. Engelhardt and A. C. Wall, Coarse Graining Holographic Black Holes, JHEP 05
+     (2019) 160, [arXiv:1806.01281].
+[29] N. Engelhardt, G. Penington, and A. Shahbazi-Moghaddam, Finding pythons in
+     unexpected places, Class. Quant. Grav. 39 (2022), no. 9 094002, [arXiv:2105.09316].
+
+
+
+
+                                            – 65 –
+[30] N. Engelhardt, G. Penington, and A. Shahbazi-Moghaddam, A world without pythons
+     would be so simple, Class. Quant. Grav. 38 (2021), no. 23 234001, [arXiv:2102.07774].
+[31] C. Akers, N. Engelhardt, D. Harlow, G. Penington, and S. Vardhan, The black hole
+     interior from non-isometric codes and complexity, arXiv:2207.06536.
+[32] A. Bouland, B. Fefferman, and U. Vazirani, Computational pseudorandomness, the
+     wormhole growth paradox, and constraints on the AdS/CFT duality,
+     arXiv:1910.14646.
+[33] L. Yang and N. Engelhardt, The complexity of learning (pseudo)random dynamics of
+     black holes and other chaotic systems, arXiv:2302.11013.
+[34] Z. Ji, Y.-K. Liu, and F. Song, Pseudorandom quantum states, in Advances in
+     Cryptology – CRYPTO 2018 (H. Shacham and A. Boldyreva, eds.), (Cham),
+     pp. 126–152, Springer International Publishing, 2018.
+[35] P. Hayden and J. Preskill, Black holes as mirrors: quantum information in random
+     subsystems, JHEP 09 (2007) 120, [arXiv:0708.4025].
+[36] I. H. Kim and J. Preskill, Complementarity and the unitarity of the black hole
+     S-matrix, JHEP 02 (2023) 233, [arXiv:2212.00194].
+[37] S. H. Shenker and D. Stanford, Black holes and the butterfly effect, JHEP 03 (2014)
+     067, [arXiv:1306.0622].
+[38] D. A. Roberts, D. Stanford, and L. Susskind, Localized shocks, JHEP 03 (2015) 051,
+     [arXiv:1409.8180].
+[39] J. Maldacena, S. H. Shenker, and D. Stanford, A bound on chaos, JHEP 08 (2016)
+     106, [arXiv:1503.01409].
+[40] J. S. Cotler, G. Gur-Ari, M. Hanada, J. Polchinski, P. Saad, S. H. Shenker,
+     D. Stanford, A. Streicher, and M. Tezuka, Black Holes and Random Matrices, JHEP
+     05 (2017) 118, [arXiv:1611.04650]. [Erratum: JHEP 09, 002 (2018)].
+[41] N. Engelhardt and Å. Folkestad, Holography Abhors Visible Trapped Surfaces, JHEP
+     07 (2021) 066, [arXiv:2012.11445].
+[42] A. R. Brown, H. Gharibyan, G. Penington, and L. Susskind, The Python’s Lunch:
+     geometric obstructions to decoding Hawking radiation, JHEP 08 (2020) 121,
+     [arXiv:1912.00228].
+[43] N. Engelhardt and A. C. Wall, Quantum Extremal Surfaces: Holographic Entanglement
+     Entropy beyond the Classical Regime, JHEP 01 (2015) 073, [arXiv:1408.3203].
+[44] R. Bousso, Z. Fisher, S. Leichenauer, and A. C. Wall, Quantum focusing conjecture,
+     Phys. Rev. D93 (2016), no. 6 064044, [arXiv:1506.02669].
+
+
+
+
+                                          – 66 –
+[45] A. Almheiri, R. Mahajan, and J. Maldacena, Islands outside the horizon,
+     arXiv:1910.11077.
+[46] R. Bousso and G. Penington, Islands Far Outside the Horizon, arXiv:2312.03078.
+[47] V. A. Belinsky, I. M. Khalatnikov, and E. M. Lifshitz, Oscillatory approach to a
+     singular point in the relativistic cosmology, Adv. Phys. 19 (1970) 525–573.
+[48] V. A. Belinsky and I. M. Khalatnikov, General Solution of the Gravitational Equations
+     with a Physical Singularity, Sov.Phys.JETP 30 (1970) 1174.
+[49] E. Shaghoulian and H. Wang, Timelike BKL singularities and chaos in AdS/CFT,
+     Class. Quant. Grav. 33 (2016), no. 12 125020, [arXiv:1601.02599].
+[50] T. Faulkner and M. Li, Asymptotically isometric codes for holography,
+     arXiv:2211.12439.
+[51] S. Leutheusser and H. Liu, Subalgebra-subregion duality: emergence of space and time
+     in holography, arXiv:2212.13266.
+[52] N. Engelhardt, Å. Folkestad, A. Levine, E. Verheijden, and L. Yang, Spoofing
+     entanglement in holography, arXiv:2407.14589.
+[53] R. Bousso, Z. Fisher, S. Leichenauer, and A. C. Wall, Quantum focusing conjecture,
+     Phys. Rev. D 93 (2016), no. 6 064044, [arXiv:1506.02669].
+[54] A. C. Wall, A Proof of the generalized second law for rapidly-evolving Rindler horizons,
+     Phys.Rev. D82 (2010) 124019, [arXiv:1007.1493].
+[55] A. Shahbazi-Moghaddam, Restricted Quantum Focusing, arXiv:2212.03881.
+[56] N. Engelhardt, G. Penington, and A. Shahbazi-Moghaddam, Twice Upon a Time:
+     Timelike-Separated Quantum Extremal Surfaces, JHEP 01 (2024) 033,
+     [arXiv:2308.16226].
+[57] C. Akers, N. Engelhardt, G. Penington, and M. Usatyuk, Quantum Maximin Surfaces,
+     JHEP 08 (2020) 140, [arXiv:1912.02799].
+[58] N. Engelhardt and A. C. Wall, Decoding the Apparent Horizon: Coarse-Grained
+     Holographic Entropy, Phys. Rev. Lett. 121 (2018), no. 21 211301, [arXiv:1706.02038].
+[59] A. Hamilton, D. N. Kabat, G. Lifschytz, and D. A. Lowe, Local bulk operators in
+     AdS/CFT: A Boundary view of horizons and locality, Phys.Rev. D73 (2006) 086003,
+     [hep-th/0506118].
+[60] A. Hamilton, D. N. Kabat, G. Lifschytz, and D. A. Lowe, Holographic representation of
+     local bulk operators, Phys.Rev. D74 (2006) 066009, [hep-th/0606141].
+[61] A. Hamilton, D. N. Kabat, G. Lifschytz, and D. A. Lowe, Local bulk operators in
+     AdS/CFT: A Holographic description of the black hole interior, Phys. Rev. D75 (2007)
+     106001, [hep-th/0612053]. [Erratum: Phys. Rev.D75,129902(2007)].
+
+
+
+
+                                           – 67 –
+[62] N. Engelhardt and H. Liu, Algebraic ER=EPR and Complexity Transfer,
+     arXiv:2311.04281.
+[63] D. Harlow and P. Hayden, Quantum Computation vs. Firewalls, JHEP 1306 (2013)
+     085, [arXiv:1301.4504].
+[64] I. Kim, E. Tang, and J. Preskill, The ghost in the radiation: Robust encodings of the
+     black hole interior, JHEP 06 (2020) 031, [arXiv:2003.05451].
+[65] H.-Y. Huang, S. Chen, and J. Preskill, Learning to Predict Arbitrary Quantum
+     Processes, PRX Quantum 4 (2023), no. 4 040337, [arXiv:2210.14894].
+[66] D. Marolf, Microcanonical Path Integrals and the Holography of small Black Hole
+     Interiors, JHEP 09 (2018) 114, [arXiv:1808.00394].
+[67] D. A. Roberts and B. Yoshida, Chaos and complexity by design, JHEP 04 (2017) 121,
+     [arXiv:1610.04903].
+[68] R. Gregory and R. Laflamme, Black strings and p-branes are unstable, Phys. Rev. Lett.
+     70 (1993) 2837–2840, [hep-th/9301052].
+[69] R. P. Geroch, Local characterization of singularities in general relativity, J. Math.
+     Phys. 9 (1968) 450–465.
+[70] Y. B. Zeldovich, A New Type of Radioactive Decay: Gravitational Annihilation of
+     Baryons, Phys. Lett. A 59 (1976) 254.
+[71] L. F. Abbott and M. B. Wise, Wormholes and Global Symmetries, Nucl. Phys. B 325
+     (1989) 687–704.
+[72] R. Kallosh, A. D. Linde, D. A. Linde, and L. Susskind, Gravity and global symmetries,
+     Phys. Rev. D 52 (1995) 912–935, [hep-th/9502069].
+[73] M. W. Choptuik, Universality and scaling in gravitational collapse of a massless scalar
+     field, Phys. Rev. Lett. 70 (1993) 9–12.
+[74] D. Christodoulou, Examples of naked singularity formation in the gravitational collapse
+     of a scalar field, Annals Math. 140 (1994) 607–653.
+[75] J. Santos, Connecting the weak gravity conjecture to the weak cosmic censorship, in
+     Strings 2018, (Okinawa, Japan), June, 2018.
+[76] R. P. Geroch and G. T. Horowitz, Global structure of spacetimes, in General Relativity:
+     An Einstein Centenary Survey, pp. 212–293. Cambridge University Press, 1979.
+[77] E. Giorgi, S. Klainerman, and J. Szeftel, Wave equations estimates and the nonlinear
+     stability of slowly rotating kerr black holes, 2022.
+[78] F. Haake, Quantum signatures of chaos. Springer, 1991.
+[79] D. N. Page, Expected entropy of a subsystem, Phys. Rev. Lett. 71 (1993) 1291–1294,
+     [http://arXiv.org/abs/gr-qc/9305007].
+
+
+
+
+                                            – 68 –
+[80] J. Choi et al., Preparing random states and benchmarking with many-body quantum
+     chaos, Nature 613 (2023), no. 7944 468–473, [arXiv:2103.03535].
+[81] W. W. Ho and S. Choi, Exact emergent quantum state designs from quantum chaotic
+     dynamics, Phys. Rev. Lett. 128 (2022) 060601, [arXiv:2109.07491].
+[82] R. Bousso, V. Chandrasekaran, and A. Shahbazi-Moghaddam, From black hole entropy
+     to energy-minimizing states in QFT, Phys. Rev. D 101 (2020), no. 4 046001,
+     [arXiv:1906.05299].
+[83] N. Engelhardt and S. Fischetti, Losing the IR: a Holographic Framework for Area
+     Theorems, Class. Quant. Grav. 36 (2019), no. 3 035008, [arXiv:1805.08891].
+[84] A. M. Kubicki, A. May, and D. Pérez-Garcia, Constraints on physical computers in
+     holographic spacetimes, SciPost Phys. 16 (2024) 024, [arXiv:2304.09900].
+[85] I. Bena, S. Giusto, E. J. Martinec, R. Russo, M. Shigemori, D. Turton, and N. P.
+     Warner, Smooth horizonless geometries deep inside the black-hole regime, Phys. Rev.
+     Lett. 117 (2016), no. 20 201601, [arXiv:1607.03908].
+[86] J. Cotler and A. Strominger, The Universe as a Quantum Encoder, arXiv:2201.11658.
+[87] J. Cotler and K. Jensen, Isometric Evolution in de Sitter Quantum Gravity, Phys. Rev.
+     Lett. 131 (2023), no. 21 211601, [arXiv:2302.06603].
+[88] P. Ananth, A. Gulati, F. Kaleoglu, and Y.-T. Lin, “Pseudorandom Isometries.”
+     Cryptology ePrint Archive, Paper 2023/1741. https://eprint.iacr.org/2023/1741.
+[89] S. Lloyd, Ultimate physical limits to computation, Nature 406 (2000), no. 6799
+     1047–1054.
+[90] G. Katoch, J. Ren, and S. R. Roy, Quantum complexity and bulk timelike singularities,
+     JHEP 12 (2023) 085, [arXiv:2303.02752].
+[91] E. Meckes and M. Meckes, Spectral measures of powers of random matrices, Electronic
+     Communications in Probability 18 (jan, 2013).
+[92] Q. Wang, Z. Zhang, K. Chen, J. Guan, W. Fang, J. Liu, and M. Ying, Quantum
+     Algorithm for Fidelity Estimation, IEEE Trans. Info. Theor. 69 (2023), no. 1 273–282,
+     [arXiv:2103.09076].
+
+
+
+
+                                          – 69 –
+

@@ -77,7 +77,9 @@ if ! nm -D class 2>/dev/null | grep -qi omp; then
 fi
 
 # classy Python binding against the freshly built libclass.
-pip install -e python/
+# --no-build-isolation: reuse the venv's Cython instead of PEP 517 isolated
+# build env (which lacks Cython and fails). Verified locally 2026-04-22.
+pip install --no-build-isolation -e python/
 
 # ---------------------------------------------------------------------------
 # 5. Cobaya packages (Planck 2018 + DESI DR2 + Pantheon+)

@@ -12,7 +12,7 @@ falls back to an existing Python 3.12 environment that already contains the
 required scientific stack:
 
 - `numpy 2.4.2`, `scipy 1.17.0`, `matplotlib 3.10.8`, `tqdm 4.67.3`
-  (from `~/.openclaw/venvs/pipeline/`)
+  (from `(project venv)/`)
 - `sympy 1.14.0` (exposed via `.pth` link)
 - `astropy`: **not installed**, but not imported by any D*/N* file (verified by grep).
 - `cadabra2`: **not installed** (requires sudo); only referenced in comments/README
@@ -71,6 +71,6 @@ No other scripts required modification.
    on an N-body snapshot (GUDHI) is still a TODO, as documented in the script.
 3. The venv the owner specified (`.venv-compute`) was created but its interpreter
    was not reachable from the execution sandbox; all runs used the working
-   `~/.openclaw/venvs/pipeline/` interpreter which carries identical package
+   `(project venv)/` interpreter which carries identical package
    versions. If a strictly hermetic rerun is needed, `pip install -r` inside
    `.venv-compute` should reproduce identical outputs.

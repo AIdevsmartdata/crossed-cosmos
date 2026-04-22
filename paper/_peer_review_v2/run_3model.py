@@ -17,7 +17,7 @@ RAW.mkdir(exist_ok=True)
 API_URL = "https://api.1min.ai/api/chat-with-ai"
 API_KEY = os.environ.get("ONEMIN_AI_API_KEY")
 if not API_KEY:
-    print("ERROR: ONEMIN_AI_API_KEY not set (source ~/.openclaw/.env first)", file=sys.stderr)
+    print("ERROR: ONEMIN_AI_API_KEY not set (source ~/.env  # set ENV_FILE to override first)", file=sys.stderr)
     sys.exit(1)
 
 MODELS = [

@@ -5,7 +5,7 @@ Three questions probing (Q1) variational derivation from crossed-product first l
 (Q2) Krylov→k-design complexity shift, (Q3) dimensional analysis of κ_R.
 
 Raw responses persisted to _mistral_responses/v6_q{1,2,3}.txt.
-API key from ~/.openclaw/.env (MISTRAL_API_KEY). Never logged.
+API key from ~/.env  # set ENV_FILE to override (MISTRAL_API_KEY). Never logged.
 Rate-limit 3s, timeout 240s, 1 retry on 5xx.
 """
 from __future__ import annotations
@@ -58,7 +58,7 @@ def load_env_key() -> str | None:
     k = os.getenv("MISTRAL_API_KEY")
     if k:
         return k
-    env_path = Path.home() / ".openclaw" / ".env"
+    env_path = Path(os.environ.get("ENV_FILE", Path.home() / ".env"))
     if env_path.exists():
         for line in env_path.read_text().splitlines():
             m = re.match(r"\s*(?:export\s+)?MISTRAL_API_KEY\s*=\s*(.+?)\s*$", line)

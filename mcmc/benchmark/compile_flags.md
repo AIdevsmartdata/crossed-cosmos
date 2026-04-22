@@ -29,7 +29,7 @@ cd python && python setup.py build_ext --inplace && python setup.py install
 CLASS integrates stiff ODEs and interpolates with tight relative-tolerance
 requirements. `-ffast-math` enables `-freciprocal-math` and
 `-fno-signed-zeros`, both of which have been observed (Lesgourgues mailing
-list, 2019; chimere-server regressions on our side) to shift the
+list, 2019; reproduced in our internal benchmarks) to shift the
 background ODE solution by several σ on `H(z)` for exotic cosmologies —
 including w0-wa near `w0 ≈ -1`. **Do not use.**
 

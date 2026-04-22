@@ -37,7 +37,7 @@ mpirun -np "$MPI_NP" \
     --bind-to none \
     --map-by slot:PE=2 \
     --oversubscribe \
-    cobaya-run -r mcmc/params/eci_nmc_optimized.yaml 2>&1 | tee "$LOG"
+    cobaya-run -r mcmc/cobaya_nmc/eci_nmc_plugin.yaml 2>&1 | tee "$LOG"
 
 STATUS=${PIPESTATUS[0]}
 echo ">>> cobaya-run exit status: $STATUS"

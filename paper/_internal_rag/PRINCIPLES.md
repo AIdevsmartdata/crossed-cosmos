@@ -140,3 +140,50 @@ hard to falsify and invite reviewer scepticism. If you must make one,
 attach a specific literature-survey scope; otherwise rephrase as
 "has not been tabulated in closed form in [specific references]".
 *Anchor:* V8-adv NIT on §3.5 line 84 (2026-04-21).
+
+---
+
+## v6-specific rules (added 2026-04-22 on owner mandate)
+
+**V6-1. No equality without proof — default to Wall-style inequality.**
+The v6 equation form is
+`dS_gen/dτ_R ≤ κ_R · C_k · Θ(PH_k)`,
+NOT equality. Equality was attempted, three independent derivation agents
+(Claude/Gemini/Magistral) all verdicted ANSATZ, adversarial landed fatal
+Attack #2 (Krylov log regime becomes contradiction under equality).
+The inequality form neutralises Attack #2 (Fan 2022 log becomes the
+saturating limit) and aligns with every rigorous GSL precursor.
+*Anchor:* D18 S/N < 0.5σ at fiducial falsifier, D18b bias-degeneracy
+|ρ| = 0.998 — double-lock on pivoting to formal-track equality-to-inequality.
+
+**V6-2. Each assumption labelled M1, M2, M3 in the prose.** Distinguish
+POSTULAT / DERIVED / CONJECTURAL explicitly in every paragraph that
+introduces one. No hand-waving "it is natural to assume". The reviewer
+must see the assumption tree at a glance. Currently M1 (modular-complexity
+ansatz Brown-Susskind-style), M2 (CLT/LLN for QRF coarse-graining in
+dequantisation map), M3 (chameleon profile α = 0.095).
+*Anchor:* V6 Claude derivation report flagged (I1), (I2) as Brown-Susskind
+analogies with no type-II proof. The labels prevent silent re-hiding.
+
+**V6-3. No "arrow of time" rhetoric.** Adversarial Attack #4 (arrow-of-time
+tautology) is VALID: modular flow has built-in direction, C_k monotone
+growth under Brown-Susskind gives the result automatically. Do NOT claim
+the equation "explains" the cosmological arrow of time in v6. State only
+what it implies: dS_gen ≥ 0 in the modular frame.
+*Anchor:* V6-adversarial-attack.md Attack #4 (commit 5d1d052).
+
+**V6-4. No cosmological falsifier in v6.** D18 and D18b killed the
+fσ_8 × Θ(PH_2) falsifier at DR3+Euclid precision (S/N ≈ 0.36σ at fiducial,
+σ(ε_0) degradation 27× under marginalisation, degeneracy with galaxy bias
+b(z) |ρ| = 0.998). v6 is a FORMAL paper, not a cosmology paper. Do NOT
+re-propose a cosmological prediction in the v6 draft; JHEP/PRD-formal
+does not require one.
+*Anchor:* D18-report.md commit 2d46fbe, D18b-report.md commit 9aee7f2.
+
+**V6-5. Weekly scoop surveillance during drafting.** Check arXiv listings
+for Pedraza-Svesko-Weller-Davies, Caputa-del Campo-Nandy, and Bianconi
+every Monday until v6 is on arXiv. They are the groups most likely to
+publish a time-differential gravity-from-complexity statement that
+would scoop a component of v6. Log checks in
+`paper/_internal_rag/v6_surveillance.md`.
+*Anchor:* v6_audit.md §6 (commit 31525e1).

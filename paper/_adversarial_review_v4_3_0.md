@@ -117,3 +117,27 @@ Required edits (mechanical, no physics):
 After these 3–4 single-line edits, recompile, re-run bib audit script (extended to cross-check `.aux` citation coverage if feasible), then tag `v4.3.0` and release. No physics is broken. No re-derivation is required.
 
 If the `AAL2023` cite-site is not found, delete the bib entry in the same fix-commit to keep bib discipline. Same with any of `DESY5`/`DESIForecast` if the citation spot is judged redundant.
+
+## Re-run 2026-04-22 (post-fix)
+
+**Fix commits landed:**
+- `b7510da` — v4.3: fix V5-adv findings (4 orphan bib + 3 stale TODO-BIB)
+- `4633ce8` — v4.3: clean trailing TODO-BIB in section_3_6 comment block
+
+**Grep matrix:**
+| Check | Expected | Found |
+|---|---|---|
+| `TODO-BIB\|RAG-PENDING` across `paper/*.tex` | only 1 historical "RAG-PENDING resolved" note | 1 (eci.tex:68, intentional) |
+| `\cite{AAL2023}` | ≥1 in eci.tex (§A5) and §3.6 | eci.tex: 1 (§A5, combined with Montero2022); section_3_6: 1 (line 20) — total 2 sites |
+| `\cite{DESY5}` + `\cite{DESIForecast}` + `\cite{Matsubara2003}` | each ≥1 | DESY5: 1 (§3.5), DESIForecast: 1 (§3.5), Matsubara2003: 1 (§A6 line 78) — total 3 |
+
+**Compilation:** `latexmk -pdf` clean. 7 pages, 713,267 bytes (was ~712 KB). 0 undefined refs, 0 missing citations, 0 bibtex warnings. Single benign `LaTeX Warning: 'h' float specifier changed to 'ht'` (pre-existing, non-blocking).
+
+**§A5 / §A6 / §3.6 prose check:**
+- eci.tex:68 — derivation snippet `M_* ~ Λ^{1/12} M_P^{2/3}` with `H^2 ~ Λ/M_P^2` gives species-scale exponent, cites Montero2022+AAL2023 as primary (c'=1/6) and AAL2025+OoguriVafa2007 as comparison (c'≈0.05). Grammatical, accurate, self-contained.
+- eci.tex:78 — adds 3D super-level-set specification with `H_3`, `σ_0`, `S_3^prim`, Gaussian density `φ`, cites Matsubara2003 + Yip2024/Calles2025 refinement. Correct.
+- section_3_6:19-25 — Dark Dimension (Montero2022) + low-scale gravity variant (AAL2023) cited at first mention; species scale log-distance parametrisation with c'=1/6 stated cleanly. Correct.
+
+**Verdict: SHIP**
+
+All V5-adv M1+M2 findings resolved. Zero critical, zero major, zero new regressions. Minor items (style) remain optional and non-blocking. Owner may tag v4.3.0.

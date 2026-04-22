@@ -1,0 +1,40 @@
+# Cobaya input for the ECINMCTheory plugin smoke-test MCMC.
+# 2 chains x 200 steps; a trivial Gaussian likelihood on a derived quantity
+# just to exercise the plugin end-to-end. R-1 < 1 is the only convergence
+# goal — this is NOT a physics run.
+
+theory:
+  eci_nmc_theory.ECINMCTheory:
+    python_path: ./
+
+likelihood:
+  # Trivial analytic gaussian on xi_chi and chi_initial — exercises the
+  # theory/sampler plumbing without needing Planck/DESI data files.
+  smoke:
+    external: "lambda xi_chi, chi_initial: -0.5*(xi_chi/0.02)**2 - 0.5*((chi_initial-0.1)/0.02)**2"
+    input_params: [xi_chi, chi_initial]
+
+params:
+  xi_chi:
+    prior: {min: -0.05, max: 0.05}
+    ref: {dist: norm, loc: 0.0, scale: 0.005}
+    proposal: 0.005
+    latex: \xi_\chi
+  chi_initial:
+    prior: {min: 0.05, max: 0.20}
+    ref: {dist: norm, loc: 0.10, scale: 0.01}
+    proposal: 0.01
+    latex: \chi_\mathrm{ini}
+  wa_nmc_correction:
+    derived: true
+    latex: \Delta w_a^\mathrm{NMC}
+
+sampler:
+  mcmc:
+    burn_in: 0
+    max_samples: 400
+    max_tries: 200
+    Rminus1_stop: 1.0
+    learn_proposal: false
+
+output: chains/eci_nmc_plugin_smoke

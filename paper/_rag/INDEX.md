@@ -43,6 +43,19 @@ ScherrerSen2008          0712.3450
 Wolf2025                 2504.07679
 Ye2025                   2407.15832
 PanYe2026                2503.19898      (same PDF as Bedroya2025; symlinked copy)
+
+# v6 audit-add (2026-04-21): bib-only entries; text-only cache (no PDF)
+Wall2011                       1105.3445
+ElingGuedensJacobson2006       gr-qc/0602001
+Fan2022                        2206.00855
+BRSS2019                       1907.05393
+Caputa2024                     2306.14732
+BrownSusskind2018              1701.01107
+ConnesRovelli1994              gr-qc/9406019
+SchusterHaferkampHuang2025     2407.07754
+Pedraza2022Threads             2106.12585
+Carrasco2023                   2306.08503
+Bianconi2025                   2408.14391
 ```
 
 ---

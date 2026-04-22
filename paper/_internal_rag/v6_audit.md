@@ -198,3 +198,38 @@ Total: 47 entries (some 5.x subsections share items; canonical list in
 2. Produce a dimensional-analysis memo.
 3. Derive the equality (sec 8.1) before writing any `eci.tex` prose.
 4. Only then touch `eci.tex`.
+
+## 9. Flaw #3 resolution — dequantisation map
+
+**Owner decision 2026-04-22.** The V6 adversarial agent's Attack #3 flagged a
+category mismatch between the Type II crossed-product factor `A_R` (on which
+`ρ_R` lives) and the classical density field on which `PH_k` operates. We
+resolve this by the owner-proposed map
+
+```
+  δn(x, τ_R) := Tr_R[ ρ_R(τ_R) · n̂(x) ] − ⟨n⟩
+```
+
+with `n̂(x)` the number-density operator coarse-grained at the QRF scale
+`σ_cg ≈ 1 Mpc`, `Tr_R` the partial trace over unobserved QRF d.o.f., and
+`⟨n⟩` the background. This is the Jacobson-2016 entanglement-equilibrium
+modular response of R to the quantum state.
+
+Well-definedness: partial trace is a CPTP map, Gaussian coarse-graining is a
+bounded convolution, and the trace pairing of two Hermitians is real — so
+`δn` is a real, mean-zero, modular-covariant classical scalar field. `PH_k`
+then operates on `δn` as a classical functor.
+
+Numerical verification: see `derivations/V6-dequantisation-map.py` (toy Type
+II_1 factor, `N = 6` qubits, `N_R = 4` visible, XXZ modular Hamiltonian,
+`β = 1`). All three required asserts pass — reality of `δn`, mean-zero at
+`τ_R = 0`, and commutation of the map with the modular flow to `< 10⁻⁸`. RMS
+`δn` at `τ_R = 0.7`, `σ_cg = 1.2` is `2.5 × 10⁻²` — a non-trivial classical
+field. Full prescription in `derivations/V6-dequantisation-map.md`.
+
+Verdict: category mismatch **RESOLVED CONDITIONALLY** on the ansatz status
+of the semi-classical (Gaussian-field) limit. The map itself is rigorous;
+the Gaussian recovery in the product-state limit is demonstrated partially
+(right RMS order, small finite-N non-Gaussian residuals). Attack #3 of the
+V6 adversarial report is thereby downgraded from "critical blocker" to
+"semi-classical-limit caveat".

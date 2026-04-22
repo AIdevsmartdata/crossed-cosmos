@@ -27,8 +27,12 @@ enum gravity_model {propto_omega, propto_scale,
     galileon, nkgb,
     brans_dicke,
     quintessence_monomial, quintessence_tracker,
-    alpha_attractor_canonical
+    alpha_attractor_canonical,
+    nonminimal_coupling
 };
+
+/** Potential form for the nonminimal_coupling (NMC) model. */
+enum nmc_potential_form {nmc_V_monomial, nmc_V_exponential, nmc_V_cosine};
 
 /** parameterized expansion, only for non-self consistent Horndeski theories (_smg) */
 
@@ -154,6 +158,7 @@ struct background
   enum gravity_model gravity_model_smg; /** Horndeski model */
   //   enum gravity_model_subclass gravity_submodel_smg; /** Horndeski model */
   enum expansion_model expansion_model_smg; /* choice of expansion rate */
+  enum nmc_potential_form V_chi_form; /**< potential form for nonminimal_coupling (NMC) */
 
   short initial_conditions_set_smg; /* whether IC have been established. For printing and information */
   short parameters_tuned_smg; /* whether model has been tuned. For doing stability tests, etc... */

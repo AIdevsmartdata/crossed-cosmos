@@ -487,9 +487,73 @@ int gravity_models_gravity_properties_smg(
    }
   //end of nKGB
 
+  /* ---------------- NMC (nonminimal coupling) ---------------------------- *
+   * Action:  S = int d4x sqrt(-g) [ (1 - xi phi^2)/2 * R + (1/2)(dphi)^2
+   *                                 - V(phi) ]       (CLASS units, M_P=1)
+   *
+   * parameters_smg layout:
+   *   [0] = xi_chi     (dimensionless nonminimal coupling)
+   *   [1] = N          (monomial exponent, used if V_chi_form = monomial)
+   *                    (or alpha, if V_chi_form = exponential / cosine)
+   *   [2] = V0         (potential amplitude, CLASS internal units)
+   *   [3] = phi_prime_ini
+   *   [4] = phi_ini
+   *
+   * At xi=0 and V_chi_form = monomial, this reduces EXACTLY to
+   * quintessence_monomial with parameters (N, V0, phi_prime_ini, phi_ini).
+   * ----------------------------------------------------------------------- */
+  if (strcmp(string1,"nonminimal_coupling") == 0) {
+    pba->gravity_model_smg = nonminimal_coupling;
+    pba->field_evolution_smg = _TRUE_;
+    pba->is_quintessence_smg = _TRUE_;
+    flag2 = _TRUE_;
+
+    pba->parameters_size_smg = 5;
+    class_read_list_of_doubles("parameters_smg",
+                               pba->parameters_smg,
+                               pba->parameters_size_smg);
+
+    /* Potential form keyword (optional, default = monomial) */
+    {
+      char string_nmc[_ARGUMENT_LENGTH_MAX_];
+      int flag_nmc = _FALSE_;
+      class_call(parser_read_string(pfc,"V_chi_form",&string_nmc,&flag_nmc,errmsg),
+                 errmsg,errmsg);
+      if (flag_nmc == _TRUE_ && strstr(string_nmc,"exponential") != NULL)
+        pba->V_chi_form = nmc_V_exponential;
+      else if (flag_nmc == _TRUE_ && strstr(string_nmc,"cosine") != NULL)
+        pba->V_chi_form = nmc_V_cosine;
+      else
+        pba->V_chi_form = nmc_V_monomial;
+    }
+
+    /* Tuning: default tune V0 (index 2) */
+    double N_mon = pba->parameters_smg[1];
+    double V0_mon = pba->parameters_smg[2];
+    double phi_ini_nmc = pba->parameters_smg[4];
+    double phi_end_guess = fmax(phi_ini_nmc,2.);
+
+    if (has_tuning_index_smg == _FALSE_)
+      pba->tuning_index_smg = 2; /* tune V0 */
+
+    if (has_dxdy_guess_smg == _FALSE_) {
+      if (pba->tuning_index_smg == 2) {
+        if (pba->V_chi_form == nmc_V_monomial) {
+          V0_mon = pba->Omega0_smg / pow(phi_end_guess, N_mon);
+          pba->tuning_dxdy_guess_smg = 1./pow(phi_end_guess, N_mon);
+          pba->parameters_smg[2] = V0_mon;
+        }
+        else {
+          pba->tuning_dxdy_guess_smg = 1.;
+        }
+      }
+    }
+  }
+  /* end of nonminimal_coupling */
+
   class_test(flag2==_FALSE_,
              errmsg,
-             "could not identify gravity_theory value, check that it is one of 'propto_omega', 'propto_scale', 'constant_alphas', 'eft_alphas_power_law', 'eft_gammas_power_law', 'eft_gammas_exponential', 'brans_dicke', 'galileon', 'nKGB', 'quintessence_monomial', 'quintessence_tracker', 'alpha_attractor_canonical' ...");
+             "could not identify gravity_theory value, check that it is one of 'propto_omega', 'propto_scale', 'constant_alphas', 'eft_alphas_power_law', 'eft_gammas_power_law', 'eft_gammas_exponential', 'brans_dicke', 'galileon', 'nKGB', 'quintessence_monomial', 'quintessence_tracker', 'alpha_attractor_canonical', 'nonminimal_coupling' ...");
 
   return _SUCCESS_;
 }
@@ -704,6 +768,58 @@ int gravity_models_get_Gs_smg(
     pgf->G3_X = npow*ngpow*pow(X,npow-1)/pow(H0,2*npow);
     pgf->G3_XX = npow*(npow-1.)*ngpow*pow(X,npow-2)/pow(H0,2*npow);
 
+  }
+
+  else if (pba->gravity_model_smg == nonminimal_coupling) {
+
+    /* NMC:  S = int sqrt(-g) [ (1 - xi phi^2)/2 R + X - V(phi) ]
+     * Horndeski mapping:
+     *   G2 = X - V(phi),   G3 = 0,   G5 = 0
+     *   G4 = 1/2 - xi phi^2/2      (DG4 = G4 - 1/2 = -xi phi^2/2)
+     * M^2_* = 2 G4 = 1 - xi phi^2.
+     * Sign check against quintessence_monomial: at xi=0 -> identical branch. */
+
+    double xi = pba->parameters_smg[0];
+    double N  = pba->parameters_smg[1];
+    double V0 = pba->parameters_smg[2];
+
+    double V, V_phi, V_phiphi;
+    double Hunits2 = pow(pba->H0/pba->h, 2.);
+
+    if (pba->V_chi_form == nmc_V_monomial) {
+      /* V = V0 * H0^2/h^2 * phi^N  (identical to quintessence_monomial) */
+      V        =  V0 * Hunits2 * pow(phi, N);
+      V_phi    =  N * V0 * Hunits2 * pow(phi, N - 1.);
+      V_phiphi =  N * (N - 1.) * V0 * Hunits2 * pow(phi, N - 2.);
+    }
+    else if (pba->V_chi_form == nmc_V_exponential) {
+      /* V = V0 * H0^2/h^2 * exp(-N * phi) */
+      V        =  V0 * Hunits2 * exp(-N * phi);
+      V_phi    = -N * V;
+      V_phiphi =  N * N * V;
+    }
+    else { /* nmc_V_cosine:  V0 * H0^2/h^2 * (1 + cos(N phi)) */
+      V        =  V0 * Hunits2 * (1. + cos(N * phi));
+      V_phi    = -V0 * Hunits2 * N * sin(N * phi);
+      V_phiphi = -V0 * Hunits2 * N * N * cos(N * phi);
+    }
+
+    /* G2 = X - V */
+    pgf->G2       =  X - V;
+    pgf->G2_X     =  1.;
+    pgf->G2_phi   = -V_phi;
+    pgf->G2_phiphi= -V_phiphi;
+
+    /* G3 = 0  (left at defaults) */
+
+    /* G4 = 1/2 - xi phi^2 / 2 */
+    pgf->DG4      = -0.5 * xi * phi * phi;
+    pgf->G4       =  0.5 + pgf->DG4;
+    pgf->G4_phi   = -xi * phi;
+    pgf->G4_phiphi= -xi;
+    /* G4_X = G4_XX = 0 */
+
+    /* G5 = 0 */
   }
 
   return _SUCCESS_;
@@ -1097,6 +1213,14 @@ int gravity_models_initial_conditions_smg(
 			pvecback_integration[pba->index_bi_phi_prime_smg] = pba->parameters_smg[3];
 			break;
 
+	  case nonminimal_coupling:
+			/* Match quintessence_monomial IC mapping (at xi=0 must reduce exactly):
+			 *   phi_ini      = parameters_smg[4]
+			 *   phi'_ini     = parameters_smg[3] * H0           */
+			pvecback_integration[pba->index_bi_phi_smg] = pba->parameters_smg[4];
+			pvecback_integration[pba->index_bi_phi_prime_smg] = pba->parameters_smg[3]*pba->H0;
+			break;
+
 	  case nkgb:
 		  {
 				/* Action is
@@ -1252,6 +1376,14 @@ int gravity_models_print_stdout_smg(
      printf("Modified gravity: Kinetic Gravity Braiding with K=-X and G=1/n g^(2n-1)/2 * X^n with parameters: \n");
      printf(" -> g = %g, n = %g, phi_ini = 0.0, smg density fraction from shift charge term = %g. \n",
 	    pba->parameters_smg[0],pba->parameters_smg[1],pba->parameters_smg[2]);
+    break;
+
+    case nonminimal_coupling:
+      printf("Modified gravity: nonminimal_coupling (xi R chi^2/2) with parameters: \n");
+      printf(" -> xi = %g, N/alpha = %g, V0 = %g, V0* = %g, phi_prime_ini = %g, phi_ini = %g, V_form=%d \n",
+             pba->parameters_smg[0], pba->parameters_smg[1],
+             pba->parameters_smg[2], pba->parameters_smg[2]*pow(pba->H0/pba->h,2),
+             pba->parameters_smg[3], pba->parameters_smg[4], (int) pba->V_chi_form);
     break;
 
     case propto_omega:

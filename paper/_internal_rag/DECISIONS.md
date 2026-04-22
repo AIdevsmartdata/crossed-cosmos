@@ -7,6 +7,40 @@ reviews, and the D*/V* derivation reports.
 
 ---
 
+**2026-04-21 — v5.0 submission path: Cobaya pre-screen → hi_class production → EPJ C, indie-author status disclosed**
+- Decision: the ξ_χ posterior for §3.5 / §4 row 1b is produced via a
+  two-stage MCMC: (stage 1) Cobaya Python Theory plugin wrapping vanilla
+  classy + D14 G_eff/η post-processing as a fast pre-screen
+  (`mcmc/cobaya-nmc/`, commit 8f5f179); (stage 2) production run on a
+  fork of `hi_class_public` upstream 50f447c with the NMC (ξ R χ²/2) term
+  implemented as a Horndeski sub-case (`mcmc/nmc_patch/hi_class_nmc/`,
+  commits 2eaf5cb → 4be6354). Compute target is a Vast.ai EPYC Zen 5 spot
+  instance; the eu-west-3 AWS walkthrough (d65c02f) is kept as the backup
+  provider. HAL deposit hal-05598836 was withdrawn on affiliation grounds
+  (75f5b32) — Zenodo (DOI 10.5281/zenodo.19686399) is the sole permanent
+  archive. Submission target: **EPJ C** (SCOAP3 OA, IF 4.3). Indie-author
+  status is explicitly disclosed in the cover letter and in a dedicated
+  note `docs/AUTHOR_STATUS.md` (ORCID 0009-0008-2443-7166, first-time
+  submitter, software-engineering background, self-trained via open
+  literature, no advisor, no grant, no co-authorship history).
+- Alternatives: Foundations of Physics as editorial target (kept as
+  backup); single-stage MCMC directly in hi_class (rejected — the Python
+  pre-screen is 30× cheaper per chain and catches YAML errors before the
+  Zen 5 instance spins up); staying silent on indie status in the cover
+  letter (rejected as dishonest gate per PRINCIPLES.md #1).
+- Justification: the Cobaya pre-screen costs ~200 CPU-hours on the local
+  box and de-risks the production YAML; the hi_class fork gives the full
+  Boltzmann treatment needed for the §3.7 perturbation observables; the
+  Vast.ai EPYC Zen 5 spot recommendation comes out of the mcmc-bench
+  projection (commit fe066f7) as the best $/chain at the 5-target
+  precision required. EPJ C chosen over Foundations of Physics because
+  the §3.5–§3.7 phenomenology is the load-bearing part of the paper and
+  EPJ C is the natural venue for that style of observer-theory
+  triangulation.
+- Pushed back: mcmc-bench REPORT.md projections (cost envelope); HAL
+  moderator (withdrew deposit — pushed the archive story to Zenodo-only
+  and made the indie-status disclosure unavoidable).
+
 **2026-04-22 — §1.5 unifying thesis = observer-dependent cosmology (Team B, Bridge verdict)**
 - Decision: §1.5 (`section_1_5_thesis_B.tex`, \input after §1, before §2)
   adopts Hypothesis B (observer-dependent cosmology, scoped to late-time

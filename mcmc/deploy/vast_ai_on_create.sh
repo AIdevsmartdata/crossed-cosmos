@@ -29,7 +29,7 @@ apt-get install -y --no-install-recommends \
     libgsl-dev libcfitsio-dev \
     libopenmpi-dev openmpi-bin libomp-dev \
     tmux curl rsync ca-certificates \
-    python3.11 python3.11-venv python3.11-dev \
+    python3 python3-venv python3-dev \
     htop less
 
 # ---------------------------------------------------------------------------
@@ -46,7 +46,7 @@ cd /root/eci
 #    numpy<2 pin preserved for classy ABI compatibility (classy Cython is
 #    still built against numpy 1.x in most wheels as of Apr 2026).
 # ---------------------------------------------------------------------------
-python3.11 -m venv .venv-mcmc
+python3 -m venv .venv-mcmc
 # shellcheck disable=SC1091
 source .venv-mcmc/bin/activate
 pip install --upgrade pip wheel

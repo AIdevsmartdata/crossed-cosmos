@@ -36,6 +36,7 @@ if ENV_FILE.exists():
         os.environ.setdefault(k.strip(), v.strip().strip('"').strip("'"))
 
 TIMEOUT = 180
+GEMINI_TIMEOUT = 420
 RETRY_SLEEP = 5
 
 PROMPT_HEAD = """You are a peer reviewer for Journal of High Energy Physics (JHEP). You have been given a 4-page formal-track paper presenting:
@@ -71,21 +72,22 @@ def call_qwen(prompt: str) -> dict:
     key = os.environ.get("ONEMIN_AI_API_KEY")
     if not key:
         return {"error": "no ONEMIN_AI_API_KEY"}
-    url = "https://api.1min.ai/api/features?isStreaming=false"
+    url = "https://api.1min.ai/api/chat-with-ai"
     body = {
-        "type": "CHAT_WITH_AI",
-        "model": "qwen3-max",
-        "promptObject": {
-            "prompt": prompt,
-            "isMixed": False,
-            "webSearch": False,
-        },
+        "type": "UNIFY_CHAT_WITH_AI",
+        "model": "deepseek-chat",
+        "promptObject": {"prompt": prompt},
     }
     data = json.dumps(body).encode("utf-8")
     req = urllib.request.Request(
         url,
         data=data,
-        headers={"API-KEY": key, "Content-Type": "application/json"},
+        headers={
+            "API-KEY": key,
+            "Content-Type": "application/json",
+            "Accept": "application/json",
+            "User-Agent": "curl/8.5.0",
+        },
         method="POST",
     )
     with urllib.request.urlopen(req, timeout=TIMEOUT) as r:
@@ -134,10 +136,10 @@ def call_gemini(prompt: str) -> dict:
     # prompt as arg or via --prompt. Safer: pipe via stdin to `gemini -p -`.
     try:
         proc = subprocess.run(
-            ["gemini", "-m", "gemini-2.5-pro", "-p", prompt],
+            ["gemini", "-m", os.environ.get("GEMINI_MODEL", "gemini-2.5-pro"), "-p", prompt],
             capture_output=True,
             text=True,
-            timeout=TIMEOUT,
+            timeout=GEMINI_TIMEOUT,
         )
     except subprocess.TimeoutExpired:
         return {"error": "timeout"}
@@ -206,11 +208,17 @@ def extract_magistral(resp: dict) -> str:
 
 # ---------------- Driver ----------------
 
-MODELS = [
-    ("qwen3_max",       call_qwen,      extract_qwen),
+ALL_MODELS = [
+    ("deepseek_chat",   call_qwen,      extract_qwen),
     ("gemini_2_5_pro",  call_gemini,    extract_gemini),
     ("magistral_medium", call_magistral, extract_magistral),
 ]
+# Allow filtering via CLI: python run_v6_panel.py qwen3_max gemini_2_5_pro
+if len(sys.argv) > 1:
+    keep = set(sys.argv[1:])
+    MODELS = [m for m in ALL_MODELS if m[0] in keep]
+else:
+    MODELS = ALL_MODELS
 
 
 def run_one(name, caller, extractor, prompt):

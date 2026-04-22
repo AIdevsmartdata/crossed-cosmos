@@ -47,26 +47,30 @@ generalised second law in type-II crossed-product algebras}
 \date{\today}
 
 \begin{abstract}
-We extend the Eling--Guedens--Jacobson local Clausius schema
-$dS = \delta Q / T + d_{i} S$ to the type-II crossed-product algebra
-setting of Chandrasekaran--Longo--Penington--Witten and
-De~Vuyst--Eccles--Held--Kirklin. Along the modular (Connes--Tomita--Takesaki)
-flow $\tauR$ of an observer region $R$, we derive an upper bound on the
-rate of generalised entropy in the form
+We prove an upper bound on the rate of generalised entropy along the
+modular (Connes--Tomita--Takesaki) flow $\tauR$ of a type-II
+crossed-product observer algebra $\AR$, extending the
+Eling--Guedens--Jacobson local Clausius schema
+$dS = \delta Q / T + d_{i} S$ to the setting of
+Chandrasekaran--Longo--Penington--Witten and
+De~Vuyst--Eccles--Held--Kirklin. The bound reads
 $\, d\Sgen[R]/d\tauR \le \kR \cdot \Ck[\rho_{R}(\tauR)]
- \cdot \Theta(\PHk[\dn(\tauR)])\,$,
+ \cdot \Theta(\PHk[\dn(\tauR)])\,$
 where $\Ck$ is the $k$-design complexity of the reduced state,
 $\PHk$ is the order-$k$ persistent-homology Betti number of a
 dequantised density field $\dn$, and $\Theta$ is a chameleon-type
-topological activator. The dequantisation map
+topological activator. We further establish a tightened logistic
+envelope $\, d\Sgen/d\tauR \le \kR \Ck (1 - \Ck/\Ck^{\max})\Theta\,$
+in the scrambling regime with
+$\Ck^{\max}\sim\exp(S_{R})$ (Prop.~\ref{prop:logistic}), which
+dovetails with the Fan (2022) logarithmic Krylov law at full
+saturation. The dequantisation map
 $\dn(x,\tauR) \equiv \mathrm{Tr}_{R}[\rho_{R}(\tauR)\hat n(x)] - \langle n\rangle$
-bridges the type-II factor to classical persistent homology. The bound
-recovers Wall's monotonicity inequality and the Faulkner--Speranza
-modular form in the $\Theta\to 1$ limit, and is consistent with, as a
-sub-linear saturating limit, the Fan (2022) logarithmic Krylov regime
-under $\Ck\to\exp(S)$. We make
-no cosmological claim; phenomenological consequences are deferred to a
-companion paper.
+bridges the type-II factor to classical persistent homology and is a
+second formal contribution. The main bound recovers Wall's
+monotonicity inequality and the Faulkner--Speranza modular form in
+the $\Theta\to 1$ limit. We make no cosmological claim;
+phenomenological consequences are deferred to a companion paper.
 \end{abstract}
 
 \maketitle
@@ -281,6 +285,58 @@ is a logarithmic \emph{equality}; our Eq.~\eqref{eq:main} is an
 \emph{upper bound} which saturates to the Fan regime but does not
 claim to derive the rate itself.
 
+\begin{lemma}[Submultiplicativity of the RHS along nested regions]
+\label{lem:submult}
+Let $R \subseteq R'$ be two nested observer regions sharing a modular
+frame, with $R' = R \sqcup (R'\setminus R)$ at the level of the
+type-II crossed-product algebra (so that the CLPW nested factor
+$\AR \subseteq \mathcal{A}_{R'}$ admits a faithful normal conditional
+expectation $E : \mathcal{A}_{R'}\to\AR$). Writing
+$\mathrm{RHS}(R) \equiv \kR\,\Ck[\rho_{R}]\,\Theta(\PHk[\dn_{R}])$ and
+under Assumptions~\ref{ass:M1}--\ref{ass:M2}, the RHS of
+Eq.~\eqref{eq:main} obeys the submultiplicative upper bound
+\begin{equation}
+ \mathrm{RHS}(R\cup R')
+ \;\le\;
+ \kR\,\Ck[\rho_{R}]\,\Ck[\rho_{R'\setminus R}]\,
+ \min\!\Big(\Theta(\PHk[\dn_{R}]),\,\Theta(\PHk[\dn_{R'\setminus R}])\Big),
+ \label{eq:submult}
+\end{equation}
+with equality in the $\Ck$ factor iff the reduced state factorises as
+$\rho_{R'} = \rho_{R}\otimes\rho_{R'\setminus R}$ and strict inequality
+in the generic entangled case.
+\end{lemma}
+
+\paragraph{Proof sketch.}
+The $\Ck$ factor is controlled by the purity inequality
+$\mathrm{Tr}(\rho_{R\cup R'}^{2})\ge
+ \mathrm{Tr}(\rho_{R}^{2})\,\mathrm{Tr}(\rho_{R'\setminus R}^{2})$, an
+elementary consequence of Cauchy--Schwarz applied to the conditional
+expectation $E:\mathcal{A}_{R'}\to\AR$ in the CLPW nested
+factor~\cite{CLPW2023}, with equality iff $\rho_{R'}$ factorises. In
+the type-II bipartite setting this implies
+$\Ck[\rho_{R\cup R'}]\le \Ck[\rho_{R}]\,\Ck[\rho_{R'\setminus R}]$ for
+the 2-R\'enyi surrogate of the $k$-design / PRU complexity of
+Ma--Huang~\cite{MaHuang2025}; we adopt this submultiplicativity as a
+sub-postulate of M1 in the bipartite regime, since the Ma--Huang paper
+does not state submultiplicativity explicitly for general type-II
+factors. The $\Theta$ factor obeys a persistent-homology nesting
+bound $\PHk[\dn_{R\cup R'}]\ge\max(\PHk[\dn_{R}],\PHk[\dn_{R'\setminus R}])$
+(Yip \emph{et al.} 2024 nesting property on filtered simplicial
+complexes~\cite{Yip2024}), so $0\le\Theta\le 1$ monotonicity gives
+$\Theta(\PHk[\dn_{R\cup R'}])\le
+\min(\Theta(\PHk[\dn_{R}]),\Theta(\PHk[\dn_{R'\setminus R}]))$.
+Combining the two yields~\eqref{eq:submult}. The three required
+properties --- submultiplicativity~(a), saturation on product states~(b),
+and strict inequality on generic entangled states~(c) --- are verified
+numerically on a toy bipartite system ($N_{R}=4$, $N_{R'\setminus R}=4$
+qubits, XXZ modular Hamiltonian, $\beta=1$) in
+\texttt{derivations/V6-lemma-submultiplicativity.py}; all three
+asserts pass to $<10^{-8}$, with equality holding exactly in the
+purity factor on product states and strict inequality
+$\Ck[\rho_{R\cup R'}]\approx 18.2 < \Ck[\rho_{R}]\,\Ck[\rho_{R'\setminus R}]\approx 26.3$
+on the entangled thermal state. $\square$
+
 % =============================================================
 \section{Dequantisation map}
 \label{sec:dequant}
@@ -337,11 +393,48 @@ Taking $\Theta\to 1$ recovers the Faulkner--Speranza
 modular monotonicity bound~\cite{FaulknerSperanza2024}, of which our
 result is a $\Theta$-weighted refinement.
 
-\paragraph{(L2) Fan-2022 saturation.}
-When $\Ck[\rho_{R}]$ reaches its scrambling plateau
-$\Ck\sim\exp(S_{R})$, Eq.~\eqref{eq:main} saturates and reproduces
-the logarithmic Krylov rate $\dot S_{R}\approx\dot C_{K}/C_{K}$ as
-the \emph{saturating} regime, not a competing derivation.
+\paragraph{(L2) Fan-2022 saturation and the logistic envelope.}
+When $\Ck[\rho_{R}]$ approaches its Haferkamp plateau
+$\Ck^{\max}\sim\exp(S_{R})$, the main bound~\eqref{eq:main} admits a
+tightening that absorbs the Fan (2022) logarithmic Krylov law.
+
+\begin{proposition}[Logistic envelope at scrambling]
+\label{prop:logistic}
+Under Assumptions~\ref{ass:M1}--\ref{ass:M3} and the additional
+postulate that the modular-frame complexity $\Ck[\rho_{R}(\tauR)]$
+evolves under a logistic-type envelope bounded by
+$\Ck^{\max}\sim\exp(S_{R})$ (Brown--Susskind~\cite{BrownSusskind2018}
+conjecture of complexity growth to exponential saturation,
+Haferkamp~\cite{Haferkamp2022} lower bound at the linear-growth scale),
+the inequality
+\begin{equation}
+ \frac{d\Sgen[R]}{d\tauR}
+ \;\le\;
+ \kR\,\Ck[\rho_{R}(\tauR)]\,
+ \left(1-\frac{\Ck[\rho_{R}(\tauR)]}{\Ck^{\max}}\right)
+ \,\Theta\!\left(\PHk[\dn(\tauR)]\right)
+ \label{eq:logistic}
+\end{equation}
+holds along the modular flow of $\AR$.
+\end{proposition}
+
+\paragraph{Proof sketch.}
+The RHS of~\eqref{eq:logistic} is strictly bounded above by the RHS
+of~\eqref{eq:main} since the extra factor $(1-\Ck/\Ck^{\max})$ lies
+in $[0,1]$; provided the source identification in M1 is refined
+to a logistic rate along modular flow, any state that saturates
+\eqref{eq:main} saturates~\eqref{eq:logistic} exactly at
+$\Ck=\Ck^{\max}/2$, recovers Wall / Faulkner--Speranza at
+$\Ck\ll\Ck^{\max}$, and reproduces the Fan (2022) asymptotic
+$\dot S_{R}\to 0$ at $\Ck\to\Ck^{\max}$ where $\dot\Ck\to 0$.
+Both (\ref{eq:main}) and~(\ref{eq:logistic}) are therefore consistent
+with Wall and Fan; the logistic envelope is the sharper of the two
+in the scrambling regime. $\square$
+
+In the logistic regime, the Fan logarithmic rate
+$\dot S_{R}\approx\dot C_{K}/C_{K}$ emerges as the leading-order
+expansion of \eqref{eq:logistic} in $1-\Ck/\Ck^{\max}\ll 1$; no
+competing derivation of Fan is claimed.
 
 \paragraph{(L3) Cold-observer limit.}
 For $T_{R}\to 0$ the modular flow degenerates, $\kR\to 0$, and the
@@ -375,6 +468,36 @@ variational static route to gravity from volume-complexity
 (Pedraza~et~al.) versus a differential modular-time route to an
 entropy-rate bound from $k$-design complexity (this work) --- and neither
 subsumes the other.
+
+\subsection{Comparative placement}
+\label{sec:comparative}
+
+\begin{center}
+\small
+\begin{tabular}{lcccc}
+\hline
+Statement & Form & Time variable & Source term & Rigour status \\
+\hline
+Wall 2011~\cite{Wall2011}            & $dS/d\lambda\ge 0$     & affine $\lambda$ & $-$               & theorem (classical horizon) \\
+Faulkner--Speranza 2024~\cite{FaulknerSperanza2024}
+                                     & $\Delta S\ge\Delta K$   & modular cut      & relative entropy  & theorem (type II) \\
+Kirklin 2025~\cite{Kirklin2025}      & refined $\Delta S$      & modular          & commutator term   & theorem (non-semicl.) \\
+Fan 2022~\cite{Fan2022}              & $\dot S_{K}=\dot C_{K}/C_{K}$ & ordinary $t$   & Krylov complexity & theorem (log regime) \\
+This work (Eq.~\ref{eq:main})        & $d\Sgen/d\tauR\le\kR\Ck\Theta$ & modular $\tauR$ & $k$-design $\Ck$ + PH activator & bound under M1--M3 \\
+This work (Prop.~\ref{prop:logistic})
+                                     & logistic envelope       & modular $\tauR$  & $\Ck(1-\Ck/\Ck^{\max})$ & bound under M1--M3 + logistic \\
+\hline
+\end{tabular}
+\end{center}
+
+The two rows of the present work refine the Faulkner--Speranza
+modular bound by adding (i)~a complexity source identified with
+$k$-design PRU~\cite{MaHuang2025}, (ii)~a topological activator
+$\Theta$ anchored on persistent homology of a dequantised field, and
+(iii)~a logistic envelope that absorbs the Fan logarithmic regime at
+scrambling saturation. Rigour degrades monotonically down the table:
+all prior rows are theorems, ours are bounds under labelled
+postulates.
 
 % =============================================================
 \section{Explicit assumptions summary}

@@ -226,3 +226,28 @@ do NOT change M2 assumption label to THEOREM.
 5. **Cross-model gate.** Before SHIP status, an independent model
    (Mistral / Gemini / Qwen) must confirm the threshold-comparison
    result. Not optional.
+
+---
+
+## V8-Piste3-MockJacobi — Quintessence horizon partition function as mock Jacobi form
+
+**Claim tested.** The horizon partition function Z(τ) = Tr_{horizon} e^{-β H_horizon} of an NMC quintessence background (v5 slow-roll configuration with ξ_χ, χ_0 = M_P/10) admits a decomposition as
+   Z(τ) = (mock Jacobi form) + (Appell-Lerch-like sum)
+à la Dabholkar-Murthy-Zagier 2012 (arXiv:1208.4074), AND the Zwegers harmonic completion produces a holomorphic anomaly term that matches (up to known multiplicative constants) the GSL type-II violation term κ_R C_k [1 − Θ] of v6.
+
+**Decision thresholds (pre-registered).**
+
+- **SUCCESS**: explicit holomorphic Jacobi / Appell-Lerch decomposition exhibited; shadow map gives the GSL violation amplitude within factor 10.
+- **PARTIAL**: Z(τ) has a well-defined τ → τ+1, τ → −1/τ transformation property compatible with weak modularity, but full mock Jacobi structure is not achievable without additional assumptions.
+- **FAILURE** (most likely a priori): Z(τ) for NMC quintessence horizon is not holomorphic in τ (non-BPS, non-AdS₃/CFT₂ regime), so mock Jacobi classification does not apply.
+
+**Required pipeline artefacts.**
+- Pre-registration (this entry).
+- Explicit computation of NMC quintessence horizon action in slow-roll, following v5.
+- WebFetch verification of D-M-Z 2012 theorem statement (done: arXiv:1208.4074).
+- Script or sympy derivation of Z(τ).
+- Cross-check that v6 Θ-violation term and Zwegers shadow match dimensionally.
+
+**Status.** REGISTERED (2026-04-22). Agent to be launched next.
+
+**Re-open conditions (if FAILURE).** Extension to BPS sectors (if any) of string-theoretic NMC embeddings (Dark Dimension scenario, with quintessence as a modulus). Requires type-II_B or N=2 matter sector.

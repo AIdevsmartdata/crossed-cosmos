@@ -248,6 +248,17 @@ do NOT change M2 assumption label to THEOREM.
 - Script or sympy derivation of Z(τ).
 - Cross-check that v6 Θ-violation term and Zwegers shadow match dimensionally.
 
-**Status.** REGISTERED (2026-04-22). Agent to be launched next.
+**Status.** **RUN-FAIL** (2026-04-22). Four fatal obstructions identified:
+(1) Z(τ) NOT holomorphic — eigenspectrum irrational (ν² ∉ ℤ), QNM damping
+    breaks analyticity; no meromorphic Jacobi form exists.
+(2) No modular group action — τ→τ+1 fails (irrational spectrum);
+    τ→−1/τ fails (no self-dual dS₄ geometry).
+(3) Wrong universality class — D-M-Z requires N=4 SUSY BPS on K3×T²;
+    NMC quintessence dS₄ satisfies 0/4 prerequisites.
+(4) Categorical mismatch — Zwegers shadow dimensionally and structurally
+    incompatible with κ_R C_k (1−Θ). Logged as FAILED.md F-19.
 
-**Re-open conditions (if FAILURE).** Extension to BPS sectors (if any) of string-theoretic NMC embeddings (Dark Dimension scenario, with quintessence as a modulus). Requires type-II_B or N=2 matter sector.
+**Artefacts.** `derivations/V8-piste3-mock-jacobi.py`,
+`paper/_internal_rag/v8_piste3_mock_jacobi_report.md`.
+
+**Re-open conditions (if FAILURE).** Extension to BPS sectors (if any) of string-theoretic NMC embeddings (Dark Dimension scenario, with quintessence as a modulus). Requires type-II_B or N=2 matter sector and proof χ is a BPS object.

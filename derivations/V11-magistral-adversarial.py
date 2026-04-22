@@ -7,7 +7,7 @@ Three claim prompts:
   3. Observer-frame qualifier propagation integrity — §3.5/§3.6/§A6/App A.
 
 Rate-limit 3 s, timeout 180 s, retry once on 5xx. Raw responses to
-_mistral_responses/v11_claim_{1,2,3}.txt. API key from ~/.openclaw/.env
+_mistral_responses/v11_claim_{1,2,3}.txt. API key from ~/.env  # set ENV_FILE to override
 (MISTRAL_API_KEY). Never logged.
 """
 from __future__ import annotations
@@ -57,7 +57,7 @@ def load_env_key() -> str | None:
     k = os.getenv("MISTRAL_API_KEY")
     if k:
         return k
-    env_path = Path.home() / ".openclaw" / ".env"
+    env_path = Path(os.environ.get("ENV_FILE", Path.home() / ".env"))
     if env_path.exists():
         for line in env_path.read_text().splitlines():
             m = re.match(r"\s*(?:export\s+)?MISTRAL_API_KEY\s*=\s*(.+?)\s*$", line)

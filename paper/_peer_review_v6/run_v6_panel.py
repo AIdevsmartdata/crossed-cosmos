@@ -25,8 +25,8 @@ TEX = REPO / "paper" / "v6" / "v6_jhep.tex"
 RAW = ROOT / "raw"
 RAW.mkdir(parents=True, exist_ok=True)
 
-# Load env from ~/.openclaw/.env without logging values
-ENV_FILE = Path.home() / ".openclaw" / ".env"
+# Load env from ~/.env  # set ENV_FILE to override without logging values
+ENV_FILE = Path(os.environ.get("ENV_FILE", Path.home() / ".env"))
 if ENV_FILE.exists():
     for line in ENV_FILE.read_text().splitlines():
         line = line.strip()

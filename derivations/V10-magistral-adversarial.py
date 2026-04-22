@@ -4,7 +4,7 @@
 Four claim prompts sent sequentially (3 s rate-limit, 180 s timeout, 1 retry on 5xx).
 Raw responses persisted to _mistral_responses/v10_claim_{1..4}.txt.
 
-API key from ~/.openclaw/.env (MISTRAL_API_KEY). Never logged.
+API key from ~/.env  # set ENV_FILE to override (MISTRAL_API_KEY). Never logged.
 """
 from __future__ import annotations
 
@@ -42,11 +42,11 @@ Show all derivation steps including: (i) taking ratios of the two saturation equ
 
 
 def load_env_key() -> str | None:
-    # Prefer env; else parse ~/.openclaw/.env
+    # Prefer env; else parse ~/.env  # set ENV_FILE to override
     k = os.getenv("MISTRAL_API_KEY")
     if k:
         return k
-    env_path = Path.home() / ".openclaw" / ".env"
+    env_path = Path(os.environ.get("ENV_FILE", Path.home() / ".env"))
     if env_path.exists():
         for line in env_path.read_text().splitlines():
             m = re.match(r"\s*(?:export\s+)?MISTRAL_API_KEY\s*=\s*(.+?)\s*$", line)
@@ -108,7 +108,7 @@ def flatten(x):
 def main() -> int:
     api_key = load_env_key()
     if not api_key:
-        print("ERROR: MISTRAL_API_KEY not found in env or ~/.openclaw/.env", file=sys.stderr)
+        print("ERROR: MISTRAL_API_KEY not found in env or ~/.env  # set ENV_FILE to override", file=sys.stderr)
         return 1
 
     total_usage = {"prompt_tokens": 0, "completion_tokens": 0}

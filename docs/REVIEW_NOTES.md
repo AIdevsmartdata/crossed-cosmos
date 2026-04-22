@@ -69,3 +69,33 @@ These are work items, not showstoppers, for a framework paper.
 ### Outstanding weak points
 - [findings]
 ```
+
+## 2026-04-22 — v4.3.0 axioms + equations + conventions
+
+Automated agent pass. Six logical edits landed, one commit each, all
+compiled clean (0 hard errors). Undefined-citation warnings are
+expected and handled by the parallel v4.3 bib agent.
+
+### Edits
+1. **Conventions subsection** (§2 head) — metric (−,+,+,+), Faraoni NMC sign, M_P numeric value, natural units, t-vs-η. (commit `v4.3: add conventions subsection`)
+2. **A5 species-scale equation** — Λ_sp(H) = M_P (H/M_P)^{c'} with c' = 1/6 (Montero2022, primary) and c' ≃ 0.05 (OoguriVafa-slope, comparison). Fifth-force + N_eff bounds retained. (commit `v4.3: A5 carries species-scale equation`)
+3. **A4 amendment** — one-sentence insertion: χ is a 4D effective scalar; bulk-vs-zero-mode choice deferred to §3.6. (commit `v4.3: A4 amendment`)
+4. **A6 equation** — Matsubara-leading-order Euler-characteristic shift `⟨χ_E(ν)⟩_fNL − ⟨χ_E(ν)⟩_0 ≃ (f_NL σ_0 S_3/6) H_3(ν) φ(ν)`, with Yip2024/Calles2025 as the PH refinement. (commit `v4.3: A6 carries Matsubara-Yip Euler-char equation`)
+5. **No-ghost prose** — expanded to a two-line derivation from the NMC kinetic matrix (M_{P,eff}² > 0 ⇒ ξχ²/M_P² < 1). (commit `v4.3: no-ghost prose derivation`)
+6. **α ≤ √2 attractor** — one-sentence citation of Halliwell1987 + CopelandLiddleWands1998 as the standard exponential-scalar attractor bound. (commit `v4.3: alpha <= sqrt(2) attractor prose`)
+
+### TODO-BIB markers introduced (file:line at HEAD)
+- `paper/eci.tex` — `Montero2022` (A5 line)
+- `paper/eci.tex` — `Matsubara2003` (A6 line)
+- `paper/eci.tex` — `Halliwell1987` (§3.3 line)
+
+### RAG-PENDING markers introduced
+- `paper/eci.tex` (A5) — exact (H/M_P)^{c'} form not literal in `_rag/Montero2022.txt`; derived from Eq. (2.2) of that paper.
+- `paper/eci.tex` (A6) — explicit Hermite form of the Matsubara equation not present in `_rag/Yip2024.txt`; `_rag/Matsubara2003.txt` absent (astro-ph/0305472 misidentified per INDEX.md).
+
+### Compilation
+Clean after every commit: `latexmk -pdf -interaction=nonstopmode eci.tex`, 0 hard errors. Only undefined-citation warnings for the three TODO-BIB keys.
+
+### Word-count delta (approximate)
+- §1 Axioms: +≈ 95 words (A4 ≈ +30, A5 ≈ +25 incl. eq., A6 ≈ +40 incl. eq.).
+- §2 Action: +≈ 95 words (Conventions subsection ≈ +75, no-ghost expansion ≈ +20).

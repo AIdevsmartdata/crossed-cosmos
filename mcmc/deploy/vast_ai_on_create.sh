@@ -29,8 +29,14 @@ apt-get install -y --no-install-recommends \
     libgsl-dev libcfitsio-dev \
     libopenmpi-dev openmpi-bin libomp-dev \
     tmux curl rsync ca-certificates \
-    python3 python3-venv python3-dev \
-    htop less
+    python3 python3-venv python3-dev python3-pip \
+    htop less openssh-server
+
+# Ensure sshd is up (bare CUDA images sometimes don't start it automatically)
+mkdir -p /var/run/sshd
+service ssh start 2>/dev/null || /usr/sbin/sshd 2>/dev/null || true
+sleep 2
+echo ">>> sshd status: $(pgrep -a sshd | head -2)"
 
 # ---------------------------------------------------------------------------
 # 2. Source checkout

@@ -154,6 +154,35 @@ DR2+DESY5 mean.}
 \label{fig:D7}
 \end{figure}
 
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.95\columnwidth]{../derivations/figures/D17-w0wa-eci-band.pdf}
+\caption{ECI v5.0 MCMC posterior in the $(w_0,w_a)$ plane (4-chain MPI run on
+DESI~DR2 BAO + Pantheon+~SN through the Cobaya plugin route,
+$R-1=0.036$ final, 13{,}790 samples post-burn-in; blue $1\sigma/2\sigma$
+contours). Dashed green: minimal-coupling Scherrer--Sen line at
+$\Omega_\Lambda=0.7$. Green band: ECI NMC correction at
+$|\xi_\chi|\le 0.095$ (posterior $2\sigma$) with the numerical
+$B_{\mathrm{num}}(0.7)=9.05$ of Table~\ref{tab:B_of_OmegaL} at
+$\chi_0=\chi_0^{\rm med}$. Orange ellipses: DESI~DR2 + CMB + DESY5 fiducial
+($1\sigma,2\sigma$, 2-dof, reconstructed as in Fig.~\ref{fig:D7}). Black star:
+$\Lambda$CDM. See \texttt{derivations/D17-posterior-analysis.py}.}
+\label{fig:D17-w0wa}
+\end{figure}
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.95\columnwidth]{../derivations/figures/D17-triangle.pdf}
+\caption{Full nine-parameter posterior triangle from the ECI v5.0 MCMC
+($H_0$, $\Omega_b h^2$, $\Omega_c h^2$, $n_s$, $\log 10^{10}A_s$, $w_0$, $w_a$,
+$\xi_\chi$, $\chi_0$). The $\xi_\chi$ marginal is prior-rail-limited (flat prior
+$[-0.1,0.1]$) and centred on $\xi_\chi=0.003^{+0.065}_{-0.070}$; the
+$(\xi_\chi,\chi_0)$ sub-block is essentially flat, reflecting the
+degeneracy $\xi_\chi\times(\chi_0/M_P)^2$ of the scalar-tensor sector at
+background level. See \texttt{derivations/D17-posterior-analysis.py}.}
+\label{fig:D17-triangle}
+\end{figure}
+
 \paragraph{Honest caveats.}
 \begin{enumerate}
 \item Eq.~(\ref{eq:gamma_PPN_full}) assumes a \emph{quasi-static} scalar with Compton wavelength
@@ -185,11 +214,43 @@ DR2+DESY5 mean.}
   $\sigma(w_p)_{\rm pred}=0.0257$ differs from the quoted $0.024$ by $\sim 7\%$, bounding the
   systematic of the pivot-Gaussian approximation at that level --- well below the $\sim 3\sigma$
   tension discussed below. See \texttt{derivations/D10-report.md} for the full cross-check.
-\item \textbf{Tension with DR2 + DESY5, stated plainly.} Under the reconstructed DR2 + CMB +
-  DESY5 covariance the Mahalanobis distance from the posterior mean is $3.29\sigma$
-  (2-dof) to the ECI band and $3.33\sigma$ to the minimal-coupling Scherrer--Sen line,
-  both \emph{outside} the $2\sigma$ threshold $\sqrt{6.17}\simeq 2.48$.
-  The interpretation is not that ECI fails where $w$CDM succeeds: DR2 + DESY5 prefers the
+\item \textbf{Tension with DR2 + DESY5, stated plainly (MCMC update, v5.0).}
+  The analytic Mahalanobis estimate of v4.7 ($3.29\sigma$ to the ECI band and
+  $3.33\sigma$ to the minimal-coupling Scherrer--Sen line, 2-dof, against the
+  reconstructed DR2 + CMB + DESY5 covariance) has been superseded in v5.0 by a
+  4-chain MPI MCMC on DESI~DR2 BAO + Pantheon+~SN sampled via the Cobaya plugin
+  route (\texttt{mcmc/cobaya\_nmc/eci\_nmc\_plugin.yaml},
+  \texttt{derivations/D14-nmc-perturbations.py};
+  19{,}700 accepted steps, $R-1=0.036$ final, 13{,}790 samples post-burn-in;
+  see \texttt{derivations/D17-posterior-analysis.py} and
+  \texttt{mcmc/\_results/posterior\_summary.json}). At the fiducial
+  $\chi_0=M_P/10$ the marginalised constraint is
+  \begin{equation}
+    \xi_\chi \;=\; 0.003^{+0.065}_{-0.070}\ (68\%~\mathrm{CL})
+    ,\qquad |\xi_\chi|<0.095~(95\%~\mathrm{CL}),
+    \label{eq:xi_chi_MCMC}
+  \end{equation}
+  i.e.\ the posterior is prior-rail-limited over $[-0.1,0.1]$ and fully
+  consistent with $\xi_\chi=0$. The MCMC $(w_0,w_a)$ means are
+  $w_0=-0.869\pm0.055$, $w_a=-0.40^{+0.28}_{-0.36}$ with
+  $H_0=67.8\pm2.6$\,km/s/Mpc, $\Omega_m=0.319\pm0.015$. The best-fit $\chi^2$ is
+  $1411.3$ (BAO $8.64$ + SN $1402.68$); restricting to the $\Lambda$CDM-like nested slice
+  $|\xi_\chi|<0.005$ gives $\chi^2_{\min}=1411.36$, hence
+  $\Delta\chi^2_{\rm ECI-\Lambda CDM}=-0.04$: the data provide no preference for
+  non-zero NMC coupling. The Savage--Dickey density ratio at $\xi_\chi=0$ yields
+  a Bayes factor $\mathrm{BF}_{01}=p(0\mid D)/\pi(0)\simeq 1.00$
+  ($\ln\mathrm{BF}=-0.003$), inconclusive by any Jeffreys' threshold. The
+  cosmological envelope $|\xi_\chi|(\chi_0/M_P)^2\lesssim 3.7\times 10^{-3}$
+  (95\%, MCMC) is $\sim 600\times$ weaker than the Wolf~et~al.\ 2025
+  solar-system bound $|\xi_\chi|(\chi_0/M_P)^2\lesssim 6\times 10^{-6}$
+  rederived in Eq.~(\ref{eq:xi_bound}) above, confirming that the Cassini channel
+  remains the decisive falsifier at DR2 precision. The relaxed R-1 stopping
+  criterion of $0.05$ is appropriate for the plugin route (\texttt{classy}
+  background + NMC derived sector), and the ESS on $\xi_\chi$ and $\chi_0$
+  exceeds $1.6\times 10^3$ (see \texttt{posterior\_summary.json}), well above the
+  threshold for reliable 1-D marginalised constraints.
+
+  The narrative interpretation of the v4.7 analysis is unchanged: DR2 + DESY5 prefers the
   phantom-crossing region $w<-1$, which no non-phantom thawing model can populate.
   ECI's NMC coupling $\xi_\chi$ does in principle permit crossing $w=-1$ without a ghost
   instability (established in \S\,DESI DR2 via the no-ghost analysis of Bar\-ce\-l\'o~\&~Visser

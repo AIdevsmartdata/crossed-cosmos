@@ -7,6 +7,20 @@ reviews, and the D*/V* derivation reports.
 
 ---
 
+**2026-04-22 — v5.0 MCMC result: ξ_χ posterior from DR2 BAO + Pantheon+ (Cobaya plugin route, D17)**
+- 4-chain MPI run on mcmc/chains/eci_v50_run1/ finished at N=19,700 (R-1 final 0.036, acceptance 0.34), 13,790 samples post-30%-burn-in.
+- Marginalised posterior at χ_0 = M_P/10:
+    ξ_χ = 0.003 ^{+0.065}_{-0.070} (68% CL), |ξ_χ| < 0.095 (95% CL)
+  — prior-rail-limited on [-0.1, 0.1], fully consistent with ξ_χ = 0.
+- Companion: w_0 = -0.869 ± 0.055, w_a = -0.40 +0.28/-0.36, H_0 = 67.8 ± 2.6 km/s/Mpc, Ω_m = 0.319 ± 0.015.
+- Best-fit χ² = 1411.32 (BAO 8.64 + SN 1402.68); ΛCDM-like nested (|ξ|<0.005) min χ² = 1411.36, Δχ² = -0.04.
+- Savage–Dickey at ξ_χ = 0: BF_{01} = p(0|D)/π(0) ≈ 1.00 (ln BF = -0.003) — inconclusive by any Jeffreys' threshold.
+- Cosmological envelope |ξ_χ|(χ_0/M_P)² ≲ 3.7e-3 (95% MCMC), i.e. ~600× weaker than the Wolf+2025 solar-system bound 6e-6 that we rederived in §3.5 — Cassini remains the decisive falsifier at DR2 precision.
+- Consequence: §3.5 Caveat 4 rewritten to quote the MCMC posterior in place of the analytic 3.29σ Mahalanobis estimate; §4 row 1b updated to measured+DR3/LSST-forecast hybrid; abstract (ii) augmented with the one-number constraint. D17 (posterior-analysis.py) + figures D17-triangle.pdf + D17-w0wa-eci-band.pdf committed. Both RevTeX (paper/eci.tex, 12pp) and svjour3 (submission/epjc/eci_svjour3.tex, 14pp) recompile with 0 undefined refs.
+- Open item: relaxed R-1 stop (0.05) was appropriate for the plugin route; the hi_class production run (stage 2 of 2026-04-21 plan) will target R-1 < 0.01 and feed a physics-MCMC back-reaction on H(z).
+
+---
+
 **2026-04-21 — v5.0 submission path: Cobaya pre-screen → hi_class production → EPJ C, indie-author status disclosed**
 - Decision: the ξ_χ posterior for §3.5 / §4 row 1b is produced via a
   two-stage MCMC: (stage 1) Cobaya Python Theory plugin wrapping vanilla

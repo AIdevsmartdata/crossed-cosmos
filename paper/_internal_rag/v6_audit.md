@@ -28,7 +28,7 @@ subregion `R`, taken along its modular (Connes–Tomita–Takesaki) flow.
 | Symbol | Meaning |
 |---|---|
 | `τ_R` | Modular proper time of region `R` (Connes–Tomita–Takesaki flow). |
-| `κ_R` | Observer-dependent entropic conductance, units `[nat · t⁻²]`. |
+| `κ_R` | Observer-dependent entropic conductance, units `[nat · t⁻¹]` (nat per modular e-fold). Owner decision 2026-04-22: adopt `κ_R ≡ 2π T_R` (Tomita–Takesaki modular temperature); reduces to `H` at de Sitter Gibbons–Hawking. [Prior draft said `nat · t⁻²` — **corrected per Claude+Adversarial cross-check**.] |
 | `C_k[ρ_R(τ)]` | `k`-design complexity of the reduced state `ρ_R` (Ma–Huang PRU sense). |
 | `Θ(·)` | Chameleon-like activator `exp[-(PH_k/PH_c)^α]`, with `α = 0.095`. |
 | `PH_k[δn]` | Persistent-homology Betti number of order `k` on the density field `δn(τ)`. |
@@ -185,8 +185,9 @@ Total: 47 entries (some 5.x subsections share items; canonical list in
   pathology at cosmological scales.
 
 ### 8.3 Dimensional analysis agenda
-- Confirm `[κ_R] = nat · t⁻²` across the three target regimes (near-horizon QFT,
-  cosmological coarse-grained, laboratory analogue).
+- Confirm `[κ_R] = nat · t⁻¹` across the three target regimes (near-horizon QFT,
+  cosmological coarse-grained, laboratory analogue). **Adopted form**: `κ_R ≡ 2π T_R`
+  (Tomita–Takesaki modular temperature), reducing to `H` at de Sitter Gibbons–Hawking.
 - Verify `C_k` is dimensionless in the Ma–Huang PRU normalisation.
 - Check that `PH_k/PH_c` is genuinely scale-free, so `α = 0.095` is a pure number.
 - Cross-validate `α = 0.095` against Barrow `Δ ≲ 0.1` within `1σ` of current

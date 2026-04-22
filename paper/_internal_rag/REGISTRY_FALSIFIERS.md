@@ -128,8 +128,21 @@ Keating 1996 arithmetic 2-point correction within statistical error.
 - Script `V7-BK-fit.py` reproducible.
 - F-test or likelihood ratio comparing {GUE only, GUE+BK, GUE+BK+extra}.
 
-**Status.** **REGISTERED** (2026-04-22, in progress agent
-`a871b4fd51ee44881`). Result pending.
+**Status.** **RUN-BK-PLUS-EXTRA** (2026-04-22). BK signal real
+($\chi^2_{\rm M0}/\rm dof = 7.49 \to \chi^2_{\rm M2}/\rm dof = 4.17$
+with free amplitude A, effective height $L_{\rm eff}$;
+F-test $p \approx 3\times 10^{-8}$), but BK alone insufficient. Extra
+cosine at $\nu \approx 1.11$, amplitude $C = 0.031$, reduces
+$\chi^2/\rm dof$ to $1.27$; F-test against BK-only gives
+$p \approx 3\times 10^{-14}$. **Honesty flag:** the extra $\nu\approx 1$
+cosine is most likely a $1\%$ unfolding miscalibration
+(GUE sine-kernel shoulder at $x=1$), not new physics. Canonical $A=1$
+BK worsens fit, suggesting convention/prefactor issue. Net: BK
+explains the bulk of the residual; no ZSA-specific signal can be
+isolated; residual beyond BK plausibly attributable to unfolding.
+
+**Artefacts.** `derivations/V7-BK-fit.py`, `derivations/V7-BK-fit.png`,
+`derivations/V7-BK-fit-report.md`, commit `a0be8c9`.
 
 ---
 

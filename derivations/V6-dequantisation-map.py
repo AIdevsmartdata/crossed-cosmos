@@ -50,8 +50,8 @@ rng = np.random.default_rng(seed=20260422)
 # factor; viewed relatively to the thermal modular flow it is the finite-dim
 # analogue of a Type II_1 factor (normalised trace = 2^{-N_R} Tr).
 
-N = 6          # total qubits
-N_R = 4        # observer-visible qubits
+N = 10         # total qubits (v6-hardening 2026-04-21: raised from 6)
+N_R = 7        # observer-visible qubits (keep traced-out fraction ~ 0.3)
 assert 1 <= N_R < N, "need at least one hidden qubit for the partial trace"
 DIM = 2 ** N
 DIM_R = 2 ** N_R
@@ -251,7 +251,7 @@ def product_thermal(beta: float) -> np.ndarray:
 
 
 samples = []
-x_probe = 1.5
+x_probe = 1.5 * (N_R / 4.0)   # scale probe with visible region size
 for _ in range(400):
     rho = product_thermal(BETA)
     rho_R = partial_trace_hidden(rho)
@@ -263,6 +263,36 @@ skew = float(((samples - samples.mean()) ** 3).mean() / samples.std() ** 3)
 kurt = float(((samples - samples.mean()) ** 4).mean() / samples.std() ** 4) - 3.0
 rms = float(samples.std())
 
+
+# ---------------------------------------------------------------------------
+# 8b. CLT / Lie-algebra argument (formally an M2 POSTULATE)
+# ---------------------------------------------------------------------------
+# Sketch: let {T_a} be a Hermitian basis of su(2^N_R) and write the visible
+# reduced state as rho_R = (1/D_R) (I + sum_a r_a T_a). The coarse-grained
+# number operator n_hat decomposes as a sum of N_R commuting site operators
+# n_j, each contributing O(1/N_R) to n_hat after Gaussian weighting. If the
+# coefficients r_a arising from the partial trace of product thermal states
+# with i.i.d. local fields are themselves i.i.d. with finite second moment,
+# then delta_n(x) = sum_j w_j (Tr[rho_R n_j] - <n_j>) is a weighted sum of
+# i.i.d. bounded random variables and obeys a Lindeberg-Feller CLT as
+# N_R -> infty with sigma_cg fixed.
+#
+# SYMPY CANNOT CLOSE THIS THEOREM (it is a probability-theoretic statement
+# on an ensemble of states, not an algebraic identity). We therefore DO NOT
+# assert Gaussianity from first principles here; we document the sketch and
+# report the empirical skew/kurtosis as corroborating evidence.
+#
+# The formal status of the Gaussian-field limit is: ANSATZ M2 (PRINCIPLES
+# V6-2). The dequantisation map (M) itself is rigorous; its semi-classical
+# Gaussian limit is postulated, corroborated by the toy simulation below.
+# ---------------------------------------------------------------------------
+
+# Soft empirical check — prints a warning rather than asserting, because
+# the Gaussian-limit recovery is an M2 postulate, not a theorem.
+CLT_SKEW_THRESH = 0.05
+CLT_KURT_THRESH = 0.20
+clt_skew_ok = abs(skew) < CLT_SKEW_THRESH
+clt_kurt_ok = abs(kurt) < CLT_KURT_THRESH
 
 # ---------------------------------------------------------------------------
 # 9. Symbolic (sympy) sanity on a 2-qubit reduction
@@ -301,5 +331,10 @@ print("  Asserts:")
 print("    (i)   delta_n real-valued                OK")
 print("    (ii)  <delta_n>(tau=0) ~ 0               OK")
 print("    (iii) map commutes with modular flow     OK")
+print("-" * 60)
+print("  CLT / M2 postulate corroboration (non-asserting):")
+print(f"    |skew| < {CLT_SKEW_THRESH}  -> {'OK' if clt_skew_ok else 'soft-fail (M2 postulate)'}")
+print(f"    |kurt| < {CLT_KURT_THRESH}  -> {'OK' if clt_kurt_ok else 'soft-fail (M2 postulate)'}")
+print("    (Gaussian-limit is an M2 POSTULATE, not a theorem; see PRINCIPLES V6-2.)")
 print("=" * 60)
 print("  Dequantisation map: WELL-DEFINED on toy Type II_1 factor.")

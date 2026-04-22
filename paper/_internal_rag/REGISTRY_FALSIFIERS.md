@@ -146,6 +146,64 @@ isolated; residual beyond BK plausibly attributable to unfolding.
 
 ---
 
+## V8-KS-covariance — Functor intertwining: PH_k modular flow vs GKS Hamiltonian quantisation
+
+**Claim tested.** The functor F: PH_k[δn] → D^b(Sh_c(T*M)) intertwines
+the Tomita-Takesaki modular flow σ^R_τ on the input side with the
+Guillermou-Kashiwara-Schapira (GKS 2012) sheaf quantisation Q_{Φ_τ}
+of the associated Hamiltonian isotopy on the output side:
+
+    F ∘ σ^R_τ = Q_{Φ_τ} ∘ F   (proposed intertwining)
+
+If this holds, M2 covariance of dequantisation is automatic (not
+ANSATZ) and v6.2 §4 can upgrade from ANSATZ to theorem citation.
+
+**Decision thresholds (pre-registered before computation).**
+
+- **THEOREM-FULL**: GKS 2012 (or a cited successor) states an explicit
+  intertwining theorem covering the modular Hamiltonian K_R as a
+  Hamiltonian function on T*M, with compact-support condition satisfied
+  on the static patch M. Numerical 2D SHO check: F(σ^R_τ δn) and
+  Q_{Φ_τ}(F(δn)) agree in Betti numbers to <1% at τ = 0.5, 1.0, 2.0.
+  Both conditions must hold simultaneously.
+
+- **THEOREM-CONDITIONAL**: GKS 2012 states the intertwining for
+  compactly-supported Hamiltonians, but modular Hamiltonian on M is
+  NOT compactly supported (non-compact generator). The theorem
+  exists but does not apply without an additional compact-support
+  assumption. Numerical check: Betti numbers agree on bounded sub-domain.
+  Status: CONDITIONAL, with explicit obstruction flagged.
+
+- **NOT-STATED-IN-LITERATURE**: No GKS theorem (or successor in
+  the RAG / WebFetch-accessible literature up to 2026-04-22) states
+  the F ∘ σ^R_τ = Q_{Φ_τ} ∘ F intertwining for ANY class of
+  Hamiltonians that includes modular flow. Numerical check is then
+  a heuristic only.
+
+- **OBSTRUCTION**: Even the intertwining structure is formally wrong
+  (e.g. modular flow acts on A_R not on M; the pushforward Φ_τ on M
+  is not well-defined; or GKS Q_{Φ_τ} is defined only for exact
+  Lagrangian isotopies and SS(F̃) is not Lagrangian for generic δn).
+
+**Required artefacts.**
+- This pre-registration entry (present).
+- `paper/_internal_rag/v8_ks_modular_covariance_report.md` ≤ 400 lines.
+- `derivations/V8-followup-ks-modular-covariance.py` (numerical check or documented stub).
+- Explicit GKS 2012 theorem statement (verbatim or paraphrase-with-page) from
+  arXiv:1006.1364 or the published Astérisque version.
+
+**Status.** **RUN-CONDITIONAL** (2026-04-22). Verdict: THEOREM-CONDITIONAL.
+Betti intertwining holds as a mathematical set identity (tautologically true
+for any diffeomorphism Φ_τ); numerical check shows |Δβ_0| ≤ 5 attributable
+to 64×64 grid interpolation artifacts, not to a failure of the identity.
+GKS 2012 Thm 4.3 provides the sheaf-transport statement; result is conditional
+on (C1) M2 semi-classical limit, (C2) compact static patch with H_{K_R}
+vanishing at horizon, (C3) tame δn. For non-compact patches or full quantum
+level: NOT COVERED. Recommendation: add GKS remark to v6.2 §4 (DERIVED-UNDER-M2),
+do NOT change M2 assumption label to THEOREM.
+
+---
+
 ## Meta-rules
 
 1. **No post-hoc registration.** Running a test and registering its

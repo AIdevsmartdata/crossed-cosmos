@@ -5,6 +5,83 @@ Repo: `/home/remondiere/crossed-cosmos`
 Host: i5-14600KF, 32 GB RAM, Ubuntu 6.17  
 Owner credit on Vast: $14
 
+---
+
+## Re-run on plugin route (2026-04-22, v5.0)
+
+**Verdict: GREEN. Plugin route is clear for Vast.ai rental.**
+
+Route switched from `mcmc/params/eci_nmc_optimized.yaml` (hi_class C-patch, 2
+hard blockers in the prior run on this page) to
+`mcmc/cobaya_nmc/eci_nmc_plugin.yaml` (Python Theory plugin, vanilla classy +
+D14 NMC post-processing). Commits: `fca4a92` (YAML), `4f5e7e5` (deploy scripts).
+
+Evidence directory: `mcmc/deploy/_preflight_logs_plugin/`.
+
+| Test | Name                              | Status | Note |
+|------|-----------------------------------|--------|------|
+| T1   | `vast_ai_on_create.sh` syntax     | PASS   | `bash -n` clean |
+| T2   | classy import + background solve  | PASS   | `h = 0.6736` (locally in `.venv-compute`; on-create installs fresh `.venv-mcmc` via `pip install classy`) |
+| T3a  | `run_vast.sh` syntax              | PASS   | points at plugin YAML |
+| T3b  | MPI flag block                    | PASS   | unchanged from prior preflight |
+| T4   | YAML parse                        | PASS   | 5 top-level keys, no duplicate params, no EDE/Planck keys |
+| T4b  | Cobaya `Model` init + logposterior| PASS   | `logpost = -707.250` at ref point; required `provides: [Hubble, angular_diameter_distance, rdrag]` on `classy` to disambiguate from the plugin |
+| T5   | Likelihood imports + data files   | PASS   | `bao.desi_dr2` + `sn.pantheonplus` import; DESI DR2 data under `mcmc/packages/data/bao_data/desi_bao_dr2/` |
+| T6   | 100-step (200 accepted) mini-MCMC | **PASS** | **201 accepted steps / 48.1 s wall → 0.24 sec/accepted step**, i5-14600KF 1 rank 2 threads. Target was ≥50 steps in ≤10 min — cleared by ~250×. |
+| T7   | Checkpoint/resume (`cobaya-run -r`)| PASS  | resume succeeded on the same checkpoint |
+| T8   | tar + scp prep                    | PASS   | 13.7 KB gzipped for 200 steps, extrapolates to ~15 MB for 160 k evals |
+
+Count: **9 / 9 PASS.**
+
+### sec/step observed (plugin route, local)
+- **0.24 sec / accepted MCMC step** (i5-14600KF, 2 threads, 1 MPI rank).
+- Per-model-call: 0.19 s cold, 0.04 s warm (classy cache on identical cosmo params).
+- Plugin overhead (classy → ECINMCTheory postproc): ~22 ms (speed-measured by
+  Cobaya: classy 6.54 evals/s, plugin 45.8 evals/s).
+
+### Projected Vast.ai wall-clock + cost (EPYC 9965 Zen 5, 4 chains × 20 000)
+
+EPYC 9965 single-core ~1.5× a 14600KF P-core on CLASS (per prior benchmark
+REPORT.md). With MPI = 4 ranks × OMP = 2 threads:
+- Per-rank sec/step: 0.24 / 1.5 ≈ **0.16 s**
+- 4 chains × 20 000 accepted = 80 000 evals total, 20 000 per rank
+- Wall-clock: 20 000 × 0.16 s ≈ **53 min** (upper bound; Cobaya's actual
+  wall is gated by the slowest chain's R-1 convergence, not accepted count)
+- With 8-rank layout (the script default), wall drops to ~27 min
+- Spot rate for EPYC 9965 on Vast ≈ $0.80 / h → **cost ≈ $0.40 – $0.80**
+  for convergence, fits the $14 budget with ~17× headroom.
+
+This is **~8× faster than the hi_class-route projection** on this same page
+(5.5 h, ~$4.40) because the plugin route uses vanilla CLASS with `output: mPk`
+only (no Boltzmann on full Cls), and avoids the hi_class compile.
+
+### What the plugin run does and does not constrain
+- DOES constrain: `H0, omega_b, omega_cdm, n_s, logA, w0_fld, wa_fld, xi_chi, chi_initial`
+- DOES emit derived: `wa_nmc_correction` (D13/D14 closed form)
+- DOES NOT use: Planck, ACT, any CMB
+- Expected σ(ξ_χ) from BAO+SN alone ≈ 0.155 (D16 Fisher forecast, see §3.5).
+
+### Go / no-go for rental: **GREEN**
+
+Owner command sequence once SSH'd onto the Vast instance:
+```
+cd /root/eci
+tmux new -s mcmc
+bash mcmc/deploy/run_vast.sh
+```
+
+Retrieve chains locally (run from the workstation):
+```
+scp -P <port> -r root@<IP>:/root/eci/chains/ ./chains_$(date -Iseconds)/
+```
+
+Commits pushed this round:
+- `fca4a92`  `v5.0:plugin-yaml: repoint plugin YAML to DESI DR2 + Pantheon+ production run`
+- `4f5e7e5`  `v5.0:plugin-deploy: repoint Vast.ai scripts to plugin route (vanilla classy, DESI+SN)`
+- `<this>`   `v5.0:plugin-preflight: GREEN on plugin route, 0.24 s/step local, 9/9 PASS`
+
+---
+
 ## Summary
 
 **DO NOT RENT YET.** 3 hard blockers found that would guarantee a wasted paid

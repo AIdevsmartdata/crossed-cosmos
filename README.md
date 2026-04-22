@@ -2,7 +2,7 @@
 
 **ECI — Entanglement, Complexity, Information.** Two companion papers on orthogonal tracks: (v5) a phenomenological framework with MCMC on DESI DR2 + Pantheon+ targeting EPJ C, and (v6) a formal differential GSL on type-II crossed-product algebras targeting JHEP.
 
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.19686399.svg)](https://doi.org/10.5281/zenodo.19686399)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.19686398.svg)](https://doi.org/10.5281/zenodo.19686398)
 [![License: CC BY 4.0](https://img.shields.io/badge/License-CC_BY_4.0-lightgrey.svg)](https://creativecommons.org/licenses/by/4.0/)
 [![ORCID](https://img.shields.io/badge/ORCID-0009--0008--2443--7166-a6ce39)](https://orcid.org/0009-0008-2443-7166)
 
@@ -21,7 +21,8 @@
 | Main result | ξ_χ = 0.003 +0.065/−0.070 (68% CL), BF_01 ≈ 1 | dS_gen/dτ_R ≤ κ_R · C_k · Θ(PH_k) + logistic envelope (Prop. 1) |
 | Second result | — | Dequantisation map (type-II → classical PH) |
 | Falsifier | NMC deviations from ΛCDM at DR3+Euclid | None (D18 / D18b killed fσ_8 × Θ(PH_2)) |
-| Zenodo | [10.5281/zenodo.19686399](https://doi.org/10.5281/zenodo.19686399) | (fresh DOI on tag `v6.0.0`) |
+| Zenodo version DOI | [10.5281/zenodo.19696017](https://doi.org/10.5281/zenodo.19696017) | [10.5281/zenodo.19699006](https://doi.org/10.5281/zenodo.19699006) |
+| Zenodo concept DOI (all versions) | [10.5281/zenodo.19686398](https://doi.org/10.5281/zenodo.19686398) | [10.5281/zenodo.19686398](https://doi.org/10.5281/zenodo.19686398) |
 
 The two papers are **complementary, not hierarchical**: v6 does not subsume or supersede v5; it operates on an orthogonal axis (formal-algebraic vs empirical-fit).
 
@@ -66,7 +67,7 @@ cd paper && latexmk -pdf eci.tex
   author  = {Remondi\`ere, Kevin},
   title   = {ECI --- Entanglement, Complexity, Information: a framework paper},
   year    = {2026},
-  doi     = {10.5281/zenodo.19686399},
+  doi     = {10.5281/zenodo.19686398},
   url     = {https://github.com/AIdevsmartdata/crossed-cosmos}
 }
 ```

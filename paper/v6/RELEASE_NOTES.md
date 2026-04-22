@@ -5,7 +5,7 @@
 **Date.** 2026-04-22
 
 A formal 7-page companion paper to the v5 phenomenological framework paper
-(Zenodo [10.5281/zenodo.19686399](https://doi.org/10.5281/zenodo.19686399)).
+(v6 Zenodo version DOI [10.5281/zenodo.19699006](https://doi.org/10.5281/zenodo.19699006); concept DOI [10.5281/zenodo.19686398](https://doi.org/10.5281/zenodo.19686398); v5 version DOI [10.5281/zenodo.19696017](https://doi.org/10.5281/zenodo.19696017)).
 This is **not a successor** to v5; the two papers operate on orthogonal
 tracks.
 

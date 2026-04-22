@@ -362,3 +362,38 @@ Planck M_P = 2.435×10¹⁸ GeV, ξ > 0 attractive**
   Jiménez-Aguilar, Khan. External audit label "Adam, Cline et al." is a
   misattribution; bibkey kept per audit instruction, note in bib entry.
 - Pushed back: none.
+
+**2026-04-22 — v6.0.0 release: formal JHEP companion**
+- Decision: release `paper/v6/v6_jhep.tex` as v6.0.0, separate from the
+  v5 phenomenological line. GitHub tag + Zenodo auto-archive; arXiv
+  deferred pending `hep-th` endorsement.
+- Scope: 7-page formal paper; main inequality
+  dS_gen/dτ_R ≤ κ_R C_k Θ on the type-II crossed-product algebra, with
+  logistic envelope proposition, dequantisation map, comparative §5
+  table, TikZ setup figure, §6 programmatic outlook
+  (entropy-complexity equivalence MOTIVATION-tagged), §7 conclusion.
+- Why now: 3 adversarial rounds + peer-eco panel + adv-v3 full sweep
+  all SHIP; pre-write pipeline 18/18 PASS; surveillance Pedraza/Caputa/
+  Bianconi all clear 2026-04-22; owner requested GitHub+Zenodo path
+  because no arXiv endorsement yet.
+- Why inequality (not equality): triple-model ANSATZ verdict + fatal
+  Attack #2 on Fan (2022) log regime; enshrined in PRINCIPLES V6-1.
+- Why no cosmological falsifier: D18 S/N < 0.5σ + D18b bias degeneracy
+  |ρ|=0.998 killed fσ_8 × Θ(PH_2); enshrined in V6-4.
+- Claude-app "loi ECI finale" draft REJECTED 2026-04-22 after audit
+  found 3 arithmetic errors (S_BH 15 orders off, ω_P = 2π k_B T_P/ℏ
+  wrong by 2π, Lange 2021 value fabricated) and 4 PRINCIPLES violations
+  (V6-1, V6-4, rule 1, rule 16). Salvage: Einstein analogy retained as
+  §6 MOTIVATION, κ_R UV/IR discussion retained with correct 2π factor,
+  Λ/M_P⁴ ≈ (H_0/ω_P)² retained as ~1-dex order-of-magnitude coincidence
+  (not exact identity). Audit at
+  `paper/_internal_rag/v6_claude_app_audit.md`.
+- Title: T3 ("From Faulkner–Speranza to a complexity-bounded GSL in
+  type-II crossed-product algebras") selected over T1/T2.
+- Author: Kevin Remondière, Independent Researcher, ORCID
+  0009-0008-2443-7166. Single-author deposit.
+- Class: RevTeX 4-2 fallback (jheppub.cls unavailable at build host
+  2026-04-22); swap before JHEP submission.
+- Pushed back: derive α from first principles (out of scope — foundational
+  paper); prove M1 type-II theorem (open question §7 (i)); first-principles
+  chameleon anchor for α (open question §7 (iii)).

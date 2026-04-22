@@ -363,3 +363,52 @@ full likelihood. The editorial note (eci.tex §Editorial) states this
 plainly. The v4.6 tag is the submission-ready snapshot under the
 framework-genre reading; submission itself requires the svjour3 port
 (weakness §D.7) and a final bib sweep.
+
+---
+
+## Part G — v6 formal companion (JHEP-track, 2026-04-22)
+
+A **separate, orthogonal paper** published alongside v5. The v6 draft
+(`paper/v6/v6_jhep.tex`, 7 pages, HEAD commit sequence ending with
+scaffolding release) claims a single formal result:
+
+$$
+\frac{dS_{\mathrm{gen}}[R]}{d\tau_R}
+\le
+\kappa_R \cdot \mathcal{C}_k[\rho_R(\tau)] \cdot
+\Theta(\mathrm{PH}_k[\delta n(\tau)])
+$$
+
+along the modular (Tomita-Takesaki) flow of a type-II crossed-product
+observer algebra $\mathcal{A}_R$ (CLPW 2023 + DEHK 2025a,b). A tightened
+logistic envelope
+$\kappa_R\mathcal{C}_k(1-\mathcal{C}_k/\mathcal{C}_k^{\max})\Theta$
+(Prop. 1) holds under additional Brown-Susskind + Haferkamp-style
+postulates, matching the Fan (2022) logarithmic Krylov regime at
+saturation. A second formal contribution is the dequantisation map
+$\delta n(x,\tau_R) = \mathrm{Tr}_R[\rho_R \hat n(x)] - \langle n\rangle$,
+verified on a toy type-II_1 factor and shown to converge to a
+mean-zero Gaussian field by a CLT check at N ∈ {12, 16, 20}.
+
+**What v6 does NOT claim.** No cosmological prediction (V6-4).
+Eq.(1) is strictly an inequality, never an equality (V6-1; adversarial
+Attack #2 on the equality form landed fatal in a triple-model
+derivation audit). No first-principles anchor for α (M3 stays
+CONJECTURAL, α ∈ (0, 0.1]). No operational protocol for
+entropy-complexity indistinguishability (§6 outlook frames the Einstein
+analogy strictly as MOTIVATION). No promotion of $\kappa_R$ to a
+fundamental CODATA constant.
+
+**Relation to v5.** Complementary, orthogonal. v5 is empirical-fit on
+DESI DR2; v6 is formal-algebraic. Neither subsumes the other.
+
+**Editorial target.** JHEP (arXiv `hep-th` primary, `gr-qc` cross-list)
+after arXiv endorsement. GitHub + Zenodo release in the interim.
+
+**Audit trail anchors.** Fix-agent 9 fixes (commit `3a252a4`), adv-v2
+(commit `a8fb6d6`), peer-eco panel (commit `eca965e`), §6 outlook
+adversarial (commit `5f5a9f2`), adv-v3 pre-arXiv sweep (commit
+`557ab7d`). Pre-write audit pipeline
+`derivations/V6-claims-audit-pipeline.py` enforces PRINCIPLES rules 1,
+3, 12, 16 and V6-1, V6-4 on every future v6/v7 edit; currently 18/18
+gates passing.

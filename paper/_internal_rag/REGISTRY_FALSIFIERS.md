@@ -237,6 +237,58 @@ self-consistent (ε_SR ~ 2×10⁻³). Consequence: frozen-field approx carries
 
 ---
 
+## V8-Fisher-DR3-LSST — σ(ξ_χ) structural null through DR3 + LSST Y10
+
+**Claim tested.** The v5 null result (ξ_χ = 0.003 ± 0.068 at DR2+Pantheon+,
+prior-dominated) remains unresolvable through the next two major data releases
+(DESI DR3, LSST Y10 3×2pt) because σ(ξ_χ) at those epochs exceeds 3× the
+Cassini saturation bound |ξ_χ| ≤ 0.024 (at χ_0 = M_P/10).
+
+The 5-parameter Fisher forecast (θ = {w_0, w_a, ξ_χ, Ω_m, σ_8}) over
+BAO + fσ_8(z) + S_8 observables, marginalised over galaxy bias, photo-z outlier
+fractions, and SNe calibration floor, gives explicit σ(ξ_χ) at each milestone.
+
+**Decision thresholds (pre-registered 2026-04-22, before script execution).**
+
+- **CONFIRMS-STRUCTURAL-NULL**: σ(ξ_χ)|_{DR3+LSST Y10} ≥ 3.0 × |ξ_χ|_Cassini = 0.072.
+  Verdict: null result is structural through next 2 data releases.
+- **RESOLVES-DR3**: σ(ξ_χ)|_{DR3 alone} < |ξ_χ|_Cassini = 0.024.
+  Verdict: DR3 alone can resolve vs Cassini saturation.
+- **INTERMEDIATE**: σ(ξ_χ)|_{DR3+LSST} < 0.072 but σ(ξ_χ)|_{DR3} ≥ 0.024.
+
+**Required pipeline artefacts.**
+- This pre-registration entry (present).
+- `derivations/V8-fisher-forecast-DR3-LSST.py` — 5-param Fisher, all assertions passing.
+- `derivations/V8-fisher-forecast-DR3-LSST.png` — σ(ξ_χ) timeline figure.
+- `derivations/V8-fisher-forecast-DR3-LSST-report.md` — ≤200 lines with derivation.
+- D16 back-compat check (ratio V8/D16 ∈ [0.8, 1.3]).
+
+**Status.** **RUN-CONFIRMS-STRUCTURAL-NULL** (2026-04-22).
+
+| Scenario | σ(ξ_χ) | σ/Cassini |
+|----------|---------|-----------|
+| DR2+Pantheon+ | 0.475 | 19.8× |
+| DR3 alone | 0.155 | 6.4× |
+| DR3+Euclid DR1 | 0.155 | 6.4× |
+| DR3+LSST Y10 | **0.090** | **3.7×** |
+| DR3+Euclid+LSST | 0.076 | 3.2× |
+
+Threshold: σ(ξ_χ)|_{DR3+LSST} = 0.090 ≥ 3.0× Cassini (3.7×). → CONFIRMS-STRUCTURAL-NULL.
+
+D16 back-compat ratio = 1.0001 (machine precision). Six approximations flagged
+([APPROX-1..6] in script); all conservative. Verdict is robust: even a 50%
+degradation in sensitivity (σ → 1.5×) would still yield 5.6× Cassini at DR3.
+
+Euclid DR1 note: fσ_8 growth channel yields <1% improvement on σ(ξ_χ) after
+galaxy bias marginalisation. Euclid's main contribution is via the BAO channel
+(σ(w_a)=0.065, comparable to DR3), explaining the DR3+Euclid ≈ DR3 result.
+
+**Artefacts.** `derivations/V8-fisher-forecast-DR3-LSST.py`,
+`derivations/V8-fisher-forecast-DR3-LSST.png`,
+`derivations/V8-fisher-forecast-DR3-LSST-report.md`.
+
+---
+
 ## Meta-rules
 
 1. **No post-hoc registration.** Running a test and registering its

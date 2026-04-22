@@ -1,0 +1,655 @@
+\documentclass[10pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{mathtools}
+\usepackage{hyperref}
+\usepackage[margin=1in]{geometry}
+\usepackage{enumitem}
+\usepackage{xcolor}
+\usepackage{booktabs}
+\usepackage{microtype}
+
+\newtheorem{hypothesis}{Hypothesis}
+\theoremstyle{remark}
+\newtheorem{motivation}{Motivation}
+
+\title{Chim\`ere $\Omega$: a blueprint for a physico-cognitively inspired
+local-first LLM runtime with entropic mode scheduling}
+
+\author{Kevin Remondi\`ere\thanks{kevin.remondiere@gmail.com}\\
+\small Independent Researcher, ORCID 0009-0008-2443-7166}
+
+\date{2026-04-22}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+We propose \emph{Chim\`ere $\Omega$}, a blueprint for a local-first LLM
+runtime that allocates computation across four modes --- fast
+prediction, block-diffusion refinement, symbolic verification,
+latent-space planning --- via a scheduler driven by token-level
+residual entropy rather than fixed architectural choices. The
+blueprint integrates verified Q4~2025--Q2~2026 state-of-the-art:
+LeJEPA/SIGReg~(Balestriero \& LeCun, arXiv:2511.08544), hybrid
+Gated-DeltaNet + sparse-attention backbones (Qwen3-Next,
+Kimi-Linear), test-time memory optimisation
+(Titans~arXiv:2501.00663 $\to$ Nested Learning / Hope~arXiv:2512.24695),
+block-diffusion--AR fusion (BD3-LMs~arXiv:2503.09573),
+auxiliary-loss-free MoE routing~(arXiv:2408.15664), and the vLLM~V1
+production stack. We then propose three design hypotheses, framed
+explicitly as hypotheses to be tested rather than theorems: a
+\emph{free-energy-under-censorship} training objective, a
+\emph{renormalisation-group view of fine-grained MoE routing}, and an
+\emph{A6-persistent, A3-censored memory-write policy} that ties
+episodic consolidation to symbolic verification. The physics
+inspiration from the author's earlier ECI framework
+(entanglement--complexity--information,
+v5~phenomenological and v6~formal companions) is used as analogical
+scaffolding, not mathematical derivation; this distinction is
+enforced throughout. We conclude with a 24-month phased roadmap
+whose first phase is immediately executable on consumer hardware
+(RTX~5060~Ti, 16~GB~VRAM) via the author's existing
+\texttt{chimere-server} Rust FFI runtime and \texttt{ik\_llama.cpp}
+backend.
+\end{abstract}
+
+\section{Introduction and scope}
+\label{sec:intro}
+
+The public debate on large-model design through late 2025 has often
+been framed as a dichotomy: \emph{predict} (autoregressive next-token,
+exploiting pre-training redundancy) versus \emph{compute}
+(test-time-compute, refinement, program synthesis). We argue this
+dichotomy is a false opposition. Both are projections of the same
+underlying quantity, the \emph{information bits allocated per output
+token}, and the useful design question is how to \emph{modulate} this
+allocation as a function of local residual entropy.
+
+This paper proposes an explicit blueprint, \emph{Chim\`ere $\Omega$},
+for a runtime that schedules between four modes:
+\begin{description}[leftmargin=*,itemsep=3pt]
+ \item[M1.] \textbf{Fast prediction} ($\sim 5$\,ms/token) when the
+   per-token residual entropy $H(r_t)$ is low (e.g.\ $<0.5$ bit): a
+   Gated-DeltaNet dominated backbone with MoE top-$K$ selection.
+ \item[M2.] \textbf{Block-diffusion refinement}
+   ($\sim 30$\,ms/block) when $H(r_t) \in [2,4]$ bits: BD3-style
+   diffusion over fixed-size blocks with preserved KV cache.
+ \item[M3.] \textbf{Symbolic verification} ($\sim 200$\,ms/claim) when
+   the candidate output is formally testable: a Scallop-lite
+   provenance-semiring check, or Lean-style proof verification.
+ \item[M4.] \textbf{Latent-space planning} (world-model rollout) for
+   action-conditioned tasks: V-JEPA-style predictor operating on
+   frozen embeddings.
+\end{description}
+
+The contribution of this paper is not a new theorem or a new
+fundamental constant. It is three distinct things, clearly
+delineated: \textbf{(i)} a curated landscape of verified Q4~2025--Q2~2026
+state-of-the-art with citations cross-checked against arXiv and
+publisher records (\S\ref{sec:sota}); \textbf{(ii)} an explicit
+architecture integrating those components with an entropy-driven
+scheduler (\S\ref{sec:blueprint}); \textbf{(iii)} three \emph{design
+hypotheses} framed as falsifiable statements, inspired by the
+author's physics-motivated ECI framework but presented as analogical
+scaffolding, not mathematical derivation (\S\ref{sec:equations}).
+
+\paragraph{What this paper does not claim.}
+We do not claim: a new equation of physics, a new fundamental
+constant, a mathematical identification between physics axioms (ECI
+A3 censorship, A6 persistence) and machine-learning
+loss terms, nor a theorem that the proposed runtime attains a
+particular benchmark score. The relation to ECI is motivational;
+the ECI v5 and v6 companion papers live at the cosmology end of the
+project, and a rigorous mathematical bridge to the machine-learning
+objectives of this paper is \emph{not} established in either
+direction.
+
+\section{The verified 2025--2026 landscape}
+\label{sec:sota}
+
+Five programmes dominate the Q4~2025--Q2~2026 state of the art and
+together define the engineering envelope for a local-first LLM
+runtime.
+
+\subsection{Self-supervised representation learning: the JEPA line}
+\label{sec:jepa}
+
+LeJEPA (Balestriero and LeCun, arXiv:2511.08544, November 2025)
+\cite{LeJEPA2025} proves that the optimal distribution on joint
+embedding predictor architecture (JEPA) representations is the
+isotropic Gaussian $\mathcal{N}(0, I_d)$ and proposes
+\emph{Sketched Isotropic Gaussian Regularisation} (SIGReg) as a
+linear-cost surrogate:
+\begin{equation}
+ \mathcal{L}_{\mathrm{SIGReg}} = \frac{1}{M} \sum_{m=1}^{M}
+ \mathcal{D}\!\left( \hat\varphi_{z_m}(t),\, e^{-t^2/2} \right),
+ \qquad z_m = \langle u_m, s_\phi(x) \rangle, \;
+ u_m \sim \mathrm{Unif}(S^{d-1})
+ \label{eq:sigreg}
+\end{equation}
+where $\hat\varphi$ is the empirical characteristic function and
+$\mathcal{D}$ a distance to the characteristic function of
+$\mathcal{N}(0,1)$. By the Cram\'er--Wold theorem, matching all
+one-dimensional projections to $\mathcal{N}(0,1)$ forces isotropy of
+the $d$-dimensional distribution. This removes the heuristic
+stack (stop-gradient, EMA teacher, asymmetric predictor) that had
+characterised earlier JEPA variants.
+
+\subsection{Hybrid linear + attention backbones}
+\label{sec:backbone}
+
+The consensus architectural pattern through Q2~2026 is a
+three-to-one ratio of linear-attention layers (Gated DeltaNet
+\cite{GatedDeltaNet2025}, Kimi Delta Attention
+\cite{KimiLinear2025}, Mamba-family SSMs) interleaved with sparse
+or full-attention layers. The Gated-DeltaNet update rule is an
+online delta-descent step,
+\begin{equation}
+ S_t = \alpha_t \left( S_{t-1} - \beta_t (S_{t-1} k_t) k_t^{\top} \right)
+ + \beta_t\, v_t k_t^{\top}
+ \label{eq:gdn}
+\end{equation}
+with $\alpha_t \in (0,1)$ a SiLU-gated forget factor and $\beta_t$ a
+token-level learning rate; Kimi Delta Attention generalises
+$\alpha_t$ to a channel-wise vector $\alpha_t \in \mathbb{R}^d$
+combined with a diagonal-plus-low-rank transition matrix. Mamba-3
+(arXiv:2603.15569) extends the state to $h_t \in \mathbb{C}^d$ with a
+data-dependent rotation $A_t = \mathrm{diag}(e^{i\theta_t} e^{-\alpha_t})$,
+which lifts the $\mathsf{TC}^0$ expressivity bound of real-valued
+SSMs.
+
+\subsection{Memory: Titans $\to$ Nested Learning / Hope}
+\label{sec:memory}
+
+Titans \cite{Titans2024} formulates long-term memory as a test-time
+online optimisation with momentum and forgetting:
+\begin{equation}
+ S_t = \eta_t\, S_{t-1} - \theta_t\, \nabla \ell(M_{t-1}; k_t, v_t),
+ \quad M_t = (1-\alpha_t)\, M_{t-1} + S_t
+ \label{eq:titans}
+\end{equation}
+with associative loss $\ell(M; k, v) = \|M(k) - v\|^2$. Nested
+Learning / Hope (Behrouz et al.,
+NeurIPS~2025)~\cite{NestedLearning2025} generalises this: a model is
+a stack of nested optimisation problems, each level $\ell$
+minimising a loss $\mathcal{L}_\ell(\theta_\ell; C_\ell)$ where
+$\theta_\ell$ parameterises the optimiser of level $\ell - 1$. The
+Hope reference implementation attains lower perplexity than
+Mamba-2 and standard transformers on long-context benchmarks and is
+explicitly designed with multiple-frequency update rates for
+continual learning.
+
+\subsection{Generation: block-diffusion, not pure diffusion}
+\label{sec:diffusion}
+
+Block Diffusion (BD3-LMs, Arriola et al., ICLR~2025
+Oral)~\cite{BlockDiffusion2025} decomposes a sequence of length
+$L = B \cdot b$ into $B$ blocks; intra-block diffusion is masked,
+inter-block factorisation is autoregressive,
+\begin{equation}
+ \log p_\theta(x) \;\ge\;
+ \sum_{b=1}^{B} \mathcal{L}_{\mathrm{diffusion}}
+ \!\left( x^{b},\, x^{<b},\, \theta \right).
+ \label{eq:bd3}
+\end{equation}
+The critical practical property is that BD3 preserves the KV cache
+across blocks, which pure discrete-diffusion cannot. The 2026
+production deployments (LLaDA~2.0, Mercury~2) confirm this pattern
+dominates the diffusion-LM frontier.
+
+\subsection{MoE: ultra-sparse with auxiliary-loss-free balancing}
+\label{sec:moe}
+
+The auxiliary-loss-free load balancing of Wang et
+al.~\cite{AuxLossFreeMoE2024}, deployed in DeepSeek-V3
+\cite{DeepSeekV3}, uses an additive bias $b_i$ that enters the
+top-$K$ selection but not the gating value,
+\begin{equation}
+ \tilde s_{i,t} = s_{i,t} + b_i,
+ \quad g_i = \mathbb{1}\!\left[ \tilde s_{i,t} \in \mathrm{TopK} \right],
+ \quad b_i \leftarrow b_i - \gamma\,
+   \mathrm{sign}(\mathrm{load}_i - \overline{\mathrm{load}}).
+ \label{eq:auxfree}
+\end{equation}
+The update is applied with $\gamma = 10^{-3}$ during early
+pre-training and annealed to zero. Kimi~K2
+\cite{KimiK2} uses 384 routed experts, the highest
+publicly-documented count in an open-weights model as of
+April~2026.
+
+\subsection{Runtime stack and quantisation}
+\label{sec:runtime}
+
+vLLM~V1 unifies prefill--decode scheduling with PagedAttention at
+16-token block granularity and first-class hybrid-model support
+(Qwen3-Next, Granite-4.0). EAGLE-3 (arXiv:2503.01840)
+\cite{EAGLE3} provides $3\!-\!6\!\times$ speculative-decoding
+speedup over autoregressive baselines via multi-layer feature
+fusion. For quantisation, SpinQuant \cite{SpinQuant2024} learns
+Hadamard rotations via Cayley parameterisation on the Stiefel
+manifold to close the W4A4KV4 gap to $\sim 3$~points vs.\ FP16.
+KIVI \cite{KIVI2024} gives $2$-bit K (per-channel) / $2$-bit V
+(per-token) KV-cache compression with $\sim 2.6\times$ memory
+reduction at negligible perplexity cost.
+
+\section{Chim\`ere $\Omega$ blueprint}
+\label{sec:blueprint}
+
+We now specify the blueprint, organised around three dualities and
+an entropy-driven scheduler.
+
+\subsection{Three dualities}
+\label{sec:dualities}
+
+\begin{description}[leftmargin=*,itemsep=3pt]
+ \item[D1. Predict vs.\ compute.] A token with low residual entropy
+   is optimally served by a fast M1 (prediction) pass; a token with
+   high residual entropy warrants M2 (refinement) or M3
+   (verification). The scheduling variable is $H(r_t)$.
+ \item[D2. Memorise vs.\ compress.] Following IBLM \cite{IBLM2025},
+   learning alternates between a memorisation phase (capacity
+   expansion) and a compression phase (entropy reduction); we
+   propose that \emph{inference} should likewise alternate via an
+   episodic write/consolidate policy.
+ \item[D3. Local vs.\ global.] Fine-grained MoE routing is a
+   coarse-graining step: as depth increases, low-level details are
+   integrated out toward semantic features. We suggest
+   (Hypothesis~\ref{hyp:rg}) that this be formalised as a
+   discrete-layer renormalisation-group flow.
+\end{description}
+
+\subsection{Architecture}
+\label{sec:arch}
+
+A 96-layer backbone interleaving GDN/KDA layers (75\%) with sparse
+full-attention (15\%) and dense layers (10\%), fine-grained MoE
+(512 routed experts + 2 shared + 4 proposed \emph{censor} experts)
+with auxiliary-loss-free balancing, multi-head output (MTP~4 for AR
+generation, BD3 for refinement, JEPA predictor for planning,
+verification head for symbolic checks), and a 4-tier memory
+hierarchy (L1 KV cache, L2 Titans LMM, L3 FHRR hash table, L4
+EM-LLM episodic segmentation).
+
+\paragraph{Censor experts.}
+Four MoE experts are reserved for tokens with high residual
+entropy. Their selection score adds a residual-entropy term:
+\begin{equation}
+ s_{i,t} = \mathrm{sigmoid}(u_t^{\top} e_i) + b_i
+ + \mathbb{1}_{\{i \in \mathrm{censor}\}} \cdot \kappa \cdot H(r_t).
+ \label{eq:censor}
+\end{equation}
+This is a design choice, not a theorem: it is engineered to
+concentrate out-of-distribution tokens into experts whose weights
+can carry additional regularisation (spectral-norm constraints,
+narrower weight initialisation). Whether this improves
+out-of-distribution behaviour in practice is a testable prediction.
+
+\subsection{Entropy-driven scheduler}
+\label{sec:scheduler}
+
+The runtime computes $H(r_t) = -\sum_v p_\theta(v|\cdot)
+\log p_\theta(v|\cdot)$ (or a top-$k$ approximation) per token and
+dispatches:
+\begin{center}
+\small
+\begin{tabular}{lll}
+\toprule
+$H(r_t)$ range & Mode(s) activated & Wall-clock target \\
+\midrule
+$< 0.5$ bit              & M1 only                       & $5$\,ms/token \\
+$[0.5, 2)$ bits          & M1 $+$ EAGLE-3 speculative    & $10$\,ms/token \\
+$[2, 4)$ bits            & M2 (BD3 block refinement)     & $30$\,ms/block \\
+$\ge 4$ bits             & M2 $+$ M3 $+$ L3 retrieval    & $200+$\,ms/claim \\
+\bottomrule
+\end{tabular}
+\end{center}
+The thresholds are engineering proposals to be calibrated
+empirically; the design principle is that \emph{marginal expected
+information gain of adding mode~$N+1$ must exceed its wall-clock
+cost}. This is implementable today with the
+\texttt{chimere-server} runtime FFI-ed to \texttt{ik\_llama.cpp};
+no new training is required to deploy the M1/M2 split.
+
+\section{Three design hypotheses}
+\label{sec:equations}
+
+The following three expressions are framed as
+\emph{hypotheses}, not theorems. Each inherits motivation from the
+author's ECI framework axioms (A3 censorship-like suppression; A6
+persistence-like consolidation); the mapping from cosmological
+axioms to machine-learning objectives is \emph{analogical} and is
+not derived. Each hypothesis yields a concrete experimental
+programme with a binary outcome.
+
+\subsection{H1 --- Free energy under censorship (FEC)}
+
+\begin{hypothesis}[Free energy under censorship, FEC]
+\label{hyp:fec}
+Training a Chim\`ere $\Omega$ model with the modified objective
+\begin{equation}
+ \mathcal{L}_{\mathrm{FEC}} =
+ \underbrace{\mathbb{E}_q[-\log p_\theta(x)]}_{\mathrm{NTP}}
+ + \beta\, I_{\mathrm{SAE}}(Z_{\mathrm{free}}; X)
+ - \gamma\, \langle V(M) \rangle
+ + \lambda\, \mathcal{L}_{\mathrm{SIGReg}}(Z)
+ \label{eq:FEC}
+\end{equation}
+where $I_{\mathrm{SAE}}$ is the mutual information between the
+subset of SAE features not causally related to the prediction target
+and the input, $V$ is a learned scalar functional on memory states
+$M$, and $\mathcal{L}_{\mathrm{SIGReg}}$ is
+Eq.~\eqref{eq:sigreg}, yields equal or lower bits-per-character on
+out-of-distribution evaluation sets at matched FLOPs versus the
+NTP-only baseline.
+\end{hypothesis}
+
+\begin{motivation}
+The ECI framework suggests ``censoring'' information that cannot be
+predicted, via an activation function $\Theta$ in the cosmological
+horizon setting. The analogue proposed here is to penalise SAE
+features that carry no prediction signal, weighted by
+$\beta$. The memory-potential term $\gamma \langle V(M) \rangle$ is
+the ML analogue of the persistence axiom~A6 in ECI, rewarding
+long-lived informative memory content. The SIGReg term closes the
+isotropy condition on latent representations.
+\end{motivation}
+
+\paragraph{Falsification.}
+H1 is falsified if, after hyperparameter tuning of $(\beta, \gamma,
+\lambda)$, the FEC objective fails to beat matched-FLOPs NTP on
+at least one of: BPC on a held-out domain, Arc-AGI-2 single-sample
+accuracy, or RULER at $128$k context. A negative result would not
+invalidate the ECI framework (which lives in a different domain) but
+would falsify the design analogy.
+
+\subsection{H2 --- MoE routing as a discrete renormalisation-group
+flow}
+
+\begin{hypothesis}[RG-flow MoE]
+\label{hyp:rg}
+Let $b_i^{(\ell)}$ denote the load-balancing bias of expert $i$ at
+layer $\ell$. If the interlayer update is augmented by a
+coarse-graining operator $\mathcal{R}[\cdot]$ that maps
+fine-grained biases at layer $\ell-1$ to effective biases at layer
+$\ell$,
+\begin{equation}
+ \frac{d b_i^{(\ell)}}{d\ell} = -\gamma\,
+  \mathrm{sign}\!\left( \mathrm{load}_i^{(\ell)} -
+  \overline{\mathrm{load}}^{(\ell)} \right)
+ + \mu\, \mathcal{R}\!\left[ b_i^{(\ell-1)} \right],
+ \label{eq:RG}
+\end{equation}
+then training stability improves and the emergent expert
+specialisation follows a layer-dependent power law $\kappa^{(\ell)}
+\propto \ell^{-\alpha}$.
+\end{hypothesis}
+
+\begin{motivation}
+Fine-grained MoE segmentation plus auxiliary-loss-free balancing is
+already a form of layer-wise reorganisation. Interpreting it as a
+Kadanoff-like block-spin map suggests that the bias update should
+carry information between layers rather than be reset per layer.
+\end{motivation}
+
+\paragraph{Falsification.}
+H2 is falsified if, on a matched-FLOPs pretraining run, the added
+$\mathcal{R}$ term neither reduces expert-imbalance variance nor
+produces a consistent power-law in $\kappa^{(\ell)}$.
+
+\subsection{H3 --- Engram write policy with A6-persistence and
+A3-censorship}
+
+\begin{hypothesis}[Engram write policy]
+\label{hyp:engram}
+An episodic-memory write policy of the form
+\begin{equation}
+ \pi_{\mathrm{write}}(e_t \mid h_t) = \sigma\!\big(
+ w_0 + w_1\, \mathrm{Surprise}_B(h_t) + w_2\, V_{\mathrm{verify}}(h_t)
+ - w_3\, \mathcal{C}_{\mathrm{A3}}(h_t) \big)
+ \label{eq:engram}
+\end{equation}
+with $\mathrm{Surprise}_B$ the EM-LLM bayesian surprise,
+$V_{\mathrm{verify}}$ a symbolic-check score, and
+$\mathcal{C}_{\mathrm{A3}}$ a hallucination-risk score from a trained
+SAE, outperforms a threshold-only write policy on long-horizon
+factual consistency benchmarks.
+\end{hypothesis}
+
+\begin{motivation}
+A memory that writes every surprising event risks consolidating
+hallucinations; a memory that writes nothing but verified claims
+misses creative long-horizon coherence. H3 proposes a trainable
+trade-off with four factors, two of which
+($V_{\mathrm{verify}}$, $\mathcal{C}_{\mathrm{A3}}$) are concrete
+proxies for the ECI A3 censorship axiom, and one of which
+($\mathrm{Surprise}_B$) is a direct instantiation of the A6
+persistence condition restricted to surprising events.
+\end{motivation}
+
+\paragraph{Falsification.}
+H3 is falsified if an ablation that removes either
+$V_{\mathrm{verify}}$ or $\mathcal{C}_{\mathrm{A3}}$ yields equal
+benchmark performance.
+
+\subsection{Honest note on ECI as scaffolding}
+
+All three hypotheses use the ECI~v3 axioms (A3, A6) as
+\emph{linguistic and architectural scaffolding}. The rigorous ECI
+v5~(phenomenological) and v6~(formal) companion papers
+inhabit a wholly different scientific domain (cosmology and type-II
+crossed-product algebras). An explicit attempt at a mathematical
+bridge from the ECI Jacobson--EGJ internal production
+($d_i S$) to a machine-learning source term failed under a
+dedicated audit (see~\cite{ECIv6Audit}, registered in the
+author's \texttt{FAILED.md} as entry~F-14). The ML hypotheses in
+this paper therefore rely on the \emph{form} of the ECI axioms,
+not on any derivation from them. This distinction is load-bearing
+and must not be blurred.
+
+\section{Roadmap and feasibility on consumer hardware}
+\label{sec:roadmap}
+
+\subsection{Hardware budget (single-author context)}
+
+The author's workstation (i5-14600KF, 32~GB DDR4, RTX~5060~Ti 16~GB
+VRAM) and the existing \texttt{chimere-server} Rust FFI to
+\texttt{ik\_llama.cpp} define the hardware envelope. For a
+$\sim 30$B-active-parameter upcycled hybrid model at IQ3\_S weights
+with Q8\_0 on routers and final LayerNorm, the total memory
+footprint is $\sim 34$--$38$~GB, which fits with aggressive
+DDR-offload of cold experts; expected throughput $\sim 8$--$15$~tok/s.
+From-scratch pretraining is infeasible at this budget; continue-training
+via Drop-Upcycling \cite{DropUpcycling2025} from a published base
+model (e.g.\ Qwen3-Next-80B-A3B) on Vast.ai spot instances remains
+feasible at $\sim\$50$k--$\$200$k.
+
+\subsection{Four-phase plan}
+
+\begin{description}[leftmargin=*,itemsep=3pt]
+ \item[Phase 1 (months 0--3).] Runtime integration: entropic
+   scheduler M1/M2 on the existing \texttt{chimere-server} stack.
+   No new training. Gold-path demonstration on a Qwen3-Next-80B
+   upcycle.
+ \item[Phase 2 (months 3--8).] Drop-Upcycling~\cite{DropUpcycling2025}
+   of Qwen3-Next, addition of BD3 and JEPA predictor heads via
+   LoRA, Engram L1--L3 integration.
+ \item[Phase 3 (months 8--14).] Mode~M3 symbolic verification,
+   SAE-based interpretability for censorship scores, calibrated
+   hypothesis-H3 ablations.
+ \item[Phase 4 (months 14--24).] A $3$--$8$B from-scratch training
+   with the full FEC objective (Eq.~\ref{eq:FEC}) on
+   $\sim 200$--$500$B tokens via Vast.ai; this is the first stage
+   where hypothesis~H1 becomes directly testable.
+\end{description}
+
+\subsection{What the pure assemblage already delivers}
+
+Phase~1 alone (entropic scheduler on existing components) is a
+strict improvement over a monolithic AR or monolithic diffusion
+baseline on workloads with mixed residual entropy: gains of
+$\sim 3\!-\!6\times$ wall-clock on typical mixed-entropy workloads
+follow mechanically from the EAGLE-3 +
+M2-selective-refinement combination. The novel design hypotheses
+(H1--H3) should only be introduced after the assemblage baseline
+saturates, which we estimate at the end of Phase~3.
+
+\section{Limitations and honest caveats}
+\label{sec:caveats}
+
+\paragraph{The ECI scaffolding is analogical, not derivational.}
+The ECI v3 axioms A3 (``cryptographic censorship'') and A6
+(``persistent-homology complexity'') live in a cosmological
+setting with specific mathematical content; we use their
+\emph{names and structural role} as scaffolding for the
+machine-learning hypotheses. An explicit attempt to derive the
+form of the v6 source term from the Jacobson--EGJ internal
+production~$d_i S$ failed in a dedicated audit~\cite{ECIv6Audit},
+with four sub-obstructions catalogued
+(categorical mismatch between state-functional complexity and
+extrinsic horizon geometry; Gaussian-coherent-state erasure of
+$|\alpha|^2$ in spread complexity; the $\delta Q = T \delta S$
+Wald-entropy tautology; absence of coupling-coefficient prediction
+in type-II crossed-product frameworks). The present paper inherits
+the diagnostic weight of this audit: the ECI language is
+suggestive, not load-bearing.
+
+\paragraph{Production-first, research-second.}
+No hypothesis is promoted unless Phase~3 completes; Phase~1 delivers
+value whether or not the hypotheses hold.
+
+\paragraph{Falsification is explicit.}
+Each hypothesis in Section~\ref{sec:equations} carries a
+\emph{falsification clause}; a clean failure is a valid result. The
+\texttt{FAILED.md} discipline inherited from the ECI project
+applies.
+
+\paragraph{We do not claim SOTA.}
+The blueprint targets a local-first, interpretable, and honestly
+scoped runtime, not a frontier-model ranking on a fixed benchmark
+suite. If a frontier-cloud runtime (DeepSeek, Kimi, Gemini) scores
+higher on any given benchmark, that is orthogonal to the value
+proposition here.
+
+\section{Conclusions}
+\label{sec:conclusions}
+
+The frontier between \emph{prediction} and \emph{computation} is
+not a dichotomy; it is a budget. Chim\`ere $\Omega$ proposes a
+runtime that allocates that budget per-token as a function of
+residual entropy, integrating verified 2025--2026 components
+(LeJEPA/SIGReg, hybrid GDN + sparse-attention backbones,
+Titans / Nested Learning memory, BD3 block-diffusion,
+auxiliary-loss-free MoE, vLLM~V1 + EAGLE-3 runtime) with three
+design hypotheses inspired by the author's ECI framework but
+explicitly presented as hypotheses to be tested. Phase~1 of the
+roadmap is immediately executable on consumer hardware and
+delivers value independently of whether hypotheses H1--H3 hold;
+Phases~2--4 progressively introduce the hypothesis testing.
+
+The intellectually honest deliverable of this paper is not a new
+theorem. It is a \emph{plan of record} for a line of work whose
+first executable product uses existing verified components and
+whose speculative content is explicitly isolated, testable, and
+falsifiable. Further progress on Chim\`ere $\Omega$ will be
+registered under the same discipline that produced the ECI~v6.0.3
+companion paper: pre-registered falsifiers, explicit failure logs,
+and cross-model audits before any paper update.
+
+\paragraph{Acknowledgement.}
+This blueprint was substantially drafted with the assistance of
+large-language-model chat and agent interfaces, with citation
+verification performed by WebSearch / WebFetch against arXiv and
+publisher records. All numerical claims of state-of-the-art papers
+cited here were cross-checked against the primary source. No
+citation was retained without primary-source verification. The
+three design hypotheses are the author's, not the assistants'.
+
+% -------------------------------------------------------------------
+\begin{thebibliography}{99}
+
+\bibitem{LeJEPA2025}
+R.~Balestriero and Y.~LeCun,
+``\emph{LeJEPA: Provable and Scalable Self-Supervised Learning Without
+the Heuristics},''
+arXiv:2511.08544, November 2025.
+
+\bibitem{Titans2024}
+A.~Behrouz, P.~Zhong, and V.~Mirrokni,
+``\emph{Titans: Learning to Memorize at Test Time},''
+arXiv:2501.00663, December 2024.
+
+\bibitem{NestedLearning2025}
+A.~Behrouz, M.~Razaviyayn, P.~Zhong, and V.~Mirrokni,
+``\emph{Nested Learning: The Illusion of Deep Learning Architectures},''
+NeurIPS 2025, arXiv:2512.24695, November 2025.
+
+\bibitem{GatedDeltaNet2025}
+S.~Yang, Y.~Wang, B.~Hooi, W.~Liu and others,
+``\emph{Gated Delta Networks: Improving Mamba2 with Delta Rule},''
+arXiv:2412.06464, December 2024 (ICLR 2025).
+
+\bibitem{KimiLinear2025}
+Kimi team,
+``\emph{Kimi Linear: an Expressive, Efficient Attention Architecture},''
+arXiv:2510.26692, October 2025.
+
+\bibitem{DeepSeekV3}
+DeepSeek-AI,
+``\emph{DeepSeek-V3 Technical Report},''
+arXiv:2412.19437, December 2024.
+
+\bibitem{AuxLossFreeMoE2024}
+L.~Wang, H.~Gao et al.,
+``\emph{Auxiliary-Loss-Free Load Balancing Strategy for Mixture-of-Experts},''
+arXiv:2408.15664, August 2024.
+
+\bibitem{BlockDiffusion2025}
+M.~Arriola, S.~Sahoo, A.~Gokaslan, V.~Kuleshov,
+``\emph{Block Diffusion: Interpolating Between Autoregressive and Diffusion
+Language Models},''
+arXiv:2503.09573, March 2025 (ICLR 2025 Oral).
+
+\bibitem{KimiK2}
+Moonshot AI,
+``\emph{Kimi K2: Open Agentic Intelligence},''
+arXiv:2507.20534, July 2025.
+
+\bibitem{EAGLE3}
+Y.~Li et al.,
+``\emph{EAGLE-3: Scaling up Inference Acceleration of Large Language Models
+via Training-Time Test},''
+arXiv:2503.01840, March 2025.
+
+\bibitem{SpinQuant2024}
+Z.~Liu, C.~Zhao, I.~Fedorov et al.,
+``\emph{SpinQuant: LLM quantization with learned rotations},''
+arXiv:2405.16406, May 2024.
+
+\bibitem{KIVI2024}
+Z.~Liu et al.,
+``\emph{KIVI: A Tuning-Free Asymmetric 2bit Quantization for KV Cache},''
+arXiv:2402.02750, February 2024.
+
+\bibitem{DropUpcycling2025}
+T.~Nakamura et al.,
+``\emph{Drop-Upcycling: Training Sparse Mixture of Experts with Partial
+Re-initialization},''
+arXiv:2502.19261, February 2025 (ICLR 2025).
+
+\bibitem{IBLM2025}
+C.~Yu,
+``\emph{An Information Bottleneck View of LLM Pretraining},''
+arXiv:2505.08727, May 2025.
+
+\bibitem{ECIv6Audit}
+K.~Remondi\`ere,
+``\emph{ECI v6.0.3 companion paper and v8 bridge audit
+(FAILED.md~F-14)},''
+Zenodo deposit, 2026,
+\url{https://github.com/AIdevsmartdata/crossed-cosmos}.
+
+\end{thebibliography}
+
+\end{document}

@@ -10,6 +10,8 @@ Companion symbolic artifacts for `paper/eci.tex`. Each entry corresponds to an e
 | D4 | Scherrer–Sen relation extended to first order in $\xi_\chi$: $w_a(w_0; \xi_\chi)$ | SymPy + asymptotic expansion | PENDING | `D4-wa-w0-nmc.ipynb` |
 | D5 | Phantom crossing $w=-1$ without ghost in the NMC sector | SymPy + plotting | PENDING | `D5-phantom-crossing.ipynb` |
 | D6 | $\Delta N_{\mathrm{eff}}(c', \ell)$ from the KK graviton tower | SymPy | PENDING | `D6-deltaNeff-kk.ipynb` |
+| D11 | No-ghost proof (kinetic 2×2, eigenvalues, margins at $\chi=M_P/10$) | SymPy | PASS | `D11-no-ghost-proof.py` |
+| D12 | Exponential-potential attractor $\alpha\leq\sqrt{2}$ (minimal coupling) | SymPy | PASS | `D12-alpha-attractor.py` |
 
 ## Why this exists
 

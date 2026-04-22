@@ -2,8 +2,8 @@
 """Run all D1-D6 and N1-N5; capture logs and timing."""
 import subprocess, time, os, sys, json
 
-REPO = "/home/remondiere/crossed-cosmos"
-PY = "/home/remondiere/.openclaw/venvs/pipeline/bin/python"
+REPO = os.path.dirname(os.path.abspath(__file__))
+PY = os.environ.get("PIPELINE_PYTHON", sys.executable)
 
 JOBS = [
     ("derivations", ["D1-kg-nmc.py","D2-stress-nmc.py","D3-noghost.py",

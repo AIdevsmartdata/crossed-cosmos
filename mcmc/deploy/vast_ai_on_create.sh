@@ -115,3 +115,9 @@ EOF
 
 echo ">>> Vast.ai on-create complete (PLUGIN ROUTE): $(date -Iseconds)"
 echo ">>> SSH in and run:  bash mcmc/deploy/run_vast.sh   (inside tmux)"
+
+# CRITICAL — keep the container alive after setup finishes.
+# On Vast.ai the on-start script IS the container's main process; if it exits,
+# Vast marks the container as "stopped" and SSH never stabilises. Sleep forever
+# so sshd (started in step 1) keeps answering and the user can attach.
+exec sleep infinity

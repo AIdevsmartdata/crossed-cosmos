@@ -204,6 +204,39 @@ do NOT change M2 assumption label to THEOREM.
 
 ---
 
+## V8-Cassini-frozen-field — χ evolution from z=0.1 to z=0: frozen-field approximation validation
+
+**Claim tested.** In v5, the Cassini PPN bound on γ−1 is evaluated using a
+frozen scalar field χ(z) ≈ χ₀ = M_P/10 at the solar-system epoch. The field
+evolves under thawing quintessence with V_χ = V_0 exp(−αχ/M_P) and slow-roll
+Klein-Gordon on FLRW. The claim is that the fractional variation |Δχ|/χ₀ from
+z = 0.1 to z = 0 at the v5 MAP cosmology (w₀ = −0.881, wₐ = −0.272, α = 0.095)
+is sufficiently small to justify the frozen-field approximation.
+
+**Decision thresholds (pre-registered before computation).**
+
+- **PASS**: |Δχ|/χ₀ < 5% across full M3 α ∈ (0, 0.1] range → frozen-field
+  approximation validated; current v5 Cassini bound is honest.
+- **BORDERLINE**: 5% ≤ |Δχ|/χ₀ < 15% → approximation marginal; flag caveat
+  "frozen-field approximation accurate to ~X%; γ−1 bound has corresponding
+  theory uncertainty."
+- **FAIL**: |Δχ|/χ₀ ≥ 15% → frozen-field approximation invalid; PPN bound
+  must be re-derived with χ(z)-aware field profile.
+
+**Required pipeline artefacts.**
+- This pre-registration entry (present).
+- `derivations/V8-chi-z-Cassini.py` — slow-roll ODE integration.
+- `derivations/V8-chi-z-Cassini.png` — χ(z) trajectory plot.
+- `derivations/V8-chi-z-Cassini-report.md` — ≤150 lines with verdict.
+
+**Status.** **RUN-BORDERLINE** (2026-04-22). |Δχ|/χ₀ = 5.85% at MAP α=0.095;
+max 6.16% across α ∈ (0, 0.1]. Just above 5% PASS threshold. Slow-roll
+self-consistent (ε_SR ~ 2×10⁻³). Consequence: frozen-field approx carries
+~12% theory uncertainty on |γ−1|; add one-sentence caveat to v5 §3.5. See
+`derivations/V8-chi-z-Cassini-report.md`.
+
+---
+
 ## Meta-rules
 
 1. **No post-hoc registration.** Running a test and registering its

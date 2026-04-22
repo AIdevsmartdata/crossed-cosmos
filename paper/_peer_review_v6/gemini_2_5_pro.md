@@ -1,3 +1,13 @@
 # gemini_2_5_pro review of v6
 
-[ERROR] timeout
+Q1. Is this a genuinely new formal result, or a rewriting of existing GSL statements (Wall 2011, Faulkner-Speranza 2024, Kirklin 2025)?
+This work presents a genuinely new formal result by proposing a modular-time differential upper bound on generalized entropy growth, which is a $\Theta$-weighted refinement of existing GSL statements. While it explicitly recovers the Wall and Faulkner-Speranza forms in certain limits, its integration of $k$-design complexity and a topological activator $\Theta$ provides a distinct structural novelty. Additionally, the explicit dequantisation map from type-II factors to classical density fields is an independently usable and novel construction.
+
+Q2. Which of M1, M2, M3 is the weakest postulate? Should any be demoted to "conjecture" or strengthened?
+Assumption M1, the modular complexity ansatz, is the weakest postulate. The paper explicitly states "no type-II theorem is claimed" regarding its central identification of the modular-commutator source with $k$-design complexity. While M2 (semi-classical recovery of $\dn$) lacks a full proof, its partial verification offers some grounding. M3 (topological activator profile) is already labelled "conjectural," which appropriately reflects its status as an inspired functional form. Given the lack of theoretical derivation in a type-II setting, M1 should arguably be demoted from a "Postulate" to an "Ansatz" or "Conjecture" to better align with the acknowledged absence of a theorem.
+
+Q3. Referee recommendation: MINOR REVISIONS
+The paper presents genuinely novel formal results, including a modular-time differential inequality for generalized entropy growth and an explicit dequantisation map. The authors are commendably transparent about the "postulate," "ansatz," and "conjectural" nature of their core assumptions (M1, M2, M3), clearly outlining their limitations and open questions. The work effectively differentiates itself from prior GSL statements and other computational gravity programs. However, a clearer discussion in the main text on the theoretical gaps for M1 and the partial nature of M2's verification would improve the presentation and align better with the rigorous standards of a formal paper.
+
+Q4. One specific additional result the authors could derive (NOT "more rigour" handwaving) that would make the paper stronger. Max 2 sentences.
+A rigorous type-II theorem deriving Assumption M1, the modular complexity ansatz, would significantly strengthen the paper. This would elevate the foundational connection between $d\Sgen/d\tauR$ and $k$-design complexity from a postulate to a formally derived result.

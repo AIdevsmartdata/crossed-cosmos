@@ -334,6 +334,45 @@ regularisation invariant none of the surveyed frameworks provides.
 
 ---
 
+---
+
+## F-19 — Mock Jacobi form for NMC quintessence horizon Z(τ)
+
+**Date.** 2026-04-22.
+
+**Proposed.** The horizon partition function Z(τ) = Tr_{A_R} e^{−β H_R}
+for the NMC quintessence static patch (ξ_χ R χ²/2, χ₀ = M_P/10) admits a
+mock Jacobi decomposition à la Dabholkar-Murthy-Zagier 2012 (arXiv:1208.4074),
+and the Zwegers harmonic completion reproduces (up to known constants) the
+v6 GSL type-II violation term κ_R C_k (1−Θ).
+
+**Why it failed.** Four fatal obstructions:
+(1) **Non-holomorphy**: eigenspectrum of H_χ on S³ is irrational
+    (ν² = m²_eff/H²_eff − 9/4 ∉ ℤ at χ₀ = M_P/10 fiducial); QNM
+    damping also breaks τ-analyticity. Z(τ) is not a meromorphic Jacobi form.
+(2) **No modular group action**: τ→τ+1 fails (irrational spectrum);
+    τ→−1/τ fails (dS₄ not self-dual under temperature inversion;
+    no Cardy formula). Without SL(2,ℤ), mock modular classification is moot.
+(3) **Wrong universality class**: D-M-Z 2012 is a theorem about N=4 SUSY
+    quarter-BPS dyons on K3×T². NMC quintessence dS₄ is thermal (T_H>0),
+    non-BPS, non-SUSY, with Euclidean geometry S⁴ not T². Score: 0/4
+    prerequisites satisfied.
+(4) **Categorical mismatch**: Zwegers shadow arises from polar (BPS) part
+    of a meromorphic Jacobi form; κ_R C_k (1−Θ) is a modular-Hamiltonian
+    rate × complexity × PH_k indicator. Dimensionally and structurally
+    incompatible.
+
+**Artefacts.** `derivations/V8-piste3-mock-jacobi.py` (sympy + prose),
+`paper/_internal_rag/v8_piste3_mock_jacobi_report.md`.
+
+**Re-open conditions.** Embedding NMC quintessence in a type-IIB or N=2
+string-theoretic sector where χ is a BPS compactification modulus with an
+attractor geometry, and an explicit construction of a holomorphic Jacobi form
+from that string partition function. Multi-paper program; not achievable in
+a single derivation session.
+
+---
+
 ## Meta-update
 
 **Pattern confirmed across v8 15-agent run:**

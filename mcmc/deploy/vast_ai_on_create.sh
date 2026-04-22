@@ -1,21 +1,24 @@
 #!/usr/bin/env bash
-# Vast.ai On-start script for ECI NMC MCMC.
+# Vast.ai On-start script for ECI NMC MCMC (PLUGIN ROUTE, v5.0).
 # Paste the contents of this file into the "On-start Script" textbox
 # when creating the instance. Runs as root, once, at first boot.
 #
-# Constraints propagated from mcmc/benchmark/REPORT.md:
-#   - hi_class Cython requires numpy<2  -> pin numpy==1.26.4
-#   - CLASS Makefile default -pthread does NOT enable OpenMP
-#     -> must set OMPFLAG=-fopenmp and add -fopenmp to CFLAGS/LDFLAGS
-#   - Plik-lite is the production likelihood (handled by YAML, not here)
-#   - Cobaya builtin checkpointing handles spot preemption (handled at run time)
+# This script installs the Python-plugin route:
+#   - vanilla CLASS (`classy`) — NOT the hi_class NMC C patch
+#   - Cobaya `ECINMCTheory` plugin from mcmc/cobaya_nmc/ (added to PYTHONPATH
+#     by the plugin's `python_path: ./mcmc/cobaya_nmc/` field in the YAML,
+#     resolved relative to Cobaya's working directory = /root/eci)
+#   - Likelihoods: bao.desi_dr2 + sn.pantheonplus only (no Planck)
+#
+# The C-patch route (hi_class_nmc) is NOT installed here. It is kept in-tree
+# at mcmc/nmc_patch/hi_class_nmc/ for the v5.1 CMB-joint analysis.
 
 set -euo pipefail
 export DEBIAN_FRONTEND=noninteractive
 
 LOG=/var/log/onstart.log
 exec > >(tee -a "$LOG") 2>&1
-echo ">>> Vast.ai on-create start: $(date -Iseconds)"
+echo ">>> Vast.ai on-create start (PLUGIN ROUTE): $(date -Iseconds)"
 
 # ---------------------------------------------------------------------------
 # 1. System packages
@@ -39,7 +42,9 @@ fi
 cd /root/eci
 
 # ---------------------------------------------------------------------------
-# 3. Python venv with numpy<2 pin (hi_class Cython ABI constraint)
+# 3. Python venv
+#    numpy<2 pin preserved for classy ABI compatibility (classy Cython is
+#    still built against numpy 1.x in most wheels as of Apr 2026).
 # ---------------------------------------------------------------------------
 python3.11 -m venv .venv-mcmc
 # shellcheck disable=SC1091
@@ -54,46 +59,47 @@ pip install \
     'mpi4py>=3.1' \
     'cobaya>=3.5' \
     'getdist>=1.5' \
+    'classy' \
     'pyyaml' 'tqdm' 'dill' 'packaging' 'requests'
 
-# ---------------------------------------------------------------------------
-# 4. Build CLASS / hi_class with EXPLICIT OpenMP
-#    (Makefile default -pthread does NOT enable OpenMP — benchmark §4.3)
-# ---------------------------------------------------------------------------
-cd /root/eci/mcmc/nmc_patch/hi_class_nmc
-make clean || true
-
-OMPFLAG="-fopenmp" \
-CFLAGS="-O3 -march=native -mavx2 -mtune=native -flto -fopenmp" \
-LDFLAGS="-fopenmp -flto" \
-    make -j"$(nproc)" class
-
-# Sanity: binary must contain OpenMP symbols.
-if ! nm -D class 2>/dev/null | grep -qi omp; then
-    if ! ldd class | grep -qi gomp; then
-        echo "!!! CLASS binary missing OpenMP — aborting." >&2
-        exit 1
-    fi
-fi
-
-# classy Python binding against the freshly built libclass.
-# --no-build-isolation: reuse the venv's Cython instead of PEP 517 isolated
-# build env (which lacks Cython and fails). Verified locally 2026-04-22.
-pip install --no-build-isolation -e python/
+# Sanity: classy imports and runs a background compute.
+python - <<'PY'
+from classy import Class
+c = Class()
+c.set({'output':'mPk', 'H0':67.36})
+c.compute()
+print("classy OK, h =", c.h())
+PY
 
 # ---------------------------------------------------------------------------
-# 5. Cobaya packages (Planck 2018 + DESI DR2 + Pantheon+)
-#    Skip CAMB: we use classy only.
+# 4. Sanity: ECINMCTheory plugin imports.
+#    Cobaya resolves the plugin via the YAML's `python_path: ./mcmc/cobaya_nmc/`
+#    at run time; we just confirm the file parses.
+# ---------------------------------------------------------------------------
+python - <<'PY'
+import sys, os
+sys.path.insert(0, '/root/eci/mcmc/cobaya_nmc')
+from eci_nmc_theory import ECINMCTheory
+print("ECINMCTheory OK:", ECINMCTheory.__name__)
+PY
+
+# ---------------------------------------------------------------------------
+# 5. Cobaya data packages — DESI DR2 + Pantheon+ only.
+#    Skip camb (we use classy), skip Planck (plugin route has no CMB).
 # ---------------------------------------------------------------------------
 cd /root/eci
 mkdir -p mcmc/packages
-cobaya-install cosmo -p mcmc/packages/ --skip camb --no-progress-bars
+cobaya-install \
+    bao.desi_dr2.desi_bao_all \
+    sn.pantheonplus \
+    -p mcmc/packages/ \
+    --skip camb --no-progress-bars
 
 # ---------------------------------------------------------------------------
 # 6. Convenience: auto-activate venv on interactive SSH
 # ---------------------------------------------------------------------------
 cat >> /root/.bashrc <<'EOF'
-# ECI MCMC env
+# ECI MCMC env (plugin route)
 if [ -f /root/eci/.venv-mcmc/bin/activate ]; then
     # shellcheck disable=SC1091
     source /root/eci/.venv-mcmc/bin/activate
@@ -101,5 +107,5 @@ if [ -f /root/eci/.venv-mcmc/bin/activate ]; then
 fi
 EOF
 
-echo ">>> Vast.ai on-create complete: $(date -Iseconds)"
+echo ">>> Vast.ai on-create complete (PLUGIN ROUTE): $(date -Iseconds)"
 echo ">>> SSH in and run:  bash mcmc/deploy/run_vast.sh   (inside tmux)"

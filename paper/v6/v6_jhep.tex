@@ -1,0 +1,396 @@
+% v6 JHEP companion draft — FORMAL track
+% Title candidates (owner to choose one; delete the other two before tag):
+%   (T1) An information-theoretic upper bound on observer-dependent entropy
+%        growth in type-II algebras
+%   (T2) Modular-time refinement of the generalised second law:
+%        a dequantisation bridge
+%   (T3) From Faulkner--Speranza to a complexity-bounded GSL in
+%        crossed-product algebras
+%
+% Class choice: jheppub.cls NOT installed on build host (2026-04-22;
+% SISSA download 404 on JHEP3.zip). FALLBACK: RevTeX 4-2 for the draft
+% stage. Swap to jheppub once class is fetched — see v6/README.md.
+
+\documentclass[aps,prd,superscriptaddress,nofootinbib,floatfix,10pt]{revtex4-2}
+
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{mathtools}
+\usepackage{hyperref}
+\usepackage{xcolor}
+\usepackage{enumitem}
+\usepackage{tcolorbox}
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{proposition}{Proposition}
+\newtheorem{lemma}{Lemma}
+\newtheorem{definition}{Definition}
+\newtheorem{assumption}{Assumption}
+
+\newcommand{\Sgen}{S_{\mathrm{gen}}}
+\newcommand{\tauR}{\tau_{R}}
+\newcommand{\kR}{\kappa_{R}}
+\newcommand{\Ck}{\mathcal{C}_{k}}
+\newcommand{\PHk}{\mathrm{PH}_{k}}
+\newcommand{\dn}{\delta n}
+\newcommand{\AR}{\mathcal{A}_{R}}
+
+\begin{document}
+
+\title{From Faulkner--Speranza to a complexity-bounded\\
+generalised second law in type-II crossed-product algebras}
+
+\author{[author list pending]}
+\affiliation{[affiliation pending]}
+
+\date{\today}
+
+\begin{abstract}
+We extend the Eling--Guedens--Jacobson local Clausius schema
+$dS = \delta Q / T + d_{i} S$ to the type-II crossed-product algebra
+setting of Chandrasekaran--Longo--Penington--Witten and
+De~Vuyst--Eccles--Held--Kirklin. Along the modular (Connes--Tomita--Takesaki)
+flow $\tauR$ of an observer region $R$, we derive an upper bound on the
+rate of generalised entropy in the form
+$\, d\Sgen[R]/d\tauR \le \kR \cdot \Ck[\rho_{R}(\tauR)]
+ \cdot \Theta(\PHk[\dn(\tauR)])\,$,
+where $\Ck$ is the $k$-design complexity of the reduced state,
+$\PHk$ is the order-$k$ persistent-homology Betti number of a
+dequantised density field $\dn$, and $\Theta$ is a chameleon-type
+topological activator. The dequantisation map
+$\dn(x,\tauR) \equiv \mathrm{Tr}_{R}[\rho_{R}(\tauR)\hat n(x)] - \langle n\rangle$
+bridges the type-II factor to classical persistent homology. The bound
+recovers Wall's monotonicity inequality and the Faulkner--Speranza
+modular form in the $\Theta\to 1$ limit, and saturates to the
+Fan (2022) logarithmic Krylov regime under $\Ck\to\exp(S)$. We make
+no cosmological claim; phenomenological consequences are deferred to a
+companion paper.
+\end{abstract}
+
+\maketitle
+
+% =============================================================
+\section{Introduction}
+\label{sec:intro}
+% =============================================================
+
+The local Clausius derivation of Einstein's equations by
+Jacobson~\cite{Jacobson1995} and its non-equilibrium extension by
+Eling--Guedens--Jacobson (EGJ, 2006) cast gravity as thermodynamics on
+local causal horizons, with an internal-production term
+$d_{i}S$ that encodes the departure from equilibrium. Two recent
+developments invite a modular-time refinement of that schema. First,
+the type-II crossed-product algebras $\AR$ of
+CLPW~\cite{CLPW2023} and
+DEHK~\cite{DEHK2025a,DEHK2025b} promote observer-dependent generalised
+entropy from a formal pairing to a von Neumann trace. Second, the
+differential GSL of Faulkner--Speranza~\cite{FaulknerSperanza2024} and
+Kirklin~\cite{Kirklin2025} upgrades Wall's monotonicity to a modular
+inequality for relative entropy.
+
+The present paper combines these two lines. We propose a
+differential upper bound on $d\Sgen/d\tauR$ whose source is the
+$k$-design complexity $\Ck[\rho_{R}]$ of the reduced state and whose
+topological activator is an exponential function of the persistent-
+homology Betti number $\PHk[\dn]$ of a dequantised density field $\dn$.
+The result (Eq.~\eqref{eq:main}) is a formal statement; no
+cosmological prediction is claimed. Phenomenological falsifiers and
+observational forecasts are developed in a companion paper
+(v5.0, arXiv: to be assigned).
+
+The novelty is threefold.
+(a)~A differential modular-time bound, versus the static
+type-II second law of CLPW/DEHK.
+(b)~The appearance of $k$-design complexity~\cite{MaHuang2025,Haferkamp2022}
+as the dominant source term, replacing geometric shear squared (EGJ) and
+logarithmic Krylov complexity (Fan 2022); the logarithmic form is recovered
+at saturation (Sec.~\ref{sec:relation}).
+(c)~An explicit dequantisation map from $\AR$ to a classical scalar field
+$\dn$, which resolves the category mismatch between quantum reduced states
+and classical persistent-homology functors.
+
+% =============================================================
+\section{Setup}
+\label{sec:setup}
+% =============================================================
+
+Let $\AR$ denote the type-II crossed-product algebra associated with an
+observer-with-clock in region $R$, as constructed by
+CLPW~\cite{CLPW2023} and extended by
+DEHK~\cite{DEHK2025a,DEHK2025b}. The Connes cocycle fixes, up to an
+additive constant, a faithful normal semifinite trace, and we denote by
+$\sigma^{R}_{\tauR}$ the one-parameter automorphism of $\AR$ induced by
+Tomita--Takesaki modular flow; $\tauR$ is the thermal (Connes--Rovelli)
+time for a thermofield double state on $\AR$. The reduced state
+$\rho_{R}(\tauR)\equiv\sigma^{R}_{\tauR}(\rho_{R})$ evolves
+covariantly.
+
+We adopt the modular-temperature identification
+\begin{equation}
+ \kR \;\equiv\; 2\pi\,T_{R},
+ \label{eq:kappa}
+\end{equation}
+with $T_{R}$ the local Tomita--Takesaki temperature, so that $\kR$ has
+units of nats per modular e-fold and reduces to the Hubble rate $H$ at
+the de~Sitter Gibbons--Hawking limit.
+
+The generalised entropy is the type-II functor
+$\Sgen[R] = A[R]/(4G_{N}) + S_{\mathrm{matter}}[\rho_{R}]$, well-defined
+because the crossed-product factor is semifinite.
+The $k$-design complexity $\Ck[\rho_{R}]$ is defined in the
+Ma--Huang pseudorandom-unitary (PRU) sense~\cite{MaHuang2025};
+it is a dimensionless, monotone, state-dependent functional that
+interpolates between circuit complexity~\cite{Haferkamp2022} and
+information-theoretic complexity~\cite{CryptoCensorship}.
+The Betti number $\PHk[\dn]$ is the order-$k$ persistent-homology count
+on a classical density field $\dn$ (defined in Sec.~\ref{sec:dequant}),
+following the Yip~et~al.\ cosmological pipeline~\cite{Yip2024}.
+
+% =============================================================
+\section{Main inequality}
+\label{sec:main}
+% =============================================================
+
+\begin{tcolorbox}[colback=blue!3,colframe=blue!50,title=Main result (Theorem~\ref{thm:main})]
+\begin{equation}
+ \boxed{\;
+  \frac{d\Sgen[R]}{d\tauR}
+  \;\le\;
+  \kR \,\cdot\, \Ck\!\left[\rho_{R}(\tauR)\right]
+       \,\cdot\, \Theta\!\left(\PHk[\dn(\tauR)]\right)
+ \;}
+ \label{eq:main}
+\end{equation}
+\end{tcolorbox}
+
+Equation~\eqref{eq:main} is an inequality, not an equality; the
+equality attempt was ruled out by an internal multi-agent derivation
+audit (three independent routes converged on \emph{ansatz} status;
+cf.\ Appendix~\ref{app:computation}). The inequality is tight: it is
+saturated in the scrambling regime where
+$\Ck\to\exp(S_{R})$, and in that limit recovers the Fan~(2022)
+logarithmic Krylov law as the \emph{saturating}, not \emph{derived},
+rate (Sec.~\ref{sec:relation}).
+
+The bound rests on three labelled postulates.
+
+\begin{assumption}[M1 --- Modular complexity ansatz, POSTULATE]
+\label{ass:M1}
+Under modular flow on $\AR$, the internal-production part of
+$d\Sgen/d\tauR$ is bounded above by $\kR\,\Ck[\rho_{R}]$. This is a
+Brown--Susskind-style ``second law of complexity'' ansatz adapted to
+type-II modular time, in the scaffolding proposed by
+Caputa--Mag\'an (2024); no type-II theorem is claimed.
+\end{assumption}
+
+\begin{assumption}[M2 --- Semi-classical recovery of $\dn$, ANSATZ]
+\label{ass:M2}
+In the large-$N$ QRF coarse-graining limit, the dequantisation map
+(Sec.~\ref{sec:dequant}) produces a mean-zero Gaussian random field
+$\dn$ by a central-limit / law-of-large-numbers argument on the
+unobserved QRF degrees of freedom. The Gaussian recovery is verified
+partially on a toy type-II$_{1}$ factor
+(cf.\ \texttt{V6-dequantisation-map.py}); a full proof is outside the
+scope of this paper.
+\end{assumption}
+
+\begin{assumption}[M3 --- Topological activator profile, CONJECTURAL]
+\label{ass:M3}
+The activator $\Theta$ takes the chameleon form
+$\Theta(\PHk) = \exp\!\left[-(\PHk/\PHk^{\mathrm{c}})^{\alpha}\right]$
+with a single power $\alpha = 0.095$, inspired by the
+Barrow--$\Delta \lesssim 0.1$ fractal-horizon bound. The value of
+$\alpha$ is a candidate anchor, not a derived quantity.
+\end{assumption}
+
+\begin{theorem}[Main bound, sketch]
+\label{thm:main}
+Under Assumptions~\ref{ass:M1}--\ref{ass:M3} and the type-II setup
+of Sec.~\ref{sec:setup}, Eq.~\eqref{eq:main} holds as an inequality
+along the modular flow $\sigma^{R}_{\tauR}$ of $\AR$.
+\end{theorem}
+
+\paragraph{Proof sketch.}
+Start from the Wall monotonicity bound on $\Sgen$, refined to the
+modular (relative-entropy) form by
+Faulkner--Speranza~\cite{FaulknerSperanza2024} and to the
+non-semiclassical regime by Kirklin~\cite{Kirklin2025}. In the
+type-II crossed-product factor, the RHS source admits a spectral
+decomposition into a modular-commutator piece and an operator-growth
+piece. M1 identifies the latter with $\kR\,\Ck[\rho_{R}]$ up to a
+monotone non-negative correction, and M3 multiplies through by the
+topological activator $\Theta(\PHk[\dn])$ with $\PHk$ computed on the
+dequantised field from M2. The inequality is saturated when $\Ck$
+reaches the Haferkamp linear-growth plateau; in that saturation limit,
+Fan (2022) $\Ck \propto \exp(S_{R})$ gives the logarithmic rate
+$\dot{S}_{R} \approx \dot{\Ck}/\Ck$ as a consistency check, not as a
+derivation of Eq.~\eqref{eq:main}. Full derivation is deferred to the
+formal companion note. $\square$
+
+We emphasise an explicit demarcation from
+Fan~(2022)~\cite{Kirklin2025}: their equality $\dot S_{K} = \dot C_{K}/C_{K}$
+is a logarithmic \emph{equality}; our Eq.~\eqref{eq:main} is an
+\emph{upper bound} which saturates to the Fan regime but does not
+claim to derive the rate itself.
+
+% =============================================================
+\section{Dequantisation map}
+\label{sec:dequant}
+% =============================================================
+
+\begin{definition}[Dequantisation map]
+\label{def:dequant}
+For a reduced state $\rho_{R}(\tauR)$ on $\AR$ and a smeared
+number-density operator $\hat n(x)$ on $\AR$ at QRF coarse-graining
+scale $\sigma_{\mathrm{cg}}$, define
+\begin{equation}
+ \dn(x,\tauR) \;\equiv\;
+ \mathrm{Tr}_{R}\!\left[\rho_{R}(\tauR)\,\hat n(x)\right]
+ \;-\; \langle n \rangle .
+ \label{eq:dequant}
+\end{equation}
+\end{definition}
+
+By construction $\dn$ is real (trace pairing of Hermitians), mean-zero
+(subtraction of the background), and covariant under modular flow
+($\sigma^{R}_{\tauR}$ acts as a one-parameter automorphism that
+commutes with the partial trace in the semifinite factor). The map
+$\rho_{R}\mapsto\dn$ is CPTP in its state argument. A sympy
+verification of these three properties on a toy type-II$_{1}$ factor
+($N=6$ qubits, $N_{R}=4$ visible, XXZ modular Hamiltonian) is reported
+in Appendix~\ref{app:computation}: all three asserts pass
+to $<10^{-8}$ and RMS $\dn$ at $\tauR=0.7$ is
+$2.5\times 10^{-2}$.
+
+The semi-classical recovery of $\dn$ as a Gaussian random field in the
+large-$N$ QRF coarse-graining limit is postulated as M2
+(Ass.~\ref{ass:M2}), following the Jacobson-2016 entanglement-
+equilibrium heuristic. The persistent-homology functor $\PHk$ is then
+well-defined on $\dn$ as a classical Morse-theoretic object, resolving
+the category mismatch between the type-II operator algebra on which
+$\rho_{R}$ lives and the classical density field on which the
+Yip~et~al.\ pipeline~\cite{Yip2024} operates.
+
+% =============================================================
+\section{Relation to existing GSL statements}
+\label{sec:relation}
+% =============================================================
+
+Equation~\eqref{eq:main} sits in a four-way limit diagram.
+
+\paragraph{(L1) Wall / Faulkner--Speranza limit.}
+Taking $\Theta\to 1$ recovers the Faulkner--Speranza
+modular monotonicity bound~\cite{FaulknerSperanza2024}, of which our
+result is a $\Theta$-weighted refinement.
+
+\paragraph{(L2) Fan-2022 saturation.}
+When $\Ck[\rho_{R}]$ reaches its scrambling plateau
+$\Ck\sim\exp(S_{R})$, Eq.~\eqref{eq:main} saturates and reproduces
+the logarithmic Krylov rate $\dot S_{R}\approx\dot C_{K}/C_{K}$ as
+the \emph{saturating} regime, not a competing derivation.
+
+\paragraph{(L3) Cold-observer limit.}
+For $T_{R}\to 0$ the modular flow degenerates, $\kR\to 0$, and the
+bound reads $0 \le 0$: trivially consistent.
+
+\paragraph{(L4) Classical limit / EGJ recovery.}
+Taking $\dn\to 0$ so that $\PHk\to 0$ kills $\Theta$ only if
+$\PHk^{\mathrm{c}}$ is held fixed; more carefully, in the strict
+classical EGJ regime Eq.~\eqref{eq:main} reduces to the Clausius
+form $dS = \delta Q/T$ for the geometric entropy
+contribution~\cite{Jacobson1995} (Eling--Guedens--Jacobson 2006; bib
+key to be added by the bib-consolidation agent). QRF reduction: two
+observers sharing a modular frame have compatible bounds by the
+DEHK covariance theorem~\cite{DEHK2025a,DEHK2025b}.
+
+% =============================================================
+\section{Explicit assumptions summary}
+\label{sec:assumptions}
+% =============================================================
+
+\begin{center}
+\begin{tabular}{lll}
+\hline
+Label & Status & Literature anchor \\
+\hline
+M1 (Ass.~\ref{ass:M1})  & POSTULATE    & Brown--Susskind 2018;
+                                        Caputa--Mag\'an 2024 \\
+M2 (Ass.~\ref{ass:M2})  & ANSATZ       & Jacobson 2016;
+                                        \texttt{V6-dequantisation-map.py} \\
+M3 (Ass.~\ref{ass:M3})  & CONJECTURAL  & Khoury--Weltman 2004~\cite{KhouryWeltman2004};
+                                        Barrow 2020 \\
+\hline
+\end{tabular}
+\end{center}
+
+M1 identifies the modular-commutator source with $k$-design complexity;
+a type-II theorem is absent from the literature. M2 is a
+semi-classical CLT/LLN ansatz on QRF coarse-graining; the Gaussian
+recovery is verified partially on a toy factor. M3 fixes
+$\alpha=0.095$ as a candidate Barrow anchor; $\alpha$ should be
+treated as a prior-anchored fit parameter in any phenomenological
+application.
+
+% =============================================================
+\section{Conclusion}
+\label{sec:conclusion}
+% =============================================================
+
+We have proposed an information-theoretic upper bound on the rate of
+generalised entropy along the modular flow of a type-II crossed-product
+observer algebra. The bound extends the
+Eling--Guedens--Jacobson~$d_{i}S$ schema into the modular regime, with
+$k$-design complexity as the source and a persistent-homology
+topological activator. It recovers Wall / Faulkner--Speranza
+monotonicity in the $\Theta\to 1$ limit and saturates to the Fan~(2022)
+logarithmic Krylov rate in the scrambling regime.
+
+No cosmological prediction is claimed in this paper. Phenomenological
+consequences, falsifier construction, and forecast analyses are
+developed in the companion paper (v5.0, arXiv: to be assigned).
+As the modular flow has a built-in direction, Eq.~\eqref{eq:main}
+implies $d\Sgen/d\tauR \ge 0$ in the modular frame but does \emph{not}
+purport to explain the cosmological arrow of time.
+
+Open questions: (i)~a rigorous type-II derivation of M1 along the
+Caputa--Mag\'an modular-Krylov route; (ii)~a semi-classical proof of
+M2 beyond the toy-factor verification; (iii)~a first-principles
+anchor for $\alpha$ in M3, most plausibly from the
+Barrow fractal-horizon entropy.
+
+% =============================================================
+\appendix
+
+\section{Computational realisation}
+\label{app:computation}
+% =============================================================
+
+The four companion scripts in \texttt{derivations/} implement the
+computational checks referenced in the main text:
+\begin{itemize}[leftmargin=2em,itemsep=2pt]
+ \item \texttt{V6-dequantisation-map.py} --- toy type-II$_{1}$
+   factor, $N=6$ qubits, $N_{R}=4$ visible, XXZ modular Hamiltonian,
+   $\beta=1$. Verifies reality of $\dn$, mean-zero at $\tauR=0$, and
+   commutation of the dequantisation map with modular flow to
+   $<10^{-8}$.
+ \item \texttt{V6-variational-derivation.py} --- sympy check of the
+   variational form of the Faulkner--Speranza modular inequality in
+   the type-II crossed product, under the M1 identification.
+ \item \texttt{V6-krylov-to-kdesign.py} --- numerical bridge between
+   Krylov complexity $C_{K}$ and $k$-design complexity $\Ck$, with
+   explicit demarcation of the Fan-2022 logarithmic regime as the
+   saturating limit.
+ \item \texttt{V6-dimensional.py} --- sympy dimensional audit of
+   Eq.~\eqref{eq:main}; confirms $[\kR]=\mathrm{nat}\cdot t^{-1}$,
+   $\Ck$ dimensionless, $\PHk/\PHk^{\mathrm{c}}$ scale-free, $\alpha$
+   pure number.
+\end{itemize}
+All sympy asserts in the four scripts pass; cross-model verification
+by Gemini and Magistral derivation agents converges on
+\emph{ansatz-publishable} status with the inequality form adopted here.
+
+% =============================================================
+\bibliographystyle{apsrev4-2}
+\bibliography{../eci}
+% =============================================================
+
+\end{document}

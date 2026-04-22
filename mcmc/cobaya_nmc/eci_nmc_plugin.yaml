@@ -16,6 +16,8 @@
 
 theory:
   classy:
+    # classy is the sole supplier of background observables (BAO/SN use these).
+    provides: [Hubble, angular_diameter_distance, rdrag]
     extra_args:
       output: mPk
       N_ur: 2.0328
@@ -25,6 +27,10 @@ theory:
       use_ppf: "yes"
   eci_nmc_theory.ECINMCTheory:
     python_path: ./mcmc/cobaya_nmc/
+    # classy delivers Hubble / angular_diameter_distance / rdrag for BAO+SN.
+    # The plugin contributes only the NMC derived sector; its Hubble method
+    # is not used in this run.
+    provides: [G_eff_over_GN, eta_slip, fsigma8, chi_of_a, wa_nmc_correction]
 
 likelihood:
   bao.desi_dr2.desi_bao_all:

@@ -1,6 +1,6 @@
 # crossed-cosmos
 
-**ECI — Entanglement, Complexity, Information.** A framework paper threading six independently-established results (2022–2026) into a single predictive canvas: type-II observer-dependent von Neumann algebras, non-minimally coupled thawing quintessence (DESI DR2), Early Dark Energy, the Dark Dimension, Cryptographic Censorship, and persistent-homology cosmology.
+**ECI — Entanglement, Complexity, Information.** Two companion papers on orthogonal tracks: (v5) a phenomenological framework with MCMC on DESI DR2 + Pantheon+ targeting EPJ C, and (v6) a formal differential GSL on type-II crossed-product algebras targeting JHEP.
 
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.19686399.svg)](https://doi.org/10.5281/zenodo.19686399)
 [![License: CC BY 4.0](https://img.shields.io/badge/License-CC_BY_4.0-lightgrey.svg)](https://creativecommons.org/licenses/by/4.0/)
@@ -9,6 +9,21 @@
 > *"Le Big Bang n'est pas un instant, c'est une frontière de décodabilité."*
 
 ---
+
+## The two companion papers
+
+| | **v5.0** phenomenological | **v6.0** formal |
+|---|---|---|
+| Track | EPJ C / astro-ph.CO | JHEP / hep-th |
+| Pages | 14 | 7 |
+| Source | `paper/eci.tex` | `paper/v6/v6_jhep.tex` |
+| Data | DESI DR2 + Pantheon+ MCMC (19700 samples, R-1=0.036) | None — pure formalism |
+| Main result | ξ_χ = 0.003 +0.065/−0.070 (68% CL), BF_01 ≈ 1 | dS_gen/dτ_R ≤ κ_R · C_k · Θ(PH_k) + logistic envelope (Prop. 1) |
+| Second result | — | Dequantisation map (type-II → classical PH) |
+| Falsifier | NMC deviations from ΛCDM at DR3+Euclid | None (D18 / D18b killed fσ_8 × Θ(PH_2)) |
+| Zenodo | [10.5281/zenodo.19686399](https://doi.org/10.5281/zenodo.19686399) | (fresh DOI on tag `v6.0.0`) |
+
+The two papers are **complementary, not hierarchical**: v6 does not subsume or supersede v5; it operates on an orthogonal axis (formal-algebraic vs empirical-fit).
 
 ## What is this
 
@@ -29,9 +44,13 @@ A **framework paper** — not a derivation, not a fit on DESI DR2. It assembles 
 
 ## Read it
 
-- `paper/eci.tex` — RevTeX source (v4)
-- `paper/eci.bib` — verified bibliography (DOIs cross-checked via Crossref, 2026-04-21)
-- `notes/v3-to-v4-corrections.md` — what changed from v3 and why
+- `paper/eci.tex` — v5 RevTeX source (phenomenological)
+- `paper/v6/v6_jhep.tex` — v6 RevTeX source (formal)
+- `paper/v6/RELEASE_NOTES.md` — v6 release notes and audit trail
+- `paper/v6/CITATION.cff` — v6-specific citation metadata
+- `paper/eci.bib` — verified bibliography (DOIs cross-checked via Crossref, 2026-04-22)
+- `derivations/V6-claims-audit-pipeline.py` — pre-write rigour pipeline (18/18 PASS on v6.2)
+- `paper/_internal_rag/PRINCIPLES.md` — project-wide editing rules
 - `CHANGELOG.md` — version log
 
 ## Build

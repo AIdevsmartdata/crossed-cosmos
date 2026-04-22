@@ -260,3 +260,89 @@ Odlyzko data.
 7. **Extrapolation from mathematical construct to physical reality** —
    F-7 (Euler–Maclaurin Λ), proposed ZSA cosmological reading of
    Bost–Connes. Fix: numerical test before publication.
+
+---
+
+## F-10 through F-17 — v8 15-agent parallel exploration results
+
+Added 2026-04-22 after Sonnet-parallel exploration of 15 analogies.
+See `v8_synthesis.md` for full scorecard. Each below is an analogy
+tested-and-rejected, added here to prevent re-exploration.
+
+### F-10 — Legendre K_R ↔ C_BS (agent 2)
+Legendre transform of modular Hamiltonian equals von Neumann entropy
+(bounded $\log 16$), not Brown-Susskind complexity (purity inverse,
+linear in Hilbert dim). Ratio $[0.18, 0.48]$ on β ∈ [0.1, 10]. NO
+multiplicative constant. Artefact: `derivations/V8-agent-02-*`.
+**Re-open**: would require identifying a non-thermodynamic Legendre
+partner of K_R which equals C_BS. Unlikely.
+
+### F-11 — Jaynes MaxCaliber → v6 bound (agent 3)
+MaxCal yields $p^* \propto e^{-\lambda C_k}$ implying linear-in-$C_k$
+bound, not logistic, no topological $\Theta$ factor emerges. Req M1
+still external. Artefact: `V8-agent-03-*`.
+**Re-open**: would require maxcal constraint on both $C_k$ and PH_k
+simultaneously, with non-trivial cross-constraint. Not attempted.
+
+### F-12 — Landau order-param α fit to v5 (agent 4)
+GRF percolation universality gives $\alpha \in [0.4, 2.1]$ (cubical
+β_1 proxy α=2.12; GKF analytic α=0.43). v5 M3 target $(0, 0.1]$ with
+fiducial 0.095. **α cannot arise from this universality class.** Artefact:
+`V8-agent-04-*`.
+**Re-open**: different random-field ensemble (non-Gaussian, clustered)
+might yield smaller α, at the cost of physical motivation.
+
+### F-13 — ξ_χ from Wetterich modular RG (agent 5)
+1-loop FRG fixed point is $\xi = 1/6$ (conformal coupling), repulsive
+flow, v5 best-fit 0.003 needs fine-tuning width $\sim 6.5 \times 10^{-4}$.
+Four ad-hoc flags; identification k = T_R exp(τ_R) not derivable.
+Artefact: `V8-agent-05-*`.
+**Re-open**: a 2-loop or non-local beta function might change the
+landscape. Requires NCG / FRG expert.
+
+### F-14 — Jacobson d_iS → v5 NMC (agent 6, **MOST IMPORTANT BLOCKED BRIDGE**)
+Req A fatal: $C_k$ is a state functional, $d_iS$ is extrinsic
+horizon-geometric. Categorically different objects. M1 POSTULATE
+cannot be bridged into a local polynomial $\xi R \chi^2$. Artefact:
+`V8-agent-06-*`.
+**Re-open**: a derivation of $C_k$ as a functional of local curvature
+observables (rather than global state properties) would be required.
+No route currently known.
+
+### F-15 — DD species scale c' ↔ modular γ_m (agent 8)
+γ_m = 1 vs c' = 1/6. Framework-mismatch (kinematic weight vs KK-tower
+state density). Artefact: `V8-agent-08-*`.
+**Re-open**: would need a theorem bridging KK-tower density to
+modular spectral density — absent from all RAG references.
+
+### F-16 — Bures metric ↔ C_BS (agent 10)
+β=0.141, R²=0.071 power-law; linear R²=-0.95 (strongly rejected).
+Bures tracks eigenvalue+eigenvector, C_BS only eigenvalue.
+Artefact: `V8-agent-10-*`.
+**Re-open**: a modified distance that projects onto the purity
+direction might correlate, but then it's not Bures.
+
+### F-17 — Heat-kernel CCM spectral action Λ (agent 15)
+Consolidates F-7. $\rho_\Lambda^{\rm spec} \sim 10^{-2} M_P^4$,
+off by $10^{120}$ from $\Lambda_{\rm obs}$. ζ-zeros enter $a_4$
+(curvature²), not $a_0$ (cosmological constant). The ZSA Λ
+mechanism is **definitively closed** via two independent
+regularisations (F-7 Euler-Maclaurin + F-17 heat-kernel).
+Artefact: `V8-agent-15-*`.
+**Re-open**: unlikely; would require a non-perturbative
+regularisation invariant none of the surveyed frameworks provides.
+
+---
+
+## Meta-update
+
+**Pattern confirmed across v8 15-agent run:**
+- Analogies testable in an afternoon do not replace years of expert
+  research.
+- Strong analogy intuitions (Legendre, Jacobson, Wetterich) fail
+  rigorously — that failure is itself diagnostic.
+- Genuine positives are REFORMULATIONS of existing structure (agents
+  1, 9), not new physics.
+- The mathematical-landscape watchlist (Hypothesis H, Bost-Connes/CCM,
+  Kashiwara-Schapira) is more refined now: KS is **theorem-rigorous**
+  for PH_k reformulation, the other two remain HOOK-PROGRAMMATIC.

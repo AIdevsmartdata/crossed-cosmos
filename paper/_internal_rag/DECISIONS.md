@@ -328,3 +328,23 @@ Planck M_P = 2.435×10¹⁸ GeV, ξ > 0 attractive**
   zero leaks to unreduced. Lock-down prevents future sign-flip silent
   bugs (PRINCIPLES.md #4 — convention hygiene).
 - Pushed back: none; V7 clean pass.
+
+**2026-04-21 — v5.0 audit-add: 5 external-audit references integrated**
+- Decision: add FrameCovariance2025 (2512.07929), KFLS2024 (2406.01669),
+  TiettoVerlinde2025 (2502.03869), Oliveira2025NMC (2510.08459),
+  AdamCline2025 (2509.13302) to `paper/eci.bib` and cite minimally in
+  §A1, §1.5, §3.2, §3.6 of both `paper/eci.tex` and
+  `submission/epjc/eci_svjour3.tex`.
+- Scooping check on 2512.07929 (Karamitsos & Muntz, "From Frame
+  Covariance to the Swampland Distance Conjecture"): RELATED, not
+  scooped. They derive SDC/Sharpened-SDC bounds from Weyl/frame
+  covariance of a generic gravitational EFT; we derive a bound on
+  $\xi_\chi$ via species-scale cutoff applied to the bulk mode $\chi$.
+  The two premises (geometric Weyl invariance vs species-counting on a
+  specific scalar) are orthogonal and the results are complementary. We
+  cite as parallel approach in §3.6. Digest:
+  `paper/_v4.7_scooping_check.md`.
+- AdamCline2025 author list verified: Adam, Hertzberg,
+  Jiménez-Aguilar, Khan. External audit label "Adam, Cline et al." is a
+  misattribution; bibkey kept per audit instruction, note in bib entry.
+- Pushed back: none.

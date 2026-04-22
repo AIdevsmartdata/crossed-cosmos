@@ -28,6 +28,12 @@ Before you write any numerical claim, any bound, any verdict sentence in
 - Not a complete literature map (see `paper/literature_map.md`).
 - Not a bibliography audit (see `paper/bib_audit.md`).
 
+## How to use this directory
+
+Future editing agents must read GROUND_TRUTH.md first, then DECISIONS.md,
+then PRINCIPLES.md, before consulting INDEX.md for specific values, and
+finally `_rag/INDEX.md` for external primary sources.
+
 ## Maintenance
 
 After landing any new D*, V*, or adversarial review, append a row to the

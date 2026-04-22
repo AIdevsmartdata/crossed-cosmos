@@ -66,6 +66,23 @@ The predictive core is §3.1–§3.7 plus §4. The speculative layer is
 Appendix A (the A3 toy dictionary). Anything that reaches for a claim
 beyond this division is out-of-scope for v4.6.
 
+**v4.7 addition (2026-04-22).** A §1.5 "organising reading" is now
+\input after §1: the six axioms admit a common observer-dependent reading
+in the late-time quasi-dS regime ($\Omega_\Lambda\gtrsim 0.7$), with
+A4/A5/A6 re-read as QRF-frame-labelled quantities and A3 as the self-
+consistency condition on the subregion where the QRF crossed product of
+A1 remains well-defined. The reading is scoped — it does NOT cover the
+pre-recombination sector (EDE axion at $z_c\sim 3500$; BBN $\xi_\chi$
+bound) — and is explicitly not a derivation. No equation is moved; no
+numerical value changes. Frame qualifiers are attached in prose to §3.5
+(Cassini bound, solar-system frame), §3.6 (EFT heuristic, causal-diamond
+regime), §A6 (Matsubara form, observer ensemble average), and
+Appendix A (QRF-subregion link). The Ma--Huang 2024 construction of PRUs
+from quantum one-way functions (arXiv:2410.10116, STOC'25) upgrades the
+A3 pseudorandomness premise at the CFT level from "effective existence"
+to "existence"; the cosmological transposition of A3 remains a working
+conjecture quarantined in Appendix A (PRINCIPLES §8).
+
 ## Part B — The six axioms, honestly labelled
 
 **A1 — Observer-dependent algebra.** Asserts that each QRF carries a

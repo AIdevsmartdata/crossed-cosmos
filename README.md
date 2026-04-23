@@ -1,10 +1,15 @@
-# crossed-cosmos
+# crossed-cosmos — ECI: Entanglement, Complexity, Information
 
-**ECI — Entanglement, Complexity, Information.** Two companion papers on orthogonal tracks: (v5) a phenomenological framework with MCMC on DESI DR2 + Pantheon+ targeting EPJ C, and (v6) a formal differential GSL on type-II crossed-product algebras targeting JHEP.
+**A quantum-gravity × cosmology framework** — two companion preprints on orthogonal tracks: (v5) a phenomenological framework with MCMC on DESI DR2 + Pantheon+ targeting EPJ C, and (v6) a formal differential Generalised Second Law on type-II crossed-product algebras targeting JHEP. Plus a v7 short note (BK fit) and the Chimère-Ω blueprint.
 
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.19686398.svg)](https://doi.org/10.5281/zenodo.19686398)
 [![License: CC BY 4.0](https://img.shields.io/badge/License-CC_BY_4.0-lightgrey.svg)](https://creativecommons.org/licenses/by/4.0/)
 [![ORCID](https://img.shields.io/badge/ORCID-0009--0008--2443--7166-a6ce39)](https://orcid.org/0009-0008-2443-7166)
+[![arXiv](https://img.shields.io/badge/arXiv-pending%20endorsement-b31b1b)](https://arxiv.org/a/remondiere_k_1)
+[![HAL](https://img.shields.io/badge/HAL-planned-critical)](https://hal.science/)
+[![Tests](https://github.com/AIdevsmartdata/crossed-cosmos/actions/workflows/tests.yml/badge.svg)](https://github.com/AIdevsmartdata/crossed-cosmos/actions/workflows/tests.yml)
+
+**Keywords** — cosmology · quantum gravity · dark energy · non-minimal coupling · quintessence · von Neumann algebras · crossed product · DESI DR2 · Pantheon+ · early dark energy · dark dimension · swampland · persistent homology · cryptographic censorship · generalised second law · hep-th · gr-qc · astro-ph.CO
 
 > *"Le Big Bang n'est pas un instant, c'est une frontière de décodabilité."*
 
@@ -42,6 +47,15 @@ A **framework paper** — not a derivation, not a fit on DESI DR2. It assembles 
 - Not peer-reviewed. Not yet.
 - Not a new derivation — an architectural synthesis.
 - Not quantitative at the level a PRD / JCAP referee would demand. EPJ C or Foundations of Physics are the realistic editorial targets.
+
+## Download the PDFs
+
+| Paper | Track | Direct PDF | Zenodo DOI |
+|---|---|---|---|
+| **v5 — ECI phenomenological** | EPJ C / astro-ph.CO | [`paper/eci.pdf`](paper/eci.pdf) | [10.5281/zenodo.19696017](https://doi.org/10.5281/zenodo.19696017) |
+| **v6 — GSL on type-II crossed products** | JHEP / hep-th | [`paper/v6/v6_jhep.pdf`](paper/v6/v6_jhep.pdf) | [10.5281/zenodo.19699006](https://doi.org/10.5281/zenodo.19699006) |
+| **v7-note — BK fit short note** | companion | [`paper/v7_note/v7_note.pdf`](paper/v7_note/v7_note.pdf) | (via concept DOI) |
+| **Chimère-Ω blueprint** | design doc | [`paper/chimere_omega/chimere_omega.pdf`](paper/chimere_omega/chimere_omega.pdf) | (via concept DOI) |
 
 ## Read it
 

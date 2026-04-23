@@ -50,12 +50,16 @@ A **framework paper** — not a derivation, not a fit on DESI DR2. It assembles 
 
 ## Download the PDFs
 
+Direct PDF downloads (clickable from phone — no LaTeX build needed):
+
 | Paper | Track | Direct PDF | Zenodo DOI |
 |---|---|---|---|
-| **v5 — ECI phenomenological** | EPJ C / astro-ph.CO | [`paper/eci.pdf`](paper/eci.pdf) | [10.5281/zenodo.19696017](https://doi.org/10.5281/zenodo.19696017) |
-| **v6 — GSL on type-II crossed products** | JHEP / hep-th | [`paper/v6/v6_jhep.pdf`](paper/v6/v6_jhep.pdf) | [10.5281/zenodo.19699006](https://doi.org/10.5281/zenodo.19699006) |
-| **v7-note — BK fit short note** | companion | [`paper/v7_note/v7_note.pdf`](paper/v7_note/v7_note.pdf) | (via concept DOI) |
-| **Chimère-Ω blueprint** | design doc | [`paper/chimere_omega/chimere_omega.pdf`](paper/chimere_omega/chimere_omega.pdf) | (via concept DOI) |
+| **v5 — ECI phenomenological** | EPJ C / astro-ph.CO | [eci.pdf](https://github.com/AIdevsmartdata/crossed-cosmos/releases/download/v5.0.2/eci.pdf) (1.4 MB) | [10.5281/zenodo.19696017](https://doi.org/10.5281/zenodo.19696017) |
+| **v6 — GSL on type-II crossed products** | JHEP / hep-th | [v6_jhep.pdf](https://github.com/AIdevsmartdata/crossed-cosmos/releases/download/v6.0.6/v6_jhep.pdf) (422 KB) | [10.5281/zenodo.19699006](https://doi.org/10.5281/zenodo.19699006) |
+| **v7-note — BK fit short note** | companion | [v7_note.pdf](https://github.com/AIdevsmartdata/crossed-cosmos/releases/download/v7-note-0.1/v7_note.pdf) (385 KB) | (via concept DOI) |
+| **Chimère-Ω blueprint** | design doc | [chimere_omega.pdf](https://github.com/AIdevsmartdata/crossed-cosmos/releases/download/chimere-omega-0.1/chimere_omega.pdf) (521 KB) | (via concept DOI) |
+
+> These links resolve directly to the PDF blob (HTTP 302 → release asset). Click-to-download works on mobile browsers without needing a GitHub account.
 
 ## Read it
 

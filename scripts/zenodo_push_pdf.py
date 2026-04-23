@@ -61,17 +61,26 @@ def _req(method: str, url: str, token: Optional[str] = None,
         raise
 
 
-def find_record_for_tag(tag: str) -> Optional[dict]:
+def find_record_for_tag(tag: str, token: Optional[str] = None) -> Optional[dict]:
     """Scan /versions for the concept record, return the one whose
-    `metadata.version` matches `tag`.
+    `metadata.version` matches `tag`. Paginate (anon cap 25/page, auth 100).
     """
-    url = f"{ZENODO_BASE}/records/{CONCEPT_RECORD_ID}/versions?size=50"
-    d = _req("GET", url)
-    hits = d.get("hits", {}).get("hits", [])
-    for h in hits:
-        if h.get("metadata", {}).get("version") == tag:
-            return h
-    return None
+    page_size = 100 if token else 25
+    page = 1
+    while True:
+        url = (f"{ZENODO_BASE}/records/{CONCEPT_RECORD_ID}/versions"
+               f"?size={page_size}&page={page}")
+        d = _req("GET", url, token=token)
+        hits = d.get("hits", {}).get("hits", [])
+        if not hits:
+            return None
+        for h in hits:
+            if h.get("metadata", {}).get("version") == tag:
+                return h
+        total = d.get("hits", {}).get("total", 0)
+        if page * page_size >= total:
+            return None
+        page += 1
 
 
 def record_has_pdf(rec: dict, pdf_name: str) -> bool:
@@ -143,7 +152,7 @@ def main() -> int:
 
     # Resolve record
     if args.tag:
-        rec = find_record_for_tag(args.tag)
+        rec = find_record_for_tag(args.tag, token=token)
         if rec is None:
             print(f"error: no Zenodo record for tag {args.tag!r}", file=sys.stderr)
             return 3

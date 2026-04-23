@@ -29,6 +29,10 @@ on:
         description: "Publish an existing Zenodo draft by ID (skip everything else)"
         required: false
         type: string
+      parent_record:
+        description: "Parent record ID (for publish_draft metadata restore)"
+        required: false
+        type: string
 
 jobs:
   upload:
@@ -41,7 +45,11 @@ jobs:
         env:
           ZENODO_TOKEN: ${{ secrets.ZENODO_TOKEN }}
         run: |
-          python3 scripts/zenodo_push_pdf.py --publish-draft "${{ inputs.publish_draft }}"
+          ARGS="--publish-draft ${{ inputs.publish_draft }}"
+          if [ -n "${{ inputs.parent_record }}" ]; then
+            ARGS="$ARGS --parent ${{ inputs.parent_record }}"
+          fi
+          python3 scripts/zenodo_push_pdf.py $ARGS
 
       - name: Determine tag
         if: inputs.publish_draft == ''

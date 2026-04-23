@@ -90,38 +90,59 @@ def record_has_pdf(rec: dict, pdf_name: str) -> bool:
     return False
 
 
-def new_version(concept_id: str, token: str) -> dict:
-    """Create a new draft version of the concept record."""
-    url = f"{ZENODO_BASE}/deposit/depositions/{concept_id}/actions/newversion"
+def new_version(published_id: str, token: str) -> dict:
+    """Create a new draft version using the InvenioRDM API.
+
+    POST /api/records/{id}/versions — new-style endpoint. Inherits
+    metadata from parent but starts with files disabled; we must
+    re-import files (or upload fresh ones) then publish.
+    """
+    url = f"{ZENODO_BASE}/records/{published_id}/versions"
     return _req("POST", url, token=token)
 
 
-def get_draft(concept_id: str, token: str) -> dict:
-    """Some flows return the draft id in 'links.latest_draft'."""
-    url = f"{ZENODO_BASE}/deposit/depositions/{concept_id}"
-    return _req("GET", url, token=token)
+def import_parent_files(draft_id: str, token: str) -> dict:
+    """Tell the draft to copy files from its parent version."""
+    url = f"{ZENODO_BASE}/records/{draft_id}/draft/actions/files-import"
+    return _req("POST", url, token=token)
 
 
-def upload_pdf(draft: dict, pdf_path: Path, token: str):
-    """Upload a file to a draft deposition. Supports both old (files) and
-    new bucket API. Prefer bucket."""
-    bucket_url = draft.get("links", {}).get("bucket")
-    if bucket_url:
-        # Bucket API: PUT <bucket>/<filename>  body = raw bytes
-        url = f"{bucket_url}/{urllib.parse.quote(pdf_path.name)}"
-        with pdf_path.open("rb") as f:
-            data = f.read()
-        _req("PUT", url, token=token, data=data,
-             headers={"Content-Type": "application/octet-stream"})
-        print(f"[zenodo] uploaded (bucket) {pdf_path.name} "
-              f"({len(data)/1024:.0f} KB)")
-        return
-    # Fallback old API
-    raise RuntimeError("no bucket link on draft — API may have changed")
+def draft_unlock_files(draft_id: str, token: str) -> dict:
+    """Allow new files to be added to the draft (sets files.enabled=true)."""
+    url = f"{ZENODO_BASE}/records/{draft_id}/draft"
+    body = json.dumps({"files": {"enabled": True}}).encode()
+    return _req("PUT", url, token=token, data=body)
+
+
+def upload_pdf(draft_id: str, pdf_path: Path, token: str):
+    """Upload a file to a draft using the InvenioRDM two-phase protocol:
+    1) POST /records/{id}/draft/files with [{"key": filename}] to declare
+    2) PUT  /records/{id}/draft/files/{filename}/content with the bytes
+    3) POST /records/{id}/draft/files/{filename}/commit
+    """
+    name = pdf_path.name
+    # 1) declare
+    declare_url = f"{ZENODO_BASE}/records/{draft_id}/draft/files"
+    declare_body = json.dumps([{"key": name}]).encode()
+    try:
+        _req("POST", declare_url, token=token, data=declare_body)
+    except urllib.error.HTTPError as e:
+        if e.code != 400:  # 400 may mean already declared, try to proceed
+            raise
+    # 2) upload content
+    content_url = f"{ZENODO_BASE}/records/{draft_id}/draft/files/{urllib.parse.quote(name)}/content"
+    with pdf_path.open("rb") as f:
+        data = f.read()
+    _req("PUT", content_url, token=token, data=data,
+         headers={"Content-Type": "application/octet-stream"})
+    # 3) commit
+    commit_url = f"{ZENODO_BASE}/records/{draft_id}/draft/files/{urllib.parse.quote(name)}/commit"
+    _req("POST", commit_url, token=token)
+    print(f"[zenodo] uploaded {name} ({len(data)/1024:.0f} KB)")
 
 
 def publish(draft_id: str, token: str) -> dict:
-    url = f"{ZENODO_BASE}/deposit/depositions/{draft_id}/actions/publish"
+    url = f"{ZENODO_BASE}/records/{draft_id}/draft/actions/publish"
     return _req("POST", url, token=token)
 
 
@@ -177,27 +198,32 @@ def main() -> int:
         print("(dry-run) would upload and publish a new version")
         return 0
 
-    # Published records are immutable: open a NEW VERSION, add PDFs,
-    # publish. Zenodo promotes existing files to the new version
-    # automatically, so the new record will have both zipball AND PDFs.
-    print("Opening new draft version via newversion action...")
-    nv = new_version(rec_id, token)
-    draft_url = nv.get("links", {}).get("latest_draft")
-    if not draft_url:
-        print(f"error: no latest_draft link on newversion response: {nv}",
-              file=sys.stderr)
+    # Published records are immutable: open a NEW VERSION via
+    # /records/{id}/versions (InvenioRDM API), import parent files,
+    # add PDFs, publish.
+    print("Opening new draft version...")
+    draft = new_version(rec_id, token)
+    draft_id = str(draft.get("id"))
+    if not draft_id or draft_id == "None":
+        print(f"error: no draft id in response: {draft}", file=sys.stderr)
         return 4
-    draft_id = re.search(r"/(\d+)(?:/|$)", draft_url).group(1)
-    draft = _req("GET", f"{ZENODO_BASE}/deposit/depositions/{draft_id}",
-                 token=token)
+    print(f"Draft {draft_id} created")
+
+    # Import parent's files (zipball) so the new version isn't empty.
+    try:
+        import_parent_files(draft_id, token)
+        print(f"Imported parent files into draft {draft_id}")
+    except urllib.error.HTTPError as e:
+        # Some drafts start with files unlocked or already imported
+        print(f"  (files-import returned {e.code}, continuing)")
 
     for p in missing:
-        upload_pdf(draft, p, token)
+        upload_pdf(draft_id, p, token)
 
-    # Publish
     print(f"Publishing draft {draft_id}...")
     published = publish(draft_id, token)
-    new_doi = published.get("doi")
+    new_doi = published.get("pids", {}).get("doi", {}).get("identifier") \
+        or published.get("doi")
     print(f"✓ Published new version. New DOI: {new_doi}")
     return 0
 

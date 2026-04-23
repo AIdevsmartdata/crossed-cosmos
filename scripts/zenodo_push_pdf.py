@@ -156,6 +156,9 @@ def main() -> int:
     ap.add_argument("--publish-draft", metavar="ID",
                     help="Publish an existing unsubmitted draft by ID "
                          "(skip newversion+upload). For resuming partial runs.")
+    ap.add_argument("--parent", metavar="ID",
+                    help="Parent record ID — only used with --publish-draft "
+                         "to restore metadata if it was mangled by a prior run.")
     ap.add_argument("--dry-run", action="store_true")
     args = ap.parse_args()
 
@@ -165,15 +168,22 @@ def main() -> int:
         if not token:
             print("error: ZENODO_TOKEN not set", file=sys.stderr); return 2
         draft_id = args.publish_draft
-        # Drafts created via the legacy `deposit/depositions/.../actions/
-        # newversion` endpoint carry legacy-shaped metadata. The new
-        # `/records/.../draft/actions/publish` endpoint validates against
-        # the InvenioRDM schema and fails on metadata.resource_type etc.
-        # Use the LEGACY publish endpoint instead — it accepts legacy
-        # drafts. For drafts created via the new API, call publish() as
-        # written in the full-flow path (not here).
+        parent_id = args.parent or ""
+        # Restore legacy metadata from parent (our earlier PUT stripped
+        # required fields) then publish via legacy endpoint.
+        if parent_id:
+            print(f"Fetching parent {parent_id} metadata to restore draft...")
+            parent = _req("GET", f"{ZENODO_BASE}/deposit/depositions/{parent_id}",
+                          token=token)
+            md = parent.get("metadata", {})
+            from datetime import date
+            md["publication_date"] = date.today().isoformat()
+            body = json.dumps({"metadata": md}).encode()
+            _req("PUT", f"{ZENODO_BASE}/deposit/depositions/{draft_id}",
+                 token=token, data=body)
+            print("[zenodo] metadata restored on draft")
         legacy_url = f"{ZENODO_BASE}/deposit/depositions/{draft_id}/actions/publish"
-        print(f"Publishing existing draft {draft_id} via legacy endpoint...")
+        print(f"Publishing draft {draft_id} via legacy endpoint...")
         published = _req("POST", legacy_url, token=token)
         new_doi = (published.get("doi")
                    or published.get("pids", {}).get("doi", {}).get("identifier"))

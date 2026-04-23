@@ -22,8 +22,12 @@ on:
   workflow_dispatch:
     inputs:
       tag:
-        description: "Release tag to (re)push"
-        required: true
+        description: "Release tag to push (new version + PDFs)"
+        required: false
+        type: string
+      publish_draft:
+        description: "Publish an existing Zenodo draft by ID (skip everything else)"
+        required: false
         type: string
 
 jobs:
@@ -32,13 +36,22 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Resume mode — publish existing draft
+        if: inputs.publish_draft != ''
+        env:
+          ZENODO_TOKEN: ${{ secrets.ZENODO_TOKEN }}
+        run: |
+          python3 scripts/zenodo_push_pdf.py --publish-draft "${{ inputs.publish_draft }}"
+
       - name: Determine tag
+        if: inputs.publish_draft == ''
         id: tag
         run: |
           TAG="${{ github.event.release.tag_name || inputs.tag }}"
           echo "tag=$TAG" >> "$GITHUB_OUTPUT"
 
       - name: Fetch release PDFs
+        if: inputs.publish_draft == ''
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
@@ -50,9 +63,11 @@ jobs:
           ls -la
 
       - name: Wait for Zenodo webhook to archive source
+        if: inputs.publish_draft == ''
         run: sleep 60
 
       - name: Push PDFs to Zenodo record
+        if: inputs.publish_draft == ''
         env:
           ZENODO_TOKEN: ${{ secrets.ZENODO_TOKEN }}
           TAG: ${{ steps.tag.outputs.tag }}

@@ -153,8 +153,24 @@ def main() -> int:
     ap.add_argument("--pdf-dir", help="Dir containing PDF assets")
     ap.add_argument("--pdf", nargs="*", default=[],
                     help="Explicit PDF paths to upload")
+    ap.add_argument("--publish-draft", metavar="ID",
+                    help="Publish an existing unsubmitted draft by ID "
+                         "(skip newversion+upload). For resuming partial runs.")
     ap.add_argument("--dry-run", action="store_true")
     args = ap.parse_args()
+
+    # Resume mode: draft already created, just publish it.
+    if args.publish_draft:
+        token = os.environ.get("ZENODO_TOKEN")
+        if not token:
+            print("error: ZENODO_TOKEN not set", file=sys.stderr); return 2
+        draft_id = args.publish_draft
+        print(f"Publishing existing draft {draft_id}...")
+        published = publish(draft_id, token)
+        new_doi = (published.get("pids", {}).get("doi", {}).get("identifier")
+                   or published.get("doi"))
+        print(f"✓ Published. New DOI: {new_doi}")
+        return 0
 
     token = os.environ.get("ZENODO_TOKEN")
     if not token and not args.dry_run:

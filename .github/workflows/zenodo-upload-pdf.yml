@@ -1,0 +1,60 @@
+name: Upload release PDFs to Zenodo
+
+# Pourquoi ce workflow : le webhook GitHub → Zenodo par défaut
+# n'archive QUE le tarball source (zipball). Les assets PDF qu'on
+# upload à la release sont absents du record Zenodo. Ce job push
+# les PDFs directement via l'API Zenodo quand une release publie.
+#
+# Requis :
+#   - Secret GH ZENODO_TOKEN (scope deposit:write)
+#     créé sur https://zenodo.org/account/settings/applications/tokens/new
+#
+# Behavior :
+#   - Attend ~60s que le webhook Zenodo crée le record pour le tag
+#   - Résout le record via l'API (concept DOI + version)
+#   - Upload chaque PDF trouvé dans les assets de la release
+#   - Si le record est déjà publié, crée une "new version" avec PDF
+#     (fallback pour les retries)
+
+on:
+  release:
+    types: [published]
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: "Release tag to (re)push"
+        required: true
+        type: string
+
+jobs:
+  upload:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Determine tag
+        id: tag
+        run: |
+          TAG="${{ github.event.release.tag_name || inputs.tag }}"
+          echo "tag=$TAG" >> "$GITHUB_OUTPUT"
+
+      - name: Fetch release PDFs
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          mkdir -p pdfs
+          cd pdfs
+          gh release download "${{ steps.tag.outputs.tag }}" \
+            -R "${{ github.repository }}" \
+            --pattern "*.pdf" || echo "no PDF in release — skipping"
+          ls -la
+
+      - name: Wait for Zenodo webhook to archive source
+        run: sleep 60
+
+      - name: Push PDFs to Zenodo record
+        env:
+          ZENODO_TOKEN: ${{ secrets.ZENODO_TOKEN }}
+          TAG: ${{ steps.tag.outputs.tag }}
+        run: |
+          python3 scripts/zenodo_push_pdf.py --tag "$TAG" --pdf-dir pdfs

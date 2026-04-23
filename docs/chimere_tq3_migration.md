@@ -218,6 +218,43 @@ la dernière valeur H0 DESI DR2 en 2025, cite l'arXiv ID":
 | 8084 | odo | (proxies to 8083) | Python | **active** |
 | Docker | searxng, perplexica, cobalt-api | — | — | up |
 
+## OCR / multimodal branch (enabled post-launch)
+
+Downloaded `mmproj-BF16.gguf` (861 MB) from
+`YTan2000/Qwen3.6-35B-A3B-TQ3_4S` to `~/.openclaw/models/Qwen3.6-35B-A3B-TQ3_4S/`,
+wired into `qwen-tq3.service` with:
+```
+--mmproj /home/remondiere/.openclaw/models/Qwen3.6-35B-A3B-TQ3_4S/mmproj-BF16.gguf
+--no-mmproj-offload
+```
+`--no-mmproj-offload` keeps the projector resident in DDR (not VRAM),
+preserving the 2.5 GB VRAM headroom for longer contexts. Post-restart
+VRAM is unchanged at **13389 MiB used / 2463 MiB free**. Text-generation
+throughput unaffected (smoke test still 102 tok/s).
+
+The APEX-side `mmproj-F16.gguf` (858 MB, same size) is likely
+interchangeable with the TQ3 `mmproj-BF16.gguf` — they are both vision
+projectors for the Qwen3.6-35B-A3B base — but we use the YTan2000-provided
+BF16 for consistency with the turbo-tan build convention.
+
+## Secrets audit post-migration (2026-04-23)
+
+Re-scan executed on the new state (planning-agent outputs added to the
+repo during this session). Verdict: **CLEAN**.
+- API key patterns (Anthropic, Mistral OWB8Ey, Brave BSAfVcm, HF
+  JxQeBGh, OpenClaw Gateway f29425d5, Telegram 8386409837): all hits
+  are self-references in `security_scan_{A,B}` docs listing the patterns
+  searched for. No actual credentials leaked.
+- Third-party emails present only in academic RAG cache, hi_class
+  maintainer attribution (Benjamin Audren — open-source attribution),
+  and vast.ai template example. All classified LOW and retained in
+  earlier audit.
+- `~/.openclaw/` path references appear in the new Piste-D / tq3-*
+  planning docs and in `derivations/V8-tq3-{preflight,launch}.sh` —
+  consistent with the existing LOW/MEDIUM tolerance from the original
+  security scan (documentation + executable scripts). No new HIGH
+  findings.
+
 ## Remaining work (out of scope for this session)
 
 - **GATED edits G1/G2/G3** (after a week of real-use stability on TQ3)

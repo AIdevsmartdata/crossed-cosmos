@@ -165,6 +165,18 @@ def main() -> int:
         if not token:
             print("error: ZENODO_TOKEN not set", file=sys.stderr); return 2
         draft_id = args.publish_draft
+        # InvenioRDM requires publication_date on the draft before publish
+        # (it is NOT auto-inherited from parent on newversion).
+        from datetime import date
+        draft_url = f"{ZENODO_BASE}/records/{draft_id}/draft"
+        current = _req("GET", draft_url, token=token)
+        md = current.get("metadata", {})
+        if not md.get("publication_date"):
+            md["publication_date"] = date.today().isoformat()
+            payload = {"metadata": md}
+            body = json.dumps(payload).encode()
+            _req("PUT", draft_url, token=token, data=body)
+            print(f"[zenodo] set publication_date = {md['publication_date']}")
         print(f"Publishing existing draft {draft_id}...")
         published = publish(draft_id, token)
         new_doi = (published.get("pids", {}).get("doi", {}).get("identifier")

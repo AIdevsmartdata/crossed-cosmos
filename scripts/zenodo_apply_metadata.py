@@ -183,17 +183,16 @@ def _normalize_metadata(md: dict) -> dict:
        DataCite — map to "references" (semantic-equivalent, on-list).
     Source JSONs stay human-readable with CamelCase and isRelatedTo.
     """
-    # Zenodo's accepted relations (lowercase, from their REST API docs)
+    # Zenodo's accepted relations (empirically tested 2026-04-24 — their API
+    # rejects even values listed in DataCite/Zenodo docs). Minimal safe set:
     ZENODO_RELATIONS = {
         "iscitedby", "cites", "issupplementto", "issupplementedby",
-        "iscontinuedby", "continues", "isdescribedby", "describes",
-        "hasmetadata", "ismetadatafor", "isnewversionof", "ispreviousversionof",
+        "isnewversionof", "ispreviousversionof",
         "ispartof", "haspart", "isreferencedby", "references",
-        "isdocumentedby", "documents", "iscompiledby", "compiles",
-        "isvariantformof", "isoriginalformof", "isidenticalto",
-        "isalternateidentifier", "isreviewedby", "reviews",
-        "isderivedfrom", "issourceof", "requires", "isrequiredby",
-        "obsoletes", "isobsoletedby",
+        "isderivedfrom", "issourceof",
+        "isversionof",  # confirmed accepted
+        "hasversion",
+        "requires", "isrequiredby",
     }
     # Map DataCite-only values to Zenodo-accepted equivalents
     RELATION_FALLBACKS = {

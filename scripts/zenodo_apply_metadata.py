@@ -298,6 +298,20 @@ def main() -> int:
         if explicit_ids:
             print(f"[zenodo] --ids override: {explicit_ids}")
 
+    # DEBUG — show first 4 records so we can see why matching fails
+    print("\n=== DEBUG: first 4 records seen by apply path ===")
+    for rec in versions[:4]:
+        rid = str(rec.get("id", ""))
+        md = rec.get("metadata", {})
+        version = md.get("version", "")
+        files = rec.get("files", [])
+        title = md.get("title", "")
+        key_pv = classify_by_version(version)
+        key_ex = explicit_ids.get(rid)
+        print(f"  id={rid} version={version!r} files_n={len(files)} "
+              f"title[0:40]={title[:40]!r} key_pv={key_pv} key_ex={key_ex}")
+    print()
+
     for rec in versions:
         rid = str(rec.get("id", ""))
         md = rec.get("metadata", {})

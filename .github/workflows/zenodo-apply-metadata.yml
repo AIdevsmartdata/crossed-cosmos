@@ -1,0 +1,99 @@
+name: Zenodo apply metadata
+
+# Manually-triggered workflow that runs zenodo_apply_metadata.py against the
+# ECI concept DOI (10.5281/zenodo.19686398). Uses the ZENODO_TOKEN secret —
+# never exposed in logs or artifacts. Always dry-run by default; apply and
+# publish require explicit inputs AND the paranoid-confirm input.
+
+on:
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: "Mode: dry-run (diff only) | apply (save drafts) | publish (save + publish)"
+        type: choice
+        required: true
+        default: dry-run
+        options:
+          - dry-run
+          - apply
+          - publish
+      only:
+        description: "Target spec: all | v5 | v6 | v7 | omega"
+        type: choice
+        required: true
+        default: all
+        options:
+          - all
+          - v5
+          - v6
+          - v7
+          - omega
+      confirm_publish:
+        description: "Type YES-PUBLISH to allow publish (safety check)"
+        required: false
+        default: ""
+
+jobs:
+  zenodo-apply:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Show spec files
+        run: |
+          echo "== Spec files =="
+          ls -la scripts/zenodo_metadata/
+          echo "== Script =="
+          head -30 scripts/zenodo_apply_metadata.py
+
+      - name: Resolve mode
+        id: mode
+        env:
+          MODE: ${{ inputs.mode }}
+          ONLY: ${{ inputs.only }}
+          CONFIRM: ${{ inputs.confirm_publish }}
+        run: |
+          case "$MODE" in
+            dry-run) FLAGS="--dry-run" ;;
+            apply)   FLAGS="--apply"   ;;
+            publish)
+              if [ "$CONFIRM" != "YES-PUBLISH" ]; then
+                echo "::error::publish mode requires confirm_publish=YES-PUBLISH"
+                exit 1
+              fi
+              FLAGS="--apply --publish --confirm"
+              ;;
+            *) echo "::error::unknown mode $MODE"; exit 1 ;;
+          esac
+          if [ "$ONLY" != "all" ]; then
+            FLAGS="$FLAGS --only $ONLY"
+          fi
+          echo "flags=$FLAGS" >> $GITHUB_OUTPUT
+          echo "effective flags: $FLAGS"
+
+      - name: Run Zenodo apply metadata
+        env:
+          ZENODO_TOKEN: ${{ secrets.ZENODO_TOKEN }}
+          ZENODO_SPEC_DIR: ${{ github.workspace }}/scripts/zenodo_metadata
+          FLAGS: ${{ steps.mode.outputs.flags }}
+        run: |
+          if [ -z "$ZENODO_TOKEN" ]; then
+            echo "::error::ZENODO_TOKEN secret is not set on this repo"
+            exit 1
+          fi
+          python3 scripts/zenodo_apply_metadata.py $FLAGS
+
+      - name: Post-run summary
+        if: always()
+        run: |
+          echo "### Run summary" >> $GITHUB_STEP_SUMMARY
+          echo "- mode: ${{ inputs.mode }}" >> $GITHUB_STEP_SUMMARY
+          echo "- only: ${{ inputs.only }}" >> $GITHUB_STEP_SUMMARY
+          echo "- status: ${{ job.status }}" >> $GITHUB_STEP_SUMMARY

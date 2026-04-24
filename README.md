@@ -7,6 +7,7 @@
 [![ORCID](https://img.shields.io/badge/ORCID-0009--0008--2443--7166-a6ce39)](https://orcid.org/0009-0008-2443-7166)
 [![arXiv](https://img.shields.io/badge/arXiv-pending%20endorsement-b31b1b)](https://arxiv.org/a/remondiere_k_1)
 [![HAL](https://img.shields.io/badge/HAL-planned-critical)](https://hal.science/)
+[![Papers index](https://img.shields.io/badge/papers-index-blue)](PAPERS.md)
 [![Tests](https://github.com/AIdevsmartdata/crossed-cosmos/actions/workflows/tests.yml/badge.svg)](https://github.com/AIdevsmartdata/crossed-cosmos/actions/workflows/tests.yml)
 
 **Keywords** — cosmology · quantum gravity · dark energy · non-minimal coupling · quintessence · von Neumann algebras · crossed product · DESI DR2 · Pantheon+ · early dark energy · dark dimension · swampland · persistent homology · cryptographic censorship · generalised second law · hep-th · gr-qc · astro-ph.CO
@@ -63,6 +64,7 @@ Direct PDF downloads (clickable from phone — no LaTeX build needed):
 
 ## Read it
 
+- [`PAPERS.md`](PAPERS.md) — landing page indexing all 4 preprints (v5, v6, v7-note, Chimère Ω) with abstracts, tags, status
 - `paper/eci.tex` — v5 RevTeX source (phenomenological)
 - `paper/v6/v6_jhep.tex` — v6 RevTeX source (formal)
 - `paper/v6/RELEASE_NOTES.md` — v6 release notes and audit trail

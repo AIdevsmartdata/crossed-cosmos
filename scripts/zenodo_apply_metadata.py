@@ -176,6 +176,24 @@ def diff_metadata(current: dict, target: dict) -> list[str]:
     return changes
 
 
+def _normalize_metadata(md: dict) -> dict:
+    """Zenodo API requires DataCite relation values in lowercase (e.g.
+    'isrelatedto' not 'isRelatedTo'). Normalize our JSON specs on the fly
+    so the source files stay human-readable."""
+    out = {k: v for k, v in md.items()}
+    rel = out.get("related_identifiers")
+    if isinstance(rel, list):
+        fixed = []
+        for r in rel:
+            if isinstance(r, dict) and "relation" in r:
+                r = dict(r)
+                r["relation"] = str(r["relation"]).lower()
+            fixed.append(r)
+        out["related_identifiers"] = fixed
+    # Same for contributors[].type etc. if ever needed (not used today).
+    return out
+
+
 def update_record(dep_id: str, metadata: dict, token: str,
                   publish: bool = False) -> dict:
     """Open edit mode on a published record, PUT new metadata, optionally publish."""
@@ -188,7 +206,7 @@ def update_record(dep_id: str, metadata: dict, token: str,
         if e.code not in (400, 403):  # 400 ≈ already in edit; 403 ≈ maybe unsubmitted
             raise
 
-    body = json.dumps({"metadata": metadata}).encode()
+    body = json.dumps({"metadata": _normalize_metadata(metadata)}).encode()
     updated = _req("PUT",
                    f"{ZENODO_BASE}/deposit/depositions/{dep_id}",
                    token=token, data=body)

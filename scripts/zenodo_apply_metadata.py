@@ -85,24 +85,43 @@ def _req(method: str, url: str, token: Optional[str] = None,
 
 # ----------------------------- Classification -----------------------------
 def classify(title: str) -> Optional[str]:
-    """Return spec key ('v5','v6','v7','omega') or None from a record title."""
+    """Legacy title-based classifier (kept for reference / fallback)."""
     t = title.lower()
-    # Skip v4 framework paper itself
     if " v4" in t or t.startswith("eci v4"):
-        # could be the original v4 – leave alone unless caller asks
         return None
-    # Chimere Omega
     if "omega" in t or "Ω" in title or "chimère" in t or "chimere ω" in t:
         return "omega"
-    # v7-note (Riemann / BK / Odlyzko)
     if " v7" in t or "v7-note" in t or "riemann" in t or "bogomolny" in t or "odlyzko" in t:
         return "v7"
-    # v6 (GSL / type-II / Faulkner-Speranza)
     if " v6" in t or "type-ii" in t or "gsl" in t or "faulkner" in t or "crossed-product algebras" in t:
         return "v6"
-    # v5 (DESI / quintessence / Pantheon)
     if " v5" in t or "desi dr2" in t or "quintessence" in t or "pantheon" in t or "non-minimally coupled" in t:
         return "v5"
+    return None
+
+
+def classify_by_version(version: str) -> Optional[str]:
+    """Primary classifier — uses Zenodo's `version` field (git tag).
+
+    v4.*                → None (framework paper, leave as-is)
+    v5.* / v5.0-preview → v5
+    v6.*                → v6
+    v7-note-* / v7.*    → v7
+    chimere-omega-*     → omega
+    """
+    if not version:
+        return None
+    v = version.lower().strip()
+    if v.startswith("chimere-omega") or v == "omega" or v.startswith("omega-"):
+        return "omega"
+    if v.startswith("v7-note") or v.startswith("v7.") or v == "v7":
+        return "v7"
+    if v.startswith("v6"):
+        return "v6"
+    if v.startswith("v5"):
+        return "v5"
+    if v.startswith("v4"):
+        return None  # framework paper — leave alone
     return None
 
 
@@ -247,61 +266,81 @@ def main() -> int:
         print(f"\n[zenodo] list done ({len(versions)} records).")
         return 0
 
-    # Match each record to a spec
-    matched: dict[str, dict] = {}   # spec_key -> chosen record
+    # Match each record by `version` field. Option A semantics (2026-04-24):
+    # every version of the v5 / v6 / v7-note / chimere-omega papers receives
+    # the corresponding metadata. Only v4.* (framework paper) is left alone.
+    matched: dict[str, list[dict]] = {k: [] for k in targets}
     unmatched: list[dict] = []
+    skipped_no_files: list[dict] = []
     for rec in versions:
         md = rec.get("metadata", {})
-        title = md.get("title", "")
-        key = classify(title)
+        version = md.get("version", "")
+        key = classify_by_version(version)
         if key and key in targets:
-            # Most-recent heuristic: keep the *latest* pub_date per spec
-            prev = matched.get(key)
-            if prev is None or md.get("publication_date", "") > \
-                    prev.get("metadata", {}).get("publication_date", ""):
-                matched[key] = rec
+            # Skip records with no files (likely in-progress drafts). These
+            # are usually the "edit" siblings of a published record with the
+            # same DOI — editing them would collide at publish time.
+            if not rec.get("files"):
+                skipped_no_files.append(rec)
+                continue
+            matched[key].append(rec)
         else:
             unmatched.append(rec)
 
-    # Report
-    print("\n=== MATCHING ===")
-    for k in targets:
-        rec = matched.get(k)
-        if rec is None:
-            print(f"  [{k:>5}] NO MATCH found in {len(versions)} versions")
-        else:
-            print(f"  [{k:>5}] → dep_id={rec.get('id')} "
-                  f"cur_ver={rec.get('metadata',{}).get('version','?'):>10} "
-                  f"title={rec.get('metadata',{}).get('title','')[:70]}")
+    # Sort each bucket by version so the diff is readable
+    for k in matched:
+        matched[k].sort(key=lambda r: r.get("metadata", {}).get("version", ""))
 
-    if unmatched:
-        print(f"\n  ({len(unmatched)} records un-targeted, will be left alone)")
+    # Report
+    print("\n=== MATCHING (by version prefix) ===")
+    total_matched = 0
+    for k in targets:
+        recs = matched.get(k, [])
+        total_matched += len(recs)
+        if not recs:
+            print(f"  [{k:>5}] no records match")
+        else:
+            print(f"  [{k:>5}] {len(recs)} record(s):")
+            for rec in recs:
+                ver = rec.get("metadata", {}).get("version", "?")
+                print(f"            id={rec.get('id')}  version={ver}")
+
+    print(f"\n  ({len(unmatched)} records un-targeted = framework v4.* + any "
+          f"uncaught; will be left alone)")
+    if skipped_no_files:
+        print(f"  ({len(skipped_no_files)} records skipped — no files, "
+              f"likely edit-drafts):")
+        for rec in skipped_no_files:
+            ver = rec.get("metadata", {}).get("version", "?")
+            print(f"      id={rec.get('id')} version={ver}")
+
+    print(f"\n  TOTAL to update: {total_matched} record(s)")
 
     # Per-record action
     for k, target_md in targets.items():
-        rec = matched.get(k)
-        if rec is None:
-            continue
-        dep_id = str(rec["id"])
-        print(f"\n=== [{k}] record {dep_id} ===")
-        changes = diff_metadata(rec.get("metadata", {}), target_md)
-        if not changes:
-            print("  (no metadata change)")
-            continue
-        for c in changes:
-            print(c)
+        recs = matched.get(k, [])
+        for rec in recs:
+            dep_id = str(rec["id"])
+            ver = rec.get("metadata", {}).get("version", "?")
+            print(f"\n=== [{k}] id={dep_id} version={ver} ===")
+            changes = diff_metadata(rec.get("metadata", {}), target_md)
+            if not changes:
+                print("  (no metadata change)")
+                continue
+            for c in changes:
+                print(c)
 
-        if args.dry_run:
-            print("  (dry-run — skipping PUT)")
-            continue
+            if args.dry_run:
+                print("  (dry-run — skipping PUT)")
+                continue
 
-        print("  → PUT /deposit/depositions/{id}  ...")
-        try:
-            update_record(dep_id, target_md, token,
-                          publish=(args.publish and args.confirm))
-            print("  ✓ updated" + (" & published" if args.publish else " (draft)"))
-        except urllib.error.HTTPError as e:
-            print(f"  ✗ failed HTTP {e.code}", file=sys.stderr)
+            print("  → PUT /deposit/depositions/{id}  ...")
+            try:
+                update_record(dep_id, target_md, token,
+                              publish=(args.publish and args.confirm))
+                print("  ✓ updated" + (" & published" if args.publish else " (draft)"))
+            except urllib.error.HTTPError as e:
+                print(f"  ✗ failed HTTP {e.code}", file=sys.stderr)
 
     print("\n[zenodo] done.")
     return 0

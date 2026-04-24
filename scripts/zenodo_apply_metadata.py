@@ -125,6 +125,26 @@ def classify_by_version(version: str) -> Optional[str]:
     return None
 
 
+def classify_by_title(title: str) -> Optional[str]:
+    """Fallback classifier by title keywords — used when `version` field was
+    already rewritten to a bare "5.0.2" / "0.1" form by a previous apply.
+    The post-apply titles are distinctive enough to disambiguate.
+    """
+    if not title:
+        return None
+    t = title.lower()
+    if "chimère ω" in t or "chimere ω" in t or "chimere-omega" in t or "chimère omega" in t:
+        return "omega"
+    if "eci v7" in t or "v7-note" in t or "empirical bogomolny" in t or "odlyzko" in t:
+        return "v7"
+    if "eci v6" in t or "faulkner" in t or "generalised second law" in t:
+        return "v6"
+    if "eci v5" in t or "desi dr2" in t or "pantheon+" in t or "phenomenological framework with desi" in t:
+        return "v5"
+    # Don't match generic "ECI v4 — ..." — that's the framework paper.
+    return None
+
+
 # ----------------------------- Versions list -----------------------------
 def list_concept_versions(token: str) -> list[dict]:
     """List every version of the concept record via deposit API.
@@ -316,18 +336,22 @@ def main() -> int:
         rid = str(rec.get("id", ""))
         md = rec.get("metadata", {})
         version = md.get("version", "")
-        # Explicit id overrides take priority over version-based classification.
+        title = md.get("title", "")
+        state = rec.get("state", "")
+        # Explicit id overrides > version classify > title classify.
         if rid in explicit_ids:
             key = explicit_ids[rid]
         else:
-            key = classify_by_version(version)
+            key = classify_by_version(version) or classify_by_title(title)
         if key and key in targets:
-            # Skip records with no files (likely in-progress drafts). These
-            # are usually the "edit" siblings of a published record with the
-            # same DOI — editing them would collide at publish time.
-            # Note: --ids override still respects this guard by default,
-            # because the edit-draft sibling WILL cause a publish-time conflict.
-            if not rec.get("files"):
+            # No-files guard: only skip records that are UNSUBMITTED (brand
+            # new drafts with no content). `state == "inprogress"` is an
+            # edit-draft of a published record — files live on the parent
+            # record and the publish action handles inheritance. `state ==
+            # "done"` is a published record (we want to edit it). Explicit
+            # --ids override bypasses the guard entirely.
+            files_ok = bool(rec.get("files")) or state in ("inprogress", "done") or rid in explicit_ids
+            if not files_ok:
                 skipped_no_files.append(rec)
                 continue
             matched[key].append(rec)

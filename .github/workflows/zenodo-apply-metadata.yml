@@ -33,6 +33,10 @@ on:
         description: "Type YES-PUBLISH to allow publish (safety check)"
         required: false
         default: ""
+      ids:
+        description: "Optional explicit ID→key map, e.g. 'v5=19701245,v6=19708665'. Bypasses version-based matching."
+        required: false
+        default: ""
 
 jobs:
   zenodo-apply:
@@ -76,6 +80,9 @@ jobs:
           esac
           if [ "$ONLY" != "all" ]; then
             FLAGS="$FLAGS --only $ONLY"
+          fi
+          if [ -n "${{ inputs.ids }}" ]; then
+            FLAGS="$FLAGS --ids ${{ inputs.ids }}"
           fi
           echo "flags=$FLAGS" >> $GITHUB_OUTPUT
           echo "effective flags: $FLAGS"

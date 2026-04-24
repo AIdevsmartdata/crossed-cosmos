@@ -194,6 +194,11 @@ def main() -> int:
                     help="Required with --publish to prevent accidental publication.")
     ap.add_argument("--only", choices=list(SPECS.keys()) + ["all"],
                     default="all", help="Target a single spec or all.")
+    ap.add_argument("--ids", default="",
+                    help="Explicit record-id → spec map, comma-separated: "
+                         "e.g. 'v5=19701245,v6=19708665,v7=19700036,omega=19700868'. "
+                         "Bypasses classify_by_version — useful when drafts are "
+                         "already PUT and classify no longer matches.")
     ap.add_argument("--list", action="store_true",
                     help="List every record under the concept with all "
                          "disambiguating fields (id, title, version, filename, "
@@ -272,14 +277,42 @@ def main() -> int:
     matched: dict[str, list[dict]] = {k: [] for k in targets}
     unmatched: list[dict] = []
     skipped_no_files: list[dict] = []
+
+    # Pre-compute explicit id→key overrides from --ids flag, if any.
+    explicit_ids: dict[str, str] = {}   # rec_id (str) → spec_key
+    if args.ids:
+        for entry in args.ids.split(","):
+            entry = entry.strip()
+            if not entry:
+                continue
+            if "=" not in entry:
+                print(f"warn: --ids entry '{entry}' ignored (missing '=')", file=sys.stderr)
+                continue
+            k, rid = entry.split("=", 1)
+            k = k.strip()
+            rid = rid.strip()
+            if k not in SPECS:
+                print(f"warn: --ids key '{k}' unknown (expected one of {list(SPECS.keys())})", file=sys.stderr)
+                continue
+            explicit_ids[rid] = k
+        if explicit_ids:
+            print(f"[zenodo] --ids override: {explicit_ids}")
+
     for rec in versions:
+        rid = str(rec.get("id", ""))
         md = rec.get("metadata", {})
         version = md.get("version", "")
-        key = classify_by_version(version)
+        # Explicit id overrides take priority over version-based classification.
+        if rid in explicit_ids:
+            key = explicit_ids[rid]
+        else:
+            key = classify_by_version(version)
         if key and key in targets:
             # Skip records with no files (likely in-progress drafts). These
             # are usually the "edit" siblings of a published record with the
             # same DOI — editing them would collide at publish time.
+            # Note: --ids override still respects this guard by default,
+            # because the edit-draft sibling WILL cause a publish-time conflict.
             if not rec.get("files"):
                 skipped_no_files.append(rec)
                 continue

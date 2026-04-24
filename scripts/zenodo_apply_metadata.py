@@ -39,12 +39,27 @@ from typing import Optional
 ZENODO_BASE = "https://zenodo.org/api"
 CONCEPT_RECID = "19686398"   # concept DOI 10.5281/zenodo.19686398
 
-BUREAU = Path("~/Bureau").expanduser()
+# Spec dir resolution (CI-safe):
+#   1. $ZENODO_SPEC_DIR if set (workflow passes this)
+#   2. <this script's dir>/zenodo_metadata/ if it exists (repo layout)
+#   3. ~/Bureau/ if the v5 file is there (Kevin's workstation)
+_env_dir = os.environ.get("ZENODO_SPEC_DIR")
+_repo_dir = Path(__file__).resolve().parent / "zenodo_metadata"
+_bureau_dir = Path("~/Bureau").expanduser()
+if _env_dir:
+    SPEC_DIR = Path(_env_dir)
+elif _repo_dir.exists():
+    SPEC_DIR = _repo_dir
+elif (_bureau_dir / "zenodo-v5-2026-04-24.json").exists():
+    SPEC_DIR = _bureau_dir
+else:
+    SPEC_DIR = _repo_dir  # default, may fail with clear error below
+
 SPECS = {
-    "v5":    BUREAU / "zenodo-v5-2026-04-24.json",
-    "v6":    BUREAU / "zenodo-v6-2026-04-24.json",
-    "v7":    BUREAU / "zenodo-v7-2026-04-24.json",
-    "omega": BUREAU / "zenodo-chimere-omega-2026-04-24.json",
+    "v5":    SPEC_DIR / "zenodo-v5-2026-04-24.json",
+    "v6":    SPEC_DIR / "zenodo-v6-2026-04-24.json",
+    "v7":    SPEC_DIR / "zenodo-v7-2026-04-24.json",
+    "omega": SPEC_DIR / "zenodo-chimere-omega-2026-04-24.json",
 }
 
 

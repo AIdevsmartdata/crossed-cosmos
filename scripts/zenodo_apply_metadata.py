@@ -175,9 +175,15 @@ def main() -> int:
                     help="Required with --publish to prevent accidental publication.")
     ap.add_argument("--only", choices=list(SPECS.keys()) + ["all"],
                     default="all", help="Target a single spec or all.")
+    ap.add_argument("--list", action="store_true",
+                    help="List every record under the concept with all "
+                         "disambiguating fields (id, title, version, filename, "
+                         "pub_date, related_identifiers). No classification, "
+                         "no changes. Use this first when the 4 records all "
+                         "inherit the same generic title.")
     args = ap.parse_args()
 
-    if not args.apply and not args.publish:
+    if not args.apply and not args.publish and not args.list:
         args.dry_run = True
 
     if args.publish and not (args.apply and args.confirm):
@@ -209,6 +215,37 @@ def main() -> int:
               f"Token scope must include `deposit:write`.", file=sys.stderr)
         return 4
     print(f"[zenodo] {len(versions)} records under concept")
+
+    # --list mode: print everything disambiguating, then exit.
+    if args.list:
+        print("\n=== RECORD LISTING (no changes) ===")
+        # Sort by publication_date descending so newest is first
+        sorted_recs = sorted(
+            versions,
+            key=lambda r: r.get("metadata", {}).get("publication_date", ""),
+            reverse=True,
+        )
+        for rec in sorted_recs:
+            rid = rec.get("id")
+            doi = rec.get("doi") or rec.get("conceptdoi") or "—"
+            md = rec.get("metadata", {})
+            title = md.get("title", "")
+            version = md.get("version", "")
+            pub = md.get("publication_date", "")
+            files = rec.get("files", [])
+            filenames = [f.get("filename", "?") for f in files]
+            rel = md.get("related_identifiers", [])
+            rel_brief = [f"{r.get('relation','?')}={r.get('identifier','?')}" for r in rel[:3]]
+            print(f"\n  id={rid}  doi={doi}  pub={pub}")
+            print(f"    title   : {title[:120]}")
+            if version:
+                print(f"    version : {version}")
+            if filenames:
+                print(f"    files   : {filenames[:3]}")
+            if rel_brief:
+                print(f"    rels    : {rel_brief}")
+        print(f"\n[zenodo] list done ({len(versions)} records).")
+        return 0
 
     # Match each record to a spec
     matched: dict[str, dict] = {}   # spec_key -> chosen record

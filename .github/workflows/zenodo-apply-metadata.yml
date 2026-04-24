@@ -9,11 +9,12 @@ on:
   workflow_dispatch:
     inputs:
       mode:
-        description: "Mode: dry-run (diff only) | apply (save drafts) | publish (save + publish)"
+        description: "Mode: list (dump records) | dry-run (diff only) | apply | publish"
         type: choice
         required: true
-        default: dry-run
+        default: list
         options:
+          - list
           - dry-run
           - apply
           - publish
@@ -61,6 +62,7 @@ jobs:
           CONFIRM: ${{ inputs.confirm_publish }}
         run: |
           case "$MODE" in
+            list)    FLAGS="--list"    ;;
             dry-run) FLAGS="--dry-run" ;;
             apply)   FLAGS="--apply"   ;;
             publish)

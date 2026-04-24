@@ -177,9 +177,28 @@ def diff_metadata(current: dict, target: dict) -> list[str]:
 
 
 def _normalize_metadata(md: dict) -> dict:
-    """Zenodo API requires DataCite relation values in lowercase (e.g.
-    'isrelatedto' not 'isRelatedTo'). Normalize our JSON specs on the fly
-    so the source files stay human-readable."""
+    """Normalize metadata for Zenodo's deposit API:
+    1. relation values → lowercase (Zenodo requires "isversionof" not "isVersionOf")
+    2. "isrelatedto" is NOT on Zenodo's accepted list despite being valid
+       DataCite — map to "references" (semantic-equivalent, on-list).
+    Source JSONs stay human-readable with CamelCase and isRelatedTo.
+    """
+    # Zenodo's accepted relations (lowercase, from their REST API docs)
+    ZENODO_RELATIONS = {
+        "iscitedby", "cites", "issupplementto", "issupplementedby",
+        "iscontinuedby", "continues", "isdescribedby", "describes",
+        "hasmetadata", "ismetadatafor", "isnewversionof", "ispreviousversionof",
+        "ispartof", "haspart", "isreferencedby", "references",
+        "isdocumentedby", "documents", "iscompiledby", "compiles",
+        "isvariantformof", "isoriginalformof", "isidenticalto",
+        "isalternateidentifier", "isreviewedby", "reviews",
+        "isderivedfrom", "issourceof", "requires", "isrequiredby",
+        "obsoletes", "isobsoletedby",
+    }
+    # Map DataCite-only values to Zenodo-accepted equivalents
+    RELATION_FALLBACKS = {
+        "isrelatedto": "references",
+    }
     out = {k: v for k, v in md.items()}
     rel = out.get("related_identifiers")
     if isinstance(rel, list):
@@ -187,10 +206,17 @@ def _normalize_metadata(md: dict) -> dict:
         for r in rel:
             if isinstance(r, dict) and "relation" in r:
                 r = dict(r)
-                r["relation"] = str(r["relation"]).lower()
+                lowered = str(r["relation"]).lower()
+                if lowered in RELATION_FALLBACKS:
+                    lowered = RELATION_FALLBACKS[lowered]
+                if lowered not in ZENODO_RELATIONS:
+                    # unknown relation — drop the entry to avoid 400
+                    print(f"[zenodo] dropping unsupported relation '{r['relation']}' on {r.get('identifier', '?')}",
+                          file=sys.stderr)
+                    continue
+                r["relation"] = lowered
             fixed.append(r)
         out["related_identifiers"] = fixed
-    # Same for contributors[].type etc. if ever needed (not used today).
     return out
 
 

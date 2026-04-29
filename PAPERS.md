@@ -120,15 +120,15 @@ cd paper/v7_note && latexmk -pdf v7_note.tex
 **Target venue.** workshop track (NeurIPS workshop, ICML workshop, COLM). NOT a theorem paper.
 
 **Abstract (TL;DR).**
-Blueprint paper proposing an architecture for a local-first physico-cognitively-inspired LLM runtime, citing verified 2025–2026 SOTA on hybrid Mamba-2 / attention architectures. Three falsifiable hypotheses:
+Blueprint paper proposing an architecture for a local-first physico-cognitively-inspired LLM runtime, citing verified 2025–2026 SOTA on hybrid Mamba-2 / attention architectures (Qwen3-Next, Nemotron-H arXiv:2504.03624, Granite-4.0). Three falsifiable hypotheses:
 
-- **H1** — compositional MoE router conditioned by persistent-homology features of hidden states improves long-range reasoning beyond pure top-k gating.
-- **H2** — Engram-based long-term memory with modular-covariance retrieval yields cheaper context-window emulation at matched quality.
-- **H3** — local-first privacy constraint is compatible with ≥ 90% of cloud-scale dense-model quality under 8 GB VRAM.
+- **H1** — Free-Energy under Censorship (FEC) objective with SAE + SIGReg auxiliary terms improves long-range reasoning over standard cross-entropy training.
+- **H2** — RG-flow-inspired MoE coarse-graining yields scale-aware expert specialisation cheaper than uniform top-k gating.
+- **H3** — Engram write policy gated by `(Surprise_B, V_verify, C_A3)` triple yields persistent context with bounded write rate, compatible with ≥ 90% of cloud-scale dense-model quality under 8 GB VRAM.
 
-Each hypothesis has an explicit falsifier. Production runtime is public at [AIdevsmartdata/chimere](https://github.com/AIdevsmartdata/chimere).
+Persistent-homology language is **analogical** (the cosmological PH_k features of v6 inspire the architecture but do not appear as ML features in the runtime). Each hypothesis has an explicit falsifier. Production runtime is public at [AIdevsmartdata/chimere](https://github.com/AIdevsmartdata/chimere).
 
-**Tags.** `large-language-models` · `local-inference` · `hybrid-architecture` · `Mamba` · `mixture-of-experts` · `persistent-homology` · `concept-routing` · `long-context`
+**Tags.** `large-language-models` · `local-inference` · `hybrid-architecture` · `Mamba-2` · `mixture-of-experts` · `RG-flow` · `concept-routing` · `long-context`
 
 **Build.**
 ```bash

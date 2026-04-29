@@ -14,7 +14,7 @@ Concept DOI (all versions): [10.5281/zenodo.19686398](https://doi.org/10.5281/ze
 | 1 | **v5** — ECI phenomenological | `astro-ph.CO` | 14 | [eci.pdf](https://github.com/AIdevsmartdata/crossed-cosmos/releases/download/v5.0.2/eci.pdf) | [10.5281/zenodo.19696017](https://doi.org/10.5281/zenodo.19696017) | preprint · endorsement pending |
 | 2 | **v6** — GSL on type-II crossed products | `hep-th` | 7 | [v6_jhep.pdf](https://github.com/AIdevsmartdata/crossed-cosmos/releases/download/v6.0.6/v6_jhep.pdf) | [10.5281/zenodo.19699006](https://doi.org/10.5281/zenodo.19699006) | preprint · endorsement pending |
 | 3 | **v7-note** — Bogomolny–Keating fit | `math.SP` | 4 | [v7_note.pdf](https://github.com/AIdevsmartdata/crossed-cosmos/releases/download/v7-note-0.1/v7_note.pdf) | via concept DOI | preprint · endorsement pending |
-| 4 | **Chimère Ω** — local-first LLM blueprint | `cs.LG` | 15 | [chimere_omega.pdf](https://github.com/AIdevsmartdata/crossed-cosmos/releases/download/chimere-omega-0.1/chimere_omega.pdf) | via concept DOI | blueprint · workshop track |
+| 4 | **Chimère Ω** — local-first LLM blueprint | `cs.LG` | 7 | [chimere_omega.pdf](https://github.com/AIdevsmartdata/crossed-cosmos/releases/download/chimere-omega-0.1/chimere_omega.pdf) | via concept DOI | blueprint · workshop track |
 
 ---
 

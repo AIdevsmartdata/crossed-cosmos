@@ -70,14 +70,34 @@ jobs:
             --pattern "*.pdf" || echo "no PDF in release — skipping"
           ls -la
 
-      - name: Wait for Zenodo webhook to archive source
+      - name: Wait for Zenodo webhook to archive source (with retry)
         if: inputs.publish_draft == ''
-        run: sleep 60
+        env:
+          TAG: ${{ steps.tag.outputs.tag }}
+        run: |
+          # Wait up to 5 minutes for the GitHub→Zenodo webhook to create
+          # the new record. Earlier sleep 60 was not enough on busy days
+          # (HTTP 409 conflicts observed 2026-04-29 for v6.0.7/v6.0.8).
+          for i in 1 2 3 4 5 6 7 8 9 10; do
+            sleep 30
+            FOUND=$(curl -s "https://zenodo.org/api/records?q=conceptrecid:19686398+AND+version:%22${TAG#v}%22&all_versions=true" \
+              | python3 -c "import json,sys; d=json.load(sys.stdin); print(d.get('hits',{}).get('total','{}').get('value',0) if isinstance(d.get('hits',{}).get('total'),dict) else d.get('hits',{}).get('total',0))" 2>/dev/null || echo "0")
+            echo "[wait $i/10 — total=${FOUND}s] hits for ${TAG}: $FOUND"
+            if [ "$FOUND" -ge 1 ]; then
+              echo "Zenodo record found for tag ${TAG}"
+              break
+            fi
+          done
 
-      - name: Push PDFs to Zenodo record
+      - name: Push PDFs to Zenodo record (tag-resolved + record fallback)
         if: inputs.publish_draft == ''
         env:
           ZENODO_TOKEN: ${{ secrets.ZENODO_TOKEN }}
           TAG: ${{ steps.tag.outputs.tag }}
         run: |
-          python3 scripts/zenodo_push_pdf.py --tag "$TAG" --pdf-dir pdfs
+          # Try tag-resolved path first (canonical). Falls back to direct
+          # --record on the latest published v6.0.6 record (id 19708665)
+          # which under concept 19686398 always exists. The script's
+          # newversion logic on Zenodo will then create v(TAG) cleanly.
+          python3 scripts/zenodo_push_pdf.py --tag "$TAG" --pdf-dir pdfs \
+            || python3 scripts/zenodo_push_pdf.py --record 19708665 --pdf-dir pdfs

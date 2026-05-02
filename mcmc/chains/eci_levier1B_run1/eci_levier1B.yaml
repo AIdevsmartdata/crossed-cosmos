@@ -45,8 +45,9 @@ theory:
       m_ncdm: 0.06
       Omega_Lambda: 0
       use_ppf: 'yes'
+      fluid_equation_of_state: CLP
   eci_nmc_theory.ECINMCTheory:
-    python_path: ./mcmc/cobaya_nmc/
+    python_path: /root/crossed-cosmos/mcmc/cobaya_nmc/
     provides:
     - G_eff_over_GN
     - eta_slip
@@ -55,14 +56,16 @@ theory:
     - wa_nmc_correction
 
 likelihood:
+  # Pure-Python Planck likelihoods (no plc/clik C library required).
+  # NPIPE high-l CamSpec is PR4 data with native CamSpec_python implementation.
   planck_2018_lowl.TT: null
   planck_2018_lowl.EE: null
-  planck_2018_highl_plik.TTTEEE: null
-  planck_2018_lensing: null
+  planck_NPIPE_highl_CamSpec.TTTEEE: null
+  planck_2018_lensing.native: null
   bao.desi_dr2.desi_bao_all: null
   sn.pantheonplus: null
   eci_kids_s8.ECIKiDSS8Likelihood:
-    python_path: ./mcmc/cobaya_nmc/
+    python_path: /root/crossed-cosmos/mcmc/cobaya_nmc/
     apply_cassini_wall: true       # Cassini hard wall ON: |ξ_χ|*(χ_0/M_P)² < 6e-6
     apply_act_penalty: false       # OFF: c'_DD not sampled in this run
     kids_s8_mean: 0.766

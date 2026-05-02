@@ -1,0 +1,62 @@
+# AxiCLASS floating-point endpoint fix for background loga_table
+#
+# Bug: On AMD EPYC Zen 3 (and potentially other architectures with
+# different FP rounding), pba->z_table[pba->bt_size-1] is initialised
+# to 6.661338e-16 (= 3*DBL_EPSILON) rather than exactly 0.  When
+# thermodynamics_lists subsequently calls background_tau_of_z(pba, 0.0)
+# for the z=0 row of the thermodynamics table, the guard
+#   class_test(z < pba->z_table[pba->bt_size-1], ...)
+# evaluates to TRUE and aborts with:
+#   "out of range: z=0.000000e+00 < z_min=6.661338e-16"
+#
+# Root cause (verified by source inspection, 2026-05-02):
+# In AxiCLASS's background_solve, loga_table is allocated and filled
+# inside a while(is_axion_converged == _FALSE_) loop that does not
+# exist in upstream CLASS.  The last element is computed as:
+#   loga_table[bt_size-1] = loga_ini
+#                         + (bt_size-1)*(loga_final-loga_ini)/(bt_size-1)
+# which equals loga_final (= 0.0) in exact arithmetic but yields
+# approximately -3*DBL_EPSILON on Zen3 due to FP cancellation when
+# loga_ini is large and negative.  The background_sources callback
+# then stores:
+#   z_table[bt_size-1] = exp(-loga_table[bt_size-1]) - 1
+#                      ≈ 3*DBL_EPSILON = 6.66e-16
+# instead of 0.
+#
+# Fix: after the loga_table filling loop, pin the last element to
+# exactly loga_final (= 0.0).  This one-liner guarantees the today
+# endpoint is architecturally exact, touching no EDE/axion logic.
+#
+# Upstream CLASS status: lesgourg/class_public does NOT have the
+# while-loop wrapper around the evolver call; the FP cancellation
+# therefore does not accumulate there, and no matching upstream commit
+# was found by inspection of the v3.3.0...v3.3.4 commit range
+# (https://github.com/lesgourg/class_public/compare/v3.3.0...v3.3.4).
+# The thermodynamics break-statement fix (upstream commit c41f6d8,
+# "fixed bug affecting tau_reio to z_reio conversion", verified via
+# https://github.com/lesgourg/class_public/commit/c41f6d8.patch) is
+# already present in AxiCLASS master and is NOT repeated here.
+#
+# Applies to: AxiCLASS master HEAD f32cfe7 (2025-11-07)
+# Apply with (from /root/src/AxiCLASS):
+#   patch -p1 -l < /path/to/axiclass-fp-fix.patch
+# (-l enables whitespace-tolerant context matching)
+#
+diff --git a/source/background.c b/source/background.c
+index 0000000..0000001 100644
+--- a/source/background.c
++++ b/source/background.c
+@@ -1960,6 +1960,11 @@
+    for (index_loga=0; index_loga<pba->bt_size; index_loga++) {
+      pba->loga_table[index_loga] = loga_ini + index_loga*(loga_final-loga_ini)/(pba->bt_size-1);
+      used_in_output[index_loga] = 1;
+    }
++   /* Pin the today endpoint to exactly loga_final (=0.0) to prevent FP
++    * cancellation from producing a slightly negative value.  Without this,
++    * background_sources stores z_table[bt_size-1] = exp(-eps)-1 ~ 3*DBL_EPSILON
++    * rather than 0, causing background_tau_of_z to reject z=0 from
++    * thermodynamics_lists (observed on EPYC Zen3, independent of -O level). */
++   pba->loga_table[pba->bt_size-1] = loga_final;
+
+   // is_axion_converged = _TRUE_;
+   /** - perform the integration */

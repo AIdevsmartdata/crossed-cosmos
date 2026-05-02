@@ -118,15 +118,22 @@ def delta_BK(x: np.ndarray, A: float, L: float) -> np.ndarray:
     we keep it free as a sanity check.
     """
     # shape (nx, nprimes)
-    # 2026-05-02: bisect (notes/V7_BK_bisect_2026_05_02.md) against 100k-zero
-    # residuals confirms the original formula reproduces M1=11.911/M2=4.173.
-    # The earlier agent-proposed "weight = (log p)^2/p" was wrong by ~10^4 in M1.
-    # The prefactor variant -2/L^2 is plausible (gives M1=4.5 at A=1) but does
-    # not change M2 (L absorbs it) so we keep -2/(2pi)^2 as published.
+    # 2026-05-02 (literature triangulation, notes/V7_BK_bisect_2026_05_02.md):
+    # the prefactor in unfolded-x convention is -2/L^2, NOT -2/(2pi)^2. The
+    # original v7-note used Conrey-Snaith Theorem 4.1 prefactor 1/(2pi)^2
+    # which is for RAW gamma, but applied it to V7-test5's UNFOLDED x without
+    # the (2pi/L)^2 = 4pi^2/L^2 unfolding Jacobian.
+    # Verified verbatim against:
+    #   - Berry-Keating SIAM Review 41 (1999) 236-266 eq. (4.20): prefactor
+    #     1/(2(pi <d>)^2) with <d> = L/(2pi), giving 2/L^2.
+    #   - Bogomolny arXiv:nlin/0312061 eq. (57) raw + p.62 unfolding rule
+    #     R2_unfolded(eps) = (1/d^2) R2(eps/d): rescales 1/(4pi^2) -> 1/L^2.
+    # Effect: M1 (canonical A=1) drops 11.9 -> 4.52; M2/M3 unchanged because
+    # L_eff absorbs the prefactor; A_fit moves from 0.408 -> 0.573 (closer to 1).
     arg = (2.0 * np.pi / L) * np.outer(x, logp)
     weight = (logp / (primes - 1.0)) ** 2             # shape (nprimes,)
     sum_p = (np.cos(arg) * weight[None, :]).sum(axis=1)
-    return A * (-2.0 / (2.0 * np.pi) ** 2) * sum_p
+    return A * (-2.0 / L ** 2) * sum_p
 
 
 # ------------------------------------------------------------------

@@ -1,10 +1,8 @@
-# AxiCLASS FP endpoint fix — apply, build, and test
+# AxiCLASS Zen 3 FP fix — apply, build, test
 
 ## What this fixes
 
-On AMD EPYC Zen 3 (Vast.ai instance type `epyc7v13`, and potentially
-other architectures with different FP rounding), bare-default LCDM
-fails immediately with:
+On AMD EPYC Zen 3 (verified Vast.ai EPYC 7V13 contract 36023758, 2026-05-02), bare-default LCDM compute on AxiCLASS aborts immediately with:
 
 ```
 Error in Class: thermodynamics_init(L:382) :error in thermodynamics_lists(...)
@@ -13,225 +11,84 @@ Error in Class: thermodynamics_init(L:382) :error in thermodynamics_lists(...)
    out of range: z=0.000000e+00 < z_min=6.661338e-16
 ```
 
-The value `6.661338e-16 = 3 × DBL_EPSILON` identifies a floating-point
-endpoint drift in the background module's `loga_table` array.
+The value `6.661338e-16 = 3 × DBL_EPSILON` is a floating-point endpoint drift in `pba->loga_table[pba->bt_size-1]`. Detailed root-cause analysis is in `axiclass-fp-fix.patch` header comments.
 
-### Root cause
+This patch is a **boundary-check tolerance** approach: relax the `class_test` in `background_tau_of_z` line 285 from `z < pba->z_table[pba->bt_size-1]` to `z < pba->z_table[pba->bt_size-1] - 1e-12`. The tolerance `1e-12` is well above `DBL_EPSILON ≈ 2.22e-16` but well below any physically meaningful `z_min`. One line.
 
-AxiCLASS wraps the entire background integration in a
-`while (is_axion_converged == _FALSE_)` loop (absent in upstream
-CLASS).  Inside that loop, `loga_table` is allocated and filled as:
+A surgical alternative (pin `loga_table[bt_size-1] = loga_final` after the fill loop) was attempted first but did not propagate because AxiCLASS wraps the integration in an outer `while (is_axion_converged == _FALSE_)` loop that re-fills `loga_table` per iteration. The tolerance-in-check approach is robust against this.
 
-```c
-loga_table[i] = loga_ini + i * (loga_final - loga_ini) / (bt_size - 1);
+## Verification, 2026-05-02 on Vast.ai EPYC 7V13:
+
+```
+classy: v3.3.0 (AxiCLASS) /root/src/AxiCLASS/python/classy.cpython-310-x86_64-linux-gnu.so
+bare LCDM: sigma8 = 0.8249    (matches vanilla CLASS 3.3.4 exactly)
 ```
 
-In exact arithmetic, `i = bt_size - 1` gives `loga_final = 0.0`.  In
-IEEE 754 double precision on Zen 3, the cancellation
-`loga_ini + (large_integer × (-loga_ini)) / large_integer` produces
-approximately `−3 × DBL_EPSILON` instead of `0`.  The
-`background_sources` callback then stores:
-
-```c
-z_table[bt_size-1] = exp(-loga_table[bt_size-1]) - 1
-                   ≈ exp(3e-16) - 1
-                   ≈ 3×DBL_EPSILON = 6.66e-16
-```
-
-When `thermodynamics_lists` calls `background_tau_of_z(pba, 0.0)` for
-the last row of the thermodynamics z-table, the guard
-
-```c
-class_test(z < pba->z_table[pba->bt_size-1], ...)
-```
-
-evaluates `0.0 < 6.66e-16 = TRUE` and aborts.
-
-The bug is independent of compiler optimisation flags (`-O0`, `-O2`,
-`-O3`, `-march=native`, `-ffast-math`).
-
-Vanilla upstream CLASS 3.3.4 is not affected because it has no
-`while`-loop wrapper and uses a single, fixed `loga_ini` whose
-arithmetic happens to round differently.
-
-### Fix
-
-A one-liner that pins the last `loga_table` element to exactly
-`loga_final` (= `0.0`) after the filling loop, before the evolver is
-called.  This guarantees the today endpoint is architecturally exact
-on all platforms and touches no EDE/axion code paths.
-
-### Upstream commit status
-
-The upstream `lesgourg/class_public` commit range v3.3.0→v3.3.4
-(https://github.com/lesgourg/class_public/compare/v3.3.0...v3.3.4)
-was inspected.  Background.c was only changed in commit `2e41ebd`
-(adding `Omega_m(z)` / `Omega_r(z)` output columns) — not relevant.
-
-The thermodynamics `break;` fix (upstream commit `c41f6d8`, "fixed
-bug affecting tau_reio to z_reio conversion", verified at
-https://github.com/lesgourg/class_public/commit/c41f6d8.patch) is
-**already present** in AxiCLASS master and is not needed here.
-
-**Conclusion: fix not located in upstream CLASS; Plan B one-liner
-applied as described in the patch header.**
-
----
-
-## Prerequisites
-
-- AxiCLASS source tree checked out at `/root/src/AxiCLASS`
-- GCC (any version ≥ 9), OpenMP, CFITSIO, FFTW3
-
----
-
-## Apply the patch
+## Apply
 
 ```bash
-# Dry-run first (safe — does not modify files):
-patch -p1 --dry-run -l -d /root/src/AxiCLASS \
-    < /root/crossed-cosmos/scripts/vastai/axiclass-fp-fix.patch
-
-# If the dry-run reports "1 hunk succeeded", apply for real:
-patch -p1 -l -d /root/src/AxiCLASS \
-    < /root/crossed-cosmos/scripts/vastai/axiclass-fp-fix.patch
+cd /root/src/AxiCLASS
+patch -p1 < /root/crossed-cosmos/scripts/vastai/axiclass-fp-fix.patch
 ```
 
-The `-l` flag enables whitespace-tolerant matching, which guards
-against tab/space differences in the context lines.
+If the patch tooling has issues with whitespace, edit `source/background.c` line 285 manually:
 
-Expected output:
+```c
+class_test(z < pba->z_table[pba->bt_size-1] - 1e-12,
 ```
-patching file source/background.c
-Hunk #1 succeeded at NNNN (offset N lines).
-```
-
-If the hunk fails (offset too large, or context mismatch), see
-**Fallback: manual edit** below.
-
----
 
 ## Build
 
 ```bash
 cd /root/src/AxiCLASS
-make clean && make -j16 CC=gcc OPTFLAG="-O3 -fopenmp"
+make clean
+make -j16 CC=gcc OPTFLAG="-O3 -fopenmp"
 ```
 
-Typical build time on EPYC 7V13: ~25 s.
+## Install in the venv
 
----
-
-## Install the Python wrapper
+**Critical:** Python's import resolution prefers a `classy.cpython-310-*.so` in `$VENV/lib/python3.10/site-packages/` over the editable install in `/root/src/AxiCLASS/python/`. Earlier `pip install classy_szfast` (a cosmopower dependency) drops a `classy 3.2.3` .so directly into site-packages. **You must remove that residual `.so` before the editable install takes effect.**
 
 ```bash
+source /root/.venv/physics/bin/activate
+rm -f /root/.venv/physics/lib/python3.10/site-packages/classy.cpython-*.so
 cd /root/src/AxiCLASS/python
+python setup.py build_ext --inplace --force
 pip install --no-build-isolation -e . --force-reinstall
 ```
 
----
-
-## Verify the fix
+## Test
 
 ```bash
-python -c "
+python -W ignore -c "
 import classy
-cl = classy.Class()
-cl.set({'output': 'mPk'})
-cl.compute()
-print('sigma8 =', cl.sigma8())
-cl.struct_cleanup()
-cl.empty()
+print('classy:', classy.__version__, classy.__file__)
+cl = classy.Class(); cl.set({'output':'mPk'}); cl.compute()
+print('LCDM compute OK; sigma8 =', round(cl.sigma8(), 4))
 "
 ```
 
-Expected output (bare LCDM defaults):
+Expected:
 ```
-sigma8 = 0.82...   # should be ≈ 0.825, matching upstream CLASS 3.3.4
-```
-
-A `sigma8` value in the range `0.82–0.84` confirms the fix is working.
-Any `Error in Class` output means the patch did not apply correctly.
-
----
-
-## Quick EDE smoke test
-
-After confirming LCDM works, run a minimal EDE parameter set:
-
-```bash
-python -c "
-import classy
-cl = classy.Class()
-cl.set({
-    'output': 'tCl,mPk',
-    'f_ede': 0.1,
-    'log10z_c': 3.56,
-    'thetai_scf': 2.83,
-    'scf_potential': 'axion',
-    'scf_parameters': '2,0,0,1',
-    'n_axion': 3,
-    'Omega_Lambda': 0,
-    'Omega_fld': 0,
-    'h': 0.72,
-    'omega_b': 0.02242,
-    'omega_cdm': 0.1193,
-})
-cl.compute()
-print('EDE sigma8 =', cl.sigma8())
-cl.struct_cleanup()
-cl.empty()
-"
+classy: v3.3.0 /root/src/AxiCLASS/python/classy.cpython-310-x86_64-linux-gnu.so
+LCDM compute OK; sigma8 = 0.8249
 ```
 
----
+## What this does NOT fix
 
-## Fallback: manual edit
-
-If `patch` fails due to line-number drift from subsequent commits,
-apply the fix by hand.  Open `source/background.c` and search for the
-unique string:
+**AxiCLASS axion shooting failure for EDE configurations.** Setting `scf_potential = axion` with realistic EDE parameters (e.g., `fraction_axion_ac = 0.132`, `log10_axion_ac = -3.531`) currently fails with:
 
 ```
-// is_axion_converged = _TRUE_;
+background_init(L:952) :condition (pba->shooting_failed == _TRUE_) is true;
+Shooting failed, try optimising input_get_guess().
+=>new_linearisation(L:998) :condition (funcreturn == _FAILURE_) is true;
+Failure in ludcmp. Possibly singular matrix!
 ```
 
-The line immediately above that comment is the closing `}` of the
-`loga_table` filling loop.  Insert this line **between** that `}`
-and the `// is_axion_converged` comment:
+This is a separate convergence issue in `input_get_guess` that requires param-space-specific initial guesses. **TODO for Levier #1 12-param launch:** tune the `input_get_guess` defaults via the Cobaya YAML's `extra_args`, or use the alternative `m_axion`, `f_axion` parameterisation in `example_axiCLASS.ini` which bypasses shooting entirely. See `notes/levier1_README.md`.
 
-```c
-   pba->loga_table[pba->bt_size-1] = loga_final;
-```
+## Path forward
 
-The patched block should look like:
-
-```c
-   for (index_loga=0; index_loga<pba->bt_size; index_loga++) {
-     pba->loga_table[index_loga] = loga_ini + index_loga*(loga_final-loga_ini)/(pba->bt_size-1);
-     used_in_output[index_loga] = 1;
-   }
-   /* Pin the today endpoint to exactly loga_final (=0.0) to prevent FP
-    * cancellation from producing a slightly negative value.  Without this,
-    * background_sources stores z_table[bt_size-1] = exp(-eps)-1 ~ 3*DBL_EPSILON
-    * rather than 0, causing background_tau_of_z to reject z=0 from
-    * thermodynamics_lists (observed on EPYC Zen3, independent of -O level). */
-   pba->loga_table[pba->bt_size-1] = loga_final;
-
-  // is_axion_converged = _TRUE_;
-  /** - perform the integration */
-  class_call(generic_evolver(background_derivs,
-```
-
----
-
-## Notes
-
-- The fix does not change any numerical results — it only ensures the
-  pre-computed table endpoint is exactly representable as 0.0.
-- The fix is safe to re-apply after `git pull` of AxiCLASS; no
-  conflicts with EDE-specific code are expected.
-- Tested scenario: bare LCDM (`output: mPk`) and EDE axion potential.
-  MCMC use (MontePython + AxiCLASS + NMC quintessence) should behave
-  identically to the unfixed code on architectures where the FP
-  arithmetic happens to round correctly.
+1. Land this patch on the running Vast.ai instance (done, 2026-05-02).
+2. For Levier #1 12-param production: tune EDE shooting initial guesses in the YAML. Likely add `m_axion: 1e4`, `f_axion: 0.1` as the "alternative" parameterisation in `example_axiCLASS.ini`, which avoids the shooting altogether.
+3. Optionally: file an upstream issue at `PoulinV/AxiCLASS` proposing this tolerance fix as a portable change. The fix is harmless on architectures where the FP cancellation does not occur.

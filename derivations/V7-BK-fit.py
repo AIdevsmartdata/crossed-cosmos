@@ -118,6 +118,11 @@ def delta_BK(x: np.ndarray, A: float, L: float) -> np.ndarray:
     we keep it free as a sanity check.
     """
     # shape (nx, nprimes)
+    # 2026-05-02: bisect (notes/V7_BK_bisect_2026_05_02.md) against 100k-zero
+    # residuals confirms the original formula reproduces M1=11.911/M2=4.173.
+    # The earlier agent-proposed "weight = (log p)^2/p" was wrong by ~10^4 in M1.
+    # The prefactor variant -2/L^2 is plausible (gives M1=4.5 at A=1) but does
+    # not change M2 (L absorbs it) so we keep -2/(2pi)^2 as published.
     arg = (2.0 * np.pi / L) * np.outer(x, logp)
     weight = (logp / (primes - 1.0)) ** 2             # shape (nprimes,)
     sum_p = (np.cos(arg) * weight[None, :]).sum(axis=1)

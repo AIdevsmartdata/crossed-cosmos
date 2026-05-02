@@ -1,0 +1,132 @@
+# eci_v50plusS8.yaml — v5.0 chain + KiDS-1000 S8 prior
+#
+# Purpose: incremental test of "does KiDS S8 add information on xi_chi vs the
+# v5 baseline (DESI DR2 BAO + Pantheon+ only)?"
+#
+# Design choices for clean isolation:
+#   - Same 9 parameters as v5 (no EDE, no Dark Dimension, no tau_reio).
+#   - Same theory stack (vanilla classy + ECINMCTheory plugin), no AxiCLASS
+#     dependency (so this can run BEFORE the AxiCLASS FP-bug patch lands).
+#   - eci_kids_s8 likelihood loaded with apply_cassini_wall: false and
+#     apply_act_penalty: false. Cassini would dominate xi_chi to |xi_chi|<6e-4
+#     and obscure the KiDS-only effect; ACT N_eff has nothing to gate (no c'_DD
+#     here). Both are tested separately in the full Levier #1 12-param run.
+#   - Reuse v5 learned covmat to seed proposal -> faster convergence.
+#
+# Walltime estimate: ~30-60 min on EPYC 7V13 (matches v5 walltime modulo small
+# overhead from the extra likelihood eval per step).
+#
+# Comparison target: v5 posterior in notes/posterior_v5_2026-05-02/summary.md
+#   v5 H_0   = 67.68 +/- 2.51    -> expect tightening from S8 only marginally
+#   v5 w_0   = -0.863 +/- 0.053  -> expect minor shift if any
+#   v5 w_a   = -0.469 +/- 0.311
+#   v5 xi_chi= -0.0002 +/- 0.066 -> KEY: does this tighten?
+
+theory:
+  classy:
+    ignore_obsolete: true
+    provides:
+    - Hubble
+    - angular_diameter_distance
+    - rdrag
+    extra_args:
+      output: mPk
+      N_ur: 2.0328
+      N_ncdm: 1
+      m_ncdm: 0.06
+      Omega_Lambda: 0
+      use_ppf: 'yes'
+  eci_nmc_theory.ECINMCTheory:
+    python_path: ./mcmc/cobaya_nmc/
+    provides:
+    - G_eff_over_GN
+    - eta_slip
+    - fsigma8
+    - chi_of_a
+    - wa_nmc_correction
+
+likelihood:
+  bao.desi_dr2.desi_bao_all: null
+  sn.pantheonplus: null
+  eci_kids_s8.ECIKiDSS8Likelihood:
+    python_path: ./mcmc/cobaya_nmc/
+    apply_cassini_wall: false
+    apply_act_penalty: false
+    kids_s8_mean: 0.766
+    kids_s8_sigma: 0.020
+
+params:
+  H0:
+    prior: {min: 55, max: 85}
+    ref: {dist: norm, loc: 67.4, scale: 0.5}
+    proposal: 0.5
+    latex: H_0
+  omega_b:
+    prior: {min: 0.017, max: 0.027}
+    ref: {dist: norm, loc: 0.02237, scale: 0.00015}
+    proposal: 0.00015
+    latex: \Omega_\mathrm{b} h^2
+  omega_cdm:
+    prior: {min: 0.09, max: 0.15}
+    ref: {dist: norm, loc: 0.12, scale: 0.0012}
+    proposal: 0.0012
+    latex: \Omega_\mathrm{c} h^2
+  n_s:
+    prior: {min: 0.9, max: 1.05}
+    ref: {dist: norm, loc: 0.9649, scale: 0.0042}
+    proposal: 0.0042
+    latex: n_\mathrm{s}
+  logA:
+    prior: {min: 2.5, max: 3.5}
+    ref: {dist: norm, loc: 3.044, scale: 0.014}
+    proposal: 0.014
+    drop: true
+    latex: \log(10^{10} A_\mathrm{s})
+  A_s:
+    value: 'lambda logA: 1e-10*np.exp(logA)'
+    latex: A_\mathrm{s}
+  w0_fld:
+    prior: {min: -1.2, max: -0.5}
+    ref: {dist: norm, loc: -1.0, scale: 0.05}
+    proposal: 0.05
+    latex: w_0
+  wa_fld:
+    prior: {min: -2.0, max: 0.0}
+    ref: {dist: norm, loc: 0.0, scale: 0.1}
+    proposal: 0.1
+    latex: w_a
+  xi_chi:
+    prior: {min: -0.1, max: 0.1}
+    ref: {dist: norm, loc: 0.0, scale: 0.01}
+    proposal: 0.01
+    latex: \xi_\chi
+  chi_initial:
+    prior: {min: 0.05, max: 0.2}
+    ref: {dist: norm, loc: 0.1, scale: 0.01}
+    proposal: 0.01
+    latex: \chi_\mathrm{ini}
+  wa_nmc_correction:
+    derived: true
+    latex: \Delta w_a^\mathrm{NMC}
+  Omega_m:
+    latex: \Omega_\mathrm{m}
+  sigma8:
+    latex: \sigma_8
+  S8:
+    derived: 'lambda sigma8, Omega_m: sigma8 * (Omega_m / 0.3) ** 0.5'
+    latex: S_8
+
+sampler:
+  mcmc:
+    burn_in: 0
+    max_samples: 20000
+    max_tries: 1000
+    covmat: ../eci_v50_run1/output_2026_05_02/eci.covmat
+    proposal_scale: 1.9
+    Rminus1_stop: 0.05
+    Rminus1_cl_stop: 0.2
+    learn_proposal: true
+    learn_proposal_Rminus1_max: 2.0
+
+output: eci_v50plusS8
+packages_path: mcmc/packages/

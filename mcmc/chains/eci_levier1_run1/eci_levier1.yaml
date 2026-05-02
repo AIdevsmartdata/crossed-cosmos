@@ -1,0 +1,358 @@
+# ============================================================================
+# ECI Levier #1 — Cobaya 12-parameter YAML
+# Joint MCMC on (xi_chi, f_EDE, c'_DD) simultaneously addressing H0 + S8 tensions
+#
+# Dataset stack:
+#   DESI DR2 BAO + Pantheon+ SN + KiDS-1000 S8 Gaussian prior
+#
+# Theory backend:
+#   AxiCLASS (EDE axion sector) + ECINMCTheory plugin (NMC perturbation postproc)
+#
+# Parameter count: 12 free + A_s (derived from logA) + Omega_m (classy derived)
+#
+# AxiCLASS argument names verified against:
+#   PoulinV/AxiCLASS example_axiCLASS.ini (commit HEAD, fetched 2026-05-02)
+#   PoulinV/AxiCLASS source/input.c (log10_axion_ac = log10(a_c), not log10(z_c))
+#   source/background.c (scf_parameters[0] = theta_i angle, multiplied by f_axion)
+#
+# IMPORTANT — coordinate convention for EDE redshift parameter:
+#   The triage specifies log10z_c in [3.4, 3.7] (log10 of redshift z_c).
+#   AxiCLASS uses log10_axion_ac = log10(a_c) = log10(1/(1+z_c)) ≈ -log10(z_c).
+#   Therefore log10_axion_ac prior maps from [-3.7, -3.4] (verified from input.c).
+#   The sampled parameter is log10_axion_ac directly in AxiCLASS units.
+#   A derived quantity log10z_c is computed below for output convenience.
+#
+# STATUS: not yet run — AxiCLASS blocked by F6 FP-bug on Zen 3 (see
+#   notes/vastai-debug-2026-05-02.md §F6). Launch only after sister-agent patch.
+# ============================================================================
+
+theory:
+  classy:
+    # AxiCLASS provides the EDE-modified background and perturbations.
+    # Install: build PoulinV/AxiCLASS and `pip install --no-build-isolation -e python/`
+    # (see notes/vastai-debug-2026-05-02.md F4-F5 for build workarounds).
+    ignore_obsolete: true
+    provides:
+      - Hubble
+      - angular_diameter_distance
+      - comoving_radial_distance
+      - rdrag
+      - sigma8
+      - Omega_m
+      - fsigma8
+    extra_args:
+      # ---------- EDE axion scalar field (AxiCLASS-specific) ----------
+      # Verified parameter names from PoulinV/AxiCLASS example_axiCLASS.ini
+      scf_potential: axion
+      n_axion: 3
+      # fraction_axion_ac (= f_EDE at a_c): sampled parameter, passed by Cobaya
+      # log10_axion_ac (= log10(a_c)):      sampled parameter, passed by Cobaya
+      # scf_parameters = "theta_i,0.0":     theta_i is sampled; formatted below
+      # Shooting: required for EDE shooting to find f_axion given fraction_axion_ac
+      do_shooting: "yes"
+      do_shooting_scf: "yes"
+      attractor_ic_scf: "no"
+      scf_has_perturbations: "yes"
+      scf_evolve_as_fluid: "no"
+      scf_evolve_like_axionCAMB: "no"
+      # ---------- Neutrino sector (standard) ----------
+      N_ur: 2.0328
+      N_ncdm: 1
+      m_ncdm: 0.06
+      # ---------- Dark energy / cosmological constant ----------
+      # EDE + LCDM: no Omega_fld, no w0_fld/wa_fld.
+      # ECI NMC dark energy enters only via the ECINMCTheory postproc.
+      Omega_Lambda: -1
+      # ---------- Output ----------
+      output: mPk
+      # k-max for mPk (needed for sigma8 and fsigma8 at z~0)
+      P_k_max_h/Mpc: 1.0
+      z_max_pk: 0.0
+
+  eci_nmc_theory.ECINMCTheory:
+    python_path: ./mcmc/cobaya_nmc/
+    # Provides G_eff/G_N, eta_slip, NMC-corrected growth for the NMC sector.
+    # chi_of_a and wa_nmc_correction are diagnostics only in this run.
+    provides:
+      - G_eff_over_GN
+      - eta_slip
+      - chi_of_a
+      - wa_nmc_correction
+
+likelihood:
+  bao.desi_dr2.desi_bao_all: null
+  sn.pantheonplus: null
+  # KiDS-1000 3x2pt S8 Gaussian prior + optional Cassini wall + c'_DD penalty
+  eci_kids_s8.ECIKiDSS8Likelihood:
+    python_path: ./mcmc/cobaya_nmc/
+    # Published KiDS-1000 3x2pt value: S8 = 0.766 +/- 0.020 (Asgari et al. 2021)
+    kids_s8_mean: 0.766
+    kids_s8_sigma: 0.020
+    # Cassini hard wall: |xi_chi| * (chi0/M_P)^2 < 6e-6 (Bertotti et al. 2003)
+    # chi0 fixed at M_P/10 fiducial (conservative; see eci_kids_s8.py for details)
+    apply_cassini_wall: true
+    chi0_over_MP: 0.1
+    # ACT DR6 N_eff diagnostic: quadratic penalty when c'_DD > 0.18
+    apply_act_penalty: true
+    act_cdd_threshold: 0.18
+    act_penalty_sigma: 0.01
+
+params:
+  # ============================================================
+  # Standard cosmological parameters
+  # ============================================================
+  omega_b:
+    prior:
+      dist: norm
+      loc: 0.02237
+      scale: 0.00015
+    ref:
+      dist: norm
+      loc: 0.02237
+      scale: 0.00015
+    proposal: 0.00010
+    latex: \omega_\mathrm{b}
+
+  omega_cdm:
+    prior:
+      min: 0.10
+      max: 0.14
+    ref:
+      dist: norm
+      loc: 0.1200
+      scale: 0.0010
+    proposal: 0.0010
+    latex: \omega_\mathrm{cdm}
+
+  H0:
+    prior:
+      min: 60
+      max: 80
+    ref:
+      dist: norm
+      loc: 68.0
+      scale: 0.8
+    proposal: 0.5
+    latex: H_0
+
+  n_s:
+    prior:
+      min: 0.88
+      max: 1.06
+    ref:
+      dist: norm
+      loc: 0.9649
+      scale: 0.005
+    proposal: 0.004
+    latex: n_\mathrm{s}
+
+  logA:
+    prior:
+      min: 2.5
+      max: 3.5
+    ref:
+      dist: norm
+      loc: 3.044
+      scale: 0.015
+    proposal: 0.012
+    drop: true
+    latex: \log(10^{10} A_\mathrm{s})
+
+  A_s:
+    value: "lambda logA: 1e-10*np.exp(logA)"
+    latex: A_\mathrm{s}
+
+  tau_reio:
+    prior:
+      dist: norm
+      loc: 0.0544
+      scale: 0.0070
+    ref:
+      dist: norm
+      loc: 0.0544
+      scale: 0.0050
+    proposal: 0.004
+    latex: \tau_\mathrm{reio}
+
+  # ============================================================
+  # EDE axion sector (AxiCLASS parameters)
+  # All names verified against PoulinV/AxiCLASS example_axiCLASS.ini
+  # ============================================================
+
+  # f_EDE: fraction of total energy density in EDE at the critical epoch a_c.
+  # AxiCLASS internal name: fraction_axion_ac (shooting target).
+  fraction_axion_ac:
+    prior:
+      min: 0.0
+      max: 0.20
+    ref:
+      dist: norm
+      loc: 0.06
+      scale: 0.03
+    proposal: 0.015
+    latex: f_\mathrm{EDE}
+
+  # log10_axion_ac: log10(a_c) where a_c is the critical scale factor.
+  # NOTE: this is log10(a_c) NOT log10(z_c). Since z_c ~ 10^3.4-3.7,
+  #   a_c = 1/(1+z_c) => log10(a_c) in [-3.7, -3.4].
+  # The triage notation log10z_c in [3.4, 3.7] maps here as follows:
+  #   log10_axion_ac = -log10(1 + 10^log10z_c) ≈ -log10z_c for z_c >> 1.
+  # Verified: input.c formula ac = 1./(pow(10, ba.log10_axion_ac) + 1)
+  log10_axion_ac:
+    prior:
+      min: -3.7
+      max: -3.4
+    ref:
+      dist: norm
+      loc: -3.57
+      scale: 0.05
+    proposal: 0.035
+    latex: \log_{10} a_c
+
+  # theta_i: initial axion field angle (in radians) passed as scf_parameters[0].
+  # AxiCLASS background.c multiplies internally: phi_ini = theta_i * f_axion.
+  # Cobaya passes this to CLASS via the scf_parameters string (see input_extra below).
+  # AXICLASS_ARG_TBD: Cobaya's classy interface may require a lambda to format
+  # scf_parameters as a string "theta_i,0.0". If the classy Cobaya wrapper does
+  # not support non-string extra_args that depend on sampled parameters, implement
+  # a thin Theory subclass to inject scf_parameters at call time (see README).
+  theta_i:
+    prior:
+      min: 0.1
+      max: 2.942  # = pi - 0.1 (avoids phi near hilltop at pi)
+    ref:
+      dist: norm
+      loc: 2.72
+      scale: 0.15
+    proposal: 0.10
+    latex: \theta_i
+
+  # Derived: log10(z_c) = log10(10^(-log10_axion_ac) - 1) for output/plotting.
+  # For z_c >> 1 this is approximately -log10_axion_ac.
+  log10z_c:
+    derived: "lambda log10_axion_ac: -log10_axion_ac"
+    latex: \log_{10} z_c
+
+  # ============================================================
+  # ECI NMC sector
+  # ============================================================
+
+  # xi_chi: non-minimal coupling of chi to curvature (R chi^2 coupling).
+  # Physical prior: Cassini limit |xi_chi| * (chi0/M_P)^2 < 6e-6.
+  # For chi0/M_P = 0.1, this gives |xi_chi| < 6e-4 — well within [-0.024, 0.024].
+  # Cassini hard wall enforced in eci_kids_s8 likelihood (not the prior).
+  # Oversampling: this is a slow parameter (NMC ODE re-integration required).
+  xi_chi:
+    prior:
+      min: -0.024
+      max: 0.024
+    ref:
+      dist: norm
+      loc: 0.0
+      scale: 0.006
+    proposal: 0.004
+    latex: \xi_\chi
+
+  # log10lambda_chi: log10 of the quintessence exponential slope lambda.
+  # Related to chi_initial in v5 via the quintessence potential V ~ exp(-lambda chi).
+  # Oversampling: couples to xi_chi in the growth ODE.
+  log10lambda_chi:
+    prior:
+      min: -2.0
+      max: 1.0
+    ref:
+      dist: norm
+      loc: -0.26
+      scale: 0.20
+    proposal: 0.15
+    latex: \log_{10} \lambda_\chi
+
+  # ============================================================
+  # Dark Dimension sector
+  # ============================================================
+
+  # c_prime_DD: Dark Dimension coupling parameter controlling Delta N_eff.
+  # Range from triage: [0.03, 0.20]. ACT DR6 penalty for c'_DD > 0.18 applied
+  # in eci_kids_s8 likelihood.
+  c_prime_DD:
+    prior:
+      min: 0.03
+      max: 0.20
+    ref:
+      dist: norm
+      loc: 0.05
+      scale: 0.02
+    proposal: 0.015
+    latex: c^\prime_\mathrm{DD}
+
+  # ============================================================
+  # Derived parameters
+  # ============================================================
+
+  Omega_m:
+    latex: \Omega_\mathrm{m}
+
+  sigma8:
+    latex: \sigma_8
+
+  S8:
+    derived: "lambda sigma8, Omega_m: sigma8 * (Omega_m / 0.3)**0.5"
+    latex: S_8
+
+  wa_nmc_correction:
+    derived: true
+    latex: \Delta w_a^\mathrm{NMC}
+
+# ============================================================
+# Sampler configuration
+# ============================================================
+sampler:
+  mcmc:
+    burn_in: 0
+    # Convergence criteria (tighter than v5 given 12-param space)
+    Rminus1_stop: 0.02
+    Rminus1_cl_stop: 0.20
+    # Proposal adaptation
+    learn_proposal: true
+    proposal_learn_every: 200
+    learn_proposal_Rminus1_max: 30.0
+    proposal_scale: 1.9
+    max_tries: 2000
+    max_samples: .inf
+    covmat: auto
+    # Oversampling: xi_chi and log10lambda_chi require NMC ODE re-integration
+    # (slow step); oversample the fast EDE/BAO params relative to the NMC sector.
+    # Cobaya oversampling syntax: 'oversample_power' or per-block 'oversampling_factor'
+    # The two slow parameters are xi_chi and log10lambda_chi.
+    oversample_power: 0.4
+
+# ============================================================
+# Output and paths
+# ============================================================
+output: chains/eci_levier1_run1/eci_levier1
+packages_path: mcmc/packages/
+
+# ============================================================
+# NOTES FOR LAUNCH
+# ============================================================
+# 1. AxiCLASS must be installed (not vanilla CLASS) before running.
+#    Build: cd ~/src/AxiCLASS && pip install --no-build-isolation -e python/
+#    Requires F6 FP-bug fix (see notes/vastai-debug-2026-05-02.md).
+#
+# 2. theta_i injection into scf_parameters:
+#    Cobaya's classy wrapper cannot natively pass sampled-parameter-dependent
+#    strings into extra_args. Two options:
+#      (a) Add a pre-call hook in ECINMCTheory.calculate() that sets
+#          self.provider.get_classy_cosmo().set({"scf_parameters": f"{theta_i},0.0"})
+#      (b) Write a thin classy subclass that overrides get_classy_cosmo() to inject.
+#    See notes/levier1_README.md §Known issues for resolution steps.
+#    # AXICLASS_ARG_TBD: scf_parameters injection mechanism via Cobaya classy wrapper
+#
+# 3. cobaya-install:
+#    cobaya-install bao.desi_dr2.desi_bao_all sn.pantheonplus -p mcmc/packages/
+#    (No install needed for eci_kids_s8 — local plugin)
+#
+# 4. Launch (4 MPI chains):
+#    mpirun --bind-to none --mca btl_vader_single_copy_mechanism none \
+#      -np 4 python -m cobaya run mcmc/chains/eci_levier1_run1/eci_levier1.yaml \
+#      --packages-path mcmc/packages/

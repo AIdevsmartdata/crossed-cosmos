@@ -1,62 +1,69 @@
-# AxiCLASS floating-point endpoint fix for background loga_table
+# AxiCLASS Zen 3 FP boundary-check tolerance patch
 #
-# Bug: On AMD EPYC Zen 3 (and potentially other architectures with
-# different FP rounding), pba->z_table[pba->bt_size-1] is initialised
-# to 6.661338e-16 (= 3*DBL_EPSILON) rather than exactly 0.  When
-# thermodynamics_lists subsequently calls background_tau_of_z(pba, 0.0)
-# for the z=0 row of the thermodynamics table, the guard
-#   class_test(z < pba->z_table[pba->bt_size-1], ...)
-# evaluates to TRUE and aborts with:
-#   "out of range: z=0.000000e+00 < z_min=6.661338e-16"
+# Bug: On AMD EPYC Zen 3 (Vast.ai EPYC 7V13 confirmed 2026-05-02), AxiCLASS's
+# `background_tau_of_z` aborts on every call (even bare-default LCDM) with:
 #
-# Root cause (verified by source inspection, 2026-05-02):
-# In AxiCLASS's background_solve, loga_table is allocated and filled
-# inside a while(is_axion_converged == _FALSE_) loop that does not
-# exist in upstream CLASS.  The last element is computed as:
-#   loga_table[bt_size-1] = loga_ini
-#                         + (bt_size-1)*(loga_final-loga_ini)/(bt_size-1)
-# which equals loga_final (= 0.0) in exact arithmetic but yields
-# approximately -3*DBL_EPSILON on Zen3 due to FP cancellation when
-# loga_ini is large and negative.  The background_sources callback
-# then stores:
-#   z_table[bt_size-1] = exp(-loga_table[bt_size-1]) - 1
-#                      ≈ 3*DBL_EPSILON = 6.66e-16
-# instead of 0.
+#   Error in Class: thermodynamics_init(L:382) :error in thermodynamics_lists(...)
+#   =>thermodynamics_lists(L:1146) :error in background_tau_of_z(...)
+#   =>background_tau_of_z(L:285) :condition (z < pba->z_table[pba->bt_size-1]) is true;
+#      out of range: z=0.000000e+00 < z_min=6.661338e-16
 #
-# Fix: after the loga_table filling loop, pin the last element to
-# exactly loga_final (= 0.0).  This one-liner guarantees the today
-# endpoint is architecturally exact, touching no EDE/axion logic.
+# Root cause (verified by reading source/background.c on AxiCLASS HEAD):
+# AxiCLASS's `background_solve` wraps the integration in
+# `while (is_axion_converged == _FALSE_) { ... }`. Inside that loop,
+# `loga_table` is allocated and filled with a uniform grid:
 #
-# Upstream CLASS status: lesgourg/class_public does NOT have the
-# while-loop wrapper around the evolver call; the FP cancellation
-# therefore does not accumulate there, and no matching upstream commit
-# was found by inspection of the v3.3.0...v3.3.4 commit range
-# (https://github.com/lesgourg/class_public/compare/v3.3.0...v3.3.4).
-# The thermodynamics break-statement fix (upstream commit c41f6d8,
-# "fixed bug affecting tau_reio to z_reio conversion", verified via
-# https://github.com/lesgourg/class_public/commit/c41f6d8.patch) is
-# already present in AxiCLASS master and is NOT repeated here.
+#   loga_table[i] = loga_ini + i * (loga_final - loga_ini) / (bt_size - 1)
 #
-# Applies to: AxiCLASS master HEAD f32cfe7 (2025-11-07)
+# In exact arithmetic, `i = bt_size - 1` yields `loga_final` (= 0.0). In IEEE 754
+# double precision on Zen 3, the cancellation produces approximately
+# `-3 * DBL_EPSILON` instead of exactly 0. The `background_sources` callback
+# subsequently stores `z_table[bt_size-1] = exp(-loga_table[bt_size-1]) - 1`
+# = `exp(3*DBL_EPSILON) - 1` ≈ `3*DBL_EPSILON` = `6.661338e-16`. The boundary
+# check `class_test(z < pba->z_table[pba->bt_size-1], ...)` then rejects the
+# legitimate `z = 0.0` query from `thermodynamics_lists`.
+#
+# Fix: relax the boundary check by `1e-12` (about 4 orders above DBL_EPSILON).
+# This is a one-line change in `background_tau_of_z` line 285. The tolerance
+# `1e-12` is small enough to still catch genuine out-of-range queries (where
+# z_min > 0 by physical design) but large enough to absorb the FP cancellation
+# residual on any modern x86 architecture.
+#
+# This patch does NOT touch the EDE/axion code paths. AxiCLASS's axion shooting
+# algorithm has separate convergence issues that require initial-guess tuning
+# in the Levier #1 12-param YAML; those are handled in
+# `notes/levier1_README.md` rather than here.
+#
+# Upstream CLASS status: this fix is unnecessary in vanilla `class_public`
+# v3.3.4 because that fork does not use the outer
+# `while (is_axion_converged == _FALSE_)` loop, so loga_table is filled exactly
+# once and the cancellation does not accumulate measurably.
+#
+# Verification (2026-05-02 on Vast.ai contract 36023758):
+#   bare-default LCDM:  sigma8 = 0.8249  (matches vanilla CLASS 3.3.4 exactly)
+#
 # Apply with (from /root/src/AxiCLASS):
-#   patch -p1 -l < /path/to/axiclass-fp-fix.patch
-# (-l enables whitespace-tolerant context matching)
+#   patch -p1 < /path/to/axiclass-fp-fix.patch
+# Build with:
+#   make clean && make -j16 CC=gcc OPTFLAG="-O3 -fopenmp"
+# Then in the venv:
+#   rm -f $(pip show classy | awk '/^Location:/{print $2}')/classy.cpython*.so
+#   cd python && python setup.py build_ext --inplace --force
+#   pip install --no-build-isolation -e . --force-reinstall
 #
-diff --git a/source/background.c b/source/background.c
-index 0000000..0000001 100644
+# IMPORTANT: a residual `classy.cpython-310-x86_64-linux-gnu.so` may exist in
+# `$VENV/lib/python3.10/site-packages/` from earlier `classy_szfast` or other
+# pip installations. It must be removed before the editable install of the
+# patched AxiCLASS takes effect, otherwise Python will load the old .so.
+#
 --- a/source/background.c
 +++ b/source/background.c
-@@ -1960,6 +1960,11 @@
-    for (index_loga=0; index_loga<pba->bt_size; index_loga++) {
-      pba->loga_table[index_loga] = loga_ini + index_loga*(loga_final-loga_ini)/(pba->bt_size-1);
-      used_in_output[index_loga] = 1;
-    }
-+   /* Pin the today endpoint to exactly loga_final (=0.0) to prevent FP
-+    * cancellation from producing a slightly negative value.  Without this,
-+    * background_sources stores z_table[bt_size-1] = exp(-eps)-1 ~ 3*DBL_EPSILON
-+    * rather than 0, causing background_tau_of_z to reject z=0 from
-+    * thermodynamics_lists (observed on EPYC Zen3, independent of -O level). */
-+   pba->loga_table[pba->bt_size-1] = loga_final;
+@@ -282,7 +282,7 @@
+              "tau=%e out of range of the tau_table [%e , %e]",
+              tau,pba->tau_table[0],pba->tau_table[pba->bt_size-1]);
 
-   // is_axion_converged = _TRUE_;
-   /** - perform the integration */
+-  class_test(z < pba->z_table[pba->bt_size-1],
++  class_test(z < pba->z_table[pba->bt_size-1] - 1e-12,
+              pba->error_message,
+              "out of range: z=%le < z_min=%le",
+              z,pba->z_table[pba->bt_size-1]);

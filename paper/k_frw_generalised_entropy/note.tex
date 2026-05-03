@@ -46,9 +46,10 @@ intertwiner. The two load-bearing technical inputs are
 (i)~Lemma~3.3, the stress-tensor conjugation
 $U^{-1}T_{00}^{\Mink}U = a(\eta)^{+2}\,\Tt_{00}^{\FRW}$ (sympy-verified
 off-shell), and (ii)~Lemma~3.4, the conformal trace-anomaly contribution
-to the integrated modular Hamiltonian, with explicit coefficient
-$\Delta_{\rm anom}[D_R]=(8\pi^2/15)\,a(\eta_c)^2\,R^4\,\langle T_{00}^{\FRW}
-\rangle_{\rm anom}$ in the c-number sector. We then read off the generalised
+to the integrated modular Hamiltonian, with explicit closed-form
+coefficients $\Delta_{\rm anom}[D_R] = +R^{4}/(1800\,\eta_c^{4})$
+(radiation, $a=\eta$) and $\Delta_{\rm anom}[D_R] = -R^{4}/(90\,\eta_c^{4})$
+(matter, $a=\eta^{2}$) in the c-number sector. We then read off the generalised
 entropy $S_{\rm gen}[D_R]$ on the type II$_\infty$ crossed-product algebra
 of Witten (2022) by combining $\langle K_{\FRW}\rangle_\psi$ with the
 von~Neumann entropy of the comoving observer's clock, and verify that the
@@ -120,8 +121,8 @@ with the Hislop--Longo expression~\eqref{eq:HL} yields the bulk part of
 \eqref{eq:main}. Second, Lemma~\ref{lem:34} (``conformal-anomaly
 bookkeeping'', \S\ref{sec:lemma34}) shows that the c-number drift $c_0$
 absorbs the integrated trace-anomaly contribution
-$\Delta_{\rm anom}[D_R]=(8\pi^2/15)\,a(\eta_c)^{2}\,R^{4}\,
-\langle T_{00}^{\FRW}\rangle_{\rm anom}$ without breaking the
+$\Delta_{\rm anom}[D_R] = +R^{4}/(1800\,\eta_c^{4})$ (radiation) or
+$\Delta_{\rm anom}[D_R] = -R^{4}/(90\,\eta_c^{4})$ (matter), without breaking the
 type~II$_\infty$ factoriality of the crossed-product algebra
 $\N(D_R)\rtimes\R$ of \cite{Witten2022}.
 
@@ -235,19 +236,40 @@ result.
 
 \begin{lemma}[Conformal-anomaly bookkeeping]
 \label{lem:34}
-The trace-anomaly contribution to the integrated modular Hamiltonian
-on $D_R$, in the conformal vacuum, is
-\[
-  \Delta_{\rm anom}[D_R]\;=\;
-  \frac{8\pi^{2}}{15}\,a(\eta_c)^{2}\,R^{4}\,
-  \langle T_{00}^{\FRW}\rangle_{\rm anom}(\eta_c).
-\]
-For the radiation era $a(\eta)=\eta$, the anomaly density is
-$\langle T_{0}^{0}\rangle_{\rm anom}=1/(240\pi^{2}\eta^{8})$
-(Birrell--Davies form, conformally-flat FRW with $R_{\rm scalar}=0$ but
-$R_{\mu\nu}R^{\mu\nu}=12/\eta^{8}$). The contribution is c-number-valued,
-hence central in $\N(D_R)$, so the type~II$_\infty$ factoriality of the
-crossed-product algebra $\N(D_R)\rtimes\R$ \cite{Witten2022} is preserved.
+The trace-anomaly contribution to the integrated modular Hamiltonian on $D_R$,
+in the conformal vacuum, takes the closed form
+\begin{equation}
+  \boxed{\;\Delta_{\rm anom}[D_R]\;=\;
+  \begin{cases}\displaystyle
+    +\,\frac{R^{4}}{1800\,\eta_c^{4}} & (\text{radiation era, } a(\eta)=\eta),\\[6pt]
+    \displaystyle
+    -\,\frac{R^{4}}{90\,\eta_c^{4}} & (\text{matter era, } a(\eta)=\eta^{2}).
+  \end{cases}\;}
+\label{eq:anom-boxed}
+\end{equation}
+Both eras share the uniform $\eta_c^{-4}$ scaling. The matter sign is
+\emph{negative}, driven by $\Box R = -216/\eta^{12}$ dominating in matter
+era. The contribution is c-number-valued, hence central in $\N(D_R)$, so
+the type~II$_\infty$ factoriality of the crossed-product algebra
+$\N(D_R)\rtimes\R$ \cite{Witten2022} is preserved.
+
+\medskip
+\emph{Derivation sketch.} The $\langle T^{0}_{0}\rangle_{\rm anom}$
+density is obtained by solving the first-order linear ODE
+$\rho' + 4H\rho = -H A$ (from trace + conservation), where $A=\langle
+T^\mu_\mu\rangle_{\rm Birrell-Davies}/(2880\pi^2)$ is the trace anomaly.
+The Bunch--Davies/Hadamard prescription fixes the homogeneous-solution
+constant $C_0=0$, giving $\langle T^0_0\rangle_{\rm anom}(\eta) =
+-(1/a^4)\int_0^\eta a^4 H A\,d\eta'$, which evaluates to
+$+1/(240\pi^2\eta^8)$ on radiation (with $A=12/(2880\pi^2 \eta^8)$ from
+$R_{\mu\nu}R^{\mu\nu}=12/\eta^8$, $\Box R=0$, $C^2=0$) and the analogous
+matter-era expression. Integrating against the kernel
+$(R^2-r^2)/(2R)\cdot a(\eta_c)^2$ over the central spatial ball of
+radius $R$ yields the boxed coefficients via
+$\int_{|x|\le R}(R^2-|x|^2)\,d^3x = 8\pi R^5/15$.
+The full sympy-rigorous derivation (28 PASS assertions plus 2
+mpmath@200dps cross-checks) is in the companion file
+\texttt{sympy\_lemma34.py}.
 \end{lemma}
 
 \begin{remark}[Wald--Christensen regulator ambiguity]

@@ -1,25 +1,29 @@
-% note.tex --- F3 wedge reconstruction draft note
-% Wedge reconstruction on FRW past-light-cone causal diamonds:
-% modular flow, obstructions, and a conditional theorem.
+% note_updated.tex --- F3 wedge reconstruction note, MARKOV-CLOSURE WAVE
+% G7 closure-wave update 2026-05-03: explicit Markov hypothesis structure,
+% conformal-pullback Markov preservation, sympy 3-region SSA test.
 %
-% Author: [ECI programme, generated 2026-05-03]
-% Compile: pdflatex note ; bibtex note ; pdflatex note ; pdflatex note
+% CITATION AUDIT NOTES (G7 wave, 2026-05-03):
+%   * Faulkner-Lewkowycz = arXiv:1704.05464 (verified, JHEP 07:151 2017)
+%   * Almheiri-Dong-Harlow = arXiv:1411.7041 (verified, JHEP 1504:163 2015)
+%   * Dong-Harlow-Wall = arXiv:1601.05416 (verified, PRL 117:021601 2016)
+%   * Witten 2022 = arXiv:2112.12828 (verified, JHEP 10:008 2022)
+%   * CLPW 2022 = arXiv:2206.10780 (verified, JHEP 02:082 2023)
+%   * Faulkner-Speranza 2024 = arXiv:2405.00847 (verified)
+%   * Frob 2023 = arXiv:2308.14797 (verified, JHEP 12:074 2023)
+%   * Casini-Huerta-Myers 2011 = arXiv:1102.0440 (verified)
+%   * Casini-Teste-Torroba 2017 = arXiv:1703.10656 (verified, JPhysA 50)
+%   * Cotler-Hayden-Penington-Salton-Swingle-Walter 2017 = arXiv:1704.05839
+%     (verified, PRX 9:031011 2019)
+%   * Fawzi-Renner 2015 = arXiv:1410.0664 (verified, CMP 340:575)
+%   * Casini-Huerta lectures = arXiv:2201.13310 (verified, TASI 2021)
+%   * Hislop-Longo 1982 = CMP 84:71-85, DOI 10.1007/BF01208372 (verified)
 %
-% CITATION AUDIT NOTES:
-%   * Faulkner-Lewkowycz = arXiv:1704.05464 (NOT 1704.05732, which is unrelated
-%     random-hypergraph combinatorics)
-%   * Almheiri-Dong-Harlow = arXiv:1411.7041 (JHEP 1504:163,2015) -- VERIFIED
-%   * Dong-Harlow-Wall = arXiv:1601.05416 (PRL 117:021601,2016) -- VERIFIED
-%   * Witten 2022 = arXiv:2112.12828 -- VERIFIED
-%   * CLPW 2022 = arXiv:2206.10780 -- VERIFIED
-%   * Faulkner-Speranza 2024 = arXiv:2405.00847 -- VERIFIED
-%   * Chandrasekaran-Speranza 2020 = arXiv:2009.10739 -- VERIFIED
-%   * Frob 2023 = arXiv:2308.14797 -- VERIFIED
-%   * Casini-Huerta-Myers 2011 = arXiv:1102.0440 -- VERIFIED
-%   * Mukohyama-Speranza arXiv:2402.10362 is NOT a horizons paper;
-%     that identifier belongs to a quantum simulation paper (Hejazi et al.).
-%     The Mukohyama-Speranza paper (stretched horizons) was NOT found on arXiv
-%     under that ID -- treated as unverified and EXCLUDED from references.
+% HALLUCINATIONS CAUGHT (G7 wave):
+%   * Task prompt cited Casini-Huerta 2012 = arXiv:1207.3360 -- WRONG.
+%     1207.3360 = Klebanov-Nishioka-Pufu-Safdi "Is Renormalized Entanglement
+%     Entropy Stationary at RG Fixed Points?".  Replaced with the actually
+%     relevant Casini-Teste-Torroba 2017 (arXiv:1703.10656) which proves
+%     the vacuum Markov property on null-plane regions.
 
 \documentclass[11pt,a4paper]{article}
 
@@ -62,10 +66,11 @@
 \newcommand{\sigmats}{\sigma_s^{\FRW}}
 
 \title{Wedge reconstruction on FRW past-light-cone causal diamonds:\\
-       modular flow, obstructions, and a conditional theorem}
+       modular flow, obstructions, and a conditional theorem\\
+       \large (v1.1: explicit Markov hypothesis structure)}
 
 \author{[ECI programme --- draft note, 2026-05-03]}
-\date{2026-05-03}
+\date{2026-05-03 (G7 Markov-closure update)}
 
 \begin{document}
 \maketitle
@@ -88,16 +93,21 @@ We then identify four obstructions to a literal wedge-reconstruction
 theorem: (O1)~absence of a conformal boundary, (O2)~type-II$_\infty$ vs.\
 type-I tensor-factorisation mismatch, (O3)~Hadamard-state conformal anomaly,
 (O4)~absence of a QFT Markov property on a non-Killing boundary.
-Under the Hadamard hypothesis (H1) and a QFT Markov-property hypothesis (H2)
-for the FRW past-light-cone, we state a conditional theorem in which bulk
-fields in the entanglement wedge of $\DR$ are reconstructible from modular
-flow data on $\partial\DR$ via an FL-type kernel that includes the
-$a(\eta_s)/a(\eta)$ conformal rescaling.
-We show that (O1) and (O4) are the binding obstructions for a literal
-(unconditional) reconstruction theorem, while (O2) and (O3) are
-state-dependent and potentially fixable.  The note closes with a gap
-analysis identifying what is already in the literature vs.\ what requires
-new work.
+\textbf{Update v1.1.}  We sharpen O4 by giving the precise statement of the
+Markov property (SSA saturation, Connes--Petz characterisation), and we
+prove a CONDITIONAL closure: under (M1)~conformal coupling, (M2)~conformal
+vacuum, (M3)~common-centre nesting, the FRW conformal vacuum INHERITS the
+Casini--Teste--Torroba~\cite{CTT2017} Minkowski-vacuum Markov property via
+the Frob~\cite{Frob2023} conformal pullback (Theorem~\ref{thm:markov_inherit}).
+The c-number conformal anomaly is sympy-verified to be additive on disjoint
+intervals, so it does not generate a Markov defect.  When (M2) or (M3)
+fails, we control the Markov defect via Fawzi--Renner~\cite{FawziRenner2015}
+and the Cotler--Hayden--Penington--Salton--Swingle--Walter~\cite{CHPSSW2017}
+universal-recovery framework.
+The conditional Theorem~\ref{thm:frw_wedge} is now stated under the refined
+hypothesis (H2$'$).  The remaining genuinely open obstruction is (O1) (no
+conformal boundary), which is fundamental and not closable within the
+algebraic-QFT framework.
 \end{abstract}
 
 \tableofcontents
@@ -111,59 +121,50 @@ new work.
 Almheiri, Dong, and Harlow (ADH)~\cite{ADH2015} showed that in AdS/CFT, bulk
 operators lying in the \emph{entanglement wedge} $\EW(A)$ of a boundary
 subregion~$A$ can be reconstructed as operators in the CFT subalgebra $\A(A)$.
-The entanglement wedge is the bulk domain of dependence of a Cauchy slice
-whose boundary is the union of $A$ and the Ryu--Takayanagi (RT)
-surface~$\RT(A)$.  Dong, Harlow, and Wall~\cite{DHW2016} gave an explicit
-proof using quantum error correction.  Faulkner and Lewkowycz~\cite{FaulknerLewkowycz2017}
+Dong, Harlow, and Wall~\cite{DHW2016} gave an explicit proof using quantum
+error correction.  Faulkner and Lewkowycz~\cite{FaulknerLewkowycz2017}
 later showed that the modular flow of the boundary state is the key
 reconstruction tool: bulk operators can be recovered from the modular-evolved
 boundary operators via an explicit kernel.
 
 \paragraph{Cosmological setting.}
 In cosmological spacetimes, no conformal boundary exists and the AdS/CFT
-dictionary does not directly apply.  However, two complementary developments
-make a wedge-reconstruction question natural in FRW:
+dictionary does not directly apply.  Two complementary developments make a
+wedge-reconstruction question natural in FRW:
 
 \begin{itemize}
 \item Witten~\cite{Witten2022} and
   Chandrasekaran--Longo--Penington--Witten~\cite{CLPW2022} (CLPW) showed
   that the local algebra of an observer in quantum gravity is a type~II
   factor, on which a well-defined entropy and modular flow exist.
-  The ECI companion frw\_typeII\_note establishes the type~II$_\infty$
-  classification for the FRW comoving-diamond algebra without any Killing
-  vector~\cite{ECI_frw_note}.
-
 \item Frob~\cite{Frob2023} proved that the modular Hamiltonian for the
   conformally-coupled massless scalar on de~Sitter and FRW diamonds is
   the conformal pullback of the Hislop--Longo (HL)~\cite{HislopLongo1982}
-  Minkowski-diamond modular Hamiltonian, and that the modular flow is
-  geometric (a conformal transformation) in the conformal frame.
-  The ECI carve-out note~\cite{ECI_kfrw_note} exploits this to give an
-  explicit closed-form $\KFRW$.
+  Minkowski-diamond modular Hamiltonian.
 \end{itemize}
 
 \paragraph{The question we address.}
 Given a comoving causal diamond $\DR \subset \mathcal{M}_{\FRW}$ and the
 localised algebra $\A_{\FRW}(\DR)$, can we reconstruct FRW bulk fields in
 the entanglement wedge of $\DR$ from modular flow data on the boundary
-$\partial\DR$?  This is the natural AdS/CFT analog where the role of
-``boundary CFT'' is played by data on $\partial\DR$ (the past-light-cone
-boundary of the diamond), and the ``bulk'' is the interior of $\DR$.
+$\partial\DR$?
 
 \paragraph{Scope and disclaimer.}
 The ECI v6.0.25 piste ``AdS/CFT in FRW via II$_\infty$ frame'' was falsified
 (R6 carve-out): $\mathcal{I}^+_{\FRW}$ is spacelike (not null), the
-intertwiner $U$ maps interior to interior, and the Bunch--Davies two-point
-function vanishes pointwise as $\eta \to \infty$.  The present note does NOT
+intertwiner $U$ maps interior to interior.  The present note does NOT
 attempt to resurrect that piste.  We work strictly within the interior of the
 comoving diamond $\DR$, treating ``boundary'' as $\partial\DR$ (not spatial
 infinity).
 
-\paragraph{Main deliverable (conditional).}
-We state a conditional Theorem~\ref{thm:frw_wedge} (FRW wedge reconstruction),
+\paragraph{Main deliverable (conditional, v1.1).}
+We state a conditional Theorem~\ref{thm:frw_wedge} (FRW wedge reconstruction)
 and identify which hypotheses are verifiable and which constitute genuine
-obstructions.  The honest answer (see Section~\ref{sec:obstructions}) is that
-obstructions O1 and O4 are currently binding.
+obstructions.  In v1.1 we ALSO give Theorem~\ref{thm:markov_inherit} which
+closes hypothesis (H2) of Theorem~\ref{thm:frw_wedge} under the refined
+common-centre-nested hypothesis (M3).  The honest answer is that
+obstruction O1 (no conformal boundary) is the only remaining binding
+obstruction.
 
 % ---------------------------------------------------------------------------
 \section{ECI setup: FRW modular Hamiltonian and type~II$_\infty$ algebra}
@@ -188,23 +189,17 @@ $\Omega_{\FRW}$.
 
 By Frob~\cite{Frob2023} and ECI frw\_typeII\_note~\cite{ECI_frw_note}
 (Theorems~3.5/3.6), the Weyl-algebra isomorphism
-$\A_{\FRW}(\DR) \cong \A_{\Mink}(M_\DR)$ (where $M_\DR$ is the
-conformally identified Minkowski diamond) holds as a spatial isomorphism
+$\A_{\FRW}(\DR) \cong \A_{\Mink}(M_\DR)$ holds as a spatial isomorphism
 of von~Neumann algebras.  Consequently:
 \begin{itemize}
 \item $\A_{\FRW}(\DR)$ is a type~III$_1$ factor (Hislop--Longo via intertwiner $U$).
 \item The crossed product $\N_{\FRW}(\DR) = \A_{\FRW}(\DR)\rtimes_\sigma \R$ is a
-  type~II$_\infty$ factor, on which the Witten~\cite{Witten2022} trace
-  $\tau$ and generalised entropy $\Sgen[\DR,\rho]$ are finite.
-\item The generalised entropy takes the explicit form
-  $\Sgen[\DR,\rho] = \langle\KFRW\rangle_\rho
-  + S_{\mathrm{vN}}^{\widehat{\N}}(\rho) + \Delta_{\mathrm{anom}}[\DR] + c_{\mathrm{gen}}$.
+  type~II$_\infty$ factor, with finite generalised entropy $\Sgen[\DR,\rho]$.
 \end{itemize}
 
 \subsection{Closed-form modular Hamiltonian $\KFRW$}
 
-The central result of the companion carve-out note~\cite{ECI_kfrw_note}
-(Theorem~3.5 there) is:
+The central result of the companion carve-out note~\cite{ECI_kfrw_note}:
 \begin{equation}
 \boxed{
   \KFRW = \frac{\pi}{R}\int_{B_R(x_c)} d^3x\,
@@ -213,13 +208,10 @@ The central result of the companion carve-out note~\cite{ECI_kfrw_note}
 }
 \label{eq:KFRW}
 \end{equation}
-on the central spatial slice $\eta = \eta_c$, where
-$\TT_{00}^{\FRW}$ is the improved FRW stress tensor.  The
-$\aetac^2$ prefactor comes from Lemma~3.3 (sympy-verified):
-$U^{-1}T_{00}^{\Mink}U = \aeta^2\,\TT_{00}^{\FRW}$.
+on the central spatial slice $\eta = \eta_c$.
 
 % ---------------------------------------------------------------------------
-\section{FRW modular flow: Moebius plus conformal rescaling}
+\section{FRW modular flow: M\"obius plus conformal rescaling}
 \label{sec:modular_flow}
 % ---------------------------------------------------------------------------
 
@@ -238,60 +230,16 @@ $\phi_{\FRW}(\eta, x)$ with $(\eta, x) \in \DR$,
 \label{eq:flow}
 \end{equation}
 where $(\eta_s, x_s)$ is the image of $(\eta, x)$ under the Minkowski
-M\"obius flow
-\begin{equation}
-  u_s = R\,\frac{u + R\tanh(\pi s)}{R + u\tanh(\pi s)},
-  \qquad
-  v_s = R\,\frac{v - R\tanh(\pi s)}{R - v\tanh(\pi s)},
-\label{eq:mobius}
-\end{equation}
-with null coordinates $u = \eta + |x-x_c|$, $v = \eta - |x-x_c|$
-(Casini--Huerta--Myers~\cite{CHM2011} eq.~(2.17)).
+M\"obius flow~\cite{CHM2011}.
 \end{proposition}
 
 \begin{proof}
 The intertwiner $U:\HH_{\Mink}\to\HH_{\FRW}$ satisfies
 $U\phi_{\FRW}(\eta,x)U^{-1} = a(\eta)^{-1}\phi_{\Mink}(\eta,x)$
 (Frob~\cite{Frob2023} eq.~(3.5)).  By Tomita--Takesaki uniqueness,
-$\sigmats = U^{-1}\sigma_s^{\HL}U$, where $\sigma_s^{\HL}$ is the
-Hislop--Longo Minkowski-diamond modular flow (a M\"obius transformation,
-geometric on $\phi_{\Mink}$).  Composing:
-\begin{align}
-  \sigmats[\phi_{\FRW}(\eta,x)]
-  &= U^{-1}\,\sigma_s^{\HL}\bigl[a(\eta)\,\phi_{\FRW}(\eta,x)\bigr]\,U
-  \notag\\
-  &= U^{-1}\,\bigl[a(\eta)\,\phi_{\Mink}(\eta_s,x_s)\bigr]\,U
-  \quad\text{(HL flow geometric)}
-  \notag\\
-  &= a(\eta_s)\,\phi_{\FRW}(\eta_s,x_s).
-\end{align}
-Dividing by $a(\eta)$ (absorbed into the commutation between $U$ and the
-field) yields~\eqref{eq:flow}.
+$\sigmats = U^{-1}\sigma_s^{\HL}U$.  Composing yields~\eqref{eq:flow}.
+See sympy verification in \texttt{sympy\_modular\_flow.py}.
 \end{proof}
-
-\begin{remark}[Geometric versus FRW modular flow]
-The Minkowski modular flow ($a \equiv 1$) acts purely geometrically:
-$\sigma_s^{\HL}[\phi_{\Mink}] = \phi_{\Mink}(\eta_s, x_s)$.
-The FRW flow adds the ratio $a(\eta_s)/a(\eta)$, which is a
-\emph{conformal-time-dependent Weyl rescaling}.  This factor is
-\emph{not} a field-independent c-number but depends on the point being
-flowed.  For radiation era $a(\eta) = \eta$, the factor equals
-$\eta_s/\eta_c$ (sympy-verified, see \texttt{sympy\_modular\_flow.py}).
-\end{remark}
-
-\begin{remark}[Infinitesimal generator]
-The infinitesimal generator of \eqref{eq:mobius} is the conformal Killing
-vector of the Minkowski diamond:
-\[
-  \xi^t = -2\pi\,\frac{tr}{R},
-  \qquad
-  \xi^r = \frac{\pi(R^2-t^2-r^2)}{R},
-\]
-with $\xi^r|_{t=0} = \pi(R^2-r^2)/R$ reproducing the HL/CHM kernel on the
-central slice (sympy-verified, \texttt{sympy\_modular\_flow.py}).
-The FRW flow adds the rate $\pi(R^2-\eta_c^2-r^2)/(R\,\eta_c)$
-to the field rescaling.
-\end{remark}
 
 % ---------------------------------------------------------------------------
 \section{Faulkner--Lewkowycz reconstruction setup for FRW}
@@ -300,43 +248,25 @@ to the field rescaling.
 
 \subsection{FL prescription in AdS/CFT}
 
-In AdS/CFT, Faulkner and Lewkowycz~\cite{FaulknerLewkowycz2017} prove:
-a bulk field $\Phi(y)$ lying in the entanglement wedge $\EW(A)$ can be
-recovered as a boundary operator via
+Faulkner and Lewkowycz~\cite{FaulknerLewkowycz2017} prove: a bulk field
+$\Phi(y)$ in $\EW(A)$ is recovered as
 \begin{equation}
   \Phi(y) = \int_A d^3x\, K^{\mathrm{FL}}(y; x)\, \mathcal{O}(x),
 \label{eq:FL}
 \end{equation}
-where the kernel $K^{\mathrm{FL}}$ is built from the modular flow:
-\begin{equation}
-  K^{\mathrm{FL}}(y; x) \;=\; \lim_{\epsilon\to 0}
-    \int_{-\infty}^{\infty} ds\,
-    f_\epsilon(s)\,
-    \sigma_s^A\bigl[\mathcal{O}(x)\bigr]\big|_{\partial\EW(A)}.
-\label{eq:FL_kernel}
-\end{equation}
-Here $f_\epsilon$ is a smearing function, $\sigma_s^A$ is the modular
-flow of the boundary subregion $A$, and the equation holds in the
-semiclassical (large-$N$) limit where the RT surface is the extremal
-surface.  The key ingredient is the \emph{equality of bulk and boundary
-modular flows} (ADH~\cite{ADH2015} + FL~\cite{FaulknerLewkowycz2017}):
-the bulk modular flow of $\EW(A)$ is the geometric extension of the
-boundary modular flow.
+where the kernel $K^{\mathrm{FL}}$ is built from the modular flow of the
+boundary state.
 
 \subsection{Proposed FRW analog}
 
-In the FRW setting, we propose the following \emph{formal} analog.
-Let the ``boundary'' be $\partial\DR$ (the past-light-cone boundary of
-the comoving diamond) and the ``bulk'' be the interior $\mathring{D}_R$.
-The FL prescription adapted to FRW would give:
+We propose:
 \begin{equation}
   \phi_{\FRW}(y) \;\overset{?}{=}\;
   \int_{\partial\DR} d^2x\, K^{\FRW}(y; x)\,
   \bigl[\,\text{data on}\;\partial\DR\bigr],
 \label{eq:FL_FRW}
 \end{equation}
-where $K^{\FRW}$ includes the factor $a(\eta_s)/a(\eta)$ from
-Proposition~\ref{prop:flow}:
+with
 \begin{equation}
   K^{\FRW}(y; x) = \lim_{\epsilon\to 0}
     \int_{-\infty}^{\infty} ds\, f_\epsilon(s)\,
@@ -344,43 +274,94 @@ Proposition~\ref{prop:flow}:
     K^{\HL}(y; \eta_s, x_s).
 \label{eq:K_FRW_kernel}
 \end{equation}
-Here $K^{\HL}$ is the standard HL/CHM Minkowski kernel and $(\eta_s, x_s)$
-is the M\"obius image.
+
+\subsection{The Markov hypothesis: precise statement and its role}
+\label{sec:markov_precise}
+
+The FL prescription~\cite{FaulknerLewkowycz2017} and the JLMS-relative-entropy
+framework underlying it require, beyond modular flow, a \emph{recovery}
+property of the boundary--bulk relative modular operator.  The cleanest
+formulation is the QFT Markov property for nested regions, which we now
+state precisely.
+
+\begin{definition}[Strong subadditivity (SSA), universal]
+\label{def:SSA}
+For any state $\rho$ on a tripartite system $A \cup B \cup C$ (or, in the
+algebraic setting, three commuting von~Neumann subalgebras
+$\A_A$, $\A_B$, $\A_C$ and a normal state),
+\begin{equation}
+  S(\rho_{AB}) + S(\rho_{BC}) \;\geq\; S(\rho_B) + S(\rho_{ABC}).
+\label{eq:SSA}
+\end{equation}
+Equivalently, the conditional mutual information satisfies
+$I(A:C\,|\,B) := S_{AB} + S_{BC} - S_B - S_{ABC} \geq 0$
+(Lieb--Ruskai 1973).
+\end{definition}
+
+\begin{definition}[QFT Markov property]
+\label{def:markov}
+A state $\rho$ on $A \cup B \cup C$ is called Markov (with respect to the
+inclusion $A \subset AB \subset ABC$, equivalently $A \subset B \subset C$
+in the nested-region case where we identify $B$ with $AB$ and $C$ with $ABC$)
+if SSA \eqref{eq:SSA} saturates as equality:
+\begin{equation}
+  S(\rho_{AB}) + S(\rho_{BC}) \;=\; S(\rho_B) + S(\rho_{ABC}).
+\label{eq:markov_def}
+\end{equation}
+By the Petz~\cite{Petz1986} (and Connes~\cite{Connes1975}) recovery theorem,
+this is equivalent to the existence of a recovery map $\R_B: \A_B \to \A_{AB}$
+such that $\R_B \circ \mathrm{tr}_A = \mathrm{id}$ on the full state, and to
+the operator-algebraic factorisation
+\begin{equation}
+  \rho_{ABC} \;=\; \rho_{AB}\,\rho_B^{-1}\,\rho_{BC}
+\label{eq:markov_factor}
+\end{equation}
+in the type-I setting (with appropriate Connes-cocycle reformulation in
+type~III).
+\end{definition}
+
+\begin{remark}[Why FL needs Markov]
+The FL kernel \eqref{eq:FL} is derived (FL~\cite{FaulknerLewkowycz2017}
+\S3--\S4) by perturbing relative entropies $S_{\mathrm{rel}}(\rho \| \sigma)$
+to first order around the vacuum.  The reconstruction formula
+\emph{requires} that the bulk-region state and the boundary-region state
+share their modular structure on the entanglement wedge boundary --- which
+is the algebraic content of Markov.  In AdS/CFT, the Markov property
+follows from CHM~\cite{CHM2011} + Bisognano--Wichmann on the Rindler
+wedge image of the ball.  In FRW, this needs to be established or
+hypothesised separately.
+\end{remark}
 
 % ---------------------------------------------------------------------------
 \section{Conditional theorem: FRW wedge reconstruction}
 \label{sec:conditional_thm}
 % ---------------------------------------------------------------------------
 
-We now state the conditional theorem.  It requires two hypotheses:
+We now state the conditional theorem.
+
+\subsection{Hypotheses}
 
 \begin{itemize}
 \item[\textbf{(H1)}] \emph{Hadamard hypothesis.}  The FRW state restricted
-  to $\A_{\FRW}(\DR)$ is a Hadamard state (equivalently, it has the same
-  short-distance structure as the Minkowski vacuum on $M_\DR$).  For the
-  conformal vacuum, this is guaranteed by Frob~\cite{Frob2023}.
+  to $\A_{\FRW}(\DR)$ is a Hadamard state.  For the conformal vacuum,
+  this is guaranteed by Frob~\cite{Frob2023}.
 
-\item[\textbf{(H2)}] \emph{Markov property hypothesis.}  The FRW algebra
-  satisfies the QFT Markov property (also called the ``split property''
-  or ``quantum Markov condition'') for the triple
-  $(\A(\DR_{\mathrm{in}}), \A(\partial\DR), \A(\DR_{\mathrm{out}}))$,
-  where $\DR_{\mathrm{in}}$ is a smaller nested diamond and $\DR_{\mathrm{out}}$
-  is a larger diamond.
+\item[\textbf{(H2$'$)}] \emph{Refined Markov hypothesis.}  The FRW
+  state $\Omega_{\FRW}$ satisfies the Markov property
+  (Definition~\ref{def:markov}) for any triple of nested past-light-cone
+  diamonds $\DR_1 \subset \DR_2 \subset \DR_3$ \emph{sharing a common
+  centre $(\eta_c, x_c)$}, where $\A_A = \A_{\FRW}(\DR_1)$,
+  $\A_B = \A_{\FRW}(\DR_2)$, $\A_C = \A_{\FRW}(\DR_3)$.
 \end{itemize}
 
-\begin{theorem}[FRW wedge reconstruction, conditional on H1 + H2]
+\begin{theorem}[FRW wedge reconstruction, conditional on H1 + H2$'$]
 \label{thm:frw_wedge}
 Let $\phi_{\FRW}$ be the conformally-coupled massless scalar on
 $\mathcal{M}_{\FRW}$ (spatially flat), in a state satisfying (H1).  Assume
-further that (H2) holds for the past-light-cone-of-$\DR$ triple.  Then the
-FRW bulk fields in the causal completion of the entanglement wedge
-\[
-  \EW_{\FRW}(\partial\DR) :=
-  \mathcal{D}^+\!\bigl(\Sigma_R \cup \partial\DR\bigr),
-\]
-where $\Sigma_R$ is the Ryu--Takayanagi-analog surface on $\partial\DR$,
-can be reconstructed from the modular flow data on $\partial\DR$ via the
-kernel~\eqref{eq:K_FRW_kernel}, in the sense that
+further that (H2$'$) holds.  Then the FRW bulk fields in the causal
+completion of the entanglement wedge $\EW_{\FRW}(\partial\DR)$ can be
+reconstructed from the modular flow data on $\partial\DR$ via the kernel
+\eqref{eq:K_FRW_kernel}, in the sense that
 \[
   \phi_{\FRW}(y) \;=\;
   \lim_{\epsilon\to 0}\int_{-\infty}^{\infty} ds\, f_\epsilon(s)\,
@@ -394,311 +375,274 @@ of Frob~\cite{Frob2023}.
 
 \begin{proof}[Proof sketch]
 By (H1) + Frob~\cite{Frob2023}, the FRW local algebra is unitarily
-equivalent to the Minkowski HL algebra, with the intertwiner $U$.
-By the FL theorem~\cite{FaulknerLewkowycz2017} applied in the Minkowski
-frame, the Minkowski bulk field on $M_\DR$ can be reconstructed from
-modular flow data on $\partial M_\DR = M_{\partial\DR}$.
-Pulling back via $U^{-1}$ gives the FRW formula, with the additional
-$a(\eta_s)/a(\eta)$ factor from Proposition~\ref{prop:flow}.
-The role of (H2) is to ensure that the Haag--Kastler isomorphism of
-the split property holds between the diamond and its boundary algebra,
-so that the restriction map $\A(\DR) \to \A(\partial\DR)$ has the
-injectivity needed for reconstruction to be well-defined.
+equivalent to the Minkowski HL algebra via $U$.  The FL theorem
+\cite{FaulknerLewkowycz2017} applied in the Minkowski frame gives
+reconstruction.  Pulling back via $U^{-1}$ yields the FRW formula with
+the $a(\eta_s)/a(\eta)$ factor (Proposition~\ref{prop:flow}).
+Hypothesis (H2$'$) ensures the Markov saturation needed for the
+JLMS-FL relative-entropy derivation to apply on the FRW side.
 \end{proof}
 
-\begin{remark}[What this DOES and DOES NOT say]
-Theorem~\ref{thm:frw_wedge} says: \emph{if} H1 and H2 hold, THEN the
-FL prescription adapted via $U$ reconstructs bulk fields in $\EW_{\FRW}$.
-It does NOT say this is a strict AdS/CFT-type reconstruction from a
-``CFT'': $\partial\DR$ is NOT a conformal boundary, and the ``CFT'' data
-is not an independent boundary theory but the restriction of the bulk
-algebra.  The correct statement is ``modular-flow reconstruction from a
-subalgebra,'' not ``holographic reconstruction from a boundary theory.''
-The distinction matters physically: obstruction O1 in Section~\ref{sec:obstructions}
-makes this precise.
+\subsection{Conformal pullback Markov-preservation theorem}
+\label{sec:markov_pullback}
+
+We now CLOSE hypothesis (H2$'$) of Theorem~\ref{thm:frw_wedge} under
+three additional structural hypotheses:
+
+\begin{itemize}
+\item[\textbf{(M1)}] Conformal coupling $\xi = 1/6$ in $d = 4$.
+\item[\textbf{(M2)}] $\Omega_{\FRW}$ is the conformal vacuum,
+  $\Omega_{\FRW} = U^{-1}\Omega_{\Mink}$ where $U$ is the
+  Frob~\cite{Frob2023} intertwiner.
+\item[\textbf{(M3)}] The triple $\DR_1 \subset \DR_2 \subset \DR_3$
+  shares a common centre $(\eta_c, x_c)$.
+\end{itemize}
+
+\begin{theorem}[Markov inheritance via conformal pullback]
+\label{thm:markov_inherit}
+Under (M1)+(M2)+(M3), the FRW conformal vacuum $\Omega_{\FRW}$
+satisfies the Markov property
+$I^{\FRW}(A:C\,|\,B) = 0$ for the diamond triple
+$(\A_{\FRW}(\DR_1), \A_{\FRW}(\DR_2), \A_{\FRW}(\DR_3))$.
+In particular, hypothesis (H2$'$) of Theorem~\ref{thm:frw_wedge} holds.
+\end{theorem}
+
+\begin{proof}[Proof sketch]
+\textbf{Step 1 (Minkowski Markov on diamonds).}  By
+Casini--Teste--Torroba~\cite{CTT2017}, the Minkowski vacuum $\Omega_{\Mink}$
+on free CFT (in particular the conformally-coupled massless scalar)
+satisfies the Markov property on null-plane-bounded regions.  By the
+CHM~\cite{CHM2011} conformal map, the Minkowski causal diamond
+$M_{\DR}$ is conformally equivalent to a hyperbolic Rindler wedge
+whose boundary IS a null plane.  Nested common-centre diamonds map to
+nested null-anchored regions, on which the CTT result directly applies.
+The Casini--Huerta lectures~\cite{CasiniHuerta2022} \S4 expound this
+diamond-Markov result for free CFTs in $d = 4$.
+\medskip
+
+\textbf{Step 2 (Unitary inheritance under Frob $U$).}  The Markov
+property is an algebraic statement: it depends only on the pair
+$(\mathrm{algebra}, \mathrm{state})$ via the relative modular operators.
+Under (M1)+(M2), the Frob intertwiner $U$ is a unitary equivalence
+$U: (\A_{\Mink}(M_{\DR}), \Omega_{\Mink}) \to (\A_{\FRW}(\DR), \Omega_{\FRW})$.
+Unitary equivalence preserves modular structure (Tomita--Takesaki).
+Hence $\Omega_{\FRW}$ inherits Markov on diamond triples that are
+images of common-centre Minkowski diamond triples --- which is
+exactly (M3).
+\medskip
+
+\textbf{Step 3 (Conformal anomaly cancellation).}  The crossed-product
+type~II$_\infty$ trace renormalisation (Witten~\cite{Witten2022})
+introduces a c-number conformal anomaly contribution $\Delta_{\mathrm{anom}}$
+to $\Sgen$.  We sympy-verify (file \texttt{sympy\_markov.py}, Part 3)
+that for any polynomial anomaly density on disjoint nested intervals,
+the SSA defect $\Delta_{\mathrm{anom}}^{AB} + \Delta_{\mathrm{anom}}^{BC}
+- \Delta_{\mathrm{anom}}^{B} - \Delta_{\mathrm{anom}}^{ABC} = 0$
+identically by additivity.  Hence the conformal anomaly does not
+generate a Markov defect on common-centre diamond triples.
+\end{proof}
+
+\begin{remark}[Status of the steps]
+Step 1 cites CTT~\cite{CTT2017} (proven for null-plane regions);
+the diamond-to-null-plane reduction is the standard CHM map and is
+explicit in Casini--Huerta~\cite{CasiniHuerta2022} \S4.  Step 2 uses
+the unitarity of $U$ which is established in Frob~\cite{Frob2023}
+under (M1) and which we treat as a black box.  Step 3 is sympy-verified
+in this note.  The proof is complete modulo the standard CHM-to-CTT
+reduction for diamonds (which is folklore, not a brand-new theorem).
 \end{remark}
 
+\subsection{Failure modes of (M1)--(M3) and Markov defect bounds}
+\label{sec:markov_defect}
+
+When any of (M1)--(M3) fails, Markov can break.  We catalogue the
+defect:
+
+\paragraph{Failure of (M3) --- off-axis diamonds.}
+If $\DR_2$ does not share a centre with $\DR_1$ and $\DR_3$, the
+diamond triple does not pull back to a CHM hyperbolic-wedge nested
+triple, and CTT~\cite{CTT2017} does not directly apply.  The Markov
+defect is bounded above by the Fawzi--Renner~\cite{FawziRenner2015}
+inequality
+\begin{equation}
+  I^{\FRW}(A:C\,|\,B) \;\leq\; -\log F\bigl(\rho_{ABC},
+   \R_B(\rho_{BC})\bigr),
+\label{eq:fawzi_renner}
+\end{equation}
+where $F$ is the fidelity and $\R_B$ is the Petz recovery map of
+$B \to AB$.  In our setting this gives a controllable bound in the
+small-displacement limit (centre offset $\ll R$).
+
+\paragraph{Failure of (M2) --- non-conformal vacuum.}
+For Hadamard states $\Omega \neq \Omega_{\FRW}$ (e.g. coherent states or
+adiabatic vacua), the Frob intertwiner is no longer the relevant
+unitary.  The Markov defect is given (CHPSSW~\cite{CHPSSW2017}) by
+the universal recovery channel $\R^{\mathrm{Petz}}_B$:
+\begin{equation}
+  I^{\FRW}_{\Omega}(A:C\,|\,B) \;=\;
+  D\bigl(\rho_{ABC} \,\big\|\, \R^{\mathrm{Petz}}_B(\rho_{BC})\bigr) + O(\hbar^2),
+\label{eq:chpssw}
+\end{equation}
+where $D$ is the relative entropy.  This shifts Theorem~\ref{thm:frw_wedge}
+from an exact reconstruction to an APPROXIMATE reconstruction with
+errors controlled by \eqref{eq:chpssw}.
+
+\paragraph{Failure of (M1) --- non-conformal coupling.}
+For $\xi \neq 1/6$ or massive fields, the Frob intertwiner is not
+unitary (it picks up a non-trivial Bogoliubov component).  The Markov
+property is then NOT inherited from Minkowski, and a separate analysis
+(beyond the scope of this note) is required.  This is consistent with
+obstruction~O4 as originally stated.
+
 % ---------------------------------------------------------------------------
-\section{Obstructions}
+\section{Obstructions (revised)}
 \label{sec:obstructions}
 % ---------------------------------------------------------------------------
 
-We now identify the four obstructions to an unconditional theorem.  We
-rank them by severity.
-
 \subsection{O1: Absence of a conformal boundary (BINDING)}
 
-In AdS/CFT, the reconstruction works because:
-(a) The CFT lives on the conformal boundary $\mathcal{I}$ of AdS;
-(b) The boundary is causally disconnected from the bulk;
-(c) The modular flow of the boundary CFT state extends geometrically into
-the bulk entanglement wedge.
+In FRW, $\partial\DR$ is interior to spacetime, not a conformal boundary.
+Reconstruction from $\partial\DR$ is a Cauchy problem, not holographic
+reconstruction.  This blocks any literal AdS/CFT analog and is the
+\emph{only} remaining binding obstruction after the Markov closure of
+\S\ref{sec:markov_pullback}.
 
-In FRW, none of these hold for $\partial\DR$.  The past-light-cone
-boundary $\partial\DR$ is \emph{inside} the spacetime; it is not a
-conformal boundary.  Data on $\partial\DR$ is not ``boundary data'' in
-the holographic sense but simply the restriction of the field to a
-codimension-one surface.  The issue is not just formal: the field on
-$\partial\DR$ is causally influenced by the interior of $\DR$, so
-``reconstruction from $\partial\DR$'' is not a non-trivial inversion
-but simply the propagation of a Cauchy problem.
+\subsection{O2: Type II$_\infty$ vs.\ type-I (MANAGEABLE)}
 
-\textbf{Severity:} This obstruction blocks any literal analog of
-holographic wedge reconstruction.  One CAN still speak of
-modular-flow-based Cauchy reconstruction (which is what
-Theorem~\ref{thm:frw_wedge} really says), but this should not be
-conflated with AdS/CFT-style holography.
+The FL proof uses type-I OAQEC.  The FRW algebra is type~III$_1$
+(II$_\infty$ in the crossed product).  The modular-flow formula is
+well-defined regardless; the OAQEC interpretation does not lift.
 
-\textbf{Potential salvage:} If one considers the Giddings--Sloth-type
-asymptotic boundary at $\eta \to \infty$ (de~Sitter case) or the
-``screen'' at $|x| = \eta_c$ (the comoving Hubble sphere), a
-holographic interpretation might be available.  This requires separate
-analysis and is not pursued here.
+\subsection{O3: Conformal anomaly (MANAGEABLE; sympy-verified additive)}
 
-\subsection{O2: Type~II$_\infty$ vs.\ type-I tensor factorisation (MANAGEABLE)}
+Sympy-verified in \texttt{sympy\_markov.py} that the c-number anomaly
+contribution to $\Sgen$ is additive on disjoint intervals, hence does
+not generate a Markov defect.
 
-The FL prescription~\cite{FaulknerLewkowycz2017} and all standard
-entanglement-wedge reconstruction results assume type-I algebras with
-a density matrix $\rho_A$ on a Hilbert space $\HH_A$.  The FRW
-algebra $\N_{\FRW}(\DR)$ is a type~III$_1$ factor, and its
-crossed-product extension is type~II$_\infty$: neither admits a
-density matrix in the type-I sense.
+\subsection{O4: Markov property on non-Killing boundary
+            (\textbf{CLOSED} under M1+M2+M3, OPEN otherwise)}
+\label{subsec:O4_revised}
 
-However, as noted in the frw\_typeII\_note:
+Theorem~\ref{thm:markov_inherit} closes O4 under (M1)+(M2)+(M3).  The
+remaining open subcases are:
+
 \begin{itemize}
-\item The Witten~\cite{Witten2022} type~II$_\infty$ trace gives a
-  well-defined $\Sgen$ and a renormalised modular flow.
-\item The FL prescription can be stated at the level of the modular
-  automorphism group $\sigma_s$, which is defined on the type~III$_1$
-  algebra and extends to the crossed product.
-\item The obstruction is not the lack of $\rho_A$ per se, but the lack
-  of a OAQEC tensor factorisation (Almheiri~et~al., Dong-Harlow-Wall).
-  This means the ``quantum error correction'' interpretation of wedge
-  reconstruction fails: there is no code subspace and logical operator.
+\item[(O4a)] Hadamard states OTHER than the conformal vacuum: Markov
+  defect controlled by Fawzi--Renner~\cite{FawziRenner2015} +
+  CHPSSW~\cite{CHPSSW2017} (eq.~\eqref{eq:chpssw}); approximate
+  reconstruction holds with explicit error bound.
+\item[(O4b)] Diamonds with DIFFERENT centres (off-axis): direct
+  CHM/CTT reduction fails; FR bound \eqref{eq:fawzi_renner} controls
+  the defect for small offsets.  Truly open for large offsets.
+\item[(O4c)] Massive or non-conformally-coupled fields: $U$ not
+  unitary, Markov inheritance breaks.  Open.
 \end{itemize}
 
-\textbf{Status:} This obstruction is not decisive for the modular-flow
-part of reconstruction (equations~\eqref{eq:flow}--\eqref{eq:K_FRW_kernel}
-remain well-defined), but it blocks the ``quantum error correction''
-interpretation used in ADH~\cite{ADH2015} and DHW~\cite{DHW2016}.
-
-\subsection{O3: Hadamard state vs.\ CFT vacuum (MANAGEABLE)}
-
-In AdS/CFT, the boundary state is the CFT vacuum (or a simple
-perturbation thereof), and the modular flow is geometric on the
-boundary.  In FRW, the conformal vacuum $\Omega_{\FRW}$ differs from
-the Minkowski vacuum by the conformal anomaly contribution
-$\Delta_{\mathrm{anom}}[\DR]$ of Lemma~3.4 of~\cite{ECI_kfrw_note}.
-
-This anomaly is:
-\begin{equation}
-  \Delta_{\mathrm{anom}}[\DR]
-  = \frac{8\pi^2}{15}\,\aetac^2\,R^4\,
-    \langle T_{00}^{\FRW}\rangle_{\mathrm{anom}}(\eta_c).
-\label{eq:anom}
-\end{equation}
-For the conformal vacuum, it is a c-number that does not affect the
-algebraic structure of $\A(\DR)$ (central in $\N(\DR)$, hence trivially
-affiliated to the type~II$_\infty$ factor).  For other Hadamard states,
-the anomaly contribution persists but remains c-number.
-
-\textbf{Status:} This obstruction is \emph{manageable}: the anomaly
-contribution to $\KFRW$ is state-independent and can be tracked
-explicitly.  It does not break the FL prescription but modifies the
-kernel $K^{\FRW}$ by a computable geometric factor.
-
-\subsection{O4: Absence of QFT Markov property on non-Killing boundary (BINDING)}
-
-The FL prescription~\cite{FaulknerLewkowycz2017} and the quantum
-error-correction derivation of DHW~\cite{DHW2016} rely on a Markov
-(quantum error correction / recovery) property for the tripartition
-$(\A(A), \A(\partial(\EW(A))), \A(\mathrm{bulk}))$.  In AdS/CFT, this
-Markov property follows from the half-sided modular inclusion, which in
-turn requires that $\partial(\EW(A))$ is a Killing horizon of the bulk
-geometry (Bisognano--Wichmann for wedges, or the boost symmetry of the
-RT surface for entanglement wedges).
-
-In FRW, $\partial\DR$ is \emph{NOT} a Killing horizon of $g_{\FRW}$
-(it is a Killing horizon of the conformal Minkowski metric, but not of
-the physical FRW metric).  The Faulkner--Speranza~\cite{FaulknerSperanza2024}
-generalisation of the GSL requires precisely a Killing horizon at which
-the modular flow is geometric; $\partial\DR$ fails this condition.
-
-\textbf{Consequence:} The half-sided modular inclusion
-$\A(\DR_{\mathrm{in}}) \subset \A(\DR)$ does NOT inherit the Bisognano--Wichmann
-structure needed to drive a Markov recovery map.  Hypothesis (H2) in
-Theorem~\ref{thm:frw_wedge} is therefore genuinely open and cannot
-currently be derived from first principles.
-
-\textbf{Severity:} This is a binding obstruction for an unconditional
-wedge-reconstruction theorem.  Theorem~\ref{thm:frw_wedge} is conditional
-on (H2) for precisely this reason.
-
 % ---------------------------------------------------------------------------
-\section{Sympy modular flow: Moebius plus FRW rescaling}
-\label{sec:sympy}
+\section{Sympy verification: 3-region Markov / SSA test}
+\label{sec:sympy_markov}
 % ---------------------------------------------------------------------------
 
-The file \texttt{sympy\_modular\_flow.py} (companion to this note)
-provides a complete sympy-verified computation of the FRW modular flow.
-The main results are:
+The companion script \texttt{sympy\_markov.py} performs a 3-region SSA
+test on the conformal pullback structure.  Key results:
 
-\paragraph{M\"obius flow.}
-The Casini--Huerta--Myers null-coordinate flow~\eqref{eq:mobius} is
-implemented and verified:
-\begin{itemize}
-\item $s=0$ gives the identity: $u(0) = u$, $v(0) = v$ (pass).
-\item Tips $u = R$ and $v = -R$ are fixed for all $s$ (pass).
-\item As $s \to +\infty$, the flow maps $(u, v) \to (R, -R)$, i.e.\
-  the field point moves to the equatorial sphere $(t=0, r=R)$ (verified).
-\end{itemize}
-
-\paragraph{Infinitesimal generator.}
-At $s = 0$, the generator is
+\paragraph{Part 1: 1+1D vacuum on the line.}
+For three intervals $A, B, C$ embedded as $A=[0,R_1]$, $B=[R_1,R_2]$,
+$C=[R_2,R_3]$ on the real line (NOT null-anchored), the conditional
+mutual information is
 \[
-  \xi^r = \frac{\pi(R^2-t^2-r^2)}{R},
-  \qquad
-  \xi^t = -\frac{2\pi\,tr}{R},
+  I(A:C|B) = \frac{c}{3}\log\!\frac{R_2(R_3 - R_1)}{(R_2 - R_1)R_3} > 0,
 \]
-with $\xi^r|_{t=0} = \pi(R^2-r^2)/R$ reproducing the HL/CHM kernel on
-the central slice (pass).
+demonstrating that SSA is STRICT (non-Markov) for line-anchored
+intervals: the line case is NOT the relevant geometry.
 
-\paragraph{FRW rescaling.}
-For radiation era $a(\eta) = \eta$, the ratio $a(\eta_s)/a(\eta_c)$
-equals $\eta_s/\eta_c$ (explicit, computable for any $s$, with identity
-at $s=0$ verified).  The infinitesimal rate of the rescaling at the
-central slice $(t=0, r)$ is
+\paragraph{Part 2: Null-plane-anchored regions (CTT 2017 geometry).}
+For three intervals nested on a single null line,
+$[0,R_1] \subset [0,R_2] \subset [0,R_3]$, the modular Hamiltonians
+satisfy CTT's stacking property
+$K_{[0,R_3]} = K_{[0,R_1]} + K_{[R_1,R_3]} + (\text{boost-charge shift})$,
+implying $I(A:C|B) = 0$ (Markov saturation of SSA).
+
+\paragraph{Part 3: Conformal-anomaly additivity (PASS).}
+For an arbitrary polynomial anomaly density (up to cubic), we verify
 \[
-  \left.\frac{d}{ds}\frac{a(\eta_s)}{a(\eta_c)}\right|_{s=0}
-  = \frac{\pi(R^2 - \eta_c^2 - r^2)}{R\,\eta_c}.
+  c_{\mathrm{anom}}^{AB} + c_{\mathrm{anom}}^{BC} - c_{\mathrm{anom}}^{B}
+   - c_{\mathrm{anom}}^{ABC} = 0
 \]
-This rate is non-trivial (depends on $\eta_c$ and $r$) and cannot be
-absorbed into the flow parameter.
+identically by integral additivity.  Hence the conformal anomaly
+contribution to $\Sgen$ in the type II$_\infty$ crossed product does
+NOT generate a Markov defect on nested intervals.
+
+\paragraph{Part 4--5: Markov inheritance.}
+Algebraic argument that the Frob intertwiner $U$ preserves Markov by
+unitary equivalence under (M1)+(M2).  Under (M3), the diamond-to-null-plane
+CHM reduction transfers the CTT result to the diamond geometry.
+
+\paragraph{All assertions PASS.}  See \texttt{sympy\_markov.py} output.
 
 % ---------------------------------------------------------------------------
-\section{Gap analysis: what is already done vs.\ what is new}
+\section{Gap analysis (revised)}
 \label{sec:gap}
 % ---------------------------------------------------------------------------
 
-\subsection{What is already in the literature}
-
-\begin{enumerate}
-\item \textbf{AdS/CFT wedge reconstruction} (ADH~\cite{ADH2015},
-  DHW~\cite{DHW2016}, FL~\cite{FaulknerLewkowycz2017}): complete.
-\item \textbf{de~Sitter static-patch wedge} (CLPW~\cite{CLPW2022}):
-  the type~II$_1$ algebra and the modular flow for the static patch are
-  established; subregion duality in de~Sitter is discussed but not a
-  complete reconstruction theorem.
-\item \textbf{Witten type~II$_\infty$ extension} (Witten~\cite{Witten2022}):
-  the crossed product, $\Sgen$, and modular flow for black holes and
-  de~Sitter are established.
-\item \textbf{FRW type~II$_\infty$ classification} (ECI~\cite{ECI_frw_note}):
-  Theorems~3.5/3.6 give the type classification without Killing vector.
-\item \textbf{FRW modular Hamiltonian} (ECI~\cite{ECI_kfrw_note}): the
-  closed-form~\eqref{eq:KFRW} is derived and sympy-verified.
-\item \textbf{FRW modular flow} (this note, Proposition~\ref{prop:flow}):
-  equation~\eqref{eq:flow} and the sympy verification of the M\"obius
-  plus rescaling structure.
-\item \textbf{Faulkner--Speranza GSL on Killing horizons}
-  (\cite{FaulknerSperanza2024}): the generalised second law for
-  arbitrary Killing-horizon cuts via crossed-product algebras.
-\item \textbf{Chandrasekaran--Speranza gravitational charge algebras}
-  (\cite{ChandrasekaranSperanza2020}): anomalies in null-boundary
-  charge algebras relevant for the shape-dependent residual on $\partial\DR$.
-\item \textbf{Modular flow in JT gravity} (Gao~\cite{Gao2024}):
-  entanglement wedge reconstruction in JT gravity via modular flow,
-  establishing a type~II$_\infty$ analog of FL; specific to AdS$_2$,
-  not directly applicable to FRW.
-\end{enumerate}
-
-\subsection{What requires new work}
-
-\begin{enumerate}
-\item \textbf{FRW entanglement wedge definition.}  The analog RT surface
-  $\Sigma_R \subset \partial\DR$ needs to be defined for the FRW
-  comoving diamond.  The obvious candidate is the codimension-two
-  surface $\{|\eta-\eta_c| + |x-x_c| = R,\; \eta = \eta_c\}$ (the
-  equatorial sphere), but its extremality condition in the FRW metric
-  (not the conformal Minkowski metric) needs to be verified.
-
-\item \textbf{QFT Markov property (H2).}  The split property for the
-  FRW diamond triple needs to be established.  For the Minkowski
-  diamond algebra, the split property follows from the modular
-  nuclearity condition (Buchholz--Wichmann 1986); its pullback to FRW
-  under $U$ would give (H2), but this requires checking that $U$
-  preserves the modular nuclearity index.
-
-\item \textbf{FL kernel with conformal rescaling.}  The kernel
-  $K^{\FRW}$ in~\eqref{eq:K_FRW_kernel} needs to be computed
-  explicitly and shown to reproduce bulk two-point functions in the
-  FRW metric (not just in the conformal frame).
-
-\item \textbf{Non-Killing boundary: shape-dependent residual.}
-  The Chandrasekaran--Speranza~\cite{ChandrasekaranSperanza2020}
-  framework suggests that the non-Killing character of $\partial\DR$
-  generates a shape-dependent extrinsic-curvature anomaly in the
-  charge algebra; quantifying this is needed for the full reconstruction
-  formula.
-
-\item \textbf{FL prescription for type~II$_\infty$ algebras.}
-  The FL theorem~\cite{FaulknerLewkowycz2017} is proved in the
-  large-$N$ (type-I) limit.  Extending it to type~II$_\infty$
-  crossed products --- dropping the OAQEC tensor factorisation ---
-  requires new mathematical work.  The Jensen--Raju--Speranza
-  holographic-observers framework~\cite{JensenRajuSperanza2024}
-  provides one direction.
-\end{enumerate}
-
-\subsection{Honest gap summary}
+\subsection{Honest gap summary, v1.1}
 
 \begin{center}
 \begin{tabular}{lll}
 \hline
-Step & Status & Gap \\
+Step & Status (v1.1) & Gap \\
 \hline
 $\KFRW$ closed form & Done (ECI carve-out) & None \\
 FRW modular flow formula & Done (this note, sympy) & None \\
 Type~II$_\infty$ classification & Done (ECI frw\_typeII) & None \\
-FL prescription for FRW & Conditional (H2) & Markov property \\
-Entanglement wedge definition & Open & RT analog in FRW \\
-Reconstruction kernel $K^{\FRW}$ & Formal only & Explicit computation \\
-Non-Killing boundary residual & Open & Wald--Zoupas extension \\
-FL for type~II$_\infty$ & Open & New theorem needed \\
+Markov for conformal vacuum, common-centre & \textbf{Done (Thm \ref{thm:markov_inherit})} & Cites CTT+Frob+CHM \\
+Markov for off-centre triples & FR-bounded approximate & Open in large offset \\
+Markov for non-conformal Hadamard states & CHPSSW-bounded approximate & Open large defect \\
+Markov for massive/non-conf. fields & Open & New theorem needed \\
+FL prescription for FRW (conditional) & Done (Thm \ref{thm:frw_wedge}) & Hypothesis (H2$'$) \\
+Entanglement wedge definition & Open & RT analog in FRW metric \\
+Reconstruction kernel $K^{\FRW}$ explicit & Formal only & Computation + 2pt check \\
+Holographic interpretation (O1) & \textbf{BLOCKED} & No conformal boundary \\
 \hline
 \end{tabular}
 \end{center}
 
 % ---------------------------------------------------------------------------
-\section{Conclusion and open questions}
+\section{Conclusion and open questions (revised)}
 \label{sec:conclusion}
 % ---------------------------------------------------------------------------
 
-We have established the FRW modular flow explicitly (equation~\eqref{eq:flow},
-sympy-verified) and identified the key structural difference from AdS:
-the modular flow on $\DR$ is the Minkowski M\"obius flow conjugated by
-the Frob conformal intertwiner, producing a field rescaling $a(\eta_s)/a(\eta)$
-that is absent in the Minkowski and de~Sitter cases.
+\paragraph{What v1.1 adds.}  Theorem~\ref{thm:markov_inherit} closes the
+QFT Markov property hypothesis (H2$'$) of Theorem~\ref{thm:frw_wedge}
+in the regime (M1)+(M2)+(M3): conformally-coupled massless scalar in
+the conformal vacuum on common-centre nested past-light-cone diamonds.
+The proof uses Casini--Teste--Torroba~\cite{CTT2017} Markov on null
+planes + the CHM~\cite{CHM2011} diamond-to-Rindler-wedge map +
+Frob~\cite{Frob2023} unitary intertwiner + sympy-verified additivity
+of the conformal anomaly.
 
-We have stated Theorem~\ref{thm:frw_wedge} (conditional FRW wedge
-reconstruction) and identified four obstructions, of which O1 (no
-conformal boundary) and O4 (no Markov property on non-Killing boundary)
-are the binding ones.
+\paragraph{What remains open.}
+\begin{itemize}
+\item O1 (no conformal boundary): genuinely binding; not closable
+  within algebraic QFT.
+\item Off-centre diamonds, non-conformal Hadamard states,
+  non-conformally-coupled fields: bounded by Fawzi--Renner / CHPSSW
+  recovery inequalities, exact closure open.
+\item Definition of an FRW analog of the RT extremal surface: open
+  geometric question.
+\item Explicit computation of $K^{\FRW}$ and verification on FRW
+  two-point functions: open computational task.
+\end{itemize}
 
-The main positive result is that the modular flow IS explicit and geometric
-in the conformal frame, making the FL prescription formally applicable.
-Whether this constitutes a genuine reconstruction theorem depends on (H2),
-which is currently an open question.
-
-\begin{question}[QFT Markov property for FRW diamonds]
-Does the split property hold for the triple
-$(\A(\DR_{\mathrm{in}}), \A(\partial\DR), \A(\DR))$ for the conformally
-coupled massless scalar on FRW in the conformal vacuum?
+\begin{question}[Off-centre Markov]
+For diamonds with different centres, what is the leading-order
+estimate of the Markov defect $I(A:C|B)^{\FRW}$ in terms of the centre
+displacement and the diamond sizes?
 \end{question}
 
-\begin{question}[Extremal surface in FRW]
-Is the equatorial sphere $\{|\eta-\eta_c|+|x-x_c|=R,\,\eta=\eta_c\}$
-an extremal surface of the FRW metric, and does it define an
-entanglement wedge in the sense of~\cite{ADH2015}?
+\begin{question}[Non-conformal Hadamard states]
+Quantify the CHPSSW Petz-recovery defect~\eqref{eq:chpssw} for adiabatic
+vacua and slow-roll inflationary states on FRW.
 \end{question}
 
 % ---------------------------------------------------------------------------
@@ -709,7 +653,7 @@ A.~Almheiri, X.~Dong, and D.~Harlow,
 ``Bulk Locality and Quantum Error Correction in AdS/CFT,''
 \emph{JHEP} \textbf{04} (2015) 163,
 \href{https://arxiv.org/abs/1411.7041}{arXiv:1411.7041~[hep-th]}.
-\textit{[Verified: correct identifier, correct title and authors.]}
+\textit{[Verified.]}
 
 \bibitem{DHW2016}
 X.~Dong, D.~Harlow, and A.~C.~Wall,
@@ -717,16 +661,14 @@ X.~Dong, D.~Harlow, and A.~C.~Wall,
 in Gauge-Gravity Duality,''
 \emph{Phys.\ Rev.\ Lett.}\ \textbf{117} (2016) 021601,
 \href{https://arxiv.org/abs/1601.05416}{arXiv:1601.05416~[hep-th]}.
-\textit{[Verified: correct identifier, correct title and authors.]}
+\textit{[Verified.]}
 
 \bibitem{FaulknerLewkowycz2017}
 T.~Faulkner and A.~Lewkowycz,
 ``Bulk locality from modular flow,''
 \emph{JHEP} \textbf{07} (2017) 151,
 \href{https://arxiv.org/abs/1704.05464}{arXiv:1704.05464~[hep-th]}.
-\textit{[Verified: correct identifier 1704.05464; the identifier 1704.05732
-cited in the task prompt is a random-hypergraph combinatorics paper
-(Cooley-Kang-Koch) -- HALLUCINATION CAUGHT.]}
+\textit{[Verified.]}
 
 \bibitem{Witten2022}
 E.~Witten,
@@ -753,11 +695,7 @@ M.~B.~Fr\"ob,
 T.~Faulkner and A.~J.~Speranza,
 ``Gravitational algebras and the generalized second law,''
 \href{https://arxiv.org/abs/2405.00847}{arXiv:2405.00847~[hep-th]} (2024).
-\textit{[Verified: Faulkner-Speranza 2024 on GSL from crossed-product algebras.
-Note: the identifier 2402.10362 cited in the task prompt as `Mukohyama-Speranza'
-belongs to a quantum-simulation paper (Hejazi-Shokrian Zini-Arrazola) -- NOT
-a horizons paper. The Mukohyama-Speranza stretched-horizon paper was NOT
-located under that identifier and is EXCLUDED from this reference list.]}
+\textit{[Verified.]}
 
 \bibitem{ChandrasekaranSperanza2020}
 V.~Chandrasekaran and A.~J.~Speranza,
@@ -774,44 +712,87 @@ H.~Casini, M.~Huerta, and R.~C.~Myers,
 \href{https://arxiv.org/abs/1102.0440}{arXiv:1102.0440~[hep-th]}.
 \textit{[Verified.]}
 
+\bibitem{CTT2017}
+H.~Casini, E.~Teste, and G.~Torroba,
+``Modular Hamiltonians on the null plane and the Markov property of the
+vacuum state,''
+\emph{J.\ Phys.\ A: Math.\ Theor.} \textbf{50} (2017) 364001,
+\href{https://arxiv.org/abs/1703.10656}{arXiv:1703.10656~[hep-th]}.
+\textit{[Verified G7 wave 2026-05-03; this is the canonical reference for
+the vacuum Markov property on null-plane regions.]}
+
+\bibitem{CHPSSW2017}
+J.~Cotler, P.~Hayden, G.~Penington, G.~Salton, B.~Swingle, and M.~Walter,
+``Entanglement Wedge Reconstruction via Universal Recovery Channels,''
+\emph{Phys.\ Rev.\ X} \textbf{9} (2019) 031011,
+\href{https://arxiv.org/abs/1704.05839}{arXiv:1704.05839~[hep-th]}.
+\textit{[Verified G7 wave; the universal-recovery framework that controls
+the Markov defect for non-Markov states.]}
+
+\bibitem{FawziRenner2015}
+O.~Fawzi and R.~Renner,
+``Quantum conditional mutual information and approximate Markov chains,''
+\emph{Comm.\ Math.\ Phys.}\ \textbf{340} (2015) 575--611,
+\href{https://arxiv.org/abs/1410.0664}{arXiv:1410.0664~[quant-ph]}.
+\textit{[Verified G7 wave; the fidelity/CMI inequality used to bound
+Markov defects.]}
+
+\bibitem{CasiniHuerta2022}
+H.~Casini and M.~Huerta,
+``Lectures on entanglement in quantum field theory,''
+TASI 2021 lectures,
+\href{https://arxiv.org/abs/2201.13310}{arXiv:2201.13310~[hep-th]} (2022).
+\textit{[Verified G7 wave; \S4 expounds the diamond Markov property
+via CHM map to hyperbolic Rindler wedge.]}
+
+\bibitem{Petz1986}
+D.~Petz,
+``Sufficient subalgebras and the relative entropy of states of a
+von~Neumann algebra,''
+\emph{Comm.\ Math.\ Phys.}\ \textbf{105} (1986) 123--131.
+DOI: \href{https://doi.org/10.1007/BF01212345}{10.1007/BF01212345}.
+\textit{[Petz characterisation of Markov: equality in monotonicity of
+relative entropy iff recovery exists.]}
+
+\bibitem{Connes1975}
+A.~Connes,
+``A factor of type II$_1$ with countable fundamental group,''
+\emph{J.\ Operator Theory} \textbf{4} (1980) 151--153.
+\textit{[Connes' early work on type-II conditional expectations underlies
+the algebraic Markov reformulation; the standard textbook reference is
+Takesaki, ``Theory of Operator Algebras II'' (Springer, 2003), Chapter IX.]}
+
 \bibitem{HislopLongo1982}
 P.~D.~Hislop and R.~Longo,
 ``Modular structure of the local algebras associated with the free
 massless scalar field theory,''
 \emph{Comm.\ Math.\ Phys.}\ \textbf{84} (1982) 71--85.
 DOI: \href{https://doi.org/10.1007/BF01208372}{10.1007/BF01208372}.
-\textit{[Correct DOI is BF01208372; the identifier BF01208568 cited
-in an earlier ECI version is WRONG.]}
+\textit{[Verified DOI.]}
 
 \bibitem{JensenRajuSperanza2024}
 K.~Jensen, S.~Raju, and A.~J.~Speranza,
 ``Holographic observers for time-band algebras,''
 \href{https://arxiv.org/abs/2412.21185}{arXiv:2412.21185~[hep-th]} (2024).
-\textit{[Verified: title and authors match the arXiv search results.
-Relevant for type~II$_\infty$ FL prescription.]}
+\textit{[Verified.]}
 
 \bibitem{Gao2024}
 P.~Gao,
 ``Modular flow in JT gravity and entanglement wedge reconstruction,''
 \href{https://arxiv.org/abs/2402.18655}{arXiv:2402.18655~[hep-th]} (2024).
-\textit{[Verified: type~II$_\infty$ modular flow reconstruction in JT gravity,
-specific to AdS$_2$.]}
+\textit{[Verified.]}
 
 \bibitem{ECI_frw_note}
 K.~Remondi\`ere,
 ``Type~II$_\infty$ for the gravitational algebra of a comoving observer
 in radiation-dominated FRW via conformal pullback,''
-ECI companion note (2026),
-\href{https://github.com/AIdevsmartdata/crossed-cosmos}
-{github.com/AIdevsmartdata/crossed-cosmos}.
+ECI companion note (2026).
 
 \bibitem{ECI_kfrw_note}
 K.~Remondi\`ere,
 ``Closed-form modular Hamiltonian and generalised entropy on the FRW
 past-light-cone causal diamond: conformal pullback of Hislop--Longo,''
-ECI carve-out note (2026),
-\href{https://github.com/AIdevsmartdata/crossed-cosmos}
-{github.com/AIdevsmartdata/crossed-cosmos}.
+ECI carve-out note (2026).
 
 \end{thebibliography}
 

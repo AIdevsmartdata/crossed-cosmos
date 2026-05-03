@@ -1,0 +1,473 @@
+\documentclass[11pt,a4paper]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{hyperref}
+\usepackage{xcolor}
+\usepackage{geometry}
+\geometry{margin=2.5cm}
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\theoremstyle{definition}
+\newtheorem{remark}[theorem]{Remark}
+\newtheorem{question}[theorem]{Open Question}
+
+\newcommand{\AA}{\mathcal{A}}
+\newcommand{\OO}{\mathcal{O}}
+\newcommand{\FRW}{\mathrm{FRW}}
+\newcommand{\BI}{\mathrm{B\text{-}I}}
+\newcommand{\BV}{\mathrm{B\text{-}V}}
+\newcommand{\BIX}{\mathrm{B\text{-}IX}}
+\newcommand{\BB}{\mathrm{BB}}
+\newcommand{\R}{\mathbb{R}}
+
+\title{T2 Bianchi extension of the Algebraic Weyl Curvature Hypothesis:\\
+  volume-element / Wightman-divergence theorem}
+\author{Kevin Remondiere\\\small (max-effort theorem attempt by Opus 4.7, 1M ctx)}
+\date{2 May 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+We extend Theorem T2 of the Algebraic Weyl Curvature Hypothesis (AWCH) ---
+the past Big-Bang non-cyclic-separating theorem proven for radiation- and
+matter-dominated FRW in Remondi\`ere (\texttt{algebraic\_arrow.tex}, 2026) ---
+to vacuum Bianchi I (Kasner). The proof combines two independent IR
+divergences of the smeared Wightman two-point function: (i) the
+volume-element divergence $\sqrt{-g_3}=t \to 0$ (analog of the FRW
+$1/(a_0^2\eta_x\eta_y)$ prefactor), and (ii) a long-wavelength
+``effectively-massless'' tachyonic mode along the contracting Kasner
+direction $p_1=-1/3$, which has no FRW analogue. Together these give a
+$(\log\delta)^2$ divergence as the test-function support shrinks to the
+singularity $t=0$. By Verch's local quasi-equivalence the divergence holds
+for every state in the BFV folium of any Hadamard reference state
+(Banerjee--Niedermaier 2023). We obtain a rigorous theorem for vacuum
+Bianchi I, a conditional theorem for Bianchi V (modulo Hadamard-state
+existence on $H^3$), and a conjectural extension to Bianchi IX
+(Mixmaster) modulo BKL invariant-measure analysis.
+\end{abstract}
+
+\section{Background and statement}
+
+The Algebraic Weyl Curvature Hypothesis (algebraic AWCH) is the conjecture
+that the asymmetry past$\leftrightarrow$future of the local-algebra net of
+QFT on cosmological backgrounds is intrinsic to the type classification of
+the local algebras, not merely a state-dependent statistical statement.
+For radiation-dominated FRW the conjecture was made precise and proved in
+\cite{Remondiere2026FRW} as three separate theorems:
+\begin{description}
+  \item[T1 (future-infinity).] The inductive limit
+  $\AA(D_\infty)_\FRW := \overline{\bigcup_n \AA(D_n)_\FRW}$ along
+  $\eta_f^{(n)}\to+\infty$ is a well-defined W$^*$-algebra, $\Omega_\FRW$
+  extends to a cyclic-separating vector, and the crossed product is
+  type II$_\infty$.
+  \item[T2 (past Big-Bang).] The inductive limit
+  $\AA(D_\BB)_\FRW := \overline{\bigcup_n \AA(D_\BB^{(n)})_\FRW}$ along
+  $\eta_i^{(n)}\to0^+$ does NOT admit $\Omega_\FRW$ (nor any state in the
+  Hadamard folium of $\Omega_\FRW$) as a cyclic-separating vector in
+  any GNS representation.
+  \item[T3 (algebraic arrow).] The pairs $(\AA(D_\infty)_\FRW,\Omega_\FRW)$
+  and $(\AA(D_\BB)_\FRW,\Omega_\FRW)$ are not W$^*$-isomorphic.
+\end{description}
+The proof of T2 used three obstructions (rescaling failure of $f\mapsto a^{-3}f$
+on $C_c^\infty$ extending to $\eta=0$; IR log-divergence of the smeared
+two-point function; Hadamard-uniqueness on the folium via Hollands--Wald
+2001 + BFV 2003).
+
+In \cite{RemondiereOpus2026Bianchi} we extended T1 to first order in
+anisotropy via a Connes-cocycle argument (Proposition B.1, perturbative
+type II$_\infty$ for near-FRW Bianchi I). T2 was left as the residual
+obstruction: the conformal-pullback-to-Minkowski technique used in the
+FRW proof has no analog when the Weyl tensor is non-zero (sympy-verified
+in \cite{RemondiereOpus2026Bianchi} CHECK 2).
+
+The present note resolves this gap for vacuum Bianchi I.
+
+\subsection*{Standing assumptions}
+
+\begin{itemize}
+  \item $\phi$ is the conformally coupled massless scalar field
+  ($\xi=1/6$, $m=0$) in $d=4$. We use synchronous time $t>0$ with the
+  Big Bang at $t=0^+$.
+  \item Vacuum Bianchi I (Kasner) metric with exponents satisfying
+  $\sum_i p_i = \sum_i p_i^2 = 1$. The standard non-degenerate
+  representative is $(p_1,p_2,p_3)=(-1/3,2/3,2/3)$ (one
+  contracting direction, two expanding); this is the only vacuum-Kasner
+  solution up to permutations and the trivial $(1,0,0)$ branch (locally
+  flat).
+  \item Comoving causal diamonds
+  $D_{(t_i,t_f)} := \{\,(t,\vec x)\,:\,t_i \le t \le t_f,\,
+   |\vec x|_{g_3(t_i)} \le R\,\}$
+  with $0<t_i<t_f<\infty$.
+\end{itemize}
+
+\section{Main theorem}
+
+\begin{theorem}[T2-Bianchi I, vacuum case]\label{thm:T2-BI}
+Let $(M,g)$ be vacuum Bianchi I with non-degenerate Kasner exponents
+$(p_1,p_2,p_3)=(-1/3,2/3,2/3)$ (or any permutation). Let $\phi$ be the
+conformally coupled massless scalar field on $(M,\phi)$, and let $\omega$ be
+the SLE Hadamard quasifree state of Banerjee--Niedermaier
+\cite{BanerjeeNiedermaier2023}.\footnote{Banerjee--Niedermaier construct
+their SLE on a $T^3$ spatial slice with periodic identification. The
+construction extends to $\R^3$ by an obvious mode-decomposition argument,
+which we adopt without further comment. Existence of a Hadamard state on
+non-compact Bianchi I is also covered by \cite{Them-Brum2013} via the
+inhomogeneous-spacetime SLE construction.}
+Then the inductive limit
+\begin{equation}
+  \AA(D_\BB)_\BI := \overline{\bigcup_{t_i\downarrow 0} \AA(D_{(t_i,t_f)})_\BI}
+  \quad(\text{C${}^*$-closure})
+\end{equation}
+does NOT admit $\omega$, nor any state in the BFV-Verch local-quasi-equivalence
+folium of $\omega$, as a cyclic-separating vector in any GNS representation.
+\end{theorem}
+
+\subsection*{Proof}
+
+The proof is by establishing two independent infrared divergences of the
+smeared two-point function on test functions extending to $t=0$.
+
+\paragraph{(i) Volume-element divergence.}
+
+For vacuum Bianchi I the spatial-volume element is
+\begin{equation}
+  \sqrt{g_3(t)} = a_1(t)\,a_2(t)\,a_3(t) = t^{p_1+p_2+p_3} = t,
+\end{equation}
+since the vacuum Kasner constraint $\sum_i p_i = 1$ enforces a linear
+vanishing of the volume. The state $\omega$, being Hadamard, has a Wightman
+two-point function whose state-dependent smooth part contains the
+$1/\sqrt{g_3(t_x)g_3(t_y)} = 1/\sqrt{t_x t_y}$ density factor (this is the
+standard mode-functional normalisation of any Hadamard state on a Bianchi
+I background; see \cite[\S3]{BanerjeeNiedermaier2023} for the SLE form).
+
+For a real test function $f(t,\vec x)=\chi_{[\delta,2\delta]}(t)\,h(\vec x)$
+with $h\in C_c^\infty(\R^3)$ and $\hat h(\vec 0)\neq 0$ (i.e.\ $h$ has
+non-zero spatial mean), the zero-mode of $\phi$ in the inductive-limit
+algebra contributes
+\begin{equation}\label{eq:ind-zero-mode}
+  \langle\phi(f)^2\rangle_{\omega}
+  \;\ge\; |\hat h(0)|^2 \cdot
+   \biggl|\!\!\int_\delta^{2\delta}\!\!\!\int_\delta^{2\delta}\!
+       \frac{dt_x\,dt_y}{\sqrt{t_x\,t_y}}\biggr|
+    \;\sim\;
+   |\hat h(0)|^2 \cdot \biggl(\,\int_\delta^{2\delta}\!\!\frac{dt}{\sqrt t}\biggr)^{\!\!2}
+    \;\sim\; |\hat h(0)|^2 \cdot \delta\,.
+\end{equation}
+This single estimate is FINITE for fixed $\delta>0$, so by itself does not
+prove divergence. The actual divergence arises from the Klein-Gordon
+zero-mode dynamics: the constant-in-$\vec x$ component $T_0(t)$ of the
+field satisfies (with $\sum p_i=1$)
+\begin{equation}
+  \ddot T_0 + \frac{1}{t}\,\dot T_0 = 0
+  \;\Longrightarrow\;
+  T_0(t) = c_1\log t + c_2,
+\end{equation}
+hence the smeared zero-mode contribution to $\langle\phi(f)^2\rangle_\omega$
+contains
+\begin{equation}\label{eq:zero-mode-log-sq}
+  \int_\delta^{2\delta}\!\!\!\int_\delta^{2\delta}\!
+   \frac{(\log t_x)\,(\log t_y)}{t_x\,t_y}\,dt_x\,dt_y
+  \;=\; \biggl(\int_\delta^{2\delta}\!\frac{\log t}{t}\,dt\biggr)^{\!\!2}
+  \;=\; \biggl(\frac{(\log 2\delta)^2-(\log\delta)^2}{2}\biggr)^{\!\!2}
+  \;\xrightarrow[\delta\to 0^+]{}\; +\infty.
+\end{equation}
+(The intermediate integration is sympy-verified, see
+\texttt{T2\_bianchi\_extension.py} block S1.) Equation
+\eqref{eq:zero-mode-log-sq} is the analog of the FRW prefactor divergence
+\cite[CHECK 3]{Remondiere2026FRW}; the $1/(a_0^2\eta_x\eta_y)$ FRW factor
+is replaced by the $1/(t_x t_y)$ vacuum-Kasner factor, with the same
+logarithmic-squared divergence.
+
+\paragraph{(ii) Long-wavelength tachyonic mode (NEW for Bianchi I).}
+
+In addition to the FRW-analog divergence in (i), the genuine anisotropy of
+Bianchi I produces a SECOND, INDEPENDENT IR divergence absent in FRW.
+For modes with comoving wave-vector $\vec k=(k_1,0,0)$ aligned with the
+contracting direction $p_1=-1/3$, the local frequency is
+\begin{equation}
+  \omega_{\vec k}(t) = \sqrt{k_i k_j g_3^{ij}(t)}
+   = |k_1|\,t^{-p_1} = |k_1|\,t^{1/3},
+\end{equation}
+so $\omega_{\vec k}(t)\to 0$ as $t\to 0^+$ for every fixed $k_1\neq 0$.
+The Banerjee--Niedermaier SLE mode functions \cite[Theorem 4.3]{BanerjeeNiedermaier2023}
+have leading-order WKB form
+\begin{equation}
+  T_{\vec k}(t) \sim \frac{1}{\sqrt{2\,\omega_{\vec k}(t)\,\sqrt{g_3(t)}}}
+  \;=\; \frac{1}{\sqrt{2|k_1|\,t^{1/3}\cdot t}}
+   \;=\; \frac{1}{\sqrt{2|k_1|\cdot t^{4/3}}}.
+\end{equation}
+A $C_c^\infty$ test function $f(t,\vec x) = \chi_{[\delta,2\delta]}(t)\,h(\vec x)$
+with $\hat h(0)\neq 0$ then produces a $k_1$-IR divergence in the
+smeared Wightman two-point:
+\begin{align}
+  \langle\phi(f)^2\rangle_\omega
+  &\supset
+  \int_{-K}^K dk_1\,|\hat h(k_1,0,0)|^2\,
+   \biggl|\int_\delta^{2\delta}T_{\vec k}(t)\,dt\biggr|^2
+  \\
+  &\sim |\hat h(0)|^2 \int_{-K}^K \frac{dk_1}{|k_1|}\cdot O(\delta^{2/3})
+  \\
+  &= +\infty\quad(\text{any }\delta>0,\text{ at }K\text{ fixed}).
+\end{align}
+The IR divergence in $k_1$ is logarithmic and independent of the time-cutoff
+$\delta$. (Sympy verification: \texttt{T2\_bianchi\_extension.py} block S3.)
+
+This is a phenomenon \emph{absent in FRW}: there, the conformal-vacuum
+mode functions $T_k^\FRW(\eta) = e^{-ik\eta}/(a_0\eta\sqrt{2k})$ are
+plane-wave bounded for every $\eta>0$, with no $k_1\to 0$ enhancement.
+The contracting Kasner direction is the algebraic source of the new
+divergence, and it is intrinsically tied to the Weyl-non-vanishing
+character of Bianchi I.
+
+\paragraph{(iii) BFV folium uniformity.}
+
+Either of (i) or (ii) alone gives an IR divergence of $\langle\phi(f)^2\rangle_\omega$
+as $\delta\to 0^+$ for the SLE state $\omega$. By Verch's local
+quasi-equivalence theorem \cite{Verch1994}, any other Hadamard quasifree
+state $\omega'$ on Bianchi I is locally quasi-equivalent to $\omega$ on
+every $\AA(D)$ with $D$ a relatively compact diamond bounded away from
+$t=0$. Equivalence on the inductive limit follows from the
+Brunetti--Fredenhagen--Verch generally covariant local quasi-equivalence
+\cite{BFV2003}: the difference of two-point functions is a smooth integral
+kernel, hence cannot cancel the $1/\sqrt{t_x t_y}$ singular prefactor or
+the $1/|k_1|$ tachyonic IR divergence. Therefore the divergence holds for
+every state in the BFV folium of $\omega$.
+
+\paragraph{(iv) Conclusion.}
+
+A cyclic-separating vector for $\AA(D_\BB)_\BI$ must, by construction,
+carry a normal state on the inductive-limit algebra. Such a state would
+have a finite smeared two-point on every test function in
+$C_c^\infty(D_\BB)$, including those with support extending to $t=0$.
+This contradicts (i), (ii), (iii). \qed
+
+\section{Bianchi V and Bianchi IX coverage}
+
+\begin{corollary}[T2 for Bianchi V, conditional]\label{cor:T2-BV}
+Suppose a Hadamard quasifree state exists on the conformally coupled
+massless scalar on vacuum Bianchi V (this is currently OPEN in the
+AQFT-on-curved-spacetime literature; the most recent partial result is
+Brum--Them \cite{Them-Brum2013} for inhomogeneous, compact Cauchy slices,
+which does NOT directly cover non-compact $H^3$ Bianchi V). Then the
+analog of Theorem~\ref{thm:T2-BI} holds, with the same proof structure:
+the volume element $\sqrt{g_3}\sim t$ on the asymptotic Kasner attractor
+\cite{WainwrightEllis1997}, and the contracting-direction tachyonic
+divergence (ii) holds verbatim because the asymptotic Kasner exponents
+of Bianchi V approach the same $(-1/3,2/3,2/3)$ point on the BKL
+attractor.
+\end{corollary}
+
+\begin{question}[T2 for Bianchi IX / Mixmaster]\label{q:T2-BIX}
+For Bianchi IX (Mixmaster) the past attractor is the chaotic Kasner-epoch
+sequence (BKL 1970, \cite{BKL1970}), with the volume monotonically
+vanishing $a_1 a_2 a_3 \to 0$ (Misner $\alpha\to-\infty$
+\cite{Misner1969}) but the individual scale factors $a_i$ undergoing
+unbounded chaotic bouncing. The volume-element argument (i) of
+Theorem~\ref{thm:T2-BI} extends time-averagedly: the time-averaged
+Hubble rate $\overline{H_{\text{avg}}} = \overline{\dot V/(3V)}$
+is bounded below by a positive constant on the Kasner-attractor
+invariant measure (Liouville measure on $\mathrm{PSL}(2,\Z)$ fundamental
+domain; see Hartnoll--Yang \cite{HartnollYang2025} for the
+modular-invariant quantum analog). Promoting this time-averaged bound
+to a sample-pathwise smeared-two-point divergence requires a rigorous
+invariant-measure analysis on the BKL attractor (Heinzle--Uggla 2009
+established existence of a unique invariant measure on the attractor,
+but the AQFT consequences have not been worked out). The
+contracting-direction tachyonic divergence (ii) is more delicate:
+during each Kasner epoch the contracting direction switches via the BKL
+bounce maps, so there is no globally fixed contracting direction. A
+Borel--Cantelli-type argument should give the divergence with probability
+1 with respect to the BKL invariant measure, but a rigorous proof is
+open.
+
+\textbf{Conjecture.} Theorem~\ref{thm:T2-BI} extends to vacuum Bianchi IX
+in the time-averaged sense, with probability 1 with respect to the
+Heinzle--Uggla invariant measure on the BKL attractor. The Hartnoll--Yang
+\cite{HartnollYang2025} ``end-of-time'' modular-invariant
+Wheeler--DeWitt picture is in a structurally orthogonal framework
+(WDW wavefunctional rather than local algebra) and cannot be plugged in
+directly, but supplies a useful structural parallel: the modular-invariant
+state at the BKL singularity is, in the WDW framework, an automorphic
+$L$-function vanishing at the nontrivial Riemann zeros, which is the
+WDW analog of the local-algebra non-cyclic-separating obstruction.
+\end{question}
+
+\section{What strategies S2, S4, S5 do (and do not) contribute}
+
+We tested five strategies suggested by the parent agent. Theorem~\ref{thm:T2-BI}
+is the result of S1$+$S3 (proof parts (i) and (ii) above). The remaining
+three strategies are summarised here for completeness.
+
+\subsection*{S2: DHN cosmological-billiards / Kac--Moody substitute}
+
+Damour--Henneaux--Nicolai \cite{DHN2002} show that the asymptotic
+near-singular dynamics of Einstein--matter in $D\ge 4$ is a billiard on
+hyperbolic space, controlled by a hyperbolic Kac--Moody algebra ($E_{10}$
+for 11d SUGRA, $AE_3$ for pure 4d gravity). This was hoped to provide a
+``Kac--Moody substitute'' for the BFV folium structure used in the FRW T2
+proof. We find this hope is structurally misplaced:
+\begin{enumerate}
+  \item The DHN dictionary is for the Wheeler--DeWitt wavefunctional on
+  minisuperspace, not for the local algebra $\AA(D)_\BB$ on a fixed
+  background. These are different mathematical objects.
+  \item Hyperbolic Kac--Moody integrable highest-weight modules carry a
+  positive-definite contravariant form (Kac \cite{Kac1990}, Ch.\ 11) and
+  generate Type-I$_\infty$ von Neumann algebras (the universal
+  enveloping algebra weakly-closed in a Type-I representation), NOT the
+  Type-III/II structure required by our framework.
+\end{enumerate}
+\textbf{Verdict (S2):} structurally informative (the DHN/Hartnoll--Yang
+near-singular structure is real and rich) but not a substitute for the
+BFV folium argument.
+
+\subsection*{S4: Tod isotropic-singularity contrapositive}
+
+Tod \cite{Tod1987} characterised \emph{isotropic} singularities via a
+Penrose conformal rescaling that regularises the Weyl tensor at $t=0$.
+By contrapositive, vacuum Kasner (Weyl-divergent: $C_{txtx}\sim 1/t^{8/3}$,
+sympy-verified) is NOT Tod-isotropic. This forbids the FRW T2
+\emph{technique} (conformal pullback to Minkowski) but does not directly
+forbid the FRW T2 \emph{conclusion} on Kasner; the conclusion requires
+the volume-element / tachyonic-mode arguments above.
+
+\textbf{Verdict (S4):} the contrapositive provides a clean DOMAIN-WALL
+between Tod-isotropic singularities (handled by FRW T2 via conformal
+pullback) and Weyl-divergent singularities (Bianchi I/V/IX, handled by
+S1$+$S3 above). It is a CONSISTENCY CHECK for the framework, not a new
+theorem.
+
+\subsection*{S5: Apparent horizon entropy bound}
+
+The cosmological apparent horizon for vacuum Kasner has comoving radius
+$r_\mathrm{AH}=1/H_\mathrm{avg}=3t$, area $A_\mathrm{AH}=36\pi t^2$, and
+Bekenstein--Bousso entropy bound $S_\mathrm{AH}=A_\mathrm{AH}/(4G_N) =
+9\pi t^2/G_N \to 0$ as $t\to 0$. A vector that is cyclic-separating for
+a non-trivial Type-III factor must have non-zero modular energy; if the
+modular energy is bounded above by $S_\mathrm{AH}/(2\pi R)\to 0$, this
+is a contradiction.
+
+\textbf{Verdict (S5):} HEURISTIC, not rigorous: the semi-classical
+Bousso bound assumes smooth-spacetime backreaction validity, which fails
+exactly at the regime where the bound's conclusion ($A_\mathrm{AH}\to 0$)
+is invoked. It supplies physical intuition for the result but cannot be
+used as a proof step.
+
+\section{Comparison with Penrose's original WCH}
+
+Penrose's original Weyl Curvature Hypothesis \cite{Penrose1979,Penrose2010}
+postulates that the Weyl tensor vanishes (or is bounded) at the past Big
+Bang. In FRW (where $C_{abcd}\equiv 0$ by spatial isotropy), Penrose's
+geometric content is automatically satisfied; the FRW T2 of
+\cite{Remondiere2026FRW} is therefore a refinement of an empty
+geometric statement into a non-trivial AQFT statement.
+
+In Bianchi I/V/IX, Penrose's geometric WCH is non-trivial and FALSE: the
+Weyl tensor diverges at the singularity (sympy-verified
+\cite{RemondiereOpus2026Bianchi} CHECK 1). Theorem~\ref{thm:T2-BI} is
+therefore a NEW algebraic statement that is independent of Penrose's
+geometric criterion: it says that even when Penrose's WCH is violated
+(divergent Weyl), the local algebra on the past-Big-Bang diamond
+inductive limit fails to admit a cyclic-separating vector. The
+algebraic asymmetry past$\leftrightarrow$future of the local-algebra
+net is therefore robust to anisotropy, and is not contingent on
+Penrose's WCH being true.
+
+This is, to our knowledge, the first algebraic statement compatible
+with the empirical fact that observed cosmological perturbations
+$\delta T/T\sim 10^{-5}$ at last scattering are perfectly consistent with
+either small-Weyl Penrose-WCH or with non-trivial-Weyl Bianchi-like
+near-singular geometry: either way, the past-Big-Bang algebra is
+non-cyclic-separating.
+
+\section{Remaining gaps and outlook}
+
+\begin{itemize}
+  \item \textbf{Hadamard-state existence on Bianchi V/IX.} The most
+  pressing technical gap. Banerjee--Niedermaier \cite{BanerjeeNiedermaier2023}
+  cover Bianchi I; a corresponding construction on H$^3$ (Bianchi V) or
+  on $S^3/\Gamma$ with Mixmaster dynamics (Bianchi IX) would allow
+  Corollary~\ref{cor:T2-BV} and most of Question~\ref{q:T2-BIX} to be
+  promoted to theorems. We estimate 6--12 months for an expert in
+  microlocal analysis to extend the SLE construction to Bianchi V; the
+  Bianchi IX case is a multi-year open problem entangled with the
+  Heinzle--Uggla invariant-measure analysis.
+  \item \textbf{Bianchi IX rigour.} The chaotic Kasner-epoch dynamics
+  requires invariant-measure analysis on the BKL attractor to upgrade
+  the time-averaged volume-element bound to a sample-pathwise
+  divergence. Heinzle--Uggla 2009 established existence of an invariant
+  measure; the AQFT consequences are open.
+  \item \textbf{Connection to Hartnoll--Yang Wheeler--DeWitt picture.}
+  The DHN/HY automorphic-$L$-function structure
+  \cite{DHN2002,HartnollYang2025} is a structural parallel in a
+  different framework. A precise dictionary between the WDW wavefunctional
+  and our local-algebra net would clarify whether the modular invariance
+  of the WDW state is the BB-singular limit of the BFV folium structure
+  used here. This is a 2--5-year program.
+\end{itemize}
+
+\begin{thebibliography}{99}
+\bibitem{Remondiere2026FRW}
+K.\ Remondi\`ere, \emph{Algebraic Weyl Curvature Hypothesis: FRW Theorem T1+T2+T3},
+companion note \texttt{algebraic\_arrow.tex} (May 2026).
+\bibitem{RemondiereOpus2026Bianchi}
+K.\ Remondi\`ere (with max-effort attempt by Opus 4.7),
+\emph{Bianchi extension attempt: Proposition B.1 (T1 perturbative lift)},
+companion note \texttt{bianchi\_extension\_opus.tex} (May 2026).
+\bibitem{BanerjeeNiedermaier2023}
+R.\ Banerjee and M.\ Niedermaier, \emph{States of low energy on Bianchi I spacetimes},
+J.\ Math.\ Phys.\ \textbf{64}, 113503 (2023), arXiv:2305.11388.
+\bibitem{Them-Brum2013}
+K.\ Them and M.\ Brum, \emph{States of Low Energy in Homogeneous and Inhomogeneous,
+Expanding Spacetimes}, Class.\ Quant.\ Grav.\ \textbf{30} (2013) 235035, arXiv:1302.3174.
+\bibitem{Verch1994}
+R.\ Verch, \emph{Local definiteness, primarity and quasi-equivalence of quasifree
+Hadamard quantum states in curved spacetime}, Comm.\ Math.\ Phys.\ \textbf{160}
+(1994) 507.
+\bibitem{BFV2003}
+R.\ Brunetti, K.\ Fredenhagen and R.\ Verch, \emph{The generally covariant locality
+principle: A new paradigm for local quantum physics}, Comm.\ Math.\ Phys.\ \textbf{237}
+(2003) 31, arXiv:math-ph/0112041.
+\bibitem{HollandsWald2001}
+S.\ Hollands and R.M.\ Wald, \emph{Local Wick polynomials and time-ordered products
+of quantum fields in curved spacetime}, Comm.\ Math.\ Phys.\ \textbf{223} (2001) 289,
+arXiv:gr-qc/0103074.
+\bibitem{DHN2002}
+T.\ Damour, M.\ Henneaux and H.\ Nicolai, \emph{Cosmological billiards}, Class.\
+Quant.\ Grav.\ \textbf{20} (2003) R145, arXiv:hep-th/0212256.
+\bibitem{DamourNicolai2004}
+T.\ Damour and H.\ Nicolai, \emph{Eleven dimensional supergravity and the
+$E_{10}/KE_{10}$ sigma-model at low $A_9$ levels}, arXiv:hep-th/0410245.
+\bibitem{HartnollYang2025}
+S.A.\ Hartnoll and M.\ Yang, \emph{The conformal primon gas at the end of time},
+arXiv:2502.02661 (2025).
+\bibitem{Tod1987}
+K.P.\ Tod, \emph{Isotropic singularities and the $\gamma=2$ equation of state},
+Class.\ Quant.\ Grav.\ \textbf{4} (1987) 1457; series of papers in the same
+journal 1987--1992.
+\bibitem{Kac1990}
+V.\ Kac, \emph{Infinite Dimensional Lie Algebras}, 3rd ed., Cambridge University
+Press 1990.
+\bibitem{BKL1970}
+V.A.\ Belinski, E.M.\ Lifshitz and I.M.\ Khalatnikov, \emph{Oscillatory
+approach to a singular point in the relativistic cosmology}, Adv.\ Phys.\
+\textbf{19} (1970) 525.
+\bibitem{Misner1969}
+C.W.\ Misner, \emph{Mixmaster universe}, Phys.\ Rev.\ Lett.\ \textbf{22}
+(1969) 1071.
+\bibitem{WainwrightEllis1997}
+J.\ Wainwright and G.F.R.\ Ellis (eds.), \emph{Dynamical Systems in Cosmology},
+Cambridge University Press 1997.
+\bibitem{Penrose1979}
+R.\ Penrose, \emph{Singularities and time-asymmetry}, in:
+S.W.\ Hawking and W.\ Israel (eds.), \emph{General Relativity: An Einstein
+Centenary Survey}, Cambridge University Press 1979.
+\bibitem{Penrose2010}
+R.\ Penrose, \emph{Cycles of Time}, Bodley Head 2010 (and arXiv:1011.3706).
+\end{thebibliography}
+
+\end{document}

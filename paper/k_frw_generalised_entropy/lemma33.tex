@@ -1,0 +1,298 @@
+% lemma33.tex --- Lemma 3.3 (stress-tensor conjugation) for the
+%                  ECI carve-out paper "Closed-form modular Hamiltonian
+%                  K_FRW + generalised entropy on the FRW past-light-cone
+%                  diamond".  Companion to /sympy_verify.py.
+%
+\documentclass[11pt]{article}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage[margin=1in]{geometry}
+\usepackage{hyperref}
+
+\newtheorem{lemma}{Lemma}[section]
+\newtheorem{proposition}[lemma]{Proposition}
+\newtheorem{remark}[lemma]{Remark}
+
+\setcounter{section}{2}
+
+\title{Lemma 3.3: Stress-tensor conjugation under the\\
+       conformal pullback for the FRW diamond}
+\author{(carve-out paper, \S 3.3 -- supporting note)}
+\date{}
+
+\begin{document}\maketitle
+
+\noindent\textbf{Setting.}  Let
+$(\mathcal{M}_{\rm FRW},g_{\rm FRW})$ be a spatially flat
+Friedmann--Lema{\^\i}tre--Robertson--Walker spacetime in conformally flat
+coordinates,
+\begin{equation}
+   ds^2_{\rm FRW} \;=\; a(\eta)^2 \bigl( -d\eta^2 + d\mathbf{x}^2 \bigr),
+   \qquad \omega \equiv \log a(\eta),
+   \label{eq:metric}
+\end{equation}
+with $a\in C^2(\mathbb{R})$, $a>0$, in spacetime dimension $d=4$.  Let
+$\Phi$ be the real, massless, conformally-coupled scalar
+($\xi=\frac{d-2}{4(d-1)}=\frac16$) on $(\mathcal{M}_{\rm FRW},g_{\rm FRW})$,
+and let $\varphi$ be the real massless scalar on Minkowski space
+$(\mathcal{M}_{\rm Mink},\eta_{\mu\nu})$.  Both fields are quantised in the
+conformal vacuum~\cite{BirrellDavies}, related by Frob's rescaling
+\cite[eq.~(3.5)]{Frob2023}
+\begin{equation}
+   \varphi(\eta,\mathbf{x}) \;=\; a(\eta)^{\frac{d-2}{2}}\,
+   \Phi(\eta,\mathbf{x})
+   \;=\; a(\eta)\,\Phi(\eta,\mathbf{x})
+   \qquad (d=4).
+   \label{eq:rescale}
+\end{equation}
+This determines a unitary intertwiner $U:\mathcal{H}_{\rm Mink}\to
+\mathcal{H}_{\rm FRW}$ between the bosonic Fock spaces built on the two
+(common) Cauchy surfaces, with $U\,\hat{\varphi}\,U^{-1}=
+a\,\hat{\Phi}$~\cite[\S3.2]{Frob2023}.
+
+\medskip
+\noindent\textbf{Improved stress tensor.}  We use the conformally-improved
+energy-momentum tensor of \cite[eq.~(2.10), eq.~(3.6)]{Frob2023}, which
+on-shell ($(\nabla^2-\xi R)\Phi\approx 0$, equivalently
+$\partial^2\varphi\approx 0$) takes the trace-free form
+\begin{equation}
+   T^{\rm Mink}_{\mu\nu}[\varphi]
+   = \tfrac{2}{3}\partial_\mu\varphi\,\partial_\nu\varphi
+     - \tfrac{1}{3}\,\varphi\,\partial_\mu\partial_\nu\varphi
+     - \tfrac{1}{6}\,\eta_{\mu\nu}\,\partial^\rho\varphi\,\partial_\rho\varphi.
+   \label{eq:Tmink}
+\end{equation}
+The corresponding curved-space tensor $\mathcal{T}^{\rm FRW}_{\mu\nu}[\Phi]$
+is given by the same formula~(2.10) with $\partial\to\nabla$ and the
+explicit curvature improvement $\frac{d-2}{4(d-1)}(R_{\mu\nu}-\frac{1}{2(d-1)}
+g_{\mu\nu}R)\Phi^2$, evaluated in the metric~\eqref{eq:metric}.
+
+\begin{lemma}[Stress-tensor conjugation, $d=4$]\label{lem:33}
+For the conformally-coupled massless real scalar in the conformal vacuum on
+the FRW background~\eqref{eq:metric}, the unitary intertwiner $U$ defined by
+the rescaling~\eqref{eq:rescale} satisfies, as an identity of operator-valued
+distributions on the common Cauchy surface,
+\begin{equation}
+\boxed{\,
+   U^{-1}\,T^{\rm Mink}_{00}(\eta,\mathbf{x})\,U
+   \;=\; a(\eta)^{\,2}\;\mathcal{T}^{\rm FRW}_{00}(\eta,\mathbf{x}).
+\,}
+   \label{eq:lemma}
+\end{equation}
+Equivalently, in arbitrary dimension $d$,
+$\,U^{-1}T^{\rm Mink}_{\mu\nu}U=
+a^{\,d-2}\mathcal{T}^{\rm FRW}_{\mu\nu}$, which is the operator form of
+Frob~\cite[eq.~(3.8)]{Frob2023}.
+\end{lemma}
+
+\begin{proof}
+We work classically on the common Cauchy surface and quantise at the end;
+the rescaling $\varphi=a\Phi$ is, on the bosonic Fock space of free fields,
+implemented by the unitary $U$ given explicitly in
+\cite[\S3.2]{Frob2023}, so the operator identity follows from the
+classical algebraic identity by Wick's theorem (no ordering ambiguities arise
+because the rescaling is a c-number on the level of mode coefficients).
+
+\smallskip
+\emph{Step 1.\ Action rescaling.}  The flat-space Lagrangian density,
+evaluated on $\varphi=a\Phi$, equals the conformally-coupled FRW
+Lagrangian density up to a total time-derivative.  Sympy verifies (see
+\texttt{sympy\_verify.py}, block~A) the algebraic identity
+\begin{equation}
+\tfrac{1}{2}\bigl[(\partial_\eta\varphi)^2-(\nabla\varphi)^2\bigr]\Big|_{\varphi=a\Phi}
+\;=\;
+\tfrac{1}{2}a^2\bigl[(\partial_\eta\Phi)^2-(\nabla\Phi)^2\bigr]
+-\tfrac{1}{2}\xi\,a^4 R\,\Phi^2
++\partial_\eta\!\left(\tfrac{1}{2}a\,a'\,\Phi^2\right),
+\label{eq:lagrangian-id}
+\end{equation}
+using $\xi=\frac16$ and $R=6a''/a^3$ (the d=4 conformally-flat
+Ricci scalar in the convention of~\cite[eq.~(3.3a)]{Frob2023}).  Since the
+total derivative does not contribute to the variation, both fields satisfy
+$\partial^2\varphi=0$ resp.\ $(\nabla^2-\xi R)\Phi=0$ as a single equation
+of motion.
+
+\smallskip
+\emph{Step 2.\ Operatorial substitution into~\eqref{eq:Tmink}.}
+Substituting $\varphi=a\Phi$ in~\eqref{eq:Tmink} for the $00$-component
+gives an algebraic expression in $a,a',a'',\Phi,\Phi',\Phi''$ and spatial
+gradients of $\Phi$.  Expansion (sympy block~B) yields, term by term,
+\begin{align*}
+T^{\rm Mink}_{00}[a\Phi]
+&= \tfrac{2}{3}(a\Phi)'^{\,2}
+  - \tfrac{1}{3}\,(a\Phi)(a\Phi)''
+  + \tfrac{1}{6}\!\left[ (a\Phi)'^{\,2} - \sum_i(a\partial_i\Phi)^2\right] \\
+&= \tfrac{2}{3}a^2\Phi'^{\,2}
+   + \tfrac{4}{3}a a'\Phi\Phi'
+   + \tfrac{2}{3}a'^2\Phi^2
+   - \tfrac{1}{3}a^2\Phi\Phi''
+   - \tfrac{1}{3}a a''\Phi^2
+   - \tfrac{2}{3}a a'\Phi\Phi'
+   + \tfrac{1}{6}\!\left[a^2\Phi'^{\,2} + 2a a'\Phi\Phi' + a'^2\Phi^2
+                          -a^2\sum_i(\partial_i\Phi)^2\right].
+\end{align*}
+
+\smallskip
+\emph{Step 3.\ Comparison with $a^{\,2}\mathcal{T}^{\rm FRW}_{00}[\Phi]$.}
+The curved-space improved $00$-component
+$\mathcal{T}^{\rm FRW}_{00}[\Phi]$, computed in the metric~\eqref{eq:metric}
+with conformal Christoffels $\Gamma^0_{\;00}=\Gamma^0_{\;ii}=H$,
+$\Gamma^i_{\;0i}=H$, $H\equiv a'/a$, Ricci tensor
+$R_{00}=-3a''/a+3H^2$, and Ricci scalar $R=6a''/a^3$, expands to
+\begin{equation*}
+\mathcal{T}^{\rm FRW}_{00}[\Phi]
+= \tfrac{2}{3}\Phi'^{\,2}
+  - \tfrac{1}{3}\Phi(\Phi''-H\Phi')
+  + \tfrac{1}{6}\!\left[\Phi'^{\,2}-\sum_i(\partial_i\Phi)^2\right]
+  + \tfrac{1}{6}\!\left[R_{00}+\tfrac{a''}{a}\right]\Phi^2.
+\end{equation*}
+Multiplying by $a^2$ and subtracting from $T^{\rm Mink}_{00}[a\Phi]$ above
+(performed symbolically by sympy, block~B), the difference vanishes
+\emph{identically} as an algebraic expression in
+$\{a,a',a'',\Phi,\Phi',\Phi'',\partial_i\Phi\}$:
+\begin{equation}
+   T^{\rm Mink}_{00}[a\Phi]\;-\;a^{\,2}\,\mathcal{T}^{\rm FRW}_{00}[\Phi]
+   \;\equiv\;0
+   \qquad \text{(off-shell, $00$-component, $d=4$).}
+   \label{eq:offshell}
+\end{equation}
+For $\mu\nu\neq 00$ the same identity holds only on-shell; sympy
+block~B verifies this by reducing the residual modulo the FRW
+equation of motion $\Phi''+2H\Phi'+(a''/a)\Phi-\nabla^2\Phi=0$.
+
+\smallskip
+\emph{Step 4.\ Quantisation.}  The classical identity~\eqref{eq:offshell}
+lifts to operators because the rescaling~\eqref{eq:rescale} is implemented
+by a unitary $U$ on the bosonic Fock space (\cite[\S3.2,
+eq.~(3.14)]{Frob2023}), and the improved tensor~\eqref{eq:Tmink} is a
+Wick-ordered bilinear in $\varphi$ (resp.\ $\Phi$).  Wick ordering commutes
+with c-number multiplications $\varphi\mapsto a\Phi$ on a fixed Cauchy
+surface, so the operator identity~\eqref{eq:lemma} follows.
+
+The conformal anomaly is state-independent (it is a c-number
+proportional to the Euler density and the Weyl-squared invariant
+\cite[\S3.5]{Frob2023}) and therefore drops out of the conjugation
+$U^{-1}\,\cdot\,U$ in~\eqref{eq:lemma}.  This is the only point at which
+the $d=4$ assumption enters the operator argument; in $d=2$ a c-number
+correction must be added.
+\end{proof}
+
+\begin{proposition}[Closed-form $K_{\rm FRW}$ on the FRW diamond]\label{prop:K}
+Let $D_R(\eta_c,\mathbf{x}_c)\subset\mathcal{M}_{\rm FRW}$ be the
+conformal diamond of conformal radius $R$ centred at the conformal point
+$(\eta_c,\mathbf{x}_c)$, and let $B_R(\mathbf{x}_c)$ be its central
+spacelike slice $\{\eta=\eta_c\}\cap\overline{D_R}$.  Let $\rho_{D_R}$ be
+the reduction of the conformal-vacuum state to the local algebra on
+$D_R$.  Then the modular Hamiltonian $K_{\rm FRW}\equiv -\log\rho_{D_R}$
+admits the closed form
+\begin{equation}
+\boxed{\,
+   K_{\rm FRW}
+   \;=\;
+   2\pi\int_{B_R(\mathbf{x}_c)}\!\!d^3 x\;
+        \frac{R^2-|\mathbf{x}-\mathbf{x}_c|^2}{2R}\;
+        a(\eta_c)^{\,2}\;\mathcal{T}^{\rm FRW}_{00}(\eta_c,\mathbf{x})
+   + c_0,
+\,}
+   \label{eq:KFRW}
+\end{equation}
+where $c_0$ is the normalisation constant ensuring $\mathrm{tr}\,\rho_{D_R}=1$.
+Equivalently
+$K_{\rm FRW}=(\pi/R)\!\int_{B_R}d^3x\,(R^2-|\mathbf{x}-\mathbf{x}_c|^2)\,a(\eta_c)^2\,\mathcal{T}^{\rm FRW}_{00}+c_0$.
+\end{proposition}
+
+\begin{proof}
+Hislop--Longo \cite{HislopLongo1982} proved that for the free massless
+scalar in any dimension, the modular Hamiltonian of the algebra of the
+double cone (causal diamond) is implemented by a one-parameter subgroup of
+the conformal group; the corresponding generator restricted to the central
+slice was made explicit by Casini--Huerta--Myers
+\cite[eq.~(2.20)]{CasiniHuertaMyers2011} as
+\begin{equation}
+   K_{\rm HL}
+   \;=\;
+   2\pi\int_{B_R}\!d^{d-1}x\;
+        \frac{R^2-r^2}{2R}\;T^{\rm Mink}_{00}(0,\mathbf{x})
+   + c_0,
+   \qquad r\equiv|\mathbf{x}|.
+   \label{eq:HL}
+\end{equation}
+Translating the centre of the diamond from the origin to $(\eta_c,
+\mathbf{x}_c)$ by a conformal isometry of Minkowski space, and applying
+the unitary $U$ of~\eqref{eq:rescale}, gives
+\[
+   K_{\rm FRW}\;=\;U^{-1}K_{\rm HL}U
+   \;=\;
+   2\pi\int_{B_R}\!d^3x\;\frac{R^2-|\mathbf{x}-\mathbf{x}_c|^2}{2R}\;
+       \bigl[U^{-1}T^{\rm Mink}_{00}(\eta_c,\mathbf{x})U\bigr] + c_0.
+\]
+Inserting Lemma~\ref{lem:33} pointwise yields~\eqref{eq:KFRW}.
+\end{proof}
+
+\begin{remark}[Sign of the $a$-exponent]\label{rem:sign}
+The exponent in~\eqref{eq:lemma} is $+2$, not $-2$.  This corrects the sign
+appearing in the v6.0.25 draft of the carve-out paper (which would have
+made $K_{\rm FRW}$ vanish in the early universe $a\to 0$, in conflict
+with finite generalised entropy).  Frob's covariant
+relation~\cite[eq.~(3.8)]{Frob2023}, $e^{(d-2)\omega}\mathcal{T}^{\rm FRW}_{\mu\nu}=T^{\rm Mink}_{\mu\nu}$,
+fixes the sign uniquely: with $e^\omega=a$ and $d=4$ this is
+$a^{2}\mathcal{T}^{\rm FRW}_{\mu\nu}=T^{\rm Mink}_{\mu\nu}$, hence
+$U^{-1}T^{\rm Mink}_{\mu\nu}U=a^{+2}\mathcal{T}^{\rm FRW}_{\mu\nu}$.
+\end{remark}
+
+\begin{remark}[Prefactor]\label{rem:pref}
+The prefactor in the $(R^2-r^2)$-form of \eqref{eq:KFRW} is $\pi/R$, not
+$\pi/R^2$ as appeared transiently in the v6.0.26 draft note.  This is read
+directly off CHM~\cite[eq.~(2.20)]{CasiniHuertaMyers2011}: $2\pi\cdot\frac{R^2-r^2}{2R}=\pi(R^2-r^2)/R$.
+\end{remark}
+
+\begin{remark}[Beyond the central slice]\label{rem:beyond}
+Equation~\eqref{eq:KFRW} is written on the \emph{central} Cauchy slice
+$\eta=\eta_c$ of the diamond.  On a non-central slice, the modular flow
+is generated by the conformal Killing vector $\zeta^\mu$ that fixes the
+diamond, and the Hislop--Longo kernel becomes the contraction
+$\zeta^\mu\xi^\nu_{\rm bdy}T^{\rm Mink}_{\mu\nu}$ along $\zeta$.  Lemma
+\ref{lem:33} still applies pointwise: the integrand becomes
+$\zeta^\mu\zeta^\nu\,a(\eta)^{2}\,\mathcal{T}^{\rm FRW}_{\mu\nu}(\eta,\mathbf{x})$,
+with $a(\eta)^2$ now appearing inside the integral and varying along the
+slice.  The central-slice form~\eqref{eq:KFRW} is the simplest and is the
+one used in the carve-out paper.
+\end{remark}
+
+\begin{remark}[Conformal anomaly]\label{rem:anomaly}
+The conformal anomaly $\mathcal{A}\equiv g^{\mu\nu}\langle T_{\mu\nu}\rangle$
+is non-zero in $d=4$ and adds a c-number contribution to $\langle
+T^{\rm Mink}_{00}\rangle$ relative to $\langle\mathcal{T}^{\rm FRW}_{00}\rangle$
+under conformal transformation.  However, $\mathcal{A}$ is
+\emph{state-independent}~\cite[\S3.5]{Frob2023}, so it cancels in the
+\emph{conjugation} $U^{-1}T_{\mu\nu}U$ (it appears with the same
+coefficient in $T_{\mu\nu}^{\rm Mink}$ and in $a^2\mathcal{T}^{\rm
+FRW}_{\mu\nu}$).  No anomaly correction is needed in
+Lemma~\ref{lem:33}.
+\end{remark}
+
+\begin{thebibliography}{9}
+\bibitem{HislopLongo1982}
+P.~D.\ Hislop and R.\ Longo,
+\emph{Modular structure of the local algebras associated with the free
+massless scalar field theory},
+Comm.\ Math.\ Phys.\ \textbf{84} (1982), 71--85.
+DOI: \href{https://doi.org/10.1007/BF01208372}{10.1007/BF01208372}.
+
+\bibitem{CasiniHuertaMyers2011}
+H.\ Casini, M.\ Huerta and R.~C.\ Myers,
+\emph{Towards a derivation of holographic entanglement entropy},
+JHEP \textbf{05} (2011) 036, \href{https://arxiv.org/abs/1102.0440}{arXiv:1102.0440}.
+
+\bibitem{Frob2023}
+M.~B.\ Fr\"ob,
+\emph{Modular Hamiltonians for double cones in conformally flat
+spacetimes},
+\href{https://arxiv.org/abs/2308.14797}{arXiv:2308.14797} (2023).
+
+\bibitem{BirrellDavies}
+N.~D.\ Birrell and P.~C.~W.\ Davies,
+\emph{Quantum Fields in Curved Space},
+Cambridge Univ.\ Press, 1982; \S 3.1, eqs.~(3.196)--(3.200).
+\end{thebibliography}
+
+\end{document}

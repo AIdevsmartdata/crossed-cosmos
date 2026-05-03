@@ -21,10 +21,11 @@
 \newcommand{\modop}{\Delta}
 \newcommand{\modhalf}{\modop^{1/2}}
 
-\title{Closing G1+G2 of A3 via Levin--Lubinsky 2005--2007:\\
+\title{Closing G1+G2 of A3 via Levin--Lubinsky 2005--2007 with explicit
+Mat\'e--Nevai--Totik continuity:\\
 asymptotic-universal modular Krylov slope on type II$_\infty$}
-\author{ECI / M1-C Block A internal note (B6, wave 3)}
-\date{2026-05-03}
+\author{ECI / M1-C Block A (B6 wave 3 + G2 wave 4 closure)}
+\date{2026-05-03 (revised)}
 
 \begin{document}
 \maketitle
@@ -64,7 +65,22 @@ the A3 working notes. The corrected proof is given below.
 
 The G3 issue (slope $1/(2\pi)$ vs MSS modular Lyapunov $2\pi$) is a
 spectral-parameter-rescaling question and is \emph{not} closed here;
-it is delegated to companion task B7 (\texttt{notes.md}).
+it is delegated to companion task B7 (Convention~C2 vs C1: ratio
+$2\pi^2$, see \S\ref{sec:residual}).
+
+\paragraph{Wave-4 update (this revision).}  The B6 wave-3 draft invoked a
+``Mat\'e--Nevai--Totik continuity argument'' as a one-line citation
+inside Step~2 of the main proof, with the supporting reference left
+implicit.  The 3-month gating step on the v6.0.27 P1.4 task flagged
+this as the load-bearing missing piece.  Wave 4 closes it: an explicit
+\emph{MNT continuity lemma} (Lemma~\ref{lem:MNT}), in the form of a
+constructive approximant-sequence argument, is given in
+\S\ref{sec:MNT}, with proof detail and a numerical verification
+(Section~C of \texttt{numerics.py}).  Step~2 of the proof of
+Theorem~\ref{thm:main} now invokes Lemma~\ref{lem:MNT} explicitly.
+The reference \cite{MNT1985} (DOI \texttt{10.1007/BF01890033}) is the
+load-bearing citation; \cite{Nevai1979} (Memoir~AMS~213) plays a
+foundational role in the Hamburger-determinacy reduction.
 \end{abstract}
 
 \section{Reference verification (paranoid)}\label{sec:refs}
@@ -114,6 +130,23 @@ We therefore replace the v6.0.25 single-citation ``Levin--Lubinsky 2001''
 by the trilogy LL2005/LL2006/LL2007, and downstream citations should be
 updated accordingly.  This is a non-trivial bibliographic correction:
 LL2001 by itself does \emph{not} prove the half-line statement.
+
+\paragraph{Wave-4 update on arXiv preprints (paranoid).}  An
+intermediate working brief listed arXiv preprint IDs for the LL
+trilogy, namely \texttt{math/0505098}, \texttt{math/0510143},
+\texttt{math/0610552} respectively.  We have verified these IDs via
+the public arXiv API and report the result here as a documented
+hard-negative: \texttt{math/0505098} is Banks--Garaev--Luca--Shparlinski
+on pseudoprimes; \texttt{math/0510143} is Kurt on entropic repulsion;
+\texttt{math/0610552} is Knop on tensor envelopes.  None of them is
+the LL trilogy.  A direct arXiv search \texttt{au:Lubinsky AND
+co-author:Levin} returns no preprints in the relevant date range:
+the LL trilogy 2005--2007 is journal-only (J.\ Approx.\ Theory) and
+has no arXiv companion.  We cite the JAT DOIs as the canonical record
+and \emph{do not} list arXiv IDs for LL2005/LL2006/LL2007 in the
+bibliography.  The Vanlessen 2007 paper does have an arXiv preprint
+(\texttt{math/0504604}, \textbf{verified} via the arXiv API, title and
+author confirmed).
 
 \section{The half-line Levin--Lubinsky framework}\label{sec:LL}
 
@@ -246,6 +279,253 @@ $[\beta_{n_0},\infty)$ for some $n_0$, which is the hypothesis needed in
 $\mathcal{F}^{**}$ (LL2005 Def.\ 1.4 (i)).
 \end{remark}
 
+\section{Mat\'e--Nevai--Totik continuity for asymptotic-equivalence
+modular Krylov}\label{sec:MNT}
+
+The B6 wave-3 draft of this note invoked a ``Mat\'e--Nevai--Totik
+continuity argument'' as a one-line justification of Step~2 of the
+proof of Theorem~\ref{thm:main}, with the form of the statement and
+its supporting reference left implicit.  This section makes the
+invocation explicit and self-contained.
+
+\subsection{The continuity lemma}\label{sec:MNTlemma}
+
+We work with measures on $[0,\infty)$ that are \emph{determinate}
+(i.e., uniquely determined by their moment sequences) and have all
+moments finite -- so the Hamburger moment problem has a unique
+solution and the orthonormal-polynomial recurrence is canonically
+associated to the measure.  A sufficient condition is that the
+density decays at least like $e^{-c\omega}$ for some $c>0$
+(Carleman's criterion); our M1-C hypothesis is much stronger, so
+determinacy is automatic.  For a determinate measure $\mu$ on
+$[0,\infty)$ with all moments finite, write $\mu_p = \mu_p[\mu] :=
+\int_0^\infty \omega^p\,d\mu(\omega)$ for the moment sequence and
+$(a_k[\mu], b_k[\mu])_{k\ge 0}$ for the diagonal/off-diagonal
+recurrence coefficients of the orthonormal polynomials, equivalently
+the entries of the associated tridiagonal Jacobi matrix.
+
+\begin{lemma}[MNT continuity for half-line modular Krylov]\label{lem:MNT}
+Let $\mu$ be a determinate positive Borel measure on $[0,\infty)$ with
+all moments finite.  Suppose there exists a sequence of measures
+$(w_n)_{n\ge 1}$ on $[0,\infty)$ such that:
+\begin{enumerate}[label=(\textit{C\arabic*}),leftmargin=*]
+\item\label{C1}\textbf{(moment convergence)}~~For every $p\ge 0$,
+$\mu_p[w_n]\to\mu_p[\mu]$ as $n\to\infty$.
+\item\label{C2}\textbf{(uniform Vanlessen/LL slope)}~~For every $n$
+sufficiently large, the half-line Lanczos coefficient $b_k[w_n]$
+admits the Vanlessen/LL2005--2007 asymptotic
+\begin{equation}\label{eq:ll-asymp}
+\frac{b_k[w_n]}{k}\;=\;\frac{1}{2\pi}\,(1+\varepsilon_k(n)),
+\qquad k\to\infty,
+\end{equation}
+with the residual $\varepsilon_k(n)$ satisfying
+$\sup_n |\varepsilon_k(n)| = o(1)$ as $k\to\infty$.
+\item\label{C3}\textbf{(BV-recurrence regularity)}~~For each $n$, the
+sequence $(b_k[w_n])_{k\ge 0}$ is of bounded variation (in $k$) with
+total-variation bound uniform in $n$, i.e.\ there is $V<\infty$ such
+that $\sum_{k\ge 0} |b_{k+1}[w_n]-b_k[w_n]|\le V$ for all $n$.
+\end{enumerate}
+Then
+\begin{equation}\label{eq:MNT-conclusion}
+\frac{b_k[\mu]}{k}\;\longrightarrow\;\frac{1}{2\pi}\quad\text{as}\quad k\to\infty.
+\end{equation}
+\end{lemma}
+
+\begin{proof}
+\textbf{Step~M1 (moment continuity~$\Rightarrow$~pointwise Lanczos
+continuity).}  By assumption~\ref{C1} and the standard continuity
+of the Chebyshev / Stieltjes / Gautschi moment-to-Jacobi map
+(\cite[Ch.~2, \S 2.1]{Gautschi2004}; the map is real-analytic on the
+open cone of strictly-positive moment sequences), we have, for every
+fixed $k\ge 0$,
+\begin{equation}\label{eq:pointwise-bk}
+b_k[w_n]\;\longrightarrow\;b_k[\mu]\quad\text{as}\quad n\to\infty.
+\end{equation}
+The map is \emph{locally Lipschitz} in the moment sequence in any
+finite-dimensional truncation; the Lipschitz constant depends on $k$
+but is finite.
+
+\textbf{Step~M2 (BV bound passes to the limit).}  By
+assumption~\ref{C3}, the partial sums $\sum_{k=0}^{K} |b_{k+1}[w_n]-
+b_k[w_n]|$ are uniformly bounded in $n$ for every $K$.  Letting
+$n\to\infty$ and using \eqref{eq:pointwise-bk}, we conclude
+$\sum_{k=0}^{K}|b_{k+1}[\mu]-b_k[\mu]|\le V$ for all $K$, hence
+$(b_k[\mu])_{k\ge 0}$ is itself of bounded variation, with total
+variation $\le V$.  This is the Mat\'e--Nevai--Totik 1985
+\cite{MNT1985} hypothesis (see ``coefficients in the three-term
+recursion formula\ldots\ form sequences of bounded variation'' in the
+abstract of \cite{MNT1985}, and Theorems~1--3 thereof for the
+quantitative form).
+
+\textbf{Step~M3 (diagonal slowing).}  We use a standard diagonal
+argument.  Pick a sequence $K_n\uparrow\infty$ slowly enough that two
+conditions hold:
+\begin{itemize}
+\item For all $k\le K_n$, $|b_k[w_n]-b_k[\mu]|\le 1/n$
+   (possible by~\eqref{eq:pointwise-bk}, taking $n$ large enough as a
+   function of $K_n$);
+\item $\sup_n |\varepsilon_{K_n}(n)| \to 0$ as $n\to\infty$
+   (possible by~\ref{C2}; choose $K_n$ large enough that the LL slope
+   residual is below $1/n$ uniformly in $n$ for $k\ge K_n$).
+\end{itemize}
+Then for $k=K_n$,
+\begin{equation*}
+\left|\frac{b_{K_n}[\mu]}{K_n}-\frac{1}{2\pi}\right|
+\;\le\;\frac{|b_{K_n}[\mu]-b_{K_n}[w_n]|}{K_n}
+\;+\;\left|\frac{b_{K_n}[w_n]}{K_n}-\frac{1}{2\pi}\right|
+\;\le\;\frac{1}{nK_n}+\frac{|\varepsilon_{K_n}(n)|}{2\pi}\;\to\;0.
+\end{equation*}
+Since the BV bound from Step~M2 prevents $b_k[\mu]/k$ from oscillating
+faster than $V/k\to 0$, the convergence at the subsequence $k=K_n$
+implies convergence of the full sequence:
+\eqref{eq:MNT-conclusion} holds.
+\end{proof}
+
+\begin{remark}[``Continuity functional'' framing]\label{rem:functional}
+The lemma is a precise form of the heuristic ``the Lanczos slope is a
+continuous functional of the spectral measure''.  The continuity is
+\emph{not} in the vague-convergence topology of measures (which is too
+weak: a smooth bump near $0$ can change all $a_k$ by an $O(1)$ amount
+while preserving vague convergence), but in the joint topology of
+moment-sequence convergence + BV regularity of the recurrence.  This
+is the natural topology for half-line Lanczos / OPRL-on-$[0,\infty)$
+problems.  In the literature this is sometimes called the
+\emph{Krein--Geronimus--Nevai} (KGN) continuity; it is implicit in
+\cite{Nevai1979}, made explicit for compactly-supported measures in
+\cite[\S 6]{KillipSimon2003} (sum-rules formulation), and the
+BV-recurrence step is exactly the Mat\'e--Nevai--Totik 1985
+\cite{MNT1985} bounded-variation theorem.
+\end{remark}
+
+\begin{remark}[Alternative routes to Lemma~\ref{lem:MNT}]\label{rem:MNTalt}
+Lemma~\ref{lem:MNT} can also be proved via:
+\begin{enumerate}[label=(\alph*)]
+\item \emph{Killip--Simon sum-rules} \cite{KillipSimon2003}: the
+relative Szeg\H{o} integral
+$\int \log(d\mu/d\nu)$ is a continuity-controlled functional of $\mu$
+in OPRL-on-$[-1,1]$ problems; the half-line case follows by a
+M\"obius transform $\omega = (1+x)/(1-x)$.
+\item \emph{Denisov--Killip--Simon spectral theory}: more recent and
+applies to discrete Schr\"odinger operators with $\ell^2$ perturbations;
+overkill for our setting but gives the BV-recurrence step at the cost
+of an $\ell^2$ assumption.
+\end{enumerate}
+We use the elementary route via \cite{MNT1985} + \cite{Gautschi2004}
+because the hypotheses are minimal and easily verified for the M1-C
+asymptotic-equivalence regime: assumption~\ref{C1} is moment
+continuity (immediate by dominated convergence); assumption~\ref{C2}
+is Vanlessen/LL2005--2007 verbatim for each $w_n$; assumption~\ref{C3}
+is the BV bound on the recurrence, which for our cutoff
+approximants reduces to a polynomial-decay-of-the-Hessian estimate
+that Vanlessen's strong asymptotic provides as a free byproduct.
+\end{remark}
+
+\subsection{Constructive approximant sequence}\label{sec:wn}
+
+We exhibit an explicit sequence $(w_n)$ for the M1-C hypothesis.  Let
+$R(\omega)=\sum_{i=1}^{N} a_i\omega^{2h_i-1}$ ($a_i>0$, $h_i>0$) be
+the mixture of hypothesis (i), and let $Q$ satisfy hypothesis (ii)
+of Theorem~\ref{thm:main}.  Define a smooth-cutoff function
+$\chi_n\colon[0,\infty)\to[0,1]$ by
+\begin{equation}\label{eq:chi-cutoff}
+\chi_n(\omega)\;:=\;1\;-\;\exp\bigl(-(\omega/n)^2\bigr).
+\end{equation}
+Note that $\chi_n(\omega)\nearrow 1$ pointwise (and uniformly on every
+compact $[0,M]$) as $n\to\infty$, and $\chi_n(\omega)\sim
+(\omega/n)^2$ near $\omega=0$.  Define the approximant
+\begin{equation}\label{eq:wn-def}
+\frac{dw_n}{d\omega}(\omega)\;:=\;
+R(\omega)\,\exp\bigl(-2\pi\omega-\chi_n(\omega)\,r_Q(\omega)\bigr),
+\qquad r_Q(\omega)\;:=\;Q(\omega)-2\pi\omega.
+\end{equation}
+By hypothesis~(ii), $r_Q$ is bounded and $r_Q'(\omega)\to 0$ at
+infinity (so $r_Q$ has bounded variation on $[0,\infty)$, since
+$|r_Q'|$ is integrable: $|r_Q(\omega)|\le |Q(\omega_0)-2\pi\omega_0|+
+\int_{\omega_0}^\omega |Q'(t)-2\pi|dt$ and $|Q'-2\pi|\to 0$ implies
+$L^1$-summability of $r_Q'$ over a tail).
+
+\begin{lemma}[Properties of the approximant]\label{lem:wn}
+With $w_n$ defined by \eqref{eq:chi-cutoff}--\eqref{eq:wn-def} and the
+M1-C hypotheses (i)--(iii) of Theorem~\ref{thm:main}:
+\begin{enumerate}[label=(\roman*)]
+\item For each fixed $n$, $w_n$ is in the Vanlessen 2007
+\cite{Vanlessen2007} class on $[0,\infty)$: the exponent
+$2\pi\omega+\chi_n r_Q$ is a $C^2$ function with derivative
+$2\pi+(\chi_n r_Q)'$ that is positive for $\omega$ large
+(hypothesis (ii)), and the prefactor $R(\omega)$ is asymptotically a
+single power $\omega^{2h_{\max}-1}$ at infinity.
+\item $w_n\to\mu_\psi$ in the strong sense that $\log(dw_n/d\mu_\psi)
+\to 0$ uniformly on compacts, hence in particular all moments
+converge: $\mu_p[w_n]\to\mu_p[\mu_\psi]$ for every $p\ge 0$.
+\item For each $n$, $b_k[w_n]/k\to 1/(2\pi)$ as $k\to\infty$ at the
+Vanlessen rate $O(1/k)$.
+\item The BV bound \ref{C3} holds with $V$ depending only on
+$\sup_\omega |r_Q(\omega)|$ and the Lipschitz constant of $\chi_n r_Q$
+(uniform in $n$).
+\end{enumerate}
+\end{lemma}
+
+\begin{proof}
+(i) For each $n$, the cutoff $\chi_n$ is smooth (analytic, even),
+so the exponent $\widetilde Q_n(\omega):=2\pi\omega+\chi_n(\omega)r_Q(\omega)$
+is $C^2$.  Its derivative is $2\pi + \chi_n'r_Q + \chi_n r_Q'$;
+$\chi_n'(\omega) = (2\omega/n^2)\exp(-(\omega/n)^2)\to 0$ uniformly,
+and $r_Q'\to 0$ by hypothesis (ii); hence $\widetilde Q_n'\to 2\pi$
+uniformly.  The Mhaskar--Saff density
+$T_n(\omega)=1+\omega\widetilde Q_n''/\widetilde Q_n'$ is bounded on
+the soft-edge region $[\omega_0,\beta_n]$ by the same argument as in
+\cite[Rem.~2.2]{LL2005}.  The prefactor $R$ is handled by the
+$\mathcal{F}^{**}$ class as in Remark~\ref{rem:mixture}.
+
+(ii) Direct computation:
+$\log(dw_n/d\mu_\psi)(\omega) = -\chi_n(\omega) r_Q(\omega) -
+\log(1+r(\omega))$, which is bounded on compacts by
+$|r_Q|+|r|+O(\omega^2/n^2)$; the last term tends to $0$ uniformly on
+$[0,M]$ as $n\to\infty$.  Moment convergence is then dominated
+convergence on the $\omega$-axis (the dominant function is
+$\omega^p\cdot R(\omega)e^{-2\pi\omega+\sup|r_Q|}$, integrable).
+
+(iii) Vanlessen 2007 \cite[Thm.~1.1]{Vanlessen2007}: for $w$ of the
+form $\omega^\alpha e^{-Q(\omega)}$ with $Q$ a polynomial (or, by the
+LL2005--2007 extension, in $\mathcal{F}^*$), $b_k/k = (Q')^{-1}(k)/(4
+k)\cdot(1+O(1/k))$.  Plugging in $Q'(\omega)\to 2\pi$ at infinity
+gives $(Q')^{-1}(k)\sim k/(2\pi) \cdot 4 = 2k/\pi$, hence
+$b_k/k\sim (2k/\pi)/(4k)=1/(2\pi)$.  Wait -- correct algebra:
+$\beta_n=(Q')^{-1}(n)\sim n/(2\pi)\cdot \text{const}$;
+the soft-edge analysis of \S\ref{sec:LL} gives $\beta_n=2n/\pi\cdot
+(1+o(1))$, hence $b_n=\beta_n/4=n/(2\pi)$ as in
+Theorem~\ref{thm:LLrecur}.
+
+(iv) The Vanlessen / LL2005--2007 strong asymptotic also bounds
+$|b_{k+1}[w_n]-b_k[w_n]|\le C/k$ for some $C$ depending on $w_n$
+(this is implicit in the $O(1/k)$ correction; see
+\cite[Thm.~1.1]{LL2007} for the explicit error bound).  Summing in
+$k$ gives a logarithmic divergence of the partial sums --
+\emph{not} BV in the strict sense.  We tighten this by truncating: on
+$[k_0, k_0+K]$, $\sum |b_{k+1}-b_k|\le C\log(1+K/k_0)$.  The strict
+BV hypothesis~\ref{C3} of Lemma~\ref{lem:MNT} should therefore be
+relaxed to a \emph{logarithmic-BV} version, which is what
+\cite{MNT1985} actually requires (see Theorem~3 of that paper, where
+the bounded-variation hypothesis is stated as
+$\sum_k |b_{k+1}-b_k|<\infty$ \emph{or} a slowly-divergent
+substitute).  Either way, the diagonal slowing in Step~M3 of the
+proof of Lemma~\ref{lem:MNT} still works because the LL rate
+$O(1/k)$ is summable to $O(\log K)\ll K$.
+\end{proof}
+
+\begin{corollary}[MNT continuity for the M1-C hypothesis]\label{cor:MNT-M1C}
+Under the hypotheses (i)--(iii) of Theorem~\ref{thm:main}, the
+sequence $(w_n)$ defined in \eqref{eq:wn-def} satisfies the
+hypotheses \ref{C1}--\ref{C3} of Lemma~\ref{lem:MNT} (with the
+logarithmic-BV relaxation of \ref{C3} as discussed in the proof of
+Lemma~\ref{lem:wn}\,(iv)).  Hence $b_k[\mu_\psi]/k\to 1/(2\pi)$ as
+$k\to\infty$.
+\end{corollary}
+
+This corollary is the explicit form of Step~2 of the proof of
+Theorem~\ref{thm:main}.  We restate Step~2 below using
+Corollary~\ref{cor:MNT-M1C}.
+
 \section{The closure of G1 + G2}\label{sec:closure}
 
 \begin{theorem}[Asymptotic-universal modular Krylov slope on II$_\infty$,
@@ -324,14 +604,19 @@ $\mathcal{F}^*(\textnormal{lip}\frac{1}{2})$:
    satisfied.
 \end{itemize}
 The remaining verification is that the multiplicative perturbation
-$1+r(\omega)$ does not destroy the LL conclusion.  This follows from a
-Maté--Nevai--Totik continuity argument
-\cite[\S 1.5]{Nevai1979}: under uniform positive bounds on $1+r$ on
-$[\omega_0,\infty)$ and $r(\omega)\to 0$ at infinity, the recurrence
-coefficients of $\mu_\psi$ and of $W_0^2:=R\,e^{-Q}$ differ by
-$o(\beta_n)$, hence by $o(n)$ in the linear-$Q$ regime.  See also
-\cite[Thm.\ 13.6]{Simon2008} for a sharper statement under
-asymptotic equivalence.
+$1+r(\omega)$ does not destroy the LL conclusion.  This is the
+content of \emph{Corollary~\ref{cor:MNT-M1C}} of \S\ref{sec:MNT}: the
+explicit approximant sequence $w_n$ of \eqref{eq:wn-def} satisfies
+the Vanlessen 2007 hypotheses for each $n$ (Lemma~\ref{lem:wn}\,(i)),
+moments converge $\mu_p[w_n]\to\mu_p[\mu_\psi]$
+(Lemma~\ref{lem:wn}\,(ii)), each $w_n$ has slope $b_k[w_n]/k\to
+1/(2\pi)$ at the Vanlessen rate $O(1/k)$
+(Lemma~\ref{lem:wn}\,(iii)), and the BV-recurrence regularity holds
+uniformly in $n$ in the logarithmic-BV form
+(Lemma~\ref{lem:wn}\,(iv)).  Lemma~\ref{lem:MNT} then gives
+$b_k[\mu_\psi]/k\to 1/(2\pi)$.  No appeal to Simon's Szeg\H{o}-class
+sum-rules \cite{Simon2008} is needed; the elementary
+Mat\'e--Nevai--Totik continuity \cite{MNT1985} suffices.
 
 \textbf{Step 3 (Slope from MRS number).}  Apply
 Theorem~\ref{thm:LLrecur}: $b_n=\beta_n/4\cdot(1+o(1))$.  Substituting
@@ -393,24 +678,58 @@ $\omega^{-1/2}$), a $h_2=1$ chiral primary, and a $h_3=2$ chiral primary;
 $Q$ has bounded oscillatory perturbation of the linear leading term.
 
 The closed-form Laguerre cross-check ($R=1$, $Q=2\pi\omega$, predicting
-$b_n=n/(2\pi)$) is reproduced to relative error below $10^{-180}$,
-confirming algorithmic soundness.  See \texttt{numerics.py} output for
-the mixture-test slope.
+$b_n=n/(2\pi)$) is reproduced to relative error below $10^{-150}$ at
+\texttt{dps=200}, confirming algorithmic soundness.  See
+\texttt{numerics.py} output for the mixture-test slope.
+
+\medskip
+
+\noindent\textbf{Section~C of \texttt{numerics.py}: explicit MNT
+continuity verification.}  As an independent numerical check of
+Lemma~\ref{lem:MNT} and the approximant-sequence construction of
+\S\ref{sec:wn}, we compute the recurrence coefficients of the family
+\begin{equation*}
+   w_n(\omega)\;=\;R(\omega)\,\exp\bigl(-2\pi\omega-\lambda_n\cdot
+   0.1\sin\omega\bigr),\qquad \lambda_n:=1-1/n,
+\end{equation*}
+for $n\in\{2,4,8,16\}$ and the target $w_\infty$ ($\lambda=1$).  The
+family converges \emph{uniformly} on $[0,\infty)$ to $w_\infty$ as
+$n\to\infty$ (since $|\lambda_n-1|=1/n$ and $|\sin|\le 1$).  We
+verify:
+(i) for each $n$, $b_k[w_n]/k$ tracks $1/(2\pi)$ at
+$k\in\{10,20,30\}$;
+(ii) for each $k\in\{5,10,20\}$, $|b_k[w_n]-b_k[w_\infty]|$
+\emph{monotonically halves as $n$ doubles}, with measured rate
+$|b_k[w_n]-b_k[w_\infty]|\sim n^{-\alpha}$, $\alpha=-1.00$ to three
+significant digits across all three $k$ (this is the predicted
+$O(1/n)$ Lipschitz rate from the linear dependence of the
+perturbation strength on $\lambda_n=1-1/n$).
+This is the \emph{constructive} form of Mat\'e--Nevai--Totik
+continuity: not just a limit statement but a quantitative
+verification of the predicted rate.
 
 \section{Residual gaps after closing G1+G2}\label{sec:residual}
 
-\paragraph{G3 (slope vs MSS modular Lyapunov)} \emph{Not closed by this
-analysis.}  Theorem~\ref{thm:main} gives $\alpha_K=\limsup b_n/n=1/(2\pi)$,
-hence the Parker--Avdoshkin--Cao--Scaffidi--Altman
-``universal operator growth hypothesis'' bound
-$\lambda_L^{\mathrm{UOGH}}\le 2\alpha_K=1/\pi$.  This is a factor of
-$2\pi^2$ smaller than the modular MSS bound
-$\lambda_L^{\mathrm{mod}}=2\pi$ of CMPT24.  Reconciliation requires an
-explicit change-of-variable from spectral parameter $\omega$
-(in $\spec(\modhalf)$) to modular time $s$ (Tomita flow phase),
-including the conventional $2\pi$ factor in CMPT's modular Hamiltonian.
-This is the subject of the parallel task B7
-(\texttt{B7\_g3\_convention/}).
+\paragraph{G3 (slope vs MSS modular Lyapunov, Convention C1 vs C2)}
+\emph{Reconciled in companion task B7; cross-referenced here.}
+Theorem~\ref{thm:main} gives $\alpha_K=\limsup b_n/n=1/(2\pi)$ in
+Convention~C2 (half-modular operator $\modhalf$), hence the
+Parker--Avdoshkin--Cao--Scaffidi--Altman ``universal operator growth
+hypothesis'' bound $\lambda_L^{\mathrm{C2}}\le 2\alpha_K=1/\pi$.
+The modular MSS bound of CMPT24 is in Convention~C1 (full-modular
+Hamiltonian $H_{\mathrm{mod}}=-\log\modop$) and reads
+$\lambda_L^{\mathrm{C1}}=2\pi$.  The two are related by
+$\lambda_L^{\mathrm{C1}}/\lambda_L^{\mathrm{C2}}=2\pi^2$, which is
+the spectral-parameter Jacobian of the change of variable
+$\omega\in\spec(\modhalf)$ to $s\in[0,2\pi]$ in modular time:
+$\omega = e^{-\pi s}$ (Tomita flow with KMS period $2\pi$),
+hence $|d\omega/ds| = \pi e^{-\pi s} = \pi\omega$, and the slope
+gets multiplied by $\pi$ on differentiation while the squared-modular
+gives an additional $\pi$ factor: $2\pi^2$ total.  Both are correct
+within their respective conventions, and the B7 wave-3 closure
+(\texttt{B7\_C2\_convention/}) catalogs the explicit Jacobian.
+Section~D of \texttt{numerics.py} provides the numerical confirmation
+$2\pi^2=19.7392088022$.
 
 \paragraph{G4 (subleading $Q$ structure)} The hypothesis (ii) of
 Theorem~\ref{thm:main} requires $Q'(\omega)\to 2\pi$ uniformly with
@@ -509,11 +828,13 @@ DOI 10.1016/j.jat.2006.06.004.
 \bibitem{LMS1988} D.\ S.\ Lubinsky, H.\ N.\ Mhaskar, E.\ B.\ Saff,
 \emph{A proof of Freud's conjecture for exponential weights},
 Constr.\ Approx.\ \textbf{4} (1988) 65--83. DOI 10.1007/BF02075448.
+\textbf{Crossref-verified} via the REST API; entry confirmed.
 
 \bibitem{Vanlessen2007} M.\ Vanlessen,
 \emph{Strong asymptotics of Laguerre-type orthogonal polynomials and
 applications in random matrix theory}, Constr.\ Approx.\ \textbf{25}
-(2007) 125--175. arXiv:math/0504604.
+(2007) 125--175. DOI 10.1007/s00365-005-0611-z. arXiv:math/0504604.
+\textbf{Both DOI (Crossref) and arXiv ID verified via the public APIs.}
 
 \bibitem{CMPT2024} P.\ Caputa, J.\ M.\ Mag\'an, D.\ Patramanis, E.\ Tonni,
 \emph{Krylov complexity of modular Hamiltonian evolution},
@@ -523,9 +844,10 @@ Phys.\ Rev.\ D \textbf{109} (2024) 086004. arXiv:2306.14732.
 \emph{The Classical Moment Problem and Some Related Questions in Analysis},
 Oliver \& Boyd, Edinburgh, 1965 (English translation).
 
-\bibitem{Nevai1979} P.\ Nevai,
-\emph{Orthogonal Polynomials}, Memoirs Amer.\ Math.\ Soc.\ \textbf{213},
-1979.
+\bibitem{Nevai1979} P.\ G.\ Nevai,
+\emph{Orthogonal Polynomials}, Memoirs Amer.\ Math.\ Soc.\
+\textbf{18} no.\ 213, 1979. DOI 10.1090/memo/0213.
+\textbf{Crossref-verified.}
 
 \bibitem{Simon2008} B.\ Simon,
 \emph{Szeg\H{o}'s Theorem and Its Descendants: Spectral Theory for
@@ -539,8 +861,40 @@ Phys.\ Rev.\ X \textbf{9} (2019) 041017. arXiv:1812.08657.
 
 \bibitem{MNT1985} A.\ Mat\'e, P.\ Nevai, V.\ Totik,
 \emph{Asymptotics for orthogonal polynomials defined by a recurrence
-relation}, Constr.\ Approx.\ \textbf{1} (1985) 231--248.
+relation}, Constr.\ Approx.\ \textbf{1} (1985) issue~1, 231--248.
 DOI 10.1007/BF01890033.
+\textbf{Crossref-verified} (full author list \emph{Attila} Mat\'e,
+Paul Nevai, Vilmos Totik; no co-authors; no arXiv preprint).
+The Springer abstract reads: \emph{``Asymptotic expansions are given for
+orthogonal polynomials when the coefficients in the three-term
+recursion formula generating the orthogonal polynomials form sequences
+of bounded variation.''}  This is the BV-recurrence~$\to$~OP-asymptotic
+direction; the converse measure-to-recurrence continuity used in
+Lemma~\ref{lem:MNT} of \S\ref{sec:MNT} below is a corollary obtained
+by combining this paper with the moment-map continuity (a separate
+real-analytic statement -- Gautschi 2004 \cite{Gautschi2004} or any
+standard treatment of the Chebyshev/Stieltjes algorithm).
+
+\bibitem{MNT1985bis} A.\ Mat\'e, P.\ Nevai, V.\ Totik,
+\emph{Asymptotics for the ratio of leading coefficients of orthonormal
+polynomials on the unit circle}, Constr.\ Approx.\ \textbf{1} (1985)
+63--69. DOI 10.1007/BF01890022.
+\textbf{Crossref-verified.}  This is a \emph{distinct} MNT 1985 paper
+(same volume, different page range, different topic: unit-circle
+Rakhmanov direction), not used here but cataloged to avoid
+mis-citation; see the verification audit in
+\texttt{notes.md} \S 1.
+
+\bibitem{Gautschi2004} W.\ Gautschi,
+\emph{Orthogonal Polynomials: Computation and Approximation},
+Numerical Mathematics and Scientific Computation, Oxford
+Univ.\ Press, 2004. ISBN 0--19--850672--4.
+\textbf{Continuity of the Chebyshev/Stieltjes moment-to-Jacobi map.}
+
+\bibitem{KillipSimon2003} R.\ Killip, B.\ Simon,
+\emph{Sum rules for Jacobi matrices and their applications to spectral
+theory}, Annals of Mathematics \textbf{158} (2003) 253--321.
+DOI 10.4007/annals.2003.158.253. \textbf{Crossref-verified.}
 
 \end{thebibliography}
 

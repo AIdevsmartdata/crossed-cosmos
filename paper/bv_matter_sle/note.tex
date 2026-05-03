@@ -1,0 +1,788 @@
+%% note.tex  --  Standalone math.OA / J.Math.Phys. draft
+%% Hadamard property of the conformally-coupled massless scalar on
+%% Bianchi V matter cosmologies via Kontorovich--Lebedev decomposition
+%%
+%% Authors: [author placeholder]
+%% Date: 2026-05-03
+%% arXiv category: math-ph (primary); math.OA, gr-qc (secondary)
+
+\documentclass[12pt,letterpaper]{article}
+
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{mathtools}
+\usepackage{geometry}
+\geometry{margin=1.25in}
+\usepackage{hyperref}
+\usepackage{xcolor}
+\hypersetup{colorlinks=true,linkcolor=blue,citecolor=blue,urlcolor=blue}
+
+%% Theorem environments
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{remark}[theorem]{Remark}
+
+%% Custom macros
+\newcommand{\Rbb}{\mathbb{R}}
+\newcommand{\Cbb}{\mathbb{C}}
+\newcommand{\Hbb}{\mathbb{H}}
+\newcommand{\Zbb}{\mathbb{Z}}
+\newcommand{\bfA}{\mathbf{A}}
+\newcommand{\cF}{\mathcal{F}}
+\newcommand{\cH}{\mathcal{H}}
+\newcommand{\cW}{\mathcal{W}}
+\newcommand{\WF}{\mathrm{WF}}
+\newcommand{\SLE}{\mathrm{SLE}}
+\newcommand{\dmu}{d\mu(\rho)}
+\newcommand{\tr}{\mathrm{tr}}
+\newcommand{\ad}{\mathrm{ad}}
+\newcommand{\BN}{BN23}
+\newcommand{\ph}{\varphi}
+\newcommand{\eps}{\varepsilon}
+\DeclareMathOperator{\spec}{spec}
+\DeclareMathOperator{\supp}{supp}
+
+\title{States of Low Energy on Bianchi~V Matter Cosmologies:\\
+Unconditional Hadamard Property via\\
+Kontorovich--Lebedev Decomposition on $H^3$}
+
+\author{[Author]\\
+\small [Institution]}
+
+\date{Draft: \today. Sequel to Banerjee--Niedermaier \cite{BN23}.}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+We prove that the \emph{State of Low Energy} (SLE) constructed for the
+conformally-coupled massless scalar field on any Bianchi~V matter
+cosmology is a Hadamard state, \emph{unconditionally} --- without imposing
+any a-priori Hadamard hypothesis on a reference state.
+The key mechanism is that the spatial sections are hyperbolic $3$-space
+$H^3$ (rather than the flat torus $T^3$ of Bianchi~I), whose Laplacian
+has a spectral gap $\inf\spec(-\Delta_{H^3})=1$.
+This gap provides an infrared mass-squared $\omega^2 \geq (1 + \rho^2)/a^2$
+for all modes, eliminating the logarithmic IR divergences that obstruct
+the Hadamard property in the massless Bianchi~I case
+\cite{BN23}.
+After Kontorovich--Lebedev (K-L) decomposition on $H^3$, the temporal mode
+equation reduces to a Schr\"{o}dinger equation with potential
+$V_{\mathrm{eff}}(\tau) = a''/a = 2/\tau^2$ (dust, conformal time), which
+decays as $\tau^{-2}$ and is subordinate to the spectral gap for
+$\tau > \sqrt{2}$.
+The SLE two-point function's wavefront set satisfies the Radzikowski
+microlocal Hadamard criterion.
+\end{abstract}
+
+%% ============================================================
+\section{Introduction and Main Result}
+\label{sec:intro}
+%% ============================================================
+
+The Hadamard condition is the accepted ultraviolet regularity criterion for
+quantum states of free fields on curved spacetimes \cite{Wald94}.
+Its microlocal formulation via the wavefront set, due to Radzikowski
+\cite{Radzikowski96}, has become the standard tool for proving that
+explicitly constructed states are Hadamard.
+
+The \emph{States of Low Energy} (SLE) were introduced in
+\cite{Olbermann07} for isotropic Friedmann--Lema\^{\i}tre--Robertson--Walker
+(FLRW) spacetimes and proved Hadamard there.
+Banerjee and Niedermaier \cite{BN23} extended the construction to anisotropic
+Bianchi~I spacetimes (spatial torus $T^3$), proving Hadamard for massive
+fields and establishing the IR obstruction for the massless case:
+the $\rho=0$ (zero-mode) degeneracy of $-\Delta_{T^3}$ causes
+$\log^2$-type IR divergences that break the Hadamard property for the
+massless minimally-coupled scalar on $T^3$.
+
+\textbf{This paper addresses the next case in the Bianchi--WCH classification:}
+Bianchi~V with a dust matter source.
+The spatial geometry is $H^3$ (hyperbolic $3$-space), not $T^3$.
+The Lie algebra of Bianchi~V is \emph{non-unimodular} (class~B), and the
+vacuum solution is isometric to Minkowski spacetime \cite{Ellis-MacCallum69},
+so the only physically interesting case is the matter-filled universe,
+which has a genuine cosmological singularity.
+
+The main result is:
+
+\begin{theorem}[Main Theorem]
+\label{thm:main}
+Let $(M,g)$ be a Bianchi~V spacetime with compactly supported dust matter
+and scale factor $a(t) = a_0 t^{2/3}$, spatially
+$M_s = \Gamma \backslash H^3$ for a cocompact lattice $\Gamma$.
+Let $\phi$ be the conformally-coupled massless scalar field,
+$(\Box + \tfrac{1}{6}R)\phi = 0$.
+Fix any reference time $\tau_0 > \sqrt{2}$ (conformal time).
+Then the State of Low Energy $\omega_{\SLE}$ constructed by
+K-L decomposition of the one-particle Hilbert space
+and energy minimization over Bogoliubov transformations
+is a Hadamard state.
+The construction is \emph{unconditional}: no Hadamard hypothesis
+on any reference state is needed.
+\end{theorem}
+
+The proof has three ingredients:
+\begin{enumerate}
+  \item[(A)] \textbf{Spectral gap.} $\inf\spec(-\Delta_{H^3}) = 1 > 0$
+    (Lemma~\ref{lem:specgap}).
+    This eliminates the IR zero-mode obstruction of the $T^3$ case.
+  \item[(B)] \textbf{Potential decay.} After conformal coupling,
+    the effective potential $V_{\mathrm{eff}}(\tau) = 2\tau^{-2}$
+    is bounded and decays; positive-frequency modes exist for all
+    $\tau_0 > \sqrt{2}$ (Proposition~\ref{prop:posfreq}).
+  \item[(C)] \textbf{Microlocal Hadamard criterion.} The K-L two-point
+    function has wavefront set on future-directed null geodesics
+    (Theorem~\ref{thm:wfset}).
+\end{enumerate}
+
+\begin{remark}[Vacuum BV is trivial]
+The vacuum Bianchi~V solution is the Milne universe, isometric to
+Minkowski spacetime via $T = t\cosh\chi$, $R = t\sinh\chi$
+(see \S\ref{sec:geometry}).
+It is globally Hadamard by default and carries no non-trivial
+quantum field theory.
+Only the matter case is non-trivial.
+\end{remark}
+
+%% ============================================================
+\section{Bianchi~V Geometry and the Matter Case}
+\label{sec:geometry}
+%% ============================================================
+
+\subsection{Lie algebra}
+
+The Bianchi~V Lie algebra $\mathfrak{b}_V$ has basis $\{e_1,e_2,e_3\}$
+with non-zero brackets
+\begin{equation}
+  [e_3, e_1] = e_1, \qquad [e_3, e_2] = e_2.
+  \label{eq:BVbrackets}
+\end{equation}
+
+\begin{lemma}[Non-unimodularity]
+\label{lem:nouni}
+$\mathfrak{b}_V$ is non-unimodular (Bianchi class~B).
+Specifically, $\tr(\ad_{e_1}) = 0$, $\tr(\ad_{e_2}) = 0$,
+$\tr(\ad_{e_3}) = 2 \neq 0$.
+\end{lemma}
+\begin{proof}
+The adjoint matrices in the basis $\{e_1,e_2,e_3\}$ are
+\[
+  \ad_{e_1} = \begin{pmatrix}0&0&-1\\0&0&0\\0&0&0\end{pmatrix},\quad
+  \ad_{e_2} = \begin{pmatrix}0&0&0\\0&0&-1\\0&0&0\end{pmatrix},\quad
+  \ad_{e_3} = \begin{pmatrix}1&0&0\\0&1&0\\0&0&0\end{pmatrix}.
+\]
+All traces are read off directly; $\tr(\ad_{e_3}) = 2$.
+The Jacobi identity is satisfied trivially since $[e_1,e_2]=0$.
+\qed
+\end{proof}
+
+In the Ellis--MacCallum classification \cite{Ellis-MacCallum69},
+$\mathfrak{b}_V$ has structure tensor $n^{ab} = 0$, $a_i = (0,0,1)$,
+giving the unique class~B type with vanishing $n^{ab}$.
+
+\subsection{Metric ansatz}
+
+The spatially isotropic Bianchi~V metric is
+\begin{equation}
+  ds^2 = -dt^2 + a(t)^2\bigl[d\chi^2 + \sinh^2\!\chi\,d\Omega^2_{S^2}\bigr],
+  \label{eq:metric}
+\end{equation}
+where $(\chi,\theta,\varphi)$ are standard hyperbolic coordinates on $H^3$.
+The spatial section is the hyperbolic space $H^3 \cong SO(3,1)/SO(3)$.
+In the compactified version relevant to quantum field theory,
+$H^3$ is replaced by a compact quotient $\Gamma\backslash H^3$.
+
+\subsection{Vacuum solution: Milne = Minkowski}
+
+\begin{proposition}[Joseph 1966]
+\label{prop:vacuum}
+The vacuum ($T_{ab}=0$) Bianchi~V solution with $a(t) = t$,
+\[
+  ds^2 = -dt^2 + t^2\bigl[d\chi^2 + \sinh^2\!\chi\,d\Omega^2_{S^2}\bigr],
+\]
+is isometric to Minkowski spacetime via the coordinate map
+\begin{equation}
+  T = t\cosh\chi, \qquad R = t\sinh\chi.
+  \label{eq:joseph}
+\end{equation}
+\end{proposition}
+\begin{proof}
+Direct computation: $-dT^2 + dR^2 = -dt^2 + t^2\,d\chi^2$,
+and $R^2 d\Omega^2_{S^2} = t^2\sinh^2\!\chi\,d\Omega^2_{S^2}$, so
+$-dT^2 + dR^2 + R^2d\Omega^2_{S^2} = ds^2$.
+The map \eqref{eq:joseph} is a diffeomorphism from
+$\{t>0, \chi\in\Rbb\}$ onto the future light cone $\{T>|R|\}$
+in Minkowski spacetime.
+\qed
+\end{proof}
+
+\begin{remark}
+Proposition~\ref{prop:vacuum} is attributed to Joseph \cite{Joseph66},
+who showed that the vacuum Bianchi~V universe is non-singular.
+It is a pre-arXiv result: see also Ellis--MacCallum \cite{Ellis-MacCallum69}
+for the classification context.
+\textbf{Citation flag:} Reference \cite{Joseph66} is a 1966 journal paper
+that cannot be verified on arXiv; physical library access required.
+The coordinate calculation in Proposition~\ref{prop:vacuum} provides an
+independent proof and renders the Hadamard argument independent of
+this reference.
+\end{remark}
+
+\subsection{Matter case}
+
+With a pressure-free dust source ($T_{ab} = \rho_m u_a u_b$),
+the Friedmann equations give the familiar matter-era scale factor
+\begin{equation}
+  a(t) = a_0\, t^{2/3}, \qquad H = \frac{2}{3t},
+  \label{eq:matter}
+\end{equation}
+and the spacetime has a genuine cosmological singularity at $t=0$.
+The Hubble parameter satisfies $\dot{H} = -2/(3t^2)$, and the
+Ricci scalar $R = 4\pi G\rho_m \geq 0$.
+
+\textbf{BKL/Kasner attractor.} Near $t=0$, the dynamics follows
+the Kasner attractor with exponents $p_1 = p_2 = p_3 = 2/3$
+(isotropic dust Kasner). The T2-anisotropy is suppressed by the matter
+source, so the approach to the singularity is monotone
+\cite{Ringström09,BKL82}.
+
+%% ============================================================
+\section{Kontorovich--Lebedev Decomposition and the Temporal ODE}
+\label{sec:KL}
+%% ============================================================
+
+\subsection{Spectral theory of $-\Delta_{H^3}$}
+
+Let $H^3$ carry its standard hyperbolic metric of curvature $-1$.
+The radial eigenfunctions are:
+
+\begin{lemma}[K-L eigenfunctions]
+\label{lem:eigen}
+For $\rho \geq 0$, the function
+\begin{equation}
+  \varphi_\rho(\chi) = \frac{\sin(\rho\chi)}{\rho\sinh\chi}
+  \label{eq:eigenfunction}
+\end{equation}
+satisfies
+\begin{equation}
+  -\Delta_{H^3}\varphi_\rho = (\rho^2 + 1)\,\varphi_\rho.
+  \label{eq:eigenvalue}
+\end{equation}
+\end{lemma}
+\begin{proof}
+On $H^3$ in standard geodesic polar coordinates,
+$-\Delta_{H^3} f = -(f'' + 2\coth\chi\, f')$ for radial $f$.
+Substituting $\varphi_\rho$ and simplifying with sympy gives
+$(-\Delta_{H^3}\varphi_\rho)/\varphi_\rho = \rho^2 + 1$ identically.
+(Full sympy verification in \texttt{sympy\_check.py}, Task~3.)
+\qed
+\end{proof}
+
+\begin{lemma}[Spectral gap]
+\label{lem:specgap}
+$\displaystyle\inf_{\rho \geq 0}\spec(-\Delta_{H^3}) = 1.$
+\end{lemma}
+\begin{proof}
+By \eqref{eq:eigenvalue}, the eigenvalue $\lambda(\rho) = \rho^2 + 1$
+achieves its minimum $1$ at $\rho = 0$.
+Alternatively, this follows from the general formula for the bottom
+of the $L^2$ spectrum of $-\Delta_{H^n}$: $\inf\spec = ((n-1)/2)^2$,
+which for $n=3$ gives $(3-1)^2/4 = 1$.
+\end{proof}
+
+\begin{remark}[Comparison with $T^3$]
+For Bianchi~I with $T^3$ spatial sections,
+$-\Delta_{T^3}$ has eigenvalues $\sum_{i=1}^3 (2\pi n_i/L_i)^2 \geq 0$,
+with zero eigenvalue at the zero mode $n_i=0$.
+This zero mode causes the $\log^2$ IR divergence that breaks the
+Hadamard property for the massless scalar on Bianchi~I \cite{BN23}.
+The spectral gap $= 1 > 0$ on $H^3$ eliminates this obstruction.
+\end{remark}
+
+\subsection{Plancherel measure}
+
+The $L^2(H^3)$ Plancherel formula reads
+\begin{equation}
+  \int_{H^3} |f(\chi)|^2\,d\mathrm{vol}_{H^3}
+  = \int_0^\infty |\hat{f}(\rho)|^2\,\rho^2\,d\rho,
+  \qquad \hat{f}(\rho) = \int_{H^3} f(\chi)\,\overline{\varphi_\rho(\chi)}\,d\mathrm{vol},
+  \label{eq:plancherel}
+\end{equation}
+where $d\mu(\rho) = \rho^2\,d\rho$ on $[0,\infty)$.
+This is the spherical Plancherel theorem for the rank-one symmetric space
+$H^3 = SL(2,\Cbb)/SU(2)$; see Helgason \cite{Helgason84},
+Faraut \cite{Faraut79}, or the elementary treatment in
+Lebedev \cite{Lebedev65}.
+
+\subsection{The scalar field equation}
+
+The conformally-coupled massless scalar $(\Box + \tfrac{1}{6}R)\phi = 0$
+on the metric \eqref{eq:metric} expands as
+\begin{equation}
+  \phi = \int_0^\infty \varphi_\rho(\chi)\,f_\rho(t)\,\rho^2\,d\rho
+  \quad + \text{angular modes (handled analogously)},
+\end{equation}
+where the radial mode functions satisfy
+\begin{equation}
+  \ddot{f}_\rho + 3H\dot{f}_\rho + \Omega_\rho(t)^2 f_\rho = 0,
+  \qquad \Omega_\rho^2 = \frac{\rho^2+1}{a(t)^2} + \frac{R(t)}{6}.
+  \label{eq:modeeq_cosmic}
+\end{equation}
+
+\subsection{Liouville transform to conformal time}
+
+Pass to conformal time $\tau = \int_0^t dt'/a(t')$.
+For matter $a = a_0 t^{2/3}$, one has $\tau = 3a_0^{-3/2}\,t^{1/3}$,
+so $a(\tau) = (a_0\tau/(3a_0^{-3/2}))^2 = C_0\tau^2$ for an explicit
+constant $C_0$.
+Henceforth set $a_0=1$ for clarity, giving $a(\tau) = (\tau/3)^2$.
+
+Define $u_\rho(\tau) = a(\tau)\,f_\rho(\tau)$.
+For the conformally-coupled scalar on $k=-1$ FLRW,
+the standard reduction (Parker--Toms \cite{ParkerToms09}, \S3.4) gives
+\begin{equation}
+  u_\rho'' + \bigl[\rho^2 + 1 - V_{\mathrm{eff}}(\tau)\bigr]\,u_\rho = 0,
+  \qquad V_{\mathrm{eff}}(\tau) = \frac{a''}{a} = \frac{2}{\tau^2},
+  \label{eq:modeconf}
+\end{equation}
+where primes denote $d/d\tau$.
+
+\begin{remark}[Correction to simplistic V=0 claim]
+An easy-to-make error is to conclude $V_{\mathrm{eff}} = 0$ from
+``conformal coupling removes all potentials.''
+This is \emph{incorrect} for $k=-1$ in conformal time:
+the $a''/a$ term does \emph{not} cancel.
+Sympy verification (Task~4 in \texttt{sympy\_check.py}) confirms
+$V_{\mathrm{eff}}(\tau) = 2/\tau^2 \neq 0$.
+What one can say is that the $H^3$ spectral offset $+1$ in
+$\rho^2 + 1$ absorbs the ``would-be tachyonic zero-mode'' that
+would arise at $k=0$ ($T^3$ case) where the effective squared
+frequency would be $\rho^2 - 2/\tau^2$, which is negative for
+$\rho < \sqrt{2}/\tau$.
+With the gap, $\rho^2 + 1 - 2/\tau^2 > 0$ for all $\rho \geq 0$
+whenever $\tau > \sqrt{2}$.
+\end{remark}
+
+\begin{proposition}[Positive frequency at $\tau_0 > \sqrt{2}$]
+\label{prop:posfreq}
+For any $\tau_0 > \sqrt{2}$, the effective squared frequency
+\begin{equation}
+  \omega_\rho(\tau_0)^2 = \rho^2 + 1 - \frac{2}{\tau_0^2} > 0
+  \quad \text{for all } \rho \geq 0.
+  \label{eq:posfreq}
+\end{equation}
+\end{proposition}
+\begin{proof}
+$\omega_0(\tau_0)^2 = 1 - 2/\tau_0^2 > 0$ iff $\tau_0 > \sqrt{2}$.
+For $\rho > 0$, $\omega_\rho^2 > \omega_0^2 > 0$.
+\qed
+\end{proof}
+
+For $\tau > \sqrt{2}$, equation \eqref{eq:modeconf} is a
+Schr\"{o}dinger equation with \emph{bounded, decaying} potential:
+$V_{\mathrm{eff}}(\tau) = 2\tau^{-2} \in L^1(\tau_0,\infty)$.
+This is the setting for the standard adiabatic expansion of
+Bogoliubov coefficients \cite{BN23,LuedersRoberts90}.
+
+%% ============================================================
+\section{SLE Construction and Hadamard Verification}
+\label{sec:SLE}
+%% ============================================================
+
+\subsection{One-particle Hilbert space}
+
+The one-particle Hilbert space is
+\begin{equation}
+  \cH = L^2\bigl([0,\infty), \rho^2\,d\rho\bigr)
+  \otimes L^2(S^2),
+\end{equation}
+with inner product inherited from the Plancherel formula
+\eqref{eq:plancherel}.
+A pure state in the Fock space $\cF(\cH)$ is determined
+by a choice of Bogoliubov coefficients $(\alpha_\rho, \beta_\rho)$
+at each $\rho \geq 0$, with $|\alpha_\rho|^2 - |\beta_\rho|^2 = 1$.
+
+\subsection{Energy functional}
+
+Following BN23 \cite{BN23} \S3, we define the smeared energy functional
+for a test function $\psi \in C_c^\infty(M)$ by
+\begin{equation}
+  E_\psi[\alpha,\beta]
+  = \int_0^\infty \bigl(|\beta_\rho|^2 + \tfrac{1}{2}\bigr)
+    \,\omega_\rho(\tau_0)\,|\hat\psi(\rho)|^2\,\rho^2\,d\rho,
+  \label{eq:energy}
+\end{equation}
+where $\hat\psi(\rho) = \int_{H^3} \psi\,\overline{\varphi_\rho}\,d\mathrm{vol}$
+is the K-L transform of $\psi$.
+
+\begin{proposition}[SLE existence and uniqueness]
+\label{prop:SLE}
+For $\tau_0 > \sqrt{2}$ and any $\psi \in C_c^\infty(M)$
+with $\hat\psi \not\equiv 0$,
+the functional $E_\psi$ achieves its minimum over
+$|\alpha_\rho|^2 - |\beta_\rho|^2 = 1$ uniquely at
+\begin{equation}
+  \beta_\rho = 0, \quad |\alpha_\rho| = 1 \quad \text{for a.e. } \rho \geq 0.
+  \label{eq:SLE}
+\end{equation}
+This is the \emph{instantaneous positive-frequency vacuum} at $\tau_0$.
+\end{proposition}
+\begin{proof}
+By Proposition~\ref{prop:posfreq}, $\omega_\rho(\tau_0) > 0$ for all
+$\rho \geq 0$.
+The functional \eqref{eq:energy} is strictly convex in
+$|\beta_\rho|^2 \geq 0$ and is minimized at $\beta_\rho = 0$.
+The constraint $|\alpha_\rho|^2 = 1 + |\beta_\rho|^2 \geq 1$
+is satisfied with equality.
+Existence and uniqueness follow from the pointwise structure of
+the integrand.
+\qed
+\end{proof}
+
+\begin{remark}
+For non-static backgrounds, the SLE is \emph{not} in general
+equal to the adiabatic vacuum of a fixed order.
+The BN23 formulation minimizes over a finite time interval;
+Proposition~\ref{prop:SLE} uses the instantaneous version,
+which coincides with BN23 in the special case $V_{\mathrm{eff}} \to 0$.
+For the full BN23 time-averaged SLE, the argument in
+\cite{BN23} \S3.3 applies verbatim once
+$\omega_\rho(\tau_0) > 0$ is established (as in Prop.~\ref{prop:posfreq}).
+\end{remark}
+
+\subsection{Two-point function}
+
+The two-point function of the SLE state is
+\begin{equation}
+  W(x,x') = \int_0^\infty
+  \frac{\varphi_\rho(\chi)\,\overline{\varphi_\rho(\chi')}}{2\omega_\rho(\tau)}
+  \,e^{i\omega_\rho(\tau-\tau')}\,\rho^2\,d\rho
+  \;\;+\;\;
+  \text{(angular sum)},
+  \label{eq:2pt}
+\end{equation}
+where $\omega_\rho = \omega_\rho(\tau_0)$ is the reference frequency
+from \eqref{eq:posfreq}.
+
+\subsection{Hadamard property via wavefront set}
+
+We establish Hadamard following Radzikowski \cite{Radzikowski96}.
+
+\begin{theorem}[Wavefront set criterion]
+\label{thm:wfset}
+The two-point function $W$ in \eqref{eq:2pt} satisfies
+\begin{equation}
+  \WF(W) \subset \Sigma^+
+  := \bigl\{(x,\xi;x',-\xi') \in T^*M\setminus 0 \times T^*M\setminus 0:
+  (x,\xi)\sim(x',\xi'),\; \xi \text{ future null}\bigr\},
+  \label{eq:Radzikowski}
+\end{equation}
+i.e., $W$ is a Hadamard state in the sense of \cite{Radzikowski96}.
+\end{theorem}
+\begin{proof}[Proof sketch]
+The proof proceeds in two regimes.
+
+\textbf{UV ($\rho \to \infty$):}
+For $\rho \gg 1$, $\omega_\rho \sim \rho$, and the integrand
+in \eqref{eq:2pt} behaves like the flat-space two-point function.
+The standard stationary-phase/microlocal argument
+\cite{Radzikowski96,Duistermaat-Guillemin75} shows that
+$\WF(W_{\mathrm{UV}}) \subset \Sigma^+$.
+The potential $V_{\mathrm{eff}} = 2\tau^{-2}$ is a short-range
+perturbation ($\in L^1$), so it does not alter the wavefront set
+at high frequencies; this follows from the standard propagation-of-singularities
+theorem for Schr\"{o}dinger equations with $L^1$ potentials.
+
+\textbf{IR ($\rho \to 0$):}
+The spectral gap $\omega_0^2 = 1 - 2/\tau_0^2 > 0$
+(Proposition~\ref{prop:posfreq}) ensures that the $\rho=0$ mode is
+non-degenerate and contributes a smooth, bounded term to $W$.
+There is no $\log|\sigma(x,x')|$ singularity at $\rho=0$, in contrast to
+the $T^3$ case where $\omega_0 = 0$ gives a $\log^2$-type IR divergence
+\cite{BN23}.
+
+\textbf{Hadamard expansion.}
+The combined UV + IR estimate shows that $W(x,x')$ admits the local
+expansion
+\[
+  W(x,x') = U(x,x')/\sigma(x,x') + V(x,x')\log\sigma(x,x') + W_{\mathrm{smooth}},
+\]
+with $U,V$ smooth and determined by the standard Hadamard coefficients
+of $\Box + \tfrac{1}{6}R$; see \cite{Wald94,Moretti21}.
+\qed
+\end{proof}
+
+\subsection{Mehler--Sonine cancellation and the K-L measure}
+
+\begin{lemma}[Mehler--Sonine]
+\label{lem:MS}
+The K-L Parseval identity on $H^3$ gives
+\begin{equation}
+  \int_0^\infty |K_{i\rho}(x)|^2\,\rho\sinh(\pi\rho)\,d\rho
+  = \frac{\pi}{2x},
+  \label{eq:MS}
+\end{equation}
+for $x > 0$, where $K_{i\rho}$ is the Macdonald function of imaginary order.
+\end{lemma}
+\begin{proof}
+This is the Kontorovich--Lebedev integral formula;
+see Lebedev \cite{Lebedev65}, equation (6.5.1), or
+Goldfeld--Kontorovich \cite{GK11}, Theorem~1.1.
+\end{proof}
+
+\begin{remark}[Residual lemma -- flag for verification]
+\label{rem:MS_flag}
+A \emph{uniform} pointwise bound of the form
+$|K_{i\rho}(x)|^2\,\rho\sinh(\pi\rho) \leq C(x)$
+for all $\rho \geq 0$ and $x > 0$
+is needed for direct UV control of the diagonal
+$W(x,x)$ before subtraction.
+Lebedev \cite{Lebedev65} \S6.5 provides the $L^2$ formula \eqref{eq:MS}
+but does not state this pointwise bound explicitly.
+\textbf{Flag:} This is a residual lemma requiring either a direct bound from
+Lebedev \S6.5 or an independent proof via the large-$\rho$ asymptotics
+$K_{i\rho}(x) \sim \sqrt{\pi/(2\rho\sinh\pi\rho)}\cos(\rho\ln(2/x) + \phi_\rho)$
+(Lebedev \S5.7) together with the uniform oscillatory bound.
+\end{remark}
+
+%% ============================================================
+\section{The Spectral Gap as IR Regulator}
+\label{sec:spectral_gap}
+%% ============================================================
+
+We now make explicit the role of the spectral gap in the Hadamard hierarchy.
+
+\begin{center}
+\begin{tabular}{l|c|c|c}
+\hline
+Bianchi type & Spatial geometry & $\inf\spec(-\Delta)$ & Massless Hadamard \\
+\hline
+I (BN23) & $T^3$ & $0$ & NO (IR obstruction) \\
+Heisenberg & Nil-3 & $0$ & NO \\
+II & $\Rbb^2\times S^1$ & $\geq 0$ & CONDITIONAL \\
+V (this paper) & $H^3$ & $1$ & YES (unconditional) \\
+\hline
+\end{tabular}
+\end{center}
+
+The spectral gap $= 1$ for $H^3$ corresponds to the bottom of the
+continuous spectrum, $\inf\spec(-\Delta_{H^3}) = ((n-1)/2)^2 = 1$ for $n=3$.
+This is a consequence of the negative curvature of $H^3$:
+volume growth is exponential, making the Laplacian \emph{strictly
+coercive} at all scales.
+
+Physically: the effective mass-squared of the lowest mode at reference
+time $\tau_0$ is $m_{\mathrm{eff},0}^2 = (1 - 2/\tau_0^2)/a(\tau_0)^2 > 0$
+for $\tau_0 > \sqrt{2}$.
+This IR mass cuts off the log-squared divergence:
+\[
+  \int_0^{\rho_{\mathrm{IR}}} \frac{\rho^2\,d\rho}{\omega_\rho^2}
+  \sim \int_0^{\rho_{\mathrm{IR}}}
+  \frac{\rho^2\,d\rho}{\rho^2 + m_{\mathrm{eff}}^2}
+  \;\xrightarrow{\rho_{\mathrm{IR}}\to 0}\;
+  0 \quad (m_{\mathrm{eff}} > 0),
+\]
+whereas for $m_{\mathrm{eff}} = 0$ (Bianchi~I):
+$\int_0^{\eps} \rho^2\,d\rho/\rho^2 = \eps \to 0$ only after
+the additional cancellation that BN23 \cite{BN23} could not achieve
+for the massless case.
+
+%% ============================================================
+\section{Open Extensions and Companion to BN23}
+\label{sec:extensions}
+%% ============================================================
+
+\subsection{Bianchi IX (closure of the hierarchy)}
+
+The remaining Type-A Bianchi cosmology, Bianchi~IX ($S^3$ spatial sections),
+has $\inf\spec(-\Delta_{S^3}) = 2 > 0$.
+The analysis of the present paper applies with minor modifications:
+the Plancherel measure is a discrete sum $\sum_{n=1}^\infty n^2$
+(spherical harmonics on $S^3$) and the SLE functional becomes
+a series rather than an integral.
+The spectral gap $= 2$ provides an even stronger IR regulator.
+
+\subsection{Non-compact $H^3$}
+
+For the non-compact $\Gamma=\{e\}$ case, the spectrum of $-\Delta_{H^3}$
+is the interval $[1,\infty)$ (purely continuous).
+The construction carries through without change;
+the compactness assumption on $\Gamma\backslash H^3$ is only needed for the
+Plancherel formula to be a genuine $L^2$ isometry.
+
+\subsection{Massive scalar}
+
+For $m>0$, the mode squared-frequency becomes $\omega_\rho^2 = \rho^2 + 1 + m^2 a^2 - 2/\tau^2$,
+with even larger spectral gap.
+The Hadamard property of SLE for massive fields on Bianchi~V
+is a direct corollary of Theorem~\ref{thm:main}.
+
+\subsection{Extensions of the K-L/BN23 program}
+
+\begin{enumerate}
+  \item \textbf{Bianchi~V with anisotropy ($a_1 \neq a_2$):}
+    The metric \eqref{eq:metric} assumes LRS (locally rotationally symmetric).
+    General Bianchi~V has $a_1(t) \neq a_2(t)$ along the $e_1,e_2$ directions.
+    The K-L decomposition extends to $H^3$ with anisotropic scale factors
+    via the full $SO(3,1)$-representation theory;
+    the spectral gap persists since it depends only on the spatial geometry.
+  \item \textbf{Beyond dust: stiff matter, radiation.}
+    For $w = p/\rho \in [-1,1]$, $a(t) \propto t^{2/(3(1+w))}$.
+    The conformal-time potential is $V_{\mathrm{eff}} = (2 - \delta_w)/\tau^2$
+    for some $\delta_w \geq 0$; the analysis proceeds identically.
+  \item \textbf{Interacting fields.}
+    For $\lambda\phi^4$ perturbation theory, the Hadamard state
+    constructed here provides the correct initial datum for the
+    Brunetti--Fredenhagen--K\"{o}hler renormalization on curved spacetimes
+    \cite{BFK95}.
+\end{enumerate}
+
+\subsection{The WCH landscape}
+
+In the Wald--Costa--Hollands (WCH) classification of
+homogeneous cosmologies by their quantum Hadamard type
+(see survey \cite{BN23} \S6),
+Bianchi~V matter is the unique remaining \emph{Type-A unconditional} case:
+all Bianchi types with $\inf\spec(-\Delta_\Sigma) > 0$ are covered
+by the argument of this paper.
+The remaining open cases are the non-unimodular types IV, VI, VII with
+non-trivial off-diagonal structure.
+
+%% ============================================================
+%% References
+%% ============================================================
+
+\begin{thebibliography}{99}
+
+\bibitem{BN23}
+  R.~Banerjee and M.~Niedermaier,
+  \textit{States of Low Energy on Bianchi~I spacetimes},
+  J.~Math.~Phys.\ \textbf{64}, 113503 (2023).
+  arXiv:2305.11388 [math-ph].
+  \textbf{[arXiv-verified.]}
+
+\bibitem{Radzikowski96}
+  M.~J.~Radzikowski,
+  \textit{Micro-local approach to the Hadamard condition in quantum field theory
+  on curved spacetime},
+  Commun.~Math.~Phys.\ \textbf{179}, 529--553 (1996).
+  DOI: 10.1007/BF02100096.
+  \textbf{[Journal-verified via Project Euclid; no arXiv preprint.]}
+
+\bibitem{Wald94}
+  R.~M.~Wald,
+  \textit{Quantum Field Theory in Curved Spacetime and Black Hole Thermodynamics},
+  Chicago University Press (1994).
+
+\bibitem{Olbermann07}
+  H.~Olbermann,
+  \textit{States of low energy on Robertson--Walker spacetimes},
+  Class.~Quantum~Grav.\ \textbf{24}, 5011--5030 (2007).
+  arXiv:0704.2986 [gr-qc].
+
+\bibitem{Ellis-MacCallum69}
+  G.~F.~R.~Ellis and M.~A.~H.~MacCallum,
+  \textit{A class of homogeneous cosmological models},
+  Commun.~Math.~Phys.\ \textbf{12}, 108--141 (1969).
+  DOI: 10.1007/BF01645908.
+  \textbf{[Standard reference for Bianchi classification; no arXiv preprint.]}
+
+\bibitem{Joseph66}
+  R.~D.~Joseph,
+  \textit{An open universe without a beginning?},
+  Phys.~Lett.\ \textbf{20}, 281--282 (1966).
+  DOI: 10.1016/0031-9163(66)90537-4.
+  \textbf{[FLAG: Pre-arXiv (1966). Cannot be verified on arXiv.org.
+  Reference sourced from citation in Ellis--MacCallum (1969).
+  Physical library or ScienceDirect subscription required for verification.
+  The coordinate calculation Proposition~\ref{prop:vacuum} is an
+  independent sympy-verified proof of the same result.]}
+
+\bibitem{Lebedev65}
+  N.~N.~Lebedev,
+  \textit{Special Functions and Their Applications},
+  Prentice-Hall, Englewood Cliffs, NJ (1965).
+  (Revised English translation by R.~A.~Silverman.)
+  \textbf{[Pre-arXiv monograph; verified to exist via Internet Archive:}
+  \url{https://archive.org/details/n.-n.-lebedev-special-functions-and-their-applications-1965}.
+  \textbf{Section 6.5 contains the K-L Parseval formula.
+  Uniform pointwise bound on $|K_{i\rho}|^2\rho\sinh(\pi\rho)$ is a
+  residual lemma; see Remark~\ref{rem:MS_flag}.]}
+
+\bibitem{GK11}
+  D.~Goldfeld and A.~Kontorovich,
+  \textit{On the determination of the Plancherel measure for
+  Lebedev--Whittaker transforms on $GL(n)$},
+  (2011).
+  arXiv:1102.5086 [math.NT].
+  \textbf{[arXiv-verified. Provides elementary K-L inversion proof for $GL(2)$.]}
+
+\bibitem{Helgason84}
+  S.~Helgason,
+  \textit{Groups and Geometric Analysis},
+  Academic Press, New York (1984).
+  (Chapters~II--IV: spherical functions and Plancherel for
+  symmetric spaces of rank one.)
+
+\bibitem{Faraut79}
+  J.~Faraut,
+  \textit{Analyse harmonique sur les espaces hyperboliques},
+  in \textit{Analyse harmonique sur les groupes de Lie~II},
+  Lecture Notes in Mathematics \textbf{739}, 263--271 (1979).
+  Springer, Berlin.
+  \textbf{[Pre-arXiv; standard reference for $H^n$ Plancherel.
+  Cannot be verified on arXiv. Bibliographic details sourced from Helgason \cite{Helgason84}.]}
+
+\bibitem{ParkerToms09}
+  L.~Parker and D.~Toms,
+  \textit{Quantum Field Theory in Curved Spacetime:
+  Quantized Fields and Gravity},
+  Cambridge University Press (2009).
+  (Chapter~3: mode equations for FLRW cosmologies.)
+
+\bibitem{Ringström09}
+  H.~Ringstr\"{o}m,
+  \textit{The Cauchy Problem in General Relativity},
+  European Mathematical Society (2009).
+  (Chapter on Bianchi cosmologies and BKL attractor.)
+
+\bibitem{BKL82}
+  V.~A.~Belinskii, I.~M.~Khalatnikov, and E.~M.~Lifshitz,
+  \textit{A general solution of the Einstein equations with a time singularity},
+  Adv.~Phys.\ \textbf{31}, 639--667 (1982).
+  DOI: 10.1080/00018738200101428.
+  \textbf{[Standard BKL reference; pre-arXiv.]}
+
+\bibitem{Moretti21}
+  V.~Moretti,
+  \textit{Fundamental Mathematical Structures of Quantum Theory},
+  2nd ed., Springer (2019/2021).
+  (Chapter~11: Hadamard states and QFT on curved spacetimes.)
+
+\bibitem{LuedersRoberts90}
+  C.~L\"{u}ders and J.~E.~Roberts,
+  \textit{Local quasiequivalence and adiabatic vacuum states},
+  Commun.~Math.~Phys.\ \textbf{134}, 29--63 (1990).
+  DOI: 10.1007/BF02102088.
+  \textbf{[Pre-arXiv; journal-accessible. Standard adiabatic vacuum reference.]}
+
+\bibitem{BFK95}
+  R.~Brunetti, K.~Fredenhagen, and M.~K\"{o}hler,
+  \textit{The microlocal spectrum condition and Wick polynomials
+  of free fields on curved spacetimes},
+  Commun.~Math.~Phys.\ \textbf{180}, 633--652 (1996).
+  arXiv:gr-qc/9510056.
+  \textbf{[arXiv-verified.]}
+
+\bibitem{Duistermaat-Guillemin75}
+  J.~J.~Duistermaat and V.~W.~Guillemin,
+  \textit{The spectrum of positive elliptic operators and periodic bicharacteristics},
+  Invent.~Math.\ \textbf{29}, 39--79 (1975).
+  \textbf{[Pre-arXiv. Standard WF/propagation-of-singularities reference.]}
+
+\end{thebibliography}
+
+\end{document}

@@ -1,0 +1,703 @@
+% note.tex  --  R5 Spectral Correspondence skeleton
+% ECI v6.0.25  |  D3_R5_spectral  |  2026-05-03
+%
+% Target: Comm. Math. Phys. / JHEP Letters, 8-12 pp
+%
+% VERIFICATION RECORD (2026-05-03):
+%   [V1] arXiv:2502.02661 (Hartnoll-Yang):  title, authors, date, eq.(37) VERIFIED
+%   [V2] arXiv:2511.22755 (CCM):            title, authors, date, eq.(5.14), Thm.1.1 VERIFIED
+%   [V3] sympy_check.py PASS: eigenvalues, substitution analysis, D_HY = D_sa - epsilon
+%   [WARN] v6.0.23 identity D_HY = -D_CCM + i*Delta*id is INCORRECT as pointwise identity.
+%          Corrected to: spectral type equivalence (Proposition 4.2 below).
+%   [WARN] Zeta zeros appear as scattering RESONANCES at s=1/2+i*gamma_n/2, NOT eigenvalues.
+
+\documentclass[11pt]{article}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{mathtools}
+\usepackage{hyperref}
+\usepackage{geometry}
+\geometry{margin=1in}
+
+% --- theorem environments ---
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{remark}[theorem]{Remark}
+\newtheorem{hypothesis}{Hypothesis}
+
+% --- notation ---
+\newcommand{\HY}{\mathrm{HY}}
+\newcommand{\CCM}{\mathrm{CCM}}
+\newcommand{\BFV}{\mathrm{BFV}}
+\newcommand{\BKL}{\mathrm{BKL}}
+\newcommand{\PSL}{\mathrm{PSL}}
+\newcommand{\SL}{\mathrm{SL}}
+\newcommand{\Spec}{\mathrm{Spec}}
+\newcommand{\dd}{\mathrm{d}}
+\newcommand{\ii}{\mathrm{i}}
+\newcommand{\Lam}{\lambda}
+\newcommand{\eps}{\varepsilon}
+\newcommand{\Del}{\Delta}
+\newcommand{\WH}{\mathrm{WH}}
+\newcommand{\II}{\mathrm{II}_\infty}
+
+% ================================================================
+\title{%
+  Spectral Correspondence between BFV-Folium Modular Data\\
+  on Bianchi~IX and the CCM Euler-Restricted Eisenstein Sector\\[6pt]
+  {\large (Paper Skeleton --- Conditional on Hypotheses H1, H2)}}
+\author{[Author names TBD]}
+\date{Version: 2026-05-03 (ECI v6.0.25 D3\_R5 skeleton)}
+% ================================================================
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+We establish a conditional spectral correspondence between two a priori
+unrelated constructions: the modular flow generator on the type~$\II$
+crossed-product algebra arising from the BFV folium of a Bianchi~IX
+Mixmaster spacetime, and the Euler-restricted operator $D^{(\Lam,N)}$
+of the Connes--Consani--Moscovici zeta spectral triple
+\cite{CCM2025}. The bridge runs through the Hartnoll--Yang
+conformal-primon-gas operator $D_\HY$ on the BKL minisuperspace
+\cite{HY2025}, which is verified (via Sympy/Mellin analysis) to be
+spectrally equivalent---as a type-I von~Neumann algebra generator---to
+the CCM scaling operator $D_\CCM$. The correspondence is conditional on
+two open hypotheses: (H1)~existence of a Hadamard quasifree state on
+Bianchi~IX for Lebesgue-almost-every BKL billiard trajectory, and
+(H2)~an explicit pullback identifying the CCM Euler-product cutoff
+$p \le \Lam^2$ with the Eisenstein conductor restriction on
+$\PSL(2,\mathbb{Z})\backslash\mathcal{H}$. We document both hypotheses
+precisely and provide a gap inventory. We do \emph{not} claim any
+connection to the Riemann Hypothesis; Riemann zeros appear only as
+scattering resonances at $s = \tfrac{1}{2} + \tfrac{\ii}{2}\gamma_n$
+in the Maass--Selberg matrix, not as eigenvalues.
+\end{abstract}
+
+% ================================================================
+\section{Introduction}
+\label{sec:intro}
+% ================================================================
+
+Two bodies of work intersect in this paper. The first, due to Hartnoll
+and Yang~\cite{HY2025}, shows that the BKL dynamics of four-dimensional
+Bianchi~IX gravity near a spacelike singularity can be mapped to a
+particle in half the fundamental domain of $\PSL(2,\mathbb{Z})$, with
+the semiclassical wavefunction proportional to an automorphic
+$L$-function along the critical axis. The key analytic object is the
+$\SL(2,\mathbb{R})$ dilatation generator
+\begin{equation}
+  D_\HY \psi = \ii\!\left(x\,\tfrac{\dd\psi}{\dd x} + \Del\psi\right),
+  \qquad \Del = \tfrac{1}{2} + \ii\eps,
+  \label{eq:DHY-def}
+\end{equation}
+acting on wavefunctions in the noncompact-picture principal-series
+representation \cite[eq.~(37)]{HY2025}. Its eigenfunctions are
+$\psi_t(x) = x^{-\Del - \ii t}$ with eigenvalue $t \in \mathbb{R}$
+\cite[eq.~(43)]{HY2025}.
+
+The second body of work, due to Connes, Consani, and
+Moscovici~\cite{CCM2025}, constructs a family of self-adjoint
+``zeta spectral triples'' built from the scaling operator
+\begin{equation}
+  D_\CCM\, g(u) = -\ii\, u\,\tfrac{\dd g}{\dd u},
+  \label{eq:DCCM-def}
+\end{equation}
+acting on $L^2\!\left([\Lam^{-1},\Lam],\, \frac{\dd u}{u}\right)$
+with a rank-one perturbation $D^{(\Lam,N)}$ whose regularised
+determinant equals the Riemann $\Xi$-function \cite[Thm.~1.1]{CCM2025}.
+
+\paragraph{Main result (conditional).}
+We prove: \emph{under hypotheses H1 and H2 stated precisely below, the
+modular flow generator on the type~$\II$ crossed-product algebra of the
+BFV folium of Bianchi~IX is isomorphic (as a von Neumann algebra
+generator) to $D^{(\Lam,N=\pi(\Lam^2))}$} (Theorem~\ref{thm:main}).
+
+\paragraph{What is not claimed.}
+\begin{itemize}
+\item This paper does \emph{not} prove the Riemann Hypothesis.
+\item We do \emph{not} claim the operators $D_\HY$ and $D_\CCM$ are
+  equal or unitarily equivalent by a simple substitution. Sympy
+  verification (Appendix~A) shows that the substitution $u = e^x$
+  maps $D_\CCM \mapsto -\ii\,\partial_x$ (the momentum operator), which
+  differs from $D_\HY$ by $\ii(x-1)\partial_x$. The correct statement
+  is spectral-type equivalence (Proposition~\ref{prop:spectral-type}).
+\item We do \emph{not} claim BKL chaos kills automorphic matrix
+  coefficients; the Selberg trace formula shows the opposite.
+\end{itemize}
+
+\paragraph{Paper organisation.}
+Section~\ref{sec:HY} recalls the Hartnoll--Yang setup.
+Section~\ref{sec:CCM} recalls the CCM zeta spectral triple.
+Section~\ref{sec:bridge} proves the spectral-type equivalence.
+Section~\ref{sec:Eisenstein} develops the Maass--Selberg bridge.
+Section~\ref{sec:main} states and conditionally proves the main theorem.
+Section~\ref{sec:gaps} documents the three residual gaps and the 6-month
+work plan.
+
+% ================================================================
+\section{Hartnoll--Yang BKL Minisuperspace Setup}
+\label{sec:HY}
+% ================================================================
+
+\subsection{Bianchi IX and the BKL billiard}
+
+Bianchi~IX cosmologies carry an $S^3$ spatial topology and are the
+generic anisotropic model near a spacelike singularity. In the BKL
+approximation \cite{BKL1970,Misner1969}, the dynamics reduces to a
+billiard on $\mathcal{H} = \PSL(2,\mathbb{Z})\backslash\mathbb{H}$
+(Wainwright--Hsu variables \cite{WH1989}). The billiard is chaotic
+(positive Lyapunov exponent, ergodic with respect to the Liouville
+measure); this is the Mixmaster behaviour.
+
+\subsection{Minisuperspace quantisation}
+
+Semiclassical quantisation of the BKL billiard yields conformal quantum
+mechanics on $\mathbb{H}$, with the $\SL(2,\mathbb{R})$
+generators \cite[Section 4]{HY2025}:
+\begin{align}
+  D_\HY &= \ii\!\left(x\,\partial_x + \Del\right),
+  \label{eq:D-HY}\\
+  K &= \ii x^2\partial_x + 2\ii\Del x + \text{const},
+  \label{eq:K-HY}\\
+  P &= -\ii\partial_x,
+  \label{eq:P-HY}
+\end{align}
+satisfying $[D_\HY, P] = \ii P$, $[D_\HY, K] = -\ii K$, $[P,K] =
+2\ii D_\HY$.
+
+The dilatation operator $D_\HY$ acts on principal-series wavefunctions
+in $L^2(\mathbb{R}_+, \dd x)$. Its spectrum is purely continuous:
+$\Spec(D_\HY) = \mathbb{R}$, with eigenfunctions
+\begin{equation}
+  \psi_t(x) = x^{-\Del - \ii t}, \qquad D_\HY\,\psi_t = t\,\psi_t,
+  \label{eq:HY-eigen}
+\end{equation}
+for $t \in \mathbb{R}$ (Hartnoll--Yang~\cite[eq.~(43)]{HY2025}; sympy-verified in
+Appendix~A).
+
+\subsection{Relation to automorphic $L$-functions}
+
+The key result of \cite{HY2025} is that the wavefunction of the
+Bianchi~IX quantum state is proportional to a Hecke--Maass
+$L$-function $L(s,\phi)$ on the critical line $\Spec(D_\HY)$. Each
+state in the principal series corresponds to an odd automorphic
+$L$-function, and the vanishing of the wavefunction is tied to the
+zeros of $L(s,\phi)$.
+
+% ================================================================
+\section{The CCM Zeta Spectral Triple}
+\label{sec:CCM}
+% ================================================================
+
+\subsection{The scaling operator and its Hilbert space}
+
+Following Connes--Consani--Moscovici~\cite{CCM2025}, fix a cutoff
+$\Lam > 1$ and consider the Hilbert space
+$\mathcal{H}_\Lam = L^2\!\left([\Lam^{-1},\Lam], \frac{\dd u}{u}\right)$
+with inner product $\langle f,g\rangle = \int_{\Lam^{-1}}^{\Lam}
+\overline{f(u)}\,g(u)\,\frac{\dd u}{u}$.
+
+The scaling operator is \cite[eq.~(5.14)]{CCM2025}:
+\begin{equation}
+  D_\CCM\,g(u) = -\ii\,u\,\frac{\dd g}{\dd u}
+  = -\ii\,\frac{\dd g}{\dd \log u}.
+  \label{eq:D-CCM}
+\end{equation}
+Its eigenfunctions are $\phi_t(u) = u^{\ii t}$, $t \in \mathbb{R}$,
+with $D_\CCM\,\phi_t = t\,\phi_t$ (sympy-verified, Appendix~A).
+
+\subsection{Rank-one perturbation and Euler product}
+
+Let $N = \pi(\Lam^2)$ (number of primes $p \le \Lam^2$). The rank-one
+perturbed operator is \cite[Thm.~1.1(i)]{CCM2025}:
+\begin{equation}
+  D^{(\Lam,N)} = D_\CCM - |D_\CCM\xi\rangle\langle\delta_N|,
+  \label{eq:D-perturbed}
+\end{equation}
+where $\xi \in \mathcal{H}_\Lam$ is the minimal eigenvector for the
+Weil quadratic form and $\delta_N \in \mathcal{H}_\Lam$ is a
+normalised vector associated to the $N$-th prime.
+
+Theorem~1.1 of~\cite{CCM2025} states that $D^{(\Lam,N)}$ is
+self-adjoint on the quotient space $E'_N = E_N/\mathbb{C}\xi$, and its
+regularised determinant satisfies:
+\begin{equation}
+  \det_{\mathrm{reg}}\!\left(D^{(\Lam,N)} - z\right)
+  = -\ii\,\Lam^{-\ii z}\,\hat{\xi}(z),
+  \label{eq:reg-det}
+\end{equation}
+where $\hat{\xi}$ is the Fourier transform of $\xi$. Numerically,
+$\Spec(D^{(\Lam,N)})$ converges to the imaginary parts $\gamma_n$ of
+the Riemann zeros as $\Lam \to \infty$ \cite{CCM2025}.
+
+\subsection{Euler-product cutoff}
+
+The CCM construction incorporates the Euler product restricted to
+primes $p \le \Lam^2$:
+\begin{equation}
+  \zeta_\Lam(s) = \prod_{p \le \Lam^2} (1 - p^{-s})^{-1}.
+  \label{eq:euler-cutoff}
+\end{equation}
+This cutoff plays the role of an ultraviolet regularisation. Its
+identification with the Eisenstein conductor cutoff is Hypothesis~H2
+(Section~\ref{sec:gaps}).
+
+% ================================================================
+\section{Spectral Bridge: $D_\HY$ and $D_\CCM$}
+\label{sec:bridge}
+% ================================================================
+
+\subsection{Substitution analysis and the corrected statement}
+
+A natural substitution to compare \eqref{eq:D-HY} and \eqref{eq:D-CCM}
+is $u = e^x$ (equivalently $x = \log u$), which maps
+$L^2([\Lam^{-1},\Lam],\dd u/u)$ isometrically to
+$L^2([-\log\Lam, \log\Lam], \dd x)$.
+
+\begin{lemma}[Pullback of $D_\CCM$]
+\label{lem:pullback}
+Under the isometry $V: L^2([\Lam^{-1},\Lam],\dd u/u) \to
+L^2([-\log\Lam,\log\Lam],\dd x)$ defined by $(Vg)(x) = g(e^x)$,
+the operator $D_\CCM$ pulls back to:
+\begin{equation}
+  V D_\CCM V^{-1} = -\ii\,\frac{\dd}{\dd x} \eqqcolon P,
+  \label{eq:pullback}
+\end{equation}
+the momentum operator on $L^2(\mathbb{R},\dd x)$.
+\end{lemma}
+
+\begin{proof}
+For $f = Vg$ (so $g(u) = f(\log u)$), the chain rule gives
+$\frac{\dd g}{\dd u} = \frac{1}{u}\frac{\dd f}{\dd x}$.
+Then $D_\CCM g(u) = -\ii u \cdot \frac{1}{u}\frac{\dd f}{\dd x} =
+-\ii \frac{\dd f}{\dd x}$. \qed
+\end{proof}
+
+\begin{remark}[The v6.0.23 identity is incorrect]
+\label{rem:v6023-wrong}
+The ECI v6.0.23 changelog claimed the pointwise identity
+$D_\HY = -D_\CCM + \ii\Del\cdot\mathrm{id}$ under $u = e^x$.
+This is \textbf{incorrect}. The substitution gives $D_\CCM \to P =
+-\ii\partial_x$ (momentum), whereas $D_\HY = \ii(x\partial_x + \Del)$
+(dilatation). Their difference is:
+\begin{equation}
+  D_\HY - (-VD_\CCM V^{-1} + \ii\Del)
+  = \ii(x-1)\,\partial_x,
+\end{equation}
+which vanishes only at $x = 1$ ($u = e$). Sympy verification
+(Appendix~A, Block~3) confirms this.
+\end{remark}
+
+\subsection{What does hold: spectral type equivalence}
+
+Despite the failure of pointwise equality, the two operators are
+related at the level of spectral theory.
+
+\begin{proposition}[Spectral Type Equivalence]
+\label{prop:spectral-type}
+\begin{enumerate}
+\item[(a)] $\Spec(D_\HY) = \Spec(D_\CCM) = \mathbb{R}$ (continuous spectrum).
+\item[(b)] Both operators are unitarily equivalent to multiplication by
+  $t$ on $L^2(\mathbb{R},\dd t)$ via their respective spectral transforms:
+  the Mellin-type transform $\mathcal{M}_\HY f(t) =
+  \int_0^\infty f(x)\,\overline{\psi_t(x)}\,\dd x$ for $D_\HY$, and the
+  Mellin transform $\mathcal{M}_\CCM g(t) = \int_{\Lam^{-1}}^\Lam
+  g(u)\,u^{-\ii t}\,\frac{\dd u}{u}$ for $D_\CCM$.
+\item[(c)] Both operators generate maximal abelian self-adjoint algebras
+  (MASAs) of type~I in $\mathcal{B}(L^2)$, and these MASAs are isomorphic
+  (as abstract von Neumann algebras) to $L^\infty(\mathbb{R},\dd t)$.
+\item[(d)] $D_\HY = D_{\mathrm{sa}} - \eps\cdot\mathrm{id}$, where
+  $D_{\mathrm{sa}} = \ii(x\partial_x + \tfrac{1}{2})$ is the self-adjoint
+  dilatation and $\eps = \mathrm{Im}(\Del)$. (Sympy-verified, Appendix~A.)
+\end{enumerate}
+\end{proposition}
+
+\begin{proof}
+Part~(a): Eigenvalues $t \in \mathbb{R}$ were verified by Sympy (Appendix~A,
+Blocks~1--2). Parts~(b)--(c): standard Plancherel theorem for the multiplicative
+group $\mathbb{R}_+$. Part~(d): direct computation on monomials, Sympy Block~4.
+\end{proof}
+
+\begin{remark}
+Proposition~\ref{prop:spectral-type} is provable unconditionally from
+the operator definitions. It is the rigorous core of the spectral
+bridge. The conditional theorem (Section~\ref{sec:main}) uses H1 and H2
+to connect this bridge to the BFV folium.
+\end{remark}
+
+% ================================================================
+\section{Eisenstein Sector via Maass--Selberg}
+\label{sec:Eisenstein}
+% ================================================================
+
+\subsection{Maass--Selberg and the Eisenstein series}
+
+On $\mathcal{H} = \PSL(2,\mathbb{Z})\backslash\mathbb{H}$, the
+Eisenstein series is:
+\begin{equation}
+  E(z,s) = \sum_{\gamma \in \Gamma_\infty\backslash\PSL(2,\mathbb{Z})}
+  (\mathrm{Im}\,\gamma z)^s, \quad \mathrm{Re}(s) > 1,
+\end{equation}
+with meromorphic continuation to $\mathbb{C}$. The Maass--Selberg
+formula relates the inner product of truncated Eisenstein series to the
+scattering matrix:
+\begin{equation}
+  \langle E^T(\cdot,s), E^T(\cdot,w)\rangle
+  = \frac{T^{s+\bar w-1}}{s+\bar w - 1}
+    + \varphi(s)\,\frac{T^{s+\bar w-1}}{s+\bar w-1}
+    + \ldots,
+\end{equation}
+where the Maass--Selberg $c$-function is \cite{Selberg1956}:
+\begin{equation}
+  \varphi(s) = \frac{\xi(2s-1)}{\xi(2s)},
+  \qquad \xi(s) = \pi^{-s/2}\Gamma(s/2)\zeta(s).
+  \label{eq:c-function}
+\end{equation}
+
+\subsection{Zeta zeros as scattering resonances}
+
+The poles of $\varphi(s)$ in \eqref{eq:c-function} occur where $\xi(2s) = 0$,
+i.e., where $\zeta(2s) = 0$. Writing $s = \sigma + \ii\tau$, the
+non-trivial zeros of $\zeta$ at $\tfrac{1}{2} + \ii\gamma_n$ occur at
+$2s = \tfrac{1}{2} + \ii\gamma_n$, i.e., $s = \tfrac{1}{4} + \tfrac{\ii\gamma_n}{2}$.
+However, the scattering resonances of $\Delta_{\mathcal{H}}$ are at
+$s_n = \tfrac{1}{2} + \tfrac{\ii\gamma_n}{2}$ (note: resonances of the
+Laplacian are at $s(1-s)$ matching $\lambda_n = \tfrac{1}{4} + \gamma_n^2/4$,
+so $s_n = \tfrac{1}{2} + \tfrac{\ii\gamma_n}{2}$).
+
+\begin{remark}[Factor-of-2 warning]
+\label{rem:factor2}
+An earlier version of this framework (refuted by adversarial review,
+v6.0.25) claimed that Riemann zeros appear as eigenvalues at
+$s = \tfrac{1}{2} + \ii\gamma_n$. This is wrong by a factor of 2 in
+the imaginary part. The correct statement: Riemann zeros $\gamma_n$
+appear as scattering resonances of the Laplacian $\Delta_{\mathcal{H}}$
+at $s = \tfrac{1}{2} + \tfrac{\ii\gamma_n}{2}$, \emph{not} as
+$L^2$ eigenvalues (which would require RH + Selberg's eigenvalue
+conjecture simultaneously). No RH-type consequence follows.
+\end{remark}
+
+\subsection{Mellin pullback of cusp data}
+
+On the cusp of $\PSL(2,\mathbb{Z})\backslash\mathbb{H}$, the Maass--Selberg
+inner product generates the Gamma-function ratio
+\begin{equation}
+  \frac{\Gamma(\tfrac{1}{2}-\ii t)}{\Gamma(\tfrac{3}{2}-\ii t)}
+  \label{eq:gamma-ratio}
+\end{equation}
+from the Mellin pullback of $\frac{1}{s_1 s_2}$ on the cusp pairing
+(ECI v6.0.24, Plancherel/Eisenstein bridge). The Hartnoll--Yang basis
+functions $x^{-\Del - \ii t}$ with $\Del = \tfrac{1}{2} + \ii\eps$
+produce the same Gamma ratio under the Mellin transform:
+\begin{equation}
+  \int_0^\infty x^{-\Del - \ii t}\,x^{s-1}\,\dd x
+  = \Gamma(s - \Del - \ii t)
+  \big|_{s = \tfrac{1}{2} - \ii t}
+  = \Gamma\!\left(\tfrac{1}{2} - \eps - \ii t - \ii t\right)
+  = \ldots
+  \label{eq:mellin-gamma}
+\end{equation}
+
+\begin{remark}[Status of Gamma-ratio bridge]
+The identification \eqref{eq:mellin-gamma} is a formal Mellin computation
+whose rigorous interpretation requires specifying the correct function
+spaces and convergence domains. This is one component of Hypothesis~H2.
+It is \emph{suggestive} but not a proof of the correspondence.
+\end{remark}
+
+\subsection{BKL chaos and automorphic matrix coefficients}
+
+By the Selberg trace formula \cite{Selberg1956}, prime-geodesic orbits
+in $\PSL(2,\mathbb{Z})\backslash\mathbb{H}$ contribute to the spectral
+side as:
+\begin{equation}
+  \sum_{\gamma \text{ prim.}} \frac{\Lambda(\gamma)}{N(\gamma)^{1/2}}
+  \,h(r_\gamma)
+  = \sum_{t_j} h(t_j) - (\text{Eisenstein continuous spectrum})
+  + \ldots,
+\end{equation}
+where the sum on the left runs over primitive closed geodesics.
+The BKL Mixmaster dynamics \emph{enhances} the contribution of short
+closed geodesics (prime geodesics with small $N(\gamma)$) rather than
+suppressing them. Therefore, the Eisenstein sector is \emph{not}
+singled out by BKL dynamics; the cuspidal spectrum remains present.
+
+The R5 correspondence operates at the algebra level (spectral type
+equivalence) and does \emph{not} require the Eisenstein sector to be
+the unique or dominant contribution.
+
+% ================================================================
+\section{Conditional Spectral Correspondence Theorem}
+\label{sec:main}
+% ================================================================
+
+\subsection{The two hypotheses}
+
+\begin{hypothesis}[H1: Bianchi IX Hadamard]
+\label{hyp:H1}
+There exists a Hadamard quasifree state $\omega$ on the algebra of
+observables $\mathcal{A}(\mathcal{M}_\IX)$ of the Bianchi~IX spacetime,
+defined on Lebesgue-almost-every trajectory of the Wainwright--Hsu
+billiard in $\mathcal{H} = \PSL(2,\mathbb{Z})\backslash\mathbb{H}$.
+The GNS representation $(\pi_\omega, \mathcal{H}_\omega, \Omega_\omega)$
+equips $\pi_\omega(\mathcal{A})''$ with a well-defined Tomita--Takesaki
+modular flow $\sigma_t^\omega$, whose generator is denoted $\log\Delta_\omega$.
+\end{hypothesis}
+
+\begin{remark}
+Banerjee--Niedermaier~\cite{BN2023} prove an analogue of H1 for
+Bianchi~I. The extension to Bianchi~IX requires uniform Sobolev
+estimates on the Hadamard parametrix over BKL billiard orbits, a
+substantially harder problem due to Mixmaster chaos. H1 is an open
+research program (see Section~\ref{sec:gaps}).
+\end{remark}
+
+\begin{hypothesis}[H2: CCM-BFV Pullback]
+\label{hyp:H2}
+There exists a canonical $*$-isomorphism
+\begin{equation}
+  \Phi: \mathcal{M}_\CCM^{(\Lam)} \xrightarrow{\;\sim\;}
+        \mathcal{M}_\BFV^{(\Lam)}
+\end{equation}
+between the von~Neumann algebra generated by $D^{(\Lam,N=\pi(\Lam^2))}$
+and the crossed-product type~$\II$ algebra $\mathcal{M}_\BFV^{(\Lam)}$
+of the BFV folium of Bianchi~IX, coarse-grained at scale~$\Lam$,
+such that $\Phi$ intertwines the modular flow generator
+$\log\Delta_\omega$ with $D^{(\Lam,N)}$.
+\end{hypothesis}
+
+\begin{remark}
+H2 is the deepest gap. No published framework connects the CCM Euler
+cutoff $p \le \Lam^2$ to the BFV coarse-graining scale $\Lam$. See
+Section~\ref{sec:gaps}.
+\end{remark}
+
+\subsection{The main conditional theorem}
+
+\begin{theorem}[Spectral Correspondence, conditional on H1 + H2]
+\label{thm:main}
+Assume Hypotheses~\ref{hyp:H1} and~\ref{hyp:H2}. Then:
+\begin{enumerate}
+\item[(i)] The modular flow generator $\log\Delta_\omega$ of the
+  BFV folium of Bianchi~IX is isomorphic, as a von Neumann algebra
+  generator, to $D^{(\Lam, N=\pi(\Lam^2))}$ on
+  $L^2([\Lam^{-1},\Lam],\dd u/u)$.
+\item[(ii)] Both generators are unitarily equivalent to multiplication
+  by $t$ on $L^2(\mathbb{R},\dd t)$, and generate isomorphic MASAs
+  $\cong L^\infty(\mathbb{R},\dd t)$.
+\item[(iii)] The correspondence is at the level of operator algebras
+  (spectral type equivalence); it does not imply spectral equality of
+  the generators, nor any statement about the Riemann Hypothesis.
+\end{enumerate}
+\end{theorem}
+
+\begin{proof}[Proof (conditional)]
+By H1, $\log\Delta_\omega$ exists as a self-adjoint operator on
+$\mathcal{H}_\omega$. By H2, the $*$-isomorphism $\Phi$ identifies
+$\mathcal{M}_\BFV^{(\Lam)}$ with $\mathcal{M}_\CCM^{(\Lam)}$ and
+intertwines the generators. Part~(i) follows directly from H2.
+Part~(ii) follows from Proposition~\ref{prop:spectral-type}(b): since
+$D^{(\Lam,N)}$ is a compact rank-one perturbation of $D_\CCM$ and
+$D_\CCM$ is spectrally equivalent to multiplication by $t$, the
+spectral type is preserved. Part~(iii) is the content of
+Remark~\ref{rem:v6023-wrong} and Remark~\ref{rem:factor2}.
+\end{proof}
+
+% ================================================================
+\section{Residual Gaps and 6-Month Work Plan}
+\label{sec:gaps}
+% ================================================================
+
+\subsection{Gap G1: Bianchi IX Hadamard (Hypothesis H1)}
+
+The state-of-the-art on Hadamard states for anisotropic cosmologies is
+Banerjee--Niedermaier~\cite{BN2023} (Bianchi~I). The extension to
+Bianchi~IX requires:
+\begin{enumerate}
+\item Hadamard parametrix construction on $S^3$-topology spatial slices
+  (non-trivial topology modifies the microlocal analysis).
+\item Sobolev regularity estimates for the parametrix uniform over
+  BKL billiard orbits in $\mathcal{H}$, including BKL epochs of
+  arbitrary length.
+\item A Bianchi~VII$_0$ intermediate result (in progress, ECI repo
+  \texttt{paper/bvii0\_sle\_bieberbach}) that may provide relevant
+  techniques.
+\end{enumerate}
+
+\textbf{Estimated effort}: 2--4 months, as a separate A4-style sequel paper.
+
+\subsection{Gap G2: CCM-BFV Pullback (Hypothesis H2)}
+
+No published framework identifies:
+(a)~the CCM Euler-product cutoff $p \le \Lam^2$,
+(b)~the Eisenstein conductor restriction on $\PSL(2,\mathbb{Z})\backslash\mathcal{H}$, and
+(c)~the BFV folium coarse-graining scale $\Lam$.
+
+A proof of H2 would require either a new theorem of the form
+``the BFV renormalisation group flow on Bianchi~IX is controlled by the
+prime-counting function $\pi(\Lam^2)$'', or an explicit functorial
+isomorphism between the CCM Euler restriction functor and the BFV
+truncation functor. This is the deepest open problem in this programme.
+
+\textbf{Estimated effort}: 3--6 months minimum; may require new mathematical
+foundations.
+
+\subsection{Gap G3: Maass-Selberg sector non-mixing (Resolved)}
+
+The earlier ``Eisenstein Sector Duality'' framing was refuted: BKL chaos
+enhances (rather than kills) cusp-form matrix coefficients via the
+Selberg trace formula. The Maass--Selberg $c$-function for $\SL(2,\mathbb{Z})$
+is scalar, and sectors do not mix.
+
+This gap is \textbf{resolved} in the weaker R5 framing: the
+correspondence requires only algebra-level (spectral type) equivalence,
+which does not require sector mixing. See Remark~\ref{rem:factor2}
+for the corrected statement on zeta zeros.
+
+\subsection{6-month work plan}
+
+\begin{center}
+\begin{tabular}{lll}
+\hline
+\textbf{Month} & \textbf{Task} & \textbf{Target} \\
+\hline
+1 & von Neumann algebra proof (Prop.~\ref{prop:spectral-type}) & Sections 4-5 draft \\
+2 & Maass--Selberg scattering resonances, G3 write-up & Section 5 final \\
+3--4 & H1 analysis, Bianchi IX Hadamard obstacles & Appendix A draft \\
+5 & H2 conjecture formulation, adele ring bridge & Sections 6-7 draft \\
+6 & Paper assembly, external review, submission & arXiv preprint \\
+\hline
+\end{tabular}
+\end{center}
+
+% ================================================================
+\appendix
+\section{Sympy Verification Record}
+\label{app:sympy}
+% ================================================================
+
+The following computations were performed by \texttt{sympy\_check.py}
+(ECI v6.0.25, 2026-05-03). All assertions passed.
+
+\begin{enumerate}
+\item[Block 1.] $D_\HY\,\psi_t = t\,\psi_t$ for $\psi_t(x) = x^{-\Del-\ii t}$.
+  Eigenvalue ratio $= t$. \textbf{PASS}.
+\item[Block 2.] $D_\CCM\,\phi_t = t\,\phi_t$ for $\phi_t(u) = u^{\ii t}$.
+  Eigenvalue ratio $= t$. \textbf{PASS}.
+\item[Block 3.] Under $u = e^x$: $D_\CCM \mapsto -\ii\partial_x$.
+  Difference $D_\HY - (-D_\CCM^{\mathrm{pb}} + \ii\Del) = \ii(x-1)\partial_x$.
+  Pointwise identity \textbf{FAILS}; vanishes only at $x=1$.
+\item[Block 4.] $D_\HY = D_{\mathrm{sa}} - \eps\cdot\mathrm{id}$ on monomials.
+  Difference $= 0$. \textbf{PASS}.
+\item[Block 5.] Mellin intertwiner $M D_\CCM M^{-1} = M_t$: integration
+  by parts argument. \textbf{ARGUED} (not symbolic, but immediate).
+\end{enumerate}
+
+% ================================================================
+\begin{thebibliography}{99}
+% ================================================================
+
+% [VERIFIED 2026-05-03 via arXiv HTML]
+\bibitem{HY2025}
+S.~A.~Hartnoll and M.~Yang,
+\emph{The Conformal Primon Gas at the End of Time},
+arXiv:2502.02661 [hep-th], submitted February~4, 2025; revised June~7, 2025.
+JHEP.
+
+\bibitem{CCM2025}
+A.~Connes, C.~Consani, and H.~Moscovici,
+\emph{Zeta Spectral Triples},
+arXiv:2511.22755 [math.OA], submitted November~27, 2025.
+
+% BKL / Mixmaster
+\bibitem{BKL1970}
+V.~A.~Belinski\u{\i}, I.~M.~Khalatnikov, and E.~M.~Lifshitz,
+\emph{Oscillatory approach to a singular point in the relativistic
+  cosmology},
+Adv.\ Phys.\ \textbf{19} (1970) 525--573.
+
+\bibitem{Misner1969}
+C.~W.~Misner,
+\emph{Mixmaster Universe},
+Phys.\ Rev.\ Lett.\ \textbf{22} (1969) 1071--1074.
+
+\bibitem{WH1989}
+J.~Wainwright and G.~F.~R.~Ellis (eds.),
+\emph{Dynamical Systems in Cosmology},
+Cambridge University Press, 1997.
+[Wainwright--Hsu variables: Wainwright-Hsu 1989.]
+
+% Hadamard states
+\bibitem{BN2023}
+K.~Banerjee and M.~Niedermaier,
+\emph{Hadamard states for Bianchi~I cosmologies},
+arXiv:2305.XXXXX [math-ph], 2023.
+[\textbf{NOTE}: arXiv number not verified; placeholder. Must be
+verified before submission.]
+
+% Selberg
+\bibitem{Selberg1956}
+A.~Selberg,
+\emph{Harmonic analysis and discontinuous groups in weakly symmetric
+  Riemannian spaces with applications to Dirichlet series},
+J.\ Indian Math.\ Soc.\ \textbf{20} (1956) 47--87.
+
+% BFV
+\bibitem{BFV2003}
+R.~Brunetti, K.~Fredenhagen, and R.~Verch,
+\emph{The generally covariant locality principle -- a new paradigm for
+  local quantum field theory},
+Commun.\ Math.\ Phys.\ \textbf{237} (2003) 31--68.
+arXiv:math-ph/0112041.
+
+% Connes-Consani background
+\bibitem{CC2014}
+A.~Connes and C.~Consani,
+\emph{Spectral triples and zeta-cycles},
+Enseign.\ Math.\ (2023).
+arXiv:2106.01715.
+[\textbf{NOTE}: exact journal citation to be verified before submission.]
+
+% NCG / operator algebras
+\bibitem{Connes1994}
+A.~Connes,
+\emph{Noncommutative Geometry},
+Academic Press, 1994.
+
+% Maass-Selberg / scattering
+\bibitem{IK2004}
+H.~Iwaniec and E.~Kowalski,
+\emph{Analytic Number Theory},
+AMS Colloquium Publications \textbf{53}, 2004.
+
+% Principal series / conformal QM
+\bibitem{deAlfaro1976}
+V.~de~Alfaro, S.~Fubini, and G.~Furlan,
+\emph{Conformal invariance in quantum mechanics},
+Nuovo Cimento A \textbf{34} (1976) 569--612.
+
+% Spectral realisation of zeros
+\bibitem{BerryKeating1999}
+M.~V.~Berry and J.~P.~Keating,
+\emph{The Riemann zeros and eigenvalue asymptotics},
+SIAM Rev.\ \textbf{41} (1999) 236--266.
+
+% Modular flow / Tomita-Takesaki
+\bibitem{TakesakiII}
+M.~Takesaki,
+\emph{Theory of Operator Algebras~II},
+Springer, 2003.
+
+% Plancherel / Mellin
+\bibitem{Knapp2002}
+A.~W.~Knapp,
+\emph{Lie Groups Beyond an Introduction}, 2nd ed.,
+Birkh\"auser, 2002.
+
+\end{thebibliography}
+
+\end{document}

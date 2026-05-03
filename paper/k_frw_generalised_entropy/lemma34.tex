@@ -1,0 +1,395 @@
+% lemma34.tex --- Lemma 3.4 (anomaly bookkeeping for generalized entropy)
+%                  for the ECI carve-out paper "Closed-form modular Hamiltonian
+%                  K_FRW + generalised entropy on the FRW past-light-cone
+%                  diamond".  Companion to sympy_anomaly.py.
+%
+\documentclass[11pt]{article}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage[margin=1in]{geometry}
+\usepackage{hyperref}
+
+\newtheorem{lemma}{Lemma}[section]
+\newtheorem{proposition}[lemma]{Proposition}
+\newtheorem{remark}[lemma]{Remark}
+\newtheorem{corollary}[lemma]{Corollary}
+
+\setcounter{section}{2}
+\setcounter{lemma}{3}      % so the first lemma in this file is 3.4
+
+\title{Lemma 3.4: Conformal-anomaly contribution to\\
+       the generalised entropy on the FRW diamond}
+\author{(carve-out paper, \S 3.4 -- supporting note)}
+\date{}
+
+\begin{document}\maketitle
+
+\noindent\textbf{Setting.}  Continuing from Lemma 3.3, let
+$(\mathcal{M}_{\rm FRW},g_{\rm FRW})$ be a spatially-flat FLRW spacetime
+in conformally-flat coordinates, $g_{\rm FRW}=a(\eta)^2(-d\eta^2+d\mathbf{x}^2)$,
+$d=4$.  Let $\Phi$ be the conformally-coupled massless real scalar
+($\xi=1/6$) in the conformal vacuum
+$\Omega_{\rm conf}\in\mathcal{H}_{\rm FRW}$, intertwined with the
+Minkowski vacuum $\Omega_M$ by the unitary $U$ of Lemma~3.3.
+Let $D_R(\eta_c,\mathbf{x}_c)$ be the conformal diamond of conformal
+radius $R$, $B_R(\mathbf{x}_c)$ its central spacelike slice, and
+$K_{\rm FRW}$ its modular Hamiltonian (Proposition 3.4 of \cite{Lemma33}).
+
+\medskip
+\noindent\textbf{Generalised entropy on type II$_\infty$.}  Following the
+Chandrasekaran--Longo--Penington--Witten (CLPW) framework
+\cite{CLPW2022,Witten2021} for de Sitter and the type II$_\infty$
+crossed-product algebra of \cite{Witten2021},
+\begin{equation}
+   S_{\rm gen}[D_R]
+   \;=\;
+   \langle K_{\rm FRW}\rangle_\psi \;+\; S_{\rm vN}(\rho_\psi)
+   \;+\; \Delta_{\rm anom}[D_R],
+   \label{eq:Sgen}
+\end{equation}
+where the third term is the c-number anomaly contribution, computed
+below; the area-law divergence absorbed into the type II$_\infty$ trace
+renormalisation contributes only an additive state-independent constant
+(\cite[\S5.4]{CLPW2022}, \cite[\S2]{Witten2021}).  Eq.~\eqref{eq:Sgen}
+is the type II$_\infty$ analogue of CLPW's $S_{\rm gen}=
+\mathrm{tr}(\rho\log\rho)$ adapted to the FRW diamond modular structure.
+
+\medskip
+\noindent\textbf{The trace anomaly.}  The conformal-anomaly Wick polynomial
+$A\equiv g^{\mu\nu}\langle T_{\mu\nu}\rangle_{\rm ren}$ for the
+conformally-coupled massless scalar in $d=4$ is, in any locally
+covariant Hadamard prescription \cite{HollandsWald2001,HollandsWald2014},
+\begin{equation}
+   A \;=\; \frac{1}{2880\,\pi^2}\Bigl[
+        R_{\mu\nu\rho\sigma}R^{\mu\nu\rho\sigma}
+        - R_{\mu\nu}R^{\mu\nu}
+        + \Box R \Bigr]
+   \;\;\equiv\;\;
+   \frac{1}{16\pi^2}\bigl[c\,W^2-a\,E_4\bigr] +
+        \frac{\beta}{2880\,\pi^2}\,\Box R,
+   \label{eq:trace-anomaly}
+\end{equation}
+where $c=1/120,\,a=1/360$, $W^2=R_{\mu\nu\rho\sigma}R^{\mu\nu\rho\sigma}-2R_{\mu\nu}R^{\mu\nu}+\frac13R^2$
+is the Weyl invariant, $E_4=R_{\mu\nu\rho\sigma}R^{\mu\nu\rho\sigma}-4R_{\mu\nu}R^{\mu\nu}+R^2$
+is the Euler density, and $\beta\in\mathbb{R}$ is a renormalisation
+ambiguity \cite[Thm 5.1]{HollandsWald2001} fixed once a Hadamard
+parametrix is chosen.  Wald's axiomatic prescription
+\cite{Wald1978} (Axiom 5: $T_{\mu\nu}$ contains no higher than
+second-order derivatives of the metric) sets $\beta=0$, recovering
+the pure Gauss--Bonnet form $A=-(1/16\pi^2)a\,E_4$.  Christensen's
+point-splitting prescription \cite{Christensen1976} retains the
+finite $\Box R$ counterterm with coefficient $1/(180\cdot(4\pi)^2)
+=1/(2880\,\pi^2)$.  Sympy verifies the two prescriptions differ by
+exactly $\Box R/(2880\pi^2)$ on the conformally-flat FRW slice,
+confirming their algebraic equivalence modulo the standard
+counterterm freedom.  The first form is Birrell--Davies
+\cite[eq.~(6.137)]{BirrellDavies}; the second is the standard
+$(a,c)$-form (Duff~\cite{Duff1994}, Bunch--Davies \cite{BunchDavies1978}).
+On the spatially-flat FRW background the Weyl tensor vanishes, $W^2=0$,
+so the unique IR-finite, regulator-independent piece of $A$ is
+\begin{equation}
+   A_{\rm FRW} \;=\; \frac{-1}{5760\,\pi^2}\,E_4
+        \;+\; \frac{\beta}{2880\,\pi^2}\,\Box R
+   \;=\; \frac{1}{2880\,\pi^2}\Bigl[R_{\mu\nu}R^{\mu\nu}-\tfrac13R^2+\Box R\Bigr]
+   \;\;\;(\text{conf-flat $d=4$}),
+   \label{eq:A-FRW}
+\end{equation}
+where we used the conformally-flat identity
+$R_{\mu\nu\rho\sigma}R^{\mu\nu\rho\sigma}=2R_{\mu\nu}R^{\mu\nu}-\frac13R^2$
+(Riegert; see also \cite[eq.~(3.93)]{BirrellDavies}).  The coefficient
+$\beta$ corresponds to a finite local counterterm $\propto\!R^2$ in the
+gravitational action; $\beta$ does not enter the $(a,c)$-anomaly and is
+unphysical for the entropy decomposition below.
+
+\smallskip\noindent
+Sympy verification (\texttt{sympy\_anomaly.py}, blocks (I)--(III))
+confirms $W^2=0$ on the spatially-flat FRW metric and that the difference
+between the Birrell--Davies form and the $(a,c)$-form is exactly
+$(\Box R)/(2880\,\pi^2)$.
+
+\begin{lemma}[Anomaly bookkeeping for $S_{\rm gen}[D_R]$, $d=4$]\label{lem:34}
+For the conformally-coupled massless real scalar in the conformal
+vacuum on a spatially-flat FLRW background~\eqref{eq:metric}, the
+state-independent anomaly contribution to the generalised
+entropy~\eqref{eq:Sgen} of the FRW diamond $D_R(\eta_c,\mathbf{x}_c)$ is
+\begin{equation}
+\boxed{\,
+   \Delta_{\rm anom}[D_R]
+   \;=\;
+   \frac{8\pi^2}{15}\,a(\eta_c)^2 R^4\,
+   \langle\mathcal{T}^{\rm FRW}_{00}(\eta_c)\rangle_{\rm anom}
+\,}
+   \label{eq:lem34}
+\end{equation}
+where $\langle\mathcal{T}^{\rm FRW}_{00}(\eta)\rangle_{\rm anom}$ is the
+$(0,0)$-component of the renormalised, anomaly-determined,
+state-independent piece of $\langle T^{\rm FRW}_{\mu\nu}\rangle$ in the
+conformal vacuum, fixed by~\eqref{eq:trace-anomaly} and covariant
+conservation up to the $\beta$-counterterm.  The contribution is
+\emph{c-number-valued} and \emph{spatially constant on each $\eta=\eta_c$
+slice} (homogeneity).
+
+In the two physically interesting epochs:
+\begin{itemize}
+\item Radiation era $a(\eta)=\eta$:
+  $\langle\mathcal{T}^{\rm FRW}_{00}\rangle_{\rm anom}
+   \;\propto\; (1/\eta^8)\,c_{\rm rad}$,
+  $\Delta_{\rm anom}[D_R]\;=\;\dfrac{c_{\rm rad}}{1800}\,\dfrac{R^4}{\eta_c^6}$.
+\item Matter era $a(\eta)=\eta^2$:
+  $\langle\mathcal{T}^{\rm FRW}_{00}\rangle_{\rm anom}
+   \;\propto\; (1/\eta^{12})\,c_{\rm mat}$,
+  $\Delta_{\rm anom}[D_R]\;=\;\dfrac{c_{\rm mat}}{150}\,\dfrac{R^4}{\eta_c^8}$.
+\end{itemize}
+The dimensionless coefficients $c_{\rm rad},c_{\rm mat}$ are determined
+by the Hadamard subtraction (Bunch--Davies prescription
+\cite{BunchDavies1978}, Birrell--Davies eq.~(6.146); $c_{\rm rad}=
+\tfrac{1}{40\pi^2}$ in the standard normalisation).  The $R^4/\eta_c^k$
+scaling and the $a(\eta_c)^2$ factor are unambiguous (rigorous output
+of \eqref{eq:lem34}).
+\end{lemma}
+
+\begin{proof}
+\emph{Step 1.\ Locality and homogeneity of the anomaly piece.}  By
+Hollands--Wald \cite[\S5]{HollandsWald2001}, the renormalised
+$\langle T^{\rm FRW}_{\mu\nu}\rangle$ on a globally hyperbolic
+spacetime decomposes as
+\begin{equation*}
+   \langle T^{\rm FRW}_{\mu\nu}\rangle_\psi
+   \;=\;
+   T^{\rm anom}_{\mu\nu}[g_{\rm FRW}] \;+\; t^{\psi}_{\mu\nu},
+\end{equation*}
+where $T^{\rm anom}_{\mu\nu}$ is a local Wick polynomial in the metric
+(state-independent, fixed by the locally covariant prescription) and
+$t^{\psi}_{\mu\nu}$ is the state-dependent residue, finite at any
+spacelike point in any Hadamard state.  On the conformal vacuum
+$\Omega_{\rm conf}$, $t^{\psi}_{\mu\nu}$ vanishes by construction
+(it is the difference between $\Omega_{\rm conf}$ and itself); only
+$T^{\rm anom}_{\mu\nu}$ survives in the $00$-component.
+
+By spatial homogeneity of $g_{\rm FRW}$,
+$T^{\rm anom}_{\mu\nu}[g_{\rm FRW}](\eta,\mathbf{x})$ depends only on
+$\eta$.  Trace and conservation conditions
+\begin{align*}
+   g^{\mu\nu}T^{\rm anom}_{\mu\nu} &= A,
+   &\nabla^\mu T^{\rm anom}_{\mu\nu} &= 0,
+\end{align*}
+together with isotropy, fix
+$T^{\rm anom}_{00}(\eta)$ uniquely up to a single $\beta$-shift
+proportional to $\Box R$.
+
+\smallskip
+\emph{Step 2.\ Insertion into Proposition 3.4 of \cite{Lemma33}.}
+Lemma~3.3 + Hislop--Longo \cite{HislopLongo1982} gives
+\begin{equation*}
+   K_{\rm FRW}
+   \;=\; 2\pi\!\int_{B_R(\mathbf{x}_c)}\!d^3x\;
+        \frac{R^2-|\mathbf{x}-\mathbf{x}_c|^2}{2R}\;
+        a(\eta_c)^2\;\mathcal{T}^{\rm FRW}_{00}(\eta_c,\mathbf{x})
+        + c_0.
+\end{equation*}
+Taking the expectation in any state $\psi$ and decomposing
+$\mathcal{T}^{\rm FRW}_{00}=T^{\rm anom}_{00}+t^{\psi}_{00}$, the
+anomaly contribution
+$\langle T^{\rm anom}_{00}(\eta_c)\rangle$ is spatially constant
+(Step 1), so it factors out of the integral:
+\begin{align*}
+   \Delta_{\rm anom}[D_R]
+   &\;=\;
+   2\pi\,a(\eta_c)^2\,\langle T^{\rm anom}_{00}(\eta_c)\rangle\,
+   \int_{B_R(\mathbf{x}_c)}\!d^3 x\,\frac{R^2-|\mathbf{x}-\mathbf{x}_c|^2}{2R}.
+\end{align*}
+The kernel integral is computed in \texttt{sympy\_anomaly.py} (block~V):
+\begin{equation}
+   \int_{B_R}\!d^3x\,\frac{R^2-r^2}{2R}
+   \;=\;
+   \int_0^R\!\!4\pi r^2\,\frac{R^2-r^2}{2R}\,dr
+   \;=\;
+   \frac{4\pi R^4}{15}.
+   \label{eq:kernel-integral}
+\end{equation}
+Substituting yields the boxed formula~\eqref{eq:lem34}.
+
+\smallskip
+\emph{Step 3.\ Specialisations.}  Sympy block~(VI) evaluates
+$T^{\rm anom}_{00}(\eta)$ from the locally covariant Wick polynomial
+on radiation and matter eras using $T^{\rm anom}_{00}=
+(1/(11520\pi^2))R_{\mu\nu}R^{\mu\nu}+\beta'\Box R$ for the spatially-flat
+FRW conformal vacuum (the BD~'78 form, with our normalisation matching
+the Birrell--Davies eq.~(6.146) on $a=\eta$).  Substituting:
+\begin{align*}
+   T^{\rm anom}_{00}(\eta)\Big|_{a=\eta}
+   &= \frac{1}{960\,\pi^2\,\eta^8} + O(\beta'),\\
+   T^{\rm anom}_{00}(\eta)\Big|_{a=\eta^2}
+   &= \frac{1}{80\,\pi^2\,\eta^{12}} + O(\beta'),
+\end{align*}
+giving the radiation- and matter-era values quoted in the lemma.  In both
+cases $\Delta_{\rm anom}\propto R^4$, with explicit $\eta_c$-dependent
+prefactor.
+
+\smallskip
+\emph{Step 4.\ Affiliation to the type II$_\infty$ algebra.}
+$\Delta_{\rm anom}$ is a c-number; it lies in the centre $\mathbb{C}\cdot
+\mathbf{1}$ of every von~Neumann algebra and is therefore
+trivially affiliated to the type II$_\infty$ factor of the carve-out.
+The crossed-product trace renormalisation absorbs the local
+$\beta$-counterterm into the additive constant of $\log\rho_\psi$ (cf.
+\cite[\S2.3]{Witten2021}), so the physical generalised entropy is
+$\Delta_{\rm anom}$-shifted by a finite, regulator-independent c-number.
+This proves the type II$_\infty$ structure is preserved.
+\end{proof}
+
+\begin{remark}[Area-law decomposition]\label{rem:area}
+The proper area of $\partial D_R\cap\{\eta=\eta_c\}$ in the FRW metric is
+$|\partial D_R|_{\rm phys}=4\pi R^2 a(\eta_c)^2$.  The leading area-law
+divergence of the entanglement entropy of a conformally-coupled scalar
+\cite{Solodukhin2011,CasiniHuerta2009} is
+$S_{\rm EE}=|\partial D_R|_{\rm phys}/(4 G_N\epsilon^2)+\ldots$, with
+$\epsilon$ a UV cut-off.  In the type II$_\infty$ algebra of
+\cite{Witten2021}, this divergence is absorbed into the trace
+renormalisation (no factor of $\epsilon^{-2}$ appears in $S_{\rm gen}$).
+What remains, $\Delta_{\rm anom}$ in~\eqref{eq:lem34}, is finite but
+\emph{not} of area-law form: it scales as $R^4 a(\eta_c)^2$, i.e.\ as
+$|\partial D_R|_{\rm phys}\cdot R^2$.  The $R^2$ excess is the FRW
+analogue of the Casimir energy density times the diamond volume; it
+reflects the difference between the conformal vacuum and the Minkowski
+vacuum upon localisation in the diamond, and is the
+``physical entanglement entropy'' contribution beyond the area law.
+\end{remark}
+
+\begin{remark}[Casimir vs entanglement]\label{rem:casimir-ee}
+Decomposing \eqref{eq:lem34}:
+\begin{equation*}
+   \Delta_{\rm anom}[D_R]
+   \;=\;
+   \underbrace{\frac{8\pi^2}{15}a(\eta_c)^2 R^4
+        T^{\rm anom}_{00}(\eta_c)}_{\text{Casimir difference Mink vs FRW}}
+   \;+\;
+   \underbrace{\beta\text{-counterterm}}_{\text{absorbed into }G_N\text{-renorm}}.
+\end{equation*}
+The first piece is the genuine difference between the Minkowski
+vacuum (where $T^{\rm anom,Mink}_{00}=0$ identically) and the FRW
+conformal vacuum.  Under the unitary $U$ of Lemma~3.3 the
+\emph{Wick-ordered} $T^{\rm Mink}_{00}$ is intertwined to
+$a^2\mathcal{T}^{\rm FRW}_{00}$, but the c-number Casimir difference
+$\langle\mathcal{T}^{\rm FRW}_{00}\rangle_{\rm conf-vac}-
+\langle T^{\rm Mink}_{00}\rangle_{\rm Mink-vac}$ is non-zero and
+geometric (set by the trace anomaly), and contributes precisely
+$\Delta_{\rm anom}$ to $S_{\rm gen}$.
+\end{remark}
+
+\begin{remark}[Sanity check on radiation era]\label{rem:rad-era-nonzero}
+A naive expectation, voiced in the v6.0.26 internal notes, is that
+$\Delta_{\rm anom}=0$ on radiation era because $R[g_{\rm FRW}]=
+6a''/a^3=0$ for $a=\eta$.  This is \emph{wrong}: the trace
+anomaly~\eqref{eq:trace-anomaly} contains $R_{\mu\nu}R^{\mu\nu}$ and
+$R_{\mu\nu\rho\sigma}R^{\mu\nu\rho\sigma}$ which do not vanish even
+when $R=0$.  Sympy block~(III) verifies
+$R_{\mu\nu}R^{\mu\nu}|_{a=\eta}=12/\eta^8\neq 0$, hence
+$A|_{a=\eta}=1/(240\pi^2\eta^8)\neq 0$, and
+$\Delta_{\rm anom}|_{a=\eta}\propto R^4/\eta_c^6\neq 0$.
+\end{remark}
+
+\begin{corollary}[Type II$_\infty$ structure preservation]\label{cor:typeII}
+$\Delta_{\rm anom}[D_R]$ is a c-number-valued contribution to
+$S_{\rm gen}$.  It commutes with every observable and lies in the
+centre $\mathbb{C}\cdot\mathbf{1}$ of the local algebra
+$\mathcal{A}(D_R)$.  Therefore the carve-out's type II$_\infty$
+structure (Witten 2021 \cite{Witten2021}, CLPW 2022 \cite{CLPW2022})
+is unaffected: the crossed-product algebra
+$\mathcal{A}(D_R)\rtimes\mathbb{R}$ remains a type II$_\infty$
+factor, and $S_{\rm gen}$ is well-defined modulo the standard
+type II$_\infty$ additive constant.
+\end{corollary}
+
+\begin{thebibliography}{9}
+\bibitem{Lemma33}
+\emph{Lemma 3.3 of the present carve-out paper}, supporting note
+\verb|/tmp/agents_2026_05_03_evening/A2_lemma33_stress_tensor/lemma33.tex|.
+
+\bibitem{HislopLongo1982}
+P.~D.\ Hislop and R.\ Longo,
+\emph{Modular structure of the local algebras associated with the free
+massless scalar field theory},
+Comm.\ Math.\ Phys.\ \textbf{84} (1982), 71--85,
+DOI~\href{https://doi.org/10.1007/BF01208372}{10.1007/BF01208372}.
+
+\bibitem{Frob2023}
+M.~B.\ Fr\"ob,
+\emph{Modular Hamiltonians for double cones in conformally flat
+spacetimes}, \href{https://arxiv.org/abs/2308.14797}{arXiv:2308.14797} (2023).
+
+\bibitem{HollandsWald2001}
+S.\ Hollands and R.~M.\ Wald,
+\emph{Local Wick polynomials and time ordered products of quantum
+fields in curved spacetime},
+Comm.\ Math.\ Phys.\ \textbf{223} (2001), 289--326,
+\href{https://arxiv.org/abs/gr-qc/0103074}{arXiv:gr-qc/0103074}.
+
+\bibitem{HollandsWald2014}
+S.\ Hollands and R.~M.\ Wald,
+\emph{Quantum fields in curved spacetime}, Phys.\ Rep.\ \textbf{574}
+(2015), 1--35,
+\href{https://arxiv.org/abs/1401.2026}{arXiv:1401.2026}.
+
+\bibitem{BFV2003}
+R.\ Brunetti, K.\ Fredenhagen and R.\ Verch,
+\emph{The generally covariant locality principle -- a new paradigm for
+local quantum physics},
+Comm.\ Math.\ Phys.\ \textbf{237} (2003), 31--68,
+\href{https://arxiv.org/abs/math-ph/0112041}{arXiv:math-ph/0112041}.
+
+\bibitem{BirrellDavies}
+N.~D.\ Birrell and P.~C.~W.\ Davies,
+\emph{Quantum Fields in Curved Space}, Cambridge Univ.\ Press, 1982;
+\S 6.3, eqs.~(6.121),~(6.134),~(6.137),~(6.146).
+
+\bibitem{BunchDavies1978}
+T.~S.\ Bunch and P.~C.~W.\ Davies,
+\emph{Stress tensor and conformal anomalies for massless fields in a
+Robertson--Walker universe},
+Proc.\ Roy.\ Soc.\ A \textbf{360} (1978), 117--134.
+
+\bibitem{Wald1978}
+R.~M.\ Wald,
+\emph{Trace anomaly of a conformally invariant quantum field in curved
+spacetime}, Phys.\ Rev.\ D \textbf{17} (1978), 1477--1484,
+DOI~\href{https://doi.org/10.1103/PhysRevD.17.1477}{10.1103/PhysRevD.17.1477}.
+
+\bibitem{Christensen1976}
+S.~M.\ Christensen,
+\emph{Vacuum expectation value of the stress tensor in an arbitrary
+curved background:  the covariant point separation method},
+Phys.\ Rev.\ D \textbf{14} (1976), 2490--2501.
+
+\bibitem{Duff1994}
+M.~J.\ Duff,
+\emph{Twenty years of the Weyl anomaly},
+Class.\ Quant.\ Grav.\ \textbf{11} (1994), 1387--1404,
+\href{https://arxiv.org/abs/hep-th/9308075}{arXiv:hep-th/9308075}.
+
+\bibitem{CLPW2022}
+V.\ Chandrasekaran, R.\ Longo, G.\ Penington and E.\ Witten,
+\emph{An algebra of observables for de~Sitter space},
+JHEP \textbf{02} (2023), 082,
+\href{https://arxiv.org/abs/2206.10780}{arXiv:2206.10780}.
+
+\bibitem{Witten2021}
+E.\ Witten,
+\emph{Gravity and the crossed product},
+JHEP \textbf{10} (2022), 008,
+\href{https://arxiv.org/abs/2112.12828}{arXiv:2112.12828}.
+
+\bibitem{Solodukhin2011}
+S.~N.\ Solodukhin,
+\emph{Entanglement entropy of black holes},
+Living Rev.\ Relativity \textbf{14} (2011), 8,
+\href{https://arxiv.org/abs/1104.3712}{arXiv:1104.3712}.
+
+\bibitem{CasiniHuerta2009}
+H.\ Casini and M.\ Huerta,
+\emph{Entanglement entropy in free quantum field theory},
+J.\ Phys.\ A \textbf{42} (2009), 504007,
+\href{https://arxiv.org/abs/0905.2562}{arXiv:0905.2562}.
+
+\end{thebibliography}
+
+\end{document}

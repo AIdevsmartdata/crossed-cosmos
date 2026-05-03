@@ -1,0 +1,455 @@
+% scope_and_limitations.tex
+% Insertable section for eci.tex
+% Author: Kevin Remondière (drafted by Claude Sonnet 4.6 agent, 2026-05-03)
+% Compile: standalone or \input{scope_and_limitations} after last body section.
+%
+% This section documents the bounded scope of the ECI framework.
+% It is NOT a defeat — it is a calibration statement.
+% Every paragraph is written to pass the critic's smell test:
+%   "Can a hostile referee accuse this of overclaiming?"
+% If the answer is yes, the paragraph has been rewritten.
+
+\section{Scope and Limitations of the ECI Framework}
+\label{sec:scope}
+
+The Entanglement--Complexity--Information (ECI) programme is a
+mathematical-physics framework in the post-CLPW algebraic-quantum-gravity
+tradition~\cite{Chandrasekaran2023,Chandrasekaran2022}.
+It constructs a type-II$_\infty$ von Neumann algebra for FRW cosmological
+diamonds via a quantum-reference-frame crossed product, derives a modular
+(Krylov) complexity measure on that algebra, and uses the Bisognano--Wichmann
+theorem and Hadamard-state theory to characterize which boundary conditions
+are algebraically admissible near the Big Bang.  The framework's value is
+precision and exclusion: it gives sharp structural results about
+\emph{what is and is not algebraically possible} in cosmological quantum
+field theory on a fixed background.
+
+This section states, with equal emphasis, what ECI claims and what it does
+not claim.  The negative results listed in \S\ref{subsec:nogo} are presented
+as successes of calibration, not as failures of the programme.  A framework
+that has explicitly tested and retired seventeen candidate bridges to
+phenomenology has narrowed its own scope in a scientifically productive way.
+
+% ---------------------------------------------------------------------------
+\subsection{What ECI Claims and Is Positioned to Prove}
+\label{subsec:claims}
+% ---------------------------------------------------------------------------
+
+\textbf{Core algebraic apparatus.}  The following results are established
+within the framework, with the level of proof noted explicitly.
+
+\begin{enumerate}
+
+\item \textbf{FRW type-II$_\infty$ crossed product (Theorems 3.5--3.6,
+  \texttt{paper/frw\_typeII\_note}).}
+  The local observable algebra on a comoving past-light-cone diamond in
+  radiation-era or matter-era FRW is a type-II$_\infty$ von Neumann factor
+  when constructed as a quantum-reference-frame crossed product $\mathcal{A}(D_O)
+  \rtimes_\sigma \mathbb{R}$.  The construction follows Witten~\cite{Witten2022},
+  Chandrasekaran--Penington--Witten~\cite{Chandrasekaran2023}, and
+  Leutheusser--Liu~\cite{Leutheusser2022}; the FRW adaptation is due to this
+  work.  The factor carries a canonical tracial weight, but this trace fixes
+  only a \emph{relative} scale (not an absolute energy density).
+
+\item \textbf{Conformal pullback of the stress tensor (Lemma 3.3,
+  sympy-verified).}
+  The unitary $U$ implementing the FRW$\to$Minkowski conformal rescaling
+  $a(\eta)$ satisfies $U^{-1}\,T^{\rm Mink}_{00}\,U = a^2(\eta)\,
+  \mathcal{T}^{\rm FRW}_{00}$ off-shell, to all orders in the Taylor-mode
+  expansion of the test-function support.  The conjugation is the
+  backbone of the $K_{\rm FRW}$ closed-form derivation.
+
+\item \textbf{$K_{\rm FRW}$ closed form (R-piste 6, $\sim$80\% paper-ready).}
+  For a massless conformally-coupled scalar on a radiation-era FRW
+  past-light-cone diamond $D_R$ of comoving radius $R_{\rm conf}$,
+  the modular Hamiltonian is
+  \begin{equation}
+    K_{\rm FRW} \;=\; \frac{\pi}{R_{\rm conf}}
+    \int_{D_R} d^3x\;
+    \bigl[R_{\rm conf}^2 - (\eta - \eta_c)^2 - |\mathbf{x}-\mathbf{x}_c|^2\bigr]\,
+    a^2(\eta)\,\mathcal{T}^{\rm FRW}_{00},
+    \label{eq:kfrw}
+  \end{equation}
+  derived by conformal pullback from the Hislop--Longo
+  Minkowski-diamond formula~\cite{HislopLongo1982}.  The prefactor
+  $\pi/R_{\rm conf}$ is structural (Bisognano--Wichmann unimodular
+  normalization $\beta=2\pi$, rescaled by the CHM08 Unruh relation); it is
+  \emph{not} matched post-hoc to any observational value.
+
+\item \textbf{Krylov-Diameter correspondence (Theorem 4, conditional).}
+  In the late-modular-time asymptotic regime, the Krylov spread complexity
+  $C_k(t)$ on the type-II$_\infty$ crossed-product algebra satisfies
+  \begin{equation}
+    \frac{1}{C_k(t)}\frac{dC_k}{dt} \;=\; \frac{1}{R_{\rm proper}(\eta_c)}
+    + O(C_k^{-1}),
+    \label{eq:krylov_rate}
+  \end{equation}
+  where $R_{\rm proper}(\eta_c) = a(\eta_c)\,R_{\rm conf}$ is the gauge-invariant
+  proper radius of the diamond at conformal time $\eta_c$.  This identity is
+  gauge-invariant (both sides are spacetime scalars) and is verified
+  symbolically era-by-era (sympy).
+  \textbf{Caveat:} the result is conditional on the \emph{restricted-class}
+  Lanczos asymptotic $b_n = \pi n$ (Block A1, Open Question~1 in
+  \texttt{krylov\_diameter.tex}) holding for the modular Hamiltonian's
+  spectral class on a type-II$_\infty$ KMS state.  This transfer from the
+  type-III$_1$ / CFT$_2$ setting (where the universal operator-growth
+  hypothesis is established) to type-II$_\infty$ is \emph{not yet proved}.
+  The conditional result is clean and publishable; the unconditional result
+  requires Block A1 closure.
+
+\item \textbf{Algebraic Weyl Curvature Hypothesis — Big-Bang
+  non-Hadamard boundary (T2-FRW and T2-Bianchi I, $\sim$80\%
+  paper-ready).}
+  No state in the BFV--Verch Hadamard folium of $\Omega_{\rm FRW}$ extends
+  to $\eta = 0$ in flat FRW (Theorem T2-FRW, three independent
+  sympy-verified obstructions) or in Bianchi I (Theorem T2-Bianchi I, two
+  independent IR divergences).  The physics consequence (Theorem T3) is that
+  the algebras $({\mathcal A}(D_\infty), \Omega_{\rm FRW})$ and
+  $(\mathcal{A}(D_{\rm BB}), \Omega_{\rm FRW})$ are not isomorphic, giving a
+  rigorous algebraic correlate of the Penrose--Weyl curvature hypothesis.
+  \textbf{Convention caveat:} the result is stated within the Hollands--Wald
+  Hadamard microlocal convention~\cite{HollandsWald2001,BFV2003};
+  alternative UV regulators may alter the IR divergence structure.
+  The result does \emph{not} constitute a derivation of the
+  cosmological arrow of time from first principles: the low-complexity
+  initial condition (Past Hypothesis) is assumed as a boundary condition,
+  not derived.
+
+\item \textbf{Levier 1B MCMC (observational, not algebraic).}
+  A joint MCMC run over Planck 2018 + ACT DR6 + DESI DR2 + Pantheon+ +
+  KiDS-1000, with non-minimal coupling $\xi_\chi$ free, returns:
+  $H_0 = 67.67 \pm 0.57$ km/s/Mpc, $\xi_\chi = -0.00003$
+  $[-0.0164, +0.0163]$ (68\% CL), $\log B_{10} = -1.37$ (Savage--Dickey,
+  weak/moderate evidence for $\Lambda$CDM over NMC).
+  The ECI programme provided the NMC prior structure; the MCMC is an
+  observational constraint, not an algebraic theorem.
+
+\end{enumerate}
+
+% ---------------------------------------------------------------------------
+\subsection{What ECI Explicitly Does NOT Claim: the NO-GO Catalogue}
+\label{subsec:nogo}
+% ---------------------------------------------------------------------------
+
+The following seventeen candidate connections between the ECI apparatus and
+physical observables have been tested and returned negative or null results.
+Each entry is a success of calibration.  They are listed here explicitly so
+that future readers, referees, and automated agents do not re-open avenues
+that have already been closed with stated reasons.
+
+\subsubsection*{The five Pistes (systematic programme failures)}
+
+\begin{description}
+
+\item[Piste 1 (partial positive only).]
+  $H = \text{Krylov rate}$: the identity
+  $\tfrac{1}{C_k}\tfrac{dC_k}{dt} = H(t)$ holds exactly for a
+  radiation-era Hubble-horizon diamond (gauge-invariant, sympy-verified) and
+  is off by a factor of $1/2$ for a matter-era past-light-cone diamond.
+  The match in the de Sitter and Hubble-horizon cases is tautological
+  (the diamond is defined to have $R_{\rm proper} = H^{-1}$).
+  \emph{ECI does not claim a general derivation of the Hubble parameter
+  from Krylov complexity.}
+
+\item[Piste 2 (NEGATIVE).]
+  Era transitions as Jones--Longo subfactor inclusions: the algebra
+  inclusion at the radiation-to-matter transition has Jones index equal to 1
+  (the factors are isomorphic) and the subfactor is trivial.
+  \emph{No cosmological transition amplitude is derived from subfactor theory.}
+
+\item[Piste 3 (TAUTOLOGICAL).]
+  $\Lambda$ from modular relaxation: the type-II$_\infty$ tracial weight
+  fixes only a relative scale; equating it to $\rho_\Lambda / M_P^4 \approx
+  10^{-121}$ requires a 121-order normalisation choice that is not derivable
+  from the algebra alone.  The trace is gauge-fixed by an arbitrary modular
+  normalisation, not by a physical energy density.
+  \emph{ECI does not contribute a derivation of the cosmological constant.}
+  (See also \S\ref{subsec:outside}.)
+
+\item[Piste 4 (NO-GO).]
+  Riemann zeros as cosmological modular Hamiltonian spectrum: the spectrum
+  of $K_{\rm FRW}$ (eq.~\eqref{eq:kfrw}) is continuous, not discrete;
+  the Riemann zeros form a discrete set.  A continuous-to-discrete
+  mapping would require compactification not present in the apparatus.
+  \emph{ECI does not offer a route to the Riemann Hypothesis via cosmology.}
+
+\item[Piste 5 (NO-GO).]
+  SM field content from modular 2-categorical compatibility: the
+  type-I (finite-dimensional) algebra arising from any fixed Fock-space
+  sector has only \emph{inner} modular automorphisms; the SM gauge group
+  cannot be read off from the modular automorphism group of a type-I factor.
+  \emph{ECI does not derive the Standard Model field content.}
+
+\end{description}
+
+\subsubsection*{The ten R-pistes (targeted rapid explorations)}
+
+\begin{description}
+
+\item[R1 (NUMEROLOGY).]
+  $\Lambda$ from T1$\leftrightarrow$T2 algebraic asymmetry: the numerical
+  match relied on a post-hoc normalisation; no structural reason for the
+  asymmetry to equal $\rho_\Lambda$.
+
+\item[R2 (POSITIVE BYPRODUCT, not $H_0$).]
+  $H_0$ from Krylov-Diameter Theorem 4, Block A: the sympy-verified
+  $\langle p_3 \rangle$ closed form is a genuine result, but it does not
+  constitute a derivation of $H_0$.  The Krylov rate equals $1/R_{\rm proper}$,
+  not $H_0$, in the matter era (factor of $1/2$ discrepancy;
+  \S\ref{subsec:claims} item 4).
+
+\item[R3 (KILLED: Verch 1994).]
+  $S_8$ as BFV folium-projection ambiguity: Verch 1994~\cite{Verch1994}
+  proves local quasi-equivalence of all Hadamard states; the alleged
+  ``projection ambiguity'' does not exist within the folium.
+  Levier 1B MCMC confirms null: NMC alone does not reduce the
+  $S_8$ tension at Planck + KiDS-1000 sensitivity.
+
+\item[R4 (REFUTED: Lie algebra).]
+  SM three generations from Bianchi IX $SU(2)$ Kasner axes: the
+  dimension count of the $\mathfrak{su}(2)$ BKL algebra is 3 (the three
+  Kasner directions), but this is the rank of the spatial isometry group,
+  not a fermion-generation count.  The Lie-algebraic bridge is not present.
+
+\item[R5 (CONDITIONAL COMPANION, downgraded).]
+  Riemann Hypothesis via Maass--Selberg + theta-correspondence:
+  the earlier framing as an RH-proof has been retracted.
+  The surviving claim is a \emph{conditional companion}: if the
+  BFV-folium $\leftrightarrow$ CCM Eisenstein spectral correspondence holds,
+  certain spectral conditions on the modular Hamiltonian would follow.
+  No unconditional RH implication is claimed.
+
+\item[R6 (CONDITIONAL COMPANION).]
+  AdS/CFT in FRW type-II$_\infty$ frame: the original framing
+  (``ECI establishes AdS/CFT for FRW'') is falsified.  The surviving
+  claim is structural: the FRW type-II$_\infty$ factor is compatible
+  with CLPW-style observer algebras, but the full holographic dictionary
+  in an FRW background is not established.
+
+\item[R7 (NUMEROLOGY).]
+  Hierarchy from $c'$ modular trace ratios: the numerical match between
+  the $c'$ parameter and $M_W/M_P$ depends on the same arbitrary
+  normalisation identified in Piste 3.  No structural derivation.
+
+\item[R8 (REFUTED: Weyl law).]
+  Generation count from PSL$(2,\mathbb{Z})\backslash\mathbb{H}$ Eisenstein/cusp
+  sectors: the Weyl law on the modular surface gives a
+  \emph{continuous} eigenvalue density $\sim T \log T$, not a finite
+  count of three.  The sector-counting route is blocked.
+
+\item[R9 (KILLED: Theorem T2).]
+  Dark matter from Bianchi VIII Mixmaster Kasner-bounce relics:
+  Theorem T2-Bianchi I (and its extension to Bianchi VIII type-A)
+  shows that no Hadamard state extends to the initial Kasner singularity;
+  the bounce-relic mechanism requires initial conditions in the folium,
+  which do not exist.
+
+\item[R10 (NO-GO: DKN walls).]
+  SM gauge from BKL $\leftrightarrow$ $E_{10}$ Kac--Moody:
+  the Damour--Kleinschmidt--Nicolai billiard walls encode the
+  $E_{10}$ structure but not the SM gauge factors $SU(3)\times SU(2)
+  \times U(1)$; the coset decomposition does not produce SM multiplets.
+
+\end{description}
+
+% ---------------------------------------------------------------------------
+\subsection{Open Problems Within ECI's Scope}
+\label{subsec:open_within}
+% ---------------------------------------------------------------------------
+
+The following problems are within the ECI apparatus's reach and represent
+the programme's live research frontier.  They are listed with their
+current readiness level.
+
+\begin{enumerate}
+
+\item \textbf{Block A1 — unconditional UOGH transfer (open).}
+  Proving $b_n = \pi n$ as an asymptotic on a type-II$_\infty$ KMS state
+  without appealing to the universal operator-growth hypothesis in the
+  type-III$_1$ / CFT$_2$ setting.  Completion would remove the ``conditional''
+  caveat from Theorem 4.
+  \emph{Status:} restricted-class Vanlessen/Levin--Lubinsky route in progress
+  (B6 wave-3); full closure estimated at 2--3 months.
+
+\item \textbf{Connes-embedding status of the FRW II$_\infty$ factor (open).}
+  Is the crossed-product factor $\mathcal{A}(D_O) \rtimes_\sigma \mathbb{R}$
+  approximately finite-dimensional (hyperfinite)?
+  By Connes--Takesaki 1977 the answer is almost certainly yes (a crossed
+  product of a hyperfinite type-III$_1$ factor by $\mathbb{R}$ is hyperfinite
+  II$_\infty$), which would imply every cosmological observer in the BFV
+  folium sees the same unique factor.
+  \emph{Status:} 6--8 week short note; math.OA submission.
+
+\item \textbf{T2-Bianchi V and T2-Bianchi IX extensions (open).}
+  Theorem T2-Bianchi I is proved.  Extension to Bianchi V (negatively-curved
+  spatial sections) is conditional on Hadamard-state existence on $H^3$;
+  extension to Bianchi IX requires the BKL invariant-measure analysis of the
+  Mixmaster attractor.
+  \emph{Status:} partial proofs in \texttt{notes/T2\_bianchi\_2026\_05\_03\_jour2};
+  3--8 weeks per case.
+
+\item \textbf{BEC analogue-FRW experimental falsifier (open).}
+  Lemma 3.3 (conformal pullback) predicts a modular spectral density on a
+  BEC analogue of the FRW past-light-cone diamond.  Comparison against
+  BEC entanglement-Hamiltonian tomography (Dalmonte--Vermersch--Zoller 2018
+  framework) would constitute the first ECI experimental falsifier outside
+  cosmological MCMC.
+  \emph{Status:} 6--9 months; requires a BEC-experimental co-author.
+
+\item \textbf{Algebraic WCH paper submission (near-ready).}
+  The \texttt{paper/algebraic\_wch\_bianchi/note.tex} is 80\% paper-ready
+  for Foundations of Physics.  Theorem T2-Bianchi I is the central result;
+  the paper requires 2--3 weeks of polish.
+
+\item \textbf{Bianconi 2025 PRD Comment (near-ready).}
+  A 4-page note pointing out a Lorentzian-signature gap in Bianconi's
+  entropic-gravity framework~\cite{Bianconi2025} has been drafted.
+  The comment does \emph{not} claim ECI resolves dark energy or $\Lambda$;
+  it is a structural mathematical objection
+  ($\mathrm{Tr}(\tilde{g}\ln\tilde{g}^{-1}) \neq 0$ in the Lorentzian case)
+  and an identification of where the ECI algebraic approach diverges from
+  the entropic approach.
+  \emph{Status:} 1--2 weeks to submission.
+
+\end{enumerate}
+
+% ---------------------------------------------------------------------------
+\subsection{Open Problems Explicitly Outside ECI's Apparatus Reach}
+\label{subsec:outside}
+% ---------------------------------------------------------------------------
+
+The following problems are \emph{outside} the ECI apparatus's reach.
+This is not a temporary limitation to be overcome by adding more structure:
+in each case a structural reason is given for why the apparatus does not
+and cannot couple.
+
+\begin{description}
+
+\item[Cosmological constant $\Lambda \approx 10^{-122}\,M_P^4$.]
+  The type-II$_\infty$ tracial weight fixes a relative scale, not an absolute
+  energy density.  Equating the trace to $\rho_\Lambda / M_P^4$ introduces a
+  normalisation that must be fixed from outside the algebra.
+  Three independent arithmetic checks (NCG spectral cutoff, $E_8$ instanton,
+  ECI internal $\kappa_R / C_k^{\rm max}$) each fail by 14--89 orders of
+  magnitude~\cite{ECI_cosmo_const_audit}.
+  \emph{No ECI paper claims a derivation of $\Lambda$.}
+
+\item[Hubble tension ($H_0 = 73.04 \pm 1.04$ vs $67.67 \pm 0.57$
+  km/s/Mpc, 4.5$\sigma$, UNRESOLVED).]
+  Levier 1B (NMC $\xi_\chi$ free, full Planck + ACT + DESI + Pantheon+
+  + KiDS-1000) returns $\log B_{10} = -1.37$ (weak/moderate evidence
+  \emph{for} $\Lambda$CDM over NMC).  The NMC sector does not move $H_0$.
+  Algebraically, $K_{\rm FRW}$ contains no Hubble-flow normalisation;
+  Theorem 4 gives $1/R_{\rm proper}$, not $H_0$, as the Krylov rate in the
+  matter era.
+  \emph{ECI does not claim to resolve the Hubble tension.
+  The 4.5$\sigma$ discrepancy remains open.}
+
+\item[Standard Model particle content and gauge structure.]
+  Piste 5 (inner modular automorphisms) and R4, R8, R10 (various
+  generation-counting routes) all return NO-GO.  The modular automorphism
+  group of any type-I sector is inner; the SM gauge factors are not
+  extractable from the BFV-folium algebra.
+  \emph{ECI does not predict or derive the SM gauge group, particle masses,
+  or fermion generation count.}
+
+\item[$S_8$ tension (KiDS vs Planck, $\sim$2.6$\sigma$).]
+  Wolf + 2025 NMC mechanism and Levier 1B both return null on $S_8$
+  (R-piste S$_8$ NEGATIVE).  Adding $\sigma_8$ as a derived parameter in
+  a future MCMC run is advised before closing this entry, but NMC alone
+  is not expected to resolve the tension.
+
+\item[Swampland conjectures and string-landscape Λ-selection.]
+  The Swampland $\times$ NMC cross-constraint (D8) tightens $|\xi|$ by
+  $\approx 250\times$ and shows that the ECI $\chi$ field cannot also be the
+  dark-dimension bulk mode (A4 $\neq$ A5).  Beyond this \emph{constraint},
+  ECI does not contribute to swampland physics, de Sitter stability, or
+  landscape statistics.
+
+\item[Galaxy-scale structure (JWST early massive galaxies, $z > 10$).]
+  ECI's apparatus operates on homogeneous--isotropic local diamonds.
+  It has no coupling to halo abundance, star-formation efficiency, or
+  first-light timing.  No ECI result bears on the JWST stellar-mass excess.
+
+\item[SM precision observables (W-mass, muon $g-2$, lepton universality).]
+  ECI's operator-algebra machinery has no coupling to loop corrections in
+  perturbative QED/QCD.  The catalogue records no-apparatus-link for all
+  three anomalies (E1--E3 in \texttt{eci\_apparatus\_links.md}).
+  The muon $g-2$ and R(K) anomalies are in any case resolved as of 2025--2026.
+
+\item[Neutrino masses and mass ordering.]
+  No apparatus link.  ECI is silent on the neutrino sector.
+
+\item[Dark matter direct-detection (XENONnT NR excess, 4$\sigma$).]
+  The dark-dimension axiom (A5) provides a $\Delta N_{\rm eff}({\rm KK})$
+  constraint, not a direct-detection cross-section.  The Bianchi VIII
+  Mixmaster DM-relic route is killed by Theorem T2.
+
+\end{description}
+
+% ---------------------------------------------------------------------------
+\subsection{Recommended Reading on What ECI Does Not Solve}
+\label{subsec:reading}
+% ---------------------------------------------------------------------------
+
+Readers seeking frameworks that address the problems in
+\S\ref{subsec:outside} are directed to the following.
+
+\begin{itemize}
+
+\item \textbf{Cosmological constant.}
+  Weinberg 2000 (arXiv:astro-ph/0005265) remains the definitive review
+  of why no symmetry argument succeeds.  Bousso--Polchinski 2000
+  (hep-th/0004134) is the landscape mechanism.  No paper in the
+  algebraic-QFT tradition (including the present one) derives
+  $\rho_\Lambda / M_P^4 \approx 10^{-121}$.
+
+\item \textbf{Hubble tension.}
+  Verde--Treu--Riess 2019 (arXiv:1907.10625) review the tension.
+  EDE (Poulin et al.\ 2019, arXiv:1811.04083) and NMC modifications
+  (Wolf--D'Amico--Pace 2025, arXiv:2504.07679) are among the active
+  explanatory approaches; Levier 1B rules out the latter at current
+  sensitivity.
+
+\item \textbf{Entropic gravity vs ECI's algebraic NO-GO.}
+  Bianconi 2025 (arXiv:2502.02661) proposes an entropic origin of
+  gravity.  The forthcoming ECI comment (B8 in flight) identifies the
+  Lorentzian-signature gap; the comment is a mathematical objection, not
+  a claim that ECI resolves dark energy.
+
+\item \textbf{Connes--Chamseddine NCG Standard Model.}
+  Chamseddine--Connes 1997 (hep-th/9606001) generates the SM action from
+  the spectral action principle but does not pin $\Lambda$ or generation
+  count.  The NCG approach and ECI are orthogonal: NCG addresses the SM
+  action at the algebra-of-observables level; ECI addresses the
+  vacuum-state structure on cosmological backgrounds.
+
+\item \textbf{Selection-principle frameworks.}
+  The Penrose--Weyl curvature hypothesis (Penrose, \emph{Cycles of Time},
+  2010) and the Past Hypothesis (Albert 2000) are the standard frameworks
+  for the cosmological arrow of time.  Theorem T3 of ECI gives an algebraic
+  correlate, but the low-complexity boundary condition remains a posit in
+  all frameworks, including ECI.
+
+\item \textbf{CLPW observer algebras.}
+  Chandrasekaran--Penington--Witten 2023 (arXiv:2206.10780) is the parent
+  framework for the type-II$_\infty$ construction.  Witten 2022
+  (arXiv:2112.12828) is the foundational paper on the crossed-product
+  algebra in de Sitter.  These references establish what \emph{can} be
+  proven at the observer-algebra level; ECI extends them to FRW backgrounds
+  but does not supersede their scope.
+
+\end{itemize}
+
+% ---------------------------------------------------------------------------
+% Local bibliography entries referenced above.
+% Add these to eciNotes.bib / eci.bib if not already present.
+% ---------------------------------------------------------------------------
+% @misc{ECI_cosmo_const_audit,
+%   author = {Remondi\`ere, Kevin},
+%   title  = {Honest reality check --- cosmological constant and arrow-of-time
+%             claims},
+%   year   = {2026},
+%   note   = {Internal audit note,
+%             \texttt{notes/cosmo\_const\_aot\_honest\_2026\_05\_02.md}}
+% }

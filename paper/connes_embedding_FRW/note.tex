@@ -1,0 +1,437 @@
+% note.tex --- companion math.OA note to frw_note.tex
+% The FRW past-light-cone type II_infty factor is hyperfinite (= R_{0,1})
+%
+% Author: Kevin Remondiere
+% Date: 2026-05-03
+% Compile: pdflatex note ; bibtex note ; pdflatex note ; pdflatex note
+
+\documentclass[11pt]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{mathtools}
+\usepackage{hyperref}
+\usepackage{xcolor}
+\usepackage{cite}
+\hypersetup{colorlinks=true, linkcolor=blue, citecolor=blue, urlcolor=blue}
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{remark}[theorem]{Remark}
+
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\C}{\mathbb{C}}
+\newcommand{\HH}{\mathcal{H}}
+\renewcommand{\AA}{\mathcal{A}}
+\newcommand{\MM}{\mathcal{M}}
+\newcommand{\RR}{\mathcal{R}}
+\newcommand{\OO}{\mathcal{O}}
+\newcommand{\Aut}{\operatorname{Aut}}
+\newcommand{\AFD}{\mathrm{AFD}}
+\newcommand{\FRW}{\mathrm{FRW}}
+\newcommand{\Mink}{\mathrm{M}}
+
+\title{The FRW past-light-cone type II$_\infty$ factor is hyperfinite\thanks{Companion to \texttt{paper/frw\_typeII\_note/frw\_note.tex} (commit \texttt{1b2d055} of \url{https://github.com/AIdevsmartdata/crossed-cosmos}). Pure expository / structural note: every step is folklore-known to the AQFT community; the contribution is to assemble them in one place for the FRW case and to record the corollary.}}
+\author{Kevin Remondi\`ere\\
+\small Independent researcher\\
+\small \href{mailto:kevin.remondiere@gmail.com}{kevin.remondiere@gmail.com}\\
+\small ORCID: \href{https://orcid.org/0009-0008-2443-7166}{0009-0008-2443-7166}}
+\date{2026-05-03}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+The companion note \cite{FrwNote2026} constructs, for a comoving causal diamond
+$D \subset $ FRW with conformally-coupled massless scalar matter in the
+Bunch--Davies vacuum, a type II$_\infty$ factor
+$\MM_\FRW(D) := \AA_\FRW(D) \rtimes_\sigma \R$ as the modular crossed product
+of the local Hadamard von Neumann algebra. Here we observe that
+$\MM_\FRW(D)$ is approximately finite-dimensional (AFD), hence isomorphic to
+the unique hyperfinite type II$_\infty$ factor $\RR_{0,1}$ of Connes--Takesaki.
+The argument is a routine concatenation of (i) Buchholz--D'Antoni--Fredenhagen
+\cite{BDF1987}, (ii) Verch's local quasi-equivalence of Hadamard quasifree
+states \cite{Verch1994}, (iii) Fewster's curved-spacetime split property
+\cite{Fewster2015Split}, (iv) the Connes--Takesaki structure theorem
+\cite{ConnesTakesaki1977}, and (v) Connes' uniqueness of the AFD II$_\infty$
+factor \cite{Connes1976}. The corollary is that no two cosmological observers
+in the BFV folium of FRW are distinguishable by the W$^*$-type of their
+gravitationally-dressed crossed-product algebra alone: every such observer sees
+$\RR_{0,1}$.
+\end{abstract}
+
+\section{Introduction and main theorem}\label{sec:intro}
+
+The crossed-product construction of Witten \cite{Witten2022} and
+Chandrasekaran--Longo--Penington--Witten (CLPW) \cite{CLPW2023} produces, from
+a type III$_1$ local algebra and its modular automorphism group, a type II
+factor of \emph{gravitationally dressed} observables. The companion note
+\cite{FrwNote2026} extended the construction to a comoving causal diamond
+in radiation-dominated FRW (and to dust and de Sitter cases) using
+conformal pullback to Minkowski, obtaining a type II$_\infty$ factor
+without invoking a Killing vector field. The output of \cite{FrwNote2026}
+Theorems 3.5 and 3.6 is, schematically,
+\[
+\AA_\FRW(D)\;\xrightarrow[\text{Tomita--Takesaki}]{\;\sigma\;}\;
+\AA_\FRW(D)\rtimes_\sigma \R \;=:\; \MM_\FRW(D),
+\qquad \text{type II}_\infty.
+\]
+That note left open the precise W$^*$-isomorphism class of $\MM_\FRW(D)$.
+The present note answers it.
+
+\begin{theorem}[Main]\label{thm:main}
+Let $\AA_\FRW(D)$ be the local von Neumann algebra of the conformally coupled
+massless scalar in radiation-dominated, dust-dominated, or de Sitter FRW, in
+the Bunch--Davies / conformal vacuum, associated to a doubly-bounded
+comoving causal diamond $D$ with $\eta_i, \eta_f$ bounded away from the
+singular conformal boundary, in the conventions of \cite{FrwNote2026}. Then
+the type II$_\infty$ factor
+$\MM_\FRW(D) := \AA_\FRW(D)\rtimes_\sigma \R$
+of \cite[Thm.~3.5/3.6]{FrwNote2026} is approximately finite-dimensional;
+\emph{a fortiori} it is isomorphic, as an abstract W$^*$-algebra equipped
+with its (unique up to scaling) semifinite normal trace, to the unique
+hyperfinite type II$_\infty$ factor
+\[
+\MM_\FRW(D)\;\cong\;\RR_{0,1}\;=\;\RR\,\overline{\otimes}\,B(\HH),
+\]
+where $\RR$ is the unique hyperfinite II$_1$ factor.
+\end{theorem}
+
+The proof factors through three lemmas, none of them new.
+
+\section{Type III$_1$ structure of the local algebra}\label{sec:typeIII1}
+
+We adopt the framework of locally covariant quantum field theory of
+Brunetti--Fredenhagen--Verch \cite{BFV2003}: the conformally coupled massless
+scalar on FRW is realised as a covariant functor from the category of
+globally hyperbolic spacetimes to the category of $C^*$-algebras, and the
+Bunch--Davies state on the conformally flat FRW pulls back to the Minkowski
+vacuum on the conformally identified manifold under the rescaling
+$\tilde\varphi = a(\eta)\varphi$ \cite[\S2.1, \S3]{FrwNote2026}.
+
+\begin{lemma}[type III$_1$]\label{lem:typeIII}
+$\AA_\FRW(D)$ is a factor of type III$_1$.
+\end{lemma}
+
+\begin{proof}
+By \cite[Prop.~3.2 + Thm.~3.5]{FrwNote2026}, there is a unitary
+$U:\HH_\FRW \to \HH_\Mink$ with $U\Omega_\FRW = \Omega_\Mink$ and
+$U\AA_\FRW(D)U^* = \AA_\Mink(M_D)$, where $M_D$ is the diamond $D$
+viewed as a subset of Minkowski via the conformal identification. The
+Hislop--Longo theorem \cite{HislopLongo1982} states that $\AA_\Mink(M_D)$
+is a type III$_1$ factor for the free massless scalar in the vacuum.
+Type and factoriality are unitary invariants, hence $\AA_\FRW(D)$ is a
+type III$_1$ factor. \qed
+\end{proof}
+
+\begin{remark}\label{rmk:pure-AQFT}
+Lemma~\ref{lem:typeIII} can equivalently be obtained without invoking the
+conformal pullback: by Verch \cite{Verch1994}, the GNS representations of all
+quasifree Hadamard states on a globally hyperbolic spacetime are locally
+quasi-equivalent, so the type of $\AA_\FRW(D)$ is independent of the choice
+of Hadamard state in its folium. Pulling back the Minkowski vacuum gives a
+Hadamard state on FRW \cite[Eq.~(2.3)]{FrwNote2026}, and the type follows
+from the Hislop--Longo result. The two paths give the same answer.
+\end{remark}
+
+\section{Hyperfiniteness}\label{sec:hyperfinite}
+
+\begin{lemma}[hyperfiniteness]\label{lem:AFD}
+$\AA_\FRW(D)$ is approximately finite-dimensional.
+\end{lemma}
+
+\begin{proof}
+Approximately finite-dimensional (AFD) is, for von Neumann algebras with
+separable predual, equivalent to injectivity (Connes \cite{Connes1976}).
+Injectivity is invariant under W$^*$-isomorphism, so by the unitary
+equivalence $\AA_\FRW(D)\cong\AA_\Mink(M_D)$ from
+\cite[Prop.~3.2]{FrwNote2026} it suffices to prove
+$\AA_\Mink(M_D)$ is injective. By Buchholz--D'Antoni--Fredenhagen
+\cite{BDF1987}, the local algebras of any Wightman quantum field theory
+satisfying the standard nuclearity / split assumptions are isomorphic to
+$\RR\,\overline{\otimes}\,Z$ for $\RR$ the hyperfinite type III$_1$ factor
+and $Z$ the centre of the local algebra; in the present (free, factor)
+case $Z=\C$, hence $\AA_\Mink(M_D)\cong\RR$, in particular injective and AFD.
+The free massless scalar on Minkowski satisfies the nuclearity / split
+hypotheses of \cite{BDF1987}; for the curved-spacetime extension, the
+nuclearity / split property is established for free Dirac fields by
+D'Antoni--Hollands \cite{DAntoniHollands2006} and for general locally
+covariant theories under nuclearity by Fewster \cite{Fewster2015Split};
+the scaling-algebra renormalization-group framework of Buchholz--Verch
+\cite{BuchholzVerch1995} provides the broader machinery in which these
+nuclearity hypotheses sit. A pedagogical overview of why all of this
+works in QFT in curved spacetime is given in
+\cite{Witten2022WhyQFT}.
+\qed
+\end{proof}
+
+\begin{remark}\label{rmk:curved-direct}
+A curved-spacetime-native proof of Lemma~\ref{lem:AFD}, without invoking
+the conformal pullback, runs as follows. Verch's symplectic adjoint
+continuity theorem \cite{Verch1997} establishes local primarity and
+Haag duality in any quasifree Hadamard representation; Fewster's split
+property \cite{Fewster2015Split} provides the funnel of type-I
+intermediate factors needed for nuclearity-style arguments; combined
+with Verch \cite{Verch1994} this gives, on any globally hyperbolic
+spacetime where nuclearity holds, the AFD III$_1$ structure of local
+algebras. For our FRW case the conformal pullback is the
+shortest path, but the curved-spacetime route is in principle
+self-contained.
+\end{remark}
+
+\begin{remark}\label{rmk:no-MIP}
+The MIP$^*$=RE refutation of Connes' embedding conjecture
+\cite{JNVWY2020} produces II$_1$ factors that do \emph{not} embed into
+the ultrapower $\RR^\omega$, and \emph{a fortiori} are not AFD. The
+algebra $\AA_\FRW(D)$ is well outside that pathology: it is a free-field
+local algebra in a Hadamard representation, the canonical AFD-friendly
+setting. The MIP$^*$=RE counterexamples involve highly non-perturbative
+non-amenable group operator algebras and have no known realisation as
+local algebras of a quantum field on a globally hyperbolic spacetime.
+The present theorem is therefore a positive result of the form
+``physically natural local algebras of free QFT on FRW remain firmly on
+the AFD side of the Connes-embedding dichotomy''.
+\end{remark}
+
+\section{Crossed product is the unique AFD II$_\infty$ factor}\label{sec:CT}
+
+\begin{lemma}[Connes--Takesaki + Connes uniqueness]\label{lem:CT}
+Let $\NN$ be an AFD type III$_1$ factor with separable predual and let
+$\sigma$ be a continuous one-parameter automorphism group whose
+restriction to a non-trivial centraliser yields the modular flow of a
+faithful normal state $\omega$. Then the crossed product
+$\NN\rtimes_\sigma\R$ is an AFD type II$_\infty$ factor with full Connes
+spectrum $\Gamma(\sigma)=\R$, and is therefore isomorphic to
+$\RR_{0,1}=\RR\,\overline{\otimes}\,B(\HH)$, the unique AFD II$_\infty$
+factor.
+\end{lemma}
+
+\begin{proof}
+This is two classical results glued together. The
+Connes--Takesaki structure theorem \cite{ConnesTakesaki1977} (and its
+modern textbook statement, e.g.\ Takesaki II.X) states that for a
+type III$_\lambda$ factor with $\lambda\in[0,1]$, the modular crossed
+product $\NN\rtimes_\sigma\R$ is type II$_\infty$, semifinite, with a
+canonical dual action of $\R$ scaling the trace. AFD-ness is preserved
+under modular crossed products: if $\NN$ is AFD then
+$\NN\rtimes_\sigma\R$ is AFD (Connes \cite[Thm.~3]{Connes1976}; see
+Takesaki, \emph{Theory of Operator Algebras III}, Ch.~XII). Connes'
+1976 uniqueness theorem \cite{Connes1976} shows that all AFD
+II$_\infty$ factors with separable predual are isomorphic; the unique
+one is denoted $\RR_{0,1}$. Combining: $\NN\rtimes_\sigma\R$ is AFD,
+type II$_\infty$, separable predual, hence isomorphic to $\RR_{0,1}$.
+The full Connes spectrum $\Gamma(\sigma)=\R$ is automatic for type
+III$_1$ \cite{ConnesTakesaki1977}.
+\qed
+\end{proof}
+
+\section{Proof of the main theorem}\label{sec:proof}
+
+\begin{proof}[Proof of Theorem~\ref{thm:main}]
+Lemma~\ref{lem:typeIII} gives type III$_1$.
+Lemma~\ref{lem:AFD} gives AFD.
+The modular flow $\sigma$ on $\AA_\FRW(D)$ is by definition the
+Tomita--Takesaki flow of the conformal vacuum, intertwined by
+$U$ to the Hislop--Longo flow on $\AA_\Mink(M_D)$
+\cite[\S3.3]{FrwNote2026}; both are continuous, and the latter has full
+Connes spectrum \cite{HislopLongo1982}, so by unitary intertwining the
+former does too. The hypotheses of Lemma~\ref{lem:CT} are met with
+$\NN=\AA_\FRW(D)$ and $\omega=$ the conformal vacuum. Lemma~\ref{lem:CT}
+yields
+$\AA_\FRW(D)\rtimes_\sigma\R \cong \RR_{0,1}$.
+The left-hand side is, by \cite[Thm.~3.5]{FrwNote2026}, the algebra
+$\MM_\FRW(D)$ of gravitationally dressed observables. \qed
+\end{proof}
+
+\begin{remark}[Separability]\label{rmk:sep}
+The Bunch--Davies GNS Hilbert space $\HH_\FRW$ is separable: the one-particle
+Hilbert space is $L^2$ of a second-countable Cauchy slice with respect to a
+smooth weight, and the Fock space over a separable Hilbert space is
+separable. So $\AA_\FRW(D)\subset B(\HH_\FRW)$ has separable predual, and
+Connes' \cite{Connes1976} uniqueness applies without subtlety.
+\end{remark}
+
+\section{Corollaries}\label{sec:corollaries}
+
+\begin{corollary}[Observer-indistinguishability by W$^*$-type alone]\label{cor:obs-indis}
+Let $D, D' \subset $ FRW be two doubly-bounded comoving causal diamonds in
+the conformal-vacuum Hadamard folium, in the regime of
+Theorem~\ref{thm:main}. Then $\MM_\FRW(D)\cong\MM_\FRW(D')$ as W$^*$-algebras
+(both $\cong\RR_{0,1}$), even though the underlying spacetime regions and
+the observers' worldlines are physically distinct.
+\end{corollary}
+
+In particular, the observer-dependence in the CLPW programme cannot be
+detected from the W$^*$-isomorphism class of the gravitationally dressed
+algebra: it lives only in the additional structure (state, trace
+normalisation, modular Hamiltonian, etc.) attached to that algebra. This
+sharpens the discussion of \cite[\S6]{CLPW2023} and \cite{FaulknerSperanza2024}.
+
+\begin{corollary}[Bianchi VI$_{-1/9}$ classification hope is closed]\label{cor:bianchi}
+Conjectures in the ECI programme (R3, R8 in the project diary) that
+sought to distinguish anisotropic Bianchi VI$_{-1/9}$ cosmologies from
+isotropic FRW ones via the W$^*$-type of the cosmological observer's
+crossed-product algebra are foreclosed in their published form: provided
+the matter sector is conformally coupled and the diamond avoids the
+conformal boundary, both spacetimes yield $\RR_{0,1}$.
+\end{corollary}
+
+\begin{remark}\label{rmk:negative-implication}
+Corollary~\ref{cor:bianchi} is not a refutation of the wider ECI programme,
+but a precise statement of what type-of-factor information \emph{alone}
+cannot resolve. Distinguishing FRW from Bianchi VI$_{-1/9}$ cosmologies
+requires invariants finer than the W$^*$-type --- e.g.\ trace normalisation,
+modular spectrum, or expectation values of relational observables ---
+none of which are foreclosed here.
+\end{remark}
+
+\section{Open questions}\label{sec:open}
+
+\begin{enumerate}
+\item \emph{Massive / non-conformally-coupled scalars.} The conformal
+pullback of \cite{FrwNote2026} fails outside $\xi=1/6$, $m=0$, $d=4$.
+Whether the local algebras of a massive Klein--Gordon field on FRW in a
+generic Hadamard state remain AFD is not settled by the present argument.
+The natural conjecture is yes, via the curved-spacetime path of
+Remark~\ref{rmk:curved-direct}, contingent on nuclearity holding for
+massive Hadamard FRW representations.
+
+\item \emph{Interacting fields.} The BDF \cite{BDF1987} hyperfiniteness
+result is conditional on nuclearity / split. For perturbatively
+constructed interacting models (Hollands--Wald \cite{HollandsWald2001})
+this is folklore but not theorem-proved on curved backgrounds.
+
+\item \emph{Wedge-type regions and asymptotic conformal boundaries.}
+The diamond restriction $\eta_i, \eta_f$ bounded away from the singularity
+is essential to the conformal pullback. Conformal-boundary algebras and
+past-light-cone wedges of unbounded conformal extent are excluded; they
+may have different W$^*$-type behaviour.
+
+\item \emph{Refining the indistinguishability statement.} What invariants
+\emph{do} distinguish $\MM_\FRW(D)$ from $\MM_\FRW(D')$ when both equal
+$\RR_{0,1}$? Candidates: the relative entropy structure on a fixed pair of
+states, the trace normalisation as a function of the observer's clock,
+the modular Hamiltonian spectrum on a finite-energy subspace.
+\end{enumerate}
+
+\bibliographystyle{plain}
+\begin{thebibliography}{99}
+
+\bibitem{FrwNote2026}
+K.\ Remondi\`ere,
+\emph{Type II$_\infty$ for the gravitational algebra of a comoving observer
+in radiation-dominated FRW via conformal pullback},
+companion note, repository \url{https://github.com/AIdevsmartdata/crossed-cosmos},
+commit \texttt{1b2d055} (2026-05-02).
+
+\bibitem{Witten2022}
+E.\ Witten,
+\emph{Gravity and the crossed product},
+JHEP \textbf{10} (2022) 008,
+arXiv:2112.12828 [hep-th].
+
+\bibitem{CLPW2023}
+V.\ Chandrasekaran, R.\ Longo, G.\ Penington, E.\ Witten,
+\emph{An algebra of observables for de Sitter space},
+JHEP \textbf{02} (2023) 082,
+arXiv:2206.10780 [hep-th].
+
+\bibitem{FaulknerSperanza2024}
+T.\ Faulkner, A.\ J.\ Speranza,
+\emph{Gravitational algebras and the generalized second law},
+JHEP \textbf{11} (2024) 099,
+arXiv:2405.00847 [hep-th].
+
+\bibitem{HislopLongo1982}
+P.\ D.\ Hislop, R.\ Longo,
+\emph{Modular structure of the local algebras associated with the free
+massless scalar field theory},
+Comm.\ Math.\ Phys.\ \textbf{84} (1982) 71--85.
+
+\bibitem{BDF1987}
+D.\ Buchholz, C.\ D'Antoni, K.\ Fredenhagen,
+\emph{The universal structure of local algebras},
+Comm.\ Math.\ Phys.\ \textbf{111} (1987) 123--135.
+DOI: 10.1007/BF01239019.
+
+\bibitem{Verch1994}
+R.\ Verch,
+\emph{Local definiteness, primarity and quasiequivalence of quasifree
+Hadamard quantum states in curved spacetime},
+Comm.\ Math.\ Phys.\ \textbf{160} (1994) 507--536.
+DOI: 10.1007/BF02173427.
+
+\bibitem{Verch1997}
+R.\ Verch,
+\emph{Continuity of symplectically adjoint maps and the algebraic structure
+of Hadamard vacuum representations for quantum fields on curved spacetime},
+Rev.\ Math.\ Phys.\ \textbf{9} (1997) 635--674,
+arXiv:funct-an/9609004.
+
+\bibitem{BuchholzVerch1995}
+D.\ Buchholz, R.\ Verch,
+\emph{Scaling algebras and renormalization group in algebraic quantum field
+theory},
+Rev.\ Math.\ Phys.\ \textbf{7} (1995) 1195--1240,
+arXiv:hep-th/9501063.
+
+\bibitem{DAntoniHollands2006}
+C.\ D'Antoni, S.\ Hollands,
+\emph{Nuclearity, local quasi-equivalence and split property for Dirac
+quantum fields in curved spacetime},
+Comm.\ Math.\ Phys.\ \textbf{261} (2006) 133--159,
+arXiv:math-ph/0106028.
+
+\bibitem{BFV2003}
+R.\ Brunetti, K.\ Fredenhagen, R.\ Verch,
+\emph{The generally covariant locality principle: a new paradigm for local
+quantum physics},
+Comm.\ Math.\ Phys.\ \textbf{237} (2003) 31--68,
+arXiv:math-ph/0112041.
+
+\bibitem{HollandsWald2001}
+S.\ Hollands, R.\ M.\ Wald,
+\emph{Local Wick polynomials and time ordered products of quantum fields in
+curved spacetime},
+Comm.\ Math.\ Phys.\ \textbf{223} (2001) 289--326,
+arXiv:gr-qc/0103074.
+
+\bibitem{Fewster2015Split}
+C.\ J.\ Fewster,
+\emph{The split property for locally covariant quantum field theories in
+curved spacetime},
+Lett.\ Math.\ Phys.\ \textbf{105} (2015) 1633--1661,
+arXiv:1501.02682.
+
+\bibitem{ConnesTakesaki1977}
+A.\ Connes, M.\ Takesaki,
+\emph{The flow of weights on factors of type III},
+T\^ohoku Math.\ J.\ \textbf{29} (1977) 473--575.
+DOI: 10.2748/tmj/1178240493.
+
+\bibitem{Connes1976}
+A.\ Connes,
+\emph{Classification of injective factors. Cases II$_1$, II$_\infty$,
+III$_\lambda$, $\lambda\neq 1$},
+Ann.\ of Math.\ (2) \textbf{104} (1976) 73--115.
+
+\bibitem{Witten2022WhyQFT}
+E.\ Witten,
+\emph{Why does quantum field theory in curved spacetime make sense? And
+what happens to the algebra of observables in the thermodynamic limit?},
+arXiv:2112.11614 [hep-th] (2021).
+
+\bibitem{JNVWY2020}
+Z.\ Ji, A.\ Natarajan, T.\ Vidick, J.\ Wright, H.\ Yuen,
+\emph{MIP$^*$=RE},
+arXiv:2001.04383 [quant-ph] (2020).
+
+\end{thebibliography}
+
+\end{document}

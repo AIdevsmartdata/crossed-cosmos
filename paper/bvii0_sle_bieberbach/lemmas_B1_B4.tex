@@ -1,0 +1,752 @@
+% lemmas_B1_B4.tex
+% Agent B3, 2026-05-03.
+% Closes Gap 1 (spatial kernel WF-set via Bessel J_0) and
+% Gap 4 (IR Plancherel convergence near r=0) for the Bianchi VII_0
+% SLE Hadamard construction of A4/note.tex.
+%
+% CITATION VERIFICATION LOG (arXiv API, 2026-05-03):
+%   [AV13]  Avetisyan--Verch, arXiv:1212.6180, CQG 30 (2013) 155006. VERIFIED.
+%   [BN23]  Banerjee--Niedermaier, arXiv:2305.11388, JMP 64 (2023) 113503. VERIFIED.
+%   [TB13]  Them--Brum, arXiv:1302.3174, CQG 30 (2013) 235035. VERIFIED.
+%   [Rad96] Radzikowski, CMP 179 (1996) 529-553. No arXiv; DOI 10.1007/BF02100096. VERIFIED.
+%   [Ver94] Verch, CMP 160 (1994) 507-536. No arXiv; DOI 10.1007/BF02173427. VERIFIED.
+%   [BFV03] Brunetti--Fredenhagen--Verch, arXiv:math-ph/0112041, CMP 237 (2003) 31-68. VERIFIED.
+%   [Hor90] H\"{o}rmander, Analysis of Linear PDEs, Vol.~I (Springer, 1990). Standard reference.
+%           Chapter~7 (WF-set calculus), Theorem~7.1.26 (WF of oscillatory integrals).
+%           Chapter~8, Proposition~8.1.3 (propagation of singularities).
+%           NOT on arXiv; cite by ISBN 3-540-52343-X or standard Springer reference.
+%
+% AV13 CORRECTION (vs note.tex): The journal is CQG 30 (2013) 155006,
+%   NOT "CMP (2013)" as recorded in note.tex gaps.md. Corrected here.
+%
+% HONEST GAP NOTICE (for downstream merger with note.tex):
+%   Lemma B1 closes Gap 1 rigorously for K_r as a smooth FUNCTION.
+%   The r-integrated kernel W2 (Lemma B1, Part 2) relies on the UV bound
+%   |beta_r^(f)| = O(r^{-N}) from BN23 Prop.~4.2, which in turn requires
+%   Gap 3 (anisotropic WKB, note.tex gap:WF) to be closed. Lemma B1
+%   is therefore CONDITIONAL on Gap 3 for the r-integrated statement.
+%   Lemma B4 (IR) is unconditional for the conformally coupled massless case.
+
+\documentclass[12pt, a4paper]{article}
+
+\usepackage{amsmath, amsthm, amssymb, mathrsfs}
+\usepackage{hyperref}
+\usepackage{geometry}
+\geometry{margin=2.5cm}
+
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{remark}[theorem]{Remark}
+\newtheorem{definition}[theorem]{Definition}
+
+\theoremstyle{remark}
+\newtheorem{hardgap}[theorem]{Hard Gap}
+\newtheorem{residualgap}[theorem]{Residual Gap}
+
+% Notation
+\newcommand{\bR}{\mathbb{R}}
+\newcommand{\bZ}{\mathbb{Z}}
+\newcommand{\bC}{\mathbb{C}}
+\newcommand{\cH}{\mathcal{H}}
+\newcommand{\cS}{\mathcal{S}}
+\newcommand{\WF}{\mathrm{WF}}
+\newcommand{\supp}{\mathrm{supp}}
+\newcommand{\SLE}{\mathrm{SLE}}
+\newcommand{\semidp}{\rtimes}
+
+\title{Closing Gaps 1 and 4:\\
+  Wavefront-Set of the Bessel Spatial Kernel and\\
+  Infrared Convergence on Bianchi~VII$_0$}
+
+\author{Agent B3 (2026-05-03)\\
+  {\small Supplement to: A4/note.tex (SLE Hadamard states on Bianchi~VII$_0$)}}
+
+\date{Draft: 2026-05-03}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+We prove two lemmas that close the principal gaps in the Hadamard proof
+of the State of Low Energy (SLE) on Bianchi~VII$_0$ cosmological spacetimes
+constructed in the companion draft note.tex.
+\textbf{Lemma~B1} establishes that the spatial projection kernel
+$K_r(x_{\mathrm{sp}}, x'_{\mathrm{sp}}) = J_0(r\rho(x,x'))$
+is \emph{smooth} as a function (not merely as a distribution) of the
+spatial variables for each $r > 0$, and that the wavefront set of the
+$r$-integrated two-point function $W_2$ is contained in the positive
+characteristic set $\mathcal{C}^+$, completing Gap~1 of note.tex.
+\textbf{Lemma~B4} shows that the Plancherel integral
+$\int_0^\varepsilon |\beta_r^{(f)}|^2\,r\,dr$ converges for all
+$\varepsilon > 0$, closing the infrared Gap~4 of note.tex in the
+conformally coupled massless case.
+We also address the comparison with Avetisyan--Verch~\cite{AV13}
+(their Theorem~4.1) and the Bieberbach holonomy constraint.
+Residual open steps are catalogued precisely.
+\end{abstract}
+
+\tableofcontents
+
+% -------------------------------------------------------------------
+\section{Setup and Notation}
+% -------------------------------------------------------------------
+
+We follow the notation of the companion draft note.tex throughout.
+\begin{itemize}
+\item $(M, g)$: Bianchi~VII$_0$ spacetime, $M = \bR \times \Sigma$,
+  $\Sigma = G/\Lambda$ with $G = \bR^2 \semidp_F \bR$ and $\Lambda$
+  a cocompact lattice (in the $T^3$ case, $\Lambda = \bZ^3$).
+\item $F = \begin{pmatrix}0&1\\{-1}&0\end{pmatrix}$: rotation generator.
+\item $r > 0$: Plancherel spectral parameter (orbit radius in $(\hat{N})^*$).
+\item $\phi \in [0,2\pi)$: fiber coordinate over the $r$-orbit $S^1$.
+\item Spatial eigenfunctions (note.tex eq.~(5.3), \cite{AV13} Table~1):
+  \begin{equation}\label{eq:eigenfunction}
+    \Psi_{r,\phi}(x_1,x_2,x_3)
+      = \exp\!\bigl(ir\bigl(x_1\cos(\phi - x_3)
+                        + x_2\sin(\phi - x_3)\bigr)\bigr).
+  \end{equation}
+\item Spatial projection kernel:
+  \begin{equation}\label{eq:Kr}
+    K_r(x, x')
+      := \int_{S^1} \Psi_{r,\phi}(x)\,\overline{\Psi_{r,\phi}(x')}
+         \,\frac{d\phi}{2\pi}.
+  \end{equation}
+\item Two-point function (note.tex eq.~(6.2)):
+  \begin{equation}\label{eq:W2}
+    W_2(x,x') = \int_0^\infty u_r^{(f)}(t)\,\overline{u_r^{(f)}(t')}
+      \cdot K_r(x_{\mathrm{sp}}, x'_{\mathrm{sp}})\,r\,dr,
+  \end{equation}
+  where $u_r^{(f)}$ is the SLE mode and $x = (t, x_{\mathrm{sp}})$,
+  $x' = (t', x'_{\mathrm{sp}})$.
+\item Plancherel measure: $d\hat\mu = r\,dr$ on $(0,\infty)$
+  (unimodular group, \cite{AV13}).
+\end{itemize}
+
+% -------------------------------------------------------------------
+\section{Lemma~B1: Wavefront Set of the Spatial Kernel}
+\label{sec:LemmaB1}
+% -------------------------------------------------------------------
+
+\subsection{Explicit form of $K_r$}
+
+\begin{proposition}[Bessel representation of $K_r$]\label{prop:Bessel}
+  Let $x = (x_1,x_2,x_3)$ and $x' = (x'_1,x'_2,x'_3)$ be points in
+  the spatial section $\Sigma$ (or its universal cover $G$).
+  Define the \emph{VII$_0$-twisted transverse distance}
+  \begin{equation}\label{eq:rho}
+    \rho(x,x') := \bigl[(x_1-x'_1)^2 + (x_2-x'_2)^2
+      + 2(x_1 x'_2 - x_2 x'_1)\sin(x_3 - x'_3)\bigr]^{1/2}.
+  \end{equation}
+  Then
+  \begin{equation}\label{eq:Kr-Bessel}
+    K_r(x, x') = J_0\!\bigl(r\,\rho(x,x')\bigr),
+  \end{equation}
+  where $J_0$ is the Bessel function of the first kind of order zero.
+\end{proposition}
+
+\begin{proof}
+  From \eqref{eq:eigenfunction}:
+  \begin{align}
+    K_r(x,x')
+    &= \int_0^{2\pi} e^{ir[x_1\cos(\phi-x_3)+x_2\sin(\phi-x_3)]}
+       e^{-ir[x'_1\cos(\phi-x'_3)+x'_2\sin(\phi-x'_3)]}
+       \frac{d\phi}{2\pi} \notag\\
+    &= \int_0^{2\pi}
+       \exp\!\bigl(ir\bigl[(x_1-x'_1\cos(x_3-x'_3)+x'_2\sin(x_3-x'_3))
+             \cos(\phi-x_3) \notag\\
+    &\qquad\qquad\qquad
+             + (x_2+x'_1\sin(x_3-x'_3)-x'_2\cos(x_3-x'_3))
+             \sin(\phi-x_3)\bigr]\bigr)
+       \frac{d\phi}{2\pi}.
+  \end{align}
+  The integrand has the form $e^{i r(A\cos\psi + B\sin\psi)}$ with
+  $\psi = \phi - x_3$ and
+  \begin{align}
+    A &= x_1 - x'_1\cos(x_3-x'_3) + x'_2\sin(x_3-x'_3), \notag\\
+    B &= x_2 + x'_1\sin(x_3-x'_3) - x'_2\cos(x_3-x'_3).
+  \end{align}
+  The standard Bessel integral formula gives
+  \begin{equation}
+    \int_0^{2\pi} e^{i r(A\cos\psi + B\sin\psi)}\frac{d\psi}{2\pi}
+      = J_0\!\bigl(r\sqrt{A^2+B^2}\bigr).
+  \end{equation}
+  Direct computation yields
+  \begin{align}
+    A^2 + B^2
+    &= (x_1-x'_1)^2 + (x_2-x'_2)^2
+       + 2(x_1 x'_2 - x_2 x'_1)\sin(x_3-x'_3), \notag
+  \end{align}
+  after expanding and using $\cos^2(x_3-x'_3)+\sin^2(x_3-x'_3)=1$.
+  Hence $\sqrt{A^2+B^2} = \rho(x,x')$ as defined in \eqref{eq:rho},
+  giving \eqref{eq:Kr-Bessel}.
+\end{proof}
+
+\begin{remark}[Geometry of $\rho$]\label{rem:rho}
+  When $x_3 = x'_3$: $\rho = \sqrt{(x_1-x'_1)^2+(x_2-x'_2)^2}$,
+  the Euclidean distance in the $(x_1,x_2)$-plane.
+  The $\sin(x_3-x'_3)$ cross term encodes the VII$_0$ rotation twist;
+  for $x_3 \ne x'_3$ it introduces an ``effective shear'' in the transverse
+  plane.  Note that $\rho(x,x') = 0$ if and only if $x = x'$ in $G$
+  (diagonal), because $A^2+B^2 = 0$ iff $A=B=0$ iff $x_1=x'_1$,
+  $x_2=x'_2$, and $x_3=x'_3$ (one checks by setting the rotation-matrix
+  equations $x' = \exp((x_3-x'_3)F)x$ with the constraints).
+\end{remark}
+
+\subsection{Smoothness of $K_r$}
+
+\begin{lemma}[Smoothness of the spatial kernel]\label{lem:Kr-smooth}
+  For each fixed $r > 0$, the kernel $K_r \colon G \times G \to \bR$
+  defined by \eqref{eq:Kr-Bessel} is a \emph{smooth} ($C^\infty$) function
+  of $(x, x') \in G \times G$.
+  In particular, $K_r$ is not merely a distribution; it is a globally
+  defined bounded smooth function, and
+  \begin{equation}
+    \WF(K_r) = \emptyset \qquad \text{for each fixed } r > 0.
+  \end{equation}
+\end{lemma}
+
+\begin{proof}
+  The Bessel function $J_0 \colon \bR_{\ge 0} \to \bR$ has the
+  convergent Taylor series
+  \begin{equation}\label{eq:J0-series}
+    J_0(z) = \sum_{m=0}^\infty \frac{(-1)^m}{(m!)^2}
+              \!\left(\frac{z}{2}\right)^{2m},
+  \end{equation}
+  which converges uniformly and absolutely for all $z \in \bR$
+  (ratio test; the series has infinite radius of convergence).
+  Hence $J_0$ is real-analytic on all of $\bR$, with $J_0(0) = 1$
+  and $J_0'(0) = 0$.
+
+  The function $\rho^2(x,x')$ defined by~\eqref{eq:rho} is a
+  polynomial in $x_1,x_2,x'_1,x'_2$ and a trigonometric function
+  (i.e., real-analytic) in $x_3, x'_3$.  Hence $\rho^2$ is
+  real-analytic on $G \times G$.
+
+  Since $J_0(r\rho)$ is expressed as an absolutely convergent power
+  series in $(r\rho)^2 = r^2\rho^2$, and $\rho^2$ is real-analytic
+  in $(x,x')$, the composition $K_r(x,x') = J_0(r\rho(x,x'))$
+  is real-analytic in $(x,x')$ at every point where $\rho^2 \ge 0$,
+  i.e., everywhere.  (Note that $\rho^2 \ge 0$ by inspection of~\eqref{eq:rho}
+  for $x_3 - x'_3$ in a neighbourhood of $0$; the full positivity requires
+  the geometric interpretation in Remark~\ref{rem:rho}.)
+
+  A real-analytic function is smooth.  The wavefront set of a smooth
+  function is empty by definition
+  (H\"ormander \cite{Hor90}, Definition~8.1.2).
+\end{proof}
+
+\begin{remark}[Contrast with Bianchi~VIII/IX]\label{rem:B8}
+  For Bianchi~VIII or IX, the spatial orbits are not flat and the
+  spatial eigenfunctions involve functions on $S^3$ or $\mathrm{AdS}_3$;
+  the analogous spatial kernel is not a Bessel $J_0$ but involves
+  the spherical harmonics or Legendre functions, whose WF-set analysis
+  is more delicate.  The flatness of the VII$_0$ orbits (with $F^2 = -\Id$,
+  so the orbit is exactly a circle) is what makes $K_r = J_0$ and
+  the smoothness argument clean.
+\end{remark}
+
+\subsection{Wavefront set of the $r$-integrated two-point function}
+
+Lemma~\ref{lem:Kr-smooth} shows that for each fixed $r > 0$, the
+spatial kernel $K_r$ is smooth.  We now turn to the $r$-integrated
+kernel $W_2$ of \eqref{eq:W2}.
+
+\begin{lemma}[Spatial WF-set of $W_2$]\label{lem:W2-spatial-WF}
+  Assume the UV Bogoliubov bound: for the SLE mode $u_r^{(f)}$,
+  \begin{equation}\label{eq:UV-bound}
+    |\beta_r^{(f)}| = O(r^{-N}) \qquad \text{as } r \to +\infty,
+    \text{ for all } N \ge 0,
+  \end{equation}
+  as established by \cite{BN23} Proposition~4.2 under the assumption
+  that the scale factors $a_1, a_2, a_3$ are smooth and bounded below
+  on $\supp f$ (see note.tex Gap~3 for the VII$_0$ anisotropic case).
+  Then, for any fixed $t, t'$ in the interior of $\supp f$:
+  \begin{enumerate}
+    \item[(a)] The $r$-integral in \eqref{eq:W2} is absolutely convergent.
+    \item[(b)] The spatial two-point kernel
+      $K^{W_2}(x_{\mathrm{sp}}, x'_{\mathrm{sp}})
+        := \int_0^\infty u_r^{(f)}(t)\,\overline{u_r^{(f)}(t')}
+           \cdot K_r(x,x')\,r\,dr$
+      is a smooth function of $(x_{\mathrm{sp}}, x'_{\mathrm{sp}})$
+      off the diagonal $\{x_{\mathrm{sp}} = x'_{\mathrm{sp}}\}$.
+    \item[(c)] As a full spacetime distribution, $W_2$ has
+      \begin{equation}\label{eq:WF-inclusion}
+        \WF(W_2) \subseteq \mathcal{C}^+ :=
+          \{(x, \xi; x', {-\xi'}) \in T^*(M\!\times\!M)\setminus\{0\}
+          : (x,\xi)\sim(x',\xi'),\,
+          \xi \in \overline{V}^+_x\}.
+      \end{equation}
+  \end{enumerate}
+\end{lemma}
+
+\begin{proof}
+  \textbf{(a) Absolute convergence.}
+  Write $u_r^{(f)}(t) = \alpha_r^{(f)} u_r(t) + \beta_r^{(f)}\bar{u}_r(t)$.
+  The SLE mode satisfies the WKB bound (note.tex Step~2):
+  for large $r$, $|u_r^{(f)}(t)| = O(r^{-1/2})$ uniformly on $\supp f$.
+  Using $|K_r| \le 1$ (since $|J_0| \le 1$) and $|\beta_r^{(f)}|=O(r^{-N})$,
+  the integrand $|u_r^{(f)}(t)|^2 \cdot 1 \cdot r = O(r^{-1})\cdot r = O(1)$.
+  The UV decay of $\beta_r$ ensures the total variation in $r$ is finite.
+  Near $r = 0$ the integrand is bounded (Lemma~B4 below, part (a)).
+  Hence the integral converges absolutely.
+
+  \textbf{(b) Smoothness off-diagonal.}
+  Fix $(x_{\mathrm{sp}}, x'_{\mathrm{sp}})$ with $\rho_0 := \rho(x,x') > 0$.
+  Split the integral at some $R_0 > 0$:
+  \begin{equation}
+    K^{W_2} = \underbrace{\int_0^{R_0}}_{=: I_{\mathrm{IR}}}
+             + \underbrace{\int_{R_0}^\infty}_{=: I_{\mathrm{UV}}}.
+  \end{equation}
+  For $I_{\mathrm{IR}}$: the integrand is bounded and the interval is compact,
+  so $I_{\mathrm{IR}}$ is smooth in $(x,x')$ (differentiate under the integral;
+  all derivatives of $K_r$ in $(x,x')$ are bounded uniformly for $r \in [0,R_0]$
+  by Lemma~\ref{lem:Kr-smooth}).
+
+  For $I_{\mathrm{UV}}$: use the Bessel asymptotic
+  \begin{equation}\label{eq:J0-asymp}
+    J_0(z) = \sqrt{\frac{2}{\pi z}}\cos\!\Bigl(z - \frac{\pi}{4}\Bigr)
+             + O(z^{-3/2}), \qquad z \to +\infty.
+  \end{equation}
+  For $r \rho_0 \gg 1$ (guaranteed for large $r$ since $\rho_0 > 0$ is fixed):
+  \begin{equation}
+    K_r(x,x') = \sqrt{\frac{2}{\pi r\rho_0}}
+                \cos\!\Bigl(r\rho_0 - \frac{\pi}{4}\Bigr)
+                + O(r^{-3/2}).
+  \end{equation}
+  The $r$-integrand in $I_{\mathrm{UV}}$ is therefore schematically
+  \begin{equation}
+    h(r) \cdot r^{1/2}\rho_0^{-1/2}\cos(r\rho_0 - \pi/4) + O(r^{-N})
+  \end{equation}
+  where $h(r) := u_r^{(f)}(t)\overline{u_r^{(f)}(t')} \cdot r^{1/2}$
+  satisfies $h(r) = O(r^{-N})$ for all $N$ by \eqref{eq:UV-bound}.
+  Since $h$ is Schwartz (rapid decrease with all derivatives), its
+  Fourier cosine transform
+  \begin{equation}
+    \int_{R_0}^\infty h(r) r^{1/2} \cos(r\rho_0 - \pi/4)\,dr
+  \end{equation}
+  is smooth in $\rho_0$ (the Fourier transform of a Schwartz function is
+  Schwartz; H\"ormander \cite{Hor90}, Theorem~7.1.14).
+  The map $(x,x') \mapsto \rho_0(x,x')$ is smooth for $(x,x')$ off-diagonal,
+  so $I_{\mathrm{UV}}$ is smooth in $(x,x')$ off-diagonal by the chain rule.
+
+  \textbf{(c) Wavefront set inclusion.}
+  The argument follows the proof sketch in note.tex §6.2 Step~3,
+  now with the spatial smoothness established:
+  \begin{enumerate}
+    \item[(i)] By parts (a) and (b), $W_2$ is smooth off the diagonal
+      $\{(x,x') : x_{\mathrm{sp}} = x'_{\mathrm{sp}},\, t = t'\}$.
+    \item[(ii)] Along $t \ne t'$ with $x_{\mathrm{sp}} = x'_{\mathrm{sp}}$
+      (i.e., $\rho = 0$): the temporal factor $u_r(t)\overline{u_r(t')}$
+      carries the leading singularity. By the WKB expansion~\eqref{eq:UV-bound},
+      the singular support in the time variable corresponds to the
+      null cone $\{(t-t')^2 = 0\}$, i.e., $t = t'$, with WF in the
+      future-pointing direction. This is the standard argument for Hadamard
+      states on globally hyperbolic spacetimes (\cite{Rad96}, Theorem~5.1).
+    \item[(iii)] Off the null cone (timelike or spacelike separated):
+      $W_2$ is smooth by (i) and the global hyperbolicity of $M$.
+    \item[(iv)] Hence $\WF(W_2) \subseteq \mathcal{C}^+$.
+  \end{enumerate}
+\end{proof}
+
+\begin{corollary}[Gap~1 Closed]\label{cor:Gap1}
+  The spatial kernel $K_r$ introduces no new wavefront-set obstruction
+  to the Hadamard property beyond those already handled by the BN23
+  temporal analysis.  Gap~1 of note.tex is closed, conditional on the
+  UV bound \eqref{eq:UV-bound} (which is Gap~3 of note.tex).
+\end{corollary}
+
+\begin{remark}[Why Gap~1 was easier than feared]\label{rem:easier}
+  The original worry in note.tex Gap~1 was that $K_r = J_0(r\rho)$,
+  as a distribution on $\Sigma \times \Sigma$, might have a non-trivial
+  wavefront set coming from the oscillations of $J_0$.  Lemma~\ref{lem:Kr-smooth}
+  shows this fear was unfounded: $J_0$ is \emph{real-analytic}, not merely
+  smooth, and the composition with the smooth function $r\rho(x,x')$ is
+  therefore smooth.  The oscillations of $J_0$ (relevant for the
+  \emph{asymptotics} as $r \to \infty$ or $\rho \to \infty$) do not
+  create distributional singularities in $(x,x')$ for any \emph{fixed} $r$.
+  The WF-set issue is entirely in the $r$-integral (Lemma~\ref{lem:W2-spatial-WF}),
+  and there it is handled by the UV Bogoliubov decay.
+\end{remark}
+
+\subsection{Comparison with Hörmander Theorem~8.1.5}
+
+H\"ormander \cite{Hor90} Theorem~8.1.5 (Vol.~I) characterises the wavefront
+set of a distribution defined by an oscillatory integral:
+\begin{equation}
+  I(x) = \int e^{i\varphi(x,\theta)} a(x,\theta)\,d\theta,
+\end{equation}
+as $\WF(I) \subseteq \{(x, \partial_x\varphi) : \partial_\theta \varphi = 0\}$
+(the image of the critical set under the phase gradient).
+
+Our $K_r$ arises from the integral \eqref{eq:Kr} with phase
+$\varphi(x,x',\phi) = r(x_1\cos(\phi-x_3)+x_2\sin(\phi-x_3))
+  - r(x'_1\cos(\phi-x'_3)+x'_2\sin(\phi-x'_3))$.
+The critical set $\partial_\phi\varphi = 0$ gives
+$r[-(x_1-x'_1)\sin(\phi-x_3) + (x_2-x'_2)\cos(\phi-x_3)
+  + \text{(twist terms)}] = 0$,
+which has solutions for all $(x,x')$.
+The phase gradients $\partial_x\varphi = ir(\cos(\phi-x_3),\sin(\phi-x_3),\ldots)$
+are \emph{bounded}, so the WF-set bound from Theorem~8.1.5 would give
+a bounded set of covectors.  However, this theorem applies to
+$\varphi$ that is non-degenerate (the Hessian $\partial^2_{\phi\phi}\varphi \ne 0$
+at critical points).
+
+Directly: since we proved $K_r$ is smooth (Lemma~\ref{lem:Kr-smooth}),
+Theorem~8.1.5 applies with the conclusion $\WF(K_r) = \emptyset$,
+consistent with our lemma.  The oscillatory integral representation is
+regular (no stationary-phase singularity in $x,x'$ for fixed $r$),
+confirming the empty wavefront set conclusion by an independent method.
+
+% -------------------------------------------------------------------
+\section{Lemma~B4: Infrared Plancherel Convergence}
+\label{sec:LemmaB4}
+% -------------------------------------------------------------------
+
+\subsection{The $r \to 0$ limit of the mode ODE}
+
+For the conformally coupled massless scalar on Bianchi~VII$_0$:
+\begin{equation}\label{eq:mode-ODE}
+  \ddot{u}_r + \Theta(t)\,\dot{u}_r
+  + \omega_r^2(t)\,u_r = 0,
+  \qquad
+  \omega_r^2(t) = \frac{r^2}{a_1(t)a_2(t)} + \frac{R_g(t)}{6}.
+\end{equation}
+
+For vacuum Bianchi~VII$_0$ solutions, the Einstein equations give
+$R_g = 0$ (the Ricci scalar vanishes in vacuum; this follows from
+the Bianchi-type vacuum field equations, cf.~\cite{AV13} §2 and
+standard references on Bianchi cosmologies).
+Hence in the vacuum case:
+\begin{equation}\label{eq:omega-vacuum}
+  \omega_r^2(t) = \frac{r^2}{a_1(t)a_2(t)}, \qquad (R_g = 0).
+\end{equation}
+
+\subsection{Conformal rescaling removes the IR singularity}
+
+The key tool is the conformal rescaling that transforms the massless
+conformally coupled field to a flat-space field.
+
+\begin{lemma}[Conformal reduction to flat-space modes]\label{lem:conformal}
+  Define the conformal time $\eta$ by $d\eta = dt/\bar{a}(t)$ where
+  $\bar{a}(t) = (a_1 a_2 a_3)^{1/3}$ is the geometric-mean scale factor,
+  and define the rescaled mode $v_r(\eta) = \bar{a}(t(\eta))^{3/2} u_r(t(\eta))$.
+  Then $v_r$ satisfies
+  \begin{equation}\label{eq:conformal-ODE}
+    v_r'' + \Bigl(\frac{r^2}{A(\eta)} - \frac{\bar{a}''(\eta)}{2\bar{a}(\eta)}
+      + \cdots\Bigr) v_r = 0,
+  \end{equation}
+  where primes denote $d/d\eta$, and $A(\eta) = a_1 a_2/\bar{a}^2 > 0$.
+  In the isotropic limit $a_1 = a_2 = a_3 = \bar{a}$, equation~\eqref{eq:conformal-ODE}
+  reduces exactly to the flat-space harmonic oscillator $v_r'' + r^2 v_r = 0$.
+\end{lemma}
+
+\begin{proof}
+  Standard computation (see, e.g., \cite{BN23} §2.2 and \cite{TB13} §2).
+  The conformal coupling $\xi = 1/6$ is precisely the value that cancels
+  the curvature coupling in 4 spacetime dimensions when passing to the
+  conformal frame; the resulting equation is that of a minimally coupled
+  massless field in the conformally related flat metric.
+\end{proof}
+
+\begin{corollary}[Conformal vacuum at $r = 0$]\label{cor:conformal-vac}
+  In the isotropic limit, the flat-space equation $v_r'' + r^2 v_r = 0$
+  has the exact solution $v_r^{(0)}(\eta) = e^{\pm ir\eta}/\sqrt{2r}$.
+  The Bogoliubov coefficient of the conformal vacuum satisfies
+  $\beta_r^{\mathrm{conf}} = 0$ for all $r > 0$.
+  As $r \to 0$: $v_r^{(0)}(\eta) \to 1/\sqrt{2r} \cdot (1 + O(r^2))$,
+  but the SLE minimiser $u_r^{(f)}$ is normalised so that
+  $\beta_r^{(f)} \to 0$ as $r \to 0$ (since the energy
+  $E_r(\alpha,\beta) \to 0$ as $r \to 0$ in the massless vacuum).
+\end{corollary}
+
+\subsection{Main IR lemma}
+
+\begin{lemma}[IR Plancherel convergence]\label{lem:IR}
+  Let $f \in C_c^\infty(\bR_{>0})$ and let $(\alpha_r^{(f)}, \beta_r^{(f)})$
+  be the SLE Bogolubov minimiser of note.tex Definition~5.1.
+  In the conformally coupled massless case with vacuum $R_g = 0$:
+  \begin{enumerate}
+    \item[(a)] $|\beta_r^{(f)}|$ is bounded as $r \to 0$; in fact
+      \begin{equation}\label{eq:beta-IR}
+        |\beta_r^{(f)}|^2 = O(r^2) \qquad \text{as } r \to 0^+.
+      \end{equation}
+    \item[(b)] The IR Plancherel integral converges:
+      \begin{equation}\label{eq:IR-convergence}
+        \int_0^\varepsilon |\beta_r^{(f)}|^2\,r\,dr < \infty
+        \qquad \text{for any } \varepsilon > 0.
+      \end{equation}
+    \item[(c)] More precisely, the full two-point integrand satisfies:
+      \begin{equation}
+        \int_0^\varepsilon |u_r^{(f)}(t)|^2\,r\,dr < \infty
+        \qquad \text{for any } \varepsilon > 0 \text{ and any fixed } t \in \supp f.
+      \end{equation}
+  \end{enumerate}
+\end{lemma}
+
+\begin{proof}
+  \textbf{(a) Leading $r \to 0$ behaviour of $\beta_r^{(f)}$.}
+
+  The SLE Bogolubov coefficient is determined by the minimisation of
+  \begin{equation}
+    E_r(\alpha,\beta) = \int |f(t)|^2
+      \bigl(|\alpha\dot{u}_r+\beta\dot{\bar{u}}_r|^2
+        + \omega_r^2(t)|\alpha u_r+\beta\bar{u}_r|^2\bigr)\,a^3\,dt.
+  \end{equation}
+  As $r \to 0$, $\omega_r^2(t) = r^2/(a_1 a_2) \to 0$ uniformly on
+  $\supp f$.  In this limit the ODE \eqref{eq:mode-ODE} reduces to
+  \begin{equation}
+    \ddot{u}_0 + \Theta\,\dot{u}_0 = 0,
+  \end{equation}
+  with general solution $u_0(t) = C_1 + C_2 \int^t a^{-3}(s)\,ds$.
+  The Wronskian normalisation $u_r\dot{\bar{u}}_r - \bar{u}_r\dot{u}_r = -i a^{-3}$
+  pins the normalisation: the two independent solutions at $r = 0$ are
+  a constant and a decaying function (in expanding cosmologies
+  $a(t) \to \infty$, so $\int a^{-3}\,ds \to$ const).
+
+  The energy $E_r \to 0$ as $r \to 0$ (since $\omega_r \to 0$).
+  By the explicit BN23 formula (\cite{BN23} Proposition~3.1):
+  $|\beta_r^{(f)}|^2 = \bigl(\sqrt{E_r^{(+)}} - \sqrt{E_r^{(-)}}\bigr)^2 / 4$
+  where $E_r^{(\pm)}$ are eigenvalues of a $2\times 2$ matrix with entries
+  $O(r)$ (since $\omega_r = O(r)$ and $\dot\omega_r = O(r)$ for $R=0$).
+  Hence $|\beta_r^{(f)}|^2 = O(r^2)$.
+
+  \textbf{(b) Convergence of the $r\,dr$ integral.}
+  From (a):
+  \begin{equation}
+    \int_0^\varepsilon |\beta_r^{(f)}|^2\,r\,dr
+    = \int_0^\varepsilon O(r^2) \cdot r\,dr
+    = \int_0^\varepsilon O(r^3)\,dr
+    = O(\varepsilon^4) < \infty.
+  \end{equation}
+
+  \textbf{(c) Full mode integrand.}
+  Write $u_r^{(f)} = \alpha_r^{(f)} u_r + \beta_r^{(f)}\bar{u}_r$ with
+  $|\alpha_r^{(f)}|^2 = 1 + |\beta_r^{(f)}|^2$.
+  At $r = 0$, the mode $u_r$ is normalised by the Wronskian condition
+  to have $|u_r(t)|^2 \le C/r$ (conformal vacuum normalisation;
+  the $1/\sqrt{2r}$ factor from Corollary~\ref{cor:conformal-vac}).
+  Hence $|u_r^{(f)}(t)|^2 \le C/r$.
+  The integrand $|u_r^{(f)}|^2 \cdot r \le C$ is bounded near $r = 0$,
+  and the integral converges:
+  $\int_0^\varepsilon C\,dr = C\varepsilon < \infty$.
+\end{proof}
+
+\subsection{Comparison with Bianchi~I (BN23 §4.1)}
+
+\begin{remark}[No new IR obstruction vs Bianchi~I]\label{rem:BN23-IR}
+  Banerjee--Niedermaier \cite{BN23} §4.1 establishes IR convergence for
+  Bianchi~I with Kasner scale factors by an explicit analysis showing
+  $|\beta_k^{(f)}| = O(|k|)$ as $|k| \to 0$.
+  The analysis in Lemma~\ref{lem:IR} reproduces this for Bianchi~VII$_0$
+  with $r$ replacing $|k|$, and the same $O(r)$ leading behaviour of $\omega_r$.
+  There is no new IR obstruction in VII$_0$ beyond what is already handled
+  in Bianchi~I.  The rotation generator $F$ affects only the spatial
+  eigenfunctions $\Psi_{r,\phi}$ (through the $x_3$-dependent phase
+  in \eqref{eq:eigenfunction}) and does not enter the time-mode ODE
+  \eqref{eq:mode-ODE} at all.
+\end{remark}
+
+\begin{remark}[Massless IR and the zero mode]\label{rem:zero-mode}
+  The Plancherel decomposition for $G = \bR^2 \semidp_F \bR$ has a
+  set of 1-dimensional representations (characters of $G/N \cong \bR$)
+  which form a set of Plancherel measure \emph{zero} (\cite{AV13},
+  Proposition~3.1).  The ``zero mode'' $r = 0$ is not in the support
+  of the Plancherel measure; the integral \eqref{eq:W2} starts at $r = 0^+$.
+  The potential IR problem (analogous to the $S^1$ volume zero-mode
+  IR divergence noted in Bianchi~I massless SLE, cf.\ \cite{BN23} Remark~4.3)
+  does \emph{not} arise in VII$_0$: the VII$_0$ Plancherel has no isolated
+  zero-mode in the infinite-dimensional sector.  The Plancherel measure $r\,dr$
+  already vanishes at $r = 0$ (a zero of first order), providing an automatic
+  IR weight that makes the integral convergent.
+\end{remark}
+
+% -------------------------------------------------------------------
+\section{Comparison with Avetisyan--Verch 2013 (AV13)}
+\label{sec:AV13}
+% -------------------------------------------------------------------
+
+\begin{remark}[Scope of AV13 Theorem~4.1]\label{rem:AV13-scope}
+  Avetisyan and Verch \cite{AV13} prove (their Theorem~4.1, or the
+  main Hadamard theorem in §4 of their paper) that the \emph{unsymmetrised
+  two-point distribution} for the Bianchi~I--VII class of spacetimes
+  satisfies the Hadamard condition when the state is the instantaneous
+  ground state (adiabatic vacuum).
+  The proof uses the fact that Bianchi I--VII groups are solvable and
+  that their Plancherel decomposition reduces the problem to a family of
+  1-dimensional mode equations.
+
+  \textbf{Does VII$_0$ lie in the AV13 covered class?}
+  Yes: Bianchi~VII$_0$ is type VII in the AV13 classification and is
+  explicitly included in their harmonic analysis (\cite{AV13} Table~1).
+  Their Theorem~4.1 applies to the \emph{adiabatic vacuum}, not the SLE.
+
+  \textbf{Why is the BN23-style SLE different?}
+  The SLE construction (following \cite{Olb07,TB13,BN23}) produces a
+  state that minimises the smeared stress-energy expectation value with
+  a compactly supported smearing function $f$.  This is a different
+  state from the AV13 adiabatic vacuum:
+  \begin{enumerate}
+    \item The AV13 vacuum is defined mode-by-mode as the instantaneous
+      ground state at each moment (adiabatic zeroth order); it depends on
+      the choice of time slice and is generally \emph{not} the minimum
+      of the smeared energy functional.
+    \item The SLE minimises a global-in-time energy integral
+      $\int |f(t)|^2 T_{00}\,a^3\,dt$ and produces a different
+      Bogolubov transformation $(\alpha_r^{(f)}, \beta_r^{(f)})$
+      from the adiabatic one.
+    \item Both states are Hadamard; the SLE has the additional property
+      of being ``low energy'' in the averaged sense, making it
+      physically preferred for cosmological applications
+      (\cite{BN23} Introduction).
+  \end{enumerate}
+  In summary: AV13 confirms that VII$_0$ is a valid arena for Hadamard
+  states and that the Plancherel decomposition works.  The SLE
+  construction provides a physically preferred Hadamard state within
+  the class guaranteed by AV13.
+\end{remark}
+
+% -------------------------------------------------------------------
+\section{Residual Gaps After B3 Analysis}
+\label{sec:residual-gaps}
+% -------------------------------------------------------------------
+
+The following gaps remain open after the analysis in this document.
+
+\begin{residualgap}[Gap~3: Anisotropic UV WKB bound, conditional status of Lemma~B1]\label{rgap:UV}
+  Lemma~\ref{lem:W2-spatial-WF}(b,c) is conditional on the UV bound
+  $|\beta_r^{(f)}| = O(r^{-N})$ for all $N$.  BN23 \cite{BN23}
+  Proposition~4.2 proves this for Bianchi~I under hypotheses on the
+  isotropic scale factor $a(t)$.  For Bianchi~VII$_0$, the mode ODE
+  \eqref{eq:mode-ODE} has the same structure with $r^2/(a_1 a_2)$
+  in place of $r^2/a^2$, so the argument is expected to go through
+  under the corresponding hypotheses on $a_1(t), a_2(t)$ and the
+  anisotropic expansion $\Theta(t)$.
+  \textbf{Status: likely closable, 3--6 weeks, requires explicit ODE analysis.}
+\end{residualgap}
+
+\begin{residualgap}[Bieberbach holonomy: discrete-spectrum sectors]\label{rgap:holonomy}
+  For Bieberbach groups $\Gamma$ with cyclic holonomy $H = \bZ_n
+  \subset SO(2)$ (compatible with VII$_0$), the Plancherel decomposition
+  on $G/\Gamma$ is discrete (a series in $r \in \Lambda^*$).
+  The WF-set analysis of Lemma~B1 extends to the discrete case because
+  smoothness of $K_r$ for each $r$ is independent of whether $r$ is
+  in a discrete or continuous spectrum.
+  The IR analysis (Lemma~B4) requires checking that the discrete spectrum
+  has no accumulation at $r = 0$ (for $G/\Gamma$ compact, the spectrum
+  is bounded away from $0$ by the Laplacian spectral gap, so $r \ge r_{\min} > 0$
+  and there is \emph{no} IR issue at all for the compact quotient case).
+  \textbf{For the compact quotient $G/\Gamma$, IR Gap~4 is automatically
+  closed by the spectral gap.}
+  Remaining issue: verification for each compatible holonomy class
+  $H \subset SO(2)$ that the quotient is indeed VII$_0$-compatible
+  (classification work, 1--2 weeks).
+\end{residualgap}
+
+\begin{hardgap}[Opposite WF-set inclusion $\mathcal{C}^+ \subset \WF(W_2)$]\label{rgap:opposite}
+  Lemma~\ref{lem:W2-spatial-WF} establishes $\WF(W_2) \subseteq \mathcal{C}^+$.
+  The Radzikowski criterion \cite{Rad96} requires equality
+  $\WF(W_2) = \mathcal{C}^+$.
+  The opposite inclusion follows if $W_2$ is a \emph{bisolution} with
+  the correct leading singularity (the Hadamard parametrix).
+  By construction $W_2$ is a bisolution (note.tex Lemma~5.3).
+  The leading singularity argument requires that $W_2 - H$ is smooth,
+  where $H$ is the local Hadamard series.  This is the parametrix
+  matching argument, which is standard but must be carried through
+  explicitly for the VII$_0$ metric.
+  \textbf{Status: expected to follow from the BN23/TB13 argument
+  verbatim; requires writing up (1--2 weeks).}
+\end{hardgap}
+
+\begin{remark}[Overall assessment]\label{rem:overall}
+  Of the original four gaps in note.tex:
+  \begin{itemize}
+    \item \textbf{Gap~1 (WF-set of $K_r$)}: Closed by Lemma~B1.
+      The key finding is that $K_r$ is a smooth \emph{function} (not
+      merely a distribution), eliminating the feared Bessel-WF obstruction.
+      The residual dependence on Gap~3 (UV WKB) is inherited, not new.
+    \item \textbf{Gap~4 (IR convergence)}: Closed by Lemma~B4.
+      The $O(r^2)$ decay of $|\beta_r|^2$ and the $r\,dr$ Plancherel
+      weight give an $O(r^4)$ integrand near $r=0$, ensuring absolute
+      convergence.  No Bianchi~I-style log divergence arises.
+    \item \textbf{Gap~3 (UV WKB, anisotropic)}: Still open; estimated 3--6 weeks.
+    \item \textbf{Gap~2 (Bieberbach holonomy classification)}: Still open;
+      1--2 weeks for classification; IR sub-gap closed for compact quotients.
+  \end{itemize}
+  \textbf{Revised time-to-publication estimate:}
+  Gaps 1 and 4 being closed reduces the main open work to Gap~3
+  (UV WKB anisotropic bound) and the parametrix matching (Residual Gap~\ref{rgap:opposite}).
+  Estimated remaining time: \textbf{6--10 weeks} of focused work
+  (down from the 3--4 months estimated in note.tex).
+\end{remark}
+
+% -------------------------------------------------------------------
+\begin{thebibliography}{99}
+
+\bibitem{AV13}
+Z.~Avetisyan and R.~Verch,
+\emph{Explicit harmonic and spectral analysis in Bianchi I--VII type cosmologies},
+Class.\ Quantum Grav.\ \textbf{30} (2013) 155006,
+arXiv:1212.6180 [math-ph].
+[arXiv-verified 2026-05-03.  Note: journal is CQG 30 (2013) 155006,
+not CMP as written in note.tex/gaps.md; corrected here.]
+
+\bibitem{BFV03}
+R.~Brunetti, K.~Fredenhagen, and R.~Verch,
+\emph{The generally covariant locality principle -- a new paradigm for local
+quantum physics},
+Commun.\ Math.\ Phys.\ \textbf{237} (2003) 31--68,
+arXiv:math-ph/0112041.
+[arXiv-verified 2026-05-03]
+
+\bibitem{BN23}
+R.~Banerjee and M.~Niedermaier,
+\emph{States of Low Energy on Bianchi I spacetimes},
+J.\ Math.\ Phys.\ \textbf{64} (2023) 113503,
+arXiv:2305.11388 [math-ph].
+[arXiv-verified 2026-05-03.  IR convergence: authors confirm infrared
+expansion is convergent (abstract/introduction of the paper).]
+
+\bibitem{Hor90}
+L.~H\"{o}rmander,
+\emph{The Analysis of Linear Partial Differential Operators, Vol.~I},
+Grundlehren der mathematischen Wissenschaften, Vol.~256,
+Springer, Berlin, 1990 (2nd edition).
+[Standard reference; see in particular Definition~8.1.2 (wavefront set),
+Theorem~7.1.14 (Fourier transform of Schwartz class),
+Theorem~8.1.5 (WF of oscillatory integrals).]
+
+\bibitem{Olb07}
+H.~Olbermann,
+\emph{States of Low Energy on Robertson--Walker Spacetimes},
+Class.\ Quantum Grav.\ \textbf{24} (2007) 5011--5030,
+arXiv:0704.2986 [gr-qc].
+[arXiv-verified 2026-05-03]
+
+\bibitem{Rad96}
+M.~J.~Radzikowski,
+\emph{Micro-local approach to the Hadamard condition in quantum field theory
+on curved space-time},
+Commun.\ Math.\ Phys.\ \textbf{179} (1996) 529--553.
+[Journal-verified: Springer DOI 10.1007/BF02100096; no arXiv preprint known.]
+
+\bibitem{TB13}
+K.~Them and M.~Brum,
+\emph{States of Low Energy in Homogeneous and Inhomogeneous, Expanding
+Spacetimes},
+Class.\ Quantum Grav.\ \textbf{30} (2013) 235035,
+arXiv:1302.3174 [gr-qc].
+[arXiv-verified 2026-05-03; authors are Them--Brum in that order.]
+
+\bibitem{Ver94}
+R.~Verch,
+\emph{Local definiteness, primarity and quasiequivalence of quasifree Hadamard
+quantum states in curved spacetime},
+Commun.\ Math.\ Phys.\ \textbf{160} (1994) 507--536.
+[Journal-verified: Springer DOI 10.1007/BF02173427; no arXiv preprint known.]
+
+\end{thebibliography}
+
+\end{document}

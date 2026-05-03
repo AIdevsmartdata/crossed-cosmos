@@ -1,0 +1,655 @@
+% note.tex
+% SLE Hadamard State on Bianchi II / Heisenberg Nilmanifold
+% Sequel to Banerjee-Niedermaier 2023 (arXiv:2305.11388)
+% Draft 2026-05-03
+%
+% WARNING: Citation Pukanszky "TAMS 126, 487-507" is WRONG.
+%          Correct cite: J. Funct. Anal. 1 (1967) 255-280. See gaps.md.
+%
+\documentclass[11pt, a4paper]{article}
+
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{mathtools}
+\usepackage{hyperref}
+\usepackage{enumitem}
+\usepackage[margin=2.5cm]{geometry}
+
+% Theorems
+\newtheorem{theorem}{Theorem}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{remark}[theorem]{Remark}
+
+% Notation
+\newcommand{\RR}{\mathbb{R}}
+\newcommand{\ZZ}{\mathbb{Z}}
+\newcommand{\CC}{\mathbb{C}}
+\newcommand{\NN}{\mathbb{N}}
+\newcommand{\HH}{\mathfrak{h}}  % Heisenberg Lie algebra
+\newcommand{\Hgroup}{H_3}        % Heisenberg group
+\newcommand{\Nil}{\mathrm{Nil}^3}
+\newcommand{\piom}{\pi_\omega}
+\newcommand{\dpiom}{d\pi_\omega}
+\newcommand{\WF}{\mathrm{WF}}
+\newcommand{\HS}{\mathrm{HS}}
+\newcommand{\Tr}{\operatorname{Tr}}
+\newcommand{\ad}{\operatorname{ad}}
+\newcommand{\Vol}{\operatorname{Vol}}
+\newcommand{\Spec}{\operatorname{Spec}}
+\newcommand{\lam}{\lambda}
+\newcommand{\om}{\omega}
+\newcommand{\half}{\tfrac{1}{2}}
+\newcommand{\sixth}{\tfrac{1}{6}}
+
+\title{States of Low Energy on Bianchi II Spacetimes:\\
+A Hadamard Construction via Nilpotent Plancherel Decomposition\\[6pt]
+{\large \textit{Draft -- Gaps Not Closed}}}
+
+\author{[Agent A5\_BII\_heisenberg, prepared for ECI v6.0.24+ project]}
+
+\date{2026-05-03}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+We initiate the construction of States of Low Energy (SLE) for a conformally
+coupled massless scalar field on Bianchi type II cosmological backgrounds.
+The spatial slices carry a left-invariant Riemannian metric on the Heisenberg group
+$H_3$; after passage to a cocompact quotient, they become the compact nilmanifold
+$\Nil = \Gamma \backslash H_3$.
+We replace the Fourier decomposition used in the Bianchi I construction of
+Banerjee--Niedermaier~\cite{BN23} by the Plancherel decomposition of
+$L^2(H_3)$ via Stone--von Neumann theory, adapting the SLE energy functional
+to integrate over the Plancherel measure $|\om|\,d\om$ on the dual $\widehat{H_3}$.
+The spatial mode equation in each Plancherel sector $\om\in\ZZ\setminus\{0\}$
+reduces to a time-dependent harmonic oscillator in the Schrödinger model coordinate,
+with eigenvalues $\lam_{n,\om}(t) = (2n+1)|\om|/(a_1 a_2) + \om^2/a_3^2$.
+The WKB adiabatic regime is controlled by the same large-$|\om|$ expansion as in the
+flat case.
+We identify the principal obstruction to a rigorous Hadamard theorem: a
+uniformity-in-$n$ estimate for the Bogoliubov coefficients in the two-index
+Plancherel sum, which does not follow from \cite{BN23} alone.
+We conclude that the construction is algebraically complete but analytically open,
+with an estimated time-to-publication of 6--9 months conditional on closing this gap.
+\end{abstract}
+
+\tableofcontents
+
+\section{Introduction}
+
+The construction of Hadamard states for quantum fields on cosmological backgrounds
+with spatial homogeneity is a central problem in algebraic quantum field theory (AQFT)
+in curved spacetime.
+For Friedmann--Lemaître--Robertson--Walker (FLRW) spacetimes, adiabatic vacua and
+their Hadamard property have been studied extensively;
+for anisotropic Bianchi I backgrounds, the systematic SLE construction was carried out
+by Banerjee--Niedermaier~\cite{BN23}, yielding the first rigorous Hadamard states
+on the full Bianchi I family.
+
+The natural next step in the Bianchi classification is Bianchi type II,
+the simplest non-abelian unimodular case.
+Its spatial symmetry group is the \emph{Heisenberg group} $H_3$, the prototype
+of a non-flat nilpotent Lie group.
+Compact spatial slices are the \emph{Heisenberg nilmanifold} (Nil-manifold)
+$\Nil = \Gamma \backslash H_3$, the simplest compact 3-manifold beyond the
+Bieberbach flat manifolds.
+
+The goal of this note is to transfer the BN23 construction from the abelian
+Bianchi I setting (where spatial symmetry is $\RR^3$ with flat Plancherel
+$d^3 k$) to the nilpotent Bianchi II setting (spatial symmetry $H_3$,
+Plancherel measure $|\om|\,d\om$ by Stone--von Neumann).
+We carry out the algebraic and analytic setup in detail and identify the
+remaining open problem for a complete Hadamard theorem.
+
+\paragraph{Convention.}
+Signature $(-,+,+,+)$, units $c = \hbar = 1$, conformal coupling $\xi = 1/6$.
+
+\section{The Heisenberg Group and Its Representations}
+
+\subsection{Lie algebra and group}
+
+The \emph{Heisenberg Lie algebra} $\HH_3$ has basis $\{e_1, e_2, e_3\}$ with
+\begin{equation}\label{eq:bracket}
+  [e_1, e_2] = e_3, \qquad [e_1, e_3] = [e_2, e_3] = 0.
+\end{equation}
+The center is $\mathfrak{z} = \RR e_3$.
+The adjoint representation matrices are (in the ordered basis $e_1, e_2, e_3$):
+\begin{equation}
+  \ad_{e_1} = \begin{pmatrix} 0&0&0\\ 0&0&0\\ 0&1&0 \end{pmatrix},
+  \qquad
+  \ad_{e_2} = \begin{pmatrix} 0&0&0\\ 0&0&0\\ -1&0&0 \end{pmatrix},
+  \qquad
+  \ad_{e_3} = 0.
+\end{equation}
+
+\begin{proposition}[Sympy-verified]\label{prop:unimod}
+  $\Tr(\ad_X) = 0$ for all $X \in \HH_3$.
+  In particular, $H_3$ is \emph{unimodular} (Bianchi class A).
+  Moreover $(\ad_X)^2 = 0$ for all $X$, so $\HH_3$ is \emph{2-step nilpotent}.
+\end{proposition}
+\begin{proof}
+  By direct matrix computation: $\Tr(\ad_{e_1}) = \Tr(\ad_{e_2}) = \Tr(\ad_{e_3}) = 0$.
+  For general $X = a e_1 + b e_2 + c e_3$:
+  $(a\,\ad_{e_1} + b\,\ad_{e_2})^2 = 0$ (verified by SymPy; see \texttt{sympy\_check.py}).
+\end{proof}
+
+The \emph{Heisenberg group} $H_3$ is the simply connected Lie group with Lie algebra $\HH_3$.
+In coordinates $(x,y,z)$ given by $\exp(xe_1 + ye_2 + ze_3)$ (first-order Baker--Campbell--Hausdorff),
+the group law is
+\begin{equation}\label{eq:grouplaw}
+  (x,y,z)\cdot(x',y',z') = (x+x',\; y+y',\; z+z'+xy').
+\end{equation}
+
+The \emph{left-invariant vector fields} (dual to the left Maurer--Cartan form) are
+\begin{equation}\label{eq:livf}
+  X_1 = \partial_x, \qquad
+  X_2 = \partial_y + x\,\partial_z, \qquad
+  X_3 = \partial_z,
+\end{equation}
+satisfying $[X_1, X_2] = X_3$ (confirms \eqref{eq:bracket}).
+The dual left-invariant coframe is
+\begin{equation}\label{eq:coframe}
+  \sigma^1 = dx, \qquad \sigma^2 = dy, \qquad \sigma^3 = dz - x\,dy.
+\end{equation}
+One verifies $\sigma^i(X_j) = \delta^i_j$ directly.
+
+\subsection{The Schrödinger representation and Plancherel theorem}
+
+For each $\om \in \RR \setminus \{0\}$, define the \emph{Schrödinger representation}
+$\piom: H_3 \to \mathcal{U}(L^2(\RR))$ by
+\begin{equation}\label{eq:schrodinger_rep}
+  (\piom(x,y,z)\psi)(q) = e^{i\om z}\, e^{i\om y q}\, \psi(q+x).
+\end{equation}
+This is unitary, irreducible, and has central character $\piom(\exp(ze_3)) = e^{i\om z}\cdot\mathrm{Id}$.
+
+\begin{proposition}[Schrödinger rep is a Lie group homomorphism]
+  The infinitesimal generators satisfy
+  \begin{equation}
+    d\piom(e_1) = \partial_q, \quad
+    d\piom(e_2) = i\om q\cdot\mathrm{Id}, \quad
+    d\piom(e_3) = i\om\cdot\mathrm{Id},
+  \end{equation}
+  and $[d\piom(e_1), d\piom(e_2)] = d\piom(e_3)$, consistent with $[e_1,e_2]=e_3$.
+\end{proposition}
+\begin{proof}
+  $[d\piom(e_1), d\piom(e_2)]\psi(q) = [\partial_q, i\om q]\psi = i\om\psi = d\piom(e_3)\psi$,
+  since $\partial_q(q\psi) - q\partial_q\psi = \psi$.
+  (Verified by SymPy; see \texttt{sympy\_check.py}.)
+\end{proof}
+
+\begin{theorem}[Plancherel theorem for $H_3$,
+  Stone--von Neumann~\cite{Folland1989}, Pukanszky~\cite{Pukan67}]\label{thm:plancherel}
+  The unitary dual $\widehat{H_3}$ consists (up to measure zero) of the
+  family $\{\piom : \om \in \RR\setminus\{0\}\}$ of Schrödinger representations,
+  together with the trivial 1-dimensional representations $\pi_{p,q}$ ($p,q\in\RR$)
+  of measure zero.
+  The Plancherel decomposition is
+  \begin{equation}\label{eq:plancherel}
+    L^2(H_3) \cong \int_{\RR\setminus\{0\}} \HS(L^2(\RR))\, |\om|\,d\om,
+  \end{equation}
+  where $\HS(L^2(\RR))$ denotes Hilbert--Schmidt operators on $L^2(\RR)$.
+  Explicitly, for $f \in L^1 \cap L^2(H_3)$:
+  \begin{equation}
+    \|f\|^2_{L^2} = \int_{\RR\setminus\{0\}} \|\piom(f)\|^2_{\HS}\,|\om|\,d\om,
+    \qquad
+    \piom(f) = \int_{H_3} f(h)\,\piom(h)\,d_L h.
+  \end{equation}
+\end{theorem}
+
+\begin{remark}
+  Since $H_3$ is unimodular (Proposition~\ref{prop:unimod}), the Plancherel measure
+  $|\om|\,d\om$ is symmetric and there is no Duflo--Moore operator correction.
+  The weight $|\om|$ arises from the Kirillov orbit method: the coadjoint orbits
+  at $\om \neq 0$ are 2-dimensional planes in $\HH_3^*$, with symplectic area $|\om|$.
+\end{remark}
+
+\subsection{Cocompact quotient and quantization}
+
+Fix the \emph{Heisenberg integer lattice}
+$\Gamma = \{(m,n,p) \in H_3 : m,n,p \in \ZZ\}$.
+One checks that $\Gamma$ is a cocompact lattice; the nilmanifold
+$\Nil = \Gamma \backslash H_3$ has volume $\Vol(\Nil) = 1$.
+
+On $\Nil$, the central character $\om$ is quantized:
+the element $(0,0,1) \in \Gamma$ requires $e^{i\om \cdot 1} = 1$,
+hence $\om \in \ZZ$.
+The Plancherel integral~\eqref{eq:plancherel} restricts to a discrete sum,
+\begin{equation}\label{eq:plancherel_nil}
+  L^2(\Nil) \cong \bigoplus_{\om \in \ZZ\setminus\{0\}} V_\om,
+  \qquad V_\om \cong L^2(\RR) \otimes \ell^2(\ZZ) \quad (\text{Hermite basis}),
+\end{equation}
+with the measure $|\om|\,d\om$ replaced by the weight $|\om|$ on each summand.
+
+\section{Bianchi II Cosmological Background}
+
+\subsection{Metric and curvature}
+
+The Bianchi type II metric on $\RR \times \Nil$ is
+\begin{equation}\label{eq:BII_metric}
+  ds^2 = -dt^2 + a_1(t)^2\,(\sigma^1)^2 + a_2(t)^2\,(\sigma^2)^2 + a_3(t)^2\,(\sigma^3)^2,
+\end{equation}
+where $\sigma^i$ are the left-invariant 1-forms \eqref{eq:coframe} and
+$a_i: \RR \to (0,\infty)$ are smooth scale factors.
+In coordinates $(t,x,y,z)$ on $\RR \times H_3$, the metric components are
+\begin{equation}
+  g_{tt} = -1, \quad g_{xx} = a_1^2, \quad
+  g_{yy} = a_2^2 + a_3^2 x^2, \quad
+  g_{yz} = -a_3^2 x, \quad g_{zz} = a_3^2.
+\end{equation}
+
+\begin{lemma}[Sympy-verified]\label{lem:sqrt_g}
+  $\det(g_{\mu\nu}) = -a_1^2 a_2^2 a_3^2$, hence
+  $\sqrt{-g} = a_1(t)\,a_2(t)\,a_3(t)$,
+  \emph{independent of the spatial coordinates $(x,y,z)$}.
+\end{lemma}
+\begin{proof}
+  $\det(g_{ij}) = a_1^2\bigl[(a_2^2 + a_3^2 x^2)a_3^2 - a_3^4 x^2\bigr]
+  = a_1^2 a_2^2 a_3^2$.
+  (Verified by SymPy.)
+\end{proof}
+
+Lemma~\ref{lem:sqrt_g} is the analytic reflection of unimodularity:
+the Haar measure on $H_3$ is the flat measure $dx\,dy\,dz$,
+and the volume form on spatial slices is $a_1 a_2 a_3\,dx\,dy\,dz$.
+
+The Ricci scalar for \eqref{eq:BII_metric} is (Kramer et al.\ 1980, standard Bianchi II curvature):
+\begin{equation}\label{eq:ricci}
+  R = -2\!\left(\frac{\ddot{a}_1}{a_1} + \frac{\ddot{a}_2}{a_2}
+    + \frac{\ddot{a}_3}{a_3}\right)
+    - 2\!\left(\frac{\dot{a}_1\dot{a}_2}{a_1 a_2}
+    + \frac{\dot{a}_1\dot{a}_3}{a_1 a_3}
+    + \frac{\dot{a}_2\dot{a}_3}{a_2 a_3}\right)
+    + \frac{a_1^2}{2 a_2^2 a_3^2}.
+\end{equation}
+The last term $a_1^2/(2a_2^2 a_3^2)$ is the \emph{Heisenberg curvature contribution},
+absent in the Bianchi I case ($a_1^2/(2a_2^2 a_3^2) = 0$ for flat spatial slices).
+
+\subsection{Conformally coupled Klein--Gordon equation}
+
+The conformally coupled massless scalar field satisfies
+\begin{equation}\label{eq:KG}
+  \left(\Box - \frac{1}{6}R\right)\phi = 0,
+\end{equation}
+where $\Box = (-g)^{-1/2}\partial_\mu\bigl((-g)^{1/2} g^{\mu\nu}\partial_\nu\bigr)$.
+Using Lemma~\ref{lem:sqrt_g}, the wave operator splits as
+\begin{equation}\label{eq:box_split}
+  \Box\phi = -\ddot{\phi} - H_{\mathrm{eff}}\,\dot{\phi} + \Delta_t\phi,
+\end{equation}
+where $H_{\mathrm{eff}} = \dot{a}_1/a_1 + \dot{a}_2/a_2 + \dot{a}_3/a_3$
+is the sum of Hubble rates and
+\begin{equation}\label{eq:delta_t}
+  \Delta_t = a_1^{-2}X_1^2 + a_2^{-2}X_2^2 + a_3^{-2}X_3^2
+\end{equation}
+is the time-dependent spatial Laplacian built from the left-invariant vector fields
+$X_i$ in \eqref{eq:livf}.
+
+\section{Plancherel Mode Decomposition}
+
+\subsection{Harmonic analysis in the $\pi_\omega$ sector}
+
+Fix $\om \in \ZZ \setminus \{0\}$ and consider the $\om$-isotypic component of the field.
+The central element $X_3 = \partial_z$ acts on this component as $i\om$.
+
+After a partial Fourier transform in $y$ (with momentum $k_y \in \RR$),
+the spatial Laplacian~\eqref{eq:delta_t} restricted to the $(\om, k_y)$ sector becomes
+\begin{equation}\label{eq:laplacian_sector}
+  \Delta_t^{(\om, k_y)} = a_1^{-2}\partial_x^2
+    - a_2^{-2}(k_y + \om x)^2
+    - a_3^{-2}\om^2.
+\end{equation}
+This is a \emph{1D quantum harmonic oscillator} in $x$,
+centered at $x_0 = -k_y/\om$,
+with time-dependent angular frequency
+\begin{equation}\label{eq:osc_freq}
+  \Omega(t) = \frac{|\om|}{a_1(t)\,a_2(t)}.
+\end{equation}
+
+\begin{proposition}\label{prop:eigenvalues}
+  The eigenfunctions of $-\Delta_t^{(\om,k_y)}$ in $L^2(\RR_x)$ are
+  the shifted Hermite functions $\psi_{n}^{(\om)}(x) = h_n(\sqrt{\Omega}\,(x-x_0))$
+  with eigenvalues
+  \begin{equation}\label{eq:eigenvalues}
+    \lam_{n,\om}(t) = (2n+1)\,\frac{|\om|}{a_1(t)\,a_2(t)} + \frac{\om^2}{a_3(t)^2},
+    \qquad n \in \NN_0.
+  \end{equation}
+\end{proposition}
+\begin{proof}
+  Completing the square: $-a_2^{-2}(k_y+\om x)^2 = -\om^2 a_2^{-2}(x-x_0)^2$.
+  The operator $-a_1^{-2}\partial_x^2 + \om^2 a_2^{-2}(x-x_0)^2$ is a harmonic
+  oscillator with frequency $\Omega = |\om|/(a_1 a_2)$, eigenvalues $(2n+1)\Omega$.
+  Adding $-a_3^{-2}\om^2$ (constant in $x$) gives~\eqref{eq:eigenvalues}.
+\end{proof}
+
+\paragraph{UV behavior.}
+For $|\om| \to \infty$:
+\begin{equation}\label{eq:UV_behavior}
+  \lam_{n,\om}(t) = \frac{\om^2}{a_3^2} + (2n+1)\frac{|\om|}{a_1 a_2} + O(1).
+\end{equation}
+The \emph{leading} UV behavior is $\om^2/a_3^2$, identical to the flat (Bianchi I)
+spectrum $k_3^2/a_3^2$ with $k_3 \leftrightarrow \om$.
+The subleading term $(2n+1)|\om|/(a_1 a_2)$ is the Heisenberg non-commutativity contribution.
+
+\subsection{Mode expansion}
+
+The field is expanded in the Plancherel--Hermite basis:
+\begin{equation}\label{eq:mode_expansion}
+  \phi(t,x,y,z) = \sum_{\om \in \ZZ\setminus\{0\}} |\om|
+    \int_\RR \sum_{n=0}^\infty
+    \phi_{n,\om}^{(k_y)}(t)\,
+    e^{i k_y y}\,e^{i\om z}\,
+    h_n\!\left(\frac{|\om|^{1/2}}{a_1^{1/2} a_2^{1/2}}\bigl(x + \tfrac{k_y}{\om}\bigr)\right)
+    \frac{dk_y}{2\pi},
+\end{equation}
+where $h_n$ are the normalized Hermite functions.
+
+Each complex amplitude $\phi_{n,\om}^{(k_y)}(t)$ satisfies the \emph{mode equation}
+\begin{equation}\label{eq:mode_eq}
+  \ddot{\phi}_{n,\om} + H_{\mathrm{eff}}\,\dot{\phi}_{n,\om}
+  + \omega_{n,\om}^2(t)\,\phi_{n,\om} = 0,
+\end{equation}
+with total squared frequency
+\begin{equation}\label{eq:total_freq}
+  \omega_{n,\om}^2(t) = \lam_{n,\om}(t) + \sixth R(t)
+  = (2n+1)\frac{|\om|}{a_1 a_2} + \frac{\om^2}{a_3^2} + \sixth R(t).
+\end{equation}
+
+\paragraph{Conformal redefinition.}
+Setting $v_{n,\om} = (a_1 a_2 a_3)^{1/2}\,\phi_{n,\om}$ and using conformal time,
+the mode equation~\eqref{eq:mode_eq} reduces to a Schrödinger-type equation
+\begin{equation}\label{eq:schrodinger_mode}
+  v_{n,\om}'' + \bigl(\omega_{n,\om}^2(\eta) - m_{\mathrm{eff}}^2(\eta)\bigr)\,v_{n,\om} = 0,
+\end{equation}
+where primes denote conformal-time derivatives and
+$m_{\mathrm{eff}}^2 = (a_1 a_2 a_3)^{1/2}\,[(a_1 a_2 a_3)^{-1/2}]''$
+is the standard effective mass correction.
+
+\section{The SLE Functional on Bianchi II}
+
+\subsection{Definition}
+
+Following Banerjee--Niedermaier~\cite{BN23}, fix a real-valued test function
+$f \in C_c^\infty(\RR_t)$ (temporal smearing).
+Let $T_{00}$ be the energy density of the conformally coupled field~\eqref{eq:KG}.
+Define the smeared energy functional
+\begin{equation}\label{eq:SLE_functional}
+  \mathcal{F}_f[\phi] = \int_\RR |f(t)|^2
+    \int_{\Nil} T_{00}(t,h)\,\sqrt{\gamma}\,dh\,dt,
+\end{equation}
+where $\sqrt{\gamma} = a_1 a_2 a_3$ is the spatial volume element.
+After inserting the mode expansion~\eqref{eq:mode_expansion}:
+
+\begin{equation}\label{eq:SLE_functional_modes}
+  \mathcal{F}_f[\phi] = \sum_{\om \in \ZZ\setminus\{0\}} |\om|
+    \int_\RR \sum_{n=0}^\infty
+    \int_\RR |f(t)|^2\,
+    \Bigl[|\dot{\phi}_{n,\om}|^2 + \omega_{n,\om}^2(t)\,|\phi_{n,\om}|^2\Bigr]
+    dt\;\frac{dk_y}{2\pi}.
+\end{equation}
+
+\begin{proposition}[Well-definedness]\label{prop:well_def}
+  For $f \in C_c^\infty(\RR)$ and $\phi$ in the classical solution space,
+  the functional~\eqref{eq:SLE_functional_modes} is well-defined provided
+  the initial data for $\phi_{n,\om}$ satisfy the WKB normalization
+  $|\phi_{n,\om}|^2 \sim (2\omega_{n,\om})^{-1}$ as $|\om|,n \to \infty$.
+\end{proposition}
+\begin{proof}[Proof sketch]
+  By \eqref{eq:UV_behavior}, $\omega_{n,\om}^2 \sim \om^2/a_3^2$ for large $|\om|$.
+  The contribution of each mode to $\mathcal{F}_f$ is proportional to
+  $|\om| \cdot \omega_{n,\om} \sim |\om|^2$.
+  Summing with WKB weight $\omega_{n,\om}^{-1} \sim a_3/|\om|$ and Plancherel weight $|\om|$:
+  the sum over $n$ converges absolutely for fixed $\om$ (the harmonic oscillator
+  ground-state energy gives $(2n+1)\Omega \cdot (2(2n+1)\Omega)^{-1} = 1/2$,
+  but the Hermite coefficients of $f$ provide the damping needed for the $n$-sum).
+  Convergence in $\om$ follows from the rapid decay of Plancherel--Fourier coefficients
+  of smooth functions on $\Nil$.
+  A rigorous proof requires the uniformity-in-$n$ estimate discussed in \S\ref{sec:gaps}.
+\end{proof}
+
+\subsection{Minimization and the SLE state}
+
+The mode equation~\eqref{eq:mode_eq} has a 2-dimensional solution space for each $(\om,n,k_y)$.
+The SLE state is defined by choosing, for each mode, the solution that
+minimizes $\mathcal{F}_f$, subject to the Wronskian normalization
+$\phi_{n,\om}\dot{\bar{\phi}}_{n,\om} - \dot{\phi}_{n,\om}\bar{\phi}_{n,\om} = -i$.
+
+\begin{proposition}[Adaptation of BN23 \S3]\label{prop:SLE_mode}
+  For each sector $(\om,n)$, the minimizer of $\int |f(t)|^2
+  [|\dot\phi|^2 + \omega_{n,\om}^2|\phi|^2]dt$ subject to the Wronskian constraint
+  satisfies the Euler--Lagrange equation
+  \begin{equation}\label{eq:EL}
+    \ddot{u} + \omega_{n,\om}^2(t)\,u = 0
+  \end{equation}
+  with initial conditions at a reference time $t_0$ given by the WKB approximation:
+  \begin{equation}\label{eq:WKB_IC}
+    u(t_0) = \frac{1}{\sqrt{2\omega_{n,\om}(t_0)}},
+    \qquad
+    \dot{u}(t_0) = -i\sqrt{\frac{\omega_{n,\om}(t_0)}{2}}.
+  \end{equation}
+\end{proposition}
+\begin{proof}
+  Identical to BN23~\cite{BN23} Proposition~3.2, replacing $k \mapsto (\om,n)$
+  and $\omega_k^2 \mapsto \omega_{n,\om}^2(t)$.
+  The mode equation~\eqref{eq:mode_eq} is formally identical after the
+  conformal redefinition.
+\end{proof}
+
+\section{Towards the Hadamard Property}\label{sec:hadamard}
+
+\subsection{Radzikowski's criterion}
+
+By Radzikowski~\cite{Rad96}, a quasi-free state $\omega$ for a Klein--Gordon field
+on a globally hyperbolic spacetime has the Hadamard property if and only if
+\begin{equation}\label{eq:WF_Hadamard}
+  \WF(\omega_2) = \{(x,k;x',k') : (x,k) \sim_+ (x',k'),\; k \text{ future-directed null}\},
+\end{equation}
+where $\omega_2$ is the two-point distribution and $\sim_+$ denotes the relation
+of being connected by a null geodesic with positive-frequency propagation.
+
+\subsection{Two-point function in the SLE state}
+
+In the SLE state defined by~\eqref{eq:WKB_IC}, the two-point function is
+\begin{equation}\label{eq:2pt_function}
+  \omega_2(t,h;\,t',h') = \sum_{\om\in\ZZ\setminus\{0\}} |\om|
+    \sum_{n=0}^\infty \int_\RR
+    u_{n,\om}(t)\,\overline{u_{n,\om}(t')}\,
+    \mathcal{K}_{n,\om}^{(k_y)}(h,h')\,\frac{dk_y}{2\pi},
+\end{equation}
+where $u_{n,\om}$ solves~\eqref{eq:EL}--\eqref{eq:WKB_IC} and
+$\mathcal{K}_{n,\om}^{(k_y)}(h,h')$ is the reproducing kernel for the
+$(n,\om,k_y)$-eigenfunction.
+
+\subsection{Expected Hadamard argument (partial)}
+
+A complete Hadamard proof would proceed in three steps:
+
+\textbf{Step H1 (temporal):}
+For fixed $(\om,n)$, the function $u_{n,\om}(t)\,\overline{u_{n,\om}(t')}$
+is the two-point function of a Hadamard state for a 1D harmonic oscillator
+with time-dependent frequency $\omega_{n,\om}(t)$.
+By the adiabatic theorem and BN23~\cite{BN23} Theorem~3.1,
+$\WF(u_{n,\om}\,\bar{u}_{n,\om})$ lies in the null bicharacteristic relation
+of the 1+1-dimensional operator $-\partial_t^2 + \omega_{n,\om}^2(t)$.
+
+\textbf{Step H2 (spatial):}
+The spatial kernel $\mathcal{K}_{n,\om}^{(k_y)}(h,h')$ is smooth off the diagonal
+and has a Riemannian Hadamard singularity on $h=h'$,
+controlled by the heat kernel on $(\Nil, g_t)$ where $g_t$ is the spatial metric
+at fixed $t$.
+The Riemannian heat kernel on Nil$^3$ is known; see the eigenvalue formula
+in Proposition~\ref{prop:eigenvalues}.
+
+\textbf{Step H3 (uniformity):}
+The sum~\eqref{eq:2pt_function} over $(\om, n, k_y)$ converges in the distributional
+sense with WF set given by~\eqref{eq:WF_Hadamard}.
+This requires \emph{uniform decay of Bogoliubov coefficients}:
+\begin{equation}\label{eq:beta_decay}
+  |\beta_{n,\om}|^2 \leq C_N\,(|\om| + n)^{-N} \qquad \forall N \in \NN,
+\end{equation}
+uniformly in both indices $\om$ and $n$.
+
+Step H3 is the \emph{principal open problem} and is discussed in \S\ref{sec:gaps}.
+
+\section{Obstructions and Open Problems}\label{sec:gaps}
+
+\subsection{Gap 1: Wavefront set uniformity (hard, blocks the theorem)}
+
+Estimate~\eqref{eq:beta_decay} is the two-index generalization of the Bogoliubov
+coefficient decay used in BN23~\cite{BN23} Theorem~3.1 and Appendix~A.
+For Bianchi I (abelian, single index $k \in \ZZ^3$), the adiabatic expansion
+gives $|\beta_k|^2 = O(|k|^{-N})$ for all $N$ by smooth dependence of the
+frequency $\omega_k(t)$ on $t$.
+
+For Bianchi II, the two-index structure introduces a new subtlety:
+for fixed $\om$, the frequency $\omega_{n,\om}(t) = [(2n+1)\Omega(t) + \om^2/a_3^2 + \sixth R]^{1/2}$
+grows as $n^{1/2}$ for large $n$ (fixed $\om$).
+The adiabatic expansion for large $n$ must be controlled \emph{uniformly in $\om$}.
+This is a distinct problem from the large-$|\om|$ adiabaticity and requires
+a two-dimensional asymptotic analysis.
+Standard references (Avron--Seiler--Yaffe 1987~\cite{ASY87}, Reed--Simon Vol.~IV~\cite{RS4})
+give the result for fixed $\om$, but the uniformity in $\om$ is not standard.
+
+\textbf{Resolution path:}
+Adapt the parametrix construction of Junker--Schrohe~\cite{JS02}
+(adiabatic vacua of higher order) to the two-index setting,
+treating $(\om, n)$ as a joint semiclassical parameter.
+
+\subsection{Gap 2: Nil$^3$ Weyl law and Sobolev threshold}
+
+The spatial Weyl counting function on $\Nil = \Gamma \backslash H_3$
+satisfies $N(\lam) \sim C\lam^2$ (not $\lam^{3/2}$ as for flat $T^3$),
+because the dominant growth of eigenvalues~\eqref{eq:eigenvalues} is
+$\lam_{n,\om} \sim \om^2$ for large $|\om|$ at fixed $n$.
+This changes the Sobolev embedding threshold.
+The SLE functional~\eqref{eq:SLE_functional_modes} converges for
+smearing functions $f \in H^2(\Nil)$ rather than $H^1$ as in the flat case.
+
+\subsection{Gap 3: Absent timelike Killing vector}
+
+On Bianchi II, there is no global timelike Killing vector.
+The SLE state depends on the choice of smearing function $f$ and reference time $t_0$.
+Stability of the Hadamard property under change of $t_0$ follows formally from the
+adiabatic expansion but requires the uniformity of Gap~1.
+
+\subsection{Gap 4: IR regularity ($\om \to 0$)}
+
+On the nilmanifold, $\om \in \ZZ\setminus\{0\}$ so $|\om| \geq 1$ and
+the IR is automatically regulated.
+On the universal cover $H_3$ (non-compact spatial sections),
+the $\om \to 0$ limit requires separate analysis of the abelian sector.
+For compact $\Nil$, this is not an issue.
+
+\subsection{Gap 5: Connection to ECI framework}
+
+The Bianchi II SLE state should be mapped into the ECI lever formalism.
+The $\om$-index (Plancherel central character, physically the ``magnetic quantum number''
+of the Heisenberg orbit) may correspond to a new ECI observable.
+This is entirely open.
+
+\section{Conclusions}
+
+We have established:
+\begin{enumerate}[label=(\roman*)]
+\item The Heisenberg group $H_3$ is unimodular with Plancherel measure $|\om|\,d\om$
+  (Proposition~\ref{prop:unimod}, Theorem~\ref{thm:plancherel}).
+\item The spatial mode decomposition on Bianchi II reduces each Plancherel sector
+  $(\om, n)$ to a time-dependent harmonic oscillator with eigenvalues~\eqref{eq:eigenvalues}.
+\item The SLE energy functional~\eqref{eq:SLE_functional_modes} is formally well-defined
+  and the minimizer satisfies mode equations~\eqref{eq:EL}--\eqref{eq:WKB_IC} identical
+  in form to BN23.
+\item The UV behavior $\lam_{n,\om} \sim \om^2/a_3^2$ is the same as in the flat case,
+  ensuring the WKB regime is controlled.
+\item The Hadamard property reduces to a wavefront set uniformity estimate (Gap~1)
+  that is plausible but not yet proved.
+\end{enumerate}
+
+\textbf{Verdict:} The construction is algebraically complete and structurally sound.
+It does \emph{not yet} constitute a rigorous Hadamard theorem.
+The piste remains ``Type A: rigorous pending Hadamard,'' with an estimated
+time-to-publication of \textbf{6--9 months} (see \texttt{gaps.md}).
+
+\bigskip
+\noindent\textbf{Note on one hallucinated reference:}
+The task brief cited ``Pukanszky 1967 TAMS 126, 487-507.''
+This reference does not exist.
+The correct citation is J.\ Funct.\ Anal.\ \textbf{1} (1967) 255--280~\cite{Pukan67}.
+
+\section*{Acknowledgments}
+Prepared as output of agent A5\_BII\_heisenberg for the ECI v6.0.24+
+piste on Bianchi II cosmological states.
+
+\begin{thebibliography}{99}
+
+\bibitem{BN23}
+R.~Banerjee, M.~Niedermaier,
+\textit{States of Low Energy on Bianchi I spacetimes},
+J.\ Math.\ Phys.\ \textbf{64} (2023) 113503.
+arXiv:2305.11388.
+
+\bibitem{AV13}
+Z.~Avetisyan, R.~Verch,
+\textit{Explicit harmonic and spectral analysis in Bianchi I-VII type cosmologies},
+Class.\ Quant.\ Grav.\ \textbf{30} (2013) 155006.
+arXiv:1212.6180.
+
+\bibitem{Pukan67}
+L.~Pukánszky,
+\textit{On the characters and the Plancherel formula of nilpotent groups},
+J.\ Funct.\ Anal.\ \textbf{1} (1967) 255--280.
+DOI:10.1016/0022-1236(67)90015-8.
+% VERIFIED. NOT Trans. Amer. Math. Soc. (that reference is wrong/hallucinated).
+
+\bibitem{Folland1989}
+G.~B.~Folland,
+\textit{Harmonic Analysis in Phase Space},
+Annals of Mathematics Studies \textbf{122}, Princeton University Press, 1989.
+ISBN~978-0-691-08528-9.
+% VERIFIED: publisher, series, year confirmed.
+
+\bibitem{Rad96}
+M.~J.~Radzikowski,
+\textit{Micro-local approach to the Hadamard condition in quantum field theory
+on curved space-time},
+Commun.\ Math.\ Phys.\ \textbf{179} (1996) 529--553.
+DOI:10.1007/BF02100096.
+% VERIFIED via Springer link.
+
+\bibitem{SvN}
+J.~von Neumann,
+\textit{Die Eindeutigkeit der Schrödingerschen Operatoren},
+Math.\ Ann.\ \textbf{104} (1931) 570--578.
+% Standard Stone-von Neumann theorem; classical result.
+
+\bibitem{JS02}
+W.~Junker, E.~Schrohe,
+\textit{Adiabatic vacuum states on general spacetime manifolds:
+definition, construction, and physical properties},
+Ann.\ Henri Poincaré \textbf{3} (2002) 1113--1181.
+% Adiabatic vacua, relevant for Bogoliubov coefficient decay.
+% NOTE: To be verified against arXiv before final submission.
+
+\bibitem{ASY87}
+J.~E.~Avron, R.~Seiler, L.~G.~Yaffe,
+\textit{Adiabatic theorems and applications to the quantum Hall effect},
+Commun.\ Math.\ Phys.\ \textbf{110} (1987) 33--49.
+% Adiabatic theorem with gap condition; used for WKB uniformity argument.
+% NOTE: To be verified against DOI before final submission.
+
+\bibitem{RS4}
+M.~Reed, B.~Simon,
+\textit{Methods of Modern Mathematical Physics, Vol.~IV: Analysis of Operators},
+Academic Press, 1978.
+% Standard reference for adiabatic theorem in spectral theory.
+
+\bibitem{Mal51}
+A.~I.~Mal'cev,
+\textit{On a class of homogeneous spaces},
+Amer.\ Math.\ Soc.\ Transl.\ \textbf{39} (1951).
+% Lattice existence in nilpotent Lie groups.
+% NOTE: Verify translation reference before submission.
+
+\end{thebibliography}
+
+\end{document}

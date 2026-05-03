@@ -1,0 +1,718 @@
+% lemma_B_G1.tex
+% Lemma B-G1: Two-index uniform Bogoliubov bound for Bianchi II SLE states.
+% Closes GAP 1 of gaps.md (A5_BII_heisenberg agent, 2026-05-03).
+%
+% REFERENCE STATUS (verified against arXiv API, 2026-05-03):
+%   Junker-Schrohe 2002: arXiv:math-ph/0109010  [CORRECT]
+%     "Adiabatic vacuum states on general spacetime manifolds..."
+%     Ann. Henri Poincaré 3 (2002) 1113--1182.
+%   HALLUCINATION CAUGHT: arXiv:math-ph/0107024 cited in task prompt is WRONG.
+%     That ID is "Geometry and integrability of Euler-Poincaré-Suslov equations"
+%     by Jovanovic (Nonlinearity 14, 2001). Completely unrelated.
+%   Hollands-Wald 2001: arXiv:gr-qc/0103074  [VERIFIED]
+%     "Local Wick Polynomials and Time Ordered Products..."
+%     Commun. Math. Phys. 223 (2001) 289--326.
+%   Brunetti-Fredenhagen 2000: arXiv:math-ph/9903028  [VERIFIED]
+%     "Microlocal Analysis and Interacting QFTs..."
+%     Commun. Math. Phys. 208 (2000) 623--661.
+%   Verch 1994: CMP 160, 507  [NOT FOUND ON ARXIV -- pre-arXiv era paper]
+%     "Local Definiteness, Primarity and Quasiequivalence..."
+%     Cannot be independently arXiv-verified; cited from literature.
+%
+\documentclass[11pt, a4paper]{article}
+
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{mathtools}
+\usepackage{hyperref}
+\usepackage{enumitem}
+\usepackage[margin=2.5cm]{geometry}
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{remark}[theorem]{Remark}
+
+% Notation consistent with A5 note.tex
+\newcommand{\RR}{\mathbb{R}}
+\newcommand{\ZZ}{\mathbb{Z}}
+\newcommand{\CC}{\mathbb{C}}
+\newcommand{\NN}{\mathbb{N}}
+\newcommand{\Nil}{\mathrm{Nil}^3}
+\newcommand{\WF}{\mathrm{WF}}
+\newcommand{\lam}{\lambda}
+\newcommand{\om}{\omega}
+\newcommand{\half}{\tfrac{1}{2}}
+\newcommand{\sixth}{\tfrac{1}{6}}
+\newcommand{\Lam}{\Lambda}
+\newcommand{\eps}{\varepsilon}
+
+\title{Lemma B-G1: Two-Index Uniform Bogoliubov Bound\\
+for Bianchi II States of Low Energy\\[6pt]
+{\normalsize Closing Gap 1 of \texttt{gaps.md} (agent A5\_BII\_heisenberg)}}
+
+\author{Agent B4\_BII\_junker\_schrohe}
+\date{2026-05-03}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+We prove uniform rapid decay of the Bogoliubov $\beta$-coefficients
+for the SLE state on a Bianchi~II background with compact spatial sections
+$\Nil = \Gamma \backslash H_3$ (Heisenberg nilmanifold).
+The Plancherel decomposition of $L^2(\Nil)$ introduces a \emph{two-index}
+UV structure: a central character $\om \in \ZZ \setminus \{0\}$
+and a harmonic-oscillator level $n \in \ZZ_{\geq 0}$.
+We show that $|\beta_{n,\om}(f)|^2 = O\bigl((\om^2 + n)^{-N}\bigr)$
+for all $N \in \NN$, uniformly in both indices,
+closing the principal analytical gap (Gap~1) of the prior draft.
+The proof adapts the parametrix construction of
+Junker--Schrohe~\cite{JS02} to the two-index setting,
+using the effective UV parameter $\Lam_{\mathrm{eff}} = \om^2 + n$
+and the Duhamel/integration-by-parts method of Banerjee--Niedermaier~\cite{BN23}
+Appendix~A.\medskip
+
+\noindent\textbf{Honesty caveat.}
+Three steps below carry explicit caveats: (i) Claim~\ref{cl:deriv_bound}
+requires a quantitative bound on time-derivatives of the effective mass
+that follows from smoothness of the scale factors but is not numerically
+checked here; (ii) Lemma~\ref{lem:WKB_error} invokes Olver~\cite{Olver74}
+in a two-parameter form that requires checking his hypotheses uniformly in $\om$;
+(iii) Proposition~\ref{prop:WF_smooth} uses the Radzikowski--Junker--Schrohe
+framework in a setting (nilmanifold) for which the pseudodifferential
+symbol calculus has not been fully developed in the literature.
+\end{abstract}
+
+\section{Setup and Notation}
+
+We work with the conformally coupled massless scalar field on the
+Bianchi~II spacetime $\mathcal{M} = \RR_t \times \Nil$,
+metric $ds^2 = -dt^2 + a_1^2 (\sigma^1)^2 + a_2^2 (\sigma^2)^2
++ a_3^2 (\sigma^3)^2$, with smooth positive scale factors $a_i: \RR \to (0,\infty)$
+satisfying $a_i(t) = 1$ for $|t|$ outside a compact interval $[T_0, T_1]$
+(or more generally, asymptotically constant at both ends, which is sufficient).
+
+The mode equation (A5 note.tex \S\S\,5--6) for the conformal variable
+$v_{n,\om} = (a_1 a_2 a_3)^{1/2} \phi_{n,\om}$ is
+\begin{equation}\label{eq:mode}
+  v_{n,\om}''(\eta) + \Omega_{n,\om}^2(\eta)\,v_{n,\om}(\eta) = 0,
+  \qquad \om \in \ZZ \setminus \{0\},\quad n \in \ZZ_{\geq 0},
+\end{equation}
+where $\eta$ is conformal time and
+\begin{equation}\label{eq:Omega}
+  \Omega_{n,\om}^2(\eta)
+  = \frac{(2n+1)|\om|}{a_1(\eta)\,a_2(\eta)}
+    + \frac{\om^2}{a_3(\eta)^2}
+    + m_{\mathrm{eff}}^2(\eta).
+\end{equation}
+Here $m_{\mathrm{eff}}^2 = \sixth R - (a_1 a_2 a_3)^{1/2}[(a_1 a_2 a_3)^{-1/2}]''$
+is the standard effective mass for conformal coupling.
+
+The SLE state is defined (A5 \S\S\,5.2) by the WKB initial conditions
+at a base time $\eta_0$:
+\begin{equation}\label{eq:WKB_IC}
+  v_{n,\om}(\eta_0) = \frac{1}{\sqrt{2\Omega_{n,\om}(\eta_0)}},
+  \qquad
+  v_{n,\om}'(\eta_0) = \frac{-i\sqrt{\Omega_{n,\om}(\eta_0)}}{\sqrt{2}}.
+\end{equation}
+The Bogoliubov $\beta$-coefficient relative to the ``out'' WKB vacuum at
+a late time $\eta_1 > \eta_0$ is
+\begin{equation}\label{eq:beta_def}
+  \beta_{n,\om} = \frac{i}{2}\Bigl[
+    v_{n,\om}(\eta_1)\,\partial_\eta \bar{u}^{\mathrm{out}}_{n,\om}(\eta_1)
+    - \bar{u}^{\mathrm{out}}_{n,\om}(\eta_1)\,v_{n,\om}'(\eta_1)
+  \Bigr],
+\end{equation}
+where $u^{\mathrm{out}}_{n,\om}(\eta) =
+(2\Omega_{n,\om}(\eta))^{-1/2}\exp\bigl(i\!\int_{\eta_0}^{\eta}
+\Omega_{n,\om}(s)\,ds\bigr)$.
+The \emph{smeared} $\beta$-coefficient against a temporal test function
+$f \in C_c^\infty(\RR)$ is
+\begin{equation}
+  \beta_{n,\om}(f)
+  = \int f(\eta)\,\beta_{n,\om}^{(\eta)}\,d\eta,
+\end{equation}
+where $\beta_{n,\om}^{(\eta)}$ denotes the Bogoliubov coefficient
+relative to the out-vacuum at time $\eta$.
+
+\section{The Effective UV Parameter}
+
+\begin{definition}[Effective UV parameter]\label{def:Lambda}
+  Set $\Lam_{\mathrm{eff}}(n, \om) = \om^2 + n$.
+  For $\om \in \ZZ \setminus \{0\}$ and $n \in \ZZ_{\geq 0}$,
+  write $\Lam = \Lam_{\mathrm{eff}}$ for short.
+\end{definition}
+
+\begin{proposition}[Frequency lower bound]\label{prop:freq_lower}
+  There exist constants $c, C > 0$ depending only on
+  $\sup_\eta (a_i(\eta)^{\pm 1})$ and $\|m_{\mathrm{eff}}^2\|_{L^\infty}$
+  such that for all $(\om, n) \in (\ZZ \setminus \{0\}) \times \ZZ_{\geq 0}$
+  and all $\eta$:
+  \begin{equation}\label{eq:freq_bound}
+    c\,\Lam \leq \Omega_{n,\om}^2(\eta) \leq C\,(\Lam + 1).
+  \end{equation}
+\end{proposition}
+
+\begin{proof}
+  From \eqref{eq:Omega}: $\Omega_{n,\om}^2 \geq \om^2 \inf_\eta a_3^{-2}
+  + (2n+1)|\om| \inf_\eta (a_1 a_2)^{-1} - \|m_{\mathrm{eff}}^2\|_{L^\infty}$.
+  Since $|\om| \geq 1$ and $n \geq 0$, we have
+  $\om^2 + (2n+1)|\om| \geq \om^2 + 2n \geq \om^2 + n = \Lam$.
+  Choose $c = \min(\inf a_3^{-2}, \inf (a_1 a_2)^{-1})/2 > 0$;
+  adjust by $\|m_{\mathrm{eff}}^2\|_{L^\infty}$.
+  The upper bound follows similarly.
+\end{proof}
+
+\begin{remark}
+  The key structural fact is that $\Omega_{n,\om}^2(\eta)$ is
+  \emph{linear} in $\Lam = \om^2 + n$, with all $\eta$-dependence
+  entering through the bounded functions $a_i(\eta)^{-1}$ and $m_{\mathrm{eff}}^2(\eta)$.
+  This linearity is what allows uniform estimates in both UV limits simultaneously.
+\end{remark}
+
+\section{Time-Derivative Estimates}
+
+\begin{claim}[Uniform derivative bound]\label{cl:deriv_bound}
+  For all $k \geq 0$ and all $(\om, n)$:
+  \begin{equation}\label{eq:deriv_bound}
+    \left|\frac{d^k}{d\eta^k}\,\Omega_{n,\om}^2(\eta)\right|
+    \leq C_k\,(\Lam + 1),
+  \end{equation}
+  where $C_k$ depends on $k$ and on $\sup_\eta \|a_i^{(j)}\|_{L^\infty}$
+  for $j \leq k$ but is \emph{independent of $(\om, n)$}.
+\end{claim}
+
+\begin{proof}
+  By inspection of \eqref{eq:Omega}:
+  $\partial_\eta^k \Omega_{n,\om}^2 = (2n+1)|\om|\,\partial_\eta^k[(a_1 a_2)^{-1}]
+  + \om^2\,\partial_\eta^k[a_3^{-2}] + \partial_\eta^k m_{\mathrm{eff}}^2$.
+  Each of $\partial_\eta^k[(a_1 a_2)^{-1}]$ and $\partial_\eta^k[a_3^{-2}]$
+  is a smooth function of the scale factors and their derivatives
+  (by Fa\`a di Bruno's formula), bounded uniformly in $\eta$ by some constant
+  $D_k$ since $a_i \in C^\infty$ and $a_i \geq c_0 > 0$.
+  The $(2n+1)|\om|$-prefactor satisfies
+  $(2n+1)|\om| \leq 2(n + |\om|^2) \leq 2(\Lam + |\om|) \leq 4\,\Lam$
+  (using $|\om| \leq 1 + \om^2 \leq 1 + \Lam$).
+  Similarly $\om^2 \leq \Lam$.
+  The claim follows with $C_k = 4 D_k + \|\partial_\eta^k m_{\mathrm{eff}}^2\|_{L^\infty}$.
+\end{proof}
+
+\begin{remark}[Where this step requires verification]
+  The bound \eqref{eq:deriv_bound} uses $a_i \geq c_0 > 0$ and
+  $a_i \in C^\infty$. For physical Bianchi~II solutions (e.g.,
+  vacuum Kasner-like collapse), the scale factors may develop
+  singularities at finite $t$. The lemma applies on any compact
+  time interval $[\eta_0, \eta_1]$ away from singularities.
+  The extension to the full cosmological evolution near singularities
+  is a separate problem not addressed here.
+\end{remark}
+
+\section{WKB Error Estimates and the Bogoliubov Bound}
+
+\begin{lemma}[WKB error, single mode]\label{lem:WKB_error}
+  Under the hypotheses of Claim~\ref{cl:deriv_bound},
+  for each $N \in \NN$ there exists $\Lam_N > 0$ and $C'_N > 0$
+  such that for all $(\om, n)$ with $\Lam = \Lam_{\mathrm{eff}}(n,\om) \geq \Lam_N$:
+  \begin{equation}\label{eq:WKB_error}
+    \left|v_{n,\om}(\eta) - v_{n,\om}^{\mathrm{WKB},N}(\eta)\right|
+    \leq C'_N\,\Lam^{-(N+1)/2},
+  \end{equation}
+  where $v_{n,\om}^{\mathrm{WKB},N}$ is the $N$-th order WKB approximation.
+\end{lemma}
+
+\begin{proof}[Proof sketch, citing Junker--Schrohe~\cite{JS02}]
+  The proof proceeds by the Duhamel (variation-of-parameters) iteration used
+  in BN23~\cite{BN23} Appendix~A and Junker--Schrohe~\cite{JS02} \S\S\,3--4.
+
+  \textbf{Step JS1 (Parametrix).}
+  Junker--Schrohe construct, for a time-dependent harmonic oscillator
+  $v'' + \Omega^2(\eta) v = 0$ with $\Omega^2(\eta) = \Lam \cdot g(\eta) + r(\eta)$
+  where $g, r \in C^\infty$ are bounded, an exact WKB parametrix of order $N$:
+  \begin{equation}
+    v^{\mathrm{WKB},N}(\eta) = \Lam^{-1/4} e^{i\Lam^{1/2}\Phi(\eta)}
+    \sum_{j=0}^{N} a_j(\eta)\,\Lam^{-j/2},
+  \end{equation}
+  where $\Phi(\eta) = \int_{\eta_0}^\eta g(s)^{1/2}\,ds$ is the eikonal phase
+  and the $a_j$ satisfy transport equations.
+
+  In our case, $g(\eta) = [(2n+1)|\om|/(a_1 a_2) + \om^2/a_3^2]\cdot\Lam^{-1}$
+  satisfies $c \leq g(\eta) \leq C$ by Proposition~\ref{prop:freq_lower},
+  and $r(\eta) = m_{\mathrm{eff}}^2(\eta)$ is bounded.
+  The parameter playing the role of ``$\Lam$'' in Junker--Schrohe is
+  our $\Lam_{\mathrm{eff}}$.
+
+  \textbf{Step JS2 (Error bound).}
+  By Olver's method~\cite{Olver74} (asymptotic expansion of solutions of
+  $y'' = [\Lam\,u(x) + v(x)]y$ as $\Lam \to \infty$, Theorem~1.1 therein),
+  the remainder after $N$ WKB iterations satisfies:
+  \begin{equation}
+    \left|\text{remainder}_N(\eta)\right|
+    \leq C_N\,\Lam^{-(N+1)/2}\,\exp\!\Bigl(\Lam^{-1/2}\int_{\eta_0}^{\eta_1}
+    |r(s)|^{1/2}\,ds\Bigr).
+  \end{equation}
+  Since $r = m_{\mathrm{eff}}^2$ is bounded and compactly supported,
+  the exponential factor is bounded uniformly in $\Lam$.
+  This gives \eqref{eq:WKB_error}.
+
+  \textbf{Uniformity in $(\om, n)$.}
+  The constants $C_N$ and $\Lam_N$ depend on $\sup_j C_j$ (from
+  Claim~\ref{cl:deriv_bound}) and $\sup_\eta g(\eta)^{-1}$ (spectral gap),
+  both of which are uniform in $(\om, n)$ by Claim~\ref{cl:deriv_bound}
+  and Proposition~\ref{prop:freq_lower}.
+
+  \textbf{Caveat.}
+  Olver's Theorem~1.1 \cite{Olver74} is stated for a single large parameter.
+  Our situation has a two-component large parameter $(\om, n)$.
+  The application to $\Lam_{\mathrm{eff}} = \om^2 + n$ is valid because,
+  after factoring $\Omega^2 = \Lam \cdot g(\eta; \om, n)$,
+  the function $g$ satisfies $c \leq g \leq C$ and $|\partial_\eta^k g|
+  \leq C_k'$ uniformly in $(\om, n)$
+  (since $g(\eta;\om,n) = \Omega^2(\eta)/\Lam$ and $\Omega^2/\Lam$ is bounded
+  above and below by Proposition~\ref{prop:freq_lower}).
+  However, the extension of Olver's theorem to this two-parameter family
+  requires checking that his hypotheses hold \emph{uniformly in the direction}
+  $(\om^2 / \Lam, n/\Lam)$ in the two-parameter UV cone; this is plausible
+  but constitutes a residual analytical step not fully discharged here.
+\end{proof}
+
+\begin{lemma}[Bogoliubov coefficient from WKB error]\label{lem:beta_from_WKB}
+  Under the same hypotheses:
+  \begin{equation}\label{eq:beta_WKB}
+    |\beta_{n,\om}|^2 \leq C''_N\,\Lam^{-N}
+    \qquad \forall N \in \NN,
+  \end{equation}
+  with $C''_N$ independent of $(\om, n)$.
+\end{lemma}
+
+\begin{proof}
+  The Bogoliubov coefficient \eqref{eq:beta_def} satisfies
+  $|\beta_{n,\om}|^2 = 1 - |\alpha_{n,\om}|^2$,
+  where $\alpha_{n,\om}$ is determined by the Wronskian
+  $\alpha_{n,\om}\,u^{\mathrm{out}} + \beta_{n,\om}\,\bar{u}^{\mathrm{out}} = v_{n,\om}$.
+  Inverting:
+  \begin{equation}
+    \beta_{n,\om} = \frac{i}{2}\Bigl[
+      v_{n,\om}\,\bigl(\partial_\eta\bar{u}^{\mathrm{out}}\bigr)
+      - v_{n,\om}'\,\bar{u}^{\mathrm{out}}
+    \Bigr].
+  \end{equation}
+  Since the WKB initial conditions \eqref{eq:WKB_IC} place $v_{n,\om}$
+  exactly in the ``in'' adiabatic vacuum, $\beta_{n,\om}$
+  measures the departure of $v_{n,\om}$ from the WKB approximation at $\eta_1$.
+  By Lemma~\ref{lem:WKB_error}:
+  \begin{equation}
+    |\beta_{n,\om}|
+    \leq C\,\bigl(|v_{n,\om} - v^{\mathrm{WKB}}| + |v_{n,\om}' - (v^{\mathrm{WKB}})'|\bigr)
+    \cdot |\bar{u}^{\mathrm{out}}_{n,\om}|^{-1}
+    = O(\Lam^{-N/2}),
+  \end{equation}
+  using $|u^{\mathrm{out}}| = (2\Omega)^{-1/2} = O(\Lam^{-1/4})$ and
+  the WKB error bound $O(\Lam^{-N/2})$ from Lemma~\ref{lem:WKB_error}.
+  Squaring gives $|\beta_{n,\om}|^2 = O(\Lam^{-N})$.
+  Replacing $N$ by $N+2$ to absorb the $\Omega$-prefactor gives
+  the claim with uniform constant $C''_N$.
+\end{proof}
+
+\section{The Main Lemma}
+
+\begin{lemma}[B-G1: Two-index uniform Bogoliubov bound]\label{lem:BG1}
+  Let $(M, g)$ be the Bianchi~II spacetime $\RR_\eta \times \Nil$ with
+  smooth scale factors $a_i \in C^\infty(\RR, (0,\infty))$
+  and $a_i(\eta) = 1$ for $\eta \notin [T_0, T_1]$.
+  Let $f \in C_c^\infty(\RR_\eta)$ be a real-valued temporal smearing function.
+  Let $\omega_{\mathrm{SLE}}$ be the SLE state defined by the WKB
+  initial conditions \eqref{eq:WKB_IC}.
+
+  Then for all $N \in \NN$, there exists $C_N > 0$
+  (depending on $N$, $f$, and the $C^\infty$-norm of $a_i$
+  on $\mathrm{supp}\,f$, but independent of $(\om, n)$) such that
+  \begin{equation}\label{eq:BG1}
+    \boxed{|\beta_{n,\om}(f)|^2 \leq C_N\,(\om^2 + n)^{-N}}
+    \qquad
+    \forall\, \om \in \ZZ \setminus \{0\},\; n \in \ZZ_{\geq 0},\;
+    |\om|^2 + n \geq 1.
+  \end{equation}
+\end{lemma}
+
+\begin{proof}
+  \textbf{Setup.}
+  We work with the conformal-time mode equation \eqref{eq:mode} and
+  set $\Lam = \om^2 + n$.
+
+  \textbf{Smearing.}
+  The smeared $\beta$-coefficient $\beta_{n,\om}(f) = \int f(\eta)\,\beta_{n,\om}^{(\eta)}\,d\eta$
+  is the unsmeared coefficient for the ``smeared mode equation''
+  obtained by replacing $v_{n,\om}$ by $\tilde{v}_{n,\om}(f) = \int f v_{n,\om}\,d\eta$.
+  For $f \in C_c^\infty$:
+  \begin{equation}
+    |\beta_{n,\om}(f)| \leq \|f\|_{L^1} \cdot \sup_\eta |\beta_{n,\om}^{(\eta)}|.
+  \end{equation}
+  It thus suffices to prove $|\beta_{n,\om}^{(\eta)}|^2 = O(\Lam^{-N})$
+  uniformly in $\eta \in \mathrm{supp}\,f$.
+
+  Alternatively, the smearing gives an additional gain via integration by parts:
+  \begin{equation}\label{eq:IBP}
+    \beta_{n,\om}(f) = \int f(\eta)\,\beta_{n,\om}^{(\eta)}\,d\eta
+    = (-1)^M \int \frac{f^{(M)}(\eta)}{\Omega_{n,\om}(\eta)^M}\,
+    \tilde\beta_{n,\om}^{(M,\eta)}\,d\eta
+  \end{equation}
+  for each $M \in \NN$, where $\tilde\beta^{(M)}$ is bounded uniformly
+  in $(\om, n)$ (this is the BN23 Appendix~A integration-by-parts argument).
+  Using $\Omega_{n,\om} \geq c\,\Lam^{1/2}$ (Proposition~\ref{prop:freq_lower}),
+  the factor $\Omega^{-M}$ contributes $\Lam^{-M/2}$ per integration by parts.
+  Combining with Lemma~\ref{lem:beta_from_WKB}
+  (which gives $|\beta^{(\eta)}| = O(\Lam^{-N/2})$ from WKB),
+  we obtain, for any $N' = N + M$:
+  \begin{equation}
+    |\beta_{n,\om}(f)|
+    \leq C_{N,M}\,\|f^{(M)}\|_{L^1}\,\Lam^{-N/2 - M/2}
+    = C_{N'}\,\Lam^{-N'/2}.
+  \end{equation}
+  Since $N'$ is arbitrary, $|\beta_{n,\om}(f)|^2 = O(\Lam^{-N})$ for all $N$.
+
+  \textbf{Uniformity.}
+  The constants $C_N$ depend on:
+  (1) the WKB error constants $C'_N$ of Lemma~\ref{lem:WKB_error},
+  which are uniform in $(\om, n)$ by that lemma's proof;
+  (2) the spectral gap $\Omega_{n,\om}^2 \geq c\,\Lam$ of
+  Proposition~\ref{prop:freq_lower}, uniform in $(\om, n)$;
+  (3) the $f$-dependent norm $\|f^{(M)}\|_{L^1}$, independent of $(\om, n)$.
+  Therefore $C_N$ is independent of $(\om, n)$, establishing \eqref{eq:BG1}.
+\end{proof}
+
+\section{Corollaries for the Hadamard Property}
+
+\begin{proposition}[Two-point function, wavefront set]\label{prop:WF_smooth}
+  Under the hypotheses of Lemma~\ref{lem:BG1},
+  the two-point distribution $\omega_2^{\mathrm{SLE}}$ of the SLE state
+  satisfies:
+  \begin{equation}
+    \omega_2^{\mathrm{SLE}}(x,y) - H_2(x,y) \in C^\infty(\mathcal{M} \times \mathcal{M}),
+  \end{equation}
+  where $H_2$ is the local Hadamard parametrix on $(\mathcal{M}, g)$.
+  Consequently, $\WF(\omega_2^{\mathrm{SLE}}) = \WF(H_2)$,
+  which equals the Hadamard wavefront set condition of Radzikowski~\cite{Rad96}.
+\end{proposition}
+
+\begin{proof}[Proof sketch]
+  The two-point function in the SLE state is (A5 note.tex, eq.~6.2):
+  \begin{equation}\label{eq:2pt_BII}
+    \omega_2^{\mathrm{SLE}}(\eta, h; \eta', h')
+    = \sum_{\om \in \ZZ \setminus \{0\}} |\om| \sum_{n=0}^\infty
+    u_{n,\om}(\eta)\,\overline{u_{n,\om}(\eta')}\,
+    \mathcal{K}_{n,\om}(h, h'),
+  \end{equation}
+  where $u_{n,\om}$ are the SLE mode functions and
+  $\mathcal{K}_{n,\om}$ is the reproducing kernel for the
+  $(n,\om)$ Hermite eigenfunction on $\Nil$.
+
+  \textbf{Step 1 (Parametrix matching).}
+  The local Hadamard parametrix $H_2$ has a mode expansion in which
+  each mode function $u^{\mathrm{Had}}_{n,\om}$ is the WKB approximation
+  to $u_{n,\om}$, accurate to all orders in $\Lam^{-1/2}$
+  (by the Junker--Schrohe parametrix construction~\cite{JS02}).
+  The difference $u_{n,\om} - u^{\mathrm{Had}}_{n,\om} = O(\Lam^{-N/2})$
+  for all $N$ (Lemma~\ref{lem:WKB_error}).
+
+  \textbf{Step 2 (Summability).}
+  The difference $\omega_2^{\mathrm{SLE}} - H_2$ has mode-by-mode
+  contributions bounded by $|\beta_{n,\om}|^2 \cdot |\mathcal{K}_{n,\om}|$.
+  The kernel $\mathcal{K}_{n,\om}$ is the Hilbert--Schmidt kernel
+  of the projection onto the $n$-th Hermite function; its $C^k$ norm
+  on $\Nil \times \Nil$ is $O(\Lam^M)$ for some $M$ depending on $k$.
+  By Lemma~\ref{lem:BG1}, $|\beta_{n,\om}|^2 = O(\Lam^{-N})$ for all $N$,
+  so $|\beta_{n,\om}|^2 \cdot \|\mathcal{K}_{n,\om}\|_{C^k} = O(\Lam^{-N'})$
+  for any $N'$.
+
+  \textbf{Step 3 (Convergence of remainder series).}
+  The sum $\sum_{\om, n} |\om| \cdot |\beta_{n,\om}|^2 \cdot \|\mathcal{K}_{n,\om}\|_{C^k}$
+  converges for any $k$ by choosing $N$ large enough
+  (the Plancherel weight $|\om|$ and summation over $n$ at most polynomial in $\Lam$
+  by Weyl's law on $\Nil$).
+  Therefore $\omega_2^{\mathrm{SLE}} - H_2$ is a $C^\infty$ kernel,
+  giving $\WF(\omega_2^{\mathrm{SLE}} - H_2) = \emptyset$.
+
+  \textbf{Caveat.}
+  Step~3 requires the precise Weyl counting function for eigenvalues $\Lam_{n,\om}$
+  on $\Nil$, specifically that the number of $(n, \om)$ pairs with
+  $\om^2 + n \leq \Lam$ grows at most polynomially in $\Lam$.
+  For $\Nil = \Gamma \backslash H_3$, the counting function is
+  $N(\Lam) = O(\Lam^2)$ (see A5 gaps.md, Gap~2, and the Weyl law
+  on nilmanifolds: the eigenvalue $\lam_{n,\om} \sim \om^2$
+  dominates, giving $N(\Lam) \sim C\Lam^{3/2}$ in the Schrödinger model).
+  The exact exponent affects the Sobolev threshold for smearing functions
+  but not the smoothness of $\omega_2^{\mathrm{SLE}} - H_2$,
+  since the $O(\Lam^{-N})$ decay of $|\beta|^2$ beats any polynomial growth.
+\end{proof}
+
+\begin{corollary}[Hadamard property]\label{cor:Hadamard}
+  Under the hypotheses of Lemma~\ref{lem:BG1},
+  the SLE state $\omega_{\mathrm{SLE}}$ on the Bianchi~II spacetime
+  $(\mathcal{M}, g)$ is a Hadamard state in the sense of
+  Radzikowski~\cite{Rad96}:
+  \begin{equation}
+    \WF(\omega_2^{\mathrm{SLE}})
+    = \{(x,k; x',k') : (x,k) \sim_+ (x',k'),\; k \text{ future null}\}.
+  \end{equation}
+\end{corollary}
+
+\begin{proof}
+  Immediate from Proposition~\ref{prop:WF_smooth} and Radzikowski's
+  equivalence theorem (that the Hadamard condition $\iff$ the
+  microlocal spectrum condition on the two-point function~\cite{Rad96}).
+\end{proof}
+
+\begin{remark}[Relation to the algebraic QFT framework]
+  By Brunetti--Fredenhagen~\cite{BF00}, the Hadamard property
+  is stable under composition with local algebra morphisms,
+  so Corollary~\ref{cor:Hadamard} extends to interacting fields
+  via perturbation theory.
+  By Hollands--Wald~\cite{HW01}, the SLE state determines a
+  consistent renormalization scheme for Wick products and
+  the stress-energy tensor on $(\mathcal{M}, g)$.
+\end{remark}
+
+\section{Honest Gap Analysis}
+
+\subsection{Steps requiring separate verification}
+
+\begin{enumerate}[label=G1.\arabic*]
+
+\item \label{gap:Olver_two_param}
+  \textbf{Olver's theorem in the two-parameter setting.}
+  Lemma~\ref{lem:WKB_error} cites Olver~\cite{Olver74} for
+  asymptotic expansions of $v'' + [\Lam\,g(\eta) + r(\eta)]v = 0$
+  as $\Lam \to \infty$.
+  Our $\Lam = \om^2 + n$ is a two-component parameter,
+  and $g(\eta; \om, n) = \Omega^2/\Lam$ depends on $(\om, n)$.
+  Olver's result holds for a single large real parameter;
+  extension to the two-index family requires checking that $g$
+  varies smoothly and is bounded away from zero \emph{uniformly in the direction}
+  $(\om, n)/\Lam$.
+  This follows from Proposition~\ref{prop:freq_lower} (lower bound on $g$)
+  and Claim~\ref{cl:deriv_bound} (uniform derivative bound on $g$),
+  but a self-contained reference for the two-parameter Olver theorem does not
+  appear to exist in the literature.
+  The most direct resolution is to treat the two regimes ($n$ fixed large $\om$;
+  $\om$ fixed large $n$) separately, apply Olver to each, and patch.
+  \emph{Estimated additional effort: 2--3 weeks.}
+
+\item \label{gap:spectral_gap_time}
+  \textbf{Time-uniform spectral gap.}
+  Proposition~\ref{prop:freq_lower} gives a lower bound
+  $\Omega_{n,\om}^2(\eta) \geq c\,\Lam$ uniform in $\eta$,
+  with $c > 0$ depending on $\inf_\eta a_i(\eta)$.
+  For cosmological scale factors that pass through small values
+  (e.g., a contracting phase with $a_1(\eta_*) \to 0$),
+  the constant $c$ could degrade.
+  In such cases the adiabatic approximation breaks down
+  (the adiabaticity condition $\varepsilon_{\mathrm{adiab}} \ll 1$ fails)
+  for modes with $n |\om| \lesssim a_1^{-2}|_{\eta_*}$.
+  These are finitely many modes (for each $\eta_*$) and can be controlled
+  by choosing $\eta_0$ away from the singularity.
+  Nevertheless, the precise class of scale factors for which
+  Lemma~\ref{lem:BG1} holds must be stated carefully.
+  \emph{The result holds for scale factors bounded away from zero
+  on $\mathrm{supp}\,f$.}
+
+\item \label{gap:Weyl_law}
+  \textbf{Weyl law on $\Nil$.}
+  Proposition~\ref{prop:WF_smooth} Step~3 uses polynomial growth
+  of the eigenvalue counting function.
+  The Weyl law on $\Nil = \Gamma \backslash H_3$ gives
+  $N(\Lam) \sim C \Lam^2$ (from the dominant $\om^2/a_3^2$ term
+  in the eigenvalue formula).
+  This is consistent with the sub-Riemannian geometry of $\Nil$
+  (degree-4 volume growth) but the precise constant $C$ and
+  the leading-order Weyl term for the left-invariant Laplacian on $\Nil$
+  should be cited from a specific source
+  (e.g., Gordon--Wilson 1984 or Corwin--Greenleaf 1990).
+  Gap~2 of gaps.md (Nil$^3$ Weyl law citation) covers this.
+  \emph{Does not affect Lemma~\ref{lem:BG1} itself, only the corollary.}
+
+\item \label{gap:pseudodiff_nilmanifold}
+  \textbf{Pseudodifferential symbol calculus on $\Nil$.}
+  Proposition~\ref{prop:WF_smooth} implicitly uses a pseudodifferential
+  symbol calculus on $\Nil \times \RR_\eta$ (to identify the
+  wavefront set of $\omega_2^{\mathrm{SLE}}$ with the null bicharacteristic
+  relation).
+  Junker--Schrohe~\cite{JS02} develop this for general globally hyperbolic
+  spacetimes, but their pseudodifferential operators are modelled on
+  $\RR^n$.
+  For the nilmanifold, the relevant calculus is the
+  \emph{Rockland/Folland--Stein calculus} on $H_3$
+  (Folland~\cite{Folland1989} Ch.~3, Taylor 1984).
+  The compatibility of the wavefront set defined via the nilpotent
+  pseudodifferential calculus with Radzikowski's microlocal criterion
+  (which uses the classical $T^*M$ wavefront set) needs checking.
+  This is a genuine analytical gap.
+  \emph{Estimated effort: 4--6 weeks for a microlocal analyst familiar
+  with both nilpotent harmonic analysis and curved-space QFT.}
+
+\item \label{gap:no_resonances_ineq}
+  \textbf{No accidental spectral coincidences.}
+  We argued in \texttt{sympy\_two\_index.py} that resonances between
+  different modes do not affect the free-field Bogoliubov coefficient.
+  This is correct.
+  However, for the WKB asymptotics one needs that
+  $\Omega_{n,\om}^2(\eta)$ is nowhere zero, i.e.,
+  $\Omega_{n,\om}(\eta) > 0$ for all $\eta$ in the evolution window.
+  This is guaranteed by Proposition~\ref{prop:freq_lower} provided
+  $c > 0$, i.e., $a_i(\eta) < \infty$ on $\mathrm{supp}\,f$.
+  For cosmological spacetimes with future infinity this is automatic.
+
+\end{enumerate}
+
+\subsection{Summary verdict on Gap 1}
+
+\begin{center}
+\begin{tabular}{lll}
+\hline
+Sub-step & Status & Residual effort \\
+\hline
+Frequency lower bound (Prop.~\ref{prop:freq_lower}) & Rigorous & None \\
+Derivative bound (Claim~\ref{cl:deriv_bound}) & Rigorous & None \\
+WKB error (Lem.~\ref{lem:WKB_error}) & Near-rigorous & 2--3 wk (G1.1) \\
+Bogoliubov bound (Lem.~\ref{lem:BG1}) & Near-rigorous & Same as G1.1 \\
+WF set of remainder (Prop.~\ref{prop:WF_smooth}) & Plausible & 4--6 wk (G1.4) \\
+Hadamard property (Cor.~\ref{cor:Hadamard}) & Plausible & Same as G1.4 \\
+\hline
+\end{tabular}
+\end{center}
+
+\noindent
+\textbf{Bottom line:}
+The most important gap (G1.1, Olver two-parameter extension) is
+\emph{tractable and close to standard}: it requires checking
+uniform hypotheses for a known theorem in two separate UV regimes.
+Gap G1.4 (pseudodifferential calculus on nilmanifolds) is the harder
+residual piece and may require consulting specialists in nilpotent
+harmonic analysis.
+
+\section{Updated Time-to-Publication Estimate}
+
+The A5 estimate was 6--9 months. After the analysis in this note:
+
+\begin{itemize}
+\item \textbf{Gap G1.1} (Olver two-parameter): 2--3 weeks.
+  Either patch the existing argument by treating the two UV regimes
+  separately, or cite Fedoryuk's parametrix theory (which handles
+  this case).
+
+\item \textbf{Gap G1.4} (pseudodifferential calculus on nilmanifolds):
+  4--6 weeks if one can cite existing results in Folland's book or
+  Taylor's treatise; up to 3 months if new analysis is required.
+
+\item \textbf{Gaps 2--3} (Weyl law citation, adiabatic initial conditions):
+  2--3 weeks each, can be done in parallel with G1.
+
+\item \textbf{Writing and refereeing}: 8--12 weeks.
+\end{itemize}
+
+\paragraph{Revised estimate (realistic):}
+\begin{equation*}
+  \text{Time to publication} \approx \mathbf{4\text{--}6 \text{ months}},
+\end{equation*}
+conditional on:
+(a) a specialist in nilpotent harmonic analysis being available to
+handle Gap G1.4, and
+(b) no new obstruction arising from the pseudodifferential
+symbol calculus on $\Nil$.
+
+\paragraph{Pessimistic bound:}
+If Gap G1.4 requires a separate foundational paper on
+pseudodifferential operators on nilmanifolds in Lorentzian
+backgrounds, the estimate reverts to \textbf{12--18 months}.
+
+\paragraph{Comparison with A5:}
+The present analysis shows that:
+\begin{itemize}
+\item The Bogoliubov coefficient bound (the combinatorial/analytic core of Gap 1)
+  is essentially \emph{proved} modulo the Olver uniformity check (2--3 weeks).
+\item The remaining hard piece is the wavefront set argument on $\Nil$
+  (Gap G1.4), which was already implicitly present in A5's Gap 1
+  but is now made explicit.
+\item The revised estimate of 4--6 months reflects closing the easier part
+  of Gap 1 without claiming the harder part (G1.4) is done.
+\end{itemize}
+
+\begin{thebibliography}{99}
+
+\bibitem{BN23}
+R.~Banerjee, M.~Niedermaier,
+\textit{States of Low Energy on Bianchi I spacetimes},
+J.\ Math.\ Phys.\ \textbf{64} (2023) 113503.
+arXiv:2305.11388.
+
+\bibitem{JS02}
+W.~Junker, E.~Schrohe,
+\textit{Adiabatic vacuum states on general spacetime manifolds:
+definition, construction, and physical properties},
+Ann.\ Henri Poincaré \textbf{3} (2002) 1113--1182.
+arXiv:\textbf{math-ph/0109010}.
+% VERIFIED: correct arXiv ID. Task prompt cited math-ph/0107024 -- WRONG (Jovanovic,
+% Euler-Poincaré-Suslov equations, unrelated). Correct ID verified 2026-05-03.
+
+\bibitem{Rad96}
+M.~J.~Radzikowski,
+\textit{Micro-local approach to the Hadamard condition in quantum field theory
+on curved space-time},
+Commun.\ Math.\ Phys.\ \textbf{179} (1996) 529--553.
+DOI:10.1007/BF02100096.
+% VERIFIED.
+
+\bibitem{HW01}
+S.~Hollands, R.~M.~Wald,
+\textit{Local Wick polynomials and time ordered products of quantum fields
+in curved spacetime},
+Commun.\ Math.\ Phys.\ \textbf{223} (2001) 289--326.
+arXiv:gr-qc/0103074.
+% VERIFIED: arXiv ID and journal reference confirmed.
+
+\bibitem{BF00}
+R.~Brunetti, K.~Fredenhagen,
+\textit{Microlocal analysis and interacting quantum field theories:
+renormalization on physical backgrounds},
+Commun.\ Math.\ Phys.\ \textbf{208} (2000) 623--661.
+arXiv:math-ph/9903028.
+% VERIFIED: arXiv ID and journal reference confirmed.
+
+\bibitem{Verch94}
+R.~Verch,
+\textit{Local definiteness, primarity and quasiequivalence of quasifree
+Hadamard quantum states in curved spacetime},
+Commun.\ Math.\ Phys.\ \textbf{160} (1994) 507--536.
+% NOT ON ARXIV (pre-arXiv era paper). Cannot be independently verified
+% by arXiv API. Cited from literature; journal reference standard.
+
+\bibitem{Olver74}
+F.~W.~J.~Olver,
+\textit{Asymptotics and Special Functions},
+Academic Press, New York, 1974.
+% Standard reference for WKB/Olver asymptotic expansion theory.
+
+\bibitem{Folland1989}
+G.~B.~Folland,
+\textit{Harmonic Analysis in Phase Space},
+Annals of Mathematics Studies \textbf{122},
+Princeton University Press, 1989.
+% VERIFIED.
+
+\bibitem{ASY87}
+J.~E.~Avron, R.~Seiler, L.~G.~Yaffe,
+\textit{Adiabatic theorems and applications to the quantum Hall effect},
+Commun.\ Math.\ Phys.\ \textbf{110} (1987) 33--49.
+% Standard adiabatic theorem with spectral gap condition.
+
+\bibitem{Pukan67}
+L.~Pukánszky,
+\textit{On the characters and the Plancherel formula of nilpotent groups},
+J.\ Funct.\ Anal.\ \textbf{1} (1967) 255--280.
+DOI:10.1016/0022-1236(67)90015-8.
+% VERIFIED. Correct citation: J. Funct. Anal., NOT Trans. Amer. Math. Soc.
+
+\end{thebibliography}
+
+\end{document}

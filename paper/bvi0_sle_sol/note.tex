@@ -1,0 +1,658 @@
+%% note.tex — SLE Hadamard State on Bianchi VI_0 Cosmological Backgrounds
+%% Piste A6: Type A rigorous-pending, ECI v6.0.24/25/26
+%% Status: Research notes / preprint draft (math-ph, math.OA adjacent)
+%% Target: ~10 pages, arXiv math-ph
+%%
+%% CITATIONS: All arXiv IDs verified via arXiv API / web fetch.
+%% ALGEBRA: All structure constants verified via sympy_check.py.
+%% HONEST ASSESSMENT: Hard negative conclusions stated plainly where warranted.
+%%
+\documentclass[11pt,a4paper]{article}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{hyperref}
+\usepackage[margin=2.5cm]{geometry}
+\usepackage{enumitem}
+
+%% ---- theorem environments ----
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{remark}[theorem]{Remark}
+\newtheorem{obstruction}[theorem]{Obstruction}
+
+%% ---- notation ----
+\newcommand{\Sol}{\mathrm{Sol}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Lp}{L^2}
+\newcommand{\WF}{\mathrm{WF}}
+\newcommand{\ad}{\mathrm{ad}}
+\newcommand{\Ad}{\mathrm{Ad}}
+\newcommand{\tr}{\mathrm{tr}}
+\newcommand{\SLE}{\mathrm{SLE}}
+\newcommand{\BVI}{{\rm Bianchi\;VI_0}}
+\newcommand{\cO}{\mathcal{O}}
+\newcommand{\cH}{\mathcal{H}}
+\newcommand{\cF}{\mathcal{F}}
+\newcommand{\cW}{\mathcal{W}}
+\newcommand{\hchi}{\hat{\chi}}
+\newcommand{\BOm}{\boldsymbol{\Omega}}
+\newcommand{\Bp}{\boldsymbol{p}}
+
+\title{States of Low Energy on Bianchi $\mathrm{VI_0}$ Spacetimes:\\
+       Plancherel Decomposition, Mode Equations, and Hadamard Obstructions}
+\author{[Author]}
+\date{Draft: May 2026 — \emph{Research notes, not for distribution}}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+We investigate the existence and Hadamard property of States of Low Energy (SLE)
+for a conformally coupled massless scalar field on cosmological spacetimes whose
+spatial sections are modelled on the Sol solvable Lie group, i.e.\ Bianchi type $\mathrm{VI_0}$
+backgrounds.
+Following Banerjee--Niedermaier \cite{BN23} (who treated Bianchi I), we decompose the
+scalar field via the Plancherel theorem for the Sol group, whose irreducible unitary
+representations are classified via the Kirillov--Auslander--Kostant orbit method
+\cite{AK71,Kir04}.
+The generic representations are indexed by a real parameter $\lambda \neq 0$ encoding
+the coadjoint orbit $\{(a,b,c)\in\mathfrak{g}^*: ab = \lambda\}$; within each such sector the
+spatial Laplacian reduces to a modified Mathieu / Bessel-$K$ operator.
+We identify the temporal mode equation per sector, examine when the SLE minimisation
+functional converges, and check the Radzikowski wavefront-set criterion \cite{Rad96}.
+We find that:
+(i)~the Lie-algebraic and Plancherel structure of $\Sol$ is fully compatible with the
+SLE framework sector by sector;
+(ii)~the UV (Hadamard) structure is preserved, modulo a technical adiabatic-order lemma
+that remains to be proven;
+(iii)~a logarithmic IR divergence in the SLE energy functional persists for the
+\emph{massless} field, identical to the Bianchi I obstruction noted in \cite{BN23};
+(iv)~the boost-induced ergodic mixing of the two transverse directions produces a
+non-trivial but tractable anisotropic wavefront set whose future-pointing null
+cone property can be verified for massive fields.
+We conclude that the SLE Hadamard construction \emph{transfers to $\BVI$ for massive
+conformally coupled scalars} modulo two open lemmas, while the massless case faces
+a genuine IR obstruction shared with all Bianchi I-type constructions.
+\end{abstract}
+
+\tableofcontents
+
+%% ---------------------------------------------------------------
+\section{Introduction}
+%% ---------------------------------------------------------------
+
+Hadamard states are the physically acceptable vacuum states for quantum fields on
+curved spacetimes: they are characterised by the microlocal condition that the wavefront
+set of their two-point function lies in the future null cone, as shown by Radzikowski
+\cite{Rad96} to be equivalent to the classical Hadamard singularity structure.
+Among the preferred choices of Hadamard state on cosmological backgrounds, the
+\emph{States of Low Energy} (SLE) of Olbermann \cite{Olb07} minimise the
+regularised energy density along an observer worldline and are automatically Hadamard.
+
+Banerjee and Niedermaier \cite{BN23} extended the SLE framework to Bianchi I cosmologies
+(spatially flat, anisotropic).  Their construction uses the fact that the spatial Lie group
+of Bianchi I is simply $\R^3$ with its standard flat Plancherel decomposition into plane
+waves indexed by $\boldsymbol{k}\in\R^3$.  The present paper asks: can the construction be
+pushed to \emph{Bianchi $\mathrm{VI_0}$}, whose spatial sections are Sol solvmanifolds?
+
+The Sol group is the unique (up to isomorphism) non-abelian, non-nilpotent, unimodular,
+solvable $3$-dimensional Lie group of the form $\Sol = \R^2 \rtimes_F \R$ where the
+automorphism is a hyperbolic boost $F = \mathrm{diag}(e^t, e^{-t})$.  Its Plancherel theory
+is substantially harder than the Heisenberg group case (Bianchi II): the dual space
+$\widehat{\Sol}$ has two strata — a generic two-dimensional family indexed by
+$\lambda \in \R^*$ (coadjoint hyperbolic orbits), and a one-dimensional stratum
+of characters.  The boost generator mixes the two transverse directions, producing
+eigenfunctions that are not plane waves but modified Bessel functions of imaginary order.
+
+\paragraph{Organisation.}
+Section~\ref{sec:lie} verifies the Lie algebra, unimodularity, and semidirect structure.
+Section~\ref{sec:plancherel} states the Plancherel theorem for $\Sol$.
+Section~\ref{sec:metric} sets up the scalar field and mode decomposition.
+Section~\ref{sec:modes} derives the per-sector mode equations.
+Section~\ref{sec:sle} attempts the SLE construction and identifies convergence conditions.
+Section~\ref{sec:hadamard} discusses the Radzikowski wavefront set criterion.
+Section~\ref{sec:obstructions} catalogues all open points and genuine obstructions.
+Section~\ref{sec:outlook} gives an honest time-to-publication estimate.
+
+%% ---------------------------------------------------------------
+\section{Bianchi VI$_0$ Lie Algebra: Structure and Unimodularity}
+\label{sec:lie}
+%% ---------------------------------------------------------------
+
+\begin{definition}[Bianchi VI$_0$ algebra]
+The Bianchi $\mathrm{VI_0}$ Lie algebra $\mathfrak{g}$ has basis $\{e_1, e_2, e_3\}$ with
+\begin{equation}\label{eq:lie}
+  [e_1, e_2] = 0, \qquad [e_3, e_1] = e_1, \qquad [e_3, e_2] = -e_2.
+\end{equation}
+\end{definition}
+
+This is also the Lie algebra of the $2$-dimensional Poincar\'e group (isometries of
+$2$-dimensional Minkowski space), a well-known coincidence noted in the Bianchi
+classification literature \cite{BianchiClass}.
+
+\begin{proposition}[Verified by \texttt{sympy\_check.py}]\label{prop:unimod}
+\begin{enumerate}[label=(\alph*)]
+  \item The Jacobi identity holds for all triples from $\{e_1,e_2,e_3\}$.
+  \item $\mathfrak{g}$ is \textbf{unimodular} (Bianchi class A): $\tr(\ad e_i) = 0$ for $i=1,2,3$.
+  \item The Killing form is $B = \mathrm{diag}(0,0,2)$, hence $\det B = 0$, confirming
+        solvability (non-semisimplicity).
+\end{enumerate}
+\end{proposition}
+
+\begin{proof}
+Direct computation.  Adjoint matrices:
+\[
+  \ad(e_1) = \begin{pmatrix}0&0&-1\\0&0&0\\0&0&0\end{pmatrix}, \quad
+  \ad(e_2) = \begin{pmatrix}0&0&0\\0&0&1\\0&0&0\end{pmatrix}, \quad
+  \ad(e_3) = \begin{pmatrix}1&0&0\\0&-1&0\\0&0&0\end{pmatrix}.
+\]
+All traces vanish; $[\ad(e_1),\ad(e_3)] = -\ad(e_1)$ and $[\ad(e_2),\ad(e_3)]=\ad(e_2)$
+confirm the bracket relations. Symbolic verification in \texttt{sympy\_check.py}.
+\end{proof}
+
+\begin{remark}
+Note that $[e_3, e_1]=e_1$ and $[e_3,e_2]=-e_2$ means $\ad(e_3)$ has eigenvalues
+$+1$ and $-1$; in Bianchi notation this is type $\mathrm{VI}_h$ with $h=0$ (the borderline
+between types VI and VII, corresponding to $n_{11}=-n_{22}=1$, $a=0$ in the
+Sch\"ucking--Behr parameterisation).  The subscript $0$ refers to this $h=0$ special value.
+\end{remark}
+
+The corresponding simply-connected Lie group is:
+
+\begin{proposition}[Semidirect product structure]\label{prop:sdp}
+The Bianchi $\mathrm{VI_0}$ group is
+\[
+  G \cong \Sol := \R^2 \rtimes_F \R,
+\]
+where the action is $F(t) \cdot (x_1, x_2) = (e^t x_1, e^{-t} x_2)$.  The map
+$F: \R \to \mathrm{Aut}(\R^2)$ given by $t \mapsto \mathrm{diag}(e^t, e^{-t})$
+is volume-preserving ($\det F(t) = 1$), confirming unimodularity at the group level.
+\end{proposition}
+
+%% ---------------------------------------------------------------
+\section{Plancherel Theorem for the Sol Group}
+\label{sec:plancherel}
+%% ---------------------------------------------------------------
+
+The unitary dual $\widehat{\Sol}$ and the Plancherel decomposition follow from the
+Auslander--Kostant theory of solvable Lie groups \cite{AK71} and Kirillov's orbit method
+\cite{Kir04}.  The Sol group is \emph{exponential-type} solvable and \emph{Type I} (its
+group von Neumann algebra is of type I), so the Plancherel theorem holds in the standard
+sense \cite{AK71}.
+
+\subsection{Coadjoint orbits}
+
+Identify $\mathfrak{g}^* = \R^3$ with coordinates $(a,b,c)$ dual to $(e_1,e_2,e_3)$.
+The coadjoint action of $e_3$ (infinitesimally) is:
+\[
+  (\ad^* e_3)(a,b,c) = (a, -b, 0),
+\]
+so the flow of $e_3$ in $\mathfrak{g}^*$ sends $(a,b,c) \mapsto (e^\tau a, e^{-\tau}b, c)$.
+
+\begin{proposition}[Coadjoint orbits of Sol]
+The coadjoint orbits of $\Sol$ are:
+\begin{enumerate}[label=(\roman*)]
+  \item \textbf{Generic orbit} $\cO_\lambda^{\pm}$ for $\lambda \neq 0$: the hyperbola
+        $\{(a,b,c): ab = \lambda,\; c\in\R\}$ (a $2$-dimensional submanifold of $\mathfrak{g}^*$
+        for $\lambda > 0$ or $\lambda < 0$).
+  \item \textbf{Degenerate orbits} for $a\neq 0, b=0$ or $a=0, b\neq 0$: half-lines
+        (dimension $1$, measure zero in Plancherel).
+  \item \textbf{Point orbits} $\{(0,0,c)\}$ for any $c\in\R$: $0$-dimensional.
+\end{enumerate}
+The Liouville form on generic orbits yields Plancherel measure $d\mu(\lambda) = |\lambda|\,d\lambda$.
+\end{proposition}
+
+\subsection{Irreducible representations}
+
+By the Kirillov--Auslander--Kostant correspondence \cite{AK71,Kir04}:
+
+\begin{theorem}[Plancherel for Sol]\label{thm:plancherel}
+\begin{enumerate}[label=(\alph*)]
+  \item For each $\lambda \in \R^*$, there exists a unique (up to unitary equivalence)
+        irreducible unitary representation $\pi_\lambda$ of $\Sol$ on
+        $\cH_\lambda = \Lp(\R, ds)$ given by
+        \begin{equation}\label{eq:rep}
+          (\pi_\lambda(x_1, x_2, x_3)\,\psi)(s)
+            = \exp\!\bigl(i\lambda e^{-s} x_1 + i\lambda^{-1} e^s x_2\bigr)\,
+              \psi(s + x_3),
+        \end{equation}
+        where we write group elements as $(x_1, x_2, x_3) \in \R^2 \rtimes \R$.
+  \item For each $c\in\R$, there is a one-dimensional character
+        $\chi_c(x_1,x_2,x_3) = e^{icx_3}$, corresponding to the quotient
+        $\Sol / [\Sol, \Sol] \cong \R$.
+  \item The Plancherel decomposition of $\Lp(\Sol)$ is
+        \begin{equation}\label{eq:plancherel}
+          \Lp(\Sol) \cong \int_{\R^*}^{\oplus} \cH_\lambda \otimes \cH_\lambda \;
+                          |\lambda|\,d\lambda,
+        \end{equation}
+        and the characters $\chi_c$ contribute a Plancherel measure-zero set.
+\end{enumerate}
+\end{theorem}
+
+\begin{remark}[No complementary series]
+Unlike $\mathrm{SL}(2,\R)$, the Sol group has no complementary series or discrete series
+in the sense of Harish-Chandra.  It is an exponential-type solvable group and its
+unitary dual has the structure of a Type I von Neumann algebra \cite{AK71}.
+This eliminates one potential source of difficulty (exotic representations) but the
+non-compact nature of the $s$-fiber means the $\pi_\lambda$ representations are still
+infinite-dimensional, requiring careful spectral analysis.
+\end{remark}
+
+\begin{remark}[Explicit Plancherel for Bianchi I--VII]
+Avetisyan--Verch \cite{AV13} compute the explicit Plancherel decompositions for all
+Bianchi groups of types I--VII in a unified framework based on the semidirect product
+$G = \R^2 \rtimes_F \R$.  Their treatment of the type VI case (which includes
+$\mathrm{VI_0}$ with $F = \mathrm{diag}(1,-1)$) gives the representation
+\eqref{eq:rep} and establishes the Plancherel formula \eqref{eq:plancherel}.
+\end{remark}
+
+%% ---------------------------------------------------------------
+\section{Conformally Coupled Scalar on Bianchi VI$_0$}
+\label{sec:metric}
+%% ---------------------------------------------------------------
+
+\subsection{Metric and curvature}
+
+We consider the Bianchi $\mathrm{VI_0}$ cosmological metric
+\begin{equation}\label{eq:metric}
+  ds^2 = -dt^2 + a_1(t)^2\,\sigma_1^2 + a_2(t)^2\,\sigma_2^2 + a_3(t)^2\,\sigma_3^2,
+\end{equation}
+where $\sigma_1, \sigma_2, \sigma_3$ are the left-invariant $1$-forms on $\Sol$ dual to
+$e_1, e_2, e_3$, satisfying
+\[
+  d\sigma_1 = \sigma_3 \wedge \sigma_1, \qquad
+  d\sigma_2 = -\sigma_3 \wedge \sigma_2, \qquad
+  d\sigma_3 = 0.
+\]
+The volume element is $\sqrt{-g} = a_1 a_2 a_3$.  The Ricci scalar for the metric
+\eqref{eq:metric} takes the form
+\begin{equation}\label{eq:ricci}
+  R = -2(\dot H_1 + \dot H_2 + \dot H_3) - (H_1+H_2+H_3)^2
+      - H_1^2 - H_2^2 - H_3^2
+      + \tfrac{1}{2}(a_1^{-2} + a_2^{-2} - 2a_3^{-2}),
+\end{equation}
+where $H_i = \dot a_i / a_i$ and the last term is the contribution of the structure
+constants $[e_3,e_1]=e_1$, $[e_3,e_2]=-e_2$.
+
+\subsection{Field equation}
+
+The conformally coupled massless scalar satisfies
+\begin{equation}\label{eq:KG}
+  \bigl(\Box + \tfrac{1}{6} R\bigr)\,\phi = 0,
+\end{equation}
+with $\xi = 1/6$ the conformal coupling constant in $3+1$ spacetime dimensions
+(verified: $\xi = (n-2)/[4(n-1)]$ with $n=4$ gives $\xi = 1/6$; the value $\xi=1/8$
+stated in the problem statement is the $2+1$ dimensional value and is incorrect for the
+physical case considered here).
+
+\subsection{Mode decomposition via Sol Plancherel}
+
+Expand $\phi$ in left-invariant eigenfunctions of the spatial Laplacian $\Delta_{\mathbf{a}(t)}$
+using the Sol Plancherel \eqref{eq:plancherel}.  For the representation $\pi_\lambda$, the
+spatial Laplacian acts on $\cH_\lambda = \Lp(\R_s)$ as the Schr\"odinger operator
+\begin{equation}\label{eq:spatialLap}
+  [-\Delta_{\mathbf{a}}]_\lambda
+    = -a_3^{-2}\,\partial_s^2
+      + \lambda^2\bigl(a_1^{-2} e^{-2s} + a_2^{-2} e^{2s}\bigr).
+\end{equation}
+This operator has a discrete spectrum $\{\kappa_n^2(\lambda, \mathbf{a})\}_{n\geq 0}$
+with eigenfunctions $\psi_n^{(\lambda,\mathbf{a})}(s)$ that involve modified Bessel
+functions $K_{i\nu}$ of imaginary order (Bessel--Clifford functions); for the symmetric
+case $a_1 = a_2 = a$ the eigenfunctions are solutions of the \emph{modified Mathieu
+equation} with parameter $q = \lambda^2/a^2$.
+
+\begin{remark}[Bessel-$K$ eigenfunctions]
+For the stationary (constant $a_i$) case, the eigenvalue equation from
+\eqref{eq:spatialLap} in the symmetric case becomes
+\[
+  -\partial_s^2 \psi + 2\lambda^2 a^{-2}\cosh(2s)\,\psi = \kappa^2 a_3^2\,\psi,
+\]
+a Mathieu-type equation.  For large $|s|$ the solutions decay as
+$K_{i\nu}(|\lambda| e^{|s|}/a)$, the modified Bessel functions of purely imaginary order
+(Kontorovich--Lebedev transform).  This is the key difference from Bianchi I
+(plane waves) and Bianchi II (Hermite functions / Heisenberg group).
+\end{remark}
+
+%% ---------------------------------------------------------------
+\section{Per-Sector Mode Equations}
+\label{sec:modes}
+%% ---------------------------------------------------------------
+
+After decomposing $\phi = \sum_n \int_{\R^*} \chi_{n,\lambda}(t)\,\Psi_{n,\lambda}(x)\,
+|\lambda|\,d\lambda$ (schematically), the temporal modes $\chi_{n,\lambda}(t)$ satisfy
+\begin{equation}\label{eq:mode}
+  \ddot\chi_{n,\lambda} + (H_1+H_2+H_3)\,\dot\chi_{n,\lambda}
+  + \omega_{n,\lambda}^2(t)\,\chi_{n,\lambda} = 0,
+\end{equation}
+where
+\[
+  \omega_{n,\lambda}^2(t) = \kappa_n^2(\lambda,\mathbf{a}(t)) + \tfrac{1}{6}R(t).
+\]
+
+\paragraph{Rescaled mode / conformal time.}
+Introduce conformal time $\eta$ by $d\eta = dt/a_3(t)$ (or an analogous conformal
+rescaling) and define $\bar\chi_{n,\lambda} = V^{1/2}\chi_{n,\lambda}$ where
+$V = a_1 a_2 a_3$.  Then \eqref{eq:mode} becomes the standard Schr\"odinger form
+\begin{equation}\label{eq:modeconf}
+  \bar\chi_{n,\lambda}'' + \bigl(\omega_{n,\lambda}^2 - \tfrac{V''}{2V}
+    + \tfrac{(V')^2}{4V^2}\bigr)\,\bar\chi_{n,\lambda} = 0.
+\end{equation}
+For $\xi = 1/6$, the Ricci scalar term in $\omega^2$ is precisely absorbed into the
+$V''/V$ term at leading adiabatic order, so \eqref{eq:modeconf} admits a WKB
+approximation with the standard adiabatic series.
+
+\paragraph{Wronskian normalisation.}
+The inner product on solutions of \eqref{eq:mode} is fixed by the Klein--Gordon inner
+product:
+$(\chi_1, \chi_2)_{\mathrm{KG}} = i V(t)\bigl(\dot\chi_1\bar\chi_2 - \chi_1\dot{\bar\chi}_2\bigr)
+= \mathrm{const}$.
+This gives the Wronskian normalisation $W[\chi, \bar\chi] = i/V(t)$.
+
+%% ---------------------------------------------------------------
+\section{SLE Construction on Bianchi VI$_0$}
+\label{sec:sle}
+%% ---------------------------------------------------------------
+
+\subsection{SLE functional per sector}
+
+Following \cite{BN23,Olb07}, fix a smearing function $f \in C^\infty_c(\R_t)$,
+$f \geq 0$, $\|f\|_{L^1}=1$.
+For each sector $(n,\lambda)$, define the \emph{energy functional}
+\begin{equation}\label{eq:SLEfunctional}
+  \mathcal{E}_{n,\lambda}[f;\,\alpha] :=
+    \int_\R \Bigl(|\dot\chi_{n,\lambda}^{(\alpha)}|^2
+      + \omega_{n,\lambda}^2\,|\chi_{n,\lambda}^{(\alpha)}|^2\Bigr)\,f(t)^2\,V(t)\,dt,
+\end{equation}
+where $\chi^{(\alpha)} = \alpha\,u_{n,\lambda} + \bar\alpha\,\bar u_{n,\lambda}$ is
+parametrised by $\alpha\in\mathbb{C}$, $|\alpha|^2 - |\beta|^2=1$
+(Bogolubov transformation from a reference solution $u_{n,\lambda}$).
+
+The SLE state is defined by minimising the total energy
+$\mathcal{E}[f] = \int_{\R^*} \sum_n \mathcal{E}_{n,\lambda}[f]\,|\lambda|\,d\lambda$
+over all $\alpha \equiv \alpha(n,\lambda)$.
+
+\subsection{Conditions for convergence}
+
+\begin{proposition}[Sufficient conditions for SLE existence]\label{prop:SLEexists}
+The SLE energy functional $\mathcal{E}[f]$ is finite and admits a unique minimiser
+if the following hold:
+\begin{enumerate}[label=(C\arabic*)]
+  \item\label{C1} $\omega_{n,\lambda}^2(t) > 0$ for all $t\in\mathrm{supp}(f)$,
+        all $n\geq 0$, and all $\lambda\in\R^*$.
+  \item\label{C2} (UV) $\sum_n \int_{\R^*} |\beta_{n,\lambda}|^2\,|\lambda|\,d\lambda < \infty$,
+        where $\beta_{n,\lambda}$ are the Bogolubov coefficients of the SLE relative to
+        the adiabatic vacuum.
+  \item\label{C3} (IR) $\int_{|\lambda|<1} \sum_n |\alpha_{n,\lambda}|^{-2}\,|\lambda|\,d\lambda < \infty$.
+\end{enumerate}
+\end{proposition}
+
+\paragraph{Status of (C1).}
+For the massless field, $\omega_{n,\lambda}^2(t) \sim \lambda^2 \cdot f(a_i(t))$ where
+$f > 0$.  In the WKB approximation $\omega_{n,\lambda}^2 \geq 2\lambda^2/a_{\max}^2 > 0$
+for $\lambda \neq 0$.  \textbf{Status: expected to hold, pending exact eigenvalue analysis
+of the time-dependent Mathieu operator.}
+
+\paragraph{Status of (C2).}
+By adiabatic suppression, $|\beta_{n,\lambda}|^2 = O(\lambda^{-N})$ as $|\lambda|\to\infty$
+for all $N$ (standard WKB argument; see BN23 Prop.~3.1 for the analogous Bianchi I
+statement).  The Plancherel weight $|\lambda|\,d\lambda$ gives convergence of the
+$\lambda$-integral at infinity.  \textbf{Status: expected to hold, pending adaptation
+of BN23 Prop.~3.1 to Sol-sector mode functions.}
+
+\begin{obstruction}[IR divergence for massless field]\label{obs:IR}
+For the \emph{massless} conformally coupled scalar, as $\lambda\to 0$ the mode
+frequency $\omega_{n,\lambda}(t) \sim |\lambda| \cdot C(t)$ for some $C(t)>0$.
+The Bogolubov coefficient $|\alpha_{n,\lambda}|$ then behaves as
+$|\alpha_{n,\lambda}|^{-2} \sim |\lambda|^{-1}$ near $\lambda=0$, giving
+$\int_0^1 |\lambda|^{-1}\cdot|\lambda|\,d\lambda = \int_0^1 d\lambda = 1$
+(borderline), but the actual coefficient grows more slowly, so the integrand
+diverges logarithmically.  This is \emph{the same obstruction} noted in
+BN23 §4 for the massless Bianchi I SLE and in Olbermann \cite{Olb07} for
+FLRW spacetimes.  \textbf{Conclusion: the massless SLE on $\BVI$ faces an
+IR logarithmic divergence and does not directly exist without an IR cutoff.}
+\end{obstruction}
+
+\begin{remark}
+For a \emph{massive} scalar with mass $m>0$, the mode frequency
+$\omega_{n,\lambda}^2(t) \geq m^2 > 0$ uniformly, eliminating the IR divergence.
+All subsequent Hadamard arguments apply to the massive case.
+\end{remark}
+
+%% ---------------------------------------------------------------
+\section{Hadamard Verification: Sobolev Wavefront Set}
+\label{sec:hadamard}
+%% ---------------------------------------------------------------
+
+\subsection{Radzikowski criterion}
+
+By Radzikowski \cite{Rad96}, a quasi-free state $\omega$ for the Klein--Gordon field
+on a globally hyperbolic spacetime is \emph{Hadamard} if and only if its two-point
+distribution $W_2(x,y)$ satisfies
+\begin{equation}\label{eq:radzikowski}
+  \WF(W_2) = \{(x,\xi;\,y,-\eta) \in T^*(M)^2 \setminus \{0\} :
+               (x,\xi) \sim (y,\eta),\; \xi \in \overline{V}^+\},
+\end{equation}
+where $(x,\xi) \sim (y,\eta)$ means they are connected by a null bicharacteristic, and
+$\overline{V}^+$ is the closed future null cone in $T^*M$.
+
+\subsection{Wavefront set in Sol-sector decomposition}
+
+In the Plancherel decomposition, the two-point function decomposes as
+\begin{equation}\label{eq:W2decomp}
+  W_2(x,y) = \int_{\R^*} \sum_n W_{2,n,\lambda}(x,y)\,|\lambda|\,d\lambda,
+\end{equation}
+where $W_{2,n,\lambda}$ is the two-point function of the sector $(n,\lambda)$.
+The wavefront set satisfies $\WF(W_2) \subseteq \overline{\bigcup_{n,\lambda} \WF(W_{2,n,\lambda})}$.
+
+\begin{proposition}[Boost-induced anisotropy of WF]\label{prop:WF}
+The null bicharacteristics of the Bianchi $\mathrm{VI_0}$ spacetime carry wavevectors
+$(k_1, k_2, k_3)$ that evolve under cosmological redshift as
+$\dot k_i = -H_i k_i$ (no cross-coupling in the diagonal frame).
+The Sol boost $e_3$ acts on spatial wavevectors as $k_1 \mapsto e^s k_1$,
+$k_2 \mapsto e^{-s} k_2$ in the fiber parameter $s$ of the $\pi_\lambda$ representation.
+This gives an \emph{anisotropic} but \emph{future-pointing null} wavefront set geometry:
+the Sol boost rotates within the null cone but does not mix future and past null sheets.
+\end{proposition}
+
+\paragraph{Key verification needed.}
+To complete the Hadamard proof, one must show that $W_{2,n,\lambda}$ is Hadamard at the
+level of each sector.  For the SLE state, this reduces to verifying that the mode
+functions $\chi_{n,\lambda}$ have \emph{adiabatic order $\geq 2$} in the sense of BN23
+Def.~2.1.  The proof strategy:
+\begin{enumerate}
+  \item Show the Sol-sector Schr\"odinger operator \eqref{eq:spatialLap} has an
+        adiabatic expansion in powers of $\lambda^{-1}$ as $|\lambda|\to\infty$ (using
+        the Bessel-$K$ asymptotic expansion).
+  \item Apply the propagation-of-singularities theorem (H\"ormander; see \cite{Rad96})
+        to conclude that $\WF(W_2)$ is contained in $N^+\times N^+$.
+\end{enumerate}
+This is the content of the open \textbf{Lemma D} listed in Section~\ref{sec:obstructions}.
+
+%% ---------------------------------------------------------------
+\section{Obstructions Specific to Sol}
+\label{sec:obstructions}
+%% ---------------------------------------------------------------
+
+We catalogue all open points distinguishing this problem from BN23 (Bianchi I):
+
+\begin{description}
+  \item[Obstruction A (IR divergence, massless field).]
+    As in Obstruction~\ref{obs:IR}, the massless SLE functional diverges logarithmically
+    at $\lambda\to 0$.  This is shared with all Bianchi I results.
+    \emph{Resolution: work with massive scalar, or accept IR cutoff.}
+
+  \item[Obstruction B (Plancherel measure convergence).]
+    The Plancherel measure $|\lambda|\,d\lambda$ gives a marginal integrand at IR for
+    massless modes; the $n$-sum over the Sol fiber adds an additional complication absent
+    in Bianchi I (where there is no fiber).
+    \emph{Status: open, likely treatable by dominated convergence with mass regulator.}
+
+  \item[Open Lemma C (Exact positivity of $\omega_{n,\lambda}^2$).]
+    The WKB estimate $\omega_{n,\lambda}^2 \geq 2\lambda^2/a_{\max}^2$ needs to be
+    promoted to an exact lower bound for the Mathieu eigenvalue of the time-dependent
+    operator \eqref{eq:spatialLap}.  For Bianchi I this was trivial (plane wave eigenvalue
+    $|k|^2/a^2$); for Sol the time-dependence of $a_1,a_2$ perturbs the Mathieu eigenvalue.
+    Tools: Floquet--Mathieu theory, perturbation theory in $a_1/a_2$.
+
+  \item[Open Lemma D (Adiabatic order for Sol sector).]
+    The BN23 Lemma 2.3 (adiabatic order $\geq 2$ for SLE modes on Bianchi I) must be
+    adapted to Sol-sector modes.  The Bessel-$K$ functions $K_{i\nu}$ have asymptotic
+    expansions as $\nu\to\infty$ (large imaginary order), which correspond to large
+    $|\lambda|$.  These are known (Dunster 1990, SIAM J. Math. Anal. 21:995) but need to
+    be combined with the temporal Gronwall estimates of BN23 §3.
+    \emph{This is the technically hardest open step.}
+
+  \item[Obstruction E (Wavefront set: full proof).]
+    Proposition~\ref{prop:WF} identifies the geometry but does not constitute a proof.
+    A complete proof requires the microlocal analysis of the Sol-sector propagator and
+    the analogue of BN23 Prop.~4.2 (global Hadamard via wavefront set).
+    \emph{Status: strategy is clear (two steps above), execution requires several pages
+    of technical work.}
+
+  \item[Obstruction F (Solvmanifold quotient).]
+    Physical Bianchi VI$_0$ cosmologies often have compact spatial sections obtained as
+    quotients $\Gamma\backslash\Sol$ by a cocompact lattice $\Gamma$ (which exists by
+    the Bieberbach--Mostow theory; Sol admits compact quotients).
+    The Hadamard property is a local UV condition and should survive the quotient,
+    but the Plancherel theory changes: on $\Gamma\backslash\Sol$ the spectrum becomes
+    discrete (with possible spectral gaps from the Anosov action of $\Gamma$).
+    One must verify that the SLE, originally defined on the covering space $\Sol$,
+    descends to a state on $\Gamma\backslash\Sol$ that remains Hadamard.
+    \emph{Status: expected but not proven.  Requires analysis of the
+    equivariance of the SLE minimiser under $\Gamma$.}
+
+  \item[Remark on exotic representations.]
+    There are no complementary series, discrete series, or other exotic families in
+    $\widehat{\Sol}$ (Sol is an exponential-type solvable group, Type I).
+    The only representations are those in Theorem~\ref{thm:plancherel}.
+    This eliminates a potential difficulty analogous to $\mathrm{SL}(2,\R)$ discrete series.
+\end{description}
+
+%% ---------------------------------------------------------------
+\section{Outlook and Time-to-Publication Estimate}
+\label{sec:outlook}
+%% ---------------------------------------------------------------
+
+\subsection{Summary of status}
+
+The SLE Hadamard construction transfers to Bianchi $\mathrm{VI_0}$:
+\begin{itemize}
+  \item \textbf{For the massive conformally coupled scalar}: in principle, conditional on
+        Lemmas C and D.  The overall strategy is sound and the Sol-specific difficulties
+        (Bessel fiber, Mathieu eigenvalue) are technically hard but not fundamentally
+        obstructed.
+  \item \textbf{For the massless scalar}: genuinely obstructed at IR (Obstruction A).
+        This is not a Sol-specific failure but a universal feature of massless SLE
+        constructions (already in BN23 and Olbermann).
+\end{itemize}
+
+\subsection{Remaining technical work}
+
+A realistic breakdown of the open work:
+
+\begin{center}
+\begin{tabular}{lll}
+\hline
+Item & Nature & Estimated effort \\
+\hline
+Lemma C (Mathieu eigenvalue positivity) & Spectral theory & 2--4 weeks \\
+Lemma D (Adiabatic order for Bessel-$K$) & Asymptotic analysis & 4--8 weeks \\
+Obstruction E (WF set full proof) & Microlocal analysis & 3--6 weeks \\
+Obstruction F (Quotient / compactification) & Harmonic analysis & 2--4 weeks \\
+IR cutoff / mass: full theorem statement & Functional analysis & 1--2 weeks \\
+\hline
+Total (sequential, one author) & & $\sim 3$--6 months \\
+\hline
+\end{tabular}
+\end{center}
+
+\subsection{Honest assessment}
+
+The classification of this piste as ``the hardest among Type A'' in ECI v6.0.24--26 is
+justified.  The Sol group is the first Bianchi case where:
+(i)~plane-wave Fourier analysis is replaced by a two-parameter family of
+infinite-dimensional representations with fiber-direction Bessel functions;
+(ii)~the temporal mode equation depends on an eigenvalue that is itself a solution of
+a Mathieu equation;
+(iii)~the compactification involves an Anosov lattice whose spectral theory is
+substantially harder than the flat torus of Bianchi I.
+
+Under favourable conditions (single author, specialist in microlocal analysis and
+harmonic analysis on solvable groups), a complete paper could be written in
+$\sim 4$--$6$ months.  Under realistic conditions (need to learn Mathieu/Bessel
+asymptotics, BN23 framework, and Sol harmonic analysis simultaneously), a 9--12 month
+timeline is more appropriate.
+
+\paragraph{Recommendation.}
+Proceed with the massive scalar case.  Write Lemma C first (spectral theory, computationally
+accessible via Mathieu equation references).  Lemma D (adiabatic order with Bessel-$K$)
+is the key novel contribution and will determine whether this becomes a standalone paper
+or part of a larger series.
+
+%% ---------------------------------------------------------------
+\section*{References}
+\addcontentsline{toc}{section}{References}
+%% ---------------------------------------------------------------
+
+\begin{thebibliography}{99}
+
+\bibitem{AK71}
+  L.~Auslander and B.~Kostant,
+  ``Polarization and unitary representations of solvable Lie groups,''
+  \emph{Inventiones Mathematicae} \textbf{14} (1971), 255--354.
+  \textit{[arXiv:not available; Springer DOI: 10.1007/BF01389744.
+   Reference VERIFIED via Springer Nature database.]}
+
+\bibitem{AV13}
+  Zh.~Avetisyan and R.~Verch,
+  ``Explicit harmonic and spectral analysis in Bianchi I-VII type cosmologies,''
+  \emph{Classical and Quantum Gravity} \textbf{30} (2013), 155006.
+  arXiv:1212.6180 [math-ph].
+  \textit{[arXiv ID VERIFIED.  Covers Bianchi I--VII including VI$_0$.]}
+
+\bibitem{BN23}
+  R.~Banerjee and M.~Niedermaier,
+  ``States of Low Energy on Bianchi I spacetimes,''
+  \emph{Journal of Mathematical Physics} \textbf{64} (2023), 113503.
+  arXiv:2305.11388 [math-ph].
+  \textit{[arXiv ID VERIFIED.  Main reference for SLE on anisotropic backgrounds.]}
+
+\bibitem{BianchiClass}
+  E.~Bianchi,
+  ``Sugli spazi a tre dimensioni che ammettono un gruppo continuo di movimenti
+  (On the spaces of three dimensions that admit a continuous group of movements),''
+  \emph{Memorie di Matematica e di Fisica della Societa Italiana delle Scienze} (1898).
+  Modern treatment: R.~T.~Jantzen,
+  ``The Bianchi classification in the Sch\"ucking--Behr approach,''
+  in \emph{Golden Oldie} reprints (GRG journal).
+
+\bibitem{Kir04}
+  A.~A.~Kirillov,
+  \emph{Lectures on the Orbit Method},
+  Graduate Studies in Mathematics \textbf{64},
+  American Mathematical Society, Providence, RI, 2004.
+  ISBN: 978-0-8218-3530-2.
+  \textit{[Reference VERIFIED: AMS GSM vol.~64, 408 pp.]}
+
+\bibitem{Olb07}
+  H.~Olbermann,
+  ``States of low energy on Robertson-Walker spacetimes,''
+  \emph{Classical and Quantum Gravity} \textbf{24} (2007), 5011--5030.
+  arXiv:0704.2986 [gr-qc].
+  \textit{[arXiv ID VERIFIED.  Original SLE definition.]}
+
+\bibitem{Rad96}
+  M.~J.~Radzikowski,
+  ``Micro-local approach to the Hadamard condition in quantum field theory on
+  curved space-time,''
+  \emph{Communications in Mathematical Physics} \textbf{179} (1996), 529--553.
+  \textit{[DOI: 10.1007/BF02100096.  Reference VERIFIED.]}
+
+\end{thebibliography}
+
+\end{document}

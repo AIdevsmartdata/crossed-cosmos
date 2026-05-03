@@ -1,0 +1,555 @@
+% krylov_diameter.tex --- standalone math.OA note
+% A Krylov-Diameter Correspondence on Type II_infty FRW Crossed
+% Product Algebras.
+%
+% Author: Kevin Remondiere
+% Date:   2026-05-02
+% Compile: pdflatex krylov_diameter ; bibtex krylov_diameter ;
+%          pdflatex krylov_diameter ; pdflatex krylov_diameter
+
+\documentclass[11pt]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{mathtools}
+\usepackage{hyperref}
+\usepackage{xcolor}
+\usepackage{cite}
+\usepackage{booktabs}
+\hypersetup{colorlinks=true, linkcolor=blue, citecolor=blue, urlcolor=blue}
+
+% Theorem environments
+\newtheorem{theorem}{Theorem}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{remark}[theorem]{Remark}
+\newtheorem{question}[theorem]{Open Question}
+
+% Macros
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\C}{\mathbb{C}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\HH}{\mathcal{H}}
+\renewcommand{\AA}{\mathcal{A}}
+\newcommand{\NN}{\mathcal{N}}
+\newcommand{\MM}{\mathcal{M}}
+\newcommand{\OO}{\mathcal{O}}
+\newcommand{\Aut}{\operatorname{Aut}}
+\newcommand{\Ad}{\operatorname{Ad}}
+\newcommand{\HL}{\mathrm{HL}}
+\newcommand{\BW}{\mathrm{BW}}
+\newcommand{\FRW}{\mathrm{FRW}}
+\newcommand{\Mink}{\mathrm{M}}
+\newcommand{\PLC}{\mathrm{PLC}}
+\newcommand{\Tr}{\operatorname{Tr}}
+\newcommand{\Rprop}{R_{\mathrm{proper}}}
+\newcommand{\Rconf}{R_{\mathrm{conf}}}
+\DeclareMathOperator{\Sp}{Sp}
+\DeclareMathOperator{\Spec}{Spec}
+
+\title{A Krylov--Diameter Correspondence on Type~II$_\infty$ FRW
+Crossed Product Algebras\thanks{Standalone technical note. The
+underlying observation was first recorded in commit \texttt{1b2d055} of
+\url{https://github.com/AIdevsmartdata/crossed-cosmos} (2026-05-02);
+the present reframing follows a sympy-verified gauge audit (Mistral
+counter-review, 2026-05-02).}}
+\author{Kevin Remondi\`ere\\
+\small Independent researcher\\
+\small \href{mailto:kevin.remondiere@gmail.com}{kevin.remondiere@gmail.com}\\
+\small ORCID: \href{https://orcid.org/0009-0008-2443-7166}{0009-0008-2443-7166}}
+\date{2026-05-02}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+We record a geometric--algebraic identity, the
+\emph{Krylov--Diameter Correspondence}, on the type~II$_\infty$
+crossed product
+$\NN := \AA(D_O)_\FRW \rtimes_\sigma \R$ of a doubly-bounded
+comoving causal diamond $D_O$ in a conformally flat
+Friedmann--Robertson--Walker background, with $\AA(D_O)_\FRW$ the
+local algebra of the conformally coupled massless scalar in the
+conformal vacuum (Theorem~3.5 of~\cite{Remondiere2026}). On a smooth
+seed inside the diamond, the Block~A modular Krylov spread
+complexity $C_k$ on $\NN$, lifted from the
+Caputa--Mag\'an--Patramanis--Tonni construction~\cite{CMPT24} via
+the Connes--Takesaki dual weight, satisfies in cosmic time $t$
+along the central worldline
+\[
+\frac{1}{C_k(t)}\,\frac{\mathrm{d}C_k(t)}{\mathrm{d}t}
+\;=\; \frac{1}{\Rprop(\eta_c)}
+\;+\; O\!\big(C_k^{-1}\big),
+\]
+where $\Rprop(\eta_c) = a(\eta_c)\,\Rconf$ is the proper diameter
+radius at the central Cauchy slice $\eta_c$. Both sides are
+spacetime scalars on the worldline. We tabulate four
+era/diamond combinations (radiation, matter, exact de~Sitter; past-light-cone vs. Hubble-horizon diamonds) verified symbolically in
+sympy. The Hubble identity $H(t)=(1/C_k)\,\mathrm{d}C_k/\mathrm{d}t$
+holds exactly in two of these and fails by an era-dependent $O(1)$
+factor in the others; we do \emph{not} claim a universal
+Hubble--Krylov identity. The Block~A definition of $C_k$ on a
+type~II$_\infty$ crossed product is novel beyond the
+type~II$_1$~\cite{AguilarGutierrez2025} and
+type~III$_1$~\cite{CMPT24} precedents and remains conjectural at the
+level of the universal operator-growth hypothesis on II$_\infty$
+KMS states.
+\end{abstract}
+
+\section{Introduction}\label{sec:intro}
+
+The crossed-product programme of Witten~\cite{Witten2022} and
+Chandrasekaran, Longo, Penington and Witten
+(CLPW)~\cite{CLPW2023} produces, from a type~III$_1$ local algebra
+$\AA(\OO)$ and a one-parameter modular automorphism group~$\sigma$,
+a type~II von~Neumann algebra of \emph{gravitationally dressed}
+observables. The semifinite trace on the resulting type~II factor
+is a quantitative entropy carrier and underlies recent advances in
+the generalised second law and entanglement entropy of subregions
+in quantum gravity.
+
+In parallel, Caputa, Mag\'an, Patramanis and Tonni
+(CMPT)~\cite{CMPT24} introduced \emph{modular Krylov complexity} for
+the operator-spread under the modular flow on type~III$_1$ algebras,
+and proved a universal late-modular-time slope $\lambda_L^{\mathrm{mod}}
+= 2\pi$ (their Eq.~(4.16)/(5.4)). This is the modular analogue of the
+universal operator-growth hypothesis~\cite{ParkerEtAl2019}. The slope
+$2\pi$ is intrinsic to the modular automorphism $\Delta^{is}$ of
+Tomita--Takesaki theory; it is independent of any background-spacetime
+time coordinate.
+
+The present note connects these two strands in the simplest
+non-stationary cosmological setting where both make sense. Our
+starting point is the type~II$_\infty$ classification of the
+crossed-product algebra
+\(\NN := \AA(D_O)_\FRW \rtimes_\sigma \R\)
+on a comoving causal diamond $D_O$ in a conformally flat FRW
+background, established for the conformally coupled massless scalar
+in the conformal vacuum in~\cite[Thm.~3.5]{Remondiere2026} via a
+conformal pullback to the Hislop--Longo modular flow on the
+Minkowski diamond~\cite{HislopLongo1982}. On this II$_\infty$
+factor we consider the Krylov spread complexity $C_k$ defined by
+Lanczos iteration on the lifted modular generator (Block~A
+definition, Section~\ref{sec:blockA}); its rate of growth in cosmic
+time $t$ along the central worldline is the object of interest.
+
+The result we record is a clean geometric identity
+\begin{equation}\label{eq:KDC-intro}
+\frac{1}{C_k(t)}\,\frac{\mathrm{d}C_k(t)}{\mathrm{d}t}
+\;=\; \frac{1}{\Rprop(\eta_c)}
+\;+\; O\!\big(C_k^{-1}\big),
+\end{equation}
+where $\Rprop(\eta_c) = a(\eta_c)\,\Rconf$ is the proper diameter
+radius at the central Cauchy slice. This holds in any conformally
+flat FRW background covered by~\cite[Thms.~3.5--3.6, Cor.~3.7]{Remondiere2026},
+\emph{independent of the equation of state} and \emph{independent of
+the particular convention chosen for the diamond}, provided
+$D_O\subset (\eta_i,\eta_f)$ with $a(\eta)$ smooth and strictly
+positive on $\overline{D_O}$ (i.e.\ bounded away from any FRW
+singularity).
+
+The Hubble identity $(1/C_k)\,\mathrm{d}C_k/\mathrm{d}t = H(t)$ is
+an era- and diamond-convention-dependent \emph{corollary} of
+\eqref{eq:KDC-intro}, exact for radiation $+$ past-light-cone and
+de~Sitter $+$ Hubble-horizon, and \emph{wrong by a factor of $1/2$}
+for matter $+$ past-light-cone (Section~\ref{sec:eras}). We make no
+universal Hubble--Krylov claim; the substantive content of the note
+is the geometric identity~\eqref{eq:KDC-intro}.
+
+\medskip\noindent\textbf{Plan.} Section~\ref{sec:setup} recalls
+the type~II$_\infty$ classification of~$\NN$
+from~\cite{Remondiere2026}; Section~\ref{sec:blockA} states the
+Block~A definition of~$C_k$. The main
+theorem~(Theorem~\ref{thm:KDC}) is in Section~\ref{sec:main};
+Section~\ref{sec:eras} is the era-by-era table;
+Section~\ref{sec:cmpt} compares with~\cite{CMPT24}; and
+Section~\ref{sec:open} lists open problems.
+
+\section{Setup: type \texorpdfstring{II$_\infty$}{II-infty} on the FRW comoving diamond}\label{sec:setup}
+
+\subsection{The local algebra and the conformal pullback}
+
+We adopt the framework of~\cite[\S\S2--3]{Remondiere2026}. Let
+$(M, g_\FRW)$ be a spatially flat conformally flat
+Friedmann--Robertson--Walker spacetime with
+\(\mathrm{d}s^2_\FRW = a(\eta)^2\big(-\mathrm{d}\eta^2 + \mathrm{d}\mathbf{x}^2\big)\)
+in conformal time $\eta\in I\subset\R$, with $a(\eta)$ smooth and
+strictly positive on the open interval $I$. We work with the
+conformally coupled massless scalar field $\varphi$ ($\xi = 1/6$) in
+the conformal (Bunch--Davies) vacuum $\Omega_\FRW$, and with a
+doubly-bounded causal diamond $D_O$ for a comoving observer at
+$\mathbf{x} = \mathbf{0}$, of conformal-time interval
+$[\eta_i,\eta_f]\subset I$ and central Cauchy slice
+$\eta_c := (\eta_i + \eta_f)/2$. The local von~Neumann algebra
+$\AA(D_O)_\FRW$ is generated, in the GNS representation
+$\pi_{\Omega_\FRW}$, by the smeared fields $\varphi(f)$ for
+$f\in C_c^\infty(D_O)$.
+
+\begin{theorem}[{\cite[Thm.~3.5]{Remondiere2026} and \cite[Thm.~3.6, Cor.~3.7]{Remondiere2026}}]\label{thm:typeII}
+For any of the three FRW backgrounds $a(\eta) = a_0\eta$
+(radiation, $\eta\in(0,\infty)$), $a(\eta) = a_0\eta^2$
+(matter, $\eta\in(0,\infty)$), $a(\eta) = -1/(H_{\mathrm{dS}}\,\eta)$
+(de~Sitter Poincar\'e patch, $\eta\in(-\infty,0)$), and any
+doubly-bounded comoving diamond $D_O$ as above, the modular
+automorphism group $\sigma^\FRW$ of the pair
+$(\AA(D_O)_\FRW, \Omega_\FRW)$ is unitarily intertwined with the
+Hislop--Longo M\"obius flow $\sigma^\HL$ on the conformally
+identified Minkowski diamond, has Connes spectrum $\Gamma(\sigma^\FRW)
+= \R$, and the crossed product
+\[
+\NN \;:=\; \AA(D_O)_\FRW \rtimes_{\sigma^\FRW} \R
+\]
+is a type~II$_\infty$ factor.
+\end{theorem}
+
+\subsection{The semifinite trace and standard form}
+
+By Connes--Takesaki, $\NN$ carries a (semifinite, faithful, normal)
+canonical trace
+\(\mathrm{tr}_\NN := \phi_{\Omega_\FRW}\circ E\)
+obtained from the dual operator-valued weight to the modular
+flow~\cite{Witten2022, CLPW2023}. Let
+$L^2(\NN, \mathrm{tr}_\NN)$ be the standard form Hilbert space of
+$\NN$, with cyclic separating vector $\Xi_\omega$ representing the
+trace. We write $\Delta_\NN$ for the modular operator of
+$(\NN, \Xi_\omega)$; under the Connes--Takesaki dual-weight
+construction the modular generator decomposes as
+\(K_\NN = -\log\Delta_\NN = K_\FRW \otimes \mathbf{1} + \mathbf{1}\otimes p_t,\)
+where $K_\FRW = -\log\Delta_\FRW$ is the lifted modular Hamiltonian
+of the original type~III$_1$ algebra $\AA(D_O)_\FRW$ and $p_t$ is
+the dual translation generator from the $\R$-factor in the crossed
+product. (We follow the sign conventions of~\cite{CLPW2023, Witten2022}.)
+
+\subsection{The proper diameter radius}
+
+The diamond $D_O$ has, on each constant-$\eta$ Cauchy slice, an
+\emph{intrinsic comoving radius} $\Rconf$ and an \emph{intrinsic
+proper radius}
+\begin{equation}\label{eq:Rproper}
+\Rprop(\eta) \;:=\; a(\eta)\,\Rconf,
+\end{equation}
+which is a spacetime scalar (a function on $\overline{D_O}$,
+gauge-invariant under reparametrisations of $\eta$). At the central
+Cauchy slice $\eta = \eta_c$ we write $\Rprop(\eta_c)$. The
+prescription for $\Rconf$ in terms of $\eta_i, \eta_f$ depends on
+the diamond convention; we discuss two natural choices in
+Section~\ref{sec:eras}.
+
+\section{Block~A definition of \texorpdfstring{$C_k$}{C\_k} on a type \texorpdfstring{II$_\infty$}{II-infty} crossed product}\label{sec:blockA}
+
+\subsection{Definition}
+
+Following~\cite{CMPT24} for the type~III$_1$ case, and lifting via
+the Connes--Takesaki dual weight to the type~II$_\infty$ standard
+form of $\NN$, we define:
+
+\begin{definition}[Block~A modular Krylov spread complexity on a type~II$_\infty$ crossed product]\label{def:Ck}
+Fix a smooth seed
+\(\lvert\mathrm{seed}\rangle := \pi_{\Omega_\FRW}\!\big(\varphi(f_0)\big)\,\Xi_\omega\)
+with $f_0 \in C_c^\infty(D_O)$, viewed as a vector in
+$L^2(\NN, \mathrm{tr}_\NN)$. Run the Lanczos algorithm on
+$-iK_\NN$: this generates an orthonormal Krylov basis
+$\{\lvert O_n\rangle\}_{n\ge 0}$ via the three-term recursion
+\(b_{n+1}\,\lvert O_{n+1}\rangle = (-iK_\NN)\,\lvert O_n\rangle - a_n\lvert O_n\rangle - b_n\lvert O_{n-1}\rangle\)
+with Lanczos coefficients $\{b_n\}_{n\ge 1}$. Define the
+\emph{Krylov spread complexity}
+\begin{equation}\label{eq:Ck-def}
+C_k(s) \;:=\; \sum_{n\ge 0} n\,\big\lvert\langle O_n\,\lvert\, e^{-iK_\NN s}\,\lvert\,\mathrm{seed}\rangle\big\rvert^2.
+\end{equation}
+\end{definition}
+
+\noindent\emph{Reductions.}
+(i) On a finite-trace corner $p\NN p$ with $\mathrm{tr}_\NN(p) <
+\infty$, Definition~\ref{def:Ck} reduces to the finite-dimensional
+Krylov complexity of Parker et al.~\cite{ParkerEtAl2019}.
+(ii) Restriction of the seed to $\AA(D_O)_\FRW \otimes \mathbf{1}$
+(``ungauged'' limit, dropping the $\R$-factor) recovers the
+type~III$_1$ modular Krylov complexity of~\cite{CMPT24}.
+(iii) On a type~II$_1$ algebra (e.g.\ the de~Sitter static-patch
+construction of~\cite{CLPW2023}) the same definition reproduces the
+DSSYK / boundary-Krylov construction of
+Aguilar-Guti\'errez~\cite{AguilarGutierrez2025} after substituting
+the type~II$_1$ trace.
+
+\subsection{Status}
+
+\begin{remark}\label{rem:blockA-status}
+Definition~\ref{def:Ck} is well-posed under standard hypotheses on
+$\NN$ and on the smooth seed (the seed lies in the analytic vectors
+of $K_\NN$; the Krylov basis is orthonormal in
+$L^2(\NN, \mathrm{tr}_\NN)$; the spread complexity is a normalised
+moment of the Lanczos return amplitude as in Vardian~\cite{CMPT24}
+and~\cite{AguilarGutierrez2025}). What we do \emph{not} prove here is
+the universal operator-growth hypothesis (UOGH) on type~II$_\infty$
+KMS states, which would underwrite a $b_n = O(n)$ scaling and the
+$e^{2\pi s}$ asymptotic of $C_k(s)$ on $\NN$ analogous to Parker et
+al.~\cite{ParkerEtAl2019} and CMPT~\cite{CMPT24}. The asymptotic
+slope $\lambda_L^{\mathrm{mod}}=2\pi$ is taken as input from the
+type~III$_1$ subalgebra: in the conformal-pullback setting of
+Theorem~\ref{thm:typeII}, the seed and the Lanczos sequence in
+$L^2(\NN, \mathrm{tr}_\NN)$ project onto the type~III$_1$ Lanczos
+sequence of~\cite{CMPT24} on $L^2(\AA(D_O)_\FRW, \Omega_\FRW)$ via
+the conditional expectation $E:\NN\to\AA(D_O)_\FRW$, which preserves
+the late-modular-time growth rate. A direct II$_\infty$-intrinsic
+proof of $\lambda_L^{\mathrm{mod}} = 2\pi$ is open (see
+Section~\ref{sec:open}).
+\end{remark}
+
+\section{Main theorem: Krylov--Diameter Correspondence}\label{sec:main}
+
+The Bisognano--Wichmann/Hislop--Longo modular Hamiltonian on a
+spacelike-symmetric Minkowski diamond of proper radius $\Rprop$
+has, at the centre $\mathbf{x}_c$, a local Unruh temperature
+\begin{equation}\label{eq:CHM}
+T_{\mathrm{loc}}(\mathbf{x}_c) \;=\; \frac{1}{2\pi\,\Rprop},
+\qquad \text{equivalently}\qquad
+\left.\frac{\mathrm{d}s}{\mathrm{d}\tau_{\mathrm{proper}}}\right|_{\mathbf{x}_c} \;=\; \frac{1}{2\pi\,\Rprop},
+\end{equation}
+where $s$ is the Tomita--Takesaki modular parameter (the parameter of
+$\Delta_\NN^{is}$) and $\tau_{\mathrm{proper}}$ is proper time of an
+observer at the centre. This is the Casini--Huerta--Myers
+relation~\cite{CHM2008}; here $\Rprop = \Rprop(\eta_c)$ as
+defined by~\eqref{eq:Rproper}, since the central Cauchy slice
+intersects the centre worldline at proper time corresponding to
+$\eta_c$.
+
+\begin{theorem}[Krylov--Diameter Correspondence on the type II$_\infty$ FRW crossed product]\label{thm:KDC}
+Let $a(\eta)$ be a smooth strictly positive scale factor on
+$\eta\in I$, $D_O$ a doubly-bounded comoving causal diamond with
+$\overline{D_O}\subset I$, $\NN = \AA(D_O)_\FRW\rtimes_\sigma\R$ the
+type~II$_\infty$ factor of Theorem~\ref{thm:typeII}, $C_k$ the
+Block~A modular Krylov spread complexity of Definition~\ref{def:Ck}
+on a smooth seed $\lvert\mathrm{seed}\rangle\in L^2(\NN, \mathrm{tr}_\NN)$,
+and $t$ the comoving observer's cosmic time at the centre of $D_O$.
+Then, in the late-modular-time asymptotic regime under the working
+assumption that the universal slope
+$\lambda_L^{\mathrm{mod}} = 2\pi$ of CMPT~\cite{CMPT24} carries over
+to $\NN$ via Remark~\ref{rem:blockA-status},
+\begin{equation}\label{eq:KDC}
+\boxed{\;\;
+\frac{1}{C_k(t)}\,\frac{\mathrm{d}C_k(t)}{\mathrm{d}t}
+\;=\; \frac{1}{\Rprop(\eta_c)}
+\;+\; O\!\big(C_k^{-1}\big),
+\;\;}
+\end{equation}
+where $\Rprop(\eta_c) = a(\eta_c)\,\Rconf$ is the proper diameter
+radius at the central Cauchy slice. Both sides of~\eqref{eq:KDC} are
+spacetime scalars on the central worldline; the identity is
+manifestly invariant under reparametrisations
+$t \mapsto t'(t)$ of the worldline parameter.
+\end{theorem}
+
+\begin{proof}[Proof sketch]
+By~\cite[Eq.~(4.16)/(5.4)]{CMPT24} and Remark~\ref{rem:blockA-status},
+the Lanczos coefficients on the type~III$_1$ sub-flow satisfy
+$b_n \sim \pi n$ in modular-time units, hence
+$C_k(s)\sim e^{2\pi s}$ at late modular time and
+\((1/C_k)\,\mathrm{d}C_k/\mathrm{d}s = \lambda_L^{\mathrm{mod}}=2\pi.\)
+By~\eqref{eq:CHM}, on the central worldline,
+\(\mathrm{d}s/\mathrm{d}t = 1/(2\pi\,\Rprop(\eta_c))\) where
+$t = \tau_{\mathrm{proper}}$ for a comoving observer in FRW. The
+chain rule then gives
+\(\frac{1}{C_k}\,\frac{\mathrm{d}C_k}{\mathrm{d}t} = 2\pi \cdot \frac{1}{2\pi\Rprop(\eta_c)} = \frac{1}{\Rprop(\eta_c)},\)
+up to corrections of order $C_k^{-1}$ from the subleading
+late-modular-time expansion of the spread complexity.
+\end{proof}
+
+\begin{remark}[Gauge invariance]\label{rem:gauge}
+The identity~\eqref{eq:KDC} is invariant under reparametrisation of
+the worldline parameter (e.g.\ $t\to\eta$ or any other smooth
+monotone reparametrisation): both
+$(1/C_k)\,\mathrm{d}C_k/\mathrm{d}t$ and $1/\Rprop(\eta_c)$
+transform identically by the chain rule, and the second is a
+pointwise spacetime scalar. The traversal through cosmic time vs.\
+conformal time vs.\ modular time is purely a matter of which
+parameter one differentiates with respect to; the underlying
+geometric--algebraic equality is the same. We verified this
+symbolically (sympy, script
+\texttt{piste1\_gauge\_audit.py}); see~\cite{Remondiere2026} for
+details.
+\end{remark}
+
+\begin{remark}[What this is \emph{not}]\label{rem:not}
+\eqref{eq:KDC} is \emph{not} a universal Hubble--Krylov identity. The
+Hubble parameter
+$H(t) := (1/a)\,\mathrm{d}a/\mathrm{d}t\big|_{\mathrm{central worldline}}$
+agrees with the right-hand side of~\eqref{eq:KDC} only in two of the
+four era/diamond combinations tabulated in
+Section~\ref{sec:eras}, and \emph{disagrees by a factor of $1/2$}
+for matter $+$ past-light-cone diamond. The clean statement is
+geometric (proper diameter radius), not Friedmann (Hubble
+expansion rate); see also the gauge audit cited in the title
+footnote. Conversely, as a consistency
+check, the special cases for which $H(t) = 1/\Rprop(\eta_c)$ does
+hold (radiation $+$ past-light-cone, de~Sitter $+$ Hubble-horizon)
+are recovered as Friedmann arithmetic, not as deeper structural
+features of $\NN$.
+\end{remark}
+
+\section{Era-by-era special cases}\label{sec:eras}
+
+We tabulate the right-hand side of~\eqref{eq:KDC} for the three
+backgrounds covered by~\cite[Thms.~3.5, 3.6, Cor.~3.7]{Remondiere2026},
+combined with two natural conventions for the diamond:
+(\textbf{PLC}) the past-light-cone diamond
+\(\eta_i \to 0^+,\ \eta_f = 2\eta_{\mathrm{obs}},\ \Rconf = \eta_{\mathrm{obs}}\)
+(only meaningful when the lower limit is regular; for de~Sitter we
+use the analogous past-cone with $\eta_i\to-\infty$);
+(\textbf{H}) the Hubble-horizon diamond defined by
+\(\Rprop = 1/H(t)\) at the central slice. Both ratios in the
+final column are in cosmic time $t$; the entries are sympy-verified
+(script \texttt{piste1\_gauge\_audit.py}, see~\cite{Remondiere2026}).
+
+\begin{center}
+\renewcommand{\arraystretch}{1.25}
+\begin{tabular}{lllll}
+\toprule
+Era & $a(\eta)$ & $H(t)$ & Diamond & $\Rprop(\eta_c)^{-1}/H(t)$ \\
+\midrule
+Radiation & $a_0\,\eta$         & $1/(2t)$  & PLC & $1$ (exact) \\
+Matter    & $a_0\,\eta^2$        & $2/(3t)$  & PLC & $1/2$ \\
+Matter    & $a_0\,\eta^2$        & $2/(3t)$  & H   & $1$ (tautological) \\
+de Sitter & $-1/(H_{\mathrm{dS}}\,\eta)$ & $H_{\mathrm{dS}}$ & H   & $1$ (tautological) \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\medskip
+
+\noindent The reading of the table is as follows. The Hubble identity
+$H(t) = (1/C_k)\,\mathrm{d}C_k/\mathrm{d}t$ holds:
+(i) exactly, by Friedmann arithmetic, for radiation $+$ PLC, since
+\(\Rprop(\eta_c) = a(\eta_c)\,\eta_{\mathrm{obs}} = a_0\eta_{\mathrm{obs}}^2 = 2t\)
+in radiation FRW;
+(ii) tautologically for matter $+$ Hubble-horizon and for
+de~Sitter $+$ Hubble-horizon, where the diamond is \emph{defined} by
+$\Rprop = 1/H$;
+and \emph{fails by a factor of $2$} for matter $+$ PLC, where
+\(\Rprop(\eta_c) = a(\eta_c)\,\eta_{\mathrm{obs}} = a_0\eta_{\mathrm{obs}}^3 = 3t\)
+gives $1/\Rprop(\eta_c) = 1/(3t)$ vs.\ $H(t) = 2/(3t)$.
+
+\begin{remark}[On the matter $+$ PLC factor of $1/2$]\label{rem:matter-half}
+The discrepancy in the matter $+$ PLC row is a feature of the
+diamond convention, not of the algebra. Different conventions for
+$\Rconf$ as a function of $\eta_i, \eta_f$ give different values of
+$\Rprop$, hence of the right-hand side of~\eqref{eq:KDC}. The
+\emph{rate} on the algebraic side (the left-hand side) is
+unambiguously $1/\Rprop(\eta_c)$ for the chosen diamond; the
+\emph{rate} on the geometric side, $H(t)$, is intrinsic to the
+background but not to the diamond. There is no contradiction; the
+identity \eqref{eq:KDC} is not the equation $H(t) = $ Krylov rate,
+which is the era-and-diamond-conditional corollary discussed above.
+\end{remark}
+
+\section{Comparison with CMPT and the modular Lyapunov \texorpdfstring{$2\pi$}{2pi}}\label{sec:cmpt}
+
+CMPT~\cite{CMPT24} establish, on the type~III$_1$ algebra of a
+two-dimensional CFT in a vacuum-like state, the universal late-modular-time
+slope
+\begin{equation}\label{eq:cmpt-2pi}
+\frac{1}{C_k(s)}\,\frac{\mathrm{d}C_k(s)}{\mathrm{d}s} \;=\; \lambda_L^{\mathrm{mod}} \;=\; 2\pi,
+\end{equation}
+where $s$ is the Tomita--Takesaki modular parameter intrinsic to the
+algebra (the parameter of $\Delta^{is}$). The constant $2\pi$ is the
+modular analogue of the universal upper bound on operator
+growth~\cite{ParkerEtAl2019} and is independent of any
+background-spacetime time coordinate.
+
+The present Theorem~\ref{thm:KDC} converts~\eqref{eq:cmpt-2pi} into a
+statement about cosmic time $t$ along the comoving worldline of the
+diamond's centre. The conversion is the Casini--Huerta--Myers
+relation~\eqref{eq:CHM} between modular and proper time at the
+centre of a spacelike-symmetric diamond. The factor $2\pi$ in
+\eqref{eq:cmpt-2pi} cancels the factor $2\pi$ in~\eqref{eq:CHM},
+leaving the clean geometric statement~\eqref{eq:KDC}.
+The Krylov complexity in~\eqref{eq:KDC} is on the type~II$_\infty$
+crossed product $\NN$, not on the type~III$_1$ subalgebra
+$\AA(D_O)_\FRW$; the Block~A definition of Section~\ref{sec:blockA}
+ensures that the late-modular-time slope is inherited.
+
+The closest published precedent for a Krylov construction on a
+type~II algebra with cosmological motivation is
+Aguilar-Guti\'errez~\cite{AguilarGutierrez2025}, where the
+type~II$_1$ DSSYK Krylov complexity is computed on the boundary
+Hartle--Hawking seed. Theorem~\ref{thm:KDC} is the type~II$_\infty$
+extension of that programme adapted to the FRW geometric setting and
+specialised to the spread complexity at the diamond centre.
+
+\section{Open problems}\label{sec:open}
+
+\begin{question}[II$_\infty$-intrinsic proof of $\lambda_L^{\mathrm{mod}}=2\pi$]\label{q:lambda}
+Prove the universal operator-growth hypothesis on type~II$_\infty$
+KMS states with respect to the canonical
+trace~$\mathrm{tr}_\NN$, in particular establishing $b_n = O(n)$ on
+$L^2(\NN, \mathrm{tr}_\NN)$ for the lifted modular Hamiltonian
+$K_\NN$. This would close the gap noted in
+Remark~\ref{rem:blockA-status}: the slope $\lambda_L^{\mathrm{mod}}=2\pi$
+in Theorem~\ref{thm:KDC} is currently inherited from the type~III$_1$
+subalgebra via a conditional-expectation argument; a direct
+II$_\infty$ proof would also clarify whether the constant $2\pi$ is
+robust under the addition of a non-trivial cocycle (e.g.\ a small
+mass perturbation).
+\end{question}
+
+\begin{question}[Diamond-convention-independent geometric invariants]\label{q:diamond}
+The right-hand side of~\eqref{eq:KDC} depends on $\Rprop(\eta_c)$,
+hence on the choice of diamond. Are there \emph{diamond-convention-independent}
+combinations of $C_k$ and its derivatives that recover purely
+intrinsic FRW invariants (e.g.\ $H(t)$, $\dot H$, $\dot H/H^2$) as
+geometric--algebraic identities? A natural candidate would involve
+the running of $\Rprop$ across a one-parameter family of nested
+diamonds.
+\end{question}
+
+\begin{question}[Big Bang regime, $\eta_i \to 0^+$]\label{q:bigbang}
+The companion note~\cite{Remondiere2026} (open-questions section,
+``Big Bang -- algebraic structure at $\eta_i=0$'') flags three
+obstructions to the conformal-pullback construction in $4$D as
+$\eta_i\to 0^+$:
+(a) failure of the conformal-rescaling bijection
+$f\mapsto a^3 f$ at the Big Bang, (b) IR singularity of the
+conformal-vacuum two-point function, (c) non-Hadamard boundary
+behaviour. In $2$D all three vanish (as verified by the
+\texttt{eta\_zero\_2d\_opus.py} script of~\cite{Remondiere2026}); in
+$4$D none are addressed by the present argument. The PLC diamond of
+the radiation row in Section~\ref{sec:eras} is a borderline case
+which heuristically extends to $\eta_i\to 0^+$ but which the present
+proof does not establish.
+\end{question}
+
+\begin{question}[Beyond the leading order, and non-PLC diamonds]\label{q:allorders}
+$1/\Rprop(\eta_c)$ in~\eqref{eq:KDC} is the leading
+late-modular-time slope; the $O(C_k^{-1})$ correction is
+seed-dependent. An all-orders expansion of $C_k(t)$ in the cosmic
+time variable, in terms of geometric invariants of the diamond and
+its central worldline, would give a genuine cosmological
+observable. A related question: for an arbitrary spacelike-symmetric
+diamond inside $D_O$, under what intrinsic conditions on the
+diamond does the ratio $1/(\Rprop(\eta_c)\,H(t))$ reduce to a clean
+closed form (e.g.\ a function of the equation-of-state parameter
+$w$ alone)?
+\end{question}
+
+\medskip
+
+\noindent\textbf{Acknowledgements.}~The reframing of the
+correspondence as a geometric--algebraic identity (rather than as a
+universal Hubble--Krylov claim) was prompted by an adversarial
+counter-review (Mistral large-latest, 2026-05-02) followed by a
+sympy-verified gauge audit; the technical content does not depend
+on either of these, but the \emph{statement} does. We thank the
+authors of~\cite{CMPT24, AguilarGutierrez2025} for opening the
+modular-Krylov programme on which this note depends, and the authors
+of~\cite{CLPW2023, Witten2022} for the type~II$_\infty$
+crossed-product machinery without which Theorem~\ref{thm:typeII}
+(and hence Theorem~\ref{thm:KDC}) would not be available.
+
+\bibliographystyle{plain}
+\bibliography{krylov_diameter}
+
+\end{document}

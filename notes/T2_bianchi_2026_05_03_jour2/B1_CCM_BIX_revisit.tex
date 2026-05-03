@@ -1,0 +1,290 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath,amssymb,amsthm,mathtools,hyperref,xcolor,geometry}
+\geometry{margin=2.5cm}
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{conjecture}[theorem]{Conjecture}
+\theoremstyle{definition}
+\newtheorem{remark}[theorem]{Remark}
+
+\newcommand{\AA}{\mathcal{A}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\BI}{\mathrm{B\text{-}I}}
+\newcommand{\BIX}{\mathrm{B\text{-}IX}}
+\newcommand{\BB}{\mathrm{BB}}
+
+\title{B1 + CCM-BIX revisit: max-effort theoretical re-examination
+  in the light of T2-Bianchi I}
+\author{Kevin Remondi\`ere\\\small (max-effort attempt by Opus 4.7, 1M ctx)}
+\date{3 May 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+We revisit two directions previously marked CLOSED in the algebraic
+arrow-of-time programme \cite{Remondiere2026FRW,RemondiereOpus2026Bianchi}:
+(i) the FRW apparent-horizon entropy via T2 past asymmetry,
+(ii) the Connes--Consani--Moscovici (CCM) zeta-spectral-triple bridge to
+Hartnoll--Yang (HY) automorphic dynamics. Today's positive result on
+T2-Bianchi I (Theorem~\ref{thm:T2-BI} below, after
+\cite{T2BIextension2026}) prompts a re-examination. We find: (B1) NEW
+coincidence (algebraic non-cyclic-separating $\Leftrightarrow$ vanishing
+horizon entropy) but no new theorem; (CCM-BIX) a sympy-verified
+algebraic identification of the CCM dilation with a compactified
+Hartnoll--Yang dilation, which re-opens the bridge that yesterday's
+\textsc{frw}-grounded NO-GO had closed. Both directions remain partial;
+we recommend pursuing CCM-BIX.
+\end{abstract}
+
+\section{Inputs}
+
+\begin{enumerate}
+  \item \textbf{T2-Bianchi I (today's positive)}
+  \cite{T2BIextension2026}. The inductive limit
+  $\AA(D_\BB)_\BI = \overline{\bigcup_{t_i\downarrow 0}
+   \AA(D_{(t_i,t_f)})_\BI}$ does not admit any Hadamard quasifree state
+  (e.g.\ the SLE \cite{BanerjeeNiedermaier2023}) as a cyclic-separating
+  vector, in any GNS representation; proof by two independent IR
+  divergences (volume-element zero-mode~$\log^3 \delta$ and contracting
+  Kasner-direction~$1/|k_1|$).
+  \item \textbf{Yesterday's B1 NO-GO}
+  \cite{B1FRWentropy2026}. The CLPW
+  \cite{CLPW2022} Schwarzschild--de Sitter linearisation step (off-shell
+  point energy~$\Rightarrow$ horizon-area shift) has no FRW analog; the
+  conformal pullback flattens~$H(t)$ to a universal M\"obius factor~$2\pi$.
+  \item \textbf{Yesterday's CCM-FRW NO-GO}
+  \cite{CCMFRWbridge2026}. CCM's dilation
+  $D = -i u \partial_u$ on $L^2([\lambda^{-1},\lambda], du/u)$
+  \cite{CCM2025} is linear in $u$; the FRW dS modular generator
+  $K_{\mathrm{FRW}} \sim (R^2 - \eta^2)\partial_\eta$ is quadratic
+  in $\eta$. Hence no unitary identification.
+\end{enumerate}
+
+\section{B1-revisit}
+
+\subsection{Claim and sympy verification}
+
+Let $(M, g)$ be vacuum Bianchi I (Kasner, $(p_1, p_2, p_3) = (-1/3,
+2/3, 2/3)$). Define the cosmological apparent horizon as
+$r_{\mathrm{AH}} = 1/H_{\mathrm{avg}}$ with
+$H_{\mathrm{avg}} = (1/3) \sum_i (\dot a_i / a_i) = 1/(3t)$. Then:
+\begin{equation}
+  r_{\mathrm{AH}}(t) = 3t,
+  \quad
+  A_{\mathrm{AH}}(t) = 4\pi r_{\mathrm{AH}}^2 = 36\pi t^2,
+  \quad
+  S_{\mathrm{BH}}(t) = \frac{A_{\mathrm{AH}}}{4 G_N} = \frac{9\pi t^2}{G_N}
+  \xrightarrow[t\to 0^+]{} 0.
+\end{equation}
+By Theorem~\ref{thm:T2-BI} (recalled below), the algebra
+$\AA(D_\BB)_\BI$ admits no cyclic-separating vector.
+
+\begin{theorem}[T2-Bianchi I; \cite{T2BIextension2026}]\label{thm:T2-BI}
+The inductive-limit local algebra
+$\AA(D_\BB)_\BI \subset \mathcal{B}(\mathcal{H}_{\mathrm{SLE}})$ does
+NOT admit the Banerjee--Niedermaier SLE state, nor any state in its
+BFV folium, as a cyclic-separating vector in any GNS representation.
+\end{theorem}
+
+\begin{conjecture}[B1-revisit, posited by parent agent]\label{conj:B1-revisit}
+The vanishing $S_{\mathrm{BH}}(t) \to 0$ as $t\to 0^+$ AND the algebraic
+non-cyclic-separating obstruction of Theorem~\ref{thm:T2-BI} are TWO
+MANIFESTATIONS of the same algebraic property of the cosmological
+wedge inclusion $\AA(D_\infty) \supset \AA(D_\BB)$.
+\end{conjecture}
+
+\subsection{Verdict: PARTIAL}
+
+We sympy-verify (\texttt{B1\_CCM\_BIX\_revisit.py}, Section~1) the
+chain:
+\begin{itemize}
+  \item \emph{Algebraic side.} The smeared Wightman two-point on
+  test-functions extending to $t = 0$ contains the zero-mode
+  contribution $\bigl(\int_\delta^{2\delta} \log(t)/t\,dt\bigr)^2 \to
+  +\infty$, plus the contracting-Kasner-direction $1/|k_1|$ IR.
+  Hence no Hadamard normal extension to $\AA(D_\BB)_\BI$.
+  \item \emph{Geometric side.} $A_{\mathrm{AH}} \sim t^2$,
+  $S_{\mathrm{BH}} \sim t^2/G_N$, both $\to 0$.
+  \item \emph{Bekenstein bound (semi-classical).} $\langle K
+  \rangle_\omega \le 2\pi r_{\mathrm{AH}} E_{\mathrm{inside}} \le
+  S_{\mathrm{BH}}$. Hence
+  $\langle K \rangle_{\max} \le S_{\mathrm{BH}}/(2\pi r_{\mathrm{AH}}) =
+  3t/(2 G_N) \to 0$.
+\end{itemize}
+
+The vanishings COINCIDE at $t \to 0^+$. However:
+\begin{itemize}
+  \item The Bekenstein bound is \emph{semi-classical}; its derivation
+  assumes smooth-spacetime geometry on the diamond, which fails as
+  $t\to 0$. So the would-be ``$\langle K\rangle = 0
+  \Rightarrow$ no cyclic-separating vector'' is a HEURISTIC, not a
+  rigorous deduction. (This is the same caveat as strategy S5 in the
+  T2 paper; see \cite{T2BIextension2026} \S~S5.)
+  \item There is no operator-level identification of the modular
+  Hamiltonian $K$ with an ``area observable'', because the FRW
+  pullback flattens the Hubble scale (yesterday's B1 NO-GO,
+  \cite{B1FRWentropy2026}~\S~5(a)). T2-Bianchi I uses a direct
+  mode-decomposition argument, NOT a pullback, so this objection does
+  not kill T2-BI itself; but it does kill the B1-revisit conjecture's
+  attempt to use T2-BI as a route to $S = A/4G$.
+\end{itemize}
+
+\paragraph{Verdict.} Conjecture~\ref{conj:B1-revisit} is REFUTED as
+written: both vanishings have a common geometric cause (the singular
+limit), but they are not derivable one from the other within the
+present framework. The B1 NO-GO of \cite{B1FRWentropy2026} stands.
+\textbf{Re-opens / still closed / partial: PARTIAL} (structural
+coincidence noted, no new theorem).
+
+\section{CCM-BIX bridge}
+
+\subsection{Setup}
+
+CCM \cite{CCM2025} eq.~(5.14): on $L^2([\lambda^{-1}, \lambda],
+du/u)$ with periodic boundary conditions,
+\begin{equation}
+  D^{(\lambda)}_{\log} = -i u \frac{\partial}{\partial u},
+  \quad
+  \mathrm{Spec}\bigl(D^{(\lambda)}_{\log}\bigr) = \biggl\{\frac{2\pi n}{2 \log \lambda} :
+   n \in \mathbb Z\biggr\}.
+\end{equation}
+Theorem~1.1 of \cite{CCM2025}: the rank-one perturbation
+$D^{(\lambda, N)}_{\log} = D^{(\lambda)}_{\log} -
+|D^{(\lambda)}_{\log} \xi\rangle\langle \delta_N|$
+has spectrum (numerically) approaching $\{\gamma_n\}$ as
+$N, \lambda \to \infty$.
+
+HY \cite{HartnollYang2025} eq.~(37): in the noncompact picture of the
+$SL(2,\R)$ principal series $\Delta = \tfrac{1}{2} + i\varepsilon$,
+on $L^2(\R, dx)$,
+\begin{equation}
+  D \psi = i\Bigl(x \frac{d \psi}{dx} + \Delta \psi\Bigr).
+\end{equation}
+HY eq.~(48--49): the wavefunction in the dilatation basis is
+$\phi(t) = \Phi(\tfrac{1}{2} + it)$ with $\Phi$ proportional to the
+$L$-function $\widetilde L(s)$. Vanishing of $\phi(t)$ at the
+nontrivial zeros: ``absorption spectrum''.
+
+\subsection{Sympy-verified mapping}
+
+\begin{proposition}[Sympy-verified, \texttt{B1\_CCM\_BIX\_revisit.py}
+Section~2]
+With $u, x$ identified via the unitary
+$U: L^2([\lambda^{-1}, \lambda], du/u) \to L^2([-\log \lambda, \log
+\lambda], dx)$ given by $u = e^x$, $du/u = dx$,
+\begin{equation}\label{eq:CCM-HY-mapping}
+  U D^{(\lambda)}_{\log} U^{-1} = -i \partial_x,
+  \qquad
+  D_{\mathrm{HY}} = -\,U D^{(\lambda)}_{\log} U^{-1} \cdot x
+   + i\Delta \cdot \mathrm{id}.
+\end{equation}
+The first equation says: CCM's dilation on the
+$\log$-rescaled compact interval is the
+\textbf{periodic-momentum operator} on $L^2([-\log \lambda, \log \lambda], dx)$.
+The second equation, in operator-substituted form, reads
+\begin{equation}
+  D_{\mathrm{HY}} - i\Delta\,\mathrm{id} = i x \partial_x = -D_{\mathrm{CCM}}
+  \;\;(\text{after } u \leftrightarrow x).
+\end{equation}
+\end{proposition}
+
+\textsc{Sympy verification} (\texttt{B1\_CCM\_BIX\_revisit.py},
+output): the difference $D_{\mathrm{HY}}\psi -
+i\Delta\psi - (-D_{\mathrm{CCM}})\psi$ is identically zero.
+
+\subsection{Why yesterday's NO-GO does not apply}
+
+Yesterday's NO-GO \cite{CCMFRWbridge2026} compared CCM with the FRW
+modular generator $K_{\mathrm{FRW}} = (\pi/2R)(R^2 - \eta^2)
+\partial_\eta$, which is quadratic in $\eta$. The HY dilation is
+linear (table in \texttt{B1\_CCM\_BIX\_revisit.py} Section~3). Hence:
+
+\begin{itemize}
+  \item \textbf{Geometry mismatch.} HY works on Bianchi IX
+  (Mixmaster), where the natural dilation is on the BKL Iwasawa
+  coordinate (eq.~(1) of \cite{HartnollYang2025}), NOT on FRW
+  conformal time. The yesterday NO-GO's quadratic-vs-linear obstruction
+  is a verdict on FRW, NOT BIX.
+  \item \textbf{Operator match.} On the BIX side, both CCM and HY
+  dilations are LINEAR in their respective variables, with
+  $D_{\mathrm{HY}} = -D_{\mathrm{CCM}} + i \Delta$ (as
+  per~\eqref{eq:CCM-HY-mapping}).
+\end{itemize}
+
+\subsection{Residual gaps and verdict}
+
+\begin{itemize}
+  \item HY's $L$-function is a wavefunction \emph{overlap}, not an
+  eigenvalue. The Riemann zeros are zeros of $\phi(t)$, NOT of
+  $D_{\mathrm{HY}}$. (HY \S~6 explicitly: ``zeros = absorption spectrum''.)
+  \item CCM's spectrum approaches $\{\gamma_n\}$ only after the
+  rank-one perturbation tied to the Euler product over $p \le \lambda^2$.
+  Without the perturbation, the spectrum is the trivial torus.
+  \item There is no known dictionary mapping CCM's perturbation
+  operator to HY's modular-invariance constraint.
+  \item HY uses Wheeler--DeWitt on a 1-particle minisuperspace; T2-BI
+  uses local-AQFT on a continuum field theory. The frameworks are
+  mathematically distinct.
+\end{itemize}
+
+\textbf{Verdict CCM-BIX: PARTIAL OPENING.} The dilation-operator
+identification is REAL and sympy-verified. But the Hilbert--P\'olya
+bridge at the spectral level remains conjectural even after this
+identification.
+
+\section{Recommendation}
+
+\begin{enumerate}
+  \item \textbf{Pursue CCM-BIX further.} Two specific directions:
+  \begin{itemize}
+    \item Iwasawa-coordinate dilation on BIX minisuperspace
+    (\cite{HartnollYang2025} eq.~(1), Iwasawa $\beta_1, \beta_2,
+    \beta_3$): check that the dilation is literally
+    $-i \partial_y$ on the upper half-plane, identifying with
+    CCM's $-i u \partial_u$ via $u = e^y$. ~1 week.
+    \item CCM perturbation $\leftrightarrow$ HY modular constraint
+    dictionary: speculative but high-reward. ~2--3 months.
+  \end{itemize}
+  \item \textbf{Do NOT pursue B1-revisit further.} The coincidence is
+  structurally interesting but does not yield a new theorem. The
+  original B1 NO-GO stands.
+\end{enumerate}
+
+\begin{thebibliography}{99}
+\bibitem{Remondiere2026FRW}
+K.\ Remondi\`ere, \emph{Algebraic Weyl Curvature Hypothesis: FRW Theorem
+T1+T2+T3}, companion note \texttt{algebraic\_arrow.tex} (May 2026).
+\bibitem{RemondiereOpus2026Bianchi}
+K.\ Remondi\`ere (with max-effort attempt by Opus 4.7), \emph{Bianchi
+extension attempt: Proposition B.1 (T1 perturbative lift)}, companion note
+\texttt{bianchi\_extension\_opus.tex} (May 2026).
+\bibitem{T2BIextension2026}
+K.\ Remondi\`ere (with Opus 4.7), \emph{T2 Bianchi extension},
+\texttt{/tmp/T2\_bianchi\_extension.\{tex,md,py\}} (May 2026).
+\bibitem{B1FRWentropy2026}
+K.\ Remondi\`ere (with Opus 4.7), \emph{B1 -- Witten/CLPW
+generalised-entropy formula on FRW type II$_\infty$ algebras},
+\texttt{/tmp/B1\_frw\_entropy.md} (May 2026).
+\bibitem{CCMFRWbridge2026}
+K.\ Remondi\`ere (with Opus 4.7), \emph{CCM 2511.22755 + Hartnoll--Yang
+2502.02661 vs FRW Type II$_\infty$},
+\texttt{/tmp/ccm\_hartnoll\_frw\_bridge.md} (May 2026).
+\bibitem{CLPW2022}
+V.\ Chandrasekaran, R.\ Longo, G.\ Penington, E.\ Witten, \emph{An algebra
+of observables for de Sitter space}, JHEP 02 (2023) 082, arXiv:2206.10780.
+\bibitem{CCM2025}
+A.\ Connes, C.\ Consani, H.\ Moscovici, \emph{Zeta Spectral Triples},
+arXiv:2511.22755 (2025).
+\bibitem{HartnollYang2025}
+S.A.\ Hartnoll, M.\ Yang, \emph{The Conformal Primon Gas at the End
+of Time}, arXiv:2502.02661 (2025).
+\bibitem{BanerjeeNiedermaier2023}
+R.\ Banerjee, M.\ Niedermaier, \emph{States of Low Energy on Bianchi I
+spacetimes}, J.\ Math.\ Phys.\ \textbf{64}, 113503 (2023),
+arXiv:2305.11388.
+\end{thebibliography}
+
+\end{document}

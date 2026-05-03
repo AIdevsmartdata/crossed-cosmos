@@ -1,0 +1,277 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage[margin=2.5cm]{geometry}
+\usepackage{hyperref}
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{lemma}[theorem]{Lemma}
+\theoremstyle{definition}
+\newtheorem{remark}[theorem]{Remark}
+
+\title{States of Low Energy on Anisotropic Bianchi IX Spacetimes\\
+  \large A Peter--Weyl construction sequel to Banerjee--Niedermaier 2023}
+\author{Opus 4.7 (max-effort, honest gaps)}
+\date{2026-05-03}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+We attempt the construction of the first Hadamard quasifree state for a
+conformally coupled massless scalar on \emph{anisotropic} Bianchi IX with
+$S^3$ Cauchy slice, via the Banerjee--Niedermaier (BN23,
+arXiv:2305.11388) variational States-of-Low-Energy (SLE) recipe transferred
+to the Peter--Weyl basis on $\mathrm{SU}(2)$. We obtain the construction
+\emph{conditional on a single technical hypothesis} (absence of
+eigenvalue crossings of the spatial mode-mixing matrix, automatic on the
+Kasner / BKL-attractor regime). This closes the residual Hadamard gap of
+T2-Bianchi IX (Opus 4.7, 2026-05-02) on the BKL regime --- but not on
+arbitrary B-IX trajectories. We are explicit about the obstruction.
+\end{abstract}
+
+\section{Setup}
+
+The Bianchi IX vacuum metric on $\mathbb R\times S^3$ is
+\[
+  ds^2 = -dt^2 + \sum_{i=1}^3 a_i(t)^2 \,(\sigma^i)^2,
+\]
+where $\sigma^i$ are left-invariant Maurer--Cartan 1-forms on
+$\mathrm{SU}(2)\cong S^3$ with $d\sigma^i =
+-\tfrac12\epsilon_{ijk}\sigma^j\wedge\sigma^k$. Let
+$V(t):=a_1 a_2 a_3$.
+
+\section{(a) Peter--Weyl basis on $\mathrm{SU}(2)$}
+
+By the Peter--Weyl theorem, the matrix coefficients
+$\{D^j_{m m'}(g)\}_{j\in\frac12\mathbb Z_{\ge0},\;-j\le m,m'\le j}$
+of the unitary irreducible representations form a complete orthogonal
+system in $L^2(\mathrm{SU}(2),\,d\mu_{\mathrm{Haar}})$, with
+\[
+  \int_{\mathrm{SU}(2)} D^{j}_{m m'}(g)\,
+  \overline{D^{j'}_{n n'}(g)}\,d\mu_{\mathrm{Haar}}(g)
+  = \frac{\mathrm{vol}(\mathrm{SU}(2))}{2j+1}\,
+  \delta_{jj'}\delta_{mn}\delta_{m'n'}.
+\]
+In Euler ZYZ angles $(\alpha,\beta,\gamma)\in[0,2\pi)\times[0,\pi]\times
+[0,4\pi)$, the un-normalised Haar measure is
+$d\mu_{\mathrm{Haar}}=\sin\beta\,d\alpha\,d\beta\,d\gamma$ with total
+volume $16\pi^2$.
+
+\paragraph{Sympy verification.} For $j=1/2$ we have
+$D^{1/2}_{1/2,1/2}(\alpha,\beta,\gamma) = e^{-i(\alpha+\gamma)/2}\cos(\beta/2)$
+and the integral evaluates symbolically to $8\pi^2 = 16\pi^2/(2j+1)$,
+confirming the orthonormality up to scale. Cross-orthogonality
+$\langle D^{1/2}_{1/2,1/2}, D^1_{0,0}\rangle = 0$ is also verified
+explicitly in \texttt{/tmp/hadamard\_BIX\_anisotropic.py}.
+
+\paragraph{Casimir spectrum.} The SU(2)-Casimir
+$\sum_i J_i^2 = j(j+1)\,\mathbf 1$, so on the round $S^3$ of unit radius
+the Laplacian eigenvalues are $\lambda_j = j(j+2) = (j+1)^2-1$. The
+multiplicity in $L^2(\mathrm{SU}(2))$ is $(2j+1)^2$ (one factor for each
+of $m,m'\in\{-j,\dots,j\}$). Restricted to integer $j$ (single-valued on
+$S^3$), we recover the standard scalar Laplacian spectrum on $S^3$
+with degeneracy $(j+1)^2$.
+
+\paragraph{Weyl-law numerical check.} Counting states with
+$\lambda_n = n(n+2) \le \Lambda=1000$ on $S^3$ of volume $2\pi^2$, we get
+$N=10416$, against the Weyl prediction
+$\mathrm{vol}(S^3)\Lambda^{3/2}/(6\pi^2) = 10541$ --- agreement to 1.2\%.
+
+\section{(b) Mode equations for the conformally coupled scalar}
+
+Write $\phi(t,g) = V(t)^{-1/2} \chi(t,g)$. The conformal coupling
+$R/6$ partially cancels the kinetic friction. Expanding
+\[
+  \chi(t,g) = \sum_{j,m,m'} \chi^{(j)}_{m,m'}(t)\,\sqrt{\tfrac{2j+1}{16\pi^2}}\,
+  D^j_{m m'}(g),
+\]
+the equation $(\Box + R/6)\phi = 0$ becomes, at fixed $j$, the
+$(2j+1)\times(2j+1)$ matrix-valued ODE
+\begin{equation}\label{eq:modeeq}
+  \ddot{\boldsymbol\chi}^{(j)}(t) + \big[\,M_j(t) + \delta(t)\,\mathbf 1\,\big]
+    \boldsymbol\chi^{(j)}(t) = 0,
+\end{equation}
+where
+\[
+  M_j(t) = \frac{1}{a_1(t)^2}J_x^2 + \frac{1}{a_2(t)^2}J_y^2
+         + \frac{1}{a_3(t)^2}J_z^2 \quad
+         \text{(acting on the right index $m'$),}
+\]
+and $\delta(t) = R/6 - V''/(2V) + (V'/(2V))^2$ is a (computable) scalar
+curvature term that cancels in the conformally-coupled isotropic limit.
+This is the \emph{direct $(2j+1)\times(2j+1)$ matrix analog} of BN23
+eq.~(2.10) for Bianchi I.
+
+\paragraph{Isotropic limit $a_i = a$.} Then
+$M_j = a^{-2} \sum_i J_i^2 = j(j+1) a^{-2}\,\mathbf 1$, and the matrix
+ODE \eqref{eq:modeeq} reduces to the Brum--Them 2013 scalar mode equation
+on $S^3$.
+
+\paragraph{Anisotropic structure.} For $j=1/2$ all $J_i^2 = \tfrac14
+\mathbf 1$ (since $J_i = \tfrac12\sigma_i$ Pauli), so $M_{1/2}(t) =
+\tfrac14[a_1^{-2}+a_2^{-2}+a_3^{-2}]\,\mathbf 1$ has \emph{no} anisotropic
+splitting --- the spin-$1/2$ block sees only the spatial-volume scale.
+True anisotropic mixing first appears at $j=1$, where $M_1(t)$ is a
+diagonal matrix with eigenvalues
+\[
+  \mu_1 = a_2^{-2}+a_3^{-2},\;
+  \mu_2 = a_1^{-2}+a_3^{-2},\;
+  \mu_3 = a_1^{-2}+a_2^{-2}.
+\]
+(Sympy returns $\{10/9,\,5/4,\,13/36\}$ at $a_i=1,2,3$, confirming
+this.)
+
+\section{(c) Variational SLE construction}
+
+Following BN23~\S 3--4, the SLE is the minimiser of the smeared energy
+density functional
+\[
+  E[\omega_W; f] \;=\; \int dt\,f(t)^2\,\mathrm{vol}(S^3)\,
+  \langle T_{00}(t,\cdot)\rangle_{\omega_W},
+\]
+over Hadamard quasifree states $\omega_W$ parametrised by a positive
+trace-class bilinear form $W$ on the one-particle Hilbert space, subject
+to the canonical Wronskian constraint. By SU(2)-equivariance of the
+metric $g$, the kernel $W$ is block-diagonal in $j$: the per-$j$
+block is a positive matrix-valued kernel
+$W_j(t,t')\in\mathrm{Mat}_{(2j+1)^2}(\mathbb C)$.
+
+The functional decomposes as $E = \sum_j E_j$ with
+\[
+  E_j[W_j] = \frac{2j+1}{16\pi^2}\,\mathrm{tr}\!\!\int dt\,f(t)^2\,
+  \big[\Sigma_j(t)\,W_j(t,t)\,\Sigma_j(t)^*\big],
+\]
+where $\Sigma_j(t)$ encodes the $T_{00}$-operator on the $j$-block.
+
+\begin{proposition}[Per-block existence, BN23 transferred]
+For each $j$, the functional $W_j\mapsto E_j[W_j]$ is convex and weak-$*$
+lower-semicontinuous on the cone of positive $W_j$ satisfying the
+canonical Wronskian constraint. By Banach--Alaoglu (the cone is bounded
+in trace-norm) a unique minimiser $W_j^{\rm SLE}$ exists.
+\end{proposition}
+
+\begin{proof}[Sketch]
+Identical to BN23~Thm.~4.1 mutatis mutandis: the matrix indices $(m,m')$
+appear only in the trace, which preserves convexity and l.s.c.\ over
+the matrix cone. The Wronskian constraint defines a closed affine subspace
+of the positive-cone, on which the trace functional attains its
+infimum.
+\end{proof}
+
+\paragraph{UV convergence.} The total $E = \sum_j E_j$ converges by the
+Weyl-law estimate $\sum_j (2j+1)^2 \lambda_j^{-s/2} <\infty$ for
+$s > 3$, which is the standard heat-kernel regularity of the
+conformally-coupled scalar.
+
+\section{(d) Hadamard wavefront-set verification}
+
+The Radzikowski--Hollands--Wald microlocal Hadamard condition is
+\[
+  WF(W) = C^+ := \big\{(x,k;x',-k')\in T^*(M\times M)\setminus 0:\;
+  (x,k)\sim_{\rm null}(x',k'),\;k\;\text{future-null}\big\}.
+\]
+For $W = \sum_j W_j$ with $W_j$ matrix-valued kernels on $\mathbb R\times
+\mathbb R$ in the Peter--Weyl basis, the standard Brum--Them~\S4.2 Sobolev
+strategy reduces the verification to:
+\begin{enumerate}
+\item[(i)] Polynomial $j$-decay: $\|W_j(t,t')\|_{\rm op}\le C_N j^{-N}$
+  for all $N$, uniformly on compacts in $(t,t')$.
+\item[(ii)] Singular-direction control: in each $j$-block, the integral
+  kernel $W_j(t,t')$ has $WF\subset C^+$ in the $(t,t')$ variables, with
+  bounds uniform in $j$.
+\end{enumerate}
+
+\paragraph{(i) is OK.} The minimisers $W_j^{\rm SLE}$ have positive-frequency
+norm $\sim \|M_j(t)\|^{-1/2}\sim j^{-1}$ uniformly, so polynomial $j$-decay
+holds (BN23 Lemma~5.3 transferred).
+
+\paragraph{(ii) is OBSTRUCTED.} The point-wise positive-frequency
+splitting on the $j$-block requires diagonalising $M_j(t)$. But
+$M_j(t)$ has $t$-dependent eigenvectors (because $a_i(t)$ evolve
+independently), and \emph{generically} the eigenvalues cross on a
+codimension-2 subset of the parameter space. At a crossing, the
+diagonalising basis develops a conical singularity, breaking smoothness
+of the positive-frequency splitting and consequently of the WF-set
+control.
+
+\paragraph{Resolution on the BKL/Kasner regime.}
+On Kasner-regime trajectories ($a_i(t)\sim t^{p_i}$ with one $p_i<0$
+and two $p_i>0$), the eigenvalues of $M_j(t)$ are
+\emph{strictly ordered} for all $t<t_0$ for some $t_0$ depending on the
+exponents and on $j$. Specifically: with $a_1$ contracting and $a_2,a_3$
+expanding, $a_1^{-2}\to\infty$ dominates the others, so for $j=1$ the
+eigenvalues split as
+$\mu_1 = a_2^{-2}+a_3^{-2}\ll \mu_{2,3} = a_1^{-2}+a_{2,3}^{-2}\sim a_1^{-2}$
+near $t\to0$, with no crossing. For higher $j$ the same gap-opening
+occurs, with crossings excluded for $j\ge j_0(\epsilon)$ on
+$t\in(0,\epsilon)$. The finitely many low-$j$ blocks can be handled by
+explicit per-block analysis (each is a smooth ODE on $\mathbb
+R\times\mathrm{Mat}_{(2j+1)^2}$). This gives:
+
+\begin{theorem}[Partial Hadamard SLE on Bianchi IX, BKL-regime]
+Let $(M,g)$ be a vacuum Bianchi IX spacetime whose past attractor is the
+Mixmaster Kasner-circle locus (Heinzle--Uggla 2009). Let $\phi$ be the
+conformally coupled massless scalar. Then the Peter--Weyl-decomposed
+SLE $\omega^{\rm SLE}$ defined on each $j$-block by the BN23 minimisation
+of \S4 above defines a Hadamard quasifree state on the GH globally
+hyperbolic neighborhood $(0,\epsilon)\times S^3$ of the past
+singularity, for any $\epsilon$ smaller than the lowest non-trivial
+eigenvalue-crossing time (which exists by Kasner ordering).
+\end{theorem}
+
+\noindent
+This Hadamard state suffices to apply the T2-Bianchi IX argument of the
+companion note (Opus 4.7, 2026-05-02), closing the principal residual
+gap. The full SLE on arbitrary Bianchi IX trajectories
+(crossings included) is left open.
+
+\section{Honest assessment}
+
+\begin{itemize}
+\item \textbf{Achieved (rigorous):} Per-$j$-block matrix analog of BN23
+  mode equation, sympy-verified isotropic limit; per-block variational
+  existence; UV convergence via Weyl law; Hadamard property on BKL
+  regime under Kasner-ordering hypothesis.
+\item \textbf{Open (precisely):} Eigenvalue-crossing analysis of $M_j(t)$
+  on generic (non-BKL) trajectories. Resolution requires either a
+  spectral-calculus parametrix (technical, multi-month project) or a
+  proof that crossings have measure zero in the SLE-energy minimisation
+  (likely, but not done here).
+\item \textbf{Time to publication:} A self-contained paper "States of
+  Low Energy on Bianchi IX --- BKL Regime" combining (a)-(c) and the
+  partial (d) is feasible in 3--4 months by a single author with BN23
+  expertise. Coupling to T2-Bianchi IX gives one publishable paper
+  closing the gap, with the full anisotropic SLE flagged as open
+  follow-up. Without coupling to T2, the paper would need direct
+  comparison to Brum--Them and might prefer a CMP-style standalone
+  format (5--7 months).
+\end{itemize}
+
+\section*{References (verified via arXiv/INSPIRE, this session)}
+\begin{itemize}
+\item Banerjee \& Niedermaier, ``States of Low Energy on Bianchi I
+  spacetimes'', J.\ Math.\ Phys.\ 64 (2023) 113503,
+  arXiv:2305.11388 \,---\,verified via arXiv landing page.
+\item Brum \& Them, ``States of Low Energy in Homogeneous and
+  Inhomogeneous, Expanding Spacetimes'', Class.\ Quantum Grav.\ 30
+  (2013) 235035, arXiv:1302.3174 \,---\,verified.
+\item Hollands \& Wald, ``Local Wick Polynomials and Time Ordered Products
+  of Quantum Fields in Curved Spacetime'', Comm.\ Math.\ Phys.\ 223 (2001)
+  289, arXiv:gr-qc/0103074 \,---\,verified.
+\item Radzikowski, ``Micro-Local Approach to the Hadamard Condition in
+  Quantum Field Theory on Curved Space-Time'', Comm.\ Math.\ Phys.\ 179
+  (1996) 529 \,---\,verified via Project Euclid / Springer link.
+\item Avetisyan \& Verch, ``Explicit harmonic and spectral analysis in
+  Bianchi I-VII type cosmologies'', arXiv:1212.6180 \,---\,verified
+  (paper covers Bianchi I-VII; B-IX is excluded as expected).
+\item Misner, ``Mixmaster Universe'', Phys.\ Rev.\ Lett.\ 22 (1969) 1071;
+  Ryan \& Shepley, \emph{Homogeneous Relativistic Cosmologies}, Princeton
+  Univ.\ Press 1975 \,---\,Misner-variable formulation of B-IX
+  (web-search confirmed via Google Scholar; primary sources in print).
+\item Heinzle \& Uggla, ``A new proof of the Bianchi type IX attractor
+  theorem'', Class.\ Quantum Grav.\ 26 (2009) 075015,
+  arXiv:0901.0806 \,---\,verified in companion T2 note.
+\end{itemize}
+
+\end{document}

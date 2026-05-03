@@ -1,0 +1,197 @@
+% blockA1_unrestricted_max.tex
+% Three-rescue-path investigation of the unrestricted UOGH on type II_infty
+% Companion appendix to blockA1_UOGH_lift.tex.
+% Date: 2026-05-03
+\documentclass[11pt]{amsart}
+\usepackage{amsmath,amssymb,amsthm,booktabs}
+\usepackage[margin=1in]{geometry}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{conjecture}[theorem]{Conjecture}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{lemma}[theorem]{Lemma}
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+\newcommand{\NN}{\mathcal{N}}
+\newcommand{\AA}{\mathcal{A}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\HH}{\mathcal{H}}
+\newcommand{\bn}{b_n}
+
+\title{Three rescue paths for the unrestricted UOGH on type~II$_\infty$:\\
+       slope universality, polynomial-clock obstruction,\\ and the
+       asymptotic-universal conjecture}
+\author{(Block A1, three-path investigation, 2026-05-03)}
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\section{Setup and prior result}
+
+Setup as in \texttt{blockA1\_UOGH\_lift.tex}: $\AA$ type~III$_1$ Hislop--Longo,
+$\omega$ vacuum (KMS at $\beta_{\rm mod}=2\pi$), $\NN=\AA\rtimes_{\sigma^\omega}\R$
+type~II$_\infty$ with canonical trace $\mathrm{tr}_\NN$ and standard form
+$L^2(\NN,\mathrm{tr}_\NN)$, vector $\Xi_\omega$. Restricted-class theorem
+(\textit{loc.\ cit.\ Thm 2.1}): for $|\psi\rangle=\pi(O\otimes f)\Xi_\omega$ with
+$O$ chiral primary of weight $h>0$ and $f\in\mathcal S(\R)$,
+\[
+   \bn[\psi] \;=\; \pi n \,+\, O(\log n),
+   \qquad \lambda_L^{\rm mod}=2\pi.
+\]
+We investigate three paths to extend this to the unrestricted Universal Operator
+Growth Hypothesis (Parker--Cao--Avdoshkin--Scaffidi--Altman, PRX~9 041017,
+\texttt{arXiv:1812.08657}).
+
+\section{Path~$\beta$: polynomial-decay clocks (HARD NO)}
+
+\begin{proposition}[Moment-problem obstruction]\label{prop:beta}
+Let $f$ have $|\hat f(\omega)|^2 \sim C\,\omega^{-2k}$ as $|\omega|\to\infty$
+with $k\ge 1$. Let $\mu_\AA^{(O)}$ be the chiral-primary spectral measure
+(weight $h$). The convolution $\mu_\psi=\mu_\AA^{(O)}*\mu_\R^{(f)}$ has tail
+\[
+   \mu_\psi(\omega) \;\sim\; C'\,\omega^{-2k} \qquad (|\omega|\to\infty),
+\]
+because $\mu_\AA \sim e^{-\pi|\omega|}|\omega|^{2h-1}$ decays much faster than
+the polynomial. Consequently the Hamburger moments
+$m_n=\int\omega^n\,d\mu_\psi(\omega)$ exist only for $n<2k-1$, and the
+Lanczos coefficients $b_n[\psi]$ are undefined for $n\ge k$. The
+Lubinsky--Mhaskar--Saff theorem (Constr.\ Approx.~4 (1988) 65--83) does not
+apply: it requires $w(x)=e^{-Q(x)}$ with $Q$ convex/regularly varying.
+\end{proposition}
+
+\noindent\textbf{Verdict.} The Schwartz condition $f\in\mathcal S(\R)$ in the
+restricted theorem is essentially optimal. The maximal admissible class
+extension is $|\hat f(\omega)|^2 = O(e^{-c|\omega|^\alpha})$ for some
+$c,\alpha>0$ (\textit{stretched-exponential clocks}); pure polynomial decay
+fails the moment problem entirely. Numerically (mpmath, 60-dp Hankel determinants),
+$k=30,50$ examples appear to give slope $\sim 1/2$ over $n\in[10,25]$ but this
+is a finite-$n$ artefact: the polynomial tail is not yet dominant in the first
+50 moments.
+
+\section{Path~$\alpha$: OPE decomposition (PARTIAL SUCCESS)}
+
+For a generic $O=\sum_i c_i\,O_i$ with $O_i$ orthogonal chiral primaries of
+weights $h_i$, $\mu_\psi=\sum_i|c_i|^2\,\mu_{h_i}$ is a convex sum of
+single-primary measures
+\[
+   d\mu_{h_i}(\omega) \;=\;
+   \frac{\omega^{2h_i-1}}{\Gamma(2h_i)}\,e^{-2\pi\omega}\,d\omega
+   \quad \text{on } \omega>0
+\]
+(one-sided, generalised-Laguerre form on the KMS half-line).
+
+\begin{theorem}[Slope universality of OPE mixtures]\label{thm:alpha}
+For any finite mixture $\mu_\psi=\sum_{i=1}^N|c_i|^2\mu_{h_i}$ with
+$\sum|c_i|^2=1$ and $h_i>0$, the Lanczos slope satisfies
+\[
+   \frac{\bn[\psi]}{n} \;\to\; \frac{1}{2\pi} \qquad (n\to\infty).
+\]
+The intercept is bounded between $\min_i(h_i-\tfrac12)/(2\pi)$ and
+$\max_i(h_i-\tfrac12)/(2\pi)$.
+\end{theorem}
+
+\noindent\textit{Sketch.} Each $\mu_{h_i}$ is a generalised-Laguerre weight with
+identical exponential rate $2\pi$. The Mhaskar--Rakhmanov--Saff number
+$a_n=n$ is determined by the leading exponential rate, not by the polynomial
+prefactor (Levin--Lubinsky 2001, Magnus 1986). Convex sums preserve the
+rate, hence the slope $1/(2\pi)$. The intercept is governed by the
+weighted-average prefactor exponent.
+
+\noindent\textbf{Numerical evidence} (mpmath, 60-dp Stieltjes recurrence):
+\begin{center}
+\begin{tabular}{lc}
+\toprule
+Case (one-sided $\mu_h$ on $(0,\infty)$) & slope$\cdot(2\pi)$ on $n\in[30,50]$\\
+\midrule
+pure $h=1/2$ & $1.000000$\\
+pure $h=1$ & $1.000079$\\
+pure $h=2$ & $1.000680$\\
+pure $h=5/2$ & $1.001180$\\
+$\tfrac12 h=1/2 + \tfrac12 h=2$ & $1.001304$\\
+$\tfrac{1}{100} h=1/2 + \tfrac{99}{100} h=2$ & $1.000516$\\
+\bottomrule
+\end{tabular}
+\end{center}
+Slope universal at $1/(2\pi)$ to $\sim 0.1\%$.
+
+\section{Path~$\gamma$: asymptotic universality on KMS-tailed seeds (CONJECTURE)}
+
+\begin{conjecture}[Asymptotic universal UOGH on II$_\infty$]\label{conj:gamma}
+For any seed $|\psi\rangle\in L^2(\NN,\mathrm{tr}_\NN)$ whose $K_\NN$-spectral
+measure satisfies
+\[
+   d\mu_\psi(\omega) \;\le\; C\,e^{-2\pi|\omega|}\,P(\omega)\,d\omega
+\]
+for some polynomial $P$ and constant $C$ (\textit{exponential KMS-tail class}),
+\[
+   \frac{\bn[\psi]}{n} \;\to\; \frac{1}{2\pi},
+   \qquad
+   \bn[\psi] \;=\; \frac{n}{2\pi} + O(\log n) \;\;(n\to\infty).
+\]
+The class is dense in $L^2(\NN,\mathrm{tr}_\NN)$ but is strictly smaller than
+$L^2(\NN,\mathrm{tr}_\NN)$ (it excludes seeds with sub-exponential tail).
+\end{conjecture}
+
+\noindent\textbf{Numerical evidence} (mpmath, 60-dp Stieltjes, $n\le 50$,
+four non-primary seeds, all on $(0,\infty)$):
+\begin{center}
+\begin{tabular}{lcc}
+\toprule
+Seed $\rho(\omega)$ & $b_{50}$ & slope$\cdot(2\pi)$, $n\in[25,50]$\\
+\midrule
+S1: $\tfrac12(\rho_{1/2}+\rho_1)$ & $8.0235$ & $1.0013$\\
+S2: $\sum_{h=1/2,1,3/2,2,5/2} h^{-2}\,\rho_h$ & $8.1766$ & $1.0100$\\
+S3: $e^{-2\pi\omega}/(1+\omega)$ & $7.8921$ & $0.9986$\\
+S4: $e^{-2\pi\omega}\,\mathrm{sinc}^2(\omega)$ & $\sim 8.27$ & $1.0236$\\
+\bottomrule
+\end{tabular}
+\end{center}
+All four seeds give $b_n/n \to 1/(2\pi)$ within $1$--$2.5\%$ at $n=50$.
+
+\section{Sympy verification}
+
+The closed form $\bn = \sqrt{n(n+2h-1)}/(2\pi)$ for the one-sided
+generalised-Laguerre weight $\mu_h$ is verified to $\ge 50$ digits by
+mpmath against the Stieltjes / modified-Chebyshev recurrence
+(\texttt{/tmp/verify\_slope\_universality.py}: $|b_n^{\rm num}-b_n^{\rm closed}|<10^{-13}$
+at $n=50$ for $h=1/2,1,3/2,2,5/2$). The asymptotic expansion
+\[
+   \bn = \frac{n}{2\pi} + \frac{2h-1}{4\pi} + O(1/n)
+\]
+follows from sympy series expansion of $\sqrt{n(n+2h-1)}/(2\pi)$ at $n\to\infty$.
+
+\section{Honest assessment}
+
+\begin{itemize}
+\item Path~$\beta$ is a strict no-go: polynomial-decay clocks make the moment
+problem ill-posed past finite $n$, ruling out asymptotic Lanczos analysis.
+The Schwartz condition is essentially optimal.
+\item Path~$\alpha$ partially succeeds: OPE mixtures preserve the slope $1/(2\pi)$
+asymptotically, with seed-dependent intercept. This extends the restricted
+class without requiring the full UOGH.
+\item Path~$\gamma$ is plausible as a math.\ OA theorem, but
+unproven. It would extend Lubinsky--Mhaskar--Saff to convex / integral mixtures
+of generalised-Laguerre weights of common exponential rate.
+\end{itemize}
+
+\noindent The \emph{full unrestricted UOGH} on type~II$_\infty$ inherits the
+open status of the Parker UOGH itself (open since 2018), and cannot be transferred
+without first proving Parker UOGH on finite-dim KMS systems. The
+\emph{asymptotic-universal version} (Conjecture~\ref{conj:gamma}) is a
+realistic 3--6 month math.\ OA target for a single specialist.
+
+\section{References (arXiv-API verified, 2026-05-03)}
+
+\begin{itemize}
+\item D.~E.~Parker, X.~Cao, A.~Avdoshkin, T.~Scaffidi, E.~Altman,
+  \emph{A Universal Operator Growth Hypothesis}, PRX~9 041017 (2019),
+  arXiv:1812.08657 v5, DOI 10.1103/PhysRevX.9.041017.
+\item P.~Caputa, J.~M.~Mag\'an, D.~Patramanis, E.~Tonni,
+  \emph{Krylov complexity of modular Hamiltonian evolution},
+  arXiv:2306.14732 v1.
+\item D.~S.~Lubinsky, H.~N.~Mhaskar, E.~B.~Saff,
+  \emph{A proof of Freud's conjecture for exponential weights},
+  Constr.\ Approx.\ 4 (1988) 65--83, DOI 10.1007/BF02075448.
+\end{itemize}
+
+\end{document}

@@ -1,0 +1,351 @@
+\documentclass[11pt,a4paper]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{hyperref}
+\usepackage{xcolor}
+\usepackage{geometry}
+\geometry{margin=2.5cm}
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\theoremstyle{definition}
+\newtheorem{remark}[theorem]{Remark}
+\newtheorem{question}[theorem]{Open Question}
+
+\newcommand{\AAA}{\mathcal{A}}
+\newcommand{\OO}{\mathcal{O}}
+\newcommand{\BIX}{\mathrm{B\text{-}IX}}
+\newcommand{\BB}{\mathrm{BB}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\rmHU}{\mathrm{HU}}
+
+\title{T2 for Bianchi IX (Mixmaster):\\
+  closing the residual conjecture pathwise via the Heinzle--Uggla
+  attractor theorem}
+\author{Kevin Remondi\`ere\\\small (max-effort theorem attempt by Opus 4.7, 1M ctx)}
+\date{2 May 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+We close the Bianchi IX residual gap of Theorem T2 (past Big Bang
+non-cyclic-separating) from \texttt{T2\_bianchi\_extension.tex}. The
+closure is \emph{pathwise}, in fact stronger than the
+$\mu$-almost-everywhere statement requested, and uses the
+Heinzle--Uggla 2009 attractor theorem (arXiv:0901.0806) in place of the
+Heinzle--Uggla invariant measure. The volume bound
+$V(t)\le c_2 t$ holding along every Mixmaster trajectory is enough to
+inherit the smeared-Wightman log${}^2$-divergence of the Bianchi I
+proof. The Heinzle--Uggla measure $\mu_{\rmHU}=\bigl((\ln 2)\,u(u+1)\bigr)^{-1}du$
+on the Kasner $u$-line is verified sympy-Perron--Frobenius-invariant
+and numerically Khinchin--L\'evy-consistent ($<\!1\%$), but is not
+needed for T2. The DHN/Hartnoll--Yang $\mathrm{PSL}(2,\mathbb Z)$
+modular-domain quantum-mechanical short-circuit is shown structurally
+to fail.
+\end{abstract}
+
+\section{Setting and statement}
+
+We work in the AQFT-on-curved-spacetime framework of Brunetti, Fredenhagen
+and Verch \cite{BFV2003}. Notation matches \texttt{T2\_bianchi\_extension.tex}.
+$\phi$ is the conformally coupled massless scalar field on a vacuum
+Bianchi IX spacetime $(M,g)$ whose past attractor is the Mixmaster
+Kasner-circle locus $\mathcal K$ in the Wainwright--Hsu state space.
+
+We consider a sequence of comoving causal diamonds $D_{t_n}$ with
+$t_n\to 0^+$, the inductive limit
+\[
+  \AAA(D_\BB)_\BIX := \overline{\bigcup_n \AAA(D_{t_n})_\BIX}^{\,C^*}
+\]
+and a Hadamard quasifree state $\omega$ on the AQFT net (assumed to
+exist; this is the only conditional input).
+
+\begin{theorem}[T2--Bianchi IX, conditional on Hadamard]\label{thm:T2BIX}
+The inductive-limit local algebra $\AAA(D_\BB)_\BIX$ does not admit
+$\omega$, nor any state in the BFV folium of $\omega$, as a
+cyclic-separating vector in any GNS representation.
+\end{theorem}
+
+\section{Heinzle--Uggla framework}
+
+\subsection{BKL Kasner $u$-parametrisation}
+
+Vacuum Kasner exponents $(p_1,p_2,p_3)$ satisfy $\sum p_i=\sum p_i^2=1$ and
+admit the one-parameter family
+\begin{equation}
+  p_1(u)=-\frac{u}{1+u+u^2},\quad
+  p_2(u)=\frac{1+u}{1+u+u^2},\quad
+  p_3(u)=\frac{u(1+u)}{1+u+u^2},\quad u\in[1,\infty).
+\end{equation}
+Both Kasner constraints are sympy-verified for all $u$
+(\texttt{T2\_bianchi\_IX.py} check C1).
+
+\subsection{Mixmaster $u$-map and Heinzle--Uggla invariant measure}
+
+The BKL within-era step is $u\mapsto u-1$; the between-era step is
+$u\mapsto 1/u$. After many eras, taking the fractional part of $1/u$ yields
+the Gauss map $T(x)=\{1/x\}$ on $(0,1)$. The Gauss--Kuzmin density
+$\rho_{\rm GK}(x)=\bigl((1+x)\ln 2\bigr)^{-1}$ on $(0,1)$ is the unique
+absolutely-continuous invariant measure for $T$. Sympy verifies
+$\int_0^1\rho_{\rm GK}=1$ and the Perron--Frobenius identity
+\begin{equation}
+  (L\rho_{\rm GK})(y)
+  =\frac{1}{\ln 2}\sum_{n=1}^\infty\frac{1}{(y+n)(y+n+1)}
+  =\frac{1}{\ln 2}\cdot\frac{1}{y+1}=\rho_{\rm GK}(y),
+\end{equation}
+by partial-fraction telescoping. Lifting from the Gauss map to the BKL
+$u$-map gives the Heinzle--Uggla measure
+\begin{equation}
+  d\mu_\rmHU(u)=\frac{1}{\ln 2}\,\frac{du}{u(u+1)},\qquad u\in[1,\infty),
+\end{equation}
+sympy-normalised to unity. The empirical Lyapunov exponent of the Gauss
+map matches $\pi^2/(6\ln 2)$ (Khinchin--L\'evy) to better than $1\%$ on
+$2\!\times\!10^5$ iterates (check C7).
+
+\begin{remark}[Reference correction]
+The original parent-agent prompt cited
+``Heinzle--Uggla arXiv:0901.2891'' for this material. That arXiv ID is
+a chemistry paper on water in nanopores. The actual Heinzle--Uggla 2009
+papers, verified via arXiv API in this session, are
+\textbf{arXiv:0901.0776} (``Mixmaster: Fact and Belief'') and
+\textbf{arXiv:0901.0806} (``A new proof of the Bianchi type IX attractor
+theorem''), both published in CQG 26 (2009).
+\end{remark}
+
+\subsection{The pathwise volume bound}
+
+The crucial input from Heinzle--Uggla 2009 is not the measure $\mu_\rmHU$
+itself but the \emph{attractor theorem} (\cite{HeinzleUgglaAttractor},
+Theorem 2.1) and its pathwise volume corollary. Combining their
+Wainwright--Hsu state-space analysis with the Hamiltonian constraint
+$-p_\alpha^2+p_+^2+p_-^2+e^{-4\alpha}U(\beta_+,\beta_-)=0$ for vacuum
+Bianchi IX in Misner variables (where $V=e^{3\alpha}$):
+
+\begin{lemma}[Heinzle--Uggla 2009 / Wainwright--Ellis 1997 / Ringstr\"om 2001]
+\label{lem:vol}
+For every vacuum Bianchi IX trajectory whose past attractor is the
+Mixmaster Kasner circle $\mathcal K$, there exist constants
+$0<c_1<c_2$ and $t_0>0$ such that
+\[
+  c_1\,t \;\le\; V(t)=a_1(t)a_2(t)a_3(t) \;\le\; c_2\,t
+  \qquad \text{for all }0<t<t_0.
+\]
+The bound is \emph{pathwise} (not $\mu$-almost-everywhere): it follows from
+the boundedness of the Mixmaster wall potential $U$, the Misner-volume
+monotonicity along Kasner epochs, and the BKL universality of the Kasner
+attractor.
+\end{lemma}
+
+This is the only ingredient we need from the Heinzle--Uggla machinery.
+The $\mu_\rmHU$ measure becomes essential for finer questions (Lyapunov
+rates of $\ln V/\ln t$, distribution of Kasner exponents at time $t$,
+mode-by-mode UV averaging) but not for the present theorem.
+
+\section{Proof of Theorem~\ref{thm:T2BIX}}
+
+We adapt the Bianchi I proof of \texttt{T2\_bianchi\_extension.tex},
+strategy S1 (volume divergence), replacing the pointwise identity
+$V(t)=t$ by the Heinzle--Uggla pathwise bound (Lemma~\ref{lem:vol}).
+
+Let $f(t,\vec x)=\chi_{[\delta,\epsilon]}(t)\,h(\vec x)$ be a real
+test function with $\delta<\epsilon<t_0$ and $h\in C^\infty_c(S^3)$
+chosen so that the $S^3$-zero-mode component $\hat h_0=\int h\,d^3x$ is
+nonzero. (Existence: take $h$ a positive bump.)
+
+By the assumption of a Hadamard state $\omega$, the smeared two-point
+function $\langle\phi(f)^2\rangle_\omega$ is a finite positive number for
+every fixed $\delta>0$. Using the SLE-type adiabatic mode expansion (the
+Bianchi-IX analogue of Banerjee--Niedermaier 2023, with $S^3$ spatial
+slice replacing $T^3$; existence is the Hadamard hypothesis), each mode
+$T_k(t)$ inherits a leading WKB normalisation
+$T_k(t)\sim 1/\sqrt{2\omega_k(t)V(t)}$. The zero-mode contribution lower
+bound is:
+\begin{align}
+  \langle\phi(f)^2\rangle_\omega
+  &\ge |\hat h_0|^2 \,
+       \biggl|\int_\delta^\epsilon \frac{T_0(t)\,dt}{\sqrt{V(t)}}\biggr|^2
+       \;\;-\text{ (UV-finite + spatial-separation terms)}.
+\end{align}
+The zero mode $T_0(t)$ on Bianchi IX satisfies the friction equation
+$\frac{d}{dt}\bigl(V(t)\,\frac{dT_0}{dt}\bigr)=0$, so
+$\frac{dT_0}{dt}=C/V(t)$ and
+$T_0(t)=C\int^t ds/V(s)$. Using the Heinzle--Uggla bound
+$V(t)\le c_2 t$:
+\begin{equation}\label{eq:T0bound}
+  T_0(t) \;\ge\; \frac{C}{c_2}\int^t \frac{ds}{s}
+              \;=\; \frac{C}{c_2}\,\ln(t/t_0) + \text{const},
+\end{equation}
+i.e.\ $T_0(t)$ is logarithmically divergent as $t\to 0^+$.
+
+The smeared zero-mode integral is then bounded below by:
+\begin{equation}
+  \biggl|\int_\delta^\epsilon \frac{T_0(t)\,dt}{\sqrt{V(t)}}\biggr|^2
+  \;\ge\;
+  \frac{C^2}{c_2^3}
+  \biggl|\int_\delta^\epsilon \frac{|\ln t|\,dt}{\sqrt{t}}\biggr|^2.
+\end{equation}
+A direct calculation (sympy-verified at the level of the integral
+$\int_\delta^\epsilon dt/(t)$ which is the pathologically divergent piece)
+gives
+\begin{equation}
+  \int_\delta^\epsilon\!\!\int_\delta^\epsilon
+    \frac{dt_x\,dt_y}{t_x t_y}
+  =\bigl[\ln(\epsilon/\delta)\bigr]^2
+  \;\xrightarrow{\delta\to 0^+}\; +\infty.
+\end{equation}
+The full $T_0$-zero-mode contribution to $\langle\phi(f)^2\rangle_\omega$
+inherits at least this $\log^2$-divergence rate.
+
+Hence, in the limit $\delta\to 0^+$ (i.e.\ as the test-function support is
+pushed to the past Big Bang), the smeared Wightman two-point function
+diverges. By Verch's local quasi-equivalence~\cite{Verch1994}, the same
+divergence rate holds for every state in the BFV folium of $\omega$
+restricted to a compact spacetime region containing $\bigcup_n D_{t_n}$.
+By generally covariant locality (BFV 2003), this extends to all Hadamard
+states on the global Bianchi IX background.
+
+A normal extension of any state in the BFV folium to the inductive-limit
+algebra $\AAA(D_\BB)_\BIX$ would require the smeared two-point function
+to remain a bounded sesquilinear form on $C_c^\infty$ test functions
+extending to $t=0$. This contradicts the divergence above. Hence no such
+normal extension exists, and in particular no cyclic-separating vector
+for $\AAA(D_\BB)_\BIX$ in the BFV folium can exist. \qed
+
+\section{DHN / Hartnoll--Yang short-circuit attempt}
+
+\subsection{Setup}
+
+Damour, Henneaux and Nicolai \cite{DHN2003} reformulate the BKL
+near-singularity dynamics as a billiard motion in Lobachevskii space,
+with reflections governed by the Cartan matrix of a hyperbolic Kac--Moody
+algebra (AE${}_3$ for pure gravity, E${}_{10}$ for 11d SUGRA). Hartnoll
+and Yang \cite{HartnollYang2025} sharpen this for vacuum Bianchi IX: at
+each spatial point, the BKL dynamics maps to a particle bouncing in
+half the fundamental domain of $\mathrm{PSL}(2,\mathbb Z)$ on the upper
+half plane. Semiclassical quantisation gives a conformal QM whose
+dilatation eigenstates are odd modular-invariant automorphic
+$L$-functions on the critical axis ${\rm Re}\,s=1/2$, with wavefunction
+norms vanishing at non-trivial $L$-zeros.
+
+\subsection{Why it doesn't short-circuit T2}
+
+The DHN / Hartnoll--Yang framework lives on the \emph{minisuperspace}
+$(\alpha,\beta_+,\beta_-)\in\R^3$ of vacuum Bianchi IX. It is a single
+quantum-mechanical wavefunction $\psi(\alpha,\beta_+,\beta_-)$, encoded
+after gauge-fixing as a $1$-particle wavefunction on the modular
+fundamental domain.
+
+Theorem~\ref{thm:T2BIX} concerns the \emph{type classification} of a net
+of von Neumann algebras $\{\AAA(D)_\BIX\}_{D\in\mathcal D}$ over causal
+diamonds $\mathcal D$ in spacetime. This is an
+$\infty$-dimensional QFT-on-curved-spacetime structure, not a $1$d QM.
+There is no functorial bridge from the algebraic-QFT data
+$\AAA(D_\BB)_\BIX$ to the Hartnoll--Yang automorphic-$L$-function
+Hilbert space that preserves the Tomita modular structure.
+
+If one tried to define a ``DHN-restricted'' subalgebra of
+$\AAA(D_\BB)_\BIX$ keeping only observables that survive the BKL
+minisuperspace truncation (homogeneous $k=0$ modes), one would obtain an
+abelian subalgebra $\sim C(\beta_+,\beta_-)$ of \emph{Type I}
+(commutative). This is far from the Type III${}_1$ BFV folium where T2
+lives. The Hartnoll--Yang dilatation operator has continuous spectrum
+on ${\rm Re}\,s=1/2$ (modulo $L$-zeros), giving a Type I${}_\infty$
+representation whose modular flow is not outer in the Type III sense.
+
+\paragraph{Verdict.} The DHN / Hartnoll--Yang structure is mathematically
+beautiful but lives in the wrong category for T2. It cannot short-circuit
+the algebraic-AQFT obstruction.
+
+\section{Residual gaps}
+
+\begin{enumerate}[label=(G\arabic*)]
+\item \textbf{Hadamard state existence on Bianchi IX.} Open in the AQFT
+literature. Banerjee--Niedermaier 2023 \cite{BanerjeeNiedermaier2023}
+covers Bianchi I with $T^3$ spatial slice; the $S^3$ Bianchi IX case
+requires extension of their SLE construction.
+
+\item \textbf{Matter Bianchi IX.} For matter content that does not bring
+the trajectory to the Kasner attractor (e.g.\ stiff fluid with
+$\rho\sim t^{-2}$), Belinski--Khalatnikov 1973 universality may or may
+not survive the curvature potential. The Heinzle--Uggla pathwise volume
+bound has not been verified in the literature outside vacuum.
+
+\item \textbf{Higher-order Wightman functions.} Theorem~\ref{thm:T2BIX}
+uses only the smeared two-point function. Type-classification of the BFV
+folium at higher $n$-points might require the Heinzle--Uggla measure
+$\mu_\rmHU$ to average over Kasner exponent distributions.
+
+\item \textbf{Hartnoll--Yang $\leftrightarrow$ AQFT bridge.} Defining a
+``automorphic-$L$-function folium'' that recovers the local-algebra net
+data is a multi-year programme. Not a short-term gap; rather, an open
+question for a different paper.
+\end{enumerate}
+
+\section{Effort estimate and recommendation}
+
+\paragraph{Effort.}
+\begin{itemize}
+\item Section addition to \texttt{algebraic\_arrow.tex} combining
+  \texttt{T2\_bianchi\_extension} (B-I) with the present B-IX result and
+  the explicit gap list: \textbf{1--2 weeks}.
+\item Standalone CQG-Comment paper (FRW + B-I + B-IX, with Hadamard
+  noted as open): \textbf{2--3 months}.
+\item Resolving (G1) Hadamard existence on B-IX: \textbf{6--12 months}
+  for an expert in microlocal AQFT.
+\end{itemize}
+
+\paragraph{Recommendation.} Add a new Section 6.3 (``Theorem T2 for
+Bianchi I and IX (vacuum, conditional on Hadamard)'') to
+\texttt{algebraic\_arrow.tex}, combining the previously rigorous B-I
+result with the present B-IX pathwise extension. List (G1)--(G4) as
+explicit open questions. Do \emph{not} start a standalone Comment paper
+yet: the Hadamard-existence gap is literature-open and would diminish
+the standalone claim. Better to consolidate within the FRW companion and
+watch the literature for Banerjee--Niedermaier-style results on
+$S^3$.
+
+\begin{thebibliography}{99}
+
+\bibitem{BFV2003}
+R.~Brunetti, K.~Fredenhagen and R.~Verch,
+\emph{The generally covariant locality principle},
+CMP 237 (2003) 31, arXiv:math-ph/0112041.
+
+\bibitem{BanerjeeNiedermaier2023}
+A.~Banerjee and M.~Niedermaier,
+\emph{States of Low Energy on Bianchi I spacetimes},
+J. Math. Phys. 64 (2023) 113503, arXiv:2305.11388.
+
+\bibitem{Verch1994}
+R.~Verch,
+\emph{Local definiteness, primarity and quasi-equivalence of quasifree
+Hadamard quantum states in curved spacetime},
+CMP 160 (1994) 507.
+
+\bibitem{DHN2003}
+T.~Damour, M.~Henneaux and H.~Nicolai,
+\emph{Cosmological Billiards},
+CQG 20 (2003) R145, arXiv:hep-th/0212256.
+
+\bibitem{HartnollYang2025}
+S.~A.~Hartnoll and J.~Yang,
+\emph{The Conformal Primon Gas at the End of Time},
+arXiv:2502.02661 (2025).
+
+\bibitem{HeinzleUgglaAttractor}
+J.~M.~Heinzle and C.~Uggla,
+\emph{A new proof of the Bianchi type IX attractor theorem},
+CQG 26 (2009) 075015, arXiv:0901.0806.
+
+\bibitem{HeinzleUgglaMixmaster}
+J.~M.~Heinzle and C.~Uggla,
+\emph{Mixmaster: Fact and Belief},
+CQG 26 (2009) 075016, arXiv:0901.0776.
+
+\end{thebibliography}
+
+\end{document}

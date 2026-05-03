@@ -1,0 +1,381 @@
+\documentclass[11pt,a4paper]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{hyperref}
+\usepackage{xcolor}
+\usepackage{geometry}
+\usepackage{array}
+\geometry{margin=2.5cm}
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\theoremstyle{definition}
+\newtheorem{remark}[theorem]{Remark}
+\newtheorem{question}[theorem]{Open Question}
+
+\newcommand{\AAA}{\mathcal{A}}
+\newcommand{\OO}{\mathcal{O}}
+\newcommand{\BI}{\mathrm{B\text{-}I}}
+\newcommand{\BII}{\mathrm{B\text{-}II}}
+\newcommand{\BVIO}{\mathrm{B\text{-}VI_0}}
+\newcommand{\BVIIO}{\mathrm{B\text{-}VII_0}}
+\newcommand{\BVIII}{\mathrm{B\text{-}VIII}}
+\newcommand{\BIX}{\mathrm{B\text{-}IX}}
+\newcommand{\BV}{\mathrm{B\text{-}V}}
+\newcommand{\BB}{\mathrm{BB}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\HH}{\mathbb{H}}
+
+\title{Theorem T2 across Type A Bianchi cosmologies\\
+  \large II, VI$_0$, VII$_0$, VIII --- with explicit obstructions and Hadamard-state status}
+\author{Kevin Remondi\`ere\\\small (max-effort theorem attempt by Opus 4.7, 1M ctx)}
+\date{3 May 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+We extend Theorem T2 (algebraic past-asymmetry / Penrose Weyl Curvature Hypothesis,
+non-cyclic-separating-vector form) of \cite{T2BI,T2BIX,T2BV} from Bianchi
+$\{$I$,$ V$,$ IX$\}$ to all four remaining Type A cosmologies: II, VI$_0$, VII$_0$,
+VIII. The two ingredients (S1 = volume zero-mode log$^2$ divergence;
+S3 = long-wavelength tachyonic mode along the contracting Kasner direction)
+are tested per type. Sympy verification confirms structure constants, Jacobi,
+spatial Ricci scalar (with correct sign signs), Kasner constraints
+$\sum p_i = \sum p_i^2 = 1$, and that one direction is always contracting.
+We obtain three new RIGOROUS-pending-Hadamard cases (II, VI$_0$, VII$_0$:
+S1+S3 both fire on respectively nilmanifold, solvmanifold, Bieberbach quotients)
+and one PATHWISE-CONDITIONAL case (VIII: S1 killed by hyperbolic-fibre
+spectral gap, S3 fires pathwise via Brehm 2016 \cite{Brehm2016}). Bianchi VIII
+is the hardest of the four, combining the worst features of B-V (non-compact
+spatial geometry with spectral gap) and B-IX (Mixmaster chaos). Estimated
+time-to-publication of a unified Type A theorem: 6--9 months for a
+section-level result, 3--5 years for full rigor across all six.
+\end{abstract}
+
+\section{Setup: Misner--Ryan diagonal metric and Behr decomposition}
+
+For Type A Bianchi (in the Ellis--MacCallum decomposition $a^a = 0$;
+Wainwright--Ellis 1997 \cite{WainwrightEllis} \S6), the structure constants
+of the spatial Lie algebra are
+\begin{equation}\label{eq:behr}
+  C^a{}_{bc} = \epsilon_{bcd}\, n^{da},
+  \qquad n^{ab} = \mathrm{diag}(n_1, n_2, n_3),
+  \qquad n_i \in \{-1, 0, +1\}.
+\end{equation}
+Sympy verifies (block C1+C2 of \texttt{T2\_bianchi\_typeA.py}) that for all
+six Type A signatures $(n_1,n_2,n_3)$ in Table~\ref{tab:behr}, the trace
+$C^a{}_{ab}$ vanishes (Type A condition) and the Jacobi identity
+$\sum_l \bigl(C^l{}_{ij} C^k{}_{lm} + \mathrm{cyc.}\bigr) = 0$ holds.
+
+\begin{table}[ht]
+\centering
+\begin{tabular}{|c|c|c|c|c|}
+\hline
+Type   & $(n_1,n_2,n_3)$ & Lie group cover  & Compact-quotient topology    & $R_3$ at iso. \\
+\hline
+I      & $(0,0,0)$       & $\R^3$           & $T^3$ (flat)                 & $0$           \\
+II     & $(1,0,0)$       & Heisenberg/Nil$^3$  & nilmanifold (NOT flat)    & $-1/2$        \\
+VI$_0$ & $(1,-1,0)$      & $E(1,1)$         & solvmanifold                 & $-2$          \\
+VII$_0$ & $(1,1,0)$      & univ.\ cov.\ $E(2)$ & Bieberbach (FLAT)         & $0$           \\
+VIII   & $(-1,1,1)$      & $\widetilde{SL(2,\R)}$ & Seifert / hyperbolic-fibred & $-5/2$    \\
+IX     & $(1,1,1)$       & $SU(2) = S^3$    & $S^3 / \Gamma$               & $+3/2$        \\
+\hline
+\end{tabular}
+\caption{Type A Bianchi signatures, group covers, compact quotients, and
+spatial Ricci scalar at the isotropic point $a_1 = a_2 = a_3 = 1$
+(Wainwright--Ellis eq.\ 1.92, sympy block C3, normalisation chosen so
+that B-IX isotropic gives $R_3 > 0$).}
+\label{tab:behr}
+\end{table}
+
+The metric is in Misner--Ryan diagonal form,
+\begin{equation}\label{eq:metric}
+  ds^2 = -dt^2 + \sum_{i=1}^{3} a_i(t)^2 \,(\sigma^i)^2,
+\end{equation}
+where $\sigma^i$ are left-invariant 1-forms of the spatial Lie group
+satisfying $d\sigma^a = -\tfrac12 C^a{}_{bc}\,\sigma^b \wedge \sigma^c$.
+
+\begin{remark}\label{rem:flat-quotient}
+A common confusion: among Type A's, only \emph{I} and \emph{VII$_0$} admit
+\emph{flat} compact spatial quotients ($T^3$ and Bieberbach manifolds
+respectively). Bianchi II = Heisenberg group has compact \emph{nilmanifold}
+quotients which are NOT flat. This distinction matters for the Hadamard-state
+construction (\S\ref{sec:hadamard}).
+\end{remark}
+
+\section{Past attractor (BKL / Wainwright--Hsu)}
+
+Wainwright and Ellis 1997 \cite{WainwrightEllis} (Ch.~6) and the later
+attractor theorems of Heinzle--Uggla 2009 \cite{HU2009a,HU2009b} and
+Brehm 2016 \cite{Brehm2016} establish that every Type A vacuum Bianchi
+trajectory limits, as $t \to 0^+$, to the Kasner circle
+$\mathcal{K} = \{(\Sigma_+, \Sigma_-) : \Sigma_+^2 + \Sigma_-^2 = 1\}$
+in the Wainwright--Hsu state space, with the per-type attractor structure
+of Table~\ref{tab:attractor}.
+
+\begin{table}[ht]
+\centering
+\begin{tabular}{|c|p{4.5cm}|p{6cm}|}
+\hline
+Type   & Past attractor  & Reference / comment \\
+\hline
+I      & Kasner circle (state space $=$ $\mathcal{K}$) & Trivial: no oscillation. \\
+II     & Single Kasner triple (one Type-II BKL bounce) & W--E \S6.2.2. \\
+VI$_0$ & Single Kasner triple, no oscillation & Mixed-sign $n_i$ wall non-confining. \\
+VII$_0$ & Single Kasner generically (modulo measure-zero NUT-like exceptions) & Ringstr\"om 2001 \cite{Ringstrom2001} (\emph{future} asymptotics; past via time-reversal). \\
+VIII   & BKL chaotic / Mixmaster (Lebesgue-a.e.\ trajectory) & Brehm 2016 \cite{Brehm2016}. \\
+IX     & BKL chaotic / Mixmaster (every trajectory off the Taub locus) & Heinzle--Uggla 2009 \cite{HU2009a}. \\
+\hline
+\end{tabular}
+\caption{Per-type past attractor in the Wainwright--Hsu state space.}
+\label{tab:attractor}
+\end{table}
+
+In every case the attractor lies on the Kasner circle, so each epoch has
+exactly one contracting direction $p_1 \in (-1/3, 0)$ (sympy block C4
+verifies this with the standard $u$-parametrisation
+$p_1 = -u/(1+u+u^2),\ p_2 = (1+u)/(1+u+u^2),\ p_3 = u(1+u)/(1+u+u^2)$,
+$u \in [1, \infty)$).
+
+\section{Per-type S1 / S3 status}
+
+The two T2 obstructions inherited from \cite{T2BI} are:
+
+\begin{description}
+  \item[(S1)] \textbf{Volume zero-mode log$^2$ divergence}: fires when the
+  spatial 3-manifold admits a finite-volume compact quotient with a constant
+  function in $L^2$, AND the zero eigenmode of the Klein--Gordon operator
+  survives the wall potential.
+  \item[(S3)] \textbf{Long-wavelength tachyonic mode}: fires whenever
+  $p_1 < 0$ along the past attractor.
+\end{description}
+
+\begin{table}[ht]
+\centering
+\begin{tabular}{|c|c|c|p{8cm}|}
+\hline
+Type   & S1 & S3 & Notes \\
+\hline
+I      & YES & YES & Both fire on $T^3$. \\
+II     & YES & YES & Nilmanifold has finite vol.\ + constant in $L^2$;
+                     $n=(1,0,0)$ wall non-confining. \\
+VI$_0$ & YES & YES & Solvmanifold compact + constant in $L^2$; mixed-sign
+                     $n_i$ non-confining. \\
+VII$_0$ & YES & YES & Bieberbach (flat); identical to B-I up to twisted
+                     boundary conditions. \\
+VIII   & NO\textsuperscript{*} & YES & S1 killed by hyperbolic-fibre spectral
+                     gap (analogue of B-V on $H^3$). \\
+IX     & NO\textsuperscript{*} & YES & S1 killed for spatial Laplacian;
+                     recovered \emph{pathwise} via H-U $V(t) \le c t$ \cite{T2BIX}. \\
+\hline
+\end{tabular}
+\caption{Per-type S1+S3 status. \textsuperscript{*}For VIII, the analogue
+of the Heinzle--Uggla \emph{pathwise} volume bound is expected by the Brehm
+2016 \cite{Brehm2016} Mixmaster convergence + monotonic-function arguments
+(Heinzle--Uggla 2010 \cite{HU2010}), but is not explicitly stated in the
+literature I verified.}
+\label{tab:s1s3}
+\end{table}
+
+\section{Per-type T2 verdict}
+
+\begin{theorem}[T2 for Bianchi II, conditional on Hadamard]\label{thm:BII}
+Let $(M, g)$ be a vacuum Bianchi II spacetime with compact nilmanifold
+spatial slice $\mathrm{Nil}^3 / \Gamma$, and let $\phi$ be the conformally
+coupled massless scalar field. Assume the existence of a Hadamard quasifree
+state $\omega$ on $(M, \phi)$ obtained by extending Banerjee--Niedermaier
+2023 \cite{BN2023} from $T^3$ to $\mathrm{Nil}^3 / \Gamma$ via the
+Heisenberg-group Plancherel decomposition (Stein 1965 \cite{Stein1965},
+Geller 1980 \cite{Geller1980}, Folland 1982 \cite{Folland1982}). Then the
+inductive-limit local algebra $\AAA(D_\BB)_\BII$ does not admit $\omega$
+(nor any state in its BFV folium \cite{BFV2003}) as a cyclic-separating
+vector in any GNS representation.
+
+\noindent
+\emph{Proof sketch.} S1 + S3 both fire (Table~\ref{tab:s1s3}). S1: the
+constant function on $\mathrm{Nil}^3 / \Gamma$ is $L^2$-normalisable; the
+Klein--Gordon zero mode satisfies $d/dt(V(t)\,dT_0/dt) = 0$ giving
+$T_0(t) = \log V(t)$; smearing yields the $\log^2(\epsilon/\delta)$
+divergence as in \cite{T2BI} \S2. S3: the contracting Kasner direction
+$p_1 \in (-1/3, 0)$ produces $\omega_k(t) = |k_1| t^{|p_1|} \to 0$ at the
+singularity, generating $\int dk_1/|k_1| = +\infty$. By Verch (1994)
+\cite{Verch1994} local quasi-equivalence + BFV \cite{BFV2003} covariant
+locality, the divergence holds for the entire BFV folium. Cyclic-separating
+vectors carry normal states; contradiction. $\square$
+\end{theorem}
+
+\begin{theorem}[T2 for Bianchi VI$_0$ and VII$_0$, conditional on Hadamard]\label{thm:BVIVII}
+The same statement and proof as Theorem~\ref{thm:BII} hold with
+$\mathrm{Nil}^3 / \Gamma$ replaced by either (a) a compact solvmanifold quotient
+of $E(1,1)$ (Bianchi VI$_0$), or (b) a flat Bieberbach quotient of
+the universal cover of $E(2)$ (Bianchi VII$_0$). The required Hadamard
+state is obtained by adapting Banerjee--Niedermaier 2023 \cite{BN2023} to
+the appropriate Plancherel decomposition: solvable Lie group Plancherel for
+VI$_0$, twisted-boundary $T^3$-like Plancherel for VII$_0$.
+\end{theorem}
+
+\begin{theorem}[T2 for Bianchi VIII, pathwise conditional]\label{thm:BVIII}
+Let $(M, g)$ be a vacuum Bianchi VIII spacetime whose past attractor is the
+Mixmaster locus (true for Lebesgue-a.e.\ initial data by Brehm 2016
+\cite{Brehm2016}). Let $\phi$ be the conformally coupled massless scalar
+field. Assume the existence of a Hadamard quasifree state $\omega$ on $(M, \phi)$.
+Then the inductive-limit local algebra $\AAA(D_\BB)_\BVIII$ does not admit
+$\omega$ (nor any state in its BFV folium) as a cyclic-separating vector.
+
+\noindent
+\emph{Proof sketch.} S1 is killed by the hyperbolic-fibre spectral gap of
+$-\Delta_{\widetilde{SL(2,\R)}}$ (analogous to $-\Delta_{H^3}$ for B-V; cf.\
+\cite{T2BV}). S3 fires \emph{pathwise}: Brehm 2016 \cite{Brehm2016} gives,
+for Lebesgue-a.e.\ trajectory, convergence to the Mixmaster attractor and
+formation of particle horizons. Each Kasner epoch in the Mixmaster sequence
+has one contracting direction; the smeared two-point function inherits the
+$\int dk_1 / |k_1| = +\infty$ IR divergence per epoch. Quasi-equivalence
+\cite{Verch1994,BFV2003} extends to the BFV folium. Cyclic-separating
+vectors carry normal states; contradiction. $\square$
+\end{theorem}
+
+\begin{remark}[VIII is the hardest of the four]\label{rem:VIIIhard}
+Bianchi VIII combines the worst features of B-V (non-compact spatial
+geometry with spectral gap) and B-IX (Mixmaster chaos). The Heinzle--Uggla
+2009 attractor proof \cite{HU2009a} for IX uses $S^3$-specific monotonic
+functions; the analogous monotonic-function argument for VIII appears in
+Heinzle--Uggla 2010 \cite{HU2010} but does not yield an explicit pathwise
+volume bound $V(t) \le c\,t$ in the form needed for an unconditional S1.
+Ringstr\"om 2019 \cite{Ringstrom2019} establishes the analytic asymptotic
+framework for the Klein--Gordon equation on Bianchi VIII backgrounds but
+does NOT construct a Hadamard state.
+\end{remark}
+
+\section{Hadamard-state existence assessment}\label{sec:hadamard}
+
+\begin{table}[ht]
+\centering
+\begin{tabular}{|c|p{4cm}|p{8cm}|}
+\hline
+Type   & Status & Best path / closest existing result \\
+\hline
+I      & SUPPLIED & Banerjee--Niedermaier 2023 \cite{BN2023} on $T^3$. \\
+II     & OPEN, plausible & Heisenberg-group Plancherel
+                     \cite{Stein1965,Geller1980,Folland1982} + BN23 method;
+                     1--3 months expert work. \\
+VI$_0$ & OPEN, plausible & Solvable Lie group Plancherel + BN23;
+                     1--3 months. \\
+VII$_0$ & OPEN, MOST plausible & Bieberbach = finite-index extension of
+                     $T^3$ BN23; 1--2 months. \\
+VIII   & OPEN, hard & Closest: Ringstr\"om 2019 \cite{Ringstrom2019}
+                     analytic asymptotics, NOT Hadamard. \\
+IX     & OPEN, hard & $S^3$ zonal Helgason adapted to chaotic attractor;
+                     no published construction. \\
+\hline
+\end{tabular}
+\caption{Hadamard quasi-free state existence per Type A Bianchi.}
+\label{tab:hadamard}
+\end{table}
+
+\section{Estimated time-to-publication for the unified Type A theorem}
+
+\begin{itemize}
+  \item Section in \texttt{algebraic\_arrow.tex} stating B-I rigorously +
+        outlining II/VI$_0$/VII$_0$/VIII/IX with the Hadamard prerequisite
+        flagged: \textbf{2--4 weeks}.
+  \item Standalone CQG / J. Math. Phys. paper ``T2 across Type A Bianchi''
+        with II/VI$_0$/VII$_0$ contingent on a single Hadamard SLE
+        prerequisite paper (nilmanifold + Bieberbach + solvmanifold):
+        \textbf{6--9 months total} (3--4 of which are the prerequisite).
+  \item Including B-VIII rigorously: \textbf{18--24 months} -- needs both
+        an explicit Brehm-style pathwise volume bound for VIII AND a
+        Hadamard SLE on $\widetilde{SL(2,\R)}$, neither presently in the
+        literature.
+  \item Full unified Type A theorem (all six types rigorous): \textbf{3--5
+        years}, gated by Hadamard existence on B-VIII / B-IX.
+\end{itemize}
+
+\section{Honest residual gaps}
+
+\begin{enumerate}
+  \item \textbf{B-VIII Hadamard state}: largest unresolved obstacle, closer
+        to B-V than B-IX in geometric character.
+  \item \textbf{B-VIII pathwise volume bound}: Brehm 2016 \cite{Brehm2016}
+        gives Mixmaster convergence Lebesgue-a.e.\ but no explicit
+        $V(t) \le c\,t$ statement. Likely true given Heinzle--Uggla 2010
+        \cite{HU2010} monotonic-function machinery, not in the cited
+        literature.
+  \item \textbf{Nilmanifold / solvmanifold SLE}: no published construction
+        of states-of-low-energy on Nil$^3$ or Sol$^3$ Bianchi spacetimes
+        (1--3 months expected per type; not yet done).
+\end{enumerate}
+
+\begin{thebibliography}{99}
+
+\bibitem{T2BI} K.\ Remondi\`ere (Opus 4.7), ``T2-Bianchi I via S1+S3'',
+\texttt{/tmp/T2\_bianchi\_extension.\{md,tex\}}, May 2026.
+
+\bibitem{T2BIX} K.\ Remondi\`ere (Opus 4.7), ``T2 for Bianchi IX pathwise
+via Heinzle--Uggla'', \texttt{/tmp/T2\_bianchi\_IX.\{md,tex\}}, May 2026.
+
+\bibitem{T2BV} K.\ Remondi\`ere (Opus 4.7), ``T2 Bianchi V matter via
+S3 alone'', \texttt{/tmp/T2\_bianchi\_V.\{md,tex\}}, May 2026.
+
+\bibitem{WainwrightEllis} J.\ Wainwright and G.~F.~R.\ Ellis (eds.),
+\emph{Dynamical Systems in Cosmology}, Cambridge University Press, 1997.
+
+\bibitem{BN2023} R.\ Banerjee and M.\ Niedermaier, ``States of Low Energy on
+Bianchi I spacetimes'', J.\ Math.\ Phys.\ \textbf{64} (2023) 113503,
+\texttt{arXiv:2305.11388}.
+
+\bibitem{BFV2003} R.\ Brunetti, K.\ Fredenhagen, R.\ Verch, ``The generally
+covariant locality principle -- A new paradigm for local quantum physics'',
+Comm.\ Math.\ Phys.\ \textbf{237} (2003) 31--68,
+\texttt{arXiv:math-ph/0112041}.
+
+\bibitem{Verch1994} R.\ Verch, ``Local definiteness, primarity and
+quasi-equivalence of quasifree Hadamard quantum states'',
+Comm.\ Math.\ Phys.\ \textbf{160} (1994) 507--536.
+
+\bibitem{HU2009a} J.~M.\ Heinzle and C.\ Uggla, ``A new proof of the Bianchi
+type IX attractor theorem'', Class.\ Quant.\ Grav.\ \textbf{26} (2009)
+075015, \texttt{arXiv:0901.0806}.
+
+\bibitem{HU2009b} J.~M.\ Heinzle and C.\ Uggla, ``Mixmaster: Fact and Belief'',
+Class.\ Quant.\ Grav.\ \textbf{26} (2009) 075016, \texttt{arXiv:0901.0776}.
+
+\bibitem{HU2010} J.~M.\ Heinzle and C.\ Uggla, ``Monotonic functions in
+Bianchi models: Why they exist and how to find them'',
+Class.\ Quant.\ Grav.\ \textbf{27} (2010) 015009,
+\texttt{arXiv:0907.0653}.
+
+\bibitem{Brehm2016} B.\ Brehm, ``Bianchi VIII and IX vacuum cosmologies:
+Almost every solution forms particle horizons and converges to the Mixmaster
+attractor'', \texttt{arXiv:1606.08058} (2016).
+
+\bibitem{Ringstrom2001} H.\ Ringstr\"om, ``The future asymptotics of Bianchi
+VIII vacuum solutions'', Class.\ Quant.\ Grav.\ \textbf{18} (2001) 3791--3824,
+\texttt{arXiv:gr-qc/0103107}.
+
+\bibitem{Ringstrom2019} H.\ Ringstr\"om, ``A unified approach to the
+Klein--Gordon equation on Bianchi backgrounds'',
+Comm.\ Math.\ Phys.\ \textbf{372} (2019) 599--656,
+\texttt{arXiv:1808.00786}.
+
+\bibitem{DHN2003} T.\ Damour, M.\ Henneaux, H.\ Nicolai, ``Cosmological
+Billiards'', Class.\ Quant.\ Grav.\ \textbf{20} (2003) R145--R200,
+\texttt{arXiv:hep-th/0212256}.
+
+\bibitem{Stein1965} E.~M.\ Stein, ``Analysis in matrix spaces'', \emph{Adv. in Math.}
+(1965); see also Stein--Weiss \emph{Introduction to Fourier Analysis on
+Euclidean Spaces}, Princeton 1971.
+
+\bibitem{Geller1980} D.\ Geller, ``Fourier analysis on the Heisenberg group.
+I.\ Schwartz space'', J.\ Funct.\ Anal.\ \textbf{36} (1980) 205--254
+(\emph{also} CPAM 33:391, 1980).
+
+\bibitem{Folland1982} G.~B.\ Folland and E.~M.\ Stein, \emph{Hardy Spaces on
+Homogeneous Groups}, Mathematical Notes 28, Princeton University Press, 1982.
+
+\end{thebibliography}
+
+\end{document}

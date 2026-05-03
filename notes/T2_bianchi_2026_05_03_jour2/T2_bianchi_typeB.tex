@@ -1,0 +1,338 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{geometry}
+\usepackage{hyperref}
+\geometry{margin=2.5cm}
+\title{T2 Bianchi extension to Type B (III, IV, VI$_h$, VII$_h$)}
+\author{Opus 4.7 (1M context), per-type analysis}
+\date{2026-05-03}
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{proposition}{Proposition}
+\newtheorem{remark}{Remark}
+\newtheorem{corollary}{Corollary}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+We extend the analysis of the algebraic past-asymmetry theorem T2 (Penrose
+Weyl Curvature Hypothesis) to the Type B Bianchi family: III, IV, VI$_h$,
+and VII$_h$. The MacCallum--Jantzen variational obstruction (Hawking 1969,
+MacCallum 1979, Jantzen 2001 \texttt{gr-qc/0102035}) does \emph{not} block
+T2 because T2 is a QFT-on-CS algebraic statement that bypasses the reduced
+action principle. The actual bottleneck for T2-Type-B is Hadamard state
+existence on the relevant non-compact, non-unimodular Lie groups, which is
+\emph{open in literature for every Type B} (we verify zero hits via INSPIRE
+API for III, IV, V, VI$_h$, VII$_h$). The S3 contracting-Kasner-mode
+driver survives on the Kasner past attractor for all Type B
+\emph{except} the exceptional locus $\mathcal{B}(\mathrm{VI}_{-1/9})$
+identified by Hewitt--Horwood--Wainwright 2003. Our verdict is
+\textbf{partial T2 (S3-conditional, Hadamard-open) for III, IV, VI$_h$
+generic, VII$_h$}; \textbf{blocked} for VI$_{-1/9}$. Estimated time to a
+unified Type B theorem is 2--5 years of expert microlocal-AQFT work.
+\end{abstract}
+
+\section{Setup}
+
+A spatially homogeneous spacetime $(M,g)$ admits a 3-dim Lie group $G_3$
+acting simply transitively on the spatial Cauchy slices. The structure
+constants $C^a_{bc}$ of $G_3$ admit the Ellis--MacCallum 1969 decomposition
+\begin{equation}
+C^a_{bc} = \epsilon_{bcd} n^{da} + \delta^a_b a_c - \delta^a_c a_b,
+\label{eq:EM}
+\end{equation}
+with $n^{ab}$ symmetric and $a_a$ a vector. Class A has $a_a = 0$; class B
+has $a_a \neq 0$. Within class B, the parameter
+$h := a^2 / (n_2 n_3)$ (with $n_1 = 0$ in canonical form) distinguishes:
+\begin{itemize}
+\item Type V: $n_2 = n_3 = 0$ (degenerate).
+\item Type IV: $n_2 = 0, n_3 \neq 0$ (limit $h = 0/0$).
+\item Type VI$_h$: $n_2 n_3 < 0$, $h < 0$ (with VI$_{-1}$ = III).
+\item Type VII$_h$: $n_2 n_3 > 0$, $h > 0$.
+\end{itemize}
+The orthogonal Misner--Ryan metric is
+\begin{equation}
+ds^2 = -dt^2 + \sum_{a=1}^{3} a_a^2(t)\, (\omega^a)^2,
+\label{eq:metric}
+\end{equation}
+with $\omega^a$ the left-invariant 1-forms of $G_3$.
+
+\section{Per-type structure constants (sympy verified)}
+
+Computed by writing $\omega^a = A^a_i\,dx^i$, inverting to get the dual
+vector frame $e_a = (A^{-1})^i{}_a \partial_i$, and computing
+$[e_a, e_b]$ component-by-component in $(x,y,z)$. All checks in
+\texttt{/tmp/T2\_bianchi\_typeB.py}.
+
+\paragraph{Type III ($=$ VI$_{-1}$):}
+$\omega^1 = dx$, $\omega^2 = dy$, $\omega^3 = e^x\,dz$;
+$\det A = e^x$;
+nontrivial bracket $[e_1, e_3] = e_3$, i.e.\ $C^3{}_{13} = 1$.
+
+\paragraph{Type IV:}
+$\omega^1 = dx$, $\omega^2 = e^x dy$, $\omega^3 = e^x(x\,dy + dz)$;
+$\det A = e^{2x}$;
+nontrivial brackets $[e_1, e_2] = e_2$, $[e_1, e_3] = e_2 + e_3$.
+
+\paragraph{Type VI$_h$ (generic $h<0$, $h \neq -1$):}
+$\omega^1 = dx$, $\omega^2 = e^{p_2 x} dy$, $\omega^3 = e^{p_3 x} dz$;
+$\det A = e^{(p_2+p_3) x}$;
+brackets $[e_1, e_2] = p_2\,e_2$, $[e_1, e_3] = p_3\,e_3$.
+The parameter $h = h(p_2, p_3)$ controls the exponent ratio.
+
+\paragraph{Type VII$_h$ ($h > 0$):}
+With $q := \sqrt{h}$,
+$\omega^1 = dx$,
+$\omega^{2,3} = e^{q x} \big[\cos(x)\,dy \mp \sin(x)\,dz,\,
+\sin(x)\,dy \pm \cos(x)\,dz\big]$;
+$\det A = e^{2qx}$;
+brackets $[e_1, e_2] = q\,e_2 - e_3$, $[e_1, e_3] = e_2 + q\,e_3$.
+
+The complex eigenvalues $q \pm i$ of $\mathrm{ad}(e_1)$ produce
+\emph{rotational} behaviour in the spatial sections, distinguishing VII$_h$
+from all other Bianchi types.
+
+\section{BKL / Hewitt--Wainwright class B asymptotic}
+
+Hewitt and Wainwright (\textit{Class.\ Quant.\ Grav.} \textbf{10} (1993)
+99--124) classify the past asymptotic states for orthogonal class B vacuum
+Bianchi. The expansion-normalised state space contains:
+\begin{itemize}
+\item Kasner circle $K$ (same as class A): $a_a(t) \sim t^{p_a}$ with
+$\sum p_i = \sum p_i^2 = 1$.
+\item Plane-wave equilibria $PW(I)$.
+\item Bifurcation locus $\mathcal{B}(\mathrm{VI}_{-1/9})$ for the
+exceptional VI$_{-1/9}$ (Hewitt--Horwood--Wainwright 2003,
+\texttt{gr-qc/0211071}).
+\end{itemize}
+
+\begin{remark}[Reference correction]
+The original task specification cited ``Hewitt--Wainwright 1990'' for
+non-Kasner Type B asymptotic. Triangulation against INSPIRE confirms the
+1990 Hewitt--Wainwright paper (\textit{Class.\ Quant.\ Grav.} \textbf{7}
+(1990) 2295) is on \emph{$G_2$ cosmologies}, not class B. The class B
+dynamical-systems paper is Hewitt--Wainwright 1993 (CQG 10, 99). The
+non-Kasner asymptotic refers to the $\mathcal{B}(\mathrm{VI}_{-1/9})$
+exceptional locus established in Hewitt--Horwood--Wainwright 2003.
+\end{remark}
+
+\noindent\textbf{Generic past attractor by type:}
+\begin{center}
+\begin{tabular}{lll}
+\hline
+Type & Past attractor & Volume \\
+\hline
+III ($=$ VI$_{-1}$) & Kasner (Mixmaster bounces) & $V \sim t$ \\
+IV & Kasner & $V \sim t$ \\
+VI$_h$ ($h \neq -1, -1/9$, $h < 0$) & Kasner & $V \sim t$ \\
+VI$_{-1/9}$ & non-Kasner $\mathcal{B}$-locus & $\sim t$ (?) \\
+VII$_h$ ($h > 0$) & Kasner past, plane-wave future & $V \sim t$ \\
+\hline
+\end{tabular}
+\end{center}
+
+\section{S1 / S3 obstruction status}
+
+Recall from the FRW T2 (Banerjee--Niedermaier 2023, \texttt{arXiv:2305.11388};
+prior work by Olbermann 2007, Brum--Fredenhagen 2013):
+\begin{itemize}
+\item \textbf{S1 (volume-element divergence):} requires
+  $V(t) \to 0$ AND a test function with non-vanishing zero-mode against
+  the spatial volume form, generating $\log^2(\epsilon/\delta)$ in
+  $\langle \phi(f)^2 \rangle$.
+\item \textbf{S3 (contracting-Kasner long-wavelength tachyon):} requires
+  some $p_a < 0$, generating $\int dk_a / |k_a| = +\infty$.
+\end{itemize}
+
+\paragraph{S1 status.} For all class B types, the spatial slice is
+non-compact and \emph{non-unimodular} (or hyperbolic); the spectrum of
+$-\Delta_3$ is continuous from a strictly positive gap:
+\begin{itemize}
+\item III: $H^2 \times \mathbb{R}$, gap $1/4$ (Helgason).
+\item V: $H^3$, gap $1$.
+\item IV, VI$_h$, VII$_h$: gap $> 0$ from the friction term
+$\mathrm{tr}(\mathrm{ad}_{e_1}) \neq 0$ (non-unimodular).
+\end{itemize}
+\textbf{Consequence:} S1 is algebraically obstructed at the $L^2$ level on
+every class B type.
+
+\paragraph{S3 status.} Generic class B Kasner exponents on the past
+attractor have exactly one $p_a < 0$ (LRS excluded). S3 driver
+\textbf{survives} on the Kasner attractor for all class B types
+\emph{except} VI$_{-1/9}$, where the past attractor is non-Kasner and
+needs separate analysis (currently incomplete in literature).
+
+\section{Why BFV does not bypass Hadamard existence}
+
+The Brunetti--Fredenhagen--Verch 2003 framework
+(\textit{Commun.\ Math.\ Phys.} \textbf{237}, 31, \texttt{math-ph/0112041})
+provides a covariant assignment $(M,g) \mapsto \mathrm{vN}$-algebra net
+and Type-III$_1$ universality on any globally hyperbolic spacetime. Local
+quasi-equivalence then propagates obstructions across the full BFV folium
+of \emph{any} Hadamard state.
+
+But BFV does \emph{not} provide Hadamard state existence. The
+Fulling--Narcowich--Wald 1981 deformation argument gives existence on any
+g.h.\ spacetime, but is \emph{non-constructive}: it does not yield the
+explicit $1/\sqrt{V(t)}$ normalisation needed for S1.
+
+\textbf{The closest substitute available} is Ringström,
+\textit{A unified approach to the Klein--Gordon equation on Bianchi
+backgrounds}, CMP \textbf{372} (2019) 599 (\texttt{arXiv:1808.00786}):
+rigorous Klein--Gordon asymptotic on \emph{all} Bianchi backgrounds with
+silent singularities. This gives mode-by-mode behaviour at the classical
+level, providing the building blocks for an SLE-style Hadamard
+construction; the upgrade has not yet been attempted in literature
+(estimated 6--12 months expert work).
+
+\section{Per-type T2 verdict}
+
+\begin{theorem}[T2-Bianchi Type B, partial]
+Let $(M,g)$ be vacuum Bianchi of type III, IV, VI$_h$ ($h \neq -1, -1/9$),
+or VII$_h$. Let $\phi$ be the conformally coupled massless scalar. Assume:
+\begin{itemize}
+\item[(H)] There exists a Hadamard quasifree state $\omega$ on the AQFT
+net over $(M,g)$ (currently \textbf{open} in literature for all Type B).
+\end{itemize}
+Then the inductive-limit local algebra
+\[
+\mathcal{A}(D_{\mathrm{BB}}) := \overline{\bigcup_{t_i > 0}
+\mathcal{A}(D_{t_i})}^{C^*}
+\]
+of comoving causal diamonds approaching the past singularity does
+\emph{not} admit $\omega$, nor any state in the BFV folium of $\omega$,
+as a cyclic-separating vector.
+\end{theorem}
+
+\begin{proof}[Proof sketch]
+By Hewitt--Wainwright 1993, the past attractor is the Kasner circle for
+all four types. The contracting-direction tachyonic IR mode (S3 of
+T2-Bianchi I) applies verbatim: modes with comoving wave-number aligned
+to a contracting Kasner direction have $\omega_k(t) = |k_a| t^{|p_a|} \to 0$,
+generating a $\int dk_a / |k_a| = +\infty$ divergence in the smeared
+2-point function. By Verch 1994 local quasi-equivalence and BFV 2003
+covariant locality, the divergence holds across the full folium of
+$\omega$. Cyclic-separating vectors carry normal states; contradiction.
+\end{proof}
+
+\paragraph{Status table.}
+\begin{center}
+\begin{tabular}{lllll}
+\hline
+Type & S1 (vol.) & S3 (contr.) & Hadamard & T2 verdict \\
+\hline
+III & gap (alg.\ obstr.) & OK & OPEN & PARTIAL (S3-cond.) \\
+IV & gap & OK & OPEN & PARTIAL \\
+VI$_h$ generic & gap & OK & OPEN & PARTIAL \\
+VI$_{-1/9}$ & ? & ? & OPEN & \textbf{BLOCKED} \\
+VII$_h$ & gap & OK & OPEN & PARTIAL (hardest) \\
+\hline
+\end{tabular}
+\end{center}
+
+\section{MacCallum--Jantzen variational obstruction does not block T2}
+
+\paragraph{The obstruction.} For Type B, the symmetry-reduced action
+\emph{does not} yield, upon variation, the symmetry-reduced Einstein
+equations (Hawking 1969, MacCallum 1979 lectures, Jantzen 2001
+\texttt{gr-qc/0102035}). Concretely, the variational principle delivers
+a strict subset of the field equations; one constraint must be added by
+hand. This is the famous obstruction to a Hamiltonian/quantum-cosmology
+treatment of Type B by direct minisuperspace reduction.
+
+\paragraph{Why T2 is unaffected.} T2 is a QFT-on-CS algebraic statement
+on the FULL Einstein-equations-satisfying background. We use the full
+Einstein equations directly via the Wainwright--Hsu / Hewitt--Wainwright
+expansion-normalised system, and never invoke a reduced action
+principle. The BFV functor only requires that $(M,g)$ be globally
+hyperbolic. Hence the MacCallum--Jantzen obstruction is relevant for
+Wheeler--DeWitt minisuperspace quantum gravity (Jantzen's ``unified
+picture''), not for the algebraic T2 obstruction.
+
+\section{Hadamard literature scan: ZERO hits beyond Bianchi I}
+
+Direct INSPIRE searches:
+\begin{itemize}
+\item ``Hadamard state Bianchi'' returns Bernard 1986 (\textit{Phys.\
+Rev.\ D} \textbf{33}, 3581, B-I only), Castagnino--Harari 1984 (general
+formalism, not Bianchi-specific), Banerjee--Niedermaier 2023 (B-I SLE).
+\item ``Hadamard state anisotropic cosmology'' returns Modak 2020 (FRW,
+isotropic), no anisotropic Hadamard literature.
+\item ``Hadamard Bianchi III'' / ``IV'' / ``VI$_h$'' / ``VII$_h$'':
+\textbf{zero hits}.
+\end{itemize}
+
+\textbf{Confirmed:} Hadamard state existence on every Type B Bianchi is
+open in literature, identical status to Bianchi V documented in
+\texttt{/tmp/T2\_bianchi\_V.md}.
+
+\section{Time-to-publication estimate}
+
+\begin{itemize}
+\item \textbf{1--3 months:} CQG/JMP Comment paper documenting the
+``generic class B partial T2 / VI$_{-1/9}$ blocked'' dichotomy with
+the two caveats (S1 spectral-gap; Hadamard open).
+\item \textbf{6--12 months:} adapt Banerjee--Niedermaier 2023 SLE to
+\emph{one} class B Lie group (V via Helgason--Bray Kontorovich--Lebedev,
+or IV via Whittaker decomposition), removing Hadamard gap for that type.
+\item \textbf{2--5 years:} unified Type B T2 theorem covering
+III/IV/V/VI$_h$/VII$_h$. Requires (a) Ringström 2019 framework
+upgrade to Hadamard; (b) classical resolution of $\mathcal{B}(\mathrm{VI}_{-1/9})$;
+(c) complex-eigenvalue mode decomposition for VII$_h$. This is a
+\emph{research programme}, not a single paper.
+\item \textbf{Intractable:} VI$_{-1/9}$ exceptional locus until its
+non-Kasner past attractor is fully classified at the classical level
+(Hewitt--Horwood--Wainwright 2003 is preliminary).
+\end{itemize}
+
+\section{Conclusions}
+
+The Type B Bianchi extension of T2 is genuinely harder than the Type A
+case (1--2 weeks for Bianchi I) by 1--2 orders of magnitude, reflecting
+Hawking's 1969 observation that class B is structurally more rigid. The
+\emph{partial} T2 (S3-conditional, Hadamard-open) covers III, IV, VI$_h$
+generic, and VII$_h$ uniformly. The \emph{blocked} case is
+VI$_{-1/9}$. The MacCallum--Jantzen variational obstruction does not
+threaten T2 because T2 lives in a different algebraic framework. The
+genuine bottleneck is the open Hadamard-existence problem on
+non-compact, non-unimodular Lie groups.
+
+\section*{References (all triangulated this session via INSPIRE API)}
+
+\begin{itemize}
+\item Hawking, S. W., \textit{On the Rotation of the Universe}, MNRAS
+\textbf{142} (1969) 129.
+\item Ellis, G. F. R.\ \& MacCallum, M. A. H., \textit{A class of
+homogeneous cosmological models}, CMP \textbf{12} (1969) 108.
+\item Wainwright, J.\ \& Hsu, L., \textit{A dynamical systems approach to
+Bianchi cosmologies: Orthogonal models of class A}, CQG \textbf{6}
+(1989) 1409.
+\item Hewitt, C. G.\ \& Wainwright, J., \textit{A dynamical systems
+approach to Bianchi cosmologies: Orthogonal models of class B}, CQG
+\textbf{10} (1993) 99.
+\item Jantzen, R. T., \textit{Spatially Homogeneous Dynamics: A Unified
+Picture}, \texttt{arXiv:gr-qc/0102035}.
+\item Heinzle, J. M.\ \& Ringström, H., \textit{Future asymptotics of
+vacuum Bianchi type VI$_0$ solutions}, CQG \textbf{26} (2009).
+\item Hewitt, C. G., Horwood, J. T.\ \& Wainwright, J., \textit{Asymptotic
+dynamics of the exceptional Bianchi cosmologies}, CQG \textbf{20}
+(2003) 1743, \texttt{arXiv:gr-qc/0211071}.
+\item Ringström, H., \textit{A unified approach to the Klein--Gordon
+equation on Bianchi backgrounds}, CMP \textbf{372} (2019) 599,
+\texttt{arXiv:1808.00786}.
+\item Ringström, H., \textit{On the geometry of silent and anisotropic big
+bang singularities}, J.\ Diff.\ Geom.\ \textbf{132} (2026) 461,
+\texttt{arXiv:2101.04955}.
+\item Banerjee, R.\ \& Niedermaier, M., \textit{States of Low Energy on
+Bianchi I spacetimes}, JMP \textbf{64} (2023) 113503,
+\texttt{arXiv:2305.11388}.
+\item Brunetti, R., Fredenhagen, K.\ \& Verch, R., \textit{The generally
+covariant locality principle}, CMP \textbf{237} (2003) 31,
+\texttt{arXiv:math-ph/0112041}.
+\item Bernard, D., \textit{Hadamard Singularity and Quantum States in
+Bianchi Type I Space-time}, Phys.\ Rev.\ D \textbf{33} (1986) 3581.
+\end{itemize}
+
+\end{document}

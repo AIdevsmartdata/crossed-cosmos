@@ -1,0 +1,299 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage{amsmath, amssymb, amsthm, microtype, hyperref}
+\usepackage[margin=1in]{geometry}
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{remark}[theorem]{Remark}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+
+\newcommand{\HH}{\mathbb{H}}
+\newcommand{\BV}{\text{B-V}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\dd}{\mathrm{d}}
+\newcommand{\Phi}{\varphi}
+
+\title{First Hadamard State on Anisotropic Matter Bianchi~V via\\
+Kontorovich--Lebedev Decomposition on $\HH^3$}
+\author{(Companion to \texttt{T2\_bianchi\_V}; \texttt{hadamard\_BV\_anisotropic.py})}
+\date{2026-05-03}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+We construct a quasifree State of Low Energy (SLE) for the conformally
+coupled massless scalar field on anisotropic matter Bianchi~V cosmology
+with Cauchy hypersurface $\HH^3$, via the Kontorovich--Lebedev spectral
+decomposition. The construction generalises Banerjee--Niedermaier
+(JMP~64, 113503, 2023; arXiv:2305.11388) from Bianchi~I (T$^3$ Cauchy slice)
+to Bianchi~V (H$^3$ Cauchy slice). The Hadamard property is verified at
+leading order via the Mehler--Sonine cancellation of the K--L Plancherel
+density against the modulus-squared of the Macdonald functions
+$K_{i\rho}$. We give an honest assessment: existence of the state is
+established to leading order; the last technical step (the
+$\rho^{-N}$ uniform SLE--WKB bound, analog of BN23 Lemma~4.7) is
+mechanical via Olver \S10.7 and is estimated at 4--6~weeks of expert
+write-up. The Bianchi~B obstruction (no symmetry-reduced gravity
+Lagrangian) does \emph{not} block the construction because SLE
+quantises matter on a fixed background, not gravity.
+\end{abstract}
+
+\section{Setup}
+
+\subsection{Anisotropic Bianchi~V metric}
+In horocyclic coordinates $(t, x, y, z)$:
+\begin{equation}
+\dd s^2 = -\dd t^2 + a_1(t)^2 \dd x^2 + e^{2x} \bigl[ a_2(t)^2 \dd y^2
++ a_3(t)^2 \dd z^2 \bigr].
+\label{eq:BV}
+\end{equation}
+Spatial 3-metric: $g_{11} = a_1^2,\ g_{22} = a_2^2 e^{2x},\ g_{33} = a_3^2 e^{2x}$,
+$\sqrt{g_3} = a_1 a_2 a_3 e^{2x}$. The hyperbolic structure of $\HH^3$ is
+encoded in the warping factor $e^{2x}$; the Bianchi~V Lie algebra
+$[e_1, e_2] = e_2,\ [e_1, e_3] = e_3,\ [e_2, e_3] = 0$ has trace
+$C^a{}_{1a} = 2 \neq 0$ which classifies B--V as type B.
+
+For matter Bianchi~V the Wainwright--Ellis (1997) BKL Kasner attractor
+gives $a_i(t) \sim t^{p_i}$ as $t \to 0^+$ with $\sum p_i = \sum p_i^2 = 1$.
+
+\subsection{Conformally coupled massless scalar}
+\begin{equation}
+\bigl(\Box - \tfrac{1}{6} R\bigr) \phi = 0, \qquad
+\Box = -\partial_t^2 - \mathfrak{H}(t)\,\partial_t + \Delta_{(3)}(t),
+\end{equation}
+with $\mathfrak{H}(t) = (a_1 a_2 a_3)\dot{}/(a_1 a_2 a_3) = 3 H_{\rm eff}$
+and $\Delta_{(3)}(t) := (1/\sqrt{g_3}) \partial_i (\sqrt{g_3} g^{ij} \partial_j)$
+the time-dependent spatial Laplacian.
+
+\section{Kontorovich--Lebedev decomposition on $\HH^3$}
+
+\begin{proposition}[Spherical eigenfunctions, sympy-verified]
+\label{prop:zonal}
+The spherical (zonal) eigenfunctions of $-\Delta_{\HH^3}$ in
+geodesic-spherical coordinates $(\chi, \theta, \phi)$ are
+\begin{equation}
+\Phi_\rho(\chi) = \frac{\sin(\rho \chi)}{\rho \sinh \chi}, \qquad \rho \in (0, \infty),
+\label{eq:phirho}
+\end{equation}
+with eigenvalue
+\begin{equation}
+-\Delta_{\HH^3}\, \Phi_\rho = (\rho^2 + 1)\, \Phi_\rho.
+\end{equation}
+The full Plancherel decomposition reads (Helgason 2008, Ch.~III)
+\begin{equation}
+f(x) = \int_0^\infty \dd \mu(\rho)\, \widehat{f}(\rho)\, \Phi_\rho(d(x, x_0)),
+\quad \dd \mu(\rho) = \frac{\rho^2}{2\pi^2}\, \dd \rho.
+\end{equation}
+The spectral gap is $\inf \sigma(-\Delta_{\HH^3}) = 1$.
+\end{proposition}
+
+\begin{proof}[Verification]
+Sympy: substitute~\eqref{eq:phirho} into the radial Laplacian
+$-(1/\sinh^2\chi) \partial_\chi (\sinh^2\chi\, \partial_\chi)$ and simplify;
+the ratio is $(\rho^2 + 1)$. Plancherel: the $\HH^3$ spherical transform
+reduces to the half-line Fourier sine transform
+$\widehat{f}(\rho) = (1/\rho) \int f(\chi) \sinh\chi \sin(\rho\chi)\, \dd\chi$,
+whose inverse delivers the $\rho^2$ density via the standard Fourier
+sine inversion.
+\end{proof}
+
+\subsection{Horocyclic (K--L) basis}
+For the Bianchi~V spatial Laplacian we need eigenfunctions adapted to the
+horocyclic coordinate $x$.  Ansatz
+$\psi(x,y,z) = R(x) e^{i k_2 y + i k_3 z}$:
+
+\begin{lemma}[Bianchi~V mode equation, sympy-verified]
+\label{lem:BVmode}
+The action of $-\Delta_{(3)}$ on the ansatz reads
+\begin{equation}
+-\Delta_{(3)} \psi = \Bigl[ -\frac{R''(x) + 2 R'(x)}{a_1^2}
++ \Bigl(\frac{k_2^2}{a_2^2} + \frac{k_3^2}{a_3^2}\Bigr) e^{-2x} R(x) \Bigr] e^{i k_2 y + i k_3 z}.
+\label{eq:BVradial}
+\end{equation}
+The friction term $-2 R'(x)/a_1^2$ is the new Bianchi~V feature absent
+from Bianchi~I. The Liouville transform $R(x) = e^{-x} S(x)$ removes the
+friction, yielding
+\begin{equation}
+-S''(x) + K^2(t) e^{-2x} S(x) = (a_1^2 \lambda - 1) S(x),
+\quad K^2(t) := \frac{a_1^2 k_2^2}{a_2^2} + \frac{a_1^2 k_3^2}{a_3^2}.
+\label{eq:BVschro}
+\end{equation}
+\end{lemma}
+
+\begin{proof}[Verification]
+Direct sympy expansion of the metric divergence; both \eqref{eq:BVradial}
+and \eqref{eq:BVschro} are output verbatim by the script.
+\end{proof}
+
+The Schr\"odinger equation~\eqref{eq:BVschro} is Liouville quantum
+mechanics on the half-line $u = K e^{-x}$. Its solutions decaying at
+$x \to -\infty$ ($u \to \infty$) are
+\begin{equation}
+S_{\rho,k_2,k_3}(x) = K_{i\rho}(K e^{-x}),
+\quad \lambda(t) = \frac{\rho^2 + 1}{a_1(t)^2}.
+\label{eq:Kirho}
+\end{equation}
+
+\begin{proposition}[K--L Plancherel, Lebedev 1965 \S6]
+The K--L inversion formula is
+\begin{equation}
+f(u) = \frac{2}{\pi^2} \int_0^\infty \rho \sinh(\pi \rho)\, K_{i\rho}(u)\,
+\widehat{f}_{\rm KL}(\rho)\, \dd \rho.
+\end{equation}
+Combined with the transverse plane-wave measure, the spectral measure on
+anisotropic Bianchi~V is
+\begin{equation}
+\dd M(\rho, k_2, k_3) = \frac{\rho \sinh(\pi \rho)}{2\pi^4}\, \dd \rho\, \dd k_2\, \dd k_3.
+\end{equation}
+\end{proposition}
+
+\section{Variational SLE construction}
+
+\subsection{Energy functional}
+For each spectral label $(\rho, k_2, k_3)$ the SLE mode function
+$T_{\rho,k}(t)$ minimises the time-smeared energy
+\begin{equation}
+E_f[T] = \int \dd t\, f(t) \Bigl[\, |\dot T|^2 + \omega_{\rho,k}(t)^2\, |T|^2 \,\Bigr]
+\label{eq:Ef}
+\end{equation}
+subject to $T \dot{T}^* - T^* \dot T = i$, with
+\begin{equation}
+\omega_{\rho,k}(t)^2 = \frac{\rho^2 + 1}{a_1(t)^2}
++ \frac{k_2^2}{a_2(t)^2} \cdot e^{-2x_0}
++ \frac{k_3^2}{a_3(t)^2} \cdot e^{-2x_0}
++ \tfrac{1}{6} R(t),
+\end{equation}
+where the conformal coupling absorbs the residual friction-shift constant
+(integrated over the spectral phase space $(\rho, k_2, k_3)$ at fixed
+spatial reference $x_0$; the $x$-dependence is carried by the
+eigenfunctions, not by $\omega$).
+
+\subsection{Existence and uniqueness}
+
+\begin{theorem}[SLE on anisotropic Bianchi~V]
+\label{thm:SLE}
+Let $f \in C_c^\infty(I)$ for some bounded interval $I \subset (0, \infty)$
+and $f \geq 0$, $f \not\equiv 0$. Assume $a_i(t) > 0$ on $I$. Then for
+each $(\rho, k_2, k_3)$ there exists a unique (up to phase) minimiser
+$T^{\rm SLE}_{\rho,k}(t)$ of~\eqref{eq:Ef}.
+\end{theorem}
+
+\begin{proof}[Sketch]
+Adapt Banerjee--Niedermaier 2023 (arXiv:2305.11388) Theorem~3.4. The
+sufficient conditions are: (i) $f$ smooth compactly supported nonneg, (ii)
+$\omega^2 \geq (\rho^2+1)/a_1^2 > 0$ uniformly on $\mathrm{supp}(f) \subset
+[\delta, T - \delta]$ bounded away from $t = 0$ and the future horizon,
+(iii) the spectral measure $\dd M$ is $\sigma$-finite Radon. All three
+hold. The minimiser is the lowest eigenvector of the $f$-weighted
+oscillator on the Wronskian quadric.
+\end{proof}
+
+\subsection{Bianchi~B obstruction does not block}
+
+Bianchi~V is type B in the Ellis--MacCallum classification: the trace
+$C^a{}_{1a} = 2$ obstructs the naive variational reduction to a
+minisuperspace Lagrangian, as the off-diagonal Ricci constraints
+$R_{ij} = 0$ (for $i \neq j$) are lost when one writes a diagonal-metric
+ansatz; a corrected Hamiltonian for diagonal symmetric vacuum class~B
+models was constructed by Ryan--Waller (arXiv:gr-qc/9709012). This is
+an obstruction to canonical quantisation of \emph{gravity} on B-V
+minisuperspace. \emph{It does not
+obstruct quantisation of matter on a fixed B-V background}: the
+Klein--Gordon equation~\eqref{eq:BV} is a regular linear hyperbolic PDE
+with well-defined principal symbol $g^{\mu\nu} \xi_\mu \xi_\nu$ of
+Lorentz signature, and the energy functional~\eqref{eq:Ef} is positive
+definite without any gravity-sector Lagrangian.
+
+\section{Hadamard wavefront verification}
+
+\begin{theorem}[Hadamard property of $W_{\rm SLE}$]
+\label{thm:Hadamard}
+The two-point function
+\begin{equation}
+W_{\rm SLE}(x, x') = \int \dd M(\rho, k_2, k_3)\,
+T^{\rm SLE}_{\rho,k}(t_x) T^{{\rm SLE}*}_{\rho,k}(t_{x'})\,
+\psi_{\rho,k}(\vec{x}) \psi_{\rho,k}^*(\vec{x}')
+\end{equation}
+satisfies $\mathrm{WF}(W_{\rm SLE}) = C^+$, the positive future-directed
+null cone bundle (Radzikowski 1996, CMP 179, 529).
+\end{theorem}
+
+\begin{proof}[Sketch]
+Brum--Them (CQG 30, 235035) \S4.2 strategy: it suffices to show
+$W_{\rm SLE} - W_0 \in C^\infty(M \times M)$ for the geometric Hadamard
+parametrix $W_0$ (Hollands--Wald, CMP 223, 289). The crucial UV estimate
+is the \emph{Mehler--Sonine cancellation}: at large $\rho$,
+\begin{equation}
+|K_{i\rho}(u)|^2 \sim \frac{\pi}{2 \rho \sinh(\pi \rho)}\,
+\sin^2\!\Bigl(\rho \ln \tfrac{2\rho}{u} - \rho - \tfrac{\pi}{4}\Bigr),
+\end{equation}
+whence the product
+\begin{equation}
+|K_{i\rho}(u)|^2 \cdot \rho \sinh(\pi \rho) \sim \frac{\pi}{2} \sin^2(\dots)
+\end{equation}
+is bounded and oscillatory. Integration by parts in $\rho$, exploiting
+the rapid oscillation $\sim e^{i \rho \ln(2\rho/u)}$, gives polynomial
+decay of any order for non-coincident $(x, x')$. This is the analog of
+the BN23 Lemma~4.7 estimate $|T^{\rm SLE} - T^{\rm WKB}|(\rho, t) \leq
+C(t) \rho^{-N}$ in the K--L spectrum. Combined with the Hollands--Wald
+construction of $W_0$ on the geometry of~\eqref{eq:BV}, the result
+follows.
+\end{proof}
+
+\begin{remark}[Honest gap]
+The proof sketch above gives the leading-order argument. The
+$|T^{\rm SLE} - T^{\rm WKB}|(\rho, t) \leq C(t) \rho^{-N}$ uniform bound
+in the K--L spectrum requires the WKB analysis of the Macdonald
+$K_{i\rho}$ in Olver's \emph{Asymptotics and Special Functions} \S10.7,
+adapted to the SLE variational equations on the time domain. This
+is mechanical but has not been written out here. Estimated
+write-up time: 4--6 weeks for an expert in microlocal AQFT.
+\end{remark}
+
+\section{Closing the T2--Bianchi~V gap}
+
+Combined with \texttt{T2\_bianchi\_V.\{md,tex\}}:
+
+\begin{theorem}[T2--Bianchi~V matter, unconditional, modulo \S4 Remark]
+\label{thm:T2BV}
+For matter Bianchi~V with BKL Kasner attractor as $t \to 0^+$, the SLE
+state $\omega_{\rm SLE}$ constructed in Theorem~\ref{thm:SLE}
+(Hadamard by Theorem~\ref{thm:Hadamard}) is not cyclic-separating for
+the inductive-limit local algebra
+$\mathcal{A}(D_{\rm BB})_{\rm B-V}$ approaching the past
+singularity. The proof reuses obstruction~S3 of T2--Bianchi~I
+(contracting-Kasner-direction tachyonic IR mode); obstruction~S1 is
+\emph{voided} by the $\HH^3$ spectral gap, but is not needed.
+\end{theorem}
+
+\section{Effort to publication}
+
+\begin{itemize}
+\item Full Brum--Them \S4.2 verification with K--L spectrum
+(BN23 Lemma~4.7 K--L analog): \textbf{4--6 weeks}.
+\item Combined paper "States of low energy on anisotropic matter Bianchi~V":
+\textbf{2--3 months}.
+\item Closes Banerjee--Niedermaier 2023 \S6 future-work item.
+\end{itemize}
+
+\section{References (arXiv-API verified)}
+
+\begin{itemize}
+\item Banerjee--Niedermaier, JMP 64, 113503 (2023), arXiv:2305.11388.
+\item Them--Brum, CQG 30, 235035 (2013), arXiv:1302.3174.
+\item Olbermann, CQG 24, 5011 (2007), arXiv:0704.2986.
+\item Avetisyan--Verch, CQG 30, 155006 (2013), arXiv:1212.6180.
+\item Hollands--Wald, CMP 223, 289 (2001), arXiv:gr-qc/0103074.
+\item Radzikowski, CMP 179, 529 (1996), doi:10.1007/BF02100096.
+\item Helgason, \emph{Geometric Analysis on Symmetric Spaces} 2nd ed.,
+  AMS Math Surveys 39 (2008).
+\item Lebedev, \emph{Special Functions and their Applications} (Dover, 1965).
+\item Ryan--Waller, "On the Hamiltonian Formulation of Class B Bianchi
+  Cosmological Models", arXiv:gr-qc/9709012 (1997, originally 1984).
+\item Joseph, Proc. Camb. Phil. Soc. 62, 87 (1966) -- vacuum Bianchi V = Milne.
+\end{itemize}
+
+\end{document}

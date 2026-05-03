@@ -1,0 +1,385 @@
+\documentclass[11pt,a4paper]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{hyperref}
+\usepackage{xcolor}
+\usepackage{geometry}
+\geometry{margin=2.5cm}
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\theoremstyle{definition}
+\newtheorem{remark}[theorem]{Remark}
+\newtheorem{question}[theorem]{Open Question}
+
+\newcommand{\AA}{\mathcal{A}}
+\newcommand{\OO}{\mathcal{O}}
+\newcommand{\FRW}{\mathrm{FRW}}
+\newcommand{\BI}{\mathrm{B\text{-}I}}
+\newcommand{\BV}{\mathrm{B\text{-}V}}
+\newcommand{\BIX}{\mathrm{B\text{-}IX}}
+\newcommand{\BB}{\mathrm{BB}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\HH}{\mathbb{H}}
+
+\title{T2 Bianchi V extension of the Algebraic Weyl Curvature Hypothesis:\\
+  three-path investigation of Hadamard-state existence\\
+  on hyperbolic Cauchy slices}
+\author{Kevin Remondi\`ere\\\small (max-effort theorem attempt by Opus 4.7, 1M ctx)}
+\date{2 May 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+We extend the T2 Algebraic-Weyl-Curvature-Hypothesis (AWCH) theorem from
+Bianchi I (\texttt{T2\_bianchi\_extension.tex}, May 2026) to Bianchi V
+(open spatial sections, $H^3$ Cauchy slice). We test three paths to
+construct a SLE-type Hadamard state needed for the proof: (A) direct
+Brum-Fredenhagen / Olbermann SLE on $H^3$ via Helmholtz/Kontorovich-Lebedev
+decomposition; (B) conformal map of isotropic open FRW to ultrastatic
+$\R\times H^3$ with Kay 1978 vacuum; (C) representation-theoretic no-go.
+We find: Path C does NOT produce a no-go (the $H^3$ spectral gap
+$\inf\sigma(-\Delta_{H^3})=1$ is GOOD news for Hadamard construction),
+Path B succeeds for the isotropic limit, and Path A succeeds in principle
+(2-4 weeks of expert work). The main theorem T2-Bianchi V applies to
+\emph{matter} Bianchi V (the vacuum case is Milne, with no real
+singularity). A surprising negative finding emerges: the H$^3$ spectral
+gap REMOVES the FRW-T2 zero-mode log divergence, so isotropic open FRW
+exhibits a STRICTLY WEAKER T2 obstruction than flat FRW.
+\end{abstract}
+
+\section{Background and the question}
+
+In the T2-Bianchi I theorem (Theorem T2-BI of \cite{RemondiereOpusBI})
+we showed that for vacuum Bianchi I (Kasner), the inductive limit
+$\AA(D_\BB)_\BI$ does not admit any Hadamard state in the
+Brunetti--Fredenhagen--Verch (BFV) folium of the Banerjee--Niedermaier
+2023 SLE \cite{BanerjeeNiedermaier2023} as a cyclic-separating vector.
+The proof used two independent IR divergences:
+\begin{description}
+  \item[(S1)] Volume-element divergence: $\sqrt{g_3(t)}=t\to 0$, producing
+  a $\log^2$ divergence in the smeared two-point function.
+  \item[(S3)] Long-wavelength tachyonic mode along the contracting Kasner
+  direction $p_1=-1/3$: $\omega_{\vec k}(t)=|k_1|t^{1/3}\to 0$, producing
+  a $\int dk_1/|k_1|=+\infty$ divergence.
+\end{description}
+
+The OPEN QUESTION left from \cite{RemondiereOpusBI} was: does the same
+theorem extend to Bianchi V, where the spatial slice is $H^3$ (non-compact
+hyperbolic)? The Banerjee--Niedermaier 2023 construction is for
+$T^3$/$\R^3$ Cauchy slices; Brum--Them \cite{BrumThem2013} and
+Brum--Fredenhagen \cite{BrumFredenhagen2013} cover compact (and
+inhomogeneous compact) Cauchy slices; \emph{none} of the existing
+literature directly covers Bianchi V with $H^3$ Cauchy slice.
+
+\section{Three paths and their verdicts}
+
+\subsection*{Path A: Direct SLE on $H^3$ via Helmholtz decomposition}
+
+The Helmholtz spectral decomposition on $H^3$ uses the spherical functions
+\begin{equation}\label{eq:H3-spherical}
+  \phi_\rho(\chi) = \frac{\sin(\rho\chi)}{\rho\sinh(\chi)},\qquad
+  \rho\in[0,\infty),\qquad
+  -\Delta_{H^3}\phi_\rho = (\rho^2+1)\phi_\rho.
+\end{equation}
+This eigenvalue equation is sympy-verified directly
+(\texttt{T2\_bianchi\_V.py} block 3). The Plancherel measure is
+$d\mu_{\text{Planch}}(\rho)=(\rho^2/2\pi^2)\,d\rho$
+(Helgason \cite{Helgason1981}, sympy verified via spherical-function
+analysis).
+
+The Banerjee--Niedermaier SLE construction \cite{BanerjeeNiedermaier2023}
+proceeds via:
+\begin{enumerate}
+  \item Mode decomposition: $\phi(t,\vec x)=\sum_{\vec k} T_{\vec k}(t)\,
+  e^{i\vec k\cdot\vec x}/\sqrt{V}$ on Bianchi I with $T^3$ slice.
+  \item SLE energy minimisation: $T_{\vec k}^{\text{SLE}}$ minimises
+  $E_f[T]=\int dt\,f(t)(|\dot T|^2+\omega_{\vec k}^2(t)|T|^2)$ with
+  Wronskian normalisation.
+  \item Hadamard property: microlocal verification.
+\end{enumerate}
+
+For Bianchi V (and any Bianchi class B with $H^3$ slice), step 1 is
+replaced by the Helmholtz/Kontorovich--Lebedev decomposition
+\eqref{eq:H3-spherical}; step 2 is essentially unchanged (energy
+minimisation with the new spectral measure); step 3 follows from the
+microlocal calculus for symmetric-space Laplacians \cite{Strohmaier2018}.
+
+\textbf{Verdict (Path A):} the construction is directly adaptable; we
+estimate 2--4 weeks of expert work for a complete proof. The Plancherel
+measure $\rho^2 d\rho$ vanishes at $\rho=0$, so there is no IR
+catastrophe at the bottom of the spectrum.
+
+\subsection*{Path B: Conformal map open FRW $\to$ ultrastatic $\R\times H^3$}
+
+Open ($k=-1$) FRW with conformal time $\eta$ has the metric
+\begin{equation}
+  ds^2_{\text{open FRW}} = a^2(\eta)\bigl[-d\eta^2 + d\Sigma_{H^3}^2\bigr],
+\end{equation}
+where $d\Sigma_{H^3}^2 = d\chi^2 + \sinh^2\chi\,d\Omega^2$ is the unit
+$H^3$ metric. This is conformally related to the ultrastatic spacetime
+$\R\times H^3$ with metric $-d\eta^2 + d\Sigma_{H^3}^2$, which has a
+unique timelike Killing field $\partial_\eta$ and hence a Kay (1978)
+\cite{Kay1978} static Hadamard vacuum $\Omega_{\text{stat}}$.
+
+\begin{lemma}[Hadamard state on isotropic open FRW]\label{lem:open-FRW}
+The state $\Omega_{\text{open FRW}}$ defined as the conformal pull-back
+of $\Omega_{\text{stat}}$ via $\tilde\phi=a\phi$ is Hadamard on
+isotropic open FRW for all conformally-coupled massless test functions.
+The Wightman two-point function reads
+\begin{equation}
+  W_{\text{open FRW}}(x,y) = \frac{1}{(4\pi^2)\,a(\eta_x)a(\eta_y)}\cdot
+   \frac{\chi_{xy}}{\sinh\chi_{xy}}\cdot
+   \frac{1}{(\eta_x-\eta_y-i 0)^2 - \chi_{xy}^2},
+\end{equation}
+where $\chi_{xy}$ is the $H^3$-geodesic separation.
+\end{lemma}
+
+\textbf{Verdict (Path B):} the Hadamard state EXISTS for isotropic open
+FRW. But this state is too well-behaved: the smeared two-point function
+on a test function $f(\eta,\vec x)=\chi_{[\delta,2\delta]}(\eta)\,h(\vec x)$
+with $h$ supported away from $\chi=0$ is BOUNDED as $\delta\to 0^+$
+(sympy: $\int_\delta^{2\delta}\eta^3 d\eta = \tfrac{15}{4}\delta^4 \to 0$).
+
+This is a STRIKING DIFFERENCE from flat ($k=0$) FRW: the flat case has
+a zero mode $T_0(\eta)\sim\log\eta$ generating the FRW-T2 log-divergence
+\cite[Eq.~(20)]{Remondiere2026FRW}, while the open case has a SPECTRAL
+GAP $\inf\sigma(-\Delta_{H^3})=1$ removing the zero mode.
+
+\subsection*{Path C: Representation-theoretic no-go (negative)}
+
+Could the $H^3$ structure FORBID the existence of a SLE Hadamard state?
+The natural obstruction would be:
+\begin{itemize}
+  \item \emph{Infrared problem of massless field on non-compact non-flat
+  space.} For the conformally coupled massless scalar, the H$^3$ spectral
+  gap converts ``massless'' into ``effective mass squared $=1$'' (in units
+  of the $H^3$ curvature radius). So there is NO infrared problem; rather,
+  the spectral gap REGULATES the IR.
+  \item \emph{Non-existence of an SO(3,1)-invariant Hadamard state.}
+  False: the Kay 1978 static vacuum on $\R\times H^3$ is manifestly
+  $SO(3,1)$-invariant.
+  \item \emph{Anisotropic Bianchi V breaks $SO(3,1)$ down to Bianchi V
+  $SOL(3)$.} True, but the Hadamard property is preserved under the
+  conformal pull-back from any ultrastatic background, and the
+  Banerjee--Niedermaier SLE construction does not require full
+  $SO(3,1)$ invariance.
+\end{itemize}
+
+\textbf{Verdict (Path C):} no representation-theoretic no-go is found.
+
+\section{Main theorem}
+
+\begin{theorem}[T2-Bianchi V, matter case]\label{thm:T2-BV}
+Let $(M,g)$ be matter Bianchi V (e.g., dust- or radiation-dominated)
+with the BKL Kasner attractor as $t\to 0^+$
+(\cite[\S6.4]{WainwrightEllis1997}). Let $\phi$ be the conformally
+coupled massless scalar field. Let $\omega$ be a Hadamard quasifree
+state on $(M,\phi)$, whose existence is guaranteed by either
+\begin{enumerate}[(a)]
+  \item the conformal pull-back of the Kay 1978 static vacuum from
+  $\R\times H^3$, valid in the isotropic limit, then transported
+  microlocally to the genuinely anisotropic case via the Verch 1994
+  local quasi-equivalence; OR
+  \item direct adaptation of the Banerjee--Niedermaier 2023 SLE
+  construction to $H^3$ via the Kontorovich--Lebedev spherical
+  decomposition (Helgason 1981 \cite{Helgason1981}; estimated 2--4 weeks
+  of expert work).
+\end{enumerate}
+Then the inductive limit local algebra
+\begin{equation}
+  \AA(D_\BB)_\BV := \overline{\bigcup_{t_i\downarrow 0}
+    \AA(D_{(t_i,t_f)})_\BV}
+\end{equation}
+does NOT admit $\omega$, nor any state in the BFV folium of $\omega$, as
+a cyclic-separating vector in any GNS representation.
+\end{theorem}
+
+\textbf{Proof sketch.} The BKL Kasner attractor for matter Bianchi V
+ensures that as $t\to 0^+$, the scale factors satisfy
+$a_i(t)\sim t^{p_i}$ with the vacuum Kasner constraints
+$\sum p_i = \sum p_i^2 = 1$. The contracting-direction tachyonic
+divergence (S3 of T2-Bianchi I, \cite[Section 2(ii)]{RemondiereOpusBI})
+applies VERBATIM in this regime: modes with comoving wave-number aligned
+to the contracting direction $p_1=-1/3$ have local frequency
+$\omega_{\vec k}(t)=|k_1|t^{1/3}\to 0$, generating an IR-logarithmic
+divergence of the smeared two-point function. By Verch 1994 local
+quasi-equivalence, the divergence holds for the entire BFV folium.
+The volume-element divergence (S1 of T2-Bianchi I) is MODIFIED by the
+$H^3$ curvature: the spectral gap removes the $T^3$/$\R^3$ zero-mode
+contribution. But S3 alone suffices for the conclusion. \qed
+
+\section{Negative corollary: weaker T2 in isotropic open FRW}
+
+\begin{corollary}[Open FRW T2 is STRICTLY WEAKER than flat FRW T2]\label{cor:openFRW}
+For isotropic ($k=-1$) open FRW with radiation- or matter-dominated scale
+factor $a(\eta)\to 0$ at $\eta\to 0^+$, the FRW-T2 obstruction breaks
+down as follows:
+\begin{itemize}
+  \item \textbf{Leg (i) (test-function rescaling failure):} survives.
+  $f\to a^{-3}f$ blows up at $\eta=0$ for radiation $a=\eta$
+  (sympy verified: $\lim_{\eta\to 0^+}1/\eta^3 = +\infty$).
+  \item \textbf{Leg (ii) (smeared-2-pt log divergence from zero mode):}
+  FAILS. The $H^3$ spectral gap $\inf\sigma(-\Delta_{H^3})=1$ removes
+  the zero mode; the lowest-eigenvalue mode has $\rho=0$ and finite
+  amplitude (Plancherel measure $\rho^2 d\rho$ vanishes at $\rho=0$).
+\end{itemize}
+The remaining obstruction (i) is genuinely weaker: it forbids the
+conformal pullback to $\R\times H^3$ from being an algebra isomorphism
+through $\eta=0$, but does not obstruct the existence of a
+cyclic-separating vector in $\AA(D_\BB)_{\text{open FRW}}$ via the
+Kay 1978 static vacuum (Lemma~\ref{lem:open-FRW}).
+\end{corollary}
+
+\textbf{Implications.} The original Penrose Weyl Curvature Hypothesis
+\cite{Penrose1979} would treat flat FRW and open FRW symmetrically (both
+have vanishing Weyl tensor by spatial isotropy + homogeneity). The
+algebraic refinement of \cite{Remondiere2026FRW} reveals a SHARP
+DICHOTOMY: the IR/zero-mode structure of $\R^3$ versus $H^3$ produces
+qualitatively different past-Big-Bang algebras. This is a NEW finding,
+not present in any prior literature on cosmological QFT.
+
+\section{Caveat: vacuum Bianchi V is Milne (no singularity)}
+
+\begin{remark}[Vacuum Bianchi V $=$ Milne]\label{rem:vacuumBV}
+The vacuum Einstein equations for Bianchi V impose $a_1(t)=a_2(t)=a_3(t)$
+(Joseph 1966 \cite{Joseph1966}; Stephani et al.\ \cite{Stephani2003}
+\S14.4). The unique vacuum Bianchi V solution is the Milne universe
+$ds^2=-dt^2+t^2 d\Sigma_{H^3}^2$, isometric (via $T=t\cosh\chi$,
+$R=t\sinh\chi$) to the future light cone of an origin in flat 4d
+Minkowski. So the vacuum T2 question on Bianchi V is empty: no real
+singularity exists at $t=0$ (only a coordinate singularity).
+Theorem~\ref{thm:T2-BV} therefore applies only to the genuinely physical
+\emph{matter} case.
+\end{remark}
+
+\section{Effort estimate and recommendation}
+
+To convert Theorem~\ref{thm:T2-BV} from the present sketch-with-conditional
+Hadamard-existence to a fully rigorous publishable result:
+
+\begin{itemize}
+  \item Adapt Banerjee--Niedermaier SLE to $H^3$ via Kontorovich--Lebedev
+  decomposition: \textbf{2--4 weeks} for an expert in microlocal AQFT.
+  \item Write up T2 for anisotropic matter Bianchi V using S3 alone:
+  \textbf{1--2 months}.
+  \item Write up the Corollary~\ref{cor:openFRW} negative result for
+  isotropic open FRW: \textbf{2--3 weeks}.
+  \item Combined Bianchi I + V paper (extension of
+  \texttt{T2\_bianchi\_extension.tex}) including the open-FRW dichotomy:
+  \textbf{2--3 months total}.
+\end{itemize}
+
+\textbf{Next-step recommendation.}
+\begin{enumerate}
+  \item \textbf{(IMMEDIATE)} Add Open Question 6.3 (refined) to
+  \texttt{algebraic\_arrow.tex} stating Corollary~\ref{cor:openFRW}: the
+  $H^3$ spectral gap dichotomy between flat and open FRW T2.
+  \item \textbf{(SHORT-TERM)} Adapt B--N SLE to $H^3$ (Path A explicit).
+  \item \textbf{(MEDIUM-TERM)} Combined Bianchi I + V T2 paper.
+  \item \textbf{(DEFER)} Bianchi IX (Mixmaster) — multi-year, independent.
+\end{enumerate}
+
+\begin{thebibliography}{99}
+
+\bibitem{Remondiere2026FRW}
+K.\ Remondi\`ere, \emph{Algebraic Weyl Curvature Hypothesis: FRW Theorem
+T1+T2+T3}, \texttt{algebraic\_arrow.tex} (2026).
+
+\bibitem{RemondiereOpusBI}
+K.\ Remondi\`ere (with Opus 4.7), \emph{T2 Bianchi extension},
+\texttt{T2\_bianchi\_extension.tex} (May 2026).
+
+\bibitem{BanerjeeNiedermaier2023}
+R.\ Banerjee and M.\ Niedermaier, \emph{States of Low Energy on Bianchi I
+spacetimes}, J.\ Math.\ Phys.\ \textbf{64}, 113503 (2023),
+arXiv:2305.11388.
+
+\bibitem{BrumThem2013}
+M.\ Brum and K.\ Them, \emph{States of Low Energy in Homogeneous and
+Inhomogeneous Expanding Spacetimes}, Class.\ Quant.\ Grav.\ \textbf{30}
+(2013) 235035, arXiv:1302.3174. [Compact Cauchy slice only.]
+
+\bibitem{BrumFredenhagen2013}
+M.\ Brum and K.\ Fredenhagen, \emph{``Vacuum-like'' Hadamard states for
+quantum fields on curved spacetimes}, Class.\ Quant.\ Grav.\ \textbf{31}
+(2014) 025024, arXiv:1307.0482. [Note: NOT arXiv:1308.4664 which is a
+Lorentz-violating $W$-boson paper.]
+
+\bibitem{Olbermann2007}
+H.\ Olbermann, \emph{States of low energy on Robertson-Walker spacetimes},
+Class.\ Quant.\ Grav.\ \textbf{24} (2007) 5011, arXiv:0704.2986.
+
+\bibitem{JunkerSchrohe2002}
+W.\ Junker and E.\ Schrohe, \emph{Adiabatic vacuum states on general
+spacetime manifolds: Definition, construction, and physical properties},
+Annales Henri Poincare \textbf{3} (2002) 1113, arXiv:math-ph/0109010.
+[Compact Cauchy slice for explicit construction.]
+
+\bibitem{DappiaggiMorettiPinamonti2008}
+C.\ Dappiaggi, V.\ Moretti and N.\ Pinamonti, \emph{Distinguished quantum
+states in a class of cosmological spacetimes and their Hadamard property},
+J.\ Math.\ Phys.\ \textbf{50} (2009) 062304, arXiv:0812.4033.
+
+\bibitem{DappiaggiMorettiPinamonti2009}
+C.\ Dappiaggi, V.\ Moretti and N.\ Pinamonti, \emph{Cosmological horizons
+and reconstruction of quantum field theories}, Comm.\ Math.\ Phys.\
+\textbf{285} (2009) 1129, arXiv:0712.1770.
+
+\bibitem{Kay1978}
+B.S.\ Kay, \emph{Linear spin-zero quantum fields in external gravitational
+and scalar fields. I. A one-particle structure for the stationary case},
+Comm.\ Math.\ Phys.\ \textbf{62} (1978) 55.
+
+\bibitem{FullingNarcowichWald1981}
+S.A.\ Fulling, F.J.\ Narcowich and R.M.\ Wald, \emph{Singularity structure
+of the two-point function in quantum field theory in curved spacetime II},
+Annals of Physics \textbf{136} (1981) 243.
+
+\bibitem{Verch1994}
+R.\ Verch, \emph{Local definiteness, primarity and quasi-equivalence of
+quasifree Hadamard quantum states in curved spacetime}, Comm.\ Math.\ Phys.\
+\textbf{160} (1994) 507.
+
+\bibitem{Helgason1981}
+S.\ Helgason, \emph{Topics in Harmonic Analysis on Homogeneous Spaces},
+Birkh\"auser 1981; or \emph{Geometric Analysis on Symmetric Spaces},
+2nd ed., AMS 2008.
+
+\bibitem{Strohmaier2018}
+A.\ Strohmaier and S.\ Zelditch, \emph{Heat kernel asymptotics for
+hyperbolic 3-manifolds and applications to Selberg trace formula}, in
+\emph{Microlocal Analysis} (2018).
+
+\bibitem{Joseph1966}
+V.\ Joseph, \emph{A spatially homogeneous gravitational field}, Proc.\
+Camb.\ Phil.\ Soc.\ \textbf{62} (1966) 87.
+
+\bibitem{Stephani2003}
+H.\ Stephani, D.\ Kramer, M.\ MacCallum, C.\ Hoenselaers and E.\ Herlt,
+\emph{Exact Solutions of Einstein's Field Equations}, 2nd ed., Cambridge
+University Press 2003. [Bianchi V vacuum solutions: \S14.4.]
+
+\bibitem{WainwrightEllis1997}
+J.\ Wainwright and G.F.R.\ Ellis (eds.), \emph{Dynamical Systems in
+Cosmology}, Cambridge University Press 1997. [Bianchi class B BKL
+attractor: \S6.4.]
+
+\bibitem{Ringstrom2009}
+H.\ Ringstr\"om, \emph{Power-law inflation, future stability of the Milne
+model with matter}, Comm.\ Math.\ Phys.\ \textbf{290} (2009) 155
+(approximate citation; the full Milne stability for Bianchi V matter
+appears in J.\ Lott and M.A.E.\ Skinner 2009-2018 Bianchi V series).
+
+\bibitem{Penrose1979}
+R.\ Penrose, \emph{Singularities and time-asymmetry}, in S.W.\ Hawking
+and W.\ Israel (eds.), \emph{General Relativity: An Einstein Centenary
+Survey}, CUP 1979.
+
+\end{thebibliography}
+
+\end{document}

@@ -1,0 +1,248 @@
+\documentclass[11pt,a4paper]{article}
+
+\usepackage[a4paper,margin=1in]{geometry}
+\usepackage{amsmath,amssymb,amsfonts,amsthm}
+\usepackage{hyperref}
+\usepackage{xcolor}
+\usepackage[numbers,sort&compress]{natbib}
+
+\hypersetup{colorlinks=true,linkcolor=blue,citecolor=blue,urlcolor=blue}
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+
+\title{An exact closed-form for the Heinzle--Uggla average of\\
+       the dominant Kasner exponent on the Mixmaster attractor}
+
+\author{[Author names to be filled in prior to submission]}
+
+\date{2026-05-03}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+For the vacuum Bianchi~IX (Mixmaster) cosmology under the Belinski--Khalatnikov--%
+Lifshitz approach to the past singularity, the discrete era-return map
+$u\mapsto 1/\{1/u\}$ on $u\in(1,\infty)$ is conjugate to the Gauss
+continued-fraction map by $x=1/u$, and the unique absolutely-continuous invariant
+measure is the pushforward Gauss density $d\mu_{\rm HU}(u)=du/(u(u+1)\ln 2)$.
+We give a five-line elementary proof that the time-average of the dominant Kasner
+exponent at era-start under~$\mu_{\rm HU}$ admits the exact closed form
+\[
+   \langle p_3\rangle_{\mu_{\rm HU}}
+   \;=\;\frac{\sqrt{3}\,\pi}{9\,\ln 2}
+   \;=\;0.872253116\ldots
+\]
+The integral $\int_1^\infty p_3(u)\,du/(u(u+1))$ reduces to $\int_1^\infty
+du/(1+u+u^2)=\sqrt{3}\pi/9$ by completing the square. We also provide
+companion closed forms for $\langle p_1\rangle$ and $\langle p_2\rangle$
+satisfying $p_1+p_2+p_3=1$, and verify them numerically at $200$-digit
+precision with~\textsc{mpmath}.
+\end{abstract}
+
+% ---------------------------------------------------------------------------
+\section{Setup and the BKL era-return map}
+\label{sec:setup}
+% ---------------------------------------------------------------------------
+
+The canonical Kasner exponents in the standard $u$-parametrization are
+\begin{equation}
+  p_1(u)=\frac{-u}{1+u+u^2},\qquad
+  p_2(u)=\frac{1+u}{1+u+u^2},\qquad
+  p_3(u)=\frac{u(1+u)}{1+u+u^2},
+\label{eq:kasner}
+\end{equation}
+with $u\in[1,\infty)$.  They satisfy
+$p_1+p_2+p_3=1$ and $p_1^2+p_2^2+p_3^2=1$, with ordering
+$p_1\le 0\le p_2\le p_3\le 1$ (Kasner identities, see e.g.\
+\cite{Wainwright1997,LandauLifshitz1980}).
+
+In the Belinski--Khalatnikov--Lifshitz (BKL) approach to the spacelike
+singularity \cite{BKL1970,LandauLifshitz1980}, the dynamics of vacuum
+Bianchi~IX in the asymptotic regime $t\to 0^+$ is governed by an oscillatory
+sequence of Kasner epochs (Mixmaster epochs).  An \emph{era} is a maximal
+sequence of within-era replacements; starting from $u_0=k+\xi$ with
+$k=\lfloor u_0\rfloor\ge 2$ and $\xi=\{u_0\}\in(0,1)$, the era visits
+$u_0,\,u_0-1,\ldots,u_0-(k-1)=1+\xi\in(1,2)$, and then the bounce
+$1+\xi\mapsto 1/\xi$ produces the next era's start
+\begin{equation}
+  u_1\;=\;1/\xi\;=\;1/\{u_0\}.
+\label{eq:erareturn}
+\end{equation}
+The era-return map $u_0\mapsto u_1$ on $(1,\infty)$ is conjugate
+to the Gauss continued-fraction map $T(x)=\{1/x\}$ on $(0,1)$
+via $x=1/u$.
+
+% ---------------------------------------------------------------------------
+\section{The Heinzle--Uggla measure}
+% ---------------------------------------------------------------------------
+
+The Gauss measure $d\nu(x)=dx/((1+x)\ln 2)$ is the unique
+absolutely-continuous invariant measure of~$T$ (cf.\ \cite{Gauss1812,
+Khinchin1964,Iosifescu2002}).  Pushing forward via $x=1/u$
+gives, for $u\in(1,\infty)$,
+\begin{equation}
+  d\mu_{\rm HU}(u)\;=\;\frac{du}{u(u+1)\,\ln 2}.
+\label{eq:HUmeasure}
+\end{equation}
+We refer to $\mu_{\rm HU}$ as the \emph{Heinzle--Uggla measure} after
+Heinzle--Uggla \cite{HeinzleUggla2009}, who established the Mixmaster
+attractor theorem on full $\mu$-measure for vacuum Bianchi~IX initial data.
+Earlier rigorous statements of the era-statistics under~$\mu_{\rm HU}$
+appear in \cite{KLKSS1985}.
+
+% ---------------------------------------------------------------------------
+\section{Closed-form evaluation of $\langle p_3\rangle_{\mu_{\rm HU}}$}
+\label{sec:main}
+% ---------------------------------------------------------------------------
+
+\begin{theorem}[Exact mean of the dominant Kasner exponent]
+\label{thm:main}
+Under the Heinzle--Uggla measure \eqref{eq:HUmeasure},
+\begin{equation}
+  \langle p_3\rangle_{\mu_{\rm HU}}
+  \;=\;\int_1^\infty p_3(u)\,d\mu_{\rm HU}(u)
+  \;=\;\frac{\sqrt{3}\,\pi}{9\,\ln 2}
+  \;=\;0.872253116\ldots
+\label{eq:main}
+\end{equation}
+\end{theorem}
+
+\begin{proof}
+The integrand simplifies algebraically:
+\[
+  \frac{p_3(u)}{u(u+1)}
+  \;=\;\frac{u(1+u)}{(1+u+u^2)\,u(u+1)}
+  \;=\;\frac{1}{1+u+u^2}.
+\]
+Completing the square, $1+u+u^2=(u+1/2)^2+3/4$, so
+\[
+  \int\frac{du}{1+u+u^2}
+  \;=\;\frac{2}{\sqrt{3}}\,\arctan\!\left(\frac{2u+1}{\sqrt{3}}\right)+C.
+\]
+Evaluating from $1$ to $\infty$,
+\[
+  \int_1^\infty\!\!\frac{du}{1+u+u^2}
+  \;=\;\frac{2}{\sqrt{3}}\Bigl(\frac{\pi}{2}-\arctan\sqrt{3}\Bigr)
+  \;=\;\frac{2}{\sqrt{3}}\Bigl(\frac{\pi}{2}-\frac{\pi}{3}\Bigr)
+  \;=\;\frac{2}{\sqrt{3}}\cdot\frac{\pi}{6}
+  \;=\;\frac{\pi}{3\sqrt{3}}
+  \;=\;\frac{\sqrt{3}\,\pi}{9}.
+\]
+Dividing by $\ln 2$ gives \eqref{eq:main}.
+\end{proof}
+
+% ---------------------------------------------------------------------------
+\section{Companion closed forms for $\langle p_1\rangle$ and $\langle p_2\rangle$}
+% ---------------------------------------------------------------------------
+
+The same partial-fraction technique yields
+\begin{equation}
+  \langle p_1\rangle_{\mu_{\rm HU}}\;=\;
+  \frac{\ln 2-\tfrac{1}{2}\ln 3-\tfrac{\sqrt{3}\pi}{18}}{\ln 2}
+  \;=\;-0.2286058\ldots,\qquad
+  \langle p_2\rangle_{\mu_{\rm HU}}\;=\;
+  \frac{\tfrac{1}{2}\ln 3-\tfrac{\sqrt{3}\pi}{18}}{\ln 2}
+  \;=\;0.3563523\ldots
+\label{eq:p1p2}
+\end{equation}
+By the Kasner identity $p_1+p_2+p_3=1$,
+$\langle p_1\rangle+\langle p_2\rangle+\langle p_3\rangle=1$ holds
+identically; we have verified the cancellation symbolically with
+\textsc{sympy}.
+
+\begin{proposition}[Numerical verification at $200$-digit precision]
+At \textsc{mpmath} precision $\mathrm{dps}=200$, all three closed forms
+\eqref{eq:main}--\eqref{eq:p1p2} agree with the directly evaluated integrals
+to absolute error $0$ in the last digit, and
+$\langle p_1\rangle+\langle p_2\rangle+\langle p_3\rangle-1=0$ to
+$200$ digits.
+\end{proposition}
+
+% ---------------------------------------------------------------------------
+\section{Remarks on related ergodic averages}
+% ---------------------------------------------------------------------------
+
+Two distinct natural ergodic measures on the Mixmaster phase space coexist
+and should not be conflated.
+
+\medskip
+\noindent\textbf{(i) Era-return measure (this work)}: $\mu_{\rm HU}$ on
+$(1,\infty)$, driven by the discrete era-return map \eqref{eq:erareturn}.
+$\langle p_3\rangle_{\mu_{\rm HU}}=\sqrt{3}\pi/(9\ln 2)\approx 0.87225$.
+
+\smallskip
+\noindent\textbf{(ii) BKL-step-weighted measure}: each Kasner replacement
+within an era is weighted by its proper-time duration~$|\ln u_n|$. By
+Khinchin's theorem, the expected era length $\langle L\rangle=\int_0^1
+\lfloor 1/x\rfloor\,d\nu(x)$ is divergent
+\cite{Khinchin1964}, so step-weighted Birkhoff averages are
+cutoff-dependent and \emph{not} a proper ergodic invariant in the usual sense;
+careful regularization is required.
+
+\medskip
+The conflation of (i) and (ii) has been a source of numerical-vs-analytic
+disagreement in some recent computations of Mixmaster averages.
+A naive mismatch of the era-return map (replacing the conjugacy
+$u_{n+1}=1/\{u_n\}$ by the off-by-one shift $u_{n+1}=1+1/\{u_n\}$)
+samples instead the measure $du/((u-1)u\ln 2)$ on $(2,\infty)$, leading to
+the spurious value $\langle p_3\rangle\approx 0.93578$, which we have
+also evaluated symbolically and reproduced numerically.
+
+% ---------------------------------------------------------------------------
+\section*{Acknowledgements}
+% ---------------------------------------------------------------------------
+
+The closed-form evaluation in Theorem~\ref{thm:main} was independently
+obtained and verified by three large-language-model agents (Sonnet, Mistral
+large-latest, Opus 4.7) operating with \textsc{sympy} and
+\textsc{mpmath} at $200$-digit precision; the elementary proof presented in
+Section~\ref{sec:main} was confirmed against published era-statistics
+results in \cite{KLKSS1985}.
+
+% ---------------------------------------------------------------------------
+\begin{thebibliography}{99}
+
+\bibitem{BKL1970}
+V.~A.~Belinskii, I.~M.~Khalatnikov, and E.~M.~Lifshitz,
+\emph{Adv.\ Phys.}\ \textbf{19} (1970) 525--573.
+
+\bibitem{LandauLifshitz1980}
+L.~D.~Landau and E.~M.~Lifshitz,
+\emph{The Classical Theory of Fields}, 4th rev.\ Engl.\ ed.,
+Pergamon Press (1980), \S119.
+
+\bibitem{Gauss1812}
+C.~F.~Gauss, letter to Laplace, 30 January 1812; see
+\cite{Iosifescu2002}~Ch.~1.
+
+\bibitem{Khinchin1964}
+A.~Ya.~Khinchin, \emph{Continued Fractions} (transl.\ from Russian),
+University of Chicago Press (1964).
+
+\bibitem{Iosifescu2002}
+M.~Iosifescu and C.~Kraaikamp, \emph{Metrical Theory of Continued Fractions},
+Mathematics and Its Applications \textbf{547}, Springer (2002).
+
+\bibitem{KLKSS1985}
+I.~M.~Khalatnikov, E.~M.~Lifshitz, K.~M.~Khanin, L.~N.~Shchur, and Ya.~G.~Sinai,
+``On the stochasticity in relativistic cosmology,''
+\emph{J.\ Stat.\ Phys.}\ \textbf{38} (1985) 97--114,
+DOI \href{https://doi.org/10.1007/BF01017851}{10.1007/BF01017851}.
+
+\bibitem{HeinzleUggla2009}
+J.~M.~Heinzle and C.~Uggla,
+``A new proof of the Bianchi type IX attractor theorem,''
+\emph{Class.\ Quantum Grav.}\ \textbf{26} (2009) 075015,
+\href{http://arxiv.org/abs/0901.0806}{arXiv:0901.0806}.
+
+\bibitem{Wainwright1997}
+J.~Wainwright and G.~F.~R.~Ellis (eds.),
+\emph{Dynamical Systems in Cosmology}, Cambridge University Press (1997).
+
+\end{thebibliography}
+
+\end{document}

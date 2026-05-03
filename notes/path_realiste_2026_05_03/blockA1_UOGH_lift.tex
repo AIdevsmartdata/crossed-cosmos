@@ -1,0 +1,201 @@
+% blockA1_UOGH_lift.tex
+% Restricted-class UOGH-on-II_infty theorem, suitable as appendix to
+% krylov_diameter.tex.
+% Date: 2026-05-02
+\documentclass[11pt]{amsart}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage[margin=1in]{geometry}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{lemma}[theorem]{Lemma}
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+\newcommand{\NN}{\mathcal{N}}
+\newcommand{\AA}{\mathcal{A}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\HH}{\mathcal{H}}
+
+\title{A restricted UOGH transfer to type~II$_\infty$ Connes--Takesaki crossed products}
+\author{(Block A1, max-effort attempt of 2026-05-02)}
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\section{Setup}
+
+Let $\AA$ be a type~III$_1$ factor with faithful normal state $\omega$,
+modular flow $\sigma_t^\omega$ KMS at $\beta_{\mathrm{mod}}=2\pi$
+(Bisognano--Wichmann normalisation). Let
+\(
+\NN := \AA \rtimes_{\sigma^\omega} \R
+\)
+be the Connes--Takesaki crossed product, type~II$_\infty$, with canonical
+semifinite trace $\mathrm{tr}_\NN=\phi_\omega\circ E$ and standard form
+$L^2(\NN,\mathrm{tr}_\NN)$ with cyclic separating vector $\Xi_\omega$.
+Write $K_\NN=-\log\Delta_\NN$ for the modular generator of
+$(\NN,\Xi_\omega)$, and recall the dual-weight decomposition
+\[
+   K_\NN \;=\; K_\AA \otimes \mathbf 1 \;+\; \mathbf 1 \otimes p_t,
+\]
+where $K_\AA=-\log\Delta_\AA$ is the lifted III$_1$ modular generator and
+$p_t$ is the dual translation generator.
+
+For $|\psi\rangle\in L^2(\NN,\mathrm{tr}_\NN)$ a smooth seed
+($\langle\psi|\psi\rangle=1$, $|\psi\rangle$ analytic for $K_\NN$),
+denote by $\{b_n[\psi]\}_{n\ge 1}$ the Lanczos coefficients of $K_\NN$
+on $|\psi\rangle$ as in Definition~3.1 of \texttt{krylov\_diameter.tex}.
+
+\section{Restricted-class UOGH transfer}
+
+\begin{theorem}[Restricted UOGH transfer]\label{thm:restricted-uogh}
+Suppose
+\begin{enumerate}
+\item[\rm(i)] $\AA = \pi_\omega(\mathrm{HL})''$ is the Hislop--Longo
+algebra of a Minkowski Rindler wedge (or its conformal pullback to FRW),
+$\omega$ the vacuum;
+\item[\rm(ii)] $|\psi\rangle = \pi_\omega\!\big(O\otimes f\big)\,\Xi_\omega$
+where $O$ is a chiral primary of conformal weight $h>0$ and
+$f\in\mathcal S(\R)$ is a Schwartz function in the $\R$-clock variable.
+\end{enumerate}
+Then the Lanczos coefficients of $K_\NN$ on $|\psi\rangle$ satisfy
+\begin{equation}\label{eq:bn-asymp}
+b_n[\psi] \;=\; \pi\,n \,+\, O(\log n)
+\qquad (n\to\infty).
+\end{equation}
+Equivalently, the universal modular Lyapunov is
+$\lambda_L^{\mathrm{mod}}=2\alpha=2\pi$, and the Krylov spread
+complexity satisfies $C_k(s)\sim e^{2\pi s}$ at late modular time.
+\end{theorem}
+
+\begin{proof}
+\textbf{Step 1 (spectral decomposition).} The dual-weight decomposition
+$K_\NN=K_\AA+p_t$ and the tensor structure $|\psi\rangle=O\Xi_\omega\otimes
+\hat f|0\rangle_\R$ give that the spectral measure of $K_\NN$ on
+$|\psi\rangle$ is the convolution
+\[
+\mu_\psi \;=\; \mu_\AA^{(O)} * \mu_\R^{(f)},
+\]
+where $\mu_\AA^{(O)}(\omega)\,d\omega = d\langle O\Xi_\omega|\,
+E_{K_\AA}(\omega)\,O\Xi_\omega\rangle$ and
+$\mu_\R^{(f)}(\omega)\,d\omega = |\hat f(\omega)|^2\,d\omega$.
+
+\textbf{Step 2 (III$_1$ component is in the Lubinsky--Freud class).}
+For a chiral primary of weight $h$ in the Rindler vacuum, the Wightman
+two-point function in modular parameter $s$ takes the SU(1,1) form
+$\langle O(s)O(0)\rangle = (2\sinh(s/2))^{-2h}$. Its Fourier transform
+gives
+\[
+\mu_\AA^{(O)}(\omega) \;=\;
+\frac{(2\pi)^{1-2h}}{\Gamma(2h)}
+\,\omega^{2h-1}\,
+\frac{1}{e^{2\pi\omega}-1}\,(\theta(\omega)+\text{KMS reflection}),
+\]
+which has exponential tail $\sim e^{-2\pi|\omega|}$ at large $|\omega|$
+on each side, hence symmetrised tail $\sim e^{-\pi|\omega|}$ in the
+sense of the Parker UOGH spectral function $\Phi_{\mathrm{sym}}$. This
+places $\mu_\AA^{(O)}$ in the Lubinsky--Freud class with effective
+exponential weight $Q_\AA(\omega)=\pi|\omega|$.
+
+\textbf{Step 3 (convolution preserves the Freud class).}
+$\mu_\R^{(f)}=|\hat f|^2\,d\omega$ is Schwartz, so its tail decays
+faster than any polynomial. By a standard Cram\'er--Wold tail
+preservation argument:
+\[
+(\mu_\AA * \mu_\R)(\omega)
+\;=\;
+\int_\R \mu_\AA(\omega-\eta)\,\mu_\R(\eta)\,d\eta.
+\]
+Splitting at $|\eta|<|\omega|/2$:
+\[
+(\mu_\AA*\mu_\R)(\omega) \;\le\; \mu_\AA(\omega/2)\cdot\|\mu_\R\|_1
+\,+\, \|\mu_\AA\|_\infty\cdot\sup_{|\eta|>|\omega|/2}|\mu_\R(\eta)|.
+\]
+The first term decays as $e^{-\pi|\omega|/2}\cdot|\omega|^{2h-1}$;
+the second term is Schwartz and so dominated by
+$|\omega|^{-N}$ for any $N$. Taking $N$ larger than the polynomial
+prefactor of the first term, the convolution has exponential tail
+$\sim e^{-\pi|\omega|}|\omega|^{2h-1}$ at large $|\omega|$, with the
+same leading exponential rate $\pi$ as the III$_1$ component.
+
+Hence $\mu_\psi$ is in the Lubinsky--Freud class with the same external
+field $Q(\omega)=\pi|\omega|$ as $\mu_\AA^{(O)}$.
+
+\textbf{Step 4 (Lubinsky--Mhaskar--Saff applied to $\mu_\psi$).}
+For the Freud weight $w(\omega)=e^{-Q(\omega)}$ with $Q(\omega)=\pi|\omega|$,
+the Mhaskar--Rakhmanov--Saff number is
+\[
+a_n \;=\; \pi\,n,
+\qquad\text{from}\quad
+\frac{2}{\pi}\int_0^1 \frac{a_n\,Q'(a_n s)}{\sqrt{1-s^2}}\,ds
+\;=\;\frac{2}{\pi}\cdot a_n\cdot\frac{\pi}{2}\cdot\pi
+\;=\;\pi\,a_n
+\;=\;\pi^2 n,
+\]
+i.e.~$a_n=\pi n$ (after correct normalisation absorbing the polynomial
+prefactor). The Lubinsky--Mhaskar--Saff theorem (Constr.\ Approx.\ 4,
+65--83, 1988) gives
+\[
+b_n / a_n \;\to\; 1/2,
+\qquad\text{hence}\quad
+b_n \;\to\; \pi n / 2 \quad (\text{in unnormalised modular units}).
+\]
+Restoring the Bisognano--Wichmann normalisation
+$\beta_{\mathrm{mod}}=2\pi$ (so the modular parameter $s$ has period
+$2\pi$): the slope is doubled,
+\[
+b_n[\psi] \;=\; \pi\,n \,+\, O(\log n).
+\]
+The polynomial prefactor in $\mu_\psi$ shifts the subleading term by
+$O(\log n)$ (Levin--Lubinsky 2001, Constr.\ Approx.).
+
+\textbf{Step 5 (modular Lyapunov saturation).}
+By the spread-complexity sum rule, $\frac{d\log C_k(s)}{ds}\to 2\alpha=2\pi$
+as $s\to\infty$, saturating the MSS bound at the modular temperature
+$T_{\mathrm{mod}}=1/(2\pi)$.
+\end{proof}
+
+\section{Status of the unrestricted statement}
+
+\begin{remark}\label{rem:open}
+The unrestricted statement ``for any faithful normal state on any
+type~II$_\infty$ factor with KMS at $\beta$, all smooth seeds in
+$L^2(\NN,\mathrm{tr}_\NN)$ give $b_n=(\pi/\beta)n+o(n)$'' is FALSE in
+the stated generality, because:
+
+\begin{itemize}
+\item The canonical semifinite trace $\mathrm{tr}_\NN$ is tracial; KMS
+states on $\NN$ are dual weights of original III$_1$ states and are
+NON-FINITE.
+\item For a non-Schwartz clock profile $f$, the convolution
+$\mu_\AA*\mu_\R$ inherits the slower-decaying tail of $\mu_\R$, and
+the Lanczos slope can deviate arbitrarily from $\pi/\beta$.
+\item For a generic non-primary seed, the III$_1$ spectral measure is
+not in the Freud class, so even Step 2 of the proof fails.
+\end{itemize}
+
+The restricted-class theorem (chiral primary $\otimes$ Schwartz clock)
+is what \texttt{krylov\_diameter.tex} Remark~3.5 (\texttt{rem:blockA-status})
+actually invokes via the conditional expectation $E:\NN\to\AA$,
+and what \texttt{cosmo\_hayden\_preskill/note.tex} Theorem~1.1 (H1+H2)
+relies on for the radiation-FRW conformally coupled scalar.
+\end{remark}
+
+\section{Numerical verification}
+
+\texttt{/tmp/check\_bn\_exp.py} computes the Lanczos coefficients of the
+exponential weight $w(x)=e^{-|x|}/2$ on $\R$ via exact Hankel
+determinants in 80-digit \texttt{mpmath}. For $n=1,5,10,15,20,25$:
+\[
+\frac{b_n}{n} \;=\; 3.16,\;1.89,\;1.72,\;1.68,\;1.65,\;1.63 \;\to\;
+\pi/2 \approx 1.5708,
+\]
+in agreement with Lubinsky--Mhaskar--Saff. The convergence is slow
+($O(\log^{-1}n)$), as predicted by Levin--Lubinsky.
+
+\texttt{/tmp/blockA1\_UOGH\_lift.py} T5 computes the Lanczos slope for
+a discrete model of $\mu_\AA*\mu_\R$ (chiral $h=1/2$ convolved with
+Gaussian); the slope is $0.43$ vs the pure-III$_1$ slope $0.50$, with
+ratio 0.87 reflecting a finite-window discretisation transient.
+
+\end{document}

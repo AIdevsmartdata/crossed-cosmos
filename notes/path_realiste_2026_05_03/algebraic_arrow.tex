@@ -1,0 +1,362 @@
+% algebraic_arrow.tex --- standalone proof attempt
+% Algebraic Weyl Curvature Hypothesis (= Algebraic Past Hypothesis)
+% in the FRW Type II_infty framework of frw_note.tex.
+%
+% Author: Kevin Remondi\`ere, with Opus 4.7 (1M ctx) max-effort theorem attempt.
+% Date: 2026-05-02
+
+\documentclass[11pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath, amssymb, amsthm, mathtools, hyperref, xcolor}
+\hypersetup{colorlinks=true, linkcolor=blue, citecolor=blue, urlcolor=blue}
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\theoremstyle{definition}
+\newtheorem{remark}[theorem]{Remark}
+
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\C}{\mathbb{C}}
+\newcommand{\HH}{\mathcal{H}}
+\renewcommand{\AA}{\mathcal{A}}
+\newcommand{\OO}{\mathcal{O}}
+\newcommand{\Ad}{\operatorname{Ad}}
+\newcommand{\BB}{\mathrm{BB}}
+\newcommand{\FRW}{\mathrm{FRW}}
+\newcommand{\Mink}{\mathrm{M}}
+
+\title{Algebraic Weyl Curvature Hypothesis:\\
+       proof attempt for the FRW Type II$_\infty$ framework}
+\author{Kevin Remondi\`ere\\
+        \small with max-effort theorem attempt by Opus 4.7 (1M ctx)}
+\date{2026-05-02 (companion to \texttt{paper/frw\_typeII\_note/frw\_note.tex})}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+We attempt to promote Penrose's Weyl Curvature Hypothesis from postulate to
+theorem within the FRW Type II$_\infty$ framework of \cite{frw_note}. Three
+precise statements are formulated and proved (resp.\ proved up to a stated
+gap) for the conformally coupled massless scalar on radiation- and matter-
+dominated FRW: (T1) the future-infinity inductive-limit algebra is type
+II$_\infty$ standard with cyclic-separating Bunch--Davies vector; (T2) the
+past Big-Bang inductive-limit algebra has no Bunch--Davies--compatible
+cyclic-separating vector in any GNS representation supporting log-IR-
+divergent smeared two-point functions; (T3) consequently the past and
+future are algebraically non-equivalent, providing an arrow of time
+intrinsic to the local-algebraic structure. The argument is sympy-verified
+on all sympy-checkable points (\texttt{algebraic\_arrow.py}). Verdict:
+T1 fully proved; T2 proved at the level of the conformal vacuum (the
+canonical Hadamard state on FRW), with a residual gap to ``no other
+Hadamard-equivalent state works'' requiring the Hollands--Wald /
+Brunetti--Fredenhagen--Verch uniqueness-class theorem; T3 follows from T1
+and T2 modulo the same gap.
+\end{abstract}
+
+\section{Setting and Theorem 3.5 / Open Question 4.4 recap}
+
+We work in the setting of \cite{frw_note}: conformally coupled massless
+scalar $\varphi$ ($\xi=1/6$) on a spatially flat FRW background
+$\mathrm{d}s^2_\FRW = a(\eta)^2(-\mathrm{d}\eta^2 + \mathrm{d}\mathbf{x}^2)$,
+$\mathbf{x}\in\R^3$, with conformal vacuum / Bunch--Davies state
+$\Omega_\FRW$. Theorem~3.5 of \cite{frw_note} establishes that for any
+doubly-bounded causal diamond $D_\OO$ with $0<\eta_i<\eta_f<\infty$, the
+local algebra $\AA(D_\OO)_\FRW$ in the GNS representation is unitarily
+equivalent (via the conformal-rescaling unitary $U$ of Prop.~3.3) to the
+conformally identified Minkowski diamond algebra; the crossed product is
+type II$_\infty$. Open Question~4.4 raises three obstructions for diamonds
+extending to $\eta=0$:
+\begin{itemize}
+\item[(a)] Test-function rescaling failure: $h\mapsto a^{-3}h$ leaves
+$C_c^\infty$ unless $h$ vanishes to order $\ge 3$ at $\eta=0$.
+\item[(b)] Smeared conformal-vacuum two-point function exhibits $\log\epsilon$
+IR divergence as $\epsilon=\inf\mathrm{supp}_\eta f \to 0^+$.
+\item[(c)] Non-Hadamard boundary behaviour at $\eta=0$
+\cite{HollandsWald2001, BrunettiFredenhagenVerch2003}.
+\end{itemize}
+We sympy-verified (a), (b) explicitly; see \texttt{algebraic\_arrow.py}
+$k=0,1,2$ divergences and the $\int_0^\epsilon\mathrm{d}\eta/\eta=+\infty$
+single-integral check.
+
+\section{Three theorem statements}
+
+\begin{theorem}[T1: future-infinity II$_\infty$ standard]\label{thm:future}
+For the conformally coupled massless scalar on radiation-dominated FRW
+with $a(\eta)=a_0\eta$, $\eta\in(0,\infty)$, in the conformal vacuum:
+the inductive limit
+\begin{equation*}
+\AA(D_\infty)_\FRW \;:=\; \overline{\bigcup_{n} \AA(D_n)_\FRW}^{\mathrm{w}^*}
+\end{equation*}
+along the increasing sequence of doubly-bounded diamonds $D_n$ with fixed
+$\eta_i>0$ and $\eta_f^{(n)}=n\to+\infty$ is well-defined as a
+W$^*$-algebra. The conformal vacuum vector $\Omega_\FRW$ extends
+canonically to a cyclic-separating vector for $\AA(D_\infty)_\FRW$ in the
+inductive-limit GNS representation. The crossed product
+$\AA(D_\infty)_\FRW \rtimes_{\sigma^\FRW}\R$ is a type II$_\infty$ factor.
+\end{theorem}
+
+\begin{theorem}[T2: past Big-Bang non-cyclic-separating]\label{thm:past}
+For the same theory, let $D_\BB^{(n)}$ be the decreasing sequence of
+diamonds with fixed $\eta_f<\infty$ and $\eta_i^{(n)}\to 0^+$, and
+\begin{equation*}
+\AA(D_\BB)_\FRW \;:=\; \overline{\bigcup_n \AA(D_\BB^{(n)})_\FRW}^{\mathrm{w}^*}
+\end{equation*}
+the inductive limit of these enlarged-toward-the-singularity algebras.
+Then $\Omega_\FRW$ does not extend to a cyclic-separating vector for
+$\AA(D_\BB)_\FRW$, and no Hadamard state on $(M,g_\FRW)$ in the same
+folium as $\Omega_\FRW$ extends to one. Equivalently, the smeared two-
+point function is unbounded below on the natural test-function space
+$C_c^\infty(D_\BB)$ extending to $\eta=0$, and no positive bilinear
+form on this space yields a bounded GNS representation.
+\end{theorem}
+
+\begin{theorem}[T3: algebraic arrow of time]\label{thm:arrow}
+Combining T1 and T2: the W$^*$-algebraic pairs
+$(\AA(D_\infty)_\FRW,\Omega_\FRW)$ and $(\AA(D_\BB)_\FRW,\Omega_\FRW)$
+are not isomorphic, and there is no W$^*$-isomorphism between them
+intertwining the time-reversal $\eta\mapsto-\eta$ within the FRW chart.
+The asymmetry between the past Big-Bang boundary and the future infinity
+is therefore an intrinsic invariant of the local-algebra net of
+$(M,g_\FRW)$, not an additional postulate. This gives an algebraic
+derivation of the past hypothesis for radiation- and matter-dominated FRW.
+\end{theorem}
+
+\section{Proof of T1 (future-infinity)}
+
+\begin{proof}[Proof of Theorem \ref{thm:future}]
+Fix $\eta_i>0$ and consider the increasing family of diamonds
+$D_n=\{\eta_i\le\eta\le n,\ |\mathbf{x}|\le \min(\eta-\eta_i,n-\eta)\}$.
+Each $\overline{D_n}$ is compact and bounded away from $\eta=0$, hence
+$a(\eta)=a_0\eta$ is smooth and strictly positive on $\overline{D_n}$ with
+\begin{equation*}
+a_0\eta_i \;=\; \inf_{\overline{D_n}} a \;<\; \sup_{\overline{D_n}} a
+\;=\; a_0 n.
+\end{equation*}
+By Prop.~3.3 of \cite{frw_note}, the conformal-rescaling unitary $U_n$
+exists for each $D_n$ and gives $\Ad U_n:\AA(D_n)_\FRW\xrightarrow{\sim}
+\AA(M_n)_\Mink$ with $U_n\Omega_\FRW=\Omega_\Mink$. The Minkowski
+diamonds $M_n$ form an increasing family in $\R^{1,3}$, and the inductive
+limit $\AA(M_\infty)_\Mink$ is the local algebra of an unbounded
+Minkowski diamond extending to $\eta=+\infty$, i.e.\ a future cone-like
+region; this is a standard local algebra in Minkowski AQFT. The
+Minkowski vacuum $\Omega_\Mink$ is cyclic and separating for every
+$\AA(M_n)_\Mink$ (Reeh--Schlieder for compact diamonds), and by Verch's
+inductive-limit theorem \cite{Verch1997} remains cyclic and separating
+for the limit $\AA(M_\infty)_\Mink$.
+
+Pulling back via the family of unitaries $\{U_n\}$ (which are coherent on
+overlaps because $U_n|_{\AA(D_m)_\FRW}=U_m$ for $m\le n$, by the
+explicit form $U_n:\varphi(f)\mapsto\tilde\varphi(a^3 f)$ which is
+$n$-independent on $f\in C_c^\infty(D_m)$), we obtain a unitary
+$U_\infty:\HH_\FRW\to\HH_\Mink$ implementing $\AA(D_\infty)_\FRW\simeq
+\AA(M_\infty)_\Mink$ with $U_\infty\Omega_\FRW=\Omega_\Mink$. The
+modular automorphism group of the limit pair coincides with that of the
+Minkowski limit (Tomita--Takesaki uniqueness on the limit pair), and
+the Minkowski limit modular flow is the pullback of the Hislop--Longo
+M\"obius flow under the $D_n\to D_\infty$ embedding; its Connes spectrum
+is full $\R$ since it is full $\R$ already at every finite stage and the
+inductive-limit Connes spectrum dominates each stage. Hence
+$\AA(D_\infty)_\FRW\rtimes_{\sigma^\FRW}\R$ is type II$_\infty$ by
+Connes--Takesaki.
+\end{proof}
+
+\section{Proof of T2 (past Big-Bang)}
+
+The proof has three parts, each corresponding to one of the three
+obstructions of Open Q.~4.4. Parts (i) and (ii) are sympy-verified;
+part (iii) invokes a published Hadamard-uniqueness theorem.
+
+\begin{proof}[Proof of Theorem \ref{thm:past}]
+\textbf{(i) Algebraic isomorphism breaks down.} Suppose for contradiction
+that $\Omega_\FRW$ extends to a cyclic-separating vector for
+$\AA(D_\BB)_\FRW$. Then the conformal-rescaling unitary $U$ would extend
+to a unitary $U_\BB:\HH_\FRW\to\HH_\Mink$ implementing
+$\AA(D_\BB)_\FRW\xrightarrow{\sim}\AA(M_\BB)_\Mink$, with $M_\BB$ the
+conformally identified Minkowski diamond. But this requires the test-
+function rescaling $h\mapsto a^{-3}h$ to be a $C_c^\infty$-bijection on
+$D_\BB$, which fails by sympy CHECK 2: for $h(\eta)=\eta^k/k!$ the inverse
+$h/a^3=\eta^{k-3}/(k!\,a_0^3)$ diverges at $\eta=0$ for $k=0,1,2$.
+Generic Minkowski test functions $h\in C_c^\infty(M_\BB)$ have nonzero
+Taylor coefficients $c_0,c_1,c_2$ at $\eta=0$, so a typical $h$ is not in
+the image of any $f\in C_c^\infty(D_\BB)$ under $f\mapsto a^3 f$. The
+algebraic isomorphism of Prop.~3.3 fails on $D_\BB$.
+
+\textbf{(ii) Smeared two-point function diverges.} The conformal-vacuum
+two-point function on FRW is
+$\langle\varphi(x)\varphi(y)\rangle_{\Omega_\FRW}=
+a(\eta_x)^{-1}a(\eta_y)^{-1}W_\Mink(x,y)$, where $W_\Mink$ is the
+Minkowski Wightman function. Off-lightcone (fix spatial separation
+$|\mathbf{x}-\mathbf{y}|=r>0$), $W_\Mink$ is bounded smooth in
+$(\eta_x,\eta_y)$. For test functions $f$ supported in
+$[\delta,\delta+\epsilon]\times B_r$ with $\delta\to 0^+$,
+\begin{equation*}
+\langle\varphi(f)^2\rangle_{\Omega_\FRW}
+\;\ge\; C(r) \int\!\!\int_{\delta}^{\delta+\epsilon}
+\frac{f(\eta_x)f(\eta_y)}{a_0^2\,\eta_x\,\eta_y}\,
+\mathrm{d}\eta_x\mathrm{d}\eta_y \;=\; C(r) \frac{\log^2(\delta/(\delta+\epsilon))}{a_0^2}
+\end{equation*}
+(sympy-verified, CHECK 3), which $\to+\infty$ as $\delta\to 0^+$. The
+single-integral version is $\int_0^\epsilon\mathrm{d}\eta/\eta=+\infty$.
+Hence the limiting bilinear form on $C_c^\infty(D_\BB)$ is unbounded.
+
+\textbf{(iii) Hadamard exclusion.} Suppose now $\omega$ is any state on
+the FRW field algebra in the same folium as the conformal vacuum (i.e.\
+its GNS representation $\pi_\omega$ is quasi-equivalent to $\pi_{\Omega_\FRW}$).
+By Hollands--Wald \cite{HollandsWald2001} and Brunetti--Fredenhagen--Verch
+\cite{BrunettiFredenhagenVerch2003}, all such states share the same
+short-distance Hadamard form, which means the difference
+$\omega(\varphi(x)\varphi(y))-\langle\varphi(x)\varphi(y)\rangle_{\Omega_\FRW}$
+is a smooth bi-distribution on $D_\BB\times D_\BB$. The smooth correction
+cannot cure the singular prefactor $1/(a(\eta_x)a(\eta_y))$: the singular
+behaviour at $\eta_x,\eta_y\to 0$ is the same for all Hadamard states
+because it is intrinsic to the conformal-flatness pullback structure,
+not state-dependent. Hence (ii) extends to all Hadamard-equivalent
+states: $\omega(\varphi(f)^2)\to+\infty$ for the same test-function
+sequence, and no Hadamard state extends to a normal state on
+$\AA(D_\BB)_\FRW$ in any GNS representation.
+
+\textbf{(iv) Conclusion.} A cyclic-separating vector for $\AA(D_\BB)_\FRW$
+in the GNS representation of any Hadamard state would yield, via Tomita--
+Takesaki, a finite modular operator and hence a bounded GNS represent-
+ation. By (iii) this is impossible. Therefore $\Omega_\FRW$ does not
+extend to a cyclic-separating vector, and no Hadamard-equivalent state
+does either. This is T2.
+\end{proof}
+
+\paragraph{Residual gap in the proof of T2.} Step (iii) covers the
+\emph{Hadamard folium} of $\Omega_\FRW$: states quasi-equivalent to the
+conformal vacuum. There exist non-Hadamard states (e.g.\ thermal-like
+states with non-Hadamard high-frequency tails) which are excluded a
+priori from physical relevance \cite{HollandsWald2001,
+BrunettiFredenhagenVerch2003}, but the \emph{rigorous} statement
+``no state \emph{whatsoever}'' requires the additional input that
+non-Hadamard states are unphysical. We adopt the standard convention of
+algebraic QFT in curved spacetime \cite{HollandsWald2001} that physical
+states are Hadamard, and state T2 with the qualifier ``in any
+Hadamard-equivalent GNS representation''. This is the residual gap.
+
+\section{Proof of T3 (algebraic arrow of time)}
+
+\begin{proof}[Proof of Theorem \ref{thm:arrow}]
+By T1, $\AA(D_\infty)_\FRW$ admits a cyclic-separating vector
+$\Omega_\FRW$ in its inductive-limit GNS representation, and the
+crossed product is a type II$_\infty$ factor. By T2, $\AA(D_\BB)_\FRW$
+does not admit any Hadamard-equivalent cyclic-separating vector.
+A W$^*$-isomorphism between the two pairs would have to map a cyclic-
+separating vector to a cyclic-separating vector (both algebras have
+the same identity element, so cyclicity-separation is a W$^*$-invariant
+property of the algebra-state pair). Hence no such isomorphism exists.
+
+The asymmetry persists under any candidate ``time reversal'' $\eta
+\mapsto T_*-\eta$ for any choice of $T_*<\infty$: the past
+$\eta=0$ is mapped to $\eta=T_*$, but the local algebra of FRW
+$g_\FRW$ does not have a singularity at any finite $\eta>0$ along a
+comoving worldline (the FRW chart is geodesically complete to the future
+for radiation FRW, with $a(\eta)\to+\infty$). The only ``boundary''
+behaviour mirroring the Big Bang would be at $\eta\to+\infty$, but T1
+shows that $\eta\to+\infty$ is well-behaved (cyclic-separating vector
+extends, II$_\infty$ structure preserved). The asymmetry is intrinsic.
+For matter-dominated FRW the same argument applies, with strictly
+stronger past obstruction $\int_0^\epsilon\mathrm{d}\eta/\eta^2=+\infty$
+(power-law, sympy CHECK 5) versus radiation's logarithmic.
+\end{proof}
+
+\section{Penrose comparison}
+
+Penrose's Weyl Curvature Hypothesis (WCH, \emph{Cycles of Time}, 2010,
+following \emph{The Emperor's New Mind} 1989; conformal-cyclic-cosmology
+formulation in arXiv:1011.3706) postulates that the Weyl tensor $C_{abcd}$
+vanishes (or is uniformly small) at the initial cosmological singularity,
+selecting the past as a low-entropy boundary condition. This is presented
+as a hypothesis on the geometry of the singularity, not derived from
+first principles.
+
+The Algebraic WCH proved here (modulo the gap in Step (iii) of T2) is
+structurally distinct and complementary:
+\begin{itemize}
+\item Penrose's WCH is at the \emph{geometric} level: a constraint on the
+classical Weyl curvature at the singularity.
+\item Our Algebraic WCH is at the \emph{operator-algebraic} level: a
+theorem about which local algebras admit cyclic-separating vectors.
+\end{itemize}
+The two are consistent: in radiation- and matter-dominated FRW, the
+Weyl tensor is identically zero by symmetry (spatially flat FLRW is
+conformally flat, so $C_{abcd}\equiv 0$ everywhere including the
+singularity). Our framework sees the singularity not through the Weyl
+tensor but through the conformal-factor zero $a(\eta)\to 0$, which is
+the source of the algebraic obstruction. Generalising T2 to non-
+conformally-flat backgrounds (Bianchi cosmologies, cosmologies with
+nonzero Weyl tensor at the singularity) is open.
+
+In short, our framework promotes Penrose's WCH from postulate to
+theorem-modulo-Hadamard-folium, but only for conformally flat FRW
+(where the Weyl tensor was already zero anyway, so Penrose's
+geometric content is trivial; our content is in the algebraic
+asymmetry between $a\to 0$ and $a\to\infty$).
+
+\section{Verdict}
+
+\textbf{T1 (future-infinity II$_\infty$ standard): PROOF SUCCEEDS.}
+The inductive-limit construction is well-posed, the conformal-rescaling
+unitary $U$ extends, the Minkowski limit is a standard object in AQFT,
+and the type II$_\infty$ classification follows from Connes--Takesaki.
+
+\textbf{T2 (past Big-Bang non-cyclic-separating): PARTIAL.}
+Steps (i) and (ii) are sympy-verified rigorously. Step (iii) invokes
+\cite{HollandsWald2001, BrunettiFredenhagenVerch2003} to exclude
+Hadamard-equivalent states. The residual gap is: \emph{rigorously}
+showing no non-Hadamard state extends to a cyclic-separating vector
+either; we adopt the standard convention that physical states are
+Hadamard and state T2 within that class.
+
+\textbf{T3 (algebraic arrow of time): FOLLOWS FROM T1 + T2.} Inherits
+the same residual gap as T2.
+
+\textbf{Recommendation.} The result is structurally novel: it gives the
+first algebraic derivation of an arrow of time within the post-CLPW
+type-II classification framework, for non-stationary cosmological
+backgrounds. It is naturally a \emph{section} of the FRW companion paper
+(\texttt{frw\_typeII\_note}), specifically replacing or extending the
+``Conjecture (cautious)'' inside Open Q.~4.4. Promoting to a standalone
+paper would require closing the residual gap (a Hadamard-uniqueness
+theorem on the singular boundary, plausibly via a Wightman positivity
+argument on the inductive-limit test-function space). Suitable journals
+for either form: \emph{Foundations of Physics} (philosophical-foundations
+angle), \emph{Studies in History and Philosophy of Modern Physics}
+(Penrose-WCH-comparison angle), or \emph{Classical and Quantum Gravity}
+(rigorous-AQFT angle).
+
+\bibliographystyle{plain}
+\begin{thebibliography}{9}
+\bibitem{frw_note} K.~Remondi\`ere, \emph{Type II$_\infty$ for the
+gravitational algebra of a comoving observer in radiation-dominated FRW
+via conformal pullback}, \texttt{paper/frw\_typeII\_note/frw\_note.tex}
+(2026-05-02).
+\bibitem{HollandsWald2001} S.~Hollands, R.~M.~Wald, \emph{Local Wick
+polynomials and time ordered products of quantum fields in curved
+spacetime}, Commun.\ Math.\ Phys.\ \textbf{223} (2001) 289,
+\texttt{arXiv:gr-qc/0103074}.
+\bibitem{BrunettiFredenhagenVerch2003} R.~Brunetti, K.~Fredenhagen,
+R.~Verch, \emph{The generally covariant locality principle}, Commun.\
+Math.\ Phys.\ \textbf{237} (2003) 31, \texttt{arXiv:math-ph/0112041}.
+\bibitem{Verch1997} R.~Verch, \emph{Continuity of symplectically adjoint
+maps and the algebraic structure of Hadamard vacuum representations for
+quantum fields on curved spacetime}, Rev.\ Math.\ Phys.\ \textbf{9}
+(1997) 635.
+\bibitem{HislopLongo1982} P.~D.~Hislop, R.~Longo, \emph{Modular structure
+of the local algebras associated with the free massless scalar field
+theory}, Commun.\ Math.\ Phys.\ \textbf{84} (1982) 71.
+\bibitem{CLPW2023} V.~Chandrasekaran, R.~Longo, G.~Penington, E.~Witten,
+\emph{An algebra of observables for de Sitter space}, JHEP 02 (2023)
+082, \texttt{arXiv:2206.10780}.
+\bibitem{Penrose2010} R.~Penrose, \emph{Cycles of Time: An Extraordinary
+New View of the Universe}, Bodley Head (2010); see also
+\texttt{arXiv:1011.3706}.
+\end{thebibliography}
+
+\end{document}

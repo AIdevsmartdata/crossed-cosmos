@@ -1,0 +1,351 @@
+% DME_functor.tex --- Diamond Master Equation as a partial functor
+% Standalone LaTeX statement, math.OA / math.CT level.
+% NO new theorem; see DME_functor.md for verdict and limits-of-scope.
+
+\documentclass[11pt]{article}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage[margin=1in]{geometry}
+\usepackage{tikz-cd}
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{remark}[theorem]{Remark}
+\newtheorem{question}[theorem]{Open Question}
+
+\newcommand{\AA}{\mathcal{A}}
+\newcommand{\NN}{\mathcal{N}}
+\newcommand{\FRW}{{\mathrm{FRW}}}
+\newcommand{\HL}{{\mathrm{HL}}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\Rprop}{R_{\mathrm{proper}}}
+\newcommand{\Diam}{\mathbf{Diam}_\FRW}
+\newcommand{\WCatinj}{\mathbf{W^{*}\!Cat}_{\mathrm{inj}}}
+
+\title{The Diamond Master Equation as a partial functor on the poset of admissible FRW comoving diamonds}
+\author{(internal categorical companion to \texttt{frw\_note} + \texttt{krylov\_diameter})}
+\date{2026-05-02}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+We formalise the assignment $D\mapsto(\NN(D),K(D),C(D;s))$ of
+\texttt{unifying\_equation\_attempt.md} (Candidate~C, the
+\emph{Diamond Master Equation}) as a covariant assignment from the
+poset $\Diam$ of admissible doubly-bounded comoving causal diamonds
+in radiation-dominated FRW with $\eta_i>0$. We show that
+$D\mapsto\NN(D)$ is a covariant functor into a Brunetti--Fredenhagen--Verch--style
+target category $\WCatinj$ of W$^*$-algebras with normal injective
+unital $*$-homomorphisms, conditional on the modular-compatibility
+hypothesis of Takesaki's conditional-expectation theorem. The
+modular Hamiltonian $K(D)$ does \emph{not} extend to an
+operator-valued natural transformation (only its automorphism group
+$\sigma^D$ does, by Connes 1973 cocycle invariance). The
+Krylov--Diameter Correspondence (\texttt{krylov\_diameter} Thm.~4)
+is a candidate natural transformation
+$\phi:F_C\Rightarrow F_R^{-1}$ between two functors on $\Diam$;
+we show that the naturality square fails on inclusions in general,
+because the Lanczos coefficients of the spread complexity are not
+preserved by the Connes--Takesaki conditional expectation
+$E:\NN(D)\to\NN(D')$. The conclusion is a \emph{partial functor with
+a non-natural transformation}, not a categorical equation in the
+sense of Doplicher--Roberts or Brunetti--Fredenhagen--Verch. No new
+theorem is proved.
+\end{abstract}
+
+\section{The source category $\Diam$}\label{sec:source}
+
+\begin{definition}[Admissible diamond]\label{def:admissible}
+Fix the radiation-dominated FRW background $a(\eta)=a_0\eta$ on
+$\eta\in(0,\infty)$ (resp.\ matter $a=a_0\eta^2$ or de~Sitter
+$a=-1/(H\eta)$ on $\eta\in(-\infty,0)$). An \emph{admissible
+diamond} is a triple $D=(\eta_i,\eta_f,R_{\mathrm{conf}})$ such that
+\begin{enumerate}
+\item $0<\eta_i<\eta_f<\infty$ (so that $a$ is smooth and strictly
+positive on $\overline{D}$),
+\item $R_{\mathrm{conf}}>0$,
+\item $R_{\mathrm{conf}}\le(\eta_f-\eta_i)/2$ (the standard
+``radius~$=$~half conformal-time interval'' diamond convention).
+\end{enumerate}
+\end{definition}
+
+\begin{definition}[Source category]\label{def:Diam}
+Let $\Diam$ be the category whose objects are admissible diamonds
+(Definition~\ref{def:admissible}) and whose morphisms are inclusions
+$D'\hookrightarrow D$, i.e.\
+$D'\le D$ iff
+$\eta_i\le\eta_i'$, $\eta_f'\le\eta_f$, $R_{\mathrm{conf}}'\le R_{\mathrm{conf}}$.
+\end{definition}
+
+\begin{remark}\label{rem:poset}
+$\Diam$ is a thin category (poset). Reflexivity, antisymmetry up to
+equality of triples, and transitivity are verified componentwise on
+the open cone of admissible parameters; this is mechanically checked
+in \texttt{DME\_functor.py} Block~1 on $\ge 2000$ random admissible
+chains.
+\end{remark}
+
+\section{Three candidate target categories}\label{sec:target}
+
+\begin{itemize}
+\item[$\mathbf{Cat_1}$:] W$^*$-algebras with W$^*$-isomorphisms.
+\emph{Rejected.} Inclusions $D'\subset D$ in QFT do not generally
+induce isomorphisms but injections (isotony of the Haag--Kastler
+net).
+\item[$\mathbf{Cat_2}$:] W$^*$-dynamical systems with covariant
+W$^*$-isomorphisms (Connes 1973). \emph{Rejected.} Same reason; in
+addition, the modular flow $\sigma^D$ on $\NN(D)$ depends on $D$ in
+such a way that no covariant isomorphism between
+$(\NN(D),\sigma^D)$ and $(\NN(D'),\sigma^{D'})$ is induced by the
+inclusion (this is precisely the absence of a state-preserving
+conditional expectation in general; see Takesaki~\cite{Takesaki1972}).
+\item[$\mathbf{Cat_3}\equiv\WCatinj$:] W$^*$-algebras with
+\emph{unital injective normal $*$-homomorphisms} as morphisms; the
+Brunetti--Fredenhagen--Verch (CMP~237 (2003) 31) target category for
+locally covariant QFT. \emph{Selected.} It is the categorical
+formalisation of isotony of nets of local algebras and supports the
+notion of a covariant quantum field as a \emph{natural transformation}
+between functors out of $\Diam$.
+\end{itemize}
+
+\section{The DME assignment as a partial functor}\label{sec:functor}
+
+\begin{theorem}[Functoriality of $\NN$, conditional]\label{thm:N-functor}
+Assume the modular-compatibility hypothesis $(\star)$:\ for each
+inclusion $D'\subset D$ in $\Diam$, there exists a faithful normal
+state-preserving conditional expectation
+$E_{D',D}:\NN(D)\to\NN(D')$ (equivalently, by Takesaki
+\cite{Takesaki1972}, $\NN(D')\subset\NN(D)$ is a Takesaki sub-pair
+for $\omega_D$). Then
+\[
+\NN \;:\; \Diam \longrightarrow \WCatinj,
+\qquad
+D \mapsto \NN(D), \qquad
+(D'\hookrightarrow D)\mapsto\bigl(\iota_{D',D}:\NN(D')\hookrightarrow\NN(D)\bigr),
+\]
+is a covariant functor.
+\end{theorem}
+
+\begin{proof}
+On objects: by Theorem~3.5/3.6 and Corollary~3.7 of
+\texttt{frw\_note.tex}~\cite{Remondiere2026}, each admissible $D$
+yields a type II$_\infty$ factor $\NN(D)$. On morphisms: the
+inclusion of test functions $C_c^\infty(D')\subset C_c^\infty(D)$
+induces $\AA(D')_\FRW\hookrightarrow\AA(D)_\FRW$ as W$^*$-subalgebras
+(isotony of the Haag--Kastler net for the conformally coupled
+massless scalar). Crossing with the modular flow $\sigma^D$
+restricted to $\AA(D')_\FRW$, hypothesis $(\star)$ ensures that
+$\sigma^D|_{\AA(D')_\FRW}=\sigma^{D'}$, so the crossed product
+$\AA(D')_\FRW\rtimes_{\sigma^{D'}}\R$ injects into
+$\AA(D)_\FRW\rtimes_{\sigma^D}\R$ as a normal unital
+$*$-homomorphism. Functoriality (composition and identity) is
+inherited from the inclusions of the underlying test-function
+spaces.
+\end{proof}
+
+\begin{remark}[Status of $(\star)$]\label{rem:star}
+$(\star)$ holds in the conformal-pullback unitary equivalence
+$\AA(D)_\FRW\simeq\AA(M_D)_\Mink$ on Minkowski diamonds of the
+Hislop--Longo type, since the Minkowski net satisfies the
+Bisognano--Wichmann property and inclusions of double cones admit
+state-preserving conditional expectations~\cite{Longo1979,
+Buchholz1974}. For the FRW-side this transfers via the unitary
+$U$ of \texttt{frw\_note} Prop.~3.4, in the conformally coupled
+massless case treated by~\cite{Remondiere2026}. Beyond this case
+$(\star)$ is open.
+\end{remark}
+
+\begin{proposition}[Non-functoriality of $K$]\label{prop:K-not-functor}
+The assignment $D\mapsto K(D):=-\log\Delta_{\omega_D}$ does
+\emph{not} extend to a functor $\Diam\to(\text{self-adjoint
+operators on a fixed Hilbert space, with intertwiners})$, because
+the modular operator of an inclusion $\NN(D')\subset\NN(D)$ is not
+in general the restriction of $\Delta_{\omega_D}$ (Takesaki's
+counterexample~\cite{Takesaki1972}). What \emph{is} functorial is
+the modular automorphism \emph{group}: by Connes's cocycle theorem
+(\cite{Connes1973}, Th\'eor\`eme~1.2.4), there exists a
+$\sigma^{D'}$-cocycle $u_{D',D}(t)\in\NN(D')$ with
+\[
+\sigma^D_t \circ \iota_{D',D} \;=\; \mathrm{Ad}\bigl(u_{D',D}(t)\bigr)\circ \iota_{D',D}\circ\sigma^{D'}_t,
+\]
+and the assignment $D\mapsto[\sigma^D]$ (the outer-modular class) is
+functorial up to inner automorphisms.
+\end{proposition}
+
+\begin{proof}
+Sympy verification of the linearised cocycle identity
+$u_{D',D}(s+t)=u_{D',D}(s)\,\sigma^{D'}_s(u_{D',D}(t))$ on three
+independent profiles is recorded in \texttt{DME\_functor.py}
+Block~3, and matches the $O(m^2)$ check of \texttt{frw\_note.tex}
+Proposition~4.2.
+\end{proof}
+
+\section{The KDC as a candidate natural transformation}\label{sec:nat}
+
+Let $\R^*_+$ denote the discrete (only-identities) category of
+positive reals. Define two functors $\Diam\to\R^*_+$:
+\[
+F_C(D) \;:=\; \lim_{t\to\infty}\frac{1}{C_k(D;t)}\frac{\mathrm{d}C_k(D;t)}{\mathrm{d}t},
+\qquad
+F_R^{-1}(D) \;:=\; \frac{1}{\Rprop(\eta_c(D))}.
+\]
+
+\begin{theorem}[KDC as a non-natural transformation]\label{thm:KDC-nat}
+Pointwise on each object $D\in\Diam$, the Krylov--Diameter
+Correspondence (\texttt{krylov\_diameter} Thm.~4) gives
+$F_C(D)=F_R^{-1}(D)$ in the late-modular-time regime under the
+universal-slope hypothesis $\lambda_L^{\mathrm{mod}}=2\pi$ of
+CMPT~\cite{CMPT24}. Sympy verification of the chain-rule identity
+$(1/C_k)\,\mathrm{d}C_k/\mathrm{d}\tau=1/\Rprop$ on the
+Parker--Cao saturating profile $C_k(s)=\sinh(\pi s)^2/\pi^2$ is
+recorded in \texttt{DME\_functor.py} Block~4.
+
+However, the assignment $\phi_D := \mathrm{id}_{F_C(D)}$ does
+\emph{not} define a natural transformation $\phi:F_C\Rightarrow
+F_R^{-1}$, because the naturality square
+\[
+\begin{tikzcd}
+F_C(D') \arrow[r, "\phi_{D'}"] \arrow[d, "F_C(\iota_{D',D})"'] & F_R^{-1}(D') \arrow[d, "F_R^{-1}(\iota_{D',D})"] \\
+F_C(D) \arrow[r, "\phi_D"'] & F_R^{-1}(D)
+\end{tikzcd}
+\]
+need not commute: the right vertical is multiplication by
+$\Rprop(D')/\Rprop(D)$ (a contraction), and is well-defined; but
+the left vertical requires the Lanczos coefficients of the spread
+complexity to be preserved by the Connes--Takesaki conditional
+expectation $E_{D',D}:\NN(D)\to\NN(D')$, which is open in general
+(\texttt{krylov\_diameter} \S6, Open Question regarding
+projectability of Lanczos sequences).
+\end{theorem}
+
+\begin{proof}[Proof sketch]
+Pointwise identity: $C_k(D;s)\sim e^{2\pi s}/(4\pi^2)$ at late
+modular time on the Parker--Cao saturating profile, hence
+$(1/C_k)\,\mathrm{d}C_k/\mathrm{d}s\to 2\pi$. The
+Casini--Huerta--Myers relation $\mathrm{d}s/\mathrm{d}\tau=1/(2\pi
+\Rprop(\eta_c))$ on the central worldline, plus the chain rule,
+gives $(1/C_k)\,\mathrm{d}C_k/\mathrm{d}\tau=1/\Rprop(\eta_c)$.
+This is checked in \texttt{DME\_functor.py} Block~4.
+
+Failure of naturality: under $\iota_{D',D}$, the seed
+$|\mathrm{seed}\rangle\in L^2(\NN(D'),\mathrm{tr}_{\NN(D')})$
+does not in general image to a Krylov-cyclic vector in
+$L^2(\NN(D),\mathrm{tr}_{\NN(D)})$; even if it does, the Lanczos
+coefficients $b_n^{D'}$ on $\NN(D')$ need not equal the
+restriction $b_n^D|_{\mathrm{Krylov}(D')}$ of the Lanczos
+coefficients on $\NN(D)$. The conditional expectation
+$E_{D',D}$ projects vectors but does not in general intertwine
+the Lanczos recursion (this requires $K_{\NN(D)}$ to commute with
+$E_{D',D}$, which is the modular-invariance hypothesis of
+Connes--Takesaki~\cite{ConnesTakesaki1977} and is not
+established for the FRW crossed product beyond the
+conformal-pullback regime).
+\end{proof}
+
+\section{Limits and colimits}\label{sec:limits}
+
+\begin{proposition}[Colimit: growing diamonds]\label{prop:colim}
+The diagram $D\subset D'\subset\cdots$ of nested admissible
+diamonds, ordered by inclusion, has a colimit in $\WCatinj$
+given by the inductive limit
+\(
+\NN_{\mathrm{global}} := \varinjlim_{D\in\Diam}\NN(D),
+\)
+which is the global FRW crossed-product algebra. This is well-defined
+under hypothesis $(\star)$ of Theorem~\ref{thm:N-functor} and is
+type II$_\infty$ if all $\NN(D)$ are.
+\end{proposition}
+
+\begin{question}[Limit: Big-Bang shrinking]\label{q:limit-BB}
+The diagram $D\supset D'\supset\cdots$ of shrinking admissible
+diamonds with $\eta_i\to 0^+$ is the categorical realisation of
+\texttt{frw\_note} Open Question~4.4. Its limit in $\WCatinj$ is
+formally
+\(
+\NN_{\mathrm{BB}} := \varprojlim_{D\,:\,\eta_i\to 0^+}\NN(D),
+\)
+but the IR singularity of the conformal vacuum at $\eta=0$
+(\texttt{frw\_note} Q.4.4 (b)--(c)) means the projective limit may
+fail to admit a cyclic separating vector. The type-classification of
+$\NN_{\mathrm{BB}}$, if it exists, is open.
+\end{question}
+
+\section{Verdict}
+
+\begin{remark}[Summary]\label{rem:verdict}
+The Diamond Master Equation is a \emph{partial} functor:
+\begin{itemize}
+\item $\NN:\Diam\to\WCatinj$ is a functor under hypothesis $(\star)$,
+which is provable in the conformal-pullback regime of
+\texttt{frw\_note} but open in general.
+\item $K:D\mapsto-\log\Delta_{\omega_D}$ is \emph{not} functorial as
+an operator-valued field; only the outer-modular class $[\sigma^D]$
+is functorial up to inner perturbations (Connes 1973).
+\item The Krylov--Diameter Correspondence is a \emph{pointwise}
+identity on each $D\in\Diam$ but \emph{not} a natural transformation
+between functors $\Diam\to\R^*_+$, because Lanczos coefficients are
+not preserved by the conditional expectation
+$E_{D',D}:\NN(D)\to\NN(D')$.
+\item The colimit (growing $D$) is the global FRW algebra; the limit
+(shrinking to BB) is the open question of \texttt{frw\_note}~4.4.
+\end{itemize}
+No new theorem is established. The construction is an honest
+categorical re-packaging of three pre-existing theorems
+(\texttt{frw\_note} 3.5/3.6, \texttt{krylov\_diameter} Thm.~4,
+\texttt{frw\_note} Prop.~4.2). The natural target for publication of
+this re-packaging, in the absence of new content, would be a
+specialist functorial-QFT venue (e.g.\ JPAA or Theory and
+Applications of Categories) only \emph{after} hypothesis $(\star)$
+and the Lanczos-projection question are resolved into actual
+theorems. As of 2026-05-02 this has not been done, and the present
+note is a research-direction marker, not a publishable result.
+\end{remark}
+
+\bigskip
+\noindent\emph{Status (2026-05-02):} speculative categorical
+synthesis; sympy-internal-consistency only; NO new theorem; NO arXiv
+claim; NO push.
+
+\begin{thebibliography}{99}
+\bibitem{Connes1973} A.~Connes, \emph{Une classification des
+facteurs de type III}, Ann.\ Sci.\ \'Ec.\ Norm.\ Sup\'er.\ (4)
+\textbf{6} (1973), 133--252.
+\bibitem{ConnesTakesaki1977} A.~Connes and M.~Takesaki, \emph{The
+flow of weights on factors of type III}, T\^ohoku Math.\ J.\
+\textbf{29} (1977), 473--575.
+\bibitem{Takesaki1972} M.~Takesaki, \emph{Conditional expectations
+in von Neumann algebras}, J.\ Funct.\ Anal.\ \textbf{9} (1972),
+306--321.
+\bibitem{Buchholz1974} D.~Buchholz, \emph{Product states for local
+algebras}, Comm.\ Math.\ Phys.\ \textbf{36} (1974), 287--304.
+\bibitem{Longo1979} R.~Longo, \emph{Notes on algebraic invariants
+for non-commutative dynamical systems}, Comm.\ Math.\ Phys.\
+\textbf{69} (1979), 195--207.
+\bibitem{DHR1971} S.~Doplicher, R.~Haag, J.E.~Roberts,
+\emph{Local observables and particle statistics I},
+Comm.\ Math.\ Phys.\ \textbf{23} (1971), 199--230;
+\emph{II}, Comm.\ Math.\ Phys.\ \textbf{35} (1974), 49--85.
+\bibitem{BFV2003} R.~Brunetti, K.~Fredenhagen, R.~Verch, \emph{The
+generally covariant locality principle -- a new paradigm for local
+quantum physics}, Comm.\ Math.\ Phys.\ \textbf{237} (2003), 31--68.
+\bibitem{BuchholzWichmann1986} D.~Buchholz, E.H.~Wichmann,
+\emph{Causal independence and the energy-level density of states in
+local quantum field theory}, Comm.\ Math.\ Phys.\ \textbf{106}
+(1986), 321--344.
+\bibitem{Longo1989} R.~Longo, \emph{Index of subfactors and
+statistics of quantum fields, I}, Comm.\ Math.\ Phys.\ \textbf{126}
+(1989), 217--247; \emph{II}, Comm.\ Math.\ Phys.\ \textbf{130}
+(1990), 285--309.
+\bibitem{CMPT24} P.~Caputa, J.~M.~Magan, D.~Patramanis, E.~Tonni,
+\emph{Krylov complexity for von Neumann algebras with type II$_1$ /
+III$_1$ factors}, 2024 (referenced in
+\texttt{krylov\_diameter.tex}).
+\bibitem{Remondiere2026} K.~Remondi\`ere, \emph{Type II$_\infty$ for
+the gravitational algebra of a comoving observer in
+radiation-dominated FRW via conformal pullback}, manuscript
+(\texttt{frw\_note.tex}, commit \texttt{aa9a3ee} of
+\texttt{crossed-cosmos}, 2026-05-02).
+\end{thebibliography}
+
+\end{document}

@@ -1,0 +1,62 @@
+% M1-C salvage: integrated B3 lift to type II_infty
+% LaTeX excerpt for paper/eci.tex v6.0.20-bis (replaces "Theorem 4.2" with "Conjecture 4.2")
+% Date: 2026-05-02. Author: sub-agent (Opus 4.7).
+
+\subsection{Modular-Krylov bound: integrated form on type II$_\infty$}
+\label{sec:M1C-integrated}
+
+The pointwise modular-Krylov bound used in v6.0.15 of this paper,
+\begin{equation}
+  \big|\langle u_t^{-1}[\log\Delta_\omega, u_t]\rangle_{\rho_R}\big|
+  \;\le\;
+  \kappa_R\, C_k[\rho_R(t)],
+  \qquad t > 0,
+  \label{eq:B3-pointwise}
+\end{equation}
+is \textbf{false} as stated in finite-dimensional type I$_n$ approximations, with $\kappa_R$ chosen as any natural function of the modular spectrum of $\omega$.  Adversarial L-BFGS optimization in $n=3,4,5$ produces violations exceeding factor $2\times 10^5$ at small $t$, driven by Krylov recurrences (revivals of $C_k$) that are intrinsic to finite dimension; see \texttt{/tmp/M1C\_B3\_opus.md}.  In type II$_\infty$ with continuous Lanczos spectrum these recurrences are absent (Avdoshkin--Dymarsky asymptotic universality of operator growth, \cite{AvdoshkinDymarsky2019}), but a rigorous derivation of \eqref{eq:B3-pointwise} on II$_\infty$ remains open.
+
+We replace \eqref{eq:B3-pointwise} with the time-integrated form, which we conjecture extends to type II$_\infty$ under a modular-boundedness restriction on the state $\rho_R$.
+
+\begin{conjecture}[Modular-Krylov GSL, integrated form]
+\label{conj:M1C-integrated}
+Let $\mathcal{N}$ be a type II$_\infty$ factor with faithful normal semifinite trace $\mathrm{Tr}_{\mathcal{N}}$ and faithful normal weight $\omega$ of bounded modular spectrum, $\|\log\Delta_\omega\|_\infty < \infty$.  Let $\rho_R$ be a normal state on $\mathcal{N}$ that is \emph{modular-bounded} relative to $\omega$, in the sense that $\rho_R^{1/2}\,\log\Delta_\omega\,\rho_R^{1/2} \in L^1(\mathcal{N}, \mathrm{Tr}_{\mathcal{N}})$.  Let $u_t = (D\rho_R : D\omega)_t \in \mathcal{N}$ be the Connes cocycle of \cite{ConnesTakesaki1977}, and let $C_k[\rho_R(t)]$ be the Krylov complexity defined via Lanczos on $\Delta_\omega^{1/2}$ acting in $L^2(\mathcal{N}, \mathrm{Tr}_{\mathcal{N}})$ as in Block~A.  Then for any $T > 0$,
+\begin{equation}
+  \int_0^T \big|\langle u_t^{-1}[\log\Delta_\omega, u_t]\rangle_{\rho_R}\big|\, dt
+  \;\le\;
+  \pi\,\|\log\Delta_\omega\|_\infty \cdot \int_0^T C_k[\rho_R(t)]\, dt.
+  \label{eq:B3-integrated}
+\end{equation}
+For KMS states $\rho_R$ at modular temperature $\beta > 0$, the constant $\pi\,\|\log\Delta_\omega\|_\infty$ may be replaced by $\pi/\beta$, which agrees with the Killing-horizon surface gravity $\kappa = 2\pi/\beta_H$ up to the factor $1/2$.
+\end{conjecture}
+
+\paragraph{Status.}  Conjecture~\ref{conj:M1C-integrated} is \emph{numerically supported} but \emph{not proved}.  It holds in 40/40 random thermal pairs in finite-dimensional type I$_n$ approximations for $n = 3, \ldots, 8$, with mean integrated ratio $(\int |\mathrm{LHS}|)/(\kappa_R \int C_k)$ uniformly below $0.05$ and decreasing as $n$ increases (see Table~\ref{tab:M1C-numerics}).  The lift to type II$_\infty$ via direct-limit approximation is plausible but has an explicit analytic gap: the total variation of the relative entropy along the cocycle flow,
+\[
+  \int_0^T \big|\tfrac{d}{dt} S_{\mathrm{rel}}(\rho_R(t)\|\omega)\big|\, dt
+  \;\stackrel{?}{\le}\; \|\log\Delta_\omega\|_\infty \cdot \mathrm{const},
+\]
+is not known to be uniformly bounded on II$_\infty$.  In the special case of half-sided modular inclusions (Faulkner--Speranza geometry, \cite{FaulknerSperanza2024}, eq.~3.18), the relative entropy is monotonic and the total variation reduces to $|\Delta S_{\mathrm{rel}}|$, closing the gap.
+
+\paragraph{Comparison to published bounds.}  The closest published precedent is the Robertson-type uncertainty bound of Hörnedal--Carabba--Matsoukas-Roubeas--del Campo \cite{Hornedal2022}, which controls $|dC_k/dt|$ rather than the modular-energy LHS of \eqref{eq:B3-integrated}, and the Avdoshkin--Dymarsky integrated bounds on the moments and tail of the operator power spectrum, \cite{AvdoshkinDymarsky2019} eqs.~(60), (61), (63), which are \emph{integral in form} but on the auto-correlator $C_T(t) = \mathrm{Tr}(\rho A(t)A)$ rather than on the cocycle bracket.  Conjecture~\ref{conj:M1C-integrated} is the natural transposition of the AD framework to the modular-energy/Krylov-complexity duality, conjectured here for the first time in this form.
+
+\begin{table}[h]
+\centering
+\caption{Numerical verification of integrated bound \eqref{eq:B3-integrated} on type I$_n$, mean of integrated ratio $(\int |\mathrm{LHS}|)/(\kappa_R \int C_k)$ over random thermal pairs, $T_{\max} = 6$.}
+\label{tab:M1C-numerics}
+\begin{tabular}{l|cccccc}
+\hline
+$n$ & 3 & 4 & 5 & 6 & 7 & 8 \\ \hline
+generic, mean ratio & 0.025 & 0.014 & 0.009 & 0.006 & 0.004 & 0.002 \\
+generic, max ratio & 0.045 & 0.029 & 0.020 & 0.010 & 0.008 & 0.004 \\
+modular-bounded, mean & --- & 0.047 & --- & 0.008 & --- & 0.003 \\
+KMS $\beta=1$, mean & --- & 0.189 & --- & 0.069 & --- & --- \\
+\hline
+\end{tabular}
+\end{table}
+
+\paragraph{What was previously claimed.}  Version 6.0.15 of this paper presented \eqref{eq:B3-pointwise} as ``Theorem 4.2'' under M1-C.  In light of the falsification of the pointwise form (factor $2\times 10^5$ violation in finite-dim adversarial search), the headline result must be downgraded to Conjecture~\ref{conj:M1C-integrated}.  All physical applications of M1-C to the GSL chain require only the integrated form (the Faulkner--Speranza--Wall argument bounds $\int dS_{\mathrm{gen}}/d\tau$, not the pointwise rate); thus the conjectural status of \eqref{eq:B3-integrated} does not undermine the higher-level physics conclusions of the ECI framework, but it precludes calling M1-C a theorem.
+
+% References cited:
+% AvdoshkinDymarsky2019: arXiv:1911.09672, Comm. Phys. 5, 207 (2022).
+% ConnesTakesaki1977: A. Connes & M. Takesaki, Tohoku Math J 29 (1977).
+% FaulknerSperanza2024: arXiv:2405.00847, JHEP 2025.
+% Hornedal2022: N. Hörnedal, N. Carabba, A. Matsoukas-Roubeas, A. del Campo, arXiv:2202.05006.

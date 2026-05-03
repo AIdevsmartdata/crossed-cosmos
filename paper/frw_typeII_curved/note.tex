@@ -1,0 +1,639 @@
+% note.tex --- standalone math.OA companion note
+% Extension of FRW conformal-pullback Theorem 3.5/3.6 framework to spatially
+% curved (k = +/- 1) Friedmann-Robertson-Walker spacetimes.
+%
+% Author: Kevin Remondiere
+% Date: 2026-05-02
+% Compile: pdflatex note ; bibtex note ; pdflatex note ; pdflatex note
+
+\documentclass[11pt]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{mathtools}
+\usepackage{hyperref}
+\usepackage{xcolor}
+\usepackage{cite}
+\hypersetup{colorlinks=true, linkcolor=blue, citecolor=blue, urlcolor=blue}
+
+% Theorem environments (numbering matches frw_note.tex companion paper)
+\newtheorem{theorem}{Theorem}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{remark}[theorem]{Remark}
+\newtheorem{question}[theorem]{Open Question}
+\newtheorem{hypothesis}[theorem]{Hypothesis}
+
+% Macros (consistent with paper/frw_typeII_note/frw_note.tex)
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\C}{\mathbb{C}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\HH}{\mathcal{H}}
+\renewcommand{\AA}{\mathcal{A}}
+\newcommand{\MM}{\mathcal{M}}
+\newcommand{\OO}{\mathcal{O}}
+\newcommand{\Aut}{\operatorname{Aut}}
+\newcommand{\Ad}{\operatorname{Ad}}
+\newcommand{\BW}{\mathrm{BW}}
+\newcommand{\HL}{\mathrm{HL}}
+\newcommand{\FRW}{\mathrm{FRW}}
+\newcommand{\Mink}{\mathrm{M}}
+\newcommand{\ESU}{\mathrm{ESU}}
+\newcommand{\Milne}{\mathrm{Milne}}
+
+\title{Conformal pullback of FRW type II$_\infty$ classification to spatially
+curved $(k=\pm 1)$ Friedmann--Robertson--Walker
+backgrounds\thanks{Standalone companion note to \cite{Remondiere2026}, extending
+its Theorems~3.5/3.6 from spatially flat $(k=0)$ to spatially curved
+$(k=\pm 1)$ FRW. The $k=-1$ extension is unconditional; the $k=+1$ extension is
+conditional on a residual hypothesis on the conformally coupled massless scalar
+on the Einstein static universe.}}
+\author{Kevin Remondi\`ere\\
+\small Independent researcher\\
+\small \href{mailto:kevin.remondiere@gmail.com}{kevin.remondiere@gmail.com}\\
+\small ORCID: \href{https://orcid.org/0009-0008-2443-7166}{0009-0008-2443-7166}}
+\date{2026-05-02}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+We extend the conformal-pullback type II$_\infty$ classification of
+\cite{Remondiere2026} (Theorems~3.5/3.6, established for spatially flat
+$k=0$ FRW with a comoving doubly-bounded causal diamond and the conformally
+coupled massless scalar) to spatially curved Friedmann--Robertson--Walker
+backgrounds. The conformal target is no longer Minkowski but the
+\emph{Einstein static universe} $(\R\times S^3,g_\ESU)$ for $k=+1$ or the
+\emph{Milne chart} $(\R\times H^3,g_\Milne)$ for $k=-1$. The wave operator
+identity used in \cite{Remondiere2026} must be replaced by the curvature-corrected
+form $(\Box_{\tilde g}-R[\tilde g]/6)(a\varphi)=a^3(\Box_g-R[g]/6)\varphi$
+of Wald 1984, App.~D.9; we re-verify this identity symbolically in sympy
+for $k\in\{-1,0,+1\}$. Two extensions follow.
+For $k=-1$ (open FRW), the Milne chart is isometric to the interior of the
+Minkowski future lightcone, so the unitary equivalence and hence the type
+II$_\infty$ classification of the modular crossed product is
+\emph{unconditional}. For $k=+1$ (closed FRW), the conformal target is the
+Einstein static universe; Buchholz--Mund--Summers~\cite{BMS2000}
+unconditionally establish the condition of geometric modular action,
+modular stability and $SO(4,1)$ covariance for transplanted
+de~Sitter wedge nets on RW backgrounds, plus cyclicity on diamonds of
+sufficient conformal-time extent (their Theorem~3.1, Corollaries~3.2--3.3),
+but do \emph{not} compute either the type or the Connes spectrum of the
+ESU spherical-diamond algebra of the conformally coupled scalar. The closed-FRW
+type II$_\infty$ statement is therefore conditional on the residual hypothesis
+\textbf{(H1$_{+1}$)}: the wedge net of the conformally coupled massless scalar on
+ESU in its conformally invariant ground state has type III$_1$ factors with
+full Connes spectrum on its spherical-diamond subalgebras. We document that
+BMS~\cite{BMS2000} themselves flag the conformally-coupled-scalar question on
+RW (and a fortiori on ESU) as explicitly open in their concluding remarks
+(p.~16, last paragraph before References).
+\end{abstract}
+
+\section{Introduction}\label{sec:intro}
+
+The companion note \cite{Remondiere2026} establishes a conformal-pullback
+type II$_\infty$ classification of the gravitationally dressed algebra of a
+comoving observer in spatially flat radiation-dominated and matter-dominated
+FRW (its Theorems~3.5 and~3.6, henceforth ``the $k=0$ theorem'' or
+``Theorem~3.5/3.6'' for definiteness): the conformal isometry of $(g_\FRW,
+\eta_{\mu\nu})$ together with conformal invariance of the conformally
+coupled $(\xi=1/6)$ massless scalar in $d=4$ lifts to a unitary
+$U:\HH_\FRW\to\HH_\Mink$ intertwining the FRW conformal vacuum with the
+Minkowski vacuum and the FRW comoving-diamond algebra with the
+Hislop--Longo~\cite{HislopLongo1982} Minkowski-diamond algebra. By
+Tomita--Takesaki uniqueness and the Connes--Takesaki crossed-product
+construction~\cite{Connes1973, CLPW2023}, $\AA(D_\OO)_\FRW
+\rtimes_{\sigma^\FRW}\R$ is a type II$_\infty$ factor whenever $a(\eta)$ is
+smooth and strictly positive on the closed diamond.
+
+The construction in \cite{Remondiere2026} is restricted to $k=0$ for two
+reasons. (a) Conformal flatness of FRW is automatic for $k=0$ in conformal
+coordinates; for $k=\pm 1$ the metric is conformally flat as a
+\emph{Lorentzian} manifold (it is conformal to a chart of either the
+Einstein static universe or the Milne chart of $H^3$), but the conformal
+target is no longer Minkowski. (b) The off-shell wave-operator identity
+(eq.~(5) of \cite{Remondiere2026})
+\(
+\Box_{\tilde g}(a\varphi) = a^3(\Box_g - R[g]/6)\varphi
+\)
+is correct as written only when $R[\tilde g]=0$, i.e.\ when the conformal
+target is Ricci-flat; for the Einstein static universe $R[\tilde g]=+6$ and
+for the Milne chart $R[\tilde g]=-6$, and an additional curvature term
+must be carried.
+
+The present note records the extension of \cite{Remondiere2026} to the two
+remaining cases $k=\pm 1$. Section~\ref{sec:prelim} reviews the spatially
+curved FRW geometries and the static conformal targets ESU and Milne;
+Section~\ref{sec:cc-cov} states and sympy-verifies the curvature-corrected
+identity (Wald 1984 App.~D.9 \cite{Wald1984}); Section~\ref{sec:open}
+gives the unconditional $k=-1$ theorem; Section~\ref{sec:closed} the
+conditional $k=+1$ theorem with the verbatim Buchholz--Mund--Summers
+\cite{BMS2000} partial resolution; Section~\ref{sec:openq} the open
+questions.
+
+\medskip
+
+\noindent\textbf{Statements (informal).} Theorem~\ref{thm:open} (open FRW,
+$k=-1$): \emph{unconditional}, the modular crossed product is a type
+II$_\infty$ factor. Theorem~\ref{thm:closed} (closed FRW, $k=+1$):
+\emph{conditional} on the residual hypothesis H1$_{+1}$ (type III$_1$ +
+full Connes spectrum on the ESU spherical-diamond algebra of the conformally
+coupled scalar); items (1)--(2) (geometric modular action, modular
+stability, $SO(4,1)$ covariance, cyclicity on long-enough diamonds) are
+\emph{unconditional} via BMS \cite{BMS2000} Thm.~3.1 and Cors.~3.2--3.3,
+and only step (3) (crossed-product type) remains open.
+
+\noindent\textbf{Scope and limitations.} As in \cite{Remondiere2026}:
+conformal coupling $\xi=1/6$, smooth strict positivity of $a(\eta)$ on the
+closed comoving diamond (bounded away from any zero of $a$ and from any
+conformal boundary, in particular from Big Bang and Big Crunch); the
+wedge case is excluded as in \cite[Rem.~3.3]{Remondiere2026}; massive,
+non-conformal $(\xi\ne 1/6)$ and interacting fields are out of scope.
+
+\section{Preliminaries: spatially curved FRW and conformal targets}\label{sec:prelim}
+
+\subsection{Spatially curved FRW in conformal coordinates}\label{sec:metric}
+
+Let $S_k(\chi):=\sin\chi$ for $k=+1$, $S_0(\chi):=\chi$ for $k=0$, and
+$S_{-1}(\chi):=\sinh\chi$ for $k=-1$. In conformal time $\eta$ and
+hyperspherical comoving coordinates $(\chi,\theta,\phi)$, the spatially
+curved FRW metric reads
+\begin{equation}\label{eq:frw-curved}
+\mathrm{d}s^2_\FRW
+= a(\eta)^2\Big[-\mathrm{d}\eta^2 + \mathrm{d}\chi^2
+  + S_k(\chi)^2\big(\mathrm{d}\theta^2 + \sin^2\theta\,\mathrm{d}\phi^2\big)\Big].
+\end{equation}
+The case $k=0$ recovers \cite[eq.~(1)]{Remondiere2026}. The conformal-time
+range is $\eta\in(0,\infty)$ for $k=0,-1$ and $\eta\in(0,\eta_*)$ for $k=+1$
+with $\eta_*=\pi$ (radiation-dominated) or $2\pi$ (matter-dominated). For
+$k=+1$, the Big Bang is at $\eta=0$ and the Big Crunch at $\eta=\eta_*$. For
+$k=-1$, the Big Bang is at $\eta=0$ and the conformal-time range extends to
+$\eta\to\infty$. Conformal flatness of \eqref{eq:frw-curved} as a Lorentzian
+manifold (vanishing Weyl tensor) holds for all $k$ \cite{IihoshiKetov2007,
+Wald1994, PenroseRindler1986}.
+
+\subsection{Conformal target spacetimes}\label{sec:targets}
+
+Writing $g_\FRW=a(\eta)^2\,\tilde g_k$, the static conformal target
+$\tilde g_k$ is a function of $k$ only:
+\begin{align}
+\tilde g_0 &= -\mathrm{d}\eta^2 + \mathrm{d}\chi^2 + \chi^2\,\mathrm{d}\Omega^2
+            \;=\; \eta_{\mu\nu}\quad (\text{Minkowski}, R[\tilde g]=0),
+            \label{eq:target-flat}\\
+\tilde g_{+1}
+            &= -\mathrm{d}\eta^2 + \mathrm{d}\chi^2 + \sin^2\chi\,\mathrm{d}\Omega^2
+            \;=\; g_\ESU\quad
+            (\text{Einstein static universe } \R\times S^3,\ R[\tilde g]=+6),
+            \label{eq:target-esu}\\
+\tilde g_{-1}
+            &= -\mathrm{d}\eta^2 + \mathrm{d}\chi^2 + \sinh^2\chi\,\mathrm{d}\Omega^2
+            \;=\; g_\Milne\quad
+            (\text{Milne chart } \R\times H^3,\ R[\tilde g]=-6).
+            \label{eq:target-milne}
+\end{align}
+Eq.~\eqref{eq:target-flat} is the $k=0$ case used in \cite{Remondiere2026}.
+Eq.~\eqref{eq:target-esu} is the conformal-compactification target of any
+closed FRW \cite[\S5.4]{Wald1994}, \cite[Ch.~9]{PenroseRindler1986}.
+Eq.~\eqref{eq:target-milne} is the conformal target of any open FRW; it is
+isometric to the interior of the Minkowski future lightcone $I^+(0)\subset
+\R^{1,3}$ via $t=e^\eta\cosh\chi$, $r=e^\eta\sinh\chi$
+\cite[\S5.3]{Wald1994}, so $k=-1$ factors through a further conformal
+isometry to a subset of $\R^{1,3}$.
+
+\smallskip
+
+\noindent\emph{Comoving worldline in the target.} A comoving observer at
+$\chi=0$ in $(g_\FRW,k=\pm 1)$ pulls back, under the rescaling
+$\varphi\mapsto a\varphi$ (Section~\ref{sec:cc-cov}), to the timelike
+geodesic at $\chi=0$ in $\tilde g_k$: a static observer of ESU for $k=+1$,
+and a static observer of Milne (which corresponds to the apex of the
+Minkowski lightcone in the further isometric embedding) for $k=-1$.
+
+\section{Curvature-corrected conformal-covariance identity}\label{sec:cc-cov}
+
+The off-shell conformal-covariance identity used in \cite[eq.~(5)]{Remondiere2026},
+\(
+\Box_{\tilde g}(a\varphi) = a^3(\Box_g-R[g]/6)\varphi,
+\)
+holds when the conformal target $\tilde g$ is Ricci-flat ($R[\tilde g]=0$),
+which is the case for spatially flat FRW. For $k=\pm 1$ the static target
+$\tilde g_k$ is \emph{not} Ricci-flat, and the correct off-shell identity
+(Wald 1984, Appendix~D, eq.~D.9 \cite{Wald1984}) carries a curvature term:
+\begin{equation}\label{eq:cc-curved}
+\big(\Box_{\tilde g} - \tfrac{1}{6}R[\tilde g]\big)\,(a\,\varphi)
+\;=\; a^3\,\big(\Box_g - \tfrac{1}{6}R[g]\big)\,\varphi.
+\end{equation}
+For $k=0$, $R[\tilde g]=0$ and \eqref{eq:cc-curved} reduces to the form used
+in \cite{Remondiere2026}. For $k=+1$, $R[\tilde g_{+1}]=R[g_\ESU]=+6$; for
+$k=-1$, $R[\tilde g_{-1}]=R[g_\Milne]=-6$. (Throughout, we use units in
+which the spatial unit-curvature radius is $1$.)
+
+\smallskip
+
+\noindent\emph{Sympy verification.} The script
+\texttt{piste\_spatially\_curved.py} (bundled with the source repository,
+see also \cite{Remondiere2026}) computes both sides of \eqref{eq:cc-curved}
+in $(\eta,\chi,\theta,\phi)$ components for arbitrary smooth $a(\eta)$ and
+arbitrary $\varphi(\eta,\chi,\theta,\phi)$, and reports a difference of zero
+after \texttt{simplify} for all three values $k\in\{-1,0,+1\}$. The Ricci
+scalars (re-derived sympy-symbolically from the Christoffel symbols of
+$g_\FRW$ and $\tilde g_k$ separately) match the analytic expressions
+$R[g_\FRW] = 6\,a^{-2}\,\big(a''/a + k\big)$ and $R[\tilde g_k]=6k$
+exactly.
+
+\smallskip
+
+\noindent\emph{Consequence.} The conformally coupled massless scalar
+$(\Box_g-R/6)\varphi=0$ on $g_\FRW$ pulls back via $\varphi\mapsto
+\tilde\varphi:=a\varphi$ to \emph{the conformally coupled massless scalar on
+the static target} $\tilde g_k$, namely
+$(\Box_{\tilde g_k}-R[\tilde g_k]/6)\tilde\varphi=0$, \emph{not} to the free
+wave equation (except for $k=0$, where $R[\tilde g_0]=0$ and the conformally
+coupled equation coincides with the free wave equation). In particular, the
+target theory is the conformally coupled massless scalar on ESU (for $k=+1$)
+or on Milne (for $k=-1$).
+
+\smallskip
+
+\noindent\emph{Symplectic form pulls back exactly.} The Klein--Gordon
+symplectic form on a constant-$\eta$ Cauchy slice $\Sigma_\eta\subset
+D_\OO$ (with the curvature term $-(R/6)\varphi^2$ contributing nothing to
+the antisymmetric current, as in
+\cite[\S3.1(b)]{Remondiere2026}) reads, for the spatially curved metric
+\eqref{eq:frw-curved},
+\begin{equation}\label{eq:sigma-curved}
+\sigma_\FRW(\varphi_1,\varphi_2)
+\;=\; \int_{\Sigma_\eta}\big(\varphi_1\,\partial_\eta\varphi_2
+                            -\varphi_2\,\partial_\eta\varphi_1\big)\,
+        a(\eta)^2\,S_k(\chi)^2\sin\theta\,
+        \mathrm{d}\chi\,\mathrm{d}\theta\,\mathrm{d}\phi,
+\end{equation}
+with weight $a^2$ from $\sqrt{h}\,n^\eta=a^3\cdot a^{-1}=a^2$, and
+$S_k(\chi)^2\sin\theta$ the spatial volume element in $\tilde g_k$.
+Substituting $\varphi_i=\tilde\varphi_i/a$ and using
+$\partial_\eta(\tilde\varphi/a)=a^{-1}\partial_\eta\tilde\varphi
+-a^{-2}(\partial_\eta a)\tilde\varphi$ as in
+\cite[\S3.1(b)]{Remondiere2026}, the two
+$(\partial_\eta a)/a$ cross terms cancel by antisymmetry of the symplectic
+bracket and one recovers $\sigma_\FRW(\varphi_1,\varphi_2)
+=\sigma_{\tilde g_k}(\tilde\varphi_1,\tilde\varphi_2)$.
+
+\section{Theorem (open FRW, $k=-1$): unconditional type II$_\infty$}
+\label{sec:open}
+
+We now state and prove the unconditional extension of \cite[Thm.~3.5]{Remondiere2026}
+to open FRW, by composition with the classical conformal isometry
+$\Milne\hookrightarrow I^+(0)\subset\R^{1,3}$.
+
+\begin{proposition}[Conformal unitary, $k=-1$]\label{prop:U-open}
+Let $a:[\eta_i,\eta_f]\to\R_+$ be smooth and strictly positive on the
+closed conformal-time interval, with $0<\eta_i<\eta_f<\infty$. Let
+$D_\OO\subset(\FRW, k=-1)$ be a doubly-bounded causal diamond of a comoving
+observer with conformal-time interval contained in $[\eta_i,\eta_f]$, and
+let $D_\OO^\Milne$ denote the same coordinate region viewed as a subset of
+the Milne chart $\tilde g_{-1}$. Then there exists a unitary
+$U_{-1}:\HH_\FRW\to\HH_\Milne$ such that
+\begin{enumerate}
+\item[(i)] $U_{-1}\,\Omega_\FRW = \Omega_\Milne$, where $\Omega_\Milne$ is
+the conformally invariant ground state of the conformally coupled massless
+scalar on $\tilde g_{-1}$;
+\item[(ii)] $U_{-1}\,\varphi_\FRW(f)\,U_{-1}^{-1}
+= \tilde\varphi_\Milne(a^3\cdot f)$ for all $f\in C_c^\infty(D_\OO)$, where
+$\tilde\varphi_\Milne$ is the rescaled field on Milne;
+\item[(iii)] $U_{-1}\,\AA(D_\OO)_\FRW\,U_{-1}^{-1}
+= \AA(D_\OO^\Milne)_\Milne$ as von Neumann subalgebras of $B(\HH_\Milne)$.
+\end{enumerate}
+\end{proposition}
+
+\begin{proof}[Proof sketch]
+By \eqref{eq:cc-curved}, the field rescaling $\varphi\mapsto\tilde\varphi=a\varphi$
+maps the conformally coupled scalar EOM on $g_\FRW$ to the conformally
+coupled scalar EOM on $\tilde g_{-1}$. By the symplectic computation of
+\eqref{eq:sigma-curved}, the test-function rescaling
+$f\mapsto a^3 f$ matches the FRW symplectic form to the Milne symplectic
+form on solutions of $D_\OO$ and $D_\OO^\Milne$. Smoothness and strict
+positivity of $a$ on $\overline{D_\OO}$ make $f\mapsto a^3 f$ a
+$C_c^\infty$-bijection (its inverse $h\mapsto a^{-3} h$ is also
+$C_c^\infty$). The induced symplectic transformation lifts to a unitary
+$U_{-1}$ on the symmetric Fock spaces with $U_{-1}\Omega_\FRW=\Omega_\Milne$,
+exactly as in \cite[Prop.~3.4]{Remondiere2026}. The double-commutant identity
+(iii) then follows from (ii) by the same argument.
+\end{proof}
+
+\begin{theorem}[Open FRW, $k=-1$, unconditional]\label{thm:open}
+Let $\varphi$ be the conformally coupled massless scalar field on open FRW
+with smooth strictly positive scale factor $a(\eta)$ on the closed
+conformal-time interval $[\eta_i,\eta_f]$, $0<\eta_i<\eta_f<\infty$, in the
+conformal vacuum $\Omega_\FRW$. Let $D_\OO$ be a doubly-bounded causal
+diamond of a comoving observer with conformal-time interval contained in
+$[\eta_i,\eta_f]$, and assume the diamond's image $D_\OO^\Milne$ in the
+Milne chart, lifted under the isometric embedding
+$\Milne\hookrightarrow I^+(0)\subset\R^{1,3}$, is a doubly-bounded causal
+diamond $M_\OO\subset\R^{1,3}$ contained strictly inside the Minkowski
+future lightcone of the origin (i.e.\ $\overline{M_\OO}\cap\partial I^+(0)
+= \emptyset$). Let $\sigma^\FRW$ denote the modular automorphism group of
+$(\AA(D_\OO)_\FRW,\Omega_\FRW)$. Then:
+\begin{enumerate}
+\item $\sigma^\FRW_t = \Ad U_{-1}^{-1}\circ\sigma^\HL_t\circ\Ad U_{-1}$,
+where $\sigma^\HL$ is the Hislop--Longo modular automorphism of the
+conformally identified Minkowski diamond $\AA(M_\OO)_\Mink$.
+\item $\Gamma(\sigma^\FRW)=\R$.
+\item $\AA(D_\OO)_\FRW\rtimes_{\sigma^\FRW}\R$ is a type II$_\infty$
+factor.
+\end{enumerate}
+\end{theorem}
+
+\begin{proof}
+By Proposition~\ref{prop:U-open}, $U_{-1}$ implements a $W^*$-isomorphism
+$\Ad U_{-1}:\AA(D_\OO)_\FRW\xrightarrow{\sim}\AA(D_\OO^\Milne)_\Milne$ with
+$U_{-1}\Omega_\FRW=\Omega_\Milne$. The Milne chart is isometric to
+$I^+(0)\subset\R^{1,3}$ via $(t,r)=(e^\eta\cosh\chi,e^\eta\sinh\chi)$
+\cite[\S5.3]{Wald1994}, and the conformally coupled massless scalar is
+conformally invariant; hence
+$\AA(D_\OO^\Milne)_\Milne\cong\AA(M_\OO)_\Mink$ via a further unitary
+$V_{-1}:\HH_\Milne\to\HH_\Mink$ sending $\Omega_\Milne$ to $\Omega_\Mink$
+(the embedding sends the Milne ground state to the restriction of the
+Minkowski vacuum to the lightcone interior, in the conformally coupled
+sector). The condition $\overline{M_\OO}\cap\partial I^+(0)=\emptyset$
+ensures that the Minkowski-vacuum two-point function and its Hadamard
+parametrix on $M_\OO$ are uniformly bounded, so the restriction is well-defined
+and the unitary $V_{-1}$ exists; this is the Hadamard / Reeh--Schlieder
+infrastructure of \cite{HollandsWald2001, Verch1997}. Composing,
+$U:=V_{-1}\circ U_{-1}:\HH_\FRW\to\HH_\Mink$ implements
+$\AA(D_\OO)_\FRW\xrightarrow{\sim}\AA(M_\OO)_\Mink$ with
+$U\Omega_\FRW=\Omega_\Mink$. By Hislop--Longo \cite{HislopLongo1982},
+$\AA(M_\OO)_\Mink$ in $\Omega_\Mink$ is a type III$_1$ factor with
+M\"obius modular flow having full Connes spectrum $\Gamma(\sigma^\HL)=\R$.
+By Tomita--Takesaki uniqueness (Bratteli--Robinson II, \S2.5; Takesaki~II,
+Ch.~VIII), modular operators intertwine: $\Delta_\FRW=U^{-1}\Delta^\HL U$,
+yielding (1). By W$^*$-isomorphism invariance of the Connes spectrum
+(\cite[Prop.~3.4]{Remondiere2026}, equivalent to Connes
+\cite[Th\'eor\`eme~1.2.4]{Connes1973}), $\Gamma(\sigma^\FRW)=\Gamma(\sigma^\HL)=\R$,
+yielding (2). By Connes--Takesaki, type III$_1$ crossed by its modular
+automorphism group with full Connes spectrum $\Gamma=\R$ is type II$_\infty$
+\cite[\S2]{CLPW2023, Witten2022, Connes1973}, yielding (3).
+\end{proof}
+
+\begin{remark}\label{rem:open-folklore}
+The doubly-bounded condition $\overline{M_\OO}\cap\partial I^+(0)=\emptyset$
+is the natural one for any doubly-bounded comoving diamond not touching the
+Big Bang $\eta=0$: under the Milne $\to$ Minkowski embedding, the Big-Bang
+hypersurface $\eta=0$ maps onto the future lightcone of the origin, and
+$\overline{D_\OO}\cap\{\eta=0\}=\emptyset$ implies
+$\overline{M_\OO}\cap\partial I^+(0)=\emptyset$. Hence Theorem~\ref{thm:open}
+applies to any doubly-bounded comoving diamond of an open FRW with
+$\eta_i>0$, with no additional hypothesis on the algebraic side beyond the
+$k=0$ Theorem~3.5/3.6 of \cite{Remondiere2026}. In this sense the $k=-1$
+extension is folklore: it follows by direct composition with the classical
+isometry of \cite[\S5.3]{Wald1994}.
+\end{remark}
+
+\section{Theorem (closed FRW, $k=+1$): conditional type II$_\infty$ + BMS partial resolution}
+\label{sec:closed}
+
+For $k=+1$ the conformal target is the Einstein static universe
+$\tilde g_{+1}=g_\ESU$, which is \emph{not} conformally embeddable into
+Minkowski as a single piece; the conformal compactification of Minkowski
+covers only \emph{half} of ESU, and the spherical-diamond modular structure
+on full ESU does not reduce to Hislop--Longo on Minkowski by direct
+composition.
+
+\subsection{The conformal unitary, $k=+1$}\label{sec:U-closed}
+
+\begin{proposition}[Conformal unitary, $k=+1$]\label{prop:U-closed}
+Under the hypotheses of Section~\ref{sec:metric} for $k=+1$ (smooth strictly
+positive $a(\eta)$ on a closed conformal-time interval $[\eta_i,\eta_f]
+\subset(0,\eta_*)$, bounded away from Big Bang $\eta=0$ and Big Crunch
+$\eta=\eta_*$), and for $D_\OO\subset(\FRW,k=+1)$ a doubly-bounded comoving
+causal diamond, there exists a unitary $U_{+1}:\HH_\FRW\to\HH_\ESU$ with
+\begin{enumerate}
+\item[(i)] $U_{+1}\,\Omega_\FRW=\Omega_\ESU$;
+\item[(ii)] $U_{+1}\,\varphi_\FRW(f)\,U_{+1}^{-1}=\tilde\varphi_\ESU(a^3\cdot f)$
+for all $f\in C_c^\infty(D_\OO)$;
+\item[(iii)] $U_{+1}\,\AA(D_\OO)_\FRW\,U_{+1}^{-1}=\AA(D_\OO^\ESU)_\ESU$.
+\end{enumerate}
+Here $\Omega_\ESU$ denotes the conformally invariant ground state of the
+conformally coupled massless scalar on ESU.
+\end{proposition}
+
+\begin{proof}[Proof sketch]
+Identical to the proof of Proposition~\ref{prop:U-open}, with $\tilde
+g_{-1}=g_\Milne$ replaced by $\tilde g_{+1}=g_\ESU$ and using
+\eqref{eq:cc-curved} for $k=+1$ (with $R[\tilde g_{+1}]=+6$). Existence of
+the conformally invariant ground state $\Omega_\ESU$ of the conformally
+coupled scalar on ESU is classical (Dimock \cite{Dimock1980},
+L\"uders--Roberts \cite{LudersRoberts1990}, and \cite[\S5.4]{Wald1994}).
+\end{proof}
+
+\subsection{Buchholz--Mund--Summers 2000: partial resolution}\label{sec:bms}
+
+The closed-FRW analogue of Hislop--Longo on the spherical-diamond algebra
+$\AA(D_\OO^\ESU)_\ESU$ of the conformally coupled scalar in $\Omega_\ESU$
+is not in the literature in the form needed here. Buchholz--Mund--Summers
+\cite{BMS2000} establish a partial resolution. We quote their setup and
+results verbatim.
+
+\medskip
+
+\noindent\textbf{BMS setup.} $\mathrm{RW}=(\R\times S^3,
+S^2(\tau)(\mathrm{d}\tau^2-\mathrm{d}\sigma^2))$ with
+$\tau\in(-\alpha\pi/2,\alpha\pi/2)$, $0<\alpha\le 1$, conformally embedded
+in de~Sitter via the diffeomorphism $\Phi(\tau,\chi,\theta,\phi):=
+(f(\tau),\chi,\theta,\phi)$, $f(\tau):=
+\arcsin(\sin(\alpha\pi/2)\sin\tau)$ (BMS eqs.~15--16). The transplantation
+$\Xi:\mathcal W\to\widetilde{\mathcal W}$ is defined on \emph{wedges only}
+(not on points), via
+$\widetilde{\mathcal A}(\widetilde W):=\mathcal A(W)$ for
+$\widetilde W=\Xi(W)$ (BMS eq.~53), and
+$\widetilde\omega(A):=\omega(A)$ (BMS eq.~54).
+
+\begin{theorem}[BMS Theorem~3.1, p.~14, verbatim]\label{thm:BMS-31}
+With the above definitions, the net $\{\widetilde{\mathcal A}(\widetilde W)\}$
+and state $\widetilde\omega$ satisfy the CGMA (Condition of Geometric
+Modular Action) and the Modular Stability Condition. The corresponding net
+of von Neumann algebras $\{\widetilde{\mathcal R}(\widetilde W)\}$ satisfies
+wedge duality and transforms covariantly under $SO(4,1)$ under the adjoint
+action of $\mathcal J$. For $\alpha<1$, there exist $J\in\mathcal J$ which
+do not implement point transformations of RW.
+\end{theorem}
+
+\begin{corollary}[BMS Corollary~3.2, $\alpha=1$]\label{thm:BMS-32}
+For $\alpha=1$, $\mathcal J$ represents the conformal group $SO(4,1)$ of RW
+$\simeq$ dS.
+\end{corollary}
+
+\begin{corollary}[BMS Corollary~3.3, double-cone non-triviality]\label{thm:BMS-33}
+Let $\widetilde O_{x,\varepsilon}\subset\mathrm{RW}$ be a double cone of
+conformal-time half-extent $\varepsilon$ centred at $x$.
+If $\varepsilon>\frac{\pi}{2}(1-\alpha)$, then $\widetilde\Omega$ is cyclic
+for $\widetilde{\mathcal R}(\widetilde O_{x,\varepsilon})$. If
+$\varepsilon<\frac{\pi}{2}(1-\alpha)$, then
+$\widetilde{\mathcal R}(\widetilde O_{x,\varepsilon})=\C\cdot\mathbf 1$
+(trivial).
+\end{corollary}
+
+\smallskip
+
+\noindent\textbf{What BMS resolves and what it leaves open.} BMS~\cite{BMS2000}
+establish, on wedges of the transplanted RW net: (a) CGMA, (b) cyclic-separating
+$\widetilde\Omega$, (c) modular stability $+$ $SO(4,1)$ covariance
+(Theorem~\ref{thm:BMS-31}); and (d) cyclic $\widetilde\Omega$ on diamonds of
+extent $\varepsilon>\frac\pi2(1-\alpha)$ (Corollary~\ref{thm:BMS-33}). They do
+\emph{not} establish (e) type III$_1$ (the string ``III$_1$'' does not appear),
+(f) full Connes spectrum $\Gamma(\sigma^{\rm diamond})=\R$, or (g) the
+conformally coupled scalar concretely on ESU --- BMS work with \emph{abstract}
+CGMA-nets, citing the conformally coupled scalar (\cite[ref.~12]{Dimock1980},
+\cite[ref.~22]{LudersRoberts1990}) only as a candidate for future work. The
+closing paragraph of \cite{BMS2000} (p.~16, last paragraph before References)
+reads, verbatim:
+\begin{quote}
+``\dots it would also be interesting to determine if the net [12]
+[Dimock 1980] and adiabatic vacuum states [22] [L\"uders--Roberts 1990]
+\dots\ satisfy the CGMA and the Modular Stability Condition for our choice
+of wedges $\widetilde{\mathcal W}$.''
+\end{quote}
+This is the explicit ``open problem'' flag from Buchholz--Mund--Summers
+themselves: even the CGMA / modular stability question for the conformally
+coupled scalar on RW is open in their concluding section, let alone the
+type-classification and Connes-spectrum questions.
+
+\subsection{Residual hypothesis and conditional theorem}\label{sec:H1plus1}
+
+\begin{hypothesis}[H1$_{+1}$, residual form]\label{hyp:H1plus1}
+The wedge net of the conformally coupled massless scalar on the Einstein
+static universe $\R\times S^3$, in its conformally invariant ground state
+$\Omega_\ESU$, has type III$_1$ factors on its spherical-diamond
+subalgebras with full Connes spectrum
+$\Gamma(\sigma^{\rm diamond})=\R$. Equivalently, the net of
+\cite{Dimock1980} combined with the L\"uders--Roberts /
+adiabatic ground state of \cite{LudersRoberts1990} satisfies
+\begin{enumerate}
+\item[(i)] factoriality and type III$_1$ on doubly-bounded spherical
+diamonds, and
+\item[(ii)] $\Gamma(\sigma^{\rm diamond})=\R$.
+\end{enumerate}
+\end{hypothesis}
+
+The hypothesis is \emph{strictly weaker} than ``$\AA(D_\OO^\ESU)_\ESU$
+satisfies all of (a)--(f) above'' because (a)--(d) are now \emph{theorems}
+(BMS \cite{BMS2000}, Theorem~\ref{thm:BMS-31} + Corollary~\ref{thm:BMS-32}
++ Corollary~\ref{thm:BMS-33}) for the dS-transplanted net, with the $\alpha=1$
+limit yielding the conformal RW=dS case unconditionally. Only (e)--(f),
+the type-and-spectrum input, remain.
+
+\begin{theorem}[Closed FRW, $k=+1$, conditional on H1$_{+1}$]\label{thm:closed}
+Let $\varphi$ be the conformally coupled massless scalar on closed FRW with
+smooth strictly positive $a(\eta)$ on the closed conformal-time interval
+$[\eta_i,\eta_f]\subset(0,\eta_*)$ (bounded away from Big Bang and Big
+Crunch), in the conformal vacuum $\Omega_\FRW$. Let $D_\OO\subset
+(\FRW,k=+1)$ be a doubly-bounded comoving causal diamond with conformal-time
+extent $\Delta\eta:=\eta_f-\eta_i$. Let $\sigma^\FRW$ denote the modular
+automorphism group of $(\AA(D_\OO)_\FRW,\Omega_\FRW)$.
+
+Then there exists a unitary $U_{+1}:\HH_\FRW\to\HH_\ESU$ with
+$U_{+1}\Omega_\FRW=\Omega_\ESU$ (Proposition~\ref{prop:U-closed}), and:
+\begin{enumerate}
+\item \textbf{(Wedge level, unconditional via BMS \cite{BMS2000}.)} The
+transplanted wedge algebra $\widetilde{\mathcal R}(\widetilde W_\OO)$
+associated to $D_\OO$ via the BMS transplantation $\Xi$ satisfies
+geometric modular action (CGMA), modular stability and $SO(4,1)$
+covariance with cyclic-separating $\widetilde\Omega$. For $\alpha=1$
+(conformal RW $\simeq$ dS), $\mathcal J$ implements the full
+$SO(4,1)$ conformal group of ESU.
+\item \textbf{(Diamond level, unconditional via BMS Cor.~3.3.)} Provided
+$\Delta\eta>\frac{\pi}{2}(1-\alpha)$, $\widetilde\Omega$ is cyclic for
+the diamond algebra $\widetilde{\mathcal R}(\widetilde D_\OO)$.
+\item \textbf{(Crossed-product type, conditional on H1$_{+1}$.)} Conditional
+on Hypothesis~\ref{hyp:H1plus1},
+$\sigma^\FRW_t=\Ad U_{+1}^{-1}\circ\sigma^\ESU_t\circ\Ad U_{+1}$,
+$\Gamma(\sigma^\FRW)=\R$, and $\AA(D_\OO)_\FRW\rtimes_{\sigma^\FRW}\R$ is a
+type II$_\infty$ factor.
+\end{enumerate}
+\end{theorem}
+
+\begin{proof}
+Items (1)--(2) follow from Proposition~\ref{prop:U-closed} together with the
+verbatim statements of Theorem~\ref{thm:BMS-31} and Corollary~\ref{thm:BMS-33}
+applied to the transplanted wedge / diamond algebra. Item (3) follows by
+the same Tomita--Takesaki + Connes--Takesaki argument as
+Theorem~\ref{thm:open}, using $\Omega_\ESU$ in place of $\Omega_\Milne$:
+Hypothesis~\ref{hyp:H1plus1} delivers the type III$_1$ classification and
+the full Connes spectrum on $\AA(D_\OO^\ESU)_\ESU$ that are needed to apply
+the Connes--Takesaki crossed-product type theorem
+\cite{Connes1973, CLPW2023}, and the W$^*$-isomorphism invariance of
+$\Gamma$ \cite[Prop.~3.4]{Remondiere2026} transports both back to $\AA(D_\OO)_\FRW$.
+\end{proof}
+
+\begin{remark}\label{rem:closed-status}
+Items (1)--(2) of Theorem~\ref{thm:closed} are unconditional in the sense
+that they require no hypothesis beyond the BMS setup; they upgrade the
+``everything is conjectural'' status of the closed-FRW companion theorem
+to ``geometric modular action + modular stability + $SO(4,1)$ covariance +
+cyclicity on long-enough diamonds are theorems; only the type-classification
+of the crossed product remains conditional''. The residual conditional
+input H1$_{+1}$ is narrowed from ``the entire algebraic-quantum-field
+infrastructure'' (where it stood before BMS) to ``factoriality + type
+III$_1$ + Connes spectrum on diamonds'' (where it stands after BMS).
+\end{remark}
+
+\section{Open questions}\label{sec:openq}
+
+\begin{question}[Unconditional H1$_{+1}$]\label{q:H1}
+Prove or refute Hypothesis~\ref{hyp:H1plus1} unconditionally. Three
+strategies suggest themselves: (i) Brunetti--Guido--Longo \cite{BGL1993}
+modular structure for diamonds in conformal QFT, together with the conformal
+embedding $\R^{1,3}\hookrightarrow\ESU$ which covers exactly half of ESU,
+and an $O(2,4)$-conjugation argument transferring the spherical-diamond
+modular generator into the Minkowski half (folklore but not in the
+literature with the precision needed); (ii) explicit $S^3$
+spherical-harmonic mode decomposition adapting Fr\"ob \cite{Frob2023}
+from de~Sitter diamonds to ESU; (iii) extension of the BMS transplantation
+\cite{BMS2000} from abstract CGMA-nets to the concrete
+Dimock--L\"uders--Roberts net \cite{Dimock1980, LudersRoberts1990} of the
+conformally coupled scalar.
+\end{question}
+
+\begin{question}[Big Bang / Big Crunch double-singularity for $k=+1$]\label{q:bbc}
+The closed FRW recollapses at $\eta=\eta_*$ ($=\pi$ for radiation,
+$2\pi$ for matter) in addition to the Big Bang at $\eta=0$. Diamonds
+touching $\eta=\eta_*$ admit the same three obstructions as diamonds
+touching $\eta=0$ (failure of the rescaling bijection, IR singularity of
+the conformal-vacuum two-point function, non-Hadamard boundary behaviour;
+see \cite[Question~6.4]{Remondiere2026}). The inductive-limit construction
+$\AA_0(D_{\rm BC})_\FRW:=\lim_{\eta_f\to\eta_*^-}\AA(D_\OO)_\FRW$ towards
+the Big Crunch may admit a PCT-symmetric counterpart of the Big-Bang
+conjecture in \cite[Question~6.4]{Remondiere2026}.
+\end{question}
+
+\begin{question}[Cosmological no-boundary / Hartle--Hawking states]\label{q:nb}
+The conformal vacuum used throughout is the Bunch--Davies /
+adiabatic-conformal state. For closed FRW the no-boundary
+(Hartle--Hawking) cosmological state and the Linde / Vilenkin tunnelling
+candidates yield different ground states on $\AA(D_\OO^\ESU)_\ESU$. The
+type classification of the resulting modular crossed product, even
+granting H1$_{+1}$ for the conformal-vacuum state, is open --- in
+particular whether the no-boundary state delivers type II$_\infty$ or
+II$_1$ (by analogy with the Bunch--Davies / static-patch dichotomy of CLPW
+\cite{CLPW2023}).
+\end{question}
+
+\section*{Acknowledgements}
+
+This note records the spatially-curved extension of the conformal-pullback
+framework of \cite{Remondiere2026}: the curvature-corrected identity
+\eqref{eq:cc-curved}, the Milne-via-Minkowski composition of
+Section~\ref{sec:open}, and the BMS-conditional formulation of
+Section~\ref{sec:closed}. The author thanks the authors of \cite{BMS2000,
+HislopLongo1982, BGL1993, Wald1984, Wald1994, HollandsWald2001, Verch1997,
+Frob2023, Connes1973, Dimock1980, LudersRoberts1990} on whose works this
+short observation builds.
+
+\bibliographystyle{plain}
+\bibliography{note}
+
+\end{document}

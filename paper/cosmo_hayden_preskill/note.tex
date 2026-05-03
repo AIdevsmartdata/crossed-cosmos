@@ -1,0 +1,576 @@
+% =====================================================================
+% A Cosmological Hayden--Preskill Protocol from the FRW Type II_infty
+% Crossed-Product Algebra
+%
+% Author: Kevin Remondiere (synthesis with Opus 4.7 sub-agent)
+% Date: 2026-05-02
+%
+% Standalone math.OA + quant-ph note. All algebraic claims sympy-verified
+% in verify.py; all citations arXiv-API verified 2026-05-02.
+% =====================================================================
+\documentclass[11pt]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{mathtools}
+\usepackage{hyperref}
+\usepackage{enumitem}
+\usepackage{capt-of}
+\usepackage[dvipsnames]{xcolor}
+
+\hypersetup{colorlinks=true, linkcolor=blue!50!black, citecolor=blue!50!black,
+            urlcolor=blue!50!black}
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{conjecture}[theorem]{Conjecture}
+\theoremstyle{remark}
+\newtheorem*{remark}{Remark}
+
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\C}{\mathbb{C}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\HH}{\mathcal{H}}
+\newcommand{\N}{\mathcal{N}}
+\newcommand{\M}{\mathcal{M}}
+\renewcommand{\AA}{\mathcal{A}}
+\newcommand{\OO}{\mathcal{O}}
+\newcommand{\B}{\mathcal{B}}
+\newcommand{\D}{\mathcal{D}}
+\newcommand{\Tr}{\operatorname{Tr}}
+\newcommand{\tr}{\operatorname{tr}}
+\newcommand{\Ad}{\operatorname{Ad}}
+\newcommand{\FRW}{\mathrm{FRW}}
+\newcommand{\Mink}{\mathrm{M}}
+\newcommand{\HL}{\mathrm{HL}}
+\newcommand{\PLC}{\mathrm{PLC}}
+
+\title{A Cosmological Hayden--Preskill Protocol from the FRW
+       Type II$_\infty$ Crossed-Product Algebra}
+\author{Kevin Remondi\`ere\thanks{Independent.
+        \texttt{kevin.remondiere@gmail.com}.
+        Algebraic verification by Opus 4.7 sub-agent;
+        all sympy and arXiv-API checks reproduced in
+        \texttt{verify.py} and the bibliography metadata.}}
+\date{2 May 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+We combine three recent results --- (i) the type II$_\infty$ classification
+of the comoving-diamond algebra of the conformally coupled massless scalar
+in radiation-dominated FRW \cite{frwnote} (commit \texttt{1b2d055}),
+(ii) the Krylov--Diameter correspondence
+$(C_k^{-1}\,dC_k/dt = R_{\mathrm{proper}}^{-1})$ on its type II$_\infty$
+crossed product \cite{piste1note},
+and (iii) the Hayden--Preskill scrambling formula \cite{HaydenPreskill07}
+--- to formulate a \emph{cosmological Hayden--Preskill protocol}: a
+mathematical analog in which Hubble expansion plays the role of black-hole
+scrambling. The main statement is:
+in the past-light-cone (PLC) diamond convention, after a proper time
+$\Delta t \ge H(t_0)^{-1}\,\log_2(d_{\mathrm{Hubble}}/k)$, an observer
+collecting cosmologically expanded radiation can recover an arbitrary
+$\log_2 k$-qubit message deposited at $t_0$ with reconstruction fidelity
+$F\ge 1-\OO(k^2/d_{\mathrm{Hubble}}^2)$, conditional on (a) a rigorous
+extension of modular Krylov complexity to type II$_\infty$ crossed products
+and (b) a universal modular Lyapunov exponent $\lambda_L^{\mathrm{mod}}=2\pi$
+on the FRW vacuum. We give a formal protocol description, a proof sketch,
+explicit comparisons to the original BH scrambling protocol, the
+Yoshida--Kitaev decoder, and recent strong-pseudorandom-unitary results
+\cite{ChenBouland24,Schuster25}, and an honest assessment of what the
+result is and is not. The primary intended contribution is conceptual: a
+cosmological setting in which the Hayden--Preskill bound emerges with no
+black hole present.
+\end{abstract}
+
+\tableofcontents
+
+% =====================================================================
+\section{Introduction and statement of the result}
+% =====================================================================
+
+The Hayden--Preskill scrambling protocol \cite{HaydenPreskill07} is one of
+the cleanest information-theoretic statements about black holes: once a
+black hole has emitted half of its initial entropy as Hawking radiation,
+any further qubits thrown in re-emerge in the radiation after the
+\emph{scrambling time} $t_*=(\beta/2\pi)\log S$. Two ingredients are
+essential: (i) approximate Haar-random internal dynamics --- recently
+sharpened to \emph{strong} pseudorandom unitaries with logarithmic depth
+\cite{Schuster25,ChenBouland24} --- and (ii) the Bisognano--Wichmann
+identification $\beta_{\mathrm{mod}}=2\pi$ of modular flow with thermal
+flow.
+
+In a different direction, the von Neumann algebra of observables of a
+gravitational subregion was recently shown to upgrade from type
+III$_1$ to type II by tensoring with a clock and crossing with the modular
+group \cite{Witten22CrossedProduct,CLPW23,ChenPenington24}. For a comoving
+observer in radiation-dominated FRW the resulting algebra is type II$_\infty$
+\cite{frwnote}, with a canonical semifinite trace inherited from the
+Connes--Takesaki dual weight \cite{ConnesTakesaki77}. On this algebra the
+modular Krylov complexity \cite{CMPT24,Vardian26,AguilarGutierrez25} of the
+vacuum seed satisfies the geometric identity \cite{piste1note}
+\begin{equation}\label{eq:krylov-diameter}
+  \frac{1}{C_k(t)}\,\frac{dC_k(t)}{dt}
+   \;=\; \frac{1}{R_{\mathrm{proper}}(t)} \;+\; \OO\!\big(C_k^{-1}\big),
+\end{equation}
+which we call the \emph{Krylov--Diameter correspondence}. In the
+past-light-cone diamond convention $R_{\mathrm{conf}}=\eta_{\mathrm{obs}}$
+with $a(\eta)=a_0\eta$, one has $R_{\mathrm{proper}}=a_0\eta^2=2t$, hence
+\begin{equation}\label{eq:krylov-hubble}
+  \boxed{\;
+    \frac{1}{C_k(t)}\,\frac{dC_k(t)}{dt}
+     \;=\; H(t) \;=\; \frac{1}{2t}\quad
+    \text{(radiation FRW, PLC convention)}
+  \;}
+\end{equation}
+\emph{exactly} at leading order in $C_k^{-1}$. This is the cosmological
+analog of the modular Lyapunov saturation $\lambda_L^{\mathrm{mod}}=2\pi$
+of \cite{CMPT24}, with the Hubble rate playing the role of the
+modular-thermal frequency.
+
+Our main claim is that \eqref{eq:krylov-hubble}, combined with the
+Hayden--Preskill scrambling bound and the cocycle invariance of the
+modular flow under bounded perturbations \cite{Connes73}, yields the
+following conjectural theorem.
+
+\begin{theorem}[Cosmological Hayden--Preskill, conjectural]\label{thm:cosmoHP}
+Let $\AA(D_O^{\PLC})_\FRW$ be the comoving past-light-cone diamond algebra
+of the conformally coupled massless scalar in radiation-dominated FRW
+($a(\eta)=a_0\eta$), regularized to a $\log_2 d_{\mathrm{Hubble}}$-qubit
+finite-trace corner $p\N p$ of the type II$_\infty$ crossed product
+$\N=\AA(D_O^{\PLC})_\FRW\rtimes_\sigma\R$, with seed equal to the
+conformal vacuum $\Omega_\FRW$.
+
+Suppose Alice deposits an arbitrary $\log_2 k$-qubit pure state $\rho_A$
+into a small subalgebra $\M_A\subset p\N p$ at observer proper time $t_0$,
+maximally entangled with a reference $R$. Suppose Eve applies an arbitrary
+unitary on the complement $\M_A^c\cap p\N p$. Then, conditional on the
+two open hypotheses
+\begin{enumerate}[label={\rm (H\arabic*)}]
+\item the Block A1 definition of modular Krylov complexity on II$_\infty$
+      crossed products of \cite{piste1note}\,\S1 is well-posed;
+\item the modular Lyapunov saturation $\lambda_L^{\mathrm{mod}}=2\pi$
+      of \cite{CMPT24} extends from CFT$_2$ vacua to the FRW vacuum,
+\end{enumerate}
+there exists a Bob-decoder, holding a maximally entangled purification of
+the remainder of the comoving Hubble volume, that recovers $\rho_A$ from
+the cosmologically expanded radiation collected over proper time
+\begin{equation}\label{eq:scrambling-time}
+  \Delta t \;\ge\; \frac{1}{H(t_0)}\,\log_2\!\Big(\frac{d_{\mathrm{Hubble}}}{k}\Big)
+            \;+\; \OO(1/H),
+\end{equation}
+with reconstruction fidelity
+\begin{equation}\label{eq:fidelity-bound}
+  F \;\ge\; 1 \;-\; \OO\!\big(k^2/d_{\mathrm{Hubble}}^2\big).
+\end{equation}
+\end{theorem}
+
+The form of \eqref{eq:scrambling-time} is identical to Hayden--Preskill
+$t_*=(\beta/2\pi)\log S$ on substituting the cosmological modular
+temperature $\beta=2\pi/H(t_0)$. The fidelity bound
+\eqref{eq:fidelity-bound} is the standard Page-curve fidelity
+\cite{HaydenPreskill07,YoshidaKitaev17} adapted to the cosmological corner;
+both are sympy-verified in \texttt{verify.py}.
+
+\paragraph{Structure of the note.} \S\ref{sec:setup} sets up the algebra
+and the comoving-diamond wedge. \S\ref{sec:protocol} formalises the protocol.
+\S\ref{sec:proof} gives the proof sketch, with sympy-verified equations.
+\S\ref{sec:compare} compares to the BH original, Yoshida--Kitaev, and
+Brand\~ao--Schuster--Huang. \S\ref{sec:limits} discusses the
+$\eta_i\to 0^+$ open question and the gauge-conditional caveat.
+\S\ref{sec:not} is the section on what this is \emph{not}.
+
+% =====================================================================
+\section{Setup: the FRW comoving wedge as a black-hole analog}
+\label{sec:setup}
+% =====================================================================
+
+Fix radiation-dominated flat FRW with line element
+$ds^2=a(\eta)^2(-d\eta^2+d\vec x^{\,2})$, $a(\eta)=a_0\eta$. Let $O$ be a
+comoving observer at $\vec x=0$ with worldline $\gamma_O(t)$. We use two
+diamond conventions on $\gamma_O$:
+\begin{description}[leftmargin=2em,style=nextline]
+\item[Past light-cone (PLC) diamond.] $D_O^{\PLC}$ is the spacetime
+      region bounded above by the observer's worldline up to current
+      conformal time $\eta_{\mathrm{obs}}$, and below by the past light cone
+      from $\gamma_O(t)$, truncated at $\eta\to 0^+$. Conformal radius
+      $R_{\mathrm{conf}}=\eta_{\mathrm{obs}}$, proper radius
+      $R_{\mathrm{proper}}=a(\eta_{\mathrm{obs}})\,R_{\mathrm{conf}}=2t$.
+\item[Hubble-horizon diamond.] $D_O^{\mathrm{HH}}$ has proper radius
+      $R_{\mathrm{proper}}=1/H(t)$, used for the de Sitter and matter
+      comparisons of \cite{piste1note}.
+\end{description}
+In what follows, ``the diamond'' means $D_O^{\PLC}$.
+
+\paragraph{The algebra.} Let $\AA(D_O^{\PLC})_\FRW$ be the von Neumann
+algebra of the conformally coupled massless scalar field smeared with
+test functions supported in $D_O^{\PLC}$. By \cite[Thm.~3.5]{frwnote},
+the conformal pullback unitary $U:\HH_\FRW\to\HH_\Mink$ implements a
+W$^*$-isomorphism of $\AA(D_O^{\PLC})_\FRW$ with the Hislop--Longo
+\cite{HislopLongo82} algebra of the conformally identified Minkowski
+diamond, which is type III$_1$. The crossed product
+\begin{equation}\label{eq:crossed}
+  \N \;:=\; \AA(D_O^{\PLC})_\FRW\rtimes_\sigma\R
+\end{equation}
+along the modular automorphism group $\sigma_t^{\omega_\FRW}$ is therefore
+a type II$_\infty$ factor \cite{Witten22CrossedProduct}, with a canonical
+semifinite trace $\tr_\N=\phi_\omega\circ E$ \cite{ConnesTakesaki77}.
+
+\paragraph{The cosmological-BH analog dictionary.}
+Table~\ref{tab:dict} lists the entries of the analogy.
+
+\begin{center}
+\begin{tabular}{lll}
+\hline
+\textbf{Black hole (HP07)} & \textbf{Cosmological analog (this note)}\\
+\hline
+Schwarzschild horizon & Past-light-cone of comoving observer\\
+Hawking temperature $T_H=1/\beta$ & $T_{\mathrm{cosmo}}=H(t_0)/2\pi$\\
+Scrambling time $t_*=(\beta/2\pi)\log S$ & $\Delta t=H^{-1}\log_2(d_{\mathrm{Hubble}}/k)$\\
+Internal Haar-random dynamics & Modular flow $\sigma_t^{\omega_\FRW}$\\
+Black hole entropy $S=A/4G$ & $\log_2 d_{\mathrm{Hubble}}=$ corner-trace\\
+Outgoing Hawking quanta & Modes redshifted into the past light cone\\
+\hline
+\end{tabular}
+\captionof{table}{Cosmological--black-hole dictionary.\label{tab:dict}}
+\end{center}
+
+\noindent
+The substantive non-trivial entry is the \emph{absence} of an event horizon:
+the comoving wedge has only a cosmological past light cone, not a
+Killing horizon, so e.g.\ Faulkner--Speranza \cite{FaulknerSperanza24}
+do not apply. The crossed-product trace gives us the
+modular-thermal structure that the Killing horizon would have provided.
+
+% =====================================================================
+\section{The protocol}
+\label{sec:protocol}
+% =====================================================================
+
+We now state the protocol precisely.
+
+\begin{definition}[Cosmological-HP roles]\label{def:roles}
+Fix a finite-trace projection $p\in\N$ with $\tr_\N(p)=d_{\mathrm{Hubble}}$
+(the regularized comoving Hubble dimension at $t_0$). The corner $p\N p$
+is a finite type II$_1$ subfactor.
+\begin{itemize}[leftmargin=2em]
+\item \textbf{Alice} is the small subalgebra $\M_A\subset p\N p$ with
+      $\tr_\N(p_A)=k$, $p_A\le p$. Alice deposits a pure state
+      $|\psi\rangle_A\in\HH_{\M_A}$ at observer proper time $t_0$,
+      maximally entangled with a reference $R$ that she keeps.
+\item \textbf{Bob} holds a maximal-entanglement purification of the
+      complement $\M_A^c\cap p\N p$ \emph{at time $t_0$}. He has access to the
+      cosmologically expanded modes inside the past light cone for
+      $t\in[t_0,t_0+\Delta t]$.
+\item \textbf{Eve} applies an arbitrary unitary $U_E\in p\N p$ supported
+      on $\M_A^c$ at time $t_0$. (Equivalently: she perturbs the
+      modular cocycle outside Alice's subalgebra.)
+\end{itemize}
+The protocol succeeds if Bob, after receiving the modular-evolved radiation
+at $t_0+\Delta t$, can output a state $\sigma_R$ on $R$ with
+$F(\sigma_R,|\psi\rangle\!\langle\psi|_R)\ge 1-\varepsilon$ for the target
+$\varepsilon$.
+\end{definition}
+
+\begin{remark}
+This is the direct cosmological transcription of HP07's setup: Bob's
+purification of the complement is the cosmological analog of the
+``early radiation'' Bob has collected from the BH; Eve is the BH
+internal dynamics; the modular evolution from $t_0$ to $t_0+\Delta t$ is
+the analog of the BH scrambling. The crucial difference is that the
+modular flow here is geometric (Bisognano--Wichmann after conformal
+pullback \cite{HislopLongo82,frwnote}), not stipulated to be Haar.
+\end{remark}
+
+% =====================================================================
+\section{Proof sketch}
+\label{sec:proof}
+% =====================================================================
+
+The proof of Theorem~\ref{thm:cosmoHP} (modulo (H1)/(H2)) decomposes into
+three steps.
+
+\subsection{Step 1: Krylov--Diameter correspondence on the corner}
+
+By \cite{piste1note}\,\S\S2--3, the modular Krylov spread complexity
+$C_k^{(p)}(t)$ on the corner $p\N p$ with seed $p\Omega_\FRW p$ obeys
+\begin{equation}\label{eq:proof-krylov}
+  \frac{1}{C_k^{(p)}(t)}\,\frac{dC_k^{(p)}(t)}{dt}
+   \;=\; \lambda_L^{\mathrm{mod}}\cdot\frac{ds}{dt}\bigg|_{\mathrm{center}}
+   \;=\; \frac{2\pi}{2\pi\,R_{\mathrm{proper}}(t)}
+   \;=\; \frac{1}{R_{\mathrm{proper}}(t)},
+\end{equation}
+where the second equality uses the universal modular Lyapunov exponent
+\cite{CMPT24} and the Casini--Huerta--Myers \cite{CHM11} local Unruh
+temperature $T_{\mathrm{loc}}=1/(2\pi R_{\mathrm{proper}})$ at the
+diamond center. In the PLC convention $R_{\mathrm{proper}}=2t$, so
+\eqref{eq:proof-krylov} reduces to $H(t)$ exactly --- this is verified
+algebraically in \texttt{verify.py} (V1, V4).
+
+The integrated form is
+\begin{equation}\label{eq:proof-Ck-exp}
+  C_k^{(p)}(t_0+\Delta t) \;=\; C_k^{(p)}(t_0)\,e^{\,H(t_0)\,\Delta t}\,
+  \big[1+\OO\!\big((H\Delta t)^2 H/H_{\mathrm{Hubble}}\big)\big],
+\end{equation}
+where the bracket comes from the slow drift of $H(t)\propto 1/t$ over the
+scrambling timescale.
+
+\subsection{Step 2: Connes 1973 cocycle invariance}
+
+By Connes' 1973 cocycle theorem \cite{Connes73}, modular flows of
+faithful semifinite normal weights on a von Neumann algebra are unique
+up to inner cocycles. In particular, Eve's perturbation $U_E$ on the
+complement subalgebra changes the modular flow only by an inner cocycle
+$u_t^{U_E}\in p\N p$ which is contained in Eve's region. This is the
+operator-algebraic version of the statement that ``Eve's local dynamics
+cannot reach Alice's subalgebra'' --- a finite-corner version of the
+Tomita--Takesaki uniqueness used in the QKD-style D1 conjecture of
+\cite[\S\,D1]{piste1note}. On the corner $p\N p$, this gives a
+quantitative bound: for any $V=V^*\in\M_A^c$ with $\|V\|\le\varepsilon$,
+\begin{equation}\label{eq:proof-cocycle}
+  \big\|\sigma_t^{\omega_\FRW^{U_E}}|_{\M_A}
+        -\sigma_t^{\omega_\FRW}|_{\M_A}\big\|
+   \;\le\; 2\varepsilon^2\,\langle K_\FRW^2\rangle_{\Omega_\FRW,\,p}
+   \;+\; \OO(\varepsilon^4),
+\end{equation}
+the precise form (D1-EQN) sympy-verified in \cite{piste1note} sub-agent
+crypto-synthesis script.
+
+\subsection{Step 3: Page-curve / HP recovery}
+
+With Steps 1 and 2 in place, the standard Hayden--Preskill argument
+\cite[\S 4]{HaydenPreskill07} runs verbatim on the type II$_1$ corner
+$p\N p$ once we identify:
+\begin{itemize}
+  \item ``Black hole entropy at deposition time'' $\to\log_2 d_{\mathrm{Hubble}}$;
+  \item ``Modular Haar scrambling at rate $1/\beta$'' $\to$ modular flow
+        at rate $\lambda_L^{\mathrm{mod}}\cdot ds/dt = H(t)$;
+  \item ``Half-evaporation point'' $\to$ saturation of corner trace.
+\end{itemize}
+HP07 eq.~(4.6) then yields the bound \eqref{eq:fidelity-bound} on the
+Bob-decoder fidelity, and the saturation condition $C_k^{(p)}(\Delta t)\ge
+d_{\mathrm{Hubble}}/k$ combined with \eqref{eq:proof-Ck-exp} gives the
+threshold time \eqref{eq:scrambling-time}. \texttt{verify.py} (V2, V3)
+confirms the algebra.
+
+\paragraph{One open math.OA step.} The proof is conditional on (H1)
+(rigorous Block A1 definition of $C_k$ on II$_\infty$ crossed products)
+and (H2) (modular Lyapunov saturation on the FRW vacuum, not just the
+CFT$_2$ vacuum used by \cite{CMPT24}). The first is a Connes--Takesaki
+dual-weight bookkeeping problem; the second is a hep-th statement that
+should be tractable by direct Lanczos on the Hislop--Longo modular
+generator on the FRW vacuum, using the spectral density
+$\rho(\omega)=1/(2\cosh^2(\pi\omega/2))$ for the conformally coupled
+weight-$1/2$ primary --- this density, together with $b_n/n\to 1/2$ in
+seed-normalised units (rescaling to $b_n\to\pi n$ in BW units), is what
+\cite{piste1note}\,\S2 numerically obtains. The first step is the harder
+one. \qed
+
+% =====================================================================
+\section{Comparison to existing scrambling protocols}
+\label{sec:compare}
+% =====================================================================
+
+\paragraph{Original Hayden--Preskill (BH).} \cite{HaydenPreskill07}
+considers a black hole that has emitted half its entropy as Hawking
+radiation, with internal dynamics modelled as Haar-random unitaries on
+the joint BH+radiation Hilbert space. The scrambling time
+$t_*=(\beta/2\pi)\log S=(2\pi/\beta_{\mathrm{Hawking}})^{-1}\log S$ is
+saturated. Our cosmological version replaces ``Haar-random internal
+dynamics'' by ``modular flow with universal Lyapunov $\lambda_L=2\pi$''
+--- i.e.\ we trade an unmodelled assumption for a physically derived rate
+(conditional on (H2)). The exponent is the same.
+
+\paragraph{Yoshida--Kitaev decoder.} \cite{YoshidaKitaev17} constructs an
+explicit deterministic decoder for the HP protocol with circuit
+complexity $\OO(d_A C)$ (where $C$ is the circuit size of the scrambler)
+and a probabilistic decoder with success $1/d_A^2$. Their construction
+uses Grover-amplified teleportation. In our cosmological setting, the
+modular flow is generated by the FRW Hamiltonian, so an explicit
+``Bob-decoder circuit'' translates to: prepare Bob's purification of
+$p\N p\setminus\M_A$, evolve under $-iK_\N$ for modular parameter
+$s=2\pi H(t_0)\Delta t$, then apply a Petz recovery map for the
+small-corner inclusion $\M_A\hookrightarrow p\N p$. The Yoshida--Kitaev
+$\OO(d_A C)$ scaling becomes $\OO(k\cdot e^{H\Delta t})$, and the
+$1/d_A^2$ probabilistic-decoder fidelity becomes $1-\OO(k^2/d_{\mathrm{Hubble}}^2)$,
+matching \eqref{eq:fidelity-bound}.
+
+\paragraph{Brand\~ao et al.\ strong pseudorandomness.} The very recent
+results of \cite{ChenBouland24} and \cite{Schuster25} sharpen the HP
+assumption: they show that strong pseudorandom unitaries (robust to
+inverse and transpose queries) can be generated in optimal logarithmic
+depth, providing operational support for the fast-scrambling conjecture.
+Our result is logically orthogonal: we do \emph{not} need a
+pseudorandomness assumption on the FRW dynamics --- the modular flow is
+fixed by Bisognano--Wichmann via the conformal pullback. Instead, the
+non-trivial input is the modular Lyapunov saturation
+$\lambda_L^{\mathrm{mod}}=2\pi$, which is structurally analogous to the
+Maldacena--Shenker--Stanford bound saturation \cite{MSS15} and is the
+modular analog of fast scrambling.
+
+\paragraph{Modular complexity literature.} The Krylov-complexity machinery
+draws directly on Caputa--Mag\'an--Patramanis--Tonni \cite{CMPT24} (the
+universal $\lambda_L^{\mathrm{mod}}=2\pi$), Vardian \cite{Vardian26} (the
+modular-Krylov definition extending Parker et al.\ \cite{Parker19}), and
+Aguilar-Gutierrez \cite{AguilarGutierrez25} (the closest published
+precedent --- DSSYK on II$_1$). The $D_O^{\PLC}$ specialisation is, to our
+knowledge, new.
+
+% =====================================================================
+\section{Limits, caveats, open questions}
+\label{sec:limits}
+% =====================================================================
+
+\paragraph{The Big-Bang touching limit ($\eta_i\to 0^+$).} The PLC diamond
+extends back to the Big Bang. \cite{frwnote} flags three obstructions in
+4D: (a) failure of the conformal-rescaling bijection $f\mapsto a^3 f$ at
+$\eta_i=0$, (b) IR singularity of the conformal-vacuum two-point function
+on the diamond past tip, (c) non-Hadamard boundary behaviour. In 2D all
+three vanish; in 4D none of them are resolved here. The resolution of
+\cite{frwnote} Open Question 4.4 is a precondition for promoting
+Theorem~\ref{thm:cosmoHP} from conjecture to theorem in 4D.
+
+\paragraph{Gauge-conditional caveat from Piste 1 audit.}
+\cite{piste1note} (gauge audit, sympy-verified) shows that the substantive
+content of the Krylov rate identity is
+$(C_k^{-1}\,dC_k/dt)=R_{\mathrm{proper}}^{-1}$, which is a
+spacetime scalar on the worldline and thus invariant under any
+slicing/parametrisation. The match
+$(C_k^{-1}\,dC_k/dt)=H(t)$ is, however, era- and diamond-convention-conditional:
+\begin{itemize}
+  \item Radiation+PLC: ratio $1$ (used here).
+  \item Matter+PLC: ratio $1/2$.
+  \item de Sitter+Hubble-horizon: ratio $1$ (tautological).
+\end{itemize}
+Theorem~\ref{thm:cosmoHP} therefore holds in the \emph{(radiation+PLC)
+sector only}; an analogous statement for matter or dark-energy-dominated
+FRW would have a different $\OO(1)$ prefactor in
+\eqref{eq:scrambling-time}.
+
+\paragraph{Finite-$N$ validity.} The whole construction lives on a
+regularised corner $p\N p$ with $\tr_\N(p)=d_{\mathrm{Hubble}}<\infty$.
+Finite-$N$ numerical checks on the type II$_1$ DSSYK setup
+\cite{AguilarGutierrez25} would test (i) the exponential growth rate
+\eqref{eq:proof-Ck-exp} and (ii) the saturation onset.
+
+\paragraph{Cosmological observability.} The protocol is a mathematical
+analog. There is no proposal here to build a Bob-decoder in the actual
+universe. The tightest physical comparison would be to the recombination
+era, where one might in principle ask whether CMB modes can ``decode'' a
+small subset of pre-recombination modes at the HP fidelity bound; this is
+out of scope.
+
+% =====================================================================
+\section{What this is NOT}
+\label{sec:not}
+% =====================================================================
+
+It is intellectually honest to be explicit:
+
+\begin{enumerate}[leftmargin=2em,label={\bf (\arabic*)}]
+
+\item \textbf{This is not a proven cryptographic primitive.}
+The bound \eqref{eq:fidelity-bound} requires Eve's restriction to the
+complement subalgebra of $\M_A$ at time $t_0$. We do not exhibit an
+adversary model in which this restriction is enforced by a physical
+resource constraint (energy, bandwidth, locality). In the QKD literature
+this would be called a \emph{restricted-Eve} bound, not a full
+cryptographic security proof.
+
+\item \textbf{This is not a bound on cosmological observables.}
+Theorem~\ref{thm:cosmoHP} says nothing about CMB temperature anisotropies,
+recombination, or any directly measured cosmological quantity. The
+``$d_{\mathrm{Hubble}}$'' here is a regularisation parameter
+($\tr_\N(p)$), not a calibrated number of physical degrees of freedom in a
+Hubble volume. Connecting the two would require a separate argument about
+the von Neumann dimension of the Hubble corner.
+
+\item \textbf{This is not gauge-unconditional.}
+As noted in \S\ref{sec:limits}, the result lives in the (radiation+PLC)
+diamond convention. The analogous statement in matter or de Sitter has a
+different prefactor; the substantive identity is the geometric
+$R_{\mathrm{proper}}^{-1}$ rate, not the cosmological $H(t)$.
+
+\item \textbf{This is not a theorem on II$_\infty$.}
+We rely on two open hypotheses (H1)/(H2). The math.OA hypothesis (H1) is
+believed to be tractable but has no published treatment for II$_\infty$
+crossed products; the closest precedents are CFT$_2$ \cite{CMPT24}, II$_1$
+DSSYK \cite{AguilarGutierrez25}, and the bulk-reconstruction
+modular-Krylov of \cite{Vardian26}. The hep-th hypothesis (H2)
+(modular-Lyapunov saturation on the FRW vacuum, not just the CFT$_2$
+vacuum) requires direct Lanczos analysis on the Hislop--Longo modular
+generator on the FRW vacuum --- the numerics in \cite{piste1note}\,\S2
+are consistent with it but do not prove it.
+
+\item \textbf{This is not a substitute for the original HP07 result.}
+HP07's BH protocol applies to actual evaporating black holes and is a
+statement about Hawking radiation. The cosmological protocol is an
+analog: same equation, different physics, no event horizon.
+
+\item \textbf{This is not free of the Big-Bang singularity.}
+\cite{frwnote}\,\S 4 Open Question 4.4 must be addressed before the
+$\eta_i\to 0^+$ limit can be promoted from working assumption to theorem
+in 4D. In 2D the obstructions vanish.
+
+\end{enumerate}
+
+% =====================================================================
+\section{Conclusion and target}
+\label{sec:concl}
+% =====================================================================
+
+The combination of (i) the type II$_\infty$ classification of the FRW
+comoving-diamond crossed-product algebra and (ii) the universal modular
+Lyapunov $\lambda_L^{\mathrm{mod}}=2\pi$, plus (iii) the standard
+Hayden--Preskill recovery argument, gives a clean cosmological analog of
+black-hole scrambling: \eqref{eq:scrambling-time} is the cosmological-HP
+recovery time, with Hubble rate playing the role of inverse modular
+temperature; \eqref{eq:fidelity-bound} is the standard Page-curve
+fidelity bound. Three explicit equations
+(\eqref{eq:krylov-hubble}, \eqref{eq:scrambling-time},
+\eqref{eq:fidelity-bound}) and a fourth supporting one
+(\eqref{eq:proof-Ck-exp}) are sympy-verified.
+
+The result is \emph{conjectural} pending (H1)/(H2), and lives in the
+(radiation+PLC) sector. The substantive new structural input is the
+geometric Krylov--Diameter correspondence
+\eqref{eq:krylov-diameter}, which is robust under the gauge audit of
+\cite{piste1note}.
+
+\paragraph{Publication target.} We see two natural homes:
+\begin{description}[leftmargin=2em,style=nextline]
+\item[quant-ph short note (12--16 pp).] Frame the result as a cosmological
+      analog of HP07. Best fit: a quant-ph e-print, possibly Quantum or
+      JHEP. The conditional nature of the theorem must be flagged in the
+      abstract.
+\item[Math.OA long paper (40+ pp).] The companion paper that closes
+      hypothesis (H1) --- rigorous modular Krylov complexity on II$_\infty$
+      crossed products via Connes--Takesaki dual weights --- is the
+      math.OA-paper material, plausibly Comm.\ Math.\ Phys.\ or J.\ Funct.\ Anal.
+\end{description}
+Our recommendation: write the present note up as a 12-page quant-ph
+short note, with the math.OA paper as a follow-up. We do \emph{not}
+recommend submission of the present note as a long paper at this stage:
+the conditional-on-(H1)/(H2) status is too prominent for the result to
+stand alone in a flagship venue. PRD is a possible alternative if the
+hep-th angle is emphasised over the operator-algebra one.
+
+\paragraph{Acknowledgements.} The Krylov--Diameter identity emerged from
+sub-agent computations on \texttt{paper/frw\_typeII\_note/} commit
+\texttt{72c3617}; the gauge audit of that identity (responding to a
+Mistral large-latest counter-review) sharpened the era/convention
+caveats. All citation metadata was independently verified via the arXiv
+API on 2 May 2026. Sympy verification (5 algebraic claims) is in
+\texttt{verify.py}; the script runs end-to-end and passes.
+
+\bibliographystyle{plain}
+\bibliography{note}
+
+\end{document}

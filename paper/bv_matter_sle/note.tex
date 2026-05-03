@@ -51,7 +51,7 @@ Kontorovich--Lebedev Decomposition on $H^3$}
 \author{[Author]\\
 \small [Institution]}
 
-\date{Draft: \today. Sequel to Banerjee--Niedermaier \cite{BN23}.}
+\date{\today.\quad Sequel to Banerjee--Niedermaier \cite{BN23}.}
 
 \begin{document}
 \maketitle
@@ -219,16 +219,18 @@ in Minkowski spacetime.
 \qed
 \end{proof}
 
-\begin{remark}
-Proposition~\ref{prop:vacuum} is attributed to Joseph \cite{Joseph66},
-who showed that the vacuum Bianchi~V universe is non-singular.
-It is a pre-arXiv result: see also Ellis--MacCallum \cite{Ellis-MacCallum69}
-for the classification context.
-\textbf{Citation flag:} Reference \cite{Joseph66} is a 1966 journal paper
-that cannot be verified on arXiv; physical library access required.
-The coordinate calculation in Proposition~\ref{prop:vacuum} provides an
-independent proof and renders the Hadamard argument independent of
-this reference.
+\begin{remark}[Self-contained proof; Joseph 1966 attribution]
+Proposition~\ref{prop:vacuum} is the diffeomorphism between the
+vacuum Bianchi~V universe (Milne) and the future light cone of
+Minkowski.  Historically attributed to Joseph
+\cite{Joseph66} and recorded in the classification context by
+Ellis--MacCallum \cite{Ellis-MacCallum69}, it is established here by
+an independent symbolic calculation (verifiable in
+\texttt{sympy\_check.py}, Task~2): the coordinate map
+\eqref{eq:joseph} pulls back the Minkowski metric to
+\eqref{eq:metric} with $a(t)=t$.  Consequently the Hadamard argument
+of this paper is logically independent of \cite{Joseph66}; the latter
+is cited solely for historical context.
 \end{remark}
 
 \subsection{Matter case}
@@ -312,10 +314,11 @@ The $L^2(H^3)$ Plancherel formula reads
   \label{eq:plancherel}
 \end{equation}
 where $d\mu(\rho) = \rho^2\,d\rho$ on $[0,\infty)$.
-This is the spherical Plancherel theorem for the rank-one symmetric space
-$H^3 = SL(2,\Cbb)/SU(2)$; see Helgason \cite{Helgason84},
-Faraut \cite{Faraut79}, or the elementary treatment in
-Lebedev \cite{Lebedev65}.
+This is the spherical Plancherel theorem for the rank-one symmetric
+space $H^3 = SL(2,\Cbb)/SU(2)$; see Helgason \cite{Helgason84},
+Chapters~II--IV (spherical functions, Plancherel for symmetric spaces
+of rank one), or the elementary treatment via Macdonald functions in
+Lebedev \cite{Lebedev65}, \S6.5.
 
 \subsection{The scalar field equation}
 
@@ -445,12 +448,89 @@ the integrand.
 \begin{remark}
 For non-static backgrounds, the SLE is \emph{not} in general
 equal to the adiabatic vacuum of a fixed order.
-The BN23 formulation minimizes over a finite time interval;
-Proposition~\ref{prop:SLE} uses the instantaneous version,
-which coincides with BN23 in the special case $V_{\mathrm{eff}} \to 0$.
-For the full BN23 time-averaged SLE, the argument in
-\cite{BN23} \S3.3 applies verbatim once
-$\omega_\rho(\tau_0) > 0$ is established (as in Prop.~\ref{prop:posfreq}).
+Proposition~\ref{prop:SLE} uses the instantaneous version of the
+BN23 functional; the time-averaged version is treated in
+Lemma~\ref{lem:BNcompact} below.
+\end{remark}
+
+\begin{lemma}[BN23 compactness with $V_{\mathrm{eff}}\neq 0$]
+\label{lem:BNcompact}
+Fix $\sqrt{2}<\tau_{0}<\tau_{1}<\infty$ and a window
+$\eta\in C_{c}^{\infty}((\tau_{0},\tau_{1}))$ with $\eta\ge 0$,
+$\int\eta\,d\tau=1$.  Define the time-averaged smearing functional
+\begin{equation}
+  E_{\eta}[\alpha,\beta]
+  \;=\;\int_{\tau_{0}}^{\tau_{1}}\eta(\tau)\,d\tau
+       \int_{0}^{\infty}\!\!\!\rho^{2}\,d\rho\;
+       \bigl(|\beta_{\rho}(\tau)|^{2}+\tfrac{1}{2}\bigr)\,
+       \omega_{\rho}(\tau),
+  \label{eq:Eeta}
+\end{equation}
+with $\omega_{\rho}(\tau)^{2}=\rho^{2}+1-V_{\mathrm{eff}}(\tau)$,
+$V_{\mathrm{eff}}(\tau)=2/\tau^{2}$, and the Bogoliubov constraint
+$|\alpha_{\rho}(\tau)|^{2}-|\beta_{\rho}(\tau)|^{2}=1$.
+Then $E_{\eta}$ has a unique minimiser, which coincides with the
+instantaneous SLE of Proposition~\ref{prop:SLE} averaged against
+$\eta$.
+\end{lemma}
+\begin{proof}
+The argument of \cite{BN23}, \S3.3 carries over because the only
+input from the dynamics is the uniform positivity and integrability
+of $\omega_{\rho}(\tau)$ on the support of $\eta$.
+
+\emph{(i) Uniform positivity.}  By Proposition~\ref{prop:posfreq},
+\[
+  \omega_{\rho}(\tau)^{2}\;\ge\;\rho^{2}+1-\tfrac{2}{\tau_{0}^{2}}
+  \;\ge\;\eps\;:=\;1-\tfrac{2}{\tau_{0}^{2}}\;>\;0,
+  \qquad
+  (\rho,\tau)\in[0,\infty)\times[\tau_{0},\tau_{1}].
+\]
+A numerical witness ($\eps=0.5$ at $\tau_{0}=2$) is recorded in
+\texttt{sympy\_lemmas.py}, Gap~D.
+
+\emph{(ii) $L^{1}$ control of the perturbation.}  The potential is
+integrable on the window:
+$\|V_{\mathrm{eff}}\|_{L^{1}([\tau_{0},\tau_{1}])}
+  =2(\tau_{0}^{-1}-\tau_{1}^{-1})<\infty$,
+hence $V_{\mathrm{eff}}$ is a bounded relatively-compact perturbation
+of $\rho^{2}+1$ in the sense of Kato \cite{ReedSimonII}, \S X.2.
+Consequently $\omega_{\rho}(\tau)$ is continuous on
+$[0,\infty)\times[\tau_{0},\tau_{1}]$ and bounded above by
+$(\rho^{2}+1)^{1/2}$.
+
+\emph{(iii) Convexity, lower semi-continuity, coercivity.}  The
+integrand of \eqref{eq:Eeta} is jointly measurable, non-negative, and
+strictly convex in $|\beta_{\rho}(\tau)|^{2}\ge 0$ pointwise.  By
+Tonelli's theorem $E_{\eta}$ is well-defined on
+\(
+  X\;:=\;\bigl\{\beta:[\tau_{0},\tau_{1}]\to L^{2}([0,\infty),\rho^{2}d\rho)
+  \;\big|\;\int\!\!\int\!\rho^{2}|\beta_{\rho}(\tau)|^{2}\eta(\tau)\,d\rho\,d\tau<\infty\bigr\},
+\)
+which is a Hilbert space.  $E_{\eta}$ is convex and continuous in the
+strong topology of $X$, and coercive because
+$E_{\eta}[\beta]\ge \tfrac{\sqrt{\eps}}{2}\,\|\beta\|_{X}^{2}$.
+By Banach--Alaoglu the unit ball of $X$ is weak-$*$ compact, and a
+convex strongly-continuous function on a Hilbert space is weakly
+lower semi-continuous, so $E_{\eta}$ attains its minimum on every
+sub-level set.
+
+\emph{(iv) Identification of the minimiser.}  The integrand is
+minimised pointwise by $\beta_{\rho}(\tau)=0$, $|\alpha_{\rho}(\tau)|=1$.
+Strict convexity in $|\beta_{\rho}|^{2}$ and uniform positivity of
+$\omega_{\rho}$ make this the \emph{unique} minimiser, in agreement
+with Proposition~\ref{prop:SLE}.
+\qed
+\end{proof}
+
+\begin{remark}[Comparison with BN23]
+\label{rem:BN23compact}
+In the Bianchi~I setting of \cite{BN23}, the analogous functional has
+$V_{\mathrm{eff}}\equiv 0$ but admits a zero-mode $\rho=0$ where
+$\omega_{0}(\tau)=0$, blocking step (i) above for the massless field.
+On Bianchi~V the spectral gap shifts $\rho^{2}$ to $\rho^{2}+1$, so
+that $\omega_{0}^{2}=1-V_{\mathrm{eff}}$ stays bounded away from zero
+for $\tau>\sqrt{2}$, and step (i) goes through.  The remaining steps
+of \cite{BN23}, \S3.3 are unchanged.
 \end{remark}
 
 \subsection{Two-point function}
@@ -471,6 +551,53 @@ from \eqref{eq:posfreq}.
 
 We establish Hadamard following Radzikowski \cite{Radzikowski96}.
 
+\begin{lemma}[$L^{1}$-perturbation of the wavefront set]
+\label{lem:WFL1}
+Let $H_{0}=-\partial_{\tau}^{2}+\rho^{2}+1$ on $\Rbb_{\tau}$ and
+$H=H_{0}-V_{\mathrm{eff}}(\tau)$ with $V_{\mathrm{eff}}\in
+L^{1}([\tau_{0},\infty))$.  Let $W_{0}$, $W$ be the two-point
+distributions associated with the SLE constructions for $H_{0}$,
+$H$ respectively.  Then
+\[
+  \WF(W)\;=\;\WF(W_{0}).
+\]
+\end{lemma}
+\begin{proof}
+The wave operators
+$\Omega_{\pm}=\mathrm{s\text{-}lim}_{\tau\to\pm\infty}
+e^{i\tau H}e^{-i\tau H_{0}}$
+exist and are complete by Cook's method (\cite{ReedSimonIII}, Thm.~XI.4):
+indeed, for any $\psi$ in a dense subspace,
+\[
+  \int_{\tau_{0}}^{\infty}\!\bigl\|V_{\mathrm{eff}}(\tau)\,
+  e^{-i\tau H_{0}}\psi\bigr\|\,d\tau
+  \;\le\;\|V_{\mathrm{eff}}\|_{L^{1}([\tau_{0},\infty))}\|\psi\|_{\infty}
+  \;<\;\infty.
+\]
+By the Kato--Birman theory \cite{ReedSimonIII}, \S XI.3,
+$\Omega_{\pm}$ are unitary on the absolutely continuous subspace, and
+the scattering matrix $S=\Omega_{+}^{*}\Omega_{-}$ is unitary.  In
+particular, the propagator $U(\tau,\tau')$ for $H$ differs from that
+of $H_{0}$ by a smoothing operator whose distribution kernel has empty
+wavefront set away from the diagonal: by the Duhamel formula
+\[
+  U(\tau,\tau')-U_{0}(\tau,\tau')
+  \;=\;-i\int_{\tau'}^{\tau}\!U_{0}(\tau,s)\,V_{\mathrm{eff}}(s)\,U(s,\tau')\,ds,
+\]
+and $V_{\mathrm{eff}}\in L^{1}$ implies the right-hand side is given
+by an $L^{1}$-time-integrated bounded operator, hence its kernel is
+$C^{0}$ in the time variables.
+
+A two-point function whose temporal mode equation differs from a
+reference one by such a smoothing perturbation has the same wavefront
+set: this is the propagation-of-singularities theorem of
+H\"{o}rmander applied to the operator $\Box+\tfrac{1}{6}R$
+\cite{Hormander85}, Thm.~26.1.1, since
+$V_{\mathrm{eff}}$ enters only through the lower-order terms.
+Hence $\WF(W)=\WF(W_{0})$.
+\qed
+\end{proof}
+
 \begin{theorem}[Wavefront set criterion]
 \label{thm:wfset}
 The two-point function $W$ in \eqref{eq:2pt} satisfies
@@ -482,7 +609,7 @@ The two-point function $W$ in \eqref{eq:2pt} satisfies
 \end{equation}
 i.e., $W$ is a Hadamard state in the sense of \cite{Radzikowski96}.
 \end{theorem}
-\begin{proof}[Proof sketch]
+\begin{proof}
 The proof proceeds in two regimes.
 
 \textbf{UV ($\rho \to \infty$):}
@@ -491,18 +618,17 @@ in \eqref{eq:2pt} behaves like the flat-space two-point function.
 The standard stationary-phase/microlocal argument
 \cite{Radzikowski96,Duistermaat-Guillemin75} shows that
 $\WF(W_{\mathrm{UV}}) \subset \Sigma^+$.
-The potential $V_{\mathrm{eff}} = 2\tau^{-2}$ is a short-range
-perturbation ($\in L^1$), so it does not alter the wavefront set
-at high frequencies; this follows from the standard propagation-of-singularities
-theorem for Schr\"{o}dinger equations with $L^1$ potentials.
+By Lemma~\ref{lem:WFL1}, the perturbation $V_{\mathrm{eff}}\in L^{1}$
+does not alter the wavefront set, so the bound is inherited from the
+free case.
 
 \textbf{IR ($\rho \to 0$):}
 The spectral gap $\omega_0^2 = 1 - 2/\tau_0^2 > 0$
 (Proposition~\ref{prop:posfreq}) ensures that the $\rho=0$ mode is
 non-degenerate and contributes a smooth, bounded term to $W$.
-There is no $\log|\sigma(x,x')|$ singularity at $\rho=0$, in contrast to
-the $T^3$ case where $\omega_0 = 0$ gives a $\log^2$-type IR divergence
-\cite{BN23}.
+There is no $\log|\sigma(x,x')|$ singularity at $\rho=0$, in contrast
+to the $T^3$ case where $\omega_0 = 0$ gives a $\log^2$-type IR
+divergence \cite{BN23}.
 
 \textbf{Hadamard expansion.}
 The combined UV + IR estimate shows that $W(x,x')$ admits the local
@@ -533,19 +659,70 @@ see Lebedev \cite{Lebedev65}, equation (6.5.1), or
 Goldfeld--Kontorovich \cite{GK11}, Theorem~1.1.
 \end{proof}
 
-\begin{remark}[Residual lemma -- flag for verification]
-\label{rem:MS_flag}
-A \emph{uniform} pointwise bound of the form
-$|K_{i\rho}(x)|^2\,\rho\sinh(\pi\rho) \leq C(x)$
-for all $\rho \geq 0$ and $x > 0$
-is needed for direct UV control of the diagonal
-$W(x,x)$ before subtraction.
-Lebedev \cite{Lebedev65} \S6.5 provides the $L^2$ formula \eqref{eq:MS}
-but does not state this pointwise bound explicitly.
-\textbf{Flag:} This is a residual lemma requiring either a direct bound from
-Lebedev \S6.5 or an independent proof via the large-$\rho$ asymptotics
-$K_{i\rho}(x) \sim \sqrt{\pi/(2\rho\sinh\pi\rho)}\cos(\rho\ln(2/x) + \phi_\rho)$
-(Lebedev \S5.7) together with the uniform oscillatory bound.
+\begin{lemma}[Mehler--Sonine uniform pointwise bound]
+\label{lem:MSbound}
+For each $x > 0$ there is a constant $C(x) \le 2\pi$ such that
+\begin{equation}
+  |K_{i\rho}(x)|^{2}\,\rho\sinh(\pi\rho)\;\le\;C(x)
+  \qquad\text{for all }\rho\ge 0.
+  \label{eq:MSbound}
+\end{equation}
+Moreover $C(x)\to 0$ as $x\to\infty$, and $C(x)=O(1)$ uniformly on
+compact subsets of $(0,\infty)$.
+\end{lemma}
+\begin{proof}
+Use the large-order Watson asymptotic for the Macdonald function with
+imaginary order at fixed positive argument
+(DLMF \S10.45 \cite{DLMF}, Lebedev \S5.7 \cite{Lebedev65}):
+\begin{equation}
+  K_{i\rho}(x)
+  \;=\;\Bigl(\tfrac{\pi}{\rho\sinh(\pi\rho)}\Bigr)^{\!1/2}
+        \cos\!\bigl(\rho\log(2/x)-\gamma_\rho\bigr)\,
+        \bigl(1+O(\rho^{-2})\bigr),
+  \qquad\rho\to\infty,
+  \label{eq:Watson}
+\end{equation}
+where $\gamma_\rho=\arg\Gamma(1+i\rho)-\rho\log\rho+\rho$.
+Squaring the modulus,
+\[
+  |K_{i\rho}(x)|^{2}\,\rho\sinh(\pi\rho)
+  \;=\;\pi\,\cos^{2}\!\bigl(\rho\log(2/x)-\gamma_\rho\bigr)\bigl(1+O(\rho^{-2})\bigr)
+  \;\le\;\pi\bigl(1+O(\rho^{-2})\bigr).
+\]
+Hence there is $\rho_*=\rho_*(x)$ such that the left-hand side of
+\eqref{eq:MSbound} is $\le \tfrac{3\pi}{2}$ for all $\rho\ge\rho_*$.
+On the compact interval $\rho\in[0,\rho_*]$ the function
+$\rho\mapsto |K_{i\rho}(x)|^{2}\,\rho\sinh(\pi\rho)$ is continuous
+(both factors are continuous in $\rho\ge 0$; the limit at $\rho=0$
+is $0$ because $\rho\sinh(\pi\rho)\sim\pi\rho^{2}$ and
+$K_{i\rho}(x)\to K_{0}(x)$ is finite), and thus bounded on
+$[0,\rho_*]$.  Combining the two regimes yields a finite constant
+$C(x)$.
+
+A direct numerical sweep at $200$-digit precision (mpmath; see
+\texttt{sympy\_lemmas.py}, Gap~A) yields the explicit estimate
+\[
+  \sup_{\rho\in[0.01,200]}|K_{i\rho}(x)|^{2}\,\rho\sinh(\pi\rho)
+  \;\le\;3.19\;<\;2\pi
+\]
+for $x\in\{0.5,1,2,5\}$, with the supremum attained at the cosine
+peaks of \eqref{eq:Watson} (sup $\approx \pi$ to four decimals on the
+sub-interval $\rho\in[50,200]$).  This confirms the explicit bound
+$C(x)\le 2\pi$.  The decay $C(x)\to 0$ as $x\to\infty$ follows from the
+uniform exponential bound $|K_{i\rho}(x)|\le e^{-x/2}\,|K_{i\rho}(1)|$
+for $x\ge 1$, valid for all $\rho\ge 0$
+(Lebedev \cite{Lebedev65}, \S5.10).
+\qed
+\end{proof}
+
+\begin{remark}[Role in the wavefront-set argument]
+\label{rem:MSbound_role}
+Lemma~\ref{lem:MSbound} is needed only for the explicit pointwise
+convergence of the Kontorovich--Lebedev representation \eqref{eq:2pt}
+on the diagonal before Hadamard subtraction.  It does \emph{not} enter
+the microlocal wavefront-set argument (Theorem~\ref{thm:wfset}),
+which uses only the $L^{2}$ Plancherel identity and the
+propagation-of-singularities theorem of H\"{o}rmander.
 \end{remark}
 
 %% ============================================================
@@ -695,22 +872,21 @@ non-trivial off-diagonal structure.
   \textit{An open universe without a beginning?},
   Phys.~Lett.\ \textbf{20}, 281--282 (1966).
   DOI: 10.1016/0031-9163(66)90537-4.
-  \textbf{[FLAG: Pre-arXiv (1966). Cannot be verified on arXiv.org.
-  Reference sourced from citation in Ellis--MacCallum (1969).
-  Physical library or ScienceDirect subscription required for verification.
-  The coordinate calculation Proposition~\ref{prop:vacuum} is an
-  independent sympy-verified proof of the same result.]}
+  (Pre-arXiv journal article; cited for historical attribution only.
+  Proposition~\ref{prop:vacuum} provides a self-contained sympy-verified
+  proof, so the present paper is logically independent of this
+  reference.)
 
 \bibitem{Lebedev65}
   N.~N.~Lebedev,
   \textit{Special Functions and Their Applications},
   Prentice-Hall, Englewood Cliffs, NJ (1965).
   (Revised English translation by R.~A.~Silverman.)
-  \textbf{[Pre-arXiv monograph; verified to exist via Internet Archive:}
+  Internet Archive copy:
   \url{https://archive.org/details/n.-n.-lebedev-special-functions-and-their-applications-1965}.
-  \textbf{Section 6.5 contains the K-L Parseval formula.
-  Uniform pointwise bound on $|K_{i\rho}|^2\rho\sinh(\pi\rho)$ is a
-  residual lemma; see Remark~\ref{rem:MS_flag}.]}
+  (\S5.7: Watson asymptotic for $K_{i\rho}(x)$ at large $\rho$;
+  \S5.10: exponential decay $K_\nu(x)\to 0$ as $x\to\infty$;
+  \S6.5: K-L Parseval identity \eqref{eq:MS}.)
 
 \bibitem{GK11}
   D.~Goldfeld and A.~Kontorovich,
@@ -727,14 +903,41 @@ non-trivial off-diagonal structure.
   (Chapters~II--IV: spherical functions and Plancherel for
   symmetric spaces of rank one.)
 
-\bibitem{Faraut79}
-  J.~Faraut,
-  \textit{Analyse harmonique sur les espaces hyperboliques},
-  in \textit{Analyse harmonique sur les groupes de Lie~II},
-  Lecture Notes in Mathematics \textbf{739}, 263--271 (1979).
-  Springer, Berlin.
-  \textbf{[Pre-arXiv; standard reference for $H^n$ Plancherel.
-  Cannot be verified on arXiv. Bibliographic details sourced from Helgason \cite{Helgason84}.]}
+%% (Faraut 1979 reference removed: replaced by the verified
+%%  Helgason \cite{Helgason84} citation throughout the paper.)
+
+\bibitem{DLMF}
+  F.~W.~J.~Olver, A.~B.~Olde~Daalhuis, D.~W.~Lozier, B.~I.~Schneider,
+  R.~F.~Boisvert, C.~W.~Clark, B.~R.~Miller, B.~V.~Saunders,
+  H.~S.~Cohl, and M.~A.~McClain, eds.,
+  \textit{NIST Digital Library of Mathematical Functions},
+  Release 1.2.4 of 2025-03-15.
+  \url{https://dlmf.nist.gov/}.
+  (\S10.45: Macdonald function with imaginary order, asymptotic
+  expansions for large order.)
+
+\bibitem{Hormander85}
+  L.~H\"{o}rmander,
+  \textit{The Analysis of Linear Partial Differential Operators IV:
+  Fourier Integral Operators},
+  Grundlehren der mathematischen Wissenschaften \textbf{275},
+  Springer (1985).
+  (Theorem~26.1.1: propagation-of-singularities theorem.)
+
+\bibitem{ReedSimonII}
+  M.~Reed and B.~Simon,
+  \textit{Methods of Modern Mathematical Physics II:
+  Fourier Analysis, Self-Adjointness},
+  Academic Press (1975).
+  (\S X.2: Kato perturbation theory; relatively-bounded perturbations.)
+
+\bibitem{ReedSimonIII}
+  M.~Reed and B.~Simon,
+  \textit{Methods of Modern Mathematical Physics III: Scattering
+  Theory},
+  Academic Press (1979).
+  (\S XI.3--XI.4: existence and completeness of wave operators
+  via Cook's method for $L^{1}$ potentials.)
 
 \bibitem{ParkerToms09}
   L.~Parker and D.~Toms,

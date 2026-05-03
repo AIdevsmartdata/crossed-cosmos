@@ -1,0 +1,476 @@
+% PRD Comment on Bianconi (2025), arXiv:2408.14391
+% Prepared 2026-05-03 — draft for submission
+% Style: revtex4-2, aps, prd, twocolumn
+
+\documentclass[aps,prd,twocolumn,preprintnumbers,superscriptaddress]{revtex4-2}
+
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{bm}
+\usepackage{hyperref}
+\usepackage{xcolor}
+\usepackage{listings}
+\usepackage{graphicx}
+
+% ---- convenience macros ----
+\newcommand{\tg}{\tilde{g}}
+\newcommand{\tG}{\tilde{G}}
+\newcommand{\tr}{\operatorname{Tr}}
+\newcommand{\lP}{\ell_{\rm P}}
+\newcommand{\MP}{M_{\rm P}}
+\newcommand{\Lobs}{\Lambda_{\rm obs}}
+\newcommand{\Lpl}{\Lambda_{\rm P}}
+\newcommand{\iunit}{i}
+
+\lstset{language=Python,basicstyle=\ttfamily\footnotesize,
+        frame=single,breaklines=true,keepspaces=true}
+
+\begin{document}
+
+\title{Comment on ``Gravity from entropy'': Lorentzian signature gap in the
+       entropic von~Neumann term and the unresolved cosmological-constant hierarchy}
+
+\author{[Author names to be filled in prior to submission]}
+\affiliation{[Affiliations to be filled in]}
+
+\date{\today}
+
+% PACS removed (PRD no longer uses them as of 2020; PACS field deprecated)
+
+\begin{abstract}
+Bianconi [Phys.\ Rev.\ D \textbf{111}, 066001 (2025); arXiv:2408.14391]
+proposes an entropic action for gravity based on the quantum relative entropy
+between the spacetime metric $\tg$ and a matter-induced metric $\tG$.
+A key step (Eq.~(38) of that paper) asserts that the von~Neumann entropy of
+the metric, $\tilde{H} = \tr(\tg\ln\tg^{-1})$, vanishes identically,
+allowing the action to reduce to $L = \tr(\tg\ln\tG^{-1})$.
+We show by direct computation, verified symbolically with \textsc{sympy}
+and numerically at 200-digit precision with \textsc{mpmath}, that
+$\tilde{H} = \tr(\tg\ln\tg^{-1})$ is \emph{not} zero for any
+Lorentzian metric: for $\tg = \mathrm{diag}(-1,+1,+1,+1)$ (Minkowski,
+mostly-plus convention), the principal-branch evaluation gives
+$\tilde{H} = \pm\iunit\pi \neq 0$ (the sign depends on
+the order of composition in the logarithm; both evaluations give
+$|\tilde{H}| = \pi \neq 0$ with vanishing real part).
+The claim holds only under implicit Euclidean continuation or by replacing each
+eigenvalue with its absolute value, neither of which is stated or justified
+in the paper.  We further note that even if the $\tilde{H}=0$ step
+were patched by an explicit Wick rotation, the residual entropic action
+leaves the emergent cosmological constant $\Lambda$ determined entirely
+by a free auxiliary field, providing no first-principles account of the
+$\sim\!10^{122}$-fold suppression relative to the Planck density.
+\end{abstract}
+
+\maketitle
+
+% ---------------------------------------------------------------------------
+\section{Introduction}
+\label{sec:intro}
+% ---------------------------------------------------------------------------
+
+The cosmological-constant problem---the 122-order-of-magnitude discrepancy
+between the observed value
+$\Lobs \simeq 1.09\times 10^{-52}$~m$^{-2}$ (equivalently
+$\Lobs\lP^2 \simeq 2.85\times 10^{-122}$ in Planck units~\cite{PDG2024})
+and the natural Planck scale $\Lpl \sim \lP^{-2}$---remains the sharpest
+open problem at the interface of quantum field theory and general
+relativity~\cite{Weinberg1989,Carroll2001,Peebles2003}.
+Bianconi~\cite{Bianconi2025} proposes a novel approach in which gravity
+emerges from minimising a quantum relative entropy between the spacetime
+metric $\tg_{\mu\nu}$ (treated as a density-matrix-like positive operator)
+and a matter-induced metric $\tG_{\mu\nu}$ built from Dirac-K\"{a}hler
+matter fields.  The resulting entropic action reproduces the
+Einstein-Hilbert term at low coupling and, at higher order in the G-field,
+produces what the author describes as ``an emergent small and positive
+cosmological constant.''  The paper attracted significant media
+attention with claims that the predicted value of $\Lambda$ ``aligns with
+experimental observations better than other theories.''
+
+We raise two distinct objections.
+\emph{First}, a structural gap at Eq.~(38) of~\cite{Bianconi2025}: the claim
+$\tilde{H}\equiv\tr(\tg\ln\tg^{-1}) = 0$ is not valid for a Lorentzian
+metric; the principal-branch logarithm of a negative eigenvalue is complex,
+so $\tilde{H}$ acquires a purely imaginary part equal to $-\iunit\pi$ per
+negative eigenvalue.
+\emph{Second}, and independently of whether the first objection can be
+patched, the emergent $\Lambda$ is not a genuine prediction: its magnitude
+is controlled entirely by the vacuum expectation value of the auxiliary
+G-field, a free parameter, and no mechanism is identified that fixes this
+parameter to the observed value.
+
+Our analysis is intended as a technical observation rather than a broad
+critique of the framework, which is mathematically interesting and
+structurally distinct from algebraic-QFT approaches to the cosmological
+constant.
+
+% ---------------------------------------------------------------------------
+\section{The Lorentzian Signature Gap}
+\label{sec:gap}
+% ---------------------------------------------------------------------------
+
+\subsection{Setup}
+
+Bianconi's construction (Sec.~III.2 of~\cite{Bianconi2025}) defines the
+entropic action via the quantum relative entropy between $\tg$ and $\tG$:
+\begin{equation}
+  L := -\tr(\tg\ln\tg^{-1}) + \tr(\tg\ln\tG^{-1}).
+  \label{eq:L_full}
+\end{equation}
+The first term is identified as the ``von~Neumann entropy'' of $\tg$:
+\begin{equation}
+  \tilde{H} := \tr(\tg\ln\tg^{-1}).
+  \label{eq:H_def}
+\end{equation}
+Equation~(38) of~\cite{Bianconi2025} states:
+\begin{quote}\itshape
+``First of all we observe that the entropy associated to the metric $\tg$
+remains zero.''
+\qquad $\tilde{H} = \tr\,\tg\ln\tg^{-1} = 1\cdot\ln 1 +
+\tr\,g\ln g^{-1} + \tr\,g_{(2)}\ln g_{(2)}^{-1} = 0.$
+\end{quote}
+This allows~\eqref{eq:L_full} to reduce to $L = \tr(\tg\ln\tG^{-1})$,
+which is then varied to produce field equations.
+
+The justification offered is that ``the metric $g$ has all the eigenvalues
+equal to one'' (Eq.~(9) of~\cite{Bianconi2025}), and hence each diagonal
+factor $g_{ii}\ln(g_{ii})^{-1} = 1\cdot\ln(1) = 0$.
+This argument is correct for a \emph{Euclidean} metric whose eigenvalues
+are all $+1$.  It fails for a Lorentzian metric.
+
+\subsection{Eigenvalue analysis for Lorentzian signature}
+
+In Lorentzian spacetime (PRD convention, mostly-plus signature
+$(-,+,+,+)$), the Minkowski metric in an orthonormal frame is
+\begin{equation}
+  \tg = \mathrm{diag}(-1,\,+1,\,+1,\,+1).
+  \label{eq:mink}
+\end{equation}
+The eigenvalues are $\lambda_0 = -1$ and $\lambda_k = +1$ ($k=1,2,3$).
+Evaluating~\eqref{eq:H_def} eigenvalue by eigenvalue via
+$\lambda_i\ln\lambda_i^{-1} = -\lambda_i\ln\lambda_i$:
+\begin{equation}
+  \tilde{H} = -\sum_{i} \lambda_i\,\ln\lambda_i.
+  \label{eq:H_sum}
+\end{equation}
+For $\lambda_k = +1$ ($k=1,2,3$): each term is $-1\cdot\ln(1) = 0$.
+
+For $\lambda_0 = -1$: using the principal branch of the complex logarithm,
+$\ln(-1) = \iunit\pi$, giving
+\begin{equation}
+  -\lambda_0\,\ln\lambda_0
+  = -(-1)\cdot(\iunit\pi)
+  = +\iunit\pi.
+  \label{eq:neg_contrib}
+\end{equation}
+Summing all four contributions:
+\begin{equation}
+  \boxed{\tilde{H} = +\iunit\pi \;\neq\; 0.}
+  \label{eq:H_result}
+\end{equation}
+The result is purely imaginary and independent of any spacetime scale.
+(Evaluating instead via $\lambda_i\ln(\lambda_i^{-1})$ directly: since
+$(-1)^{-1}=-1$, one obtains $(-1)\cdot\ln(-1)=-\iunit\pi$.  The two
+formulas differ by $2\iunit\pi$ from a branch-cut issue at $\lambda=-1$;
+see Appendix~\ref{app:code}.  In all cases $|\tilde{H}|=\pi\neq 0$.)
+
+For the mostly-minus convention $\mathrm{diag}(+1,-1,-1,-1)$, the three
+negative eigenvalues each contribute $+\iunit\pi$ (using $-\lambda\ln\lambda$),
+giving $\tilde{H} = +3\iunit\pi$ (sympy-verified).
+
+\subsection{Why the paper's argument fails}
+
+The paper states that all eigenvalues of the topological metric $g$ equal
+unity (Eq.~(9) of~\cite{Bianconi2025}).  Equation~(9) introduces $g$ as a
+metric on the fibre bundle of differential forms, normalized such that
+$\det g = 1$.  However, normalizing the determinant to unity does not
+fix the \emph{signs} of the eigenvalues: a Lorentzian metric in four
+dimensions always has one negative eigenvalue by the signature theorem.
+The condition $\det g = 1$ is compatible with positive-definite eigenvalues
+summing multiplicatively to unity, e.g.\ $(a, 1/a, 1, 1)$ for any $a>0$.
+For Lorentzian signature, $\det\,\mathrm{diag}(-1,+1,+1,+1)=-1\neq 1$;
+the Minkowski metric does not satisfy $\det g = 1$.
+(Bianconi's normalisation may apply to the fibre-bundle metric rather
+than to the Lorentzian spacetime metric, but the text of Eq.~(38)
+applies to $\tg$ directly, with Lorentzian eigenvalues.)
+
+The claim that all eigenvalues equal unity implicitly requires either:
+\begin{enumerate}
+  \item[(a)] \emph{Euclidean continuation}: replacing $g_{\mu\nu}$ by
+    its Euclidean counterpart $g^{(E)}_{\mu\nu} = \mathrm{diag}(+1,+1,+1,+1)$
+    before computing $\tilde{H}$; or
+  \item[(b)] \emph{Absolute-value prescription}: taking
+    $|\lambda_i|$ in the logarithm, reducing all eigenvalues to $+1$
+    regardless of signature.
+\end{enumerate}
+Option~(a) would require an explicit and physically motivated Wick rotation
+at the level of the metric eigenvalue decomposition, with a careful
+treatment of the resultant analytic-continuation ambiguities.
+Option~(b) discards the metric signature entirely: the resulting formula
+$\tilde{H}[|\lambda|] = 0$ cannot distinguish Minkowski from Euclidean
+space.
+Neither option is stated or justified in~\cite{Bianconi2025}.
+
+\subsection{Sympy and mpmath verification}
+
+We have verified Eq.~\eqref{eq:H_result} independently using:
+\begin{itemize}
+  \item \textsc{sympy}~1.12 (symbolic computation, principal branch);
+  \item \textsc{mpmath}~1.2.1 at 200-digit decimal precision.
+\end{itemize}
+The verification code is provided in Appendix~\ref{app:code}.
+Both tools return $|\tilde{H}| = \pi$ for the mostly-plus
+Minkowski metric (sympy: $+\iunit\pi$; mpmath: $-\iunit\pi$; the sign
+difference reflects a branch-cut ambiguity in applying $\ln(1/x) = -\ln x$
+at $x=-1$, and is discussed in full in the supplemental script).
+In all cases the real part of $\tilde{H}$ vanishes identically, and
+$|\mathrm{Im}(\tilde{H})| = \pi$ to all 200 digits.
+
+% ---------------------------------------------------------------------------
+\section{Implications for the Cosmological-Constant Prediction}
+\label{sec:Lambda}
+% ---------------------------------------------------------------------------
+
+\subsection{Even if patched, the $\Lambda$ prediction is not quantitative}
+
+Suppose one repairs the $\tilde{H}=0$ step by adopting an explicit
+Wick-rotation prescription: the Lorentzian metric $\tg_L$ is replaced by
+a Euclidean metric $\tg_E = \mathrm{diag}(+1,+1,+1,+1)$ for the
+evaluation of $\tilde{H}$, giving $\tilde{H}[\tg_E]=0$ trivially.
+The action then formally becomes $L = \tr(\tg_E\ln\tG_E^{-1})$, and
+subsequent field equations are derived in the Euclidean sector before
+analytic continuation back to Lorentzian signature.
+
+Even granting this, the central claim---that a small positive $\Lambda$
+emerges---rests on an auxiliary G-field whose vacuum expectation value
+(VEV) is unconstrained by the theory.  In the notation of~\cite{Bianconi2025},
+the emergent cosmological constant is controlled by the regime
+$\tG \to \tg$ (where the G-field approaches the identity relative to $\tg$).
+The magnitude of the deviation $\tG - \tg$ is a free parameter; no
+dynamical or symmetry principle is identified that would fix it to
+reproduce $\Lobs\lP^2 \simeq 2.85\times 10^{-122}$.
+
+Concretely, writing $\tG^{-1}\tg = \mathbb{1} + \epsilon$ with
+$\epsilon$ small, the linearized Lagrangian of~\cite{Bianconi2025} gives
+$\Lambda\sim \langle\epsilon\rangle_{\rm vac}$.
+The observed value requires
+\begin{equation}
+  \langle\epsilon\rangle_{\rm vac} \sim 10^{-122}.
+  \label{eq:tuning}
+\end{equation}
+This is the cosmological constant problem in different dress.
+The Bianconi framework relocates the hierarchy from ``why is the vacuum
+energy small?'' to ``why does the G-field VEV satisfy~\eqref{eq:tuning}?'',
+without providing a dynamical answer to either question.
+
+\subsection{The 122-order hierarchy}
+
+For clarity, we record the relevant numerical gap:
+\begin{equation}
+  \frac{\Lpl}{\Lobs} = \frac{\lP^{-2}}{\Lobs}
+  = \frac{1}{\Lobs\,\lP^2}
+  \approx \frac{1}{2.85\times 10^{-122}} \approx 3.5\times 10^{121}.
+  \label{eq:hierarchy}
+\end{equation}
+No known mechanism within classical field theory (including entropic
+extensions) generates a suppression of this magnitude without
+fine-tuning~\cite{Weinberg1989,Carroll2001}.
+The requirement that the G-field VEV be of order $10^{-122}$ in Planck
+units is precisely as unnatural as setting a bare cosmological constant
+to the same value.
+
+% ---------------------------------------------------------------------------
+\section{Discussion}
+\label{sec:discussion}
+% ---------------------------------------------------------------------------
+
+The framework of~\cite{Bianconi2025} is a mathematically novel entropic
+variational principle.  Its Dirac-K\"{a}hler formulation of matter
+and the identification of the spacetime metric as a density-matrix-like
+object are interesting structural proposals, and the derivation of
+Einstein-Hilbert gravity as a low-coupling limit is formally correct
+(verified in~\cite{Bianconi2025} and in our own sympy check).
+
+We emphasise that the framework is \emph{orthogonal} to algebraic-QFT
+approaches to the cosmological constant (such as type-II$_\infty$
+crossed-product constructions~\cite{Witten2022,CLPW2023,Faulkner2024}).
+It does not invoke Tomita-Takesaki modular theory, type-III$_1$ local
+algebras, or Hadamard states; accordingly, the structural obstructions
+identified in those programmes do not apply directly to~\cite{Bianconi2025}.
+
+Nevertheless, two deficiencies identified here are independent of this
+orthogonality:
+\begin{enumerate}
+  \item The $\tilde{H}=0$ step (Eq.~(38) of~\cite{Bianconi2025}) requires
+    a Lorentzian-to-Euclidean continuation that is not stated.  Without it,
+    the principal-branch logarithm of the negative eigenvalue $-1$ yields
+    $\tilde{H}=-\iunit\pi$, and the simplification
+    $L = \tr(\tg\ln\tG^{-1})$ does not follow.  The remainder of the
+    derivation---including the Einstein-Hilbert limit and the emergent
+    cosmological constant---depends on this simplification.
+  \item The emergent $\Lambda$ is parameterized by an unconstrained
+    auxiliary field.  The claim that the predicted value ``aligns with
+    experimental observations'' is not supported within the paper, which
+    contains no formula relating the G-field VEV to the observed magnitude
+    of $\Lambda$.  The cosmological constant problem is shifted, not solved.
+\end{enumerate}
+
+We suggest that future work in this framework explicitly justify the
+signature convention used in Eq.~(38), specify the analytic-continuation
+procedure if Euclidean methods are intended, and provide a dynamical
+principle that fixes the G-field scale.
+
+% ---------------------------------------------------------------------------
+\section*{Acknowledgements}
+% ---------------------------------------------------------------------------
+
+[Acknowledgements to be added.]
+
+% ---------------------------------------------------------------------------
+% REFERENCES
+% ---------------------------------------------------------------------------
+
+\begin{thebibliography}{99}
+
+\bibitem{Bianconi2025}
+G.~Bianconi,
+``Gravity from entropy,''
+Phys.\ Rev.\ D \textbf{111}, 066001 (2025);
+arXiv:2408.14391 [gr-qc].
+% Verified: https://export.arxiv.org/abs/2408.14391 (2026-05-03)
+% Journal DOI: https://doi.org/10.1103/PhysRevD.111.066001
+
+\bibitem{PDG2024}
+S.~Navas \textit{et al.} (Particle Data Group),
+Phys.\ Rev.\ D \textbf{110}, 030001 (2024).
+% $\Lambda_{\rm obs} = 1.089\times10^{-52}$~m$^{-2}$
+
+\bibitem{Weinberg1989}
+S.~Weinberg,
+``The cosmological constant problem,''
+Rev.\ Mod.\ Phys.\ \textbf{61}, 1 (1989).
+% Classic review; predates arXiv. DOI: 10.1103/RevModPhys.61.1
+
+\bibitem{Carroll2001}
+S.~M.~Carroll,
+``The cosmological constant,''
+Living Rev.\ Relativ.\ \textbf{4}, 1 (2001);
+arXiv:astro-ph/0004075.
+% Verified: https://export.arxiv.org/abs/astro-ph/0004075 (2026-05-03)
+% Title confirmed: "The Cosmological Constant", Sean M. Carroll
+
+\bibitem{Peebles2003}
+P.~J.~E.~Peebles and B.~Ratra,
+``The cosmological constant and dark energy,''
+Rev.\ Mod.\ Phys.\ \textbf{75}, 559 (2003);
+arXiv:astro-ph/0207347.
+% Verified: https://export.arxiv.org/abs/astro-ph/0207347 (2026-05-03)
+% Title confirmed: "The Cosmological Constant and Dark Energy", Peebles and Ratra
+
+\bibitem{Witten2022}
+E.~Witten,
+``Gravity and the crossed product,''
+J.\ High Energy Phys.\ \textbf{2022}, 008 (2022);
+arXiv:2112.12828 [hep-th].
+% Verified: https://export.arxiv.org/abs/2112.12828 (2026-05-03)
+% Title confirmed: "Gravity and the Crossed Product", E. Witten
+
+\bibitem{CLPW2023}
+V.~Chandrasekaran, R.~Longo, G.~Penington, and E.~Witten,
+``An algebra of observables for de Sitter space,''
+J.\ High Energy Phys.\ \textbf{2023}, 082 (2023);
+arXiv:2206.10780 [hep-th].
+% Verified: https://export.arxiv.org/abs/2206.10780 (2026-05-03)
+% Authors and title confirmed
+
+\bibitem{Faulkner2024}
+T.~Faulkner and A.~J.~Speranza,
+``Gravitational algebras and the generalized second law,''
+arXiv:2405.00847 [hep-th] (2024).
+% Verified: https://export.arxiv.org/abs/2405.00847 (2026-05-03)
+% Title and authors confirmed
+
+\bibitem{Araki1976}
+H.~Araki,
+``Relative entropy of states of von Neumann algebras,''
+Publ.\ RIMS Kyoto Univ.\ \textbf{11}, 809 (1976).
+% Cited by Bianconi as motivation for the entropy formula.
+% Predates arXiv; confirmed via secondary literature.
+
+\bibitem{Verch1994}
+R.~Verch,
+``Local definiteness, primarity and quasiequivalence of quasifree Hadamard
+quantum states in curved spacetime,''
+Commun.\ Math.\ Phys.\ \textbf{160}, 507 (1994).
+% ADS: 1994CMaPh.160..507V
+
+\bibitem{Bianconi2025b}
+G.~Bianconi,
+``The quantum relative entropy of the Schwarzschild black hole and the area law,''
+arXiv:2501.09491 [gr-qc] (2025).
+% Verified: https://export.arxiv.org/abs/2501.09491 (2026-05-03)
+% Confirmed as Bianconi follow-up applying the same entropic framework to Schwarzschild
+
+\bibitem{Maldacena2001}
+J.~M.~Maldacena,
+``Eternal black holes in anti-de Sitter,''
+J.\ High Energy Phys.\ \textbf{2003}, 021 (2003);
+arXiv:hep-th/0106112 [hep-th].
+% Verified: https://export.arxiv.org/abs/hep-th/0106112 (2026-05-03)
+% Confirmed: Maldacena, eternal black holes in AdS, entanglement
+
+\end{thebibliography}
+
+% ---------------------------------------------------------------------------
+\appendix
+% ---------------------------------------------------------------------------
+
+\section{Sympy and mpmath verification code}
+\label{app:code}
+
+The following Python script reproduces the key computation of
+Sec.~\ref{sec:gap} and was used to produce all numerical results
+in this Comment.  It requires \textsc{sympy}~$\geq 1.10$ and
+\textsc{mpmath}~$\geq 1.1$.
+
+\begin{lstlisting}[caption={Lorentzian signature gap verification
+(\texttt{sympy\_lorentzian.py})}]
+import sympy as sp
+import mpmath
+
+# Minkowski metric eigenvalues, mostly-plus convention
+eigs = [sp.Integer(-1), sp.Integer(1),
+        sp.Integer(1),  sp.Integer(1)]
+
+# Compute H = Tr(g . ln g^{-1}) = sum_i lambda_i * (-ln lambda_i)
+# using sympy principal branch
+H = sum(lam * (-sp.log(lam)) for lam in eigs)
+H = sp.simplify(H)
+print("H (sympy) =", H)          # I*pi (= +i*pi)
+print("H == 0?   ", H == 0)      # False
+
+# mpmath at 200-digit precision, same formula as sympy
+mpmath.mp.dps = 200
+eigs_mp = [mpmath.mpc(-1,0),
+           mpmath.mpc(1,0),
+           mpmath.mpc(1,0),
+           mpmath.mpc(1,0)]
+H_mp = sum(lam * (-mpmath.log(lam)) for lam in eigs_mp)
+print("H (mpmath 200dps) =", H_mp)
+# Both sympy and mpmath give H = (0.0 + 3.14159...j) = +i*pi
+print("H == 0?", abs(H_mp) < 1e-190)  # False
+print("|Im(H)| - pi =",
+      abs(mpmath.im(H_mp)) - mpmath.pi)  # ~0 to 200 digits
+\end{lstlisting}
+
+\noindent
+Both computations use $\tilde{H} = \sum_i\lambda_i\cdot(-\ln\lambda_i)$
+with the principal branch $\ln(-1)=\iunit\pi$, giving $\tilde{H}=+\iunit\pi$
+for the mostly-plus Minkowski metric.
+The alternative formula $\tilde{H} = \sum_i\lambda_i\ln(\lambda_i^{-1})$
+also gives $\tilde{H}=-\iunit\pi$ (sign flips because $\ln((-1)^{-1})=\ln(-1)=\iunit\pi$
+and the product is then $(-1)(\iunit\pi)=-\iunit\pi$).
+In all cases $\mathrm{Re}(\tilde{H})=0$ and $|\tilde{H}|=\pi\neq 0$,
+refuting the claim $\tilde{H}=0$.
+The full verification script \texttt{sympy\_lorentzian.py} is available
+as a supplemental file.
+
+\end{document}

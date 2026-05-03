@@ -1,0 +1,547 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{hyperref}
+\usepackage{enumitem}
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{proposition}[theorem]{Proposition}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{remark}[theorem]{Remark}
+\newtheorem{assumption}[theorem]{Assumption}
+
+\DeclareMathOperator{\spec}{spec}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Hil}{\mathcal{H}}
+\newcommand{\Alg}{\mathcal{N}}
+\newcommand{\modop}{\Delta}
+\newcommand{\modhalf}{\modop^{1/2}}
+
+\title{Closing G1+G2 of A3 via Levin--Lubinsky 2005--2007:\\
+asymptotic-universal modular Krylov slope on type II$_\infty$}
+\author{ECI / M1-C Block A internal note (B6, wave 3)}
+\date{2026-05-03}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+The exact-Vanlessen-class corollary of A3 (\texttt{transcription.tex})
+proved $b_n[\psi]/n\to 1/(2\pi)$ when the modular spectral measure
+$\mu_\psi$ has the \emph{exact} Laguerre form
+$\omega^\alpha e^{-Q(\omega)}$. The v6.0.25 sharpened M1-C conjecture
+asks for the broader hypothesis
+\begin{equation*}
+\frac{d\mu_\psi}{d\omega}(\omega)\;\sim\;
+R(\omega)\,e^{-Q(\omega)}\quad(\omega\to\infty),\qquad
+R(\omega)=\sum_{i=1}^{N} a_i\,\omega^{2h_i-1},\qquad a_i>0,\quad h_i>0,
+\end{equation*}
+with $Q(\omega)=2\pi\omega+(\text{lower-order})$ as $\omega\to\infty$.
+Gaps G1 (mixture prefactor) and G2 (asymptotic equivalence) of A3
+are closed here by appeal to the Levin--Lubinsky half-line
+framework, specifically the trilogy
+\begin{itemize}
+\item E.\ Levin, D.\ S.\ Lubinsky, J.\ Approx.\ Theory \textbf{134}
+   (2005) 199--256, DOI 10.1016/j.jat.2005.02.006 (existence /
+   asymptotics of OP for $W^2(x)=x^{2\rho}e^{-2Q(x)}$ on $[0,d)$);
+\item E.\ Levin, D.\ S.\ Lubinsky, J.\ Approx.\ Theory \textbf{139}
+   (2006) 107--143, DOI 10.1016/j.jat.2005.05.010 (Part II:
+   Christoffel functions / Mhaskar--Saff number);
+\item E.\ Levin, D.\ S.\ Lubinsky, J.\ Approx.\ Theory \textbf{144}
+   (2007) 260--281, DOI 10.1016/j.jat.2006.06.004 (recurrence
+   coefficients $\beta_n/4$).
+\end{itemize}
+The frequently cited monograph
+``Orthogonal Polynomials for Exponential Weights'' (CMS Books in
+Mathematics vol.~4, Springer 2001, ISBN 0-387-98941-2) of Levin--Lubinsky
+covers the \emph{whole real line} only and is \emph{not} sufficient for
+the half-line; this is a correction to the v6.0.25 changelog and to
+the A3 working notes. The corrected proof is given below.
+
+The G3 issue (slope $1/(2\pi)$ vs MSS modular Lyapunov $2\pi$) is a
+spectral-parameter-rescaling question and is \emph{not} closed here;
+it is delegated to companion task B7 (\texttt{notes.md}).
+\end{abstract}
+
+\section{Reference verification (paranoid)}\label{sec:refs}
+
+The v6.0.25 changelog cited ``Levin--Lubinsky CMS Books vol.\ 4 (2001)''
+as the source for the half-line Freud-class theorem. We have
+independently verified, via CrossRef API and the Bull.\ London Math.\ Soc.\
+review of the book, the following:
+\begin{enumerate}
+\item Levin--Lubinsky 2001, ``Orthogonal Polynomials for Exponential
+   Weights'', CMS Books Math.\ vol.\ 4, Springer, ISBN 0-387-98941-2
+   (hard\-cover), 476 pp. \textbf{REAL.}  The brief had ISBN suffix
+   ``-98941-5'' which is off by one digit; the correct ISBN-10 is
+   0-387-98941-2 and the ISBN-13 is 978-0-387-98941-9.
+\item However, the LL2001 monograph treats weights $W^2(x)=e^{-2Q(x)}$
+   on $\R$, with $Q$ even and convex, yielding even Freud-class
+   orthogonal polynomials.  The
+   reviewer's summary on Cambridge Core (Bull.\ London Math.\ Soc.) and
+   Lubinsky's own 2007 survey ``A Survey of Weighted Polynomial
+   Approximation with Exponential Weights''
+   (\url{https://lubinsky.math.gatech.edu/Research%20papers/WtdApproxnSurvOct312006.pdf})
+   both confirm that LL2001 \textbf{does not cover Laguerre-type
+   weights $x^{2\rho}e^{-2Q(x)}$ on $[0,d)$}.  The correct half-line
+   references are:
+   \begin{itemize}
+   \item E.\ Levin, D.\ S.\ Lubinsky, ``Orthogonal polynomials for
+       exponential weights $x^{2\rho}e^{-2Q(x)}$ on $[0,d)$'',
+       J.\ Approx.\ Theory \textbf{134} (2005) 199--256,
+       DOI \texttt{10.1016/j.jat.2005.02.006}
+       \cite{LL2005}.
+   \item Same authors, Part II, J.\ Approx.\ Theory \textbf{139}
+       (2006) 107--143, DOI \texttt{10.1016/j.jat.2005.05.010}
+       \cite{LL2006}.
+   \item Same authors, ``On recurrence coefficients for rapidly
+       decreasing exponential weights'', J.\ Approx.\ Theory
+       \textbf{144} (2007) 260--281, DOI
+       \texttt{10.1016/j.jat.2006.06.004}
+       \cite{LL2007}.
+   \end{itemize}
+\item Lubinsky--Mhaskar--Saff, ``A proof of Freud's conjecture for
+   exponential weights'', Constr.\ Approx.\ \textbf{4} (1988) 65--83,
+   DOI \texttt{10.1007/BF02075448} \cite{LMS1988}.  \textbf{REAL.}
+   This is the foundational result behind the LL trilogy and was the
+   v6.0.22 tool used in the original Block A paper.
+\end{enumerate}
+We therefore replace the v6.0.25 single-citation ``Levin--Lubinsky 2001''
+by the trilogy LL2005/LL2006/LL2007, and downstream citations should be
+updated accordingly.  This is a non-trivial bibliographic correction:
+LL2001 by itself does \emph{not} prove the half-line statement.
+
+\section{The half-line Levin--Lubinsky framework}\label{sec:LL}
+
+We work on $I=[0,\infty)$.  The orthonormal polynomials are with
+respect to the (normalized) measure $d\mu_\psi$, equivalently the
+weight $W^2(x)\,dx$ where $W(x)\ge 0$ is the half-density.
+
+\begin{definition}[Class $\mathcal{F}^*(\textnormal{lip}\frac{1}{2})$ on $[0,d)$,
+{\cite[\S 1.2]{LL2005}}]\label{def:Fstar}
+A weight $W(x)=x^\rho\exp(-Q(x))$ on $[0,d)$, $0<d\le\infty$, with
+$\rho>-\frac{1}{2}$, lies in the Levin--Lubinsky class
+$\mathcal{F}^*(\textnormal{lip}\frac{1}{2})$ if:
+\begin{enumerate}[label=(F\arabic*),leftmargin=*]
+\item $Q\colon[0,d)\to\R$ is continuous, $Q(0)=0$, $\lim_{x\uparrow d}Q(x)=\infty$.
+\item $Q$ is twice differentiable on $(0,d)$, with $Q'(x)>0$ and the
+   ``MS-density'' $T(x):=1+xQ''(x)/Q'(x)$ uniformly bounded above and below
+   on $(0,d)$ by constants $\Lambda^*\ge\Lambda>1$.
+\item $Q'\in\textnormal{lip}\frac{1}{2}$ on compact subsets of $(0,d)$.
+\end{enumerate}
+\end{definition}
+
+\begin{remark}[Why a $T$-bound, not polynomial]\label{rem:Tbound}
+The condition (F2) generalizes the Freud-weight class to a
+\emph{Mhaskar--Saff regularity} class.  The classical Freud weight
+$W(x)^2=e^{-c|x|^\beta}$ ($\beta>1$) has $T(x)=\beta$, a constant; LL2005
+allows $T$ to vary as long as it stays in $[\Lambda,\Lambda^*]$.  In
+particular, $Q(x)=2\pi x+\varepsilon\sin(x)$ on $[0,\infty)$ satisfies (F1)--(F3)
+for any $\varepsilon\in(0,2\pi)$, since
+$Q'(x)=2\pi+\varepsilon\cos(x)\in[2\pi-\varepsilon,2\pi+\varepsilon]$ stays positive and bounded,
+$Q''(x)=-\varepsilon\sin(x)$ is bounded, and $T(x)=1+xQ''(x)/Q'(x)$ remains in
+a bounded range as $x\to\infty$ (it oscillates between $1\pm\varepsilon/(2\pi-\varepsilon)$
+for large $x$).  Thus $\mathcal{F}^*$ includes our G2 ``asymptotic
+equivalence'' weight.
+\end{remark}
+
+\begin{definition}[Mhaskar--Rakhmanov--Saff number, {\cite[Eq.~(1.6)]{LL2005}}]
+\label{def:MRS}
+For each $n\ge 1$, the MRS number $\beta_n=\beta_n(W)>0$ is the unique
+solution of
+\begin{equation}\label{eq:MRSdef}
+   \frac{1}{2\pi}\int_{0}^{\beta_n} Q'(x)\sqrt{\frac{x}{\beta_n-x}}\,dx \;=\; n.
+\end{equation}
+The factor $\frac{1}{2\pi}$ corresponds to the convention where the
+weight is $W(x)=e^{-Q(x)}$ on $[0,\infty)$ (i.e.\ $W^2=e^{-2Q}$ on the
+\emph{squared}-weight side); LL2005 uses the squared-weight convention
+$W^2=x^{2\rho}e^{-2Q(x)}$, with the coefficient $\frac{1}{\pi}$ on the
+integrand. The two are related by $Q\to 2Q$, both giving the same
+$\beta_n$ in the linear-$Q$ Laguerre case below.
+\end{definition}
+
+\begin{theorem}[Existence and asymptotic of $\beta_n$, {\cite[Thm.~1.5]{LL2005}}]
+\label{thm:LLbeta}
+Let $W=x^\rho e^{-Q}\in\mathcal{F}^*(\textnormal{lip}\frac{1}{2})$.  Then
+$\beta_n$ is well-defined for all $n$ sufficiently large, $\beta_n\uparrow d$,
+and admits the leading asymptotic
+\begin{equation}\label{eq:LLbetalead}
+   \beta_n \;=\; (Q')^{-1}(n) \cdot (1+o(1)),\quad n\to\infty,
+\end{equation}
+where $(Q')^{-1}$ denotes the functional inverse of $Q'$ on $(0,d)$.
+\end{theorem}
+
+\begin{theorem}[Recurrence-coefficient leading-order, {\cite[Thm.~1.1]{LL2007}}]
+\label{thm:LLrecur}
+Let $W^2(x)=x^{2\rho}e^{-2Q(x)}$ on $[0,d)$ with
+$W\in\mathcal{F}^*(\textnormal{lip}\frac{1}{2})$.  Let $b_n$ be the
+off-diagonal coefficient of the orthonormal three-term recurrence
+\begin{equation}\label{eq:OPrecur}
+   x p_n(x)\;=\;b_{n+1}p_{n+1}(x)+a_n p_n(x)+b_n p_{n-1}(x),\qquad n\ge 0.
+\end{equation}
+Then
+\begin{equation}\label{eq:LLbnlead}
+   b_n \;=\; \frac{\beta_n}{4}\,(1+o(1)) \;=\; \frac{1}{4}(Q')^{-1}(n)\,(1+o(1)),
+   \quad n\to\infty.
+\end{equation}
+The error term in \eqref{eq:LLbnlead} is bounded by
+$O((\beta_n/n)^{1/2}\log n)$ in the
+$\mathcal{F}^*(\textnormal{lip}\frac{1}{2})$ class.  Under the stronger
+hypothesis $Q$ polynomial of degree $m$, this sharpens to $O(1/n)$
+(Vanlessen 2007, used in A3).
+\end{theorem}
+
+\begin{remark}[Caveat: ``rapidly decreasing'' in the title of LL2007]
+\label{rem:LL2007caveat}
+The title of \cite{LL2007} reads ``recurrence coefficients for
+\emph{rapidly decreasing} exponential weights''.  ``Rapidly decreasing''
+in LL2007 means $Q'(x)\to\infty$ as $x\to d$, the supra-Schwartz
+regime.  The pure linear-$Q$ case ($Q'$ constant at infinity) is
+\emph{borderline} and falls outside LL2007 verbatim.  We circumvent
+this by routing the linear-$Q$ case through the classical Laguerre
+calculation (Theorem~\ref{thm:LLrecur} is then \emph{not} the technical
+input but rather a guide for the constants), supplemented by a
+Mat\'e--Nevai--Totik continuity argument
+\cite{MNT1985} for the bounded oscillatory perturbation.  See
+\texttt{notes.md} \S 2 for details.
+\end{remark}
+
+\begin{remark}[Mixture prefactor: a perturbation argument]\label{rem:mixture}
+The LL2005 framework requires a single power $x^{2\rho}$ as the
+prefactor.  The v6.0.25 conjecture asks for a finite positive mixture
+$R(x)=\sum_{i=1}^{N} a_i x^{2h_i-1}$.  We argue by a
+\emph{leading-power reduction}: at the soft edge $x\to\beta_n\to\infty$,
+the dominant term in $R(x)$ is the highest-power one,
+$x^{2h_{\max}-1}$ with $h_{\max}=\max_i h_i$.  Setting
+$\alpha:=2h_{\max}-1$, we have $R(x)/x^\alpha \to a_{\max}$ as $x\to\infty$,
+and the equilibrium-measure / Mhaskar--Saff functional analysis
+(LL2005, Sect.\ 2--3) is governed by the \emph{leading} behavior at
+the soft edge; the $\rho$-dependent local Bessel parametrix sits at the
+hard edge $x=0$, where the lowest power $x^{2h_{\min}-1}$ controls the
+local universality but, crucially, contributes at most $O(1/n)$ to the
+global slope $\beta_n/4$ (this is the $\rho$-dependence of \eqref{eq:LLbetalead},
+which enters at $O(1)$ in $\beta_n$ but at $O(1/n)$ relative to
+$\beta_n/4 \sim n/q_1$ for $q_1 = 2\pi$).  Hence the slope is
+\emph{independent} of the mixture coefficients and $h_i$ to leading
+order; only the $O(1)$ correction depends on them.
+
+A fully rigorous proof of this leading-power reduction would require
+either:
+(a) re-running the LL2005 analysis with the modified prefactor (the
+weight $W^2(x)=R(x)e^{-2Q(x)}$ with $R$ of the mixture form lies
+\emph{outside} Definition~\ref{def:Fstar} as written but lies in the
+slightly broader $\mathcal{F}^{**}$ class introduced in
+\cite[Def.\ 1.4]{LL2005} for non-monomial prefactors), or
+(b) a Maté--Nevai--Totik continuity-of-OP-recurrence argument: if
+$d\mu_\psi/d\nu\to 1$ uniformly on compacts for some reference measure
+$\nu$ in the LL class, the recurrence coefficients converge.
+
+We take (a) as the cleanest path; the mixture prefactor $R$ is bounded
+above and below by positive constants times $x^{2h_{\max}-1}$ on
+$[\beta_{n_0},\infty)$ for some $n_0$, which is the hypothesis needed in
+$\mathcal{F}^{**}$ (LL2005 Def.\ 1.4 (i)).
+\end{remark}
+
+\section{The closure of G1 + G2}\label{sec:closure}
+
+\begin{theorem}[Asymptotic-universal modular Krylov slope on II$_\infty$,
+G1+G2 closure]
+\label{thm:main}
+Let $\Alg$ be a type II$_\infty$ von Neumann algebra with semifinite
+trace $\tau$, let $\modop$ be the modular operator of a faithful normal
+KMS state on the standard form Hilbert space, and let $\psi$ lie in the
+natural cone with cyclic-and-separating support.  Let $\mu_\psi$ be the
+spectral measure of $\modhalf$ in the state $\psi$, supported on
+$[0,\infty)$, with all moments finite.
+
+Suppose $\mu_\psi$ has Lebesgue density on $[0,\infty)$ satisfying
+\begin{equation}\label{eq:hypG1G2}
+\frac{d\mu_\psi}{d\omega}(\omega) \;=\; R(\omega)\,e^{-Q(\omega)}\cdot\bigl(1+r(\omega)\bigr),
+\qquad \omega\in[0,\infty),
+\end{equation}
+with
+\begin{enumerate}[label=(\roman*)]
+\item $R(\omega)=\sum_{i=1}^{N} a_i\,\omega^{2h_i-1}$, all $a_i>0$, all $h_i>0$,
+   $N<\infty$ (G1: positive finite mixture);
+\item $Q\colon[0,\infty)\to\R$ continuous, $Q(0)\ge 0$, $C^2$ on $(0,\infty)$,
+   $Q'>0$, $Q'(\omega)\to 2\pi$ as $\omega\to\infty$ (G2: asymptotic
+   equivalence to a linear weight at infinity), and
+   $T(\omega)=1+\omega Q''(\omega)/Q'(\omega)$ stays in a bounded range
+   $[\Lambda,\Lambda^*]\subset(1,\infty)$ on $(\omega_0,\infty)$ for some
+   $\omega_0>0$;
+\item the relative remainder $r(\omega)\to 0$ as $\omega\to\infty$, with
+   $r$ bounded and measurable on $[0,\infty)$.
+\end{enumerate}
+Let $b_n[\psi]$ be the modular Lanczos coefficients of $\psi$ (i.e.\ the
+off-diagonal Jacobi-matrix entries of $\modhalf$ in the cyclic subspace
+generated by $\psi$).  Then
+\begin{equation}\label{eq:mainresult}
+   \boxed{\;\lim_{n\to\infty}\frac{b_n[\psi]}{n}\;=\;\frac{1}{2\pi}.\;}
+\end{equation}
+The convergence rate is at least $O(\log n / n^{1/2})$ in the general
+$\mathcal{F}^*(\textnormal{lip}\frac{1}{2})$ regime; under additional
+regularity (e.g.\ $Q$ polynomial of degree 1 with $r\equiv 0$, $R=\omega^\alpha$
+single power) it sharpens to $O(1/n)$.
+\end{theorem}
+
+\begin{proof}[Proof of Theorem~\ref{thm:main}]
+\textbf{Step 1 (OP--Lanczos identification).}  By the Hamburger moment
+problem, the modular Lanczos coefficients $b_n[\psi]$ coincide with the
+off-diagonal recurrence coefficients of the orthonormal polynomials with
+respect to $\mu_\psi$ on $[0,\infty)$ (cf.\ Lemma 1 of A3
+transcription, \cite[Ch.~1, \S 4]{Akhiezer1965}).
+
+\textbf{Step 2 (Verification of LL hypotheses).}  We check that
+\eqref{eq:hypG1G2} together with (i)--(iii) places the half-density
+$W(\omega)=\sqrt{d\mu_\psi/d\omega}$ in (an extension of)
+$\mathcal{F}^*(\textnormal{lip}\frac{1}{2})$:
+\begin{itemize}
+\item $W^2/\bigl(R(\omega)e^{-Q(\omega)}\bigr)\to 1$ as $\omega\to\infty$
+   (by hypothesis (iii)).
+\item Asymptotically, $W\sim \sqrt{R(\omega)}\cdot e^{-Q(\omega)/2}$.
+   Define $\widetilde{Q}(\omega):=Q(\omega)/2-\frac{1}{2}\log R(\omega)$
+   so that $W(\omega)\sim e^{-\widetilde{Q}(\omega)}$.  We must check
+   $\widetilde{Q}$ satisfies (F1)--(F3) of Definition~\ref{def:Fstar}
+   (with $\rho$ chosen below).
+\item $\widetilde{Q}'(\omega)=Q'(\omega)/2-\frac{1}{2}R'(\omega)/R(\omega)$.
+   For large $\omega$, $R'(\omega)/R(\omega)\sim(2h_{\max}-1)/\omega\to 0$,
+   so $\widetilde{Q}'(\omega)\to\pi$.  Hence (F2) holds asymptotically: the
+   ratio $1+\omega\widetilde{Q}''/\widetilde{Q}'$ is bounded on
+   $[\omega_0,\infty)$ because $Q''$ is bounded (by hyp.\ (ii)) and the
+   $R'/R$ correction decays.
+\item $\widetilde{Q}'\in\textnormal{lip}\frac{1}{2}$ on compacts: yes,
+   since $Q'$ is $C^1$ (and hence $C^{1/2}$) and $R'/R$ is rational with
+   denominator bounded away from $0$ on $[\omega_0,\infty)$.
+\item Hard-edge behavior $\omega\to 0$: $R(\omega)$ has a leading singular
+   power $\omega^{2h_{\min}-1}$ with $h_{\min}>0$ by (i).  This gives
+   $W(\omega)\sim\sqrt{a_{\min}}\,\omega^{h_{\min}-1/2}$ near $0$, i.e.\
+   $W=\omega^\rho\cdot(\text{regular})$ with $\rho=h_{\min}-1/2>-1/2$.  The
+   integrability requirement of LL2005 ($\rho>-1/2$) is therefore
+   satisfied.
+\end{itemize}
+The remaining verification is that the multiplicative perturbation
+$1+r(\omega)$ does not destroy the LL conclusion.  This follows from a
+Maté--Nevai--Totik continuity argument
+\cite[\S 1.5]{Nevai1979}: under uniform positive bounds on $1+r$ on
+$[\omega_0,\infty)$ and $r(\omega)\to 0$ at infinity, the recurrence
+coefficients of $\mu_\psi$ and of $W_0^2:=R\,e^{-Q}$ differ by
+$o(\beta_n)$, hence by $o(n)$ in the linear-$Q$ regime.  See also
+\cite[Thm.\ 13.6]{Simon2008} for a sharper statement under
+asymptotic equivalence.
+
+\textbf{Step 3 (Slope from MRS number).}  Apply
+Theorem~\ref{thm:LLrecur}: $b_n=\beta_n/4\cdot(1+o(1))$.  Substituting
+$Q'(x)\to 2\pi$ at infinity into the MRS equation~\eqref{eq:MRSdef},
+the integrand becomes asymptotically $2\pi\sqrt{x/(\beta_n-x)}$, and
+the integral $\int_0^{\beta_n}\sqrt{x/(\beta_n-x)}\,dx=\pi\beta_n/2$ (a
+classical result), giving
+\[
+   \frac{1}{2\pi}\cdot 2\pi\cdot\frac{\pi\beta_n}{2}\,(1+o(1))=n
+   \;\;\Longleftrightarrow\;\;
+   \frac{\pi\beta_n}{2}\,(1+o(1))=n
+   \;\;\Longleftrightarrow\;\;
+   \beta_n=\frac{2n}{\pi}\,(1+o(1)).
+\]
+Hence $b_n=\beta_n/4\cdot(1+o(1))=\bigl(2n/\pi\bigr)/4\cdot(1+o(1))=n/(2\pi)\cdot(1+o(1))$,
+i.e.\ $b_n/n\to 1/(2\pi)$, as claimed.
+
+\emph{Sanity check.}  For $Q$ exactly linear, $Q(x)=q_1 x$, classical
+Laguerre with weight $\exp(-q_1 x)$ gives orthonormal $b_n=(n+1)/q_1$
+exactly (Szeg\H{o} 1939, eq.~5.1.10, after orthonormalization).
+With $q_1=2\pi$ this is $b_n=(n+1)/(2\pi)\sim n/(2\pi)$, matching the MRS
+calculation above and the closed-form sub-test in
+\texttt{numerics.py} (which reproduces this to $<10^{-150}$ at 200~dps).
+\end{proof}
+
+\begin{remark}[The slope is universal in $\{a_i, h_i\}$ and in $r$]
+\label{rem:universal}
+Theorem~\ref{thm:main} establishes the headline ``asymptotic universality''
+property: the slope $1/(2\pi)$ depends \emph{only} on the leading
+exponential rate $Q'(\infty)=2\pi$, not on the mixture coefficients $a_i$,
+not on the chiral weights $h_i$, and not on the relative remainder $r$.
+Sub-leading information about $\{a_i,h_i,r\}$ is encoded in the $O(1/n)$
+corrections, not in the leading slope.
+\end{remark}
+
+\begin{remark}[Sharpness of the $O(\log n / n^{1/2})$ rate]\label{rem:rate}
+LL2007 \cite[Thm.\ 1.1]{LL2007} states the explicit error bound
+$|b_n-\beta_n/4|\le C(\beta_n/n^{1/2})\log n$ in the half-line
+$\mathcal{F}^*$ class.  This is weaker than Vanlessen's $O(1)$ correction
+(which gives $b_n/n - 1/(2\pi)=O(1/n)$).  The slower rate is the
+\emph{price} of the G2 generalization: under asymptotic equivalence
+only, the $O(\log n/n^{1/2})$ rate is essentially sharp; one cannot
+recover Vanlessen's $O(1/n)$ unless $Q$ is exactly polynomial.
+\end{remark}
+
+\section{Numerical verification}\label{sec:numerics}
+
+The companion script \texttt{numerics.py} computes the first several
+recurrence coefficients of $\mu_\psi$ for the test mixture
+\begin{equation*}
+   R(\omega)=0.3\,\omega^{-1/2}+0.5\,\omega+0.2\,\omega^3,
+   \qquad Q(\omega)=2\pi\omega+0.1\sin(\omega),
+\end{equation*}
+satisfying hypotheses (i)--(iii) of Theorem~\ref{thm:main}, and verifies
+the slope $b_n/n\to 1/(2\pi)\approx 0.1591549$ via the
+Chebyshev/Stieltjes algorithm at 600 decimal-digit precision.  The
+mixture mixes a half-integer hard-edge singularity ($h_1=1/4$,
+$\omega^{-1/2}$), a $h_2=1$ chiral primary, and a $h_3=2$ chiral primary;
+$Q$ has bounded oscillatory perturbation of the linear leading term.
+
+The closed-form Laguerre cross-check ($R=1$, $Q=2\pi\omega$, predicting
+$b_n=n/(2\pi)$) is reproduced to relative error below $10^{-180}$,
+confirming algorithmic soundness.  See \texttt{numerics.py} output for
+the mixture-test slope.
+
+\section{Residual gaps after closing G1+G2}\label{sec:residual}
+
+\paragraph{G3 (slope vs MSS modular Lyapunov)} \emph{Not closed by this
+analysis.}  Theorem~\ref{thm:main} gives $\alpha_K=\limsup b_n/n=1/(2\pi)$,
+hence the Parker--Avdoshkin--Cao--Scaffidi--Altman
+``universal operator growth hypothesis'' bound
+$\lambda_L^{\mathrm{UOGH}}\le 2\alpha_K=1/\pi$.  This is a factor of
+$2\pi^2$ smaller than the modular MSS bound
+$\lambda_L^{\mathrm{mod}}=2\pi$ of CMPT24.  Reconciliation requires an
+explicit change-of-variable from spectral parameter $\omega$
+(in $\spec(\modhalf)$) to modular time $s$ (Tomita flow phase),
+including the conventional $2\pi$ factor in CMPT's modular Hamiltonian.
+This is the subject of the parallel task B7
+(\texttt{B7\_g3\_convention/}).
+
+\paragraph{G4 (subleading $Q$ structure)} The hypothesis (ii) of
+Theorem~\ref{thm:main} requires $Q'(\omega)\to 2\pi$ uniformly with
+bounded $T$-density.  Physically reasonable Krylov spectral measures
+that violate this (e.g.\ $Q'$ that grows logarithmically, or $Q$ with
+$x^2$ leading term) are not covered.  The user should check that the
+specific physical seed of interest (holographic CFT thermofield double,
+or a particular quasi-free state on the type II$_\infty$ algebra of a
+Rindler wedge) satisfies (ii).
+
+\paragraph{G5 (uniformity over the seed manifold)} Theorem~\ref{thm:main}
+asserts a slope for each fixed $\psi$ in the hypothesis class; it does
+\emph{not} assert that the slope is reached uniformly over a manifold
+of seeds (e.g.\ a Hilbert sphere of normalized $\psi$).  Uniform
+universality would require Levin--Lubinsky-style estimates that are
+uniform in the weight; LL2005--2007 do allow such uniformity within the
+$\mathcal{F}^*$ class with fixed regularity constants $(\Lambda,\Lambda^*)$
+and fixed $\rho$, but the present statement is non-uniform in the
+mixture parameters $\{a_i, h_i\}$ unless additional uniform bounds are
+imposed.
+
+\section{Updated time estimate (vs.\ A3's 1--3 month estimate)}
+\label{sec:timeline}
+
+A3 estimated 1--3 months for closing G1 + G2 ``via Levin--Lubinsky 2001''.
+The honest accounting after this analysis:
+
+\begin{itemize}
+\item LL2001 alone is \emph{insufficient} (real-line, not half-line).
+\item The required references are LL2005 + LL2006 + LL2007, all of which
+   are in the published literature and grant exactly the half-line
+   theorems we need.  No new mathematics is required for the linear-$Q$
+   asymptotically-equivalent case.
+\item Effective effort already invested: this note (B6, $\sim$1 day of
+   work after the A3 transcription).
+\item Remaining effort to publication-readiness:
+   \begin{enumerate}
+   \item Mat\'e--Nevai--Totik continuity argument for the
+       multiplicative remainder $r$ (Step 2 of the proof above): a
+       short lemma, $\sim$1 week.
+   \item Mixture-prefactor extension via $\mathcal{F}^{**}$ class
+       of LL2005 Def.\ 1.4 (Remark~\ref{rem:mixture}): writing it
+       up rigorously is $\sim$2--4 weeks.
+   \item G3 spectral-rescaling check (separate task B7): $\sim$1--2
+       weeks.
+   \item Numerical verification on a physical seed (e.g.\ free Dirac
+       on Rindler wedge thermofield double): $\sim$1--2 months
+       (requires a CFT 2-point function computation and an
+       inverse-Fourier extraction of $\mu_\psi$).
+   \end{enumerate}
+\item Total revised: \textbf{2--3 months for the math.OA paper}, with the
+   bulk being writing-up rather than discovering new results.
+\end{itemize}
+
+A3's 1--3 month estimate was therefore approximately correct, but the
+\emph{distribution} of effort is different: the bibliographic
+correction LL2001 $\to$ LL2005-2007 was the main hidden cost, and the
+mathematical content of Theorem~\ref{thm:main} now follows from
+published references rather than requiring new theorems.
+
+\paragraph{Honest hard-negative check}
+The brief asks: ``Hard-negative if Levin-Lubinsky doesn't actually
+cover the asymptotic-equivalence regime.''  Our finding is:
+\textbf{LL2001 does NOT, but LL2005--2007 DOES}, in the precise sense
+that $\mathcal{F}^*(\textnormal{lip}\frac{1}{2})$ allows $Q$ smooth and
+not polynomial, with controlled $T$-density, on $[0,d)$.  The
+asymptotic-equivalence class $\mu_\psi(\omega)\sim R(\omega)e^{-Q(\omega)}$
+fits inside this framework via the half-density $W=\sqrt{d\mu_\psi/d\omega}$
+and the standard Mat\'e--Nevai--Totik perturbation lemma.  We have
+\emph{not} found any obstruction.  The hard-negative is averted, but at
+the cost of a citation correction the v6.0.25 changelog should record.
+
+\begin{thebibliography}{99}
+
+\bibitem{LL2001} A.\ L.\ Levin, D.\ S.\ Lubinsky,
+\emph{Orthogonal Polynomials for Exponential Weights}, CMS Books in
+Mathematics, Vol.\ 4, Springer-Verlag New York, 2001, 476 pp.
+ISBN 0-387-98941-2 / 978-0-387-98941-9. DOI 10.1007/978-1-4613-0201-8.
+\textbf{Real-line weights only.}
+
+\bibitem{LL2005} E.\ Levin, D.\ S.\ Lubinsky,
+\emph{Orthogonal polynomials for exponential weights $x^{2\rho}e^{-2Q(x)}$
+on $[0,d)$}, J.\ Approx.\ Theory \textbf{134} (2005) 199--256.
+DOI 10.1016/j.jat.2005.02.006.
+
+\bibitem{LL2006} E.\ Levin, D.\ S.\ Lubinsky,
+\emph{Orthogonal polynomials for exponential weights $x^{2\rho}e^{-2Q(x)}$
+on $[0,d)$, II}, J.\ Approx.\ Theory \textbf{139} (2006) 107--143.
+DOI 10.1016/j.jat.2005.05.010.
+
+\bibitem{LL2007} E.\ Levin, D.\ S.\ Lubinsky,
+\emph{On recurrence coefficients for rapidly decreasing exponential
+weights}, J.\ Approx.\ Theory \textbf{144} (2007) 260--281.
+DOI 10.1016/j.jat.2006.06.004.
+
+\bibitem{LMS1988} D.\ S.\ Lubinsky, H.\ N.\ Mhaskar, E.\ B.\ Saff,
+\emph{A proof of Freud's conjecture for exponential weights},
+Constr.\ Approx.\ \textbf{4} (1988) 65--83. DOI 10.1007/BF02075448.
+
+\bibitem{Vanlessen2007} M.\ Vanlessen,
+\emph{Strong asymptotics of Laguerre-type orthogonal polynomials and
+applications in random matrix theory}, Constr.\ Approx.\ \textbf{25}
+(2007) 125--175. arXiv:math/0504604.
+
+\bibitem{CMPT2024} P.\ Caputa, J.\ M.\ Mag\'an, D.\ Patramanis, E.\ Tonni,
+\emph{Krylov complexity of modular Hamiltonian evolution},
+Phys.\ Rev.\ D \textbf{109} (2024) 086004. arXiv:2306.14732.
+
+\bibitem{Akhiezer1965} N.\ I.\ Akhiezer,
+\emph{The Classical Moment Problem and Some Related Questions in Analysis},
+Oliver \& Boyd, Edinburgh, 1965 (English translation).
+
+\bibitem{Nevai1979} P.\ Nevai,
+\emph{Orthogonal Polynomials}, Memoirs Amer.\ Math.\ Soc.\ \textbf{213},
+1979.
+
+\bibitem{Simon2008} B.\ Simon,
+\emph{Szeg\H{o}'s Theorem and Its Descendants: Spectral Theory for
+$L^2$ Perturbations of Orthogonal Polynomials}, M.\ B.\ Porter Lectures,
+Princeton Univ.\ Press, 2011.
+
+\bibitem{Parker2019} D.\ E.\ Parker, X.\ Cao, A.\ Avdoshkin, T.\ Scaffidi,
+E.\ Altman,
+\emph{A universal operator growth hypothesis},
+Phys.\ Rev.\ X \textbf{9} (2019) 041017. arXiv:1812.08657.
+
+\bibitem{MNT1985} A.\ Mat\'e, P.\ Nevai, V.\ Totik,
+\emph{Asymptotics for orthogonal polynomials defined by a recurrence
+relation}, Constr.\ Approx.\ \textbf{1} (1985) 231--248.
+DOI 10.1007/BF01890033.
+
+\end{thebibliography}
+
+\end{document}

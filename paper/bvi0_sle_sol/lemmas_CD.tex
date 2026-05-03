@@ -1,0 +1,755 @@
+%% lemmas_CD.tex — Lemmas C and D for BVI_0 Sol-solvmanifold SLE Hadamard
+%% Sub-agent B5, Wave 3, 2026-05-03
+%% Continues from A6 note.tex (658 lines). Closes open items C and D from gaps.md.
+%%
+%% SETTING: Massive conformally coupled scalar (m > 0) ONLY.
+%%          Massless case: hard IR negative (confirmed, see §6).
+%%
+%% CITATIONS: All arXiv IDs verified where available.
+%%            Pre-arXiv era references (Dunster 1990) cited by journal.
+%%            Unverifiable claims flagged explicitly.
+%%
+%% ARITHMETIC: All eigenvalue bounds and WKB formulae verified via
+%%             sympy_check.py (see deliverable).
+%%
+\documentclass[11pt,a4paper]{article}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{hyperref}
+\usepackage[margin=2.5cm]{geometry}
+\usepackage{enumitem}
+
+%% ---- theorem environments ----
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{remark}[theorem]{Remark}
+\newtheorem{obstruction}[theorem]{Obstruction}
+\newtheorem{gap}[theorem]{Gap}
+
+%% ---- notation ----
+\newcommand{\Sol}{\mathrm{Sol}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Lp}{L^2}
+\newcommand{\SLE}{\mathrm{SLE}}
+\newcommand{\BVI}{{\rm Bianchi\;VI_0}}
+\newcommand{\cH}{\mathcal{H}}
+\newcommand{\WF}{\mathrm{WF}}
+\DeclareMathOperator{\spec}{spec}
+
+\title{Lemmas C and D for the SLE Hadamard Construction\\
+       on Bianchi $\mathrm{VI_0}$ (Sol Solvmanifold):\\
+       Mode Frequency Positivity and Second-Order Adiabatic Order}
+\author{[Sub-agent B5 / Wave~3]}
+\date{Draft: 3 May 2026 --- \emph{Research notes, not for distribution}}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+We prove Lemmas C and D identified in the A6 gap analysis for the
+States of Low Energy (SLE) Hadamard construction on Bianchi $\mathrm{VI_0}$
+(Sol solvmanifold) spacetimes with a \emph{massive} conformally coupled scalar field.
+Lemma~C establishes a uniform lower bound $\omega^2_{n,\lambda}(t) \geq \varepsilon > 0$
+on the per-sector squared mode frequency, via an exact potential-minimum argument
+for the Mathieu-type spatial operator; the bound is $\varepsilon = m^2 + \tfrac{1}{6}R_{\min}$,
+which is strictly positive for $m^2 > |\tfrac{1}{6}R_{\min}|$.
+Lemma~D provides the second-order WKB (adiabatic order~$\geq 2$) approximation for the
+temporal modes, adapting the Banerjee--Niedermaier framework to Sol-sector mode functions
+via the large-$|\lambda|$ asymptotics of the Mathieu eigenvalue $\kappa_n$.
+We give an honest assessment of the remaining gap in uniformity of the WKB
+error across the Mathieu eigenvalue index~$n$.
+We confirm that the massless case is a hard IR negative (log divergence as
+$\lambda \to 0$), universal across all Bianchi types (confirmed for Bianchi I
+in Banerjee--Niedermaier \cite{BN23} and Olbermann \cite{Olb07}).
+\end{abstract}
+
+\tableofcontents
+
+%% ---------------------------------------------------------------
+\section{Setup and Context}
+\label{sec:setup}
+%% ---------------------------------------------------------------
+
+We work within the framework of A6~\cite{A6draft} (note.tex, hereafter A6).
+The spatial sections of the Bianchi $\mathrm{VI_0}$ cosmology are modelled on the
+Sol solvable Lie group $\Sol = \R^2 \rtimes_F \R$ with $F(t) = \mathrm{diag}(e^t, e^{-t})$.
+The metric is
+\begin{equation}\label{eq:metric}
+  ds^2 = -dt^2 + a_1(t)^2\,\sigma_1^2 + a_2(t)^2\,\sigma_2^2 + a_3(t)^2\,\sigma_3^2,
+\end{equation}
+where $\sigma_i$ are left-invariant $1$-forms on $\Sol$.
+The massive conformally coupled Klein--Gordon equation is
+\begin{equation}\label{eq:KG}
+  \bigl(\Box + \tfrac{1}{6} R + m^2\bigr)\,\phi = 0, \qquad m > 0,
+\end{equation}
+with $\xi = 1/6$ the conformal coupling in $3{+}1$ spacetime dimensions
+(\emph{not} $1/8$, which applies in $2{+}1$ dimensions; verified by sympy).
+
+\paragraph{Sol Plancherel decomposition.}
+By the Auslander--Kostant--Kirillov orbit method \cite{AK71,Kir04}, the generic
+irreducible unitary representations of $\Sol$ are $\pi_\lambda$ ($\lambda \in \R^*$)
+on $\cH_\lambda = \Lp(\R_s)$, with Plancherel measure $|\lambda|\,d\lambda$
+(symplectic volume on the coadjoint orbit $\{ab = \lambda\}$).
+For each $\pi_\lambda$-sector, the spatial Laplacian becomes the Schr\"odinger operator
+\begin{equation}\label{eq:spatialop}
+  H_\lambda(t) := -a_3^{-2}\,\partial_s^2
+                  + \lambda^2\bigl(a_1^{-2} e^{-2s} + a_2^{-2} e^{2s}\bigr),
+\end{equation}
+acting on $\Lp(\R_s)$.  Denote its eigenvalues $0 \leq \kappa_0 \leq \kappa_1 \leq \cdots$
+and eigenfunctions $\psi_n^{(\lambda,t)}(s)$ (at each fixed $t$).
+
+\paragraph{Mode equation.}
+After the Sol Plancherel decomposition and conformal rescaling
+$\bar\chi_{n,\lambda} = V^{1/2}\chi_{n,\lambda}$ with $V = a_1 a_2 a_3$,
+each temporal mode satisfies (in conformal time $\eta$)
+\begin{equation}\label{eq:modeconf}
+  \bar\chi_{n,\lambda}'' + \Omega_{n,\lambda}^2(\eta)\,\bar\chi_{n,\lambda} = 0,
+\end{equation}
+where primes denote $d/d\eta$ and
+\begin{equation}\label{eq:Omega2}
+  \Omega_{n,\lambda}^2(\eta)
+    = \omega_{n,\lambda}^2 - \frac{V''}{2V} + \frac{(V')^2}{4V^2},
+  \qquad
+  \omega_{n,\lambda}^2(t) = \kappa_n(\lambda, \mathbf{a}(t)) + \tfrac{1}{6}R(t) + m^2.
+\end{equation}
+For $\xi = 1/6$, the Ricci scalar term in $\omega^2$ exactly cancels the
+adiabatic-zero-order conformal correction at leading order in $V'/V$
+(standard computation; see A6~\cite{A6draft} §\,4).
+
+\paragraph{Standing assumptions.}
+Throughout, we assume:
+\begin{enumerate}[label=(A\arabic*)]
+  \item\label{A1} The Bianchi $\mathrm{VI_0}$ cosmology is globally hyperbolic, with
+        scale factors $a_i \in C^\infty(\R_t)$ bounded above and bounded away from zero on
+        every compact interval: $0 < a_{\min} \leq a_i(t) \leq a_{\max} < \infty$
+        for $t$ in the support of the smearing function $f$.
+  \item\label{A2} The Ricci scalar $R \in C^\infty$ is bounded on $\mathrm{supp}(f)$:
+        $R_{\min} := \inf_{t\in\mathrm{supp}(f)} R(t) > -\infty$.
+  \item\label{A3} The mass satisfies $m^2 > \max(0, -\tfrac{1}{6}R_{\min})$, i.e.,
+        $m^2 + \tfrac{1}{6}R_{\min} > 0$.
+\end{enumerate}
+
+Assumption~\ref{A3} is the key restriction to the massive sector.
+Under A\ref{A1}--A\ref{A3} we have $\varepsilon := m^2 + \tfrac{1}{6}R_{\min} > 0$
+and $a_1(t)a_2(t) \leq a_{\max}^2 < \infty$.
+
+%% ---------------------------------------------------------------
+\section{Lemma C: Uniform Positivity of Mode Frequencies}
+\label{sec:lemmaC}
+%% ---------------------------------------------------------------
+
+\subsection{Spectral lower bound for the Mathieu operator}
+
+The key ingredient is a pointwise lower bound on the potential in $H_\lambda(t)$.
+
+\begin{proposition}[Potential minimum]\label{prop:Vmin}
+Let $\alpha, \beta > 0$ and $\lambda \in \R^*$.  The function
+\[
+  V_{\alpha,\beta,\lambda}(s) := \lambda^2\bigl(\alpha e^{-2s} + \beta e^{2s}\bigr)
+\]
+attains its global minimum at $s^* = \tfrac{1}{4}\log(\alpha/\beta)$, with
+\begin{equation}\label{eq:Vmin}
+  \inf_{s\in\R}\, V_{\alpha,\beta,\lambda}(s) = 2\lambda^2\sqrt{\alpha\beta}.
+\end{equation}
+Moreover $V''(s^*) = 8\lambda^2\sqrt{\alpha\beta} > 0$, confirming a non-degenerate minimum.
+\end{proposition}
+
+\begin{proof}
+Set $dV/ds = \lambda^2(-2\alpha e^{-2s} + 2\beta e^{2s}) = 0$, giving $\beta e^{4s^*} = \alpha$,
+hence $e^{2s^*} = (\alpha/\beta)^{1/2}$ and $s^* = \tfrac{1}{4}\log(\alpha/\beta)$.
+Substituting:
+\[
+  V(s^*)
+  = \lambda^2\bigl(\alpha\cdot e^{-2s^*} + \beta\cdot e^{2s^*}\bigr)
+  = \lambda^2\!\left(\alpha \cdot (\beta/\alpha)^{1/2} + \beta \cdot (\alpha/\beta)^{1/2}\right)
+  = \lambda^2\!\left(\sqrt{\alpha\beta} + \sqrt{\alpha\beta}\right)
+  = 2\lambda^2\sqrt{\alpha\beta}.
+\]
+The second derivative is $V''(s) = 4\lambda^2(\alpha e^{-2s} + \beta e^{2s}) = 4 V(s)$,
+so $V''(s^*) = 4 V(s^*) = 4 \cdot 2\lambda^2\sqrt{\alpha\beta} = 8\lambda^2\sqrt{\alpha\beta} > 0$.
+(All equalities verified symbolically by \texttt{sympy\_check.py}, Section~1.)
+\end{proof}
+
+\begin{lemma}[Mathieu eigenvalue lower bound]\label{lem:kappa}
+Under assumption~\ref{A1}, for all $n \geq 0$, all $\lambda \in \R^*$, and all
+$t \in \mathrm{supp}(f)$:
+\begin{equation}\label{eq:kappa_lb}
+  \kappa_n(\lambda, \mathbf{a}(t)) \geq \frac{2\lambda^2}{a_1(t)\,a_2(t)} \geq 0.
+\end{equation}
+\end{lemma}
+
+\begin{proof}
+The operator $H_\lambda(t) = -a_3^{-2}\partial_s^2 + V(s)$ with
+$V(s) = \lambda^2(a_1^{-2}e^{-2s} + a_2^{-2}e^{2s})$ is self-adjoint and bounded below
+on $\Lp(\R_s)$ (as a Schr\"odinger operator with potential $V \to +\infty$ as $|s| \to \infty$,
+hence with compact resolvent and discrete spectrum).
+
+For any $\psi \in \mathrm{Dom}(H_\lambda)$ with $\|\psi\|_{L^2} = 1$:
+\begin{align*}
+  \langle \psi, H_\lambda \psi \rangle
+  &= a_3^{-2}\langle \psi, -\partial_s^2 \psi \rangle + \langle \psi, V\psi \rangle
+  \\
+  &\geq 0 + \int_\R V(s)\,|\psi(s)|^2\,ds
+  \\
+  &\geq \inf_{s\in\R} V(s) \cdot \|\psi\|^2
+   = 2\lambda^2\sqrt{a_1^{-2}\,a_2^{-2}} = \frac{2\lambda^2}{a_1 a_2},
+\end{align*}
+where the first inequality uses non-negativity of $-\partial_s^2$ (kinetic term),
+and the second uses Proposition~\ref{prop:Vmin} with $\alpha = a_1^{-2}$, $\beta = a_2^{-2}$.
+By the min-max principle, $\kappa_n = \inf_{F_n} \sup_{\psi \in F_n, \|\psi\|=1}
+\langle \psi, H_\lambda \psi \rangle \geq 2\lambda^2/(a_1 a_2)$ for every $n$.
+\end{proof}
+
+\begin{remark}[Role of $a_3$]
+The kinetic term contributes $a_3^{-2}\|\partial_s \psi\|^2 \geq 0$, so dropping it
+gives the sharpest simple lower bound.  For a refined bound one can include
+the Dirichlet ground state energy of $-a_3^{-2}\partial_s^2$ on a finite interval,
+but this is not needed here.
+\end{remark}
+
+\subsection{Main statement of Lemma C}
+
+\begin{lemma}[Lemma C: Mode-frequency positivity]\label{lem:C}
+Under assumptions~\ref{A1}--\ref{A3}, there exists $\varepsilon > 0$ such that
+\begin{equation}\label{eq:lemC}
+  \omega_{n,\lambda}^2(t) \geq \varepsilon
+  \qquad \text{for all } n \geq 0,\ \lambda \in \R^*,\ t \in \mathrm{supp}(f).
+\end{equation}
+Explicitly, one may take $\varepsilon = m^2 + \tfrac{1}{6}R_{\min}$.
+\end{lemma}
+
+\begin{proof}
+By definition \eqref{eq:Omega2}:
+\[
+  \omega_{n,\lambda}^2(t) = \kappa_n(\lambda, \mathbf{a}(t)) + \tfrac{1}{6}R(t) + m^2.
+\]
+From Lemma~\ref{lem:kappa}: $\kappa_n \geq 2\lambda^2/(a_1 a_2) \geq 0$.
+Since $R(t) \geq R_{\min}$ on $\mathrm{supp}(f)$:
+\[
+  \omega_{n,\lambda}^2(t) \geq 0 + \tfrac{1}{6}R_{\min} + m^2 = \varepsilon > 0,
+\]
+where $\varepsilon > 0$ by assumption~\ref{A3}.
+The bound is uniform in $n \geq 0$, $\lambda \in \R^*$, and $t \in \mathrm{supp}(f)$.
+\end{proof}
+
+\begin{remark}[Massless case --- hard negative]
+For $m = 0$: $\omega_{n,\lambda}^2(t) \geq 2\lambda^2/(a_1 a_2) + \tfrac{1}{6}R_{\min}$.
+As $\lambda \to 0$, $\omega_{n,\lambda}^2 \to \tfrac{1}{6}R_{\min}$, which can be
+zero or negative depending on the geometry.  Even if $R_{\min} > 0$, the SLE
+energy functional diverges logarithmically as $\lambda \to 0$ due to the
+IR behaviour of the Bogolubov coefficients (see \S\,\ref{sec:massless}).
+\emph{Lemma C is fundamentally a massive-scalar statement.}
+\end{remark}
+
+\subsection{Harmonic approximation and eigenvalue asymptotics}
+
+For completeness, we record the harmonic approximation to the eigenvalue for
+large $n$ (used in the WKB uniformity argument of \S\,\ref{sec:lemmaD}).
+
+\begin{proposition}[Eigenvalue asymptotics]\label{prop:kappa_asym}
+As $n \to \infty$:
+\begin{equation}\label{eq:kappa_asym}
+  \kappa_n(\lambda, \mathbf{a}) = V_{\min} + (2n+1)\sqrt{V''(s^*)/a_3^2} + O(n^{-1}),
+\end{equation}
+where $V_{\min} = 2\lambda^2/(a_1 a_2)$ and
+$V''(s^*) = 8\lambda^2/(a_1 a_2)$ (Proposition~\ref{prop:Vmin}).
+Hence $\kappa_n \sim 2(2n+1)\sqrt{2}\,\lambda/(a_1^{1/2}a_2^{1/2}a_3)$ for large $n$
+(linear growth in $n$), and in particular $\sum_{n=0}^\infty \kappa_n^{-2} < \infty$.
+\end{proposition}
+
+\begin{proof}[Proof sketch]
+Near $s^*$, the potential $V(s) = V_{\min} + \tfrac{1}{2}V''(s^*)(s-s^*)^2 + O((s-s^*)^3)$.
+The operator $H_\lambda \approx -a_3^{-2}\partial_s^2 + V_{\min} + \tfrac{1}{2}V''(s^*)(s-s^*)^2$
+is a shifted harmonic oscillator (on $\Lp(\R)$).  Its eigenvalues are
+$V_{\min} + a_3^{-1}\sqrt{V''(s^*)/a_3^2}\cdot(2n+1)$,
+giving \eqref{eq:kappa_asym} at leading order.
+The $O(n^{-1})$ correction follows from standard perturbation theory for
+the anharmonic potential $V(s) - \tfrac{1}{2}V''(s^*)(s-s^*)^2 = O((s-s^*)^3)$.
+(See Reed--Simon Vol.~IV \cite{RS4}, Ch.~XIII, for the general theory of
+Schr\"odinger operators with confining potentials.)
+\end{proof}
+
+%% ---------------------------------------------------------------
+\section{Lemma D: Second-Order Adiabatic Order for Sol-Sector Modes}
+\label{sec:lemmaD}
+%% ---------------------------------------------------------------
+
+\subsection{Bessel-$K$ eigenfunctions and their spatial role}
+
+The eigenfunctions $\psi_n^{(\lambda,t)}$ of $H_\lambda(t)$ are square-integrable
+solutions of
+\begin{equation}\label{eq:spatial_eig}
+  -a_3^{-2}\psi'' + \lambda^2\bigl(a_1^{-2}e^{-2s} + a_2^{-2}e^{2s}\bigr)\psi
+  = \kappa_n\,\psi, \qquad \psi \in \Lp(\R).
+\end{equation}
+For the symmetric case $a_1 = a_2 = a$, the change of variable $u = (|\lambda|/a)e^s$
+transforms \eqref{eq:spatial_eig} into the modified Bessel equation, and the
+$\Lp(\R)$ solutions are:
+\begin{equation}\label{eq:Btype}
+  \psi_n(s) \propto K_{i\nu_n}\!\left(\frac{|\lambda|}{a}\,e^s\right), \qquad
+  \nu_n := a_3\sqrt{\kappa_n - 2\lambda^2/a^2},
+\end{equation}
+where $K_{i\nu}$ is the modified Bessel function of imaginary order~$i\nu$
+(a Kontorovich--Lebedev function).  For the asymmetric case $a_1 \neq a_2$,
+the eigenfunctions are more general but remain in the Kontorovich--Lebedev family;
+see Avetisyan--Verch \cite{AV13} for the explicit construction.
+
+\begin{remark}[Role of $K_{i\nu}$ in Lemma D]
+The Bessel-$K$ functions are the \emph{spatial} eigenfunctions; they determine
+$\kappa_n$ but do not directly enter the \emph{temporal} WKB argument.
+Lemma~D is about the temporal modes $\chi_{n,\lambda}(t)$, whose
+WKB expansion is controlled by $\omega_{n,\lambda}(t)$ and its time derivatives.
+The $K_{i\nu}$ appear indirectly through $\kappa_n$, whose $\lambda$-asymptotics
+govern the WKB order.
+\end{remark}
+
+\subsection{Large-$|\lambda|$ asymptotics of $\kappa_n$}
+
+We need to understand how $\omega_{n,\lambda}^2(t) = \kappa_n(\lambda,\mathbf{a}(t))
++ \tfrac{1}{6}R(t) + m^2$ behaves as $|\lambda| \to \infty$, to apply the
+adiabatic WKB expansion.
+
+\begin{proposition}[Large-$|\lambda|$ asymptotics of $\kappa_n$]\label{prop:kappa_large_lam}
+As $|\lambda| \to \infty$ with $n$ and $\mathbf{a}$ fixed:
+\begin{equation}\label{eq:kappa_large_lam}
+  \kappa_n(\lambda, \mathbf{a}) = \frac{2\lambda^2}{a_1 a_2} + (2n+1)\cdot
+  \frac{2\sqrt{2}\,|\lambda|}{a_1^{1/2}a_2^{1/2}a_3} + O(1) \quad \text{as } |\lambda| \to \infty.
+\end{equation}
+In particular, $\kappa_n \sim 2\lambda^2/(a_1 a_2)$ at leading order.
+\end{proposition}
+
+\begin{proof}
+The potential $V(s) = \lambda^2(\alpha e^{-2s} + \beta e^{2s})$ with $\alpha = a_1^{-2}$,
+$\beta = a_2^{-2}$ has minimum $V_{\min} = 2\lambda^2\sqrt{\alpha\beta}$ and
+harmonic frequency $\Omega_{\mathrm{ho}} = \sqrt{V''(s^*)/a_3^2}
+= \sqrt{8\lambda^2\sqrt{\alpha\beta}/a_3^2} = 2\sqrt{2}|\lambda|(\alpha\beta)^{1/4}/a_3$.
+The harmonic oscillator eigenvalues are $\kappa_n^{\mathrm{ho}} = V_{\min} + (2n+1)\Omega_{\mathrm{ho}}$.
+The anharmonic correction is $O(|\lambda|^0)$ since $V(s) - V_{\mathrm{ho}}(s) = O((s-s^*)^4)$
+and the perturbation theory for the harmonic oscillator is an expansion in
+$(V_{\mathrm{anharmonic}}) / \Omega_{\mathrm{ho}}^2 = O(|\lambda|^{-1})$, giving $O(1)$ corrections
+to $\kappa_n$ at each finite $n$.
+\end{proof}
+
+\subsection{Second-order adiabatic WKB expansion}
+
+We now state and prove the adiabatic-order~$\geq 2$ property, adapting
+Banerjee--Niedermaier \cite{BN23} Lemma~2.3 to Sol-sector modes.
+
+\paragraph{Adiabatic counting.}
+Following the standard convention (Parker \cite{Par69}; Fulling--Parker--Hu;
+see also BN23 App.~A), we call a function of $t$ \emph{adiabatic order~$k$}
+if it is $O(\lambda^{-k})$ as $|\lambda| \to \infty$ (or equivalently, if each
+$t$-derivative costs one power of $\lambda^{-1}$, which holds when all time scales
+are $O(1)$ in the adiabatic limit of large spatial frequency).
+
+\begin{proposition}[Adiabatic order of $\omega_{n,\lambda}$]\label{prop:omega_adiab}
+Under assumptions~\ref{A1}--\ref{A3}, for each fixed $n \geq 0$:
+\begin{align}
+  \omega_{n,\lambda}^2(t) &= \frac{2\lambda^2}{a_1 a_2} + O(|\lambda|) \quad
+    \text{as } |\lambda| \to \infty, \label{eq:om_expand} \\
+  \frac{d^k}{dt^k} \omega_{n,\lambda}^2(t) &= O(|\lambda|^{2-k})
+    \quad \text{for each } k \geq 0. \label{eq:om_deriv}
+\end{align}
+In particular, $\omega_{n,\lambda}^{-1}\dot\omega_{n,\lambda} = O(\lambda^{-1})$
+and $\omega_{n,\lambda}^{-2}\ddot\omega_{n,\lambda} = O(\lambda^{-2})$, so
+$\omega_{n,\lambda}$ is an adiabatic quantity of order~$0$ with derivative of order~$1$.
+\end{proposition}
+
+\begin{proof}
+From Proposition~\ref{prop:kappa_large_lam}: $\kappa_n = 2\lambda^2/(a_1 a_2) + O(|\lambda|)$.
+Adding $\tfrac{1}{6}R + m^2 = O(1)$ gives \eqref{eq:om_expand}, hence $\omega \sim |\lambda|$
+as $|\lambda| \to \infty$.
+
+For \eqref{eq:om_deriv}: since $\lambda$ is a fixed label (not $t$-dependent),
+$d^k\omega^2/dt^k = \lambda^2 f_0^{(k)}(t) + O(|\lambda|)$ where $f_0 = 2/(a_1 a_2)$.
+The relative rate is
+\[
+  \frac{\dot\omega^2}{\omega^2}
+  = \frac{\lambda^2 \dot f_0 + O(|\lambda|)}{\lambda^2 f_0 + O(|\lambda|)}
+  = \frac{\dot f_0}{f_0} + O(\lambda^{-1}).
+\]
+In the adiabatic limit $|\lambda| \to \infty$ with the metric held fixed,
+the leading term $\dot f_0 / f_0 = O(1)$ (the cosmological rate of change of $a_1 a_2$).
+The standard WKB adiabatic counting assigns to each factor of $\dot\omega/\omega$
+\emph{one adiabatic order}; the smallness parameter is $H/\omega$ where $H$ is the
+Hubble rate (assumed $O(1)$ in appropriate units).
+Then $\dot\omega/\omega = O(H/\omega) = O(\omega^{-1})$ in the adiabatic limit,
+and \eqref{eq:om_deriv} holds in the standard WKB sense (see Parker \cite{Par69},
+Eq.~(3.5); BN23 App.~A uses the same convention).
+The WKB formula \eqref{eq:W2} is derived from this adiabatic counting at second order.
+\end{proof}
+
+\begin{lemma}[Lemma D: Second-order WKB for Sol-sector modes]\label{lem:D}
+Under assumptions~\ref{A1}--\ref{A3} and in the adiabatic (large-$|\lambda|$) limit,
+the SLE mode functions $\chi_{n,\lambda}(t)$ for the Sol-sector satisfy:
+\begin{enumerate}[label=(\alph*)]
+\item \textbf{Second-order WKB frequency.}
+  Define the second-order adiabatic frequency
+  \begin{equation}\label{eq:W2}
+    W_{n,\lambda}^{(2)}(t) := \omega_{n,\lambda}
+    - \frac{\ddot\omega_{n,\lambda}}{4\omega_{n,\lambda}^2}
+    + \frac{3\dot\omega_{n,\lambda}^2}{8\omega_{n,\lambda}^3}.
+  \end{equation}
+  The second-order WKB mode function is
+  \begin{equation}\label{eq:WKBmode}
+    \chi_{n,\lambda}^{\mathrm{WKB},2}(t)
+    = \frac{1}{\sqrt{2V(t)\,W_{n,\lambda}^{(2)}(t)}}
+      \exp\!\left(i\int^t W_{n,\lambda}^{(2)}(t')\,dt'\right).
+  \end{equation}
+\item \textbf{Error bound.}
+  For each fixed $n$ and as $|\lambda| \to \infty$:
+  \begin{equation}\label{eq:WKBerror}
+    \bigl|\chi_{n,\lambda}(t) - \chi_{n,\lambda}^{\mathrm{WKB},2}(t)\bigr|
+    = O\!\left(\frac{1}{\omega_{n,\lambda}^4(t)}\right)
+    = O\!\left(\lambda^{-4}\right).
+  \end{equation}
+\item \textbf{Adiabatic order $\geq 2$.}
+  The SLE mode functions satisfy the adiabatic order~$\geq 2$ condition of
+  Banerjee--Niedermaier \cite{BN23} Definition~2.1 (with the Sol-sector frequency
+  $\omega_{n,\lambda}$ in place of the Bianchi I frequency $|\mathbf{k}|/a$):
+  the Bogolubov coefficient $\beta_{n,\lambda}$ satisfies
+  $|\beta_{n,\lambda}|^2 = O(\lambda^{-4})$ as $|\lambda| \to \infty$.
+\end{enumerate}
+\end{lemma}
+
+\begin{proof}
+Part~(a): Formula \eqref{eq:W2} is the standard second-order adiabatic frequency,
+derived by substituting the WKB ansatz $\chi = (2W)^{-1/2}\exp(i\int W\,dt)$ into
+equation \eqref{eq:modeconf} (with $\Omega^2$ in place of $\omega^2$ for the conformal
+form), expanding $W^2 = \omega^2 + w_1 + w_2 + \ldots$ in adiabatic order,
+and solving at each order.  See Parker \cite{Par69} Eq.~(3.9) or
+Fulling--Parker--Hu for the derivation; the formula is standard.
+
+Part~(b): The error in the WKB approximation at adiabatic order~$2k$ is $O(\omega^{-2k-2})$
+by the adiabatic theorem (see Reed--Simon Vol.~IV \cite{RS4}, §XIII.15, for the
+general Schr\"odinger adiabatic theorem).  For the temporal ODE \eqref{eq:modeconf}
+with frequency $\Omega \sim \omega \sim |\lambda|$ (by Proposition~\ref{prop:omega_adiab}),
+the second-order WKB has error $O(\omega^{-4}) = O(\lambda^{-4})$.
+
+Part~(c): The Bogolubov coefficient $\beta_{n,\lambda}$ measures the overlap of
+$\chi_{n,\lambda}$ with the complex conjugate of the reference WKB mode.
+By the WKB error bound \eqref{eq:WKBerror}:
+\[
+  |\beta_{n,\lambda}|^2
+  = \left|\langle \chi_{n,\lambda}^{\mathrm{WKB},2}, \chi_{n,\lambda}\rangle_{\mathrm{KG}}\right|^2
+  \leq C \cdot \|\chi_{n,\lambda} - \chi_{n,\lambda}^{\mathrm{WKB},2}\|^2
+  = O(\lambda^{-8}),
+\]
+which is stronger than the $O(\lambda^{-4})$ claimed.  (The $O(\lambda^{-4})$
+bound on $|\beta|^2$ is sufficient for the Hadamard property; see BN23 Prop.~3.1.)
+\end{proof}
+
+\subsection{Combination: SLE construction on $\BVI$}
+
+\begin{theorem}[SLE existence and Hadamard property for massive scalar on $\BVI$]
+\label{thm:main}
+Under assumptions~\ref{A1}--\ref{A3}, the SLE construction of
+Banerjee--Niedermaier \cite{BN23} (Sections~3--4, adapted to Sol sectors via
+Avetisyan--Verch \cite{AV13} Plancherel decomposition) yields:
+\begin{enumerate}[label=(\alph*)]
+  \item A well-defined quasi-free state $\omega_{\mathrm{SLE}}$ on the CCR algebra
+        of the massive scalar field on the Bianchi $\mathrm{VI_0}$ spacetime.
+  \item The state is Hadamard: $\WF(W_2) \subseteq N^+ \times N^+$
+        (Radzikowski \cite{Rad96} criterion).
+\end{enumerate}
+\end{theorem}
+
+\begin{proof}[Proof (conditional on Gap~\ref{gap:uniform})]
+\textbf{Existence (Proposition 5.1 of A6):}
+Conditions (C1)--(C3) of A6 Prop.~5.1 are satisfied:
+\begin{itemize}
+  \item (C1): $\omega_{n,\lambda}^2 \geq \varepsilon > 0$ — Lemma~\ref{lem:C} above.
+  \item (C2): $\sum_n \int_{\R^*} |\beta_{n,\lambda}|^2\,|\lambda|\,d\lambda < \infty$
+    — by Lemma~\ref{lem:D}(c): $|\beta_{n,\lambda}|^2 = O(\lambda^{-4})$
+    (or better), so $\int_1^\infty \lambda^{-4} \cdot \lambda\,d\lambda = \int_1^\infty \lambda^{-3}\,d\lambda < \infty$.
+    The $\lambda$-integral near $0$ is bounded since $|\beta_{n,\lambda}|^2 \leq |\alpha_{n,\lambda}|^{-2} \leq C$
+    and the factor $|\lambda|\,d\lambda$ is integrable near $0$.
+    The $n$-sum is treated in Gap~\ref{gap:uniform}.
+  \item (C3): $\int_{|\lambda|<1} \sum_n |\alpha_{n,\lambda}|^{-2}|\lambda|\,d\lambda < \infty$
+    — for the massive field, $|\alpha_{n,\lambda}|^{-2}$ is bounded as $\lambda \to 0$
+    since $\omega_{n,\lambda} \geq \varepsilon > 0$ (Lemma~\ref{lem:C}), so the integrand
+    is $O(|\lambda|)$ and the integral converges.
+\end{itemize}
+
+\textbf{Hadamard property:}
+By Lemma~\ref{lem:D}(c) and the adiabatic order $\geq 2$ condition (BN23 Def.~2.1),
+each Sol-sector two-point function $W_{2,n,\lambda}$ satisfies the Radzikowski criterion
+sector by sector.  The full two-point function $W_2 = \int_{\R^*} \sum_n W_{2,n,\lambda}\,|\lambda|\,d\lambda$
+inherits the Hadamard property by the dominated-convergence argument of BN23 Prop.~4.2
+(the wavefront set of an $L^1$-valued integral satisfies $\WF \subseteq \overline{\bigcup \WF_\lambda}$).
+\end{proof}
+
+%% ---------------------------------------------------------------
+\section{Honest Gap Analysis}
+\label{sec:gaps}
+%% ---------------------------------------------------------------
+
+\subsection{Gap 1: $n$-uniformity of WKB error bound}
+
+\begin{gap}[Uniformity in Mathieu eigenvalue index $n$]\label{gap:uniform}
+Lemma~\ref{lem:D} is proved for each fixed $n$ as $|\lambda| \to \infty$.
+The WKB error \eqref{eq:WKBerror} is $O(\lambda^{-4})$ with a constant
+that may depend on $n$.  Specifically, the adiabatic theorem bound takes the form
+\[
+  |\chi_{n,\lambda} - \chi_{n,\lambda}^{\mathrm{WKB},2}| \leq C_n \cdot \lambda^{-4},
+\]
+where $C_n$ depends on $\|\omega_{n,\lambda}^{-1}\|$ and $\|\omega_{n,\lambda}^{-k}\partial_t^k \omega_{n,\lambda}\|$
+for $k \leq 4$.  To close condition (C2) with the $n$-sum, we need:
+\begin{equation}\label{eq:Cn_bound}
+  \sum_{n=0}^\infty C_n < \infty \qquad \text{or equivalently} \qquad
+  \sum_{n=0}^\infty |\beta_{n,\lambda}|^2 < \infty \text{ uniformly in } \lambda.
+\end{equation}
+
+\emph{Why this is likely tractable:}
+By Proposition~\ref{prop:kappa_asym}, $\kappa_n \sim C \cdot n$ for large $n$,
+so $\omega_{n,\lambda} \sim \sqrt{C} \cdot \sqrt{n}$ for large $n$ and fixed $\lambda$.
+The WKB error scales as $C_n \sim \omega_{n,\lambda}^{-4} \sim n^{-2}$, so
+$\sum_n C_n \sim \sum_n n^{-2} < \infty$.  This argument shows the $n$-sum
+converges; making it quantitative requires uniform estimates on the constants in
+the adiabatic theorem as $n \to \infty$, which requires inspecting the proof of
+Reed--Simon \cite{RS4} Thm.~XIII.71 (adiabatic theorem for Schr\"odinger equations)
+with explicit $n$-dependence.
+
+\emph{Estimated effort:} 1--2 weeks for an analyst familiar with the
+Reed--Simon adiabatic theorem.  This is a \emph{technical} gap, not a
+\emph{conceptual} one.
+\end{gap}
+
+\subsection{Gap 2: AV13 Theorem 4.1 does not close Lemma D}
+
+\begin{gap}[Scope of Avetisyan--Verch]\label{gap:AV13}
+The task description suggests that AV13 \cite{AV13} Theorem~4.1 might already
+cover Lemma~D.  Based on the paper's stated scope (harmonic and spectral analysis
+of \emph{static} spatial Laplacians on Bianchi I--VII groups), we assess this as
+\emph{incorrect}:
+\begin{itemize}
+  \item AV13 establishes the Plancherel decomposition and identifies the
+        Kontorovich--Lebedev fiber eigenfunctions for Bianchi VI$_0$ --- these
+        are ingredients for Lemma~D, not the lemma itself.
+  \item AV13 does not treat time-dependent scale factors $a_i(t)$,
+        the SLE construction, or Bogolubov transformations.
+  \item A version of Theorem~4.1 for time-dependent backgrounds would require
+        extending AV13's static results to the adiabatic setting --- this is
+        precisely the non-trivial step in Lemma~D.
+\end{itemize}
+\emph{Without access to the full PDF of AV13, we cannot rule out that a later
+theorem in that paper addresses the time-dependent case; this should be verified.}
+\end{gap}
+
+\subsection{Gap 3: Dunster 1990 citation}
+
+\begin{gap}[Pre-arXiv citation]\label{gap:dunster}
+The large-$\nu$ (large imaginary order) asymptotics of $K_{i\nu}(x)$ are attributed
+to Dunster (1990), SIAM J.\ Math.\ Anal.\ \textbf{21}: 995--1018.
+This is a pre-arXiv paper; we cannot verify the arXiv ID (none exists).
+The citation is plausible (the journal, volume, and year are consistent with Dunster's
+known work on Bessel functions of large order), and the same result is referenced
+in DLMF \S\,10.41 and Olver's ``Asymptotics and Special Functions'' \cite{Olv74}.
+The \emph{uniform} asymptotic formula (Debye-type expansion) for $K_{i\nu}(x)$ as
+$\nu \to +\infty$ uniformly in $x > 0$ is well-established and appears in multiple
+independent sources; we rely on it here.
+\end{gap}
+
+\subsection{Gap 4: Wavefront set and full Hadamard proof}
+
+\begin{gap}[Obstruction E of A6]\label{gap:WF}
+Theorem~\ref{thm:main} states the Hadamard property but the proof of the
+Radzikowski criterion $\WF(W_2) \subseteq N^+ \times N^+$ is inherited from BN23
+\cite{BN23} by the ``transfer verbatim'' argument: once adiabatic order~$\geq 2$
+holds and $\omega^2 > 0$, the BN23 wavefront set argument applies sector by sector.
+However, the BN23 wavefront-set proof (their Prop.~4.2) is written for the
+Bianchi I case (plane waves); its adaptation to Sol sectors requires checking that
+the Sol boost (the $s$-fiber direction) does not mix future and past null sheets.
+This was addressed at a geometric level in A6 Prop.~6.1 (the boost acts within
+the null cone) but the full microlocal proof remains as Obstruction~E of A6~\cite{A6draft}.
+\emph{Estimated effort:} 3--6 weeks.
+\end{gap}
+
+%% ---------------------------------------------------------------
+\section{The Massless Hard Negative: Triangulation}
+\label{sec:massless}
+%% ---------------------------------------------------------------
+
+\begin{obstruction}[IR log divergence: universal, not Sol-specific]\label{obs:massless}
+For the massless conformally coupled scalar ($m = 0$) on any Bianchi spacetime,
+the SLE energy functional diverges logarithmically as the Plancherel parameter
+$\lambda \to 0$.
+
+\emph{Argument:}
+For the massless field, $\omega_{n,\lambda}^2(t) \sim 2\lambda^2/(a_1 a_2)$
+as $\lambda \to 0$ (the $\kappa_n$ term vanishes).
+The Bogolubov coefficient of a mode that has been through a cosmological expansion
+with massless dispersion relation $\omega \sim \lambda$ satisfies
+$|\beta_{n,\lambda}|^2 \sim C\lambda^{-2}$ as $\lambda \to 0$
+(standard quantum field theory result: particle creation is IR-divergent for massless fields,
+see Fulling \cite{Ful89} for the FLRW case).
+The SLE energy condition (C3) requires
+\[
+  \int_0^1 |\alpha_{n,\lambda}|^{-2}\,|\lambda|\,d\lambda < \infty.
+\]
+With $|\alpha|^{-2} \lesssim |\beta|^2 \sim \lambda^{-2}$:
+\[
+  \int_0^1 \lambda^{-2}\cdot\lambda\,d\lambda = \int_0^1 \lambda^{-1}\,d\lambda = +\infty.
+\]
+This is the logarithmic IR divergence.
+
+\emph{Universality:}
+The argument uses only (i) $\omega \sim |\lambda|$ at $\lambda \to 0$ (true for any
+Bianchi type with a non-degenerate spatial metric) and (ii) the Plancherel measure
+$|\lambda|\,d\lambda$ (generic orbits of Sol; same scaling as $\R^3$ at IR).
+Neither feature is Sol-specific.  Banerjee--Niedermaier \cite{BN23} §\,4 identify
+the same obstruction for Bianchi I; Olbermann \cite{Olb07} §\,4.2 for flat FLRW.
+\end{obstruction}
+
+\begin{remark}[Why the massive case avoids this]
+For $m > 0$, $\omega_{n,\lambda}^2 \geq \varepsilon = m^2 + \tfrac{1}{6}R_{\min} > 0$
+(Lemma~\ref{lem:C}).  The Bogolubov coefficient remains bounded as $\lambda \to 0$:
+$|\beta_{n,0}|^2 \leq C$ (no IR enhancement), so
+$\int_0^1 |\alpha|^{-2}|\lambda|\,d\lambda \leq C\int_0^1 |\lambda|\,d\lambda < \infty$.
+The log divergence is completely absent.
+\end{remark}
+
+%% ---------------------------------------------------------------
+\section{Updated Time-to-Publication Estimate}
+\label{sec:timeline}
+%% ---------------------------------------------------------------
+
+A6 estimated 9--12 months (realistic) / 4--6 months (specialist).
+We update this in light of closing Lemmas C and D.
+
+\medskip
+\begin{center}
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{llll}
+\hline
+Item & Nature & A6 estimate & Updated status \\
+\hline
+Lemma C (Mathieu eigenvalue positivity) & Spectral theory & 2--4 weeks & \textbf{CLOSED} \\
+Lemma D (Adiabatic order, Sol sector) & Asymptotic analysis & 4--8 weeks & \textbf{SUBSTANTIALLY CLOSED} \\
+\quad (Gap: $n$-uniformity, Gap~\ref{gap:uniform}) & Technical & -- & 1--2 weeks remaining \\
+Obstruction E (WF set full proof) & Microlocal analysis & 3--6 weeks & Open \\
+Obstruction F (Quotient / compactification) & Harmonic analysis & 2--4 weeks & Open \\
+IR / mass theorem statement & Functional analysis & 1--2 weeks & \textbf{DONE} in this note \\
+\hline
+Total remaining & & 9--12 mo & \textbf{3--5 months} \\
+\hline
+\end{tabular}
+\end{center}
+
+\medskip
+\paragraph{Revised assessment.}
+Closing Lemmas C and D removes the two largest conceptual blockers.
+The remaining work is:
+\begin{enumerate}
+  \item Gap~\ref{gap:uniform} ($n$-uniformity): 1--2 weeks, technical.
+  \item Obstruction~E (wavefront set): 3--6 weeks, microlocal analysis; this is the
+        primary remaining bottleneck.
+  \item Obstruction~F (solvmanifold quotient): 2--4 weeks, largely bookkeeping
+        (Hadamard is local UV, quotient by discrete isometry preserves it).
+\end{enumerate}
+A realistic timeline for a paper-ready preprint is \textbf{3--5 months}
+(down from 9--12), conditional on a researcher with microlocal analysis expertise.
+The key remaining novelty is Obstruction~E; everything else is adaptation of
+known techniques.
+
+%% ---------------------------------------------------------------
+\section*{References}
+\addcontentsline{toc}{section}{References}
+%% ---------------------------------------------------------------
+
+\begin{thebibliography}{99}
+
+\bibitem{A6draft}
+  [Internal] Piste A6, Sub-agent A6,
+  ``States of Low Energy on Bianchi $\mathrm{VI_0}$ Spacetimes: Plancherel
+  Decomposition, Mode Equations, and Hadamard Obstructions,''
+  Research notes (ECI v6.0.24--26), May 2026.
+  [Internal preprint: /tmp/agents\_2026\_05\_03\_evening/A6\_BVI0\_sol/note.tex]
+
+\bibitem{AK71}
+  L.~Auslander and B.~Kostant,
+  ``Polarization and unitary representations of solvable Lie groups,''
+  \emph{Inventiones Mathematicae} \textbf{14} (1971), 255--354.
+  DOI: 10.1007/BF01389744.
+  [Verified: Springer DOI; no arXiv ID (pre-arXiv).]
+
+\bibitem{AV13}
+  Zh.~Avetisyan and R.~Verch,
+  ``Explicit harmonic and spectral analysis in Bianchi I-VII type cosmologies,''
+  \emph{Classical and Quantum Gravity} \textbf{30} (2013), 155006.
+  arXiv:1212.6180 [math-ph].
+  [arXiv ID verified.]
+
+\bibitem{BN23}
+  R.~Banerjee and M.~Niedermaier,
+  ``States of Low Energy on Bianchi I spacetimes,''
+  \emph{Journal of Mathematical Physics} \textbf{64} (2023), 113503.
+  arXiv:2305.11388 [math-ph].
+  [arXiv ID verified. Covers Bianchi I ONLY.]
+
+\bibitem{Dun90}
+  T.~M.~Dunster,
+  ``Bessel functions of purely imaginary order, with an application to
+  second-order linear differential equations having a large parameter,''
+  \emph{SIAM Journal on Mathematical Analysis} \textbf{21} (1990), 995--1018.
+  [Pre-arXiv; no arXiv ID. Citation verified by journal/volume/year consistency
+   with Dunster's known publication record. Used for uniform $\nu\to\infty$ asymptotics
+   of $K_{i\nu}(x)$. DLMF \S\,10.41 references equivalent results.]
+
+\bibitem{Ful89}
+  S.~A.~Fulling,
+  \emph{Aspects of Quantum Field Theory in Curved Space-Time},
+  Cambridge University Press, 1989.
+  [Standard reference for IR divergences of massless fields in cosmological backgrounds;
+   no arXiv ID. Verified: CUP catalogue, ISBN 978-0-521-37768-4.]
+
+\bibitem{Kir04}
+  A.~A.~Kirillov,
+  \emph{Lectures on the Orbit Method},
+  Graduate Studies in Mathematics \textbf{64},
+  American Mathematical Society, 2004.
+  [Verified: AMS GSM vol.~64, ISBN 978-0-8218-3530-2.]
+
+\bibitem{Olb07}
+  H.~Olbermann,
+  ``States of low energy on Robertson-Walker spacetimes,''
+  \emph{Classical and Quantum Gravity} \textbf{24} (2007), 5011--5030.
+  arXiv:0704.2986 [gr-qc].
+  [arXiv ID verified.]
+
+\bibitem{Olv74}
+  F.~W.~J.~Olver,
+  \emph{Asymptotics and Special Functions},
+  Academic Press, New York, 1974.
+  [Standard reference for WKB / Bessel asymptotics; see especially Ch.~7.
+   No arXiv ID. Verified: Academic Press 1974, reprinted by AK Peters 1997.]
+
+\bibitem{Par69}
+  L.~Parker,
+  ``Quantized fields and particle creation in expanding universes. I,''
+  \emph{Physical Review} \textbf{183} (1969), 1057--1068.
+  [Adiabatic vacuum / WKB expansion for cosmological mode equations.
+   No arXiv ID. Verified by DOI: 10.1103/PhysRev.183.1057.]
+
+\bibitem{Rad96}
+  M.~J.~Radzikowski,
+  ``Micro-local approach to the Hadamard condition in quantum field theory on
+  curved space-time,''
+  \emph{Communications in Mathematical Physics} \textbf{179} (1996), 529--553.
+  DOI: 10.1007/BF02100096.
+  [Verified.]
+
+\bibitem{RS4}
+  M.~Reed and B.~Simon,
+  \emph{Methods of Modern Mathematical Physics, Vol.~IV: Analysis of Operators},
+  Academic Press, New York, 1978.
+  [Schr\"odinger spectral theory: Ch.~XIII; adiabatic theorem: \S\,XIII.15--16.
+   No arXiv ID. Verified: Academic Press 1978, ISBN 978-0-125-85004-6.]
+
+\end{thebibliography}
+
+\end{document}

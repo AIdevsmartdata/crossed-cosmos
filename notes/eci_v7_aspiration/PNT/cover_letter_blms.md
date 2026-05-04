@@ -18,7 +18,7 @@ by Kévin Remondière.
 
 **Summary of the paper.**
 The metaplectic cover S'_4 of the modular symmetry group S_4, introduced
-by Novichkov, Penedo, Petcov, and Titov (JHEP 2021, arXiv:2006.03058), is
+by Novichkov, Penedo, and Petcov (Nucl. Phys. B 963, 2021; arXiv:2006.03058), is
 a group of order 48 whose "hatted" representations carry modular forms
 of odd weight at level Γ(4).  We establish two identifications between
 forms in this metaplectic setting and classical newforms in the LMFDB:
@@ -87,11 +87,26 @@ kevin.remondiere@gmail.com
 
 ---
 
-**[DRAFT NOTE for Day 3-7 polish]**
+**[STATUS after Days 3–7 polish — 2026-05-04]**
 
-Before sending:
-- Confirm both LMFDB labels live (URLs in the paper).
-- Add Zenodo DOI once record is created.
-- Confirm dMVP26 arXiv:2604.01422 is publicly available.
-- Check BLMS word/page limit for short articles (typically ≤ 12 pages).
-- If an institutional affiliation is appropriate, add it.
+Live verifications completed:
+- LMFDB 4.5.b.a: confirmed dim=1, CM by Q(i), char orbit 4.b, q-expansion
+  verbatim `q - 4q² + ... - 14q⁵ ... - 238q¹³ ... + 322q¹⁷ ... + 82q²⁹ ... + 2162q³⁷ ...`
+  Root number = +1 (corrected from earlier draft that said Fricke eigenvalue −1).
+- LMFDB 16.5.c.a: confirmed dim=2, coeff field Q(√-3), char orbit 16.c, not CM.
+  q-expansion verbatim with β=8√-3 confirmed.
+- arXiv:2604.01422 (dMVP26): confirmed authors = Ivo de Medeiros Varzielas and
+  Manuel Paiva, title = "Quark masses and mixing from Modular S'₄ with Canonical
+  Kähler Effects", submitted 1 April 2026. (Original draft had wrong authors.)
+- arXiv:2006.03058 (NPP20): confirmed 3 authors (not 4), title corrected,
+  journal = Nucl. Phys. B 963 (2021) 115301.
+- arXiv:2006.10722 (LYD20): confirmed title "Modular Invariant Quark and Lepton
+  Models in Double Covering of S₄ Modular Group". (Original draft had wrong title.)
+
+Remaining before sending:
+- **Add Zenodo DOI** once record is created (replace placeholder below).
+- Fetch BLMS author instructions directly (blocked in polish session;
+  page limit is known to be ≤ 12 pages; paper is ~9–10 pp amsart).
+- Optionally add institutional affiliation.
+
+Zenodo DOI: [TO BE ADDED — see ECI v6.0.44 record 20021358 for audit chain]

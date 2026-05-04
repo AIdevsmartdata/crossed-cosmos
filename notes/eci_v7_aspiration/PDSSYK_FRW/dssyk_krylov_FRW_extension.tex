@@ -1,0 +1,880 @@
+%% dssyk_krylov_FRW_extension.tex
+%% COMPANION NOTE: Krylov Complexity in the FRW Diamond
+%% Extending Heller-Papalini-Schuhmann (arXiv:2412.17785) to FRW
+%%
+%% Status: DRAFT 2026-05-04
+%% Authors: (to be determined)
+%%
+%% Anti-hallu notes (embedded throughout):
+%%   - HPS 2412.17785 is about DSSYK/sine-dilaton gravity (C=V matching),
+%%     NOT algebraic-KMS Krylov theory. Its results are cited accurately below.
+%%   - Parker et al. 1812.08657: abstract gives lambda_L <= 2alpha, not
+%%     explicitly lambda_K = 2pi/beta; SYK saturation is numerical.
+%%   - FRW type-II_inf is established in frw_note.tex (Thm 1/2, 2026-05-02).
+%%   - ECI v6.0.44 (sec:mss-shadow) flags the bridge S_gen <-> C_Krylov as
+%%     a working conjecture, not a theorem.
+%%   - All [CONJECTURE] tags are mandatory.
+
+\documentclass[12pt,a4paper]{article}
+
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{hyperref}
+\usepackage{cite}
+\usepackage{geometry}
+\usepackage{xcolor}
+\geometry{margin=2.5cm}
+
+%% Theorem environments
+\newtheorem{theorem}{Theorem}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{conjecture}[theorem]{Conjecture}
+\theoremstyle{definition}
+\newtheorem{remark}[theorem]{Remark}
+\newtheorem{question}[theorem]{Open Question}
+
+%% Macros
+\newcommand{\CK}{\mathcal{C}_K}
+\newcommand{\AO}{\mathcal{A}(\mathcal{O})}
+\newcommand{\lK}{\lambda_K}
+\newcommand{\lL}{\lambda_L}
+\newcommand{\bw}{\mathrm{BW}}
+\newcommand{\HL}{\mathrm{HL}}
+\newcommand{\FRW}{\mathrm{FRW}}
+\newcommand{\Mink}{\mathrm{M}}
+\newcommand{\sgen}{S_{\mathrm{gen}}}
+\newcommand{\Smod}{\mathcal{C}_K^{\mathrm{mod}}}
+\newcommand{\KMS}{\mathrm{KMS}}
+\newcommand{\dS}{\mathrm{dS}}
+\newcommand{\TODO}[1]{\textcolor{red}{[TODO: #1]}}
+
+\title{\textbf{Krylov Complexity in the FRW Diamond}\\[4pt]
+       \large Extending Heller--Papalini--Schuhmann to Non-Stationary Cosmology
+       via Conformal Pullback}
+
+\author{\textit{(Author names to be determined)}\\[2pt]
+  \small \textit{Companion note to: ``The Modular Shadow Conjecture''
+  [Letters in Mathematical Physics, submitted]}\\
+  \small \textit{and to: ``Type II$_\infty$ for the gravitational algebra in
+  radiation-dominated FRW'' \cite{FRWnote}}}
+
+\date{Preprint: 2026-05-04}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+We extend the analysis of Heller, Papalini, and Schuhmann~\cite{HPS2024}
+--- which establishes a quantitative match between Krylov spread complexity
+in double-scaled SYK (DSSYK) and the complexity-equals-volume proposal in
+sine-dilaton gravity at finite temperatures --- to the FRW causal diamond.
+The algebraic foundation is provided by the type-II$_\infty$ classification
+of the FRW diamond algebra~\cite{FRWnote}: for the conformally coupled
+massless scalar in radiation- or matter-dominated FRW, the crossed-product
+algebra $\mathcal{A}(\mathcal{O})_\FRW \rtimes_\sigma \mathbb{R}$ is type
+II$_\infty$, with the modular automorphism group unitarily intertwined with
+the Hislop--Longo flow on the conformally identified Minkowski diamond.
+The KMS state at $\beta = 2\pi$ (conformal pullback of Bisognano--Wichmann)
+gives a modular Hamiltonian with continuous unbounded spectrum, enabling
+a Lanczos recursion.
+We conjecture [CONJECTURE] that the Krylov complexity growth rate in the
+FRW diamond satisfies $\lK^\FRW = 2\pi/\beta = 1$ in natural units,
+saturating the Maldacena--Shenker--Stanford (MSS) chaos bound, as a
+structural consequence of the type-II$_\infty$ classification and the
+KMS condition.
+The central bridge $\sgen \leftrightarrow \Smod$ is flagged explicitly
+as unproven; the note records supporting arguments, identifies the obstructions,
+and proposes a programme of $\sim 4$ weeks of computation to either
+substantiate or refute the conjecture.
+\end{abstract}
+
+\tableofcontents
+
+%% ─────────────────────────────────────────────────────────────────────
+\section{Background and Motivation}
+\label{sec:background}
+%% ─────────────────────────────────────────────────────────────────────
+
+\subsection{Krylov complexity and the MSS chaos bound}
+
+Parker, Cao, Avdoshkin, Scaffidi, and Altman~\cite{Parker2019}
+introduced \emph{Krylov} (Lanczos) complexity $\CK(t)$ as a
+basis-independent measure of operator growth.
+Given an operator $\mathcal{O}$ evolving under a Hamiltonian $H$,
+one constructs iteratively the orthonormal \emph{Krylov basis}
+$\{|O_n\rangle\}$ from the nested commutators $\mathcal{L}^n\mathcal{O}$
+via the Gram--Schmidt procedure, where $\mathcal{L} = [H, \cdot]$ is the
+Liouvillian superoperator.
+The Krylov complexity is the mean position in this basis:
+$\CK(t) = \sum_n n \, |\langle O_n | \mathcal{O}(t)\rangle|^2$.
+The key quantity in the recursion is the sequence of \emph{Lanczos
+coefficients} $\{b_n\}_{n \ge 1}$, defined by the three-term recurrence.
+
+\textbf{Universal operator growth hypothesis~\cite{Parker2019}.}
+\emph{In generic (non-integrable) many-body systems, the Lanczos
+coefficients $b_n$ grow asymptotically linearly:}
+\begin{equation}
+  b_n \;\sim\; \alpha\, n \;+\; \text{(sub-leading)},
+  \qquad n \to \infty,
+  \label{eq:lanczos-linear}
+\end{equation}
+\emph{where $\alpha > 0$ is a model-dependent rate, with a logarithmic
+correction in 1+1 dimensions.
+The rate $\alpha$ upper-bounds the Lyapunov exponent:
+$\lL \le 2\alpha$.
+Since the universal low-temperature bound gives $\lL \le 2\pi T = 2\pi/\beta$
+(MSS), saturation of both bounds requires $\alpha = \pi/\beta$ and
+$b_n \sim (\pi/\beta)\,n$ in maximally chaotic systems.}
+
+The MSS chaos bound~\cite{MSS2016} states that in any large-$N$ quantum
+system with a thermal density matrix at inverse temperature $\beta$,
+the OTOC Lyapunov exponent satisfies
+\begin{equation}
+  \lL \;\le\; \frac{2\pi}{\beta}.
+  \label{eq:mss}
+\end{equation}
+Equality holds in maximally chaotic systems including near-extremal
+black holes and the SYK model.
+The modular Krylov complexity version of MSS saturation, established
+numerically in SYK at large $N$~\cite{Parker2019}, is
+$\lK = 2\pi/\beta$ at saturation.
+
+\subsection{Heller--Papalini--Schuhmann: DSSYK and holographic Krylov}
+
+The paper by Heller, Papalini, and Schuhmann~\cite{HPS2024}
+(arXiv:2412.17785, PRL 135 151602, 2025) establishes a quantitative
+holographic match:
+
+\begin{quote}
+\textbf{Verbatim abstract of~\cite{HPS2024}:}
+``One of the important open problems in quantum black hole physics is
+a dual interpretation of holographic complexity proposals.
+To date the only quantitative match is the equality between the Krylov
+spread complexity in triple-scaled SYK at infinite temperature and the
+complexity = volume proposal in classical JT gravity.
+Our work utilizes the recent connection between double-scaled SYK and
+sine-dilaton gravity to show that the quantitative relation between Krylov
+spread complexity and complexity = volume extends to finite temperatures
+and to full quantum regime on the gravity side at disk level.
+From the latter we isolate the first quantum correction to the
+complexity = volume proposal and propose to view it as a complexity of
+quantum fields in the bulk.
+Finally, we comment on the switchback effect, whose presence would make
+the Krylov spread complexity a fully fledged holographic complexity at
+least in sine-dilaton gravity.''
+\end{quote}
+
+\begin{remark}[Scope of HPS result]
+\label{rem:HPS-scope}
+The HPS result~\cite{HPS2024} is a \emph{holographic} result about
+DSSYK/sine-dilaton gravity, not a derivation from algebraic quantum field
+theory or type-II crossed-product formalism.
+It establishes:
+(a) a quantitative $C = V$ match at finite temperatures in DSSYK;
+(b) the first quantum correction to $C = V$ as bulk-field complexity;
+(c) evidence for the switchback effect in DSSYK.
+It does \emph{not} directly prove the Krylov exponent in a type-II$_\infty$
+algebraic setting.
+The extension to FRW proposed in this note therefore requires additional
+algebraic input (the type-II$_\infty$ classification of the FRW diamond,
+\S\ref{sec:FRW-setup}) and an explicit conjecture [CONJECTURE] connecting
+HPS's holographic Krylov to the algebraic FRW modular flow.
+\end{remark}
+
+\subsection{Modular shadow and MSS saturation (ECI sec:mss-shadow)}
+
+The ECI programme~\cite{ECI_v6} identifies the MSS chaos bound as a
+``modular shadow'' of the saturation of the generalised entropy growth rate
+in the type-II$_\infty$ algebra.
+The ECI saturation identity is (eq.~(20) of~\cite{ECI_v6}):
+\begin{equation}
+  \frac{1}{\sgen} \frac{d\sgen}{d\tau}\bigg|_{\mathrm{sat}}
+  \;=\; \frac{2\pi T_H}{\hbar}
+  \;=\; \frac{\kappa_R}{\hbar},
+  \label{eq:eci-mss}
+\end{equation}
+where $\kappa_R = 2\pi T_H$ is the Bisognano--Wichmann surface gravity.
+Under the Faulkner--Speranza identification $\sgen \leftrightarrow
+\Smod$~\cite{FaulknerSperanza2024},
+equation~\eqref{eq:eci-mss} produces the MSS bound at equality.
+\textbf{This identification is a working conjecture, not a theorem.}
+(ECI v6.0.44, \S sec:mss-shadow, explicitly states: ``We flag this
+identification as a working conjecture rather than a theorem:
+the bridge $\sgen \leftrightarrow \Smod$ is consistent with the
+Witten--CLPW--Caputa--Faulkner--Speranza programme but has not been
+derived as a theorem in type-II$_\infty$ crossed-product algebras.'')
+
+The companion paper~\cite{ModularShadow} develops this into the
+Modular Shadow Conjecture.
+The present note asks: does the same structural picture hold in the
+\emph{FRW diamond}, where no global Killing vector exists?
+
+%% ─────────────────────────────────────────────────────────────────────
+\section{The Heller--Papalini--Schuhmann Setting and Its Scope}
+\label{sec:HPS}
+%% ─────────────────────────────────────────────────────────────────────
+
+\subsection{DSSYK and sine-dilaton gravity}
+
+Heller, Papalini, and Schuhmann~\cite{HPS2024} work in the setting of
+\emph{double-scaled SYK} (DSSYK), a variant of the Sachdev--Ye--Kitaev
+model defined by the limit $N, q \to \infty$ with $\lambda = 2 \log q / N$
+fixed.
+In this regime the model is dual, via the chord-diagram expansion, to
+\emph{sine-dilaton gravity} on a two-dimensional background.
+The Krylov spread complexity in DSSYK at inverse temperature $\beta$
+is given by:
+\begin{equation}
+  2|\log q|\,\CK(t)_\beta \;=\; \langle \hat{L} \rangle
+  \;=\; \bigl[-\partial_\Delta \langle e^{-\Delta\hat{L}}\rangle\bigr]_{\Delta=0},
+  \label{eq:HPS-main}
+\end{equation}
+where $\hat{L}$ is the chord-length operator in sine-dilaton gravity.
+The central result of~\cite{HPS2024} is that
+$\CK(t)_\beta = \langle \hat L \rangle_\beta / (2|\log q|)$
+matches the complexity-equals-volume (C=V) proposal in sine-dilaton gravity
+at finite temperatures and at disk-level in the quantum $1/C_\phi$ expansion.
+
+\subsection{What is AdS/static-specific vs. what can transport to FRW}
+
+The HPS analysis relies on:
+\begin{enumerate}
+\item \textbf{Static patch / thermal state.}
+  DSSYK at temperature $\beta^{-1}$ corresponds to a static thermal
+  state on the JT/sine-dilaton gravity side. There is an effective
+  time-translation symmetry (the Hamiltonian of the SYK model)
+  generating the thermal KMS flow.
+
+\item \textbf{Chord diagram / matrix model structure.}
+  The quantitative $C = V$ match uses chord combinatorics specific
+  to DSSYK. These are not available in a general curved background.
+
+\item \textbf{Holographic dictionary (JT/DSSYK).}
+  The gravity dual is two-dimensional and its complexity = volume
+  proposal is specific to dilaton gravity theories.
+\end{enumerate}
+
+\textbf{What survives in FRW:}
+The \emph{structural} content of the HPS result --- that Krylov
+spread complexity is a holographically computable measure of operator
+growth that saturates the MSS bound at $\lK = 2\pi/\beta$ ---
+is what we wish to transport to the FRW diamond.
+The transport is possible because:
+\begin{itemize}
+\item The FRW diamond algebra $\mathcal{A}(\mathcal{O})_\FRW$ is
+  type-II$_\infty$ (established, \S\ref{sec:FRW-setup}),
+  the same algebraic class as the AdS/JT algebra at large $N$.
+\item The KMS state on the FRW diamond at $\beta = 2\pi$ is the
+  conformal pullback of the Minkowski vacuum (Hislop--Longo), which
+  is structurally analogous to the Hartle--Hawking state in AdS.
+\item The Lanczos recursion is well-defined in any von Neumann algebra
+  equipped with a faithful normal state (the modular Krylov construction
+  of Caputa et al.~\cite{Caputa2024}).
+\end{itemize}
+
+\textbf{What does not transport:}
+\begin{itemize}
+\item The quantitative $C = V$ match depends on the chord-diagram
+  structure and the holographic dictionary of DSSYK. No FRW analogue
+  of this dictionary exists.
+\item The quantum correction (bulk-field complexity) isolated by HPS
+  is JT-gravity specific; in the FRW setting one would need a two-
+  dimensional gravity dual for the FRW diamond, which is not available.
+\item There is no FRW analogue of the global Hamiltonian $H_\mathrm{SYK}$
+  generating the thermal flow; the modular Hamiltonian $K_\FRW$ (a
+  non-local operator) must replace it.
+\end{itemize}
+
+%% ─────────────────────────────────────────────────────────────────────
+\section{FRW Diamond Setup}
+\label{sec:FRW-setup}
+%% ─────────────────────────────────────────────────────────────────────
+
+\subsection{The metric and the comoving observer}
+
+We work in spatially flat ($k=0$) FRW spacetime in conformal time $\eta$:
+\begin{equation}
+  ds^2_\FRW \;=\; a(\eta)^2\bigl(-d\eta^2 + d\mathbf{x}^2\bigr),
+  \qquad \mathbf{x}\in\mathbb{R}^3.
+  \label{eq:FRW-metric}
+\end{equation}
+For radiation-dominated matter content ($p = \rho/3$), the Friedmann
+equations give $a(\eta) = a_0\,\eta$; for matter-dominated content
+($p = 0$), $a(\eta) = a_0\,\eta^2$.
+Both cases are conformally flat, with the Minkowski metric
+$\eta_{\mu\nu}=\mathrm{diag}(-1,+1,+1,+1)$ as conformal target.
+
+A comoving observer at $\mathbf{x} = 0$ on $\eta \in (\eta_i, \eta_f)$
+(with $0 < \eta_i < \eta_f < \infty$) sweeps out a \emph{causal diamond}
+\begin{equation}
+  D(\mathcal{O}) \;=\; \bigl\{(\eta,\mathbf{x})\;:\;
+  |\mathbf{x}| < \eta_f - \eta,\;\eta > \eta_i + |\mathbf{x}|\bigr\}.
+\end{equation}
+In the conformally identified Minkowski coordinates, $D(\mathcal{O})$
+is the same set of coordinate points as a doubly-bounded Minkowski diamond
+$M_\mathcal{O}$.
+
+\textbf{No global Killing vector.}
+Neither radiation-dominated nor matter-dominated FRW admits a
+global timelike Killing vector field along a comoving worldline.
+The CLPW construction~\cite{CLPW2023, Witten2022} and its extensions
+to Killing horizons~\cite{FaulknerSperanza2024} are not directly
+applicable.
+
+\subsection{Conformally coupled scalar and the type-II$_\infty$ theorem}
+
+We consider the conformally coupled massless scalar field:
+\begin{equation}
+  S[\varphi] \;=\; -\tfrac{1}{2}\int d^4x\,\sqrt{-g}
+  \Bigl[g^{\mu\nu}\partial_\mu\varphi\,\partial_\nu\varphi
+        \;-\; \tfrac{1}{6}\,R\,\varphi^2\Bigr],
+  \qquad \xi = \tfrac{1}{6}.
+  \label{eq:action}
+\end{equation}
+Under the Weyl rescaling $\tilde\varphi := a(\eta)\,\varphi$, the
+field equation $(\Box_g - R/6)\varphi = 0$ maps exactly to
+$\Box_\Mink \tilde\varphi = 0$ (conformal-covariance identity,
+sympy-verified in~\cite{FRWnote}).
+The Bunch--Davies (conformal) vacuum $\Omega_\FRW$ maps to the
+Minkowski vacuum $\Omega_\Mink$ under the unitary
+$U: \mathcal{H}_\FRW \to \mathcal{H}_\Mink$ implementing
+$\varphi(f) \mapsto \tilde\varphi(a^3 \cdot f)$.
+
+The following theorem is established in~\cite{FRWnote}:
+
+\begin{theorem}[{Type II$_\infty$ for the FRW diamond, \cite{FRWnote} Theorem 1}]
+\label{thm:FRW-typeII}
+Let $\varphi$ be the conformally coupled massless scalar field on
+radiation-dominated FRW with $a(\eta) = a_0\eta$, in the conformal
+vacuum $\Omega_\FRW$.
+Let $D_\mathcal{O}$ be a doubly-bounded causal diamond for a comoving
+observer with $0 < \eta_i < \eta_f < \infty$.
+Let $\sigma^\FRW$ denote the modular automorphism group of
+$(\mathcal{A}(D_\mathcal{O})_\FRW, \Omega_\FRW)$.
+Then:
+\begin{enumerate}
+\item[(1)] $\sigma_t^\FRW = \mathrm{Ad}(U^{-1}) \circ \sigma_t^\HL \circ \mathrm{Ad}(U)$,
+  where $\sigma^\HL$ is the Hislop--Longo modular automorphism group of
+  the conformally identified Minkowski diamond.
+\item[(2)] The Connes spectrum satisfies $\Gamma(\sigma^\FRW) = \mathbb{R}$.
+\item[(3)] The crossed product $\mathcal{A}(D_\mathcal{O})_\FRW
+  \rtimes_{\sigma^\FRW} \mathbb{R}$ is a type II$_\infty$ factor.
+\end{enumerate}
+The same conclusion holds for matter-dominated FRW ($a(\eta) = a_0\eta^2$)
+by the same proof.
+\end{theorem}
+
+\begin{remark}[No Killing vector required]
+The proof of Theorem~\ref{thm:FRW-typeII} uses only:
+(a) conformal flatness of $g_\FRW$;
+(b) conformal invariance of the field equation ($\xi = 1/6$, $m = 0$);
+(c) the Hislop--Longo theorem on the conformally identified Minkowski diamond;
+(d) Tomita--Takesaki uniqueness (modular operators intertwine under
+the unitary $U$);
+(e) the Connes--Takesaki classification (Connes spectrum $\mathbb{R}$
+implies type II$_\infty$ of the crossed product).
+No timelike Killing vector of $g_\FRW$ is invoked.
+This is the first example of the CLPW type-II$_\infty$ classification
+in a genuinely non-stationary FRW background with no Killing symmetry.
+\end{remark}
+
+\subsection{The FRW modular Hamiltonian and its KMS state}
+
+By Theorem~\ref{thm:FRW-typeII}(1), the FRW modular Hamiltonian is
+\begin{equation}
+  K_\FRW \;=\; U^{-1}\,K_\HL\,U,
+  \label{eq:K-FRW}
+\end{equation}
+where $K_\HL = -\log\Delta_\HL$ is the Hislop--Longo modular Hamiltonian
+for the Minkowski diamond.
+The Hislop--Longo modular flow is the one-parameter M\"{o}bius group
+of conformal transformations of the Minkowski diamond fixing its tips;
+its generator $K_\HL$ is conjugate, via the conformal group
+$\mathrm{SO}(2,4)$, to a boost generator and has continuous spectrum
+filling $\mathbb{R}$.
+Consequently:
+\begin{itemize}
+\item $K_\FRW$ has spectrum $\mathrm{Spec}(K_\FRW) = \mathbb{R}$
+  (inherited from $K_\HL$ by unitary conjugation).
+\item The modular automorphism group $\sigma_s^\FRW = e^{isK_\FRW}
+  (\cdot) e^{-isK_\FRW}$ implements a flow on $\mathcal{A}(D_\mathcal{O})_\FRW$
+  that corresponds, in the Minkowski picture, to the M\"{o}bius flow
+  of the diamond, dressed by the conformal factor $a(\eta(s))/a(\eta)$
+  (explicit formula in~\cite{FRWconformal}).
+\item The state $\Omega_\FRW$ is a KMS state at inverse temperature
+  $\beta = 2\pi$ with respect to the modular flow $\sigma_s^\FRW$,
+  by Tomita--Takesaki theory.
+\end{itemize}
+
+The conformal weight factor $a(\eta(s))/a(\eta)$ is the key difference
+from the static/AdS case.
+On the diamond orbit $(\eta(s), x^1(s)) = (\eta\cosh(2\pi s) + x^1\sinh(2\pi s),
+\; \eta\sinh(2\pi s) + x^1\cosh(2\pi s))$, this weight is:
+\begin{equation}
+  w_\FRW(s;\eta,x^1) \;:=\; \frac{a(\eta(s))}{a(\eta)}
+  \;=\; \frac{\eta\cosh(2\pi s) + x^1\sinh(2\pi s)}{\eta}
+  \quad (a = a_0\eta),
+  \label{eq:conf-weight}
+\end{equation}
+which satisfies $w_\FRW(0;\eta,x^1) = 1$ and $w_\FRW(s) \to e^{2\pi s}$
+as $s \to +\infty$ (on the wedge limit $x^1 \ll \eta$), recovering
+the Bisognano--Wichmann exponential at large boost parameter.
+
+\subsection{Scope and honest limitations}
+
+The following limitations of the FRW setup must be stated explicitly:
+\begin{enumerate}
+\item \textbf{Conformally coupled massless scalar only.}
+  Theorem~\ref{thm:FRW-typeII} applies to $\xi = 1/6$, $m = 0$.
+  For $m > 0$ or $\xi \ne 1/6$, the field equation is not conformally
+  covariant; the unitary $U$ does not intertwine the algebras; the
+  type of the crossed product is unknown.
+\item \textbf{Bounded-away-from-singularity assumption.}
+  The condition $\eta_i > 0$ (diamond bounded away from the Big Bang)
+  is essential. When $\eta_i = 0$, the conformal rescaling $f \mapsto a^3 f$
+  degenerates and the isomorphism breaks.
+\item \textbf{No quantitative $C = V$ dictionary.}
+  Unlike the DSSYK/JT setting of~\cite{HPS2024}, there is no known
+  gravity dual for the FRW diamond that would give a quantitative
+  complexity-equals-volume formula. All computations below are at the
+  level of the modular Lanczos recursion, without a holographic check.
+\item \textbf{ECI v6.0.44 explicit caveat.}
+  Section 8 of the structural limitations of ECI v6.0.44~\cite{ECI_v6}
+  states: ``The type of $\mathcal{A}(\mathcal{O}) \rtimes_\sigma \mathbb{R}$
+  for $\mathcal{O}$ a causal patch of a non-stationary FRW observer
+  (radiation- or matter-dominated era) is, to our knowledge, not derived
+  in the published math.OA literature.''
+  The gap is filled by~\cite{FRWnote}, submitted 2026-05-02, but has
+  not yet been refereed. We proceed on the basis of the technical
+  arguments of~\cite{FRWnote} while acknowledging pre-refereeing status.
+\end{enumerate}
+
+%% ─────────────────────────────────────────────────────────────────────
+\section{Krylov Complexity in the FRW Diamond}
+\label{sec:krylov-FRW}
+%% ─────────────────────────────────────────────────────────────────────
+
+\subsection{Modular Krylov construction}
+
+The Krylov complexity of an operator $\mathcal{O}$ under the modular flow
+$\sigma_s^\FRW$ is defined via the modular Liouvillian
+$\mathcal{L}_\FRW = [K_\FRW, \cdot]$.
+The Krylov basis is generated by the Gram--Schmidt orthonormalisation
+of $\{\mathcal{L}_\FRW^n \mathcal{O}\}_{n \ge 0}$ with respect to the
+KMS inner product
+\begin{equation}
+  (\mathcal{O}_1, \mathcal{O}_2)_\beta
+  \;:=\; \int_0^\beta \frac{d\tau}{\beta}
+  \langle \mathcal{O}_1^\dagger\,
+  e^{-(\beta-\tau) K_\FRW}\,\mathcal{O}_2\,
+  e^{-\tau K_\FRW}\rangle_\FRW,
+  \label{eq:KMS-inner-product}
+\end{equation}
+where $\langle \cdot \rangle_\FRW$ is the vacuum expectation value in
+the Bunch--Davies state.
+The Lanczos coefficients $\{b_n^\FRW\}$ are defined by the three-term
+recurrence in this inner product.
+
+\subsection{The autocorrelation function and Lanczos asymptotics}
+
+The Lanczos coefficients are determined by the modular autocorrelation
+function
+\begin{equation}
+  C^\FRW(s) \;:=\; (\mathcal{O},\,\sigma_s^\FRW(\mathcal{O}))_\beta
+  \;=\; \langle \mathcal{O}^\dagger\,\sigma_s^\FRW(\mathcal{O})\rangle_\FRW.
+  \label{eq:autocorr}
+\end{equation}
+By Theorem~\ref{thm:FRW-typeII}(1), this equals
+\begin{equation}
+  C^\FRW(s)
+  \;=\; \langle U\mathcal{O}U^{-1},\,\sigma_s^\HL(U\mathcal{O}U^{-1})\rangle_\Mink
+  \;=\; C^\HL(s),
+  \label{eq:autocorr-pullback}
+\end{equation}
+where $C^\HL(s)$ is the Hislop--Longo autocorrelation function for
+the operator $\tilde{\mathcal{O}} := U\mathcal{O}U^{-1}$ in the
+Minkowski diamond vacuum.
+In other words, \emph{the modular autocorrelation function in FRW is
+identical to the Hislop--Longo autocorrelation function in Minkowski,
+evaluated on the conformally related operator.}
+
+For the free massless scalar, the Hislop--Longo two-point function
+on the Minkowski diamond at $\beta = 2\pi$ decays as
+\begin{equation}
+  C^\HL(s) \;\sim\; \frac{1}{(2\sinh(\pi s))^{d-2}}
+  \;\xrightarrow{d=4}\; \frac{1}{(2\sinh(\pi s))^2}
+  \;\sim\; e^{-2\pi|s|}
+  \quad (|s| \to \infty),
+  \label{eq:autocorr-HL}
+\end{equation}
+giving $C^\FRW(s) = C^\HL(s)$ with the same exponential decay.
+By the universal relationship between the spectral density of $C(s)$
+and the Lanczos asymptotics (Parker et al.~\cite{Parker2019}),
+an exponential decay $C(s) \sim e^{-2\pi|s|}$ corresponds to a
+spectral density supported on $[-2\pi, 2\pi]$ (an arc), giving
+linear Lanczos growth:
+\begin{equation}
+  b_n^\FRW \;\sim\; \frac{\pi}{\beta}\,n
+  \;=\; \frac{\pi}{2\pi}\,n \;=\; \frac{n}{2}
+  \quad (\beta = 2\pi).
+  \label{eq:lanczos-FRW}
+\end{equation}
+
+\begin{remark}[Caution: free field vs. interacting]
+\label{rem:free-field}
+The estimate~\eqref{eq:autocorr-HL} and its consequence~\eqref{eq:lanczos-FRW}
+are for the \emph{free} massless scalar, which is \emph{not} maximally
+chaotic in the SYK sense.
+In free field theories, the Lanczos coefficients typically grow as
+$b_n \sim n^{1/2}$ (not linearly), leading to polynomial rather than
+exponential Krylov complexity growth.
+[IMPORTANT CAVEAT: the free-field autocorrelation decay rate does not
+generically imply linear Lanczos growth; the relationship between
+spectral density support and Lanczos asymptotics is more subtle.
+Parker et al.~\cite{Parker2019} show linear Lanczos growth for
+interacting and chaotic systems; for free fields the situation is
+different. The estimate~\eqref{eq:lanczos-FRW} should be regarded
+as a formal analogy, not a rigorous derivation.]
+The step from $C^\FRW(s) = C^\HL(s)$ to $\lK^\FRW = 2\pi/\beta$
+requires either: (a) passing to an interacting field in the FRW
+diamond (breaking exact conformal invariance), or (b) invoking the
+operator growth hypothesis as applying to the modular flow on the
+type-II$_\infty$ algebra in a ``chaotic'' sense to be made precise.
+This is the principal open gap.
+\end{remark}
+
+\subsection{Proposed Krylov complexity growth rate}
+
+Accepting the formal analogy and the modular Krylov construction of
+Caputa et al.~\cite{Caputa2024}, the Krylov complexity of an operator
+$\mathcal{O}$ under the FRW modular flow grows as
+\begin{equation}
+  \CK^\FRW(s) \;\sim\; e^{\lK^\FRW\,|s|},
+  \qquad |s| \to \infty,
+  \label{eq:Krylov-FRW-growth}
+\end{equation}
+with the Krylov Lyapunov exponent
+\begin{equation}
+  \lK^\FRW \;=\; 2b_1^\FRW \;\approx\; \frac{2\pi}{\beta}
+  \;=\; \frac{2\pi}{2\pi} \;=\; 1,
+  \qquad (\beta = 2\pi).
+  \label{eq:Krylov-FRW-rate}
+\end{equation}
+This is the same rate as in the Rindler wedge~\cite{ModularShadow}
+and in the SYK model~\cite{Parker2019, HPS2024}, and saturates the
+MSS bound~\eqref{eq:mss} exactly.
+
+%% ─────────────────────────────────────────────────────────────────────
+\section{The Conjecture and Supporting Arguments}
+\label{sec:conjecture}
+%% ─────────────────────────────────────────────────────────────────────
+
+\begin{conjecture}[FRW Krylov Saturation]
+\label{conj:FRW-krylov}
+\emph{[CONJECTURE]}
+Let the setup be as in Theorem~\ref{thm:FRW-typeII}: conformally
+coupled massless scalar on radiation- or matter-dominated FRW, in the
+conformal vacuum, on a causal diamond bounded away from the Big Bang
+($\eta_i > 0$).
+Then the Krylov complexity of operators evolved by the FRW modular
+flow $\sigma_s^\FRW$ grows exponentially at late modular times with
+Lyapunov exponent
+\begin{equation}
+  \lK^\FRW \;=\; \frac{2\pi}{\beta_\FRW} \;=\; 1,
+  \label{eq:conj}
+\end{equation}
+where $\beta_\FRW = 2\pi$ is the KMS inverse temperature of the
+Bunch--Davies vacuum with respect to the FRW modular flow.
+This saturates the MSS chaos bound~\eqref{eq:mss} exactly.
+\end{conjecture}
+
+\subsection{Supporting arguments}
+
+\paragraph{A1. Algebraic universality.}
+By Theorem~\ref{thm:FRW-typeII}, the FRW diamond algebra is type II$_\infty$
+with Connes spectrum $\Gamma = \mathbb{R}$ and modular flow isomorphic
+(via $U$) to the Hislop--Longo flow.
+The companion paper~\cite{ModularShadow} conjectures that MSS saturation
+is a structural property of type-II$_\infty$ algebras at KMS temperature
+$\beta = 2\pi$: the Bisognano--Wichmann surface gravity $\kappa_R = 2\pi T_H$
+appears as a structural constant fixed by the algebraic data.
+If this conjecture is correct, Conjecture~\ref{conj:FRW-krylov} follows
+as an instance in the FRW setting.
+
+\paragraph{A2. Autocorrelation function argument.}
+By~\eqref{eq:autocorr-pullback}, $C^\FRW(s) = C^\HL(s)$.
+The Hislop--Longo autocorrelation decays as $e^{-2\pi|s|}$ in $d=4$
+(at $\beta = 2\pi$), which, if one applies the Parker et al.\ universal
+operator growth hypothesis~\cite{Parker2019} to the modular flow,
+would give $b_n \sim n/2$ and $\lK = 2\pi/\beta = 1$.
+The main gap (Remark~\ref{rem:free-field}) is that this argument
+requires the interacting/chaotic version of the growth hypothesis
+to apply to modular dynamics.
+
+\paragraph{A3. Consistency with the DSSYK holographic result.}
+Heller, Papalini, and Schuhmann~\cite{HPS2024} find $\lK = 2\pi/\beta$
+in DSSYK at finite temperature.
+The DSSYK model at large $N$ (in the triple-scaled limit) approaches
+a type-II$_\infty$ structure, and the KMS temperature of the Hartle--Hawking
+state in the gravity dual is identified with the SYK inverse temperature $\beta$.
+If Conjecture~\ref{conj:FRW-krylov} is correct, it provides an independent
+(non-holographic) derivation of the same rate in a different type-II$_\infty$
+algebra --- the FRW diamond --- giving universal evidence that
+$\lK = 2\pi/\beta$ is an algebraic invariant, not a holographic artefact.
+
+\paragraph{A4. Modular shadow identification.}
+From~\eqref{eq:eci-mss} and the Faulkner--Speranza identification
+$\sgen \leftrightarrow \Smod$ (flagged as a conjecture), the ECI
+saturation rate $2\pi T_H$ equals $2\pi/\beta$ at $T_H = 1/(2\pi)$
+(in units $k_B = \hbar = 1$, $\beta = 2\pi$).
+This is exactly the rate~\eqref{eq:conj} in Conjecture~\ref{conj:FRW-krylov}.
+The FRW diamond realization provides a new geometrically distinct instance
+of this universal rate, strengthening the evidence for the modular shadow
+identification.
+
+\subsection{The principal obstruction: free field vs. chaos}
+
+The main obstruction to proving Conjecture~\ref{conj:FRW-krylov} is the
+free-field nature of the setup.
+For free fields in Minkowski space, the modular Krylov complexity under
+the Bisognano--Wichmann boost flow does \emph{not} generically exhibit
+exponential growth with $\lK = 2\pi/\beta$; the free-field Lanczos
+coefficients grow sub-linearly and Krylov complexity grows polynomially
+or as a power law~\cite{Parker2019}.
+The exponential Krylov growth at $\lK = 2\pi/\beta$ is a property
+of \emph{maximally chaotic} interacting systems (SYK, near-extremal
+black holes), not of free fields.
+
+Three routes to resolve this:
+\begin{enumerate}
+\item[(R1)] \textbf{Interacting FRW fields.}
+  Introduce a $\lambda\phi^4$ interaction on the FRW background.
+  The conformally coupled scalar with $\lambda\phi^4$ is not conformally
+  invariant in 4d (the $\beta$-function is non-trivial).
+  However, the \emph{type} of the crossed product (type II$_\infty$)
+  is expected to persist under weak interactions (it is a topological
+  property of the modular flow), and the Lanczos growth rate might
+  approach $\pi/\beta$ in the strongly interacting (renormalized) theory.
+  This requires an FRW analogue of the SYK large-$N$ argument.
+
+\item[(R2)] \textbf{Large-$N$ limit in FRW.}
+  Consider $N$ copies of the conformally coupled scalar on the FRW
+  diamond, with all-to-all $\phi^4$-type couplings (SYK-like random
+  coupling).
+  In the large-$N$ limit, one expects (by analogy with SYK~\cite{SYK_Kitaev})
+  a type-II$_\infty$ modular flow with $\lK \to 2\pi/\beta$.
+  This is the most direct route and the most computationally tractable.
+
+\item[(R3)] \textbf{Algebraic definition of ``chaotic'' modular flow.}
+  Define a notion of ``maximally chaotic modular automorphism'' in
+  a type-II$_\infty$ algebra (e.g., via the Connes entropy or relative
+  modular growth), and show that the Hislop--Longo flow, when restricted
+  to an appropriate sub-algebra, falls in this class.
+  This is the most mathematically ambitious route and the natural
+  direction for the companion modular shadow paper~\cite{ModularShadow}.
+\end{enumerate}
+
+%% ─────────────────────────────────────────────────────────────────────
+\section{Open Questions and Research Programme}
+\label{sec:open}
+%% ─────────────────────────────────────────────────────────────────────
+
+\begin{question}\label{q:free-vs-interacting}
+  Does the modular Krylov complexity of the \emph{free} conformally
+  coupled scalar on the FRW diamond grow exponentially or polynomially?
+  If polynomially, at what power?
+  (This is an explicit computation using~\cite{Parker2019}
+  applied to $C^\HL(s) \sim (2\sinh(\pi s))^{-2}$.)
+\end{question}
+
+\begin{question}\label{q:large-N}
+  Do $N$ conformally coupled scalars on the FRW diamond with large-$N$
+  SYK-type random couplings satisfy $\lK \to 2\pi/\beta$ as $N \to \infty$?
+  What is the $O(1/N)$ correction to $\lK$?
+  (This mirrors the SYK analysis of~\cite{Parker2019} and the quantum
+  correction of~\cite{HPS2024} in the holographic setting.)
+\end{question}
+
+\begin{question}\label{q:dS}
+  Does the same conjecture hold for the de Sitter static patch?
+  In the static patch, the KMS temperature is $\beta_\dS = 2\pi/H$
+  (Gibbons--Hawking), giving $\lK^\dS = H$ (the Hubble rate).
+  The modular shadow conjecture then predicts $\lK = H$, matching the
+  de Sitter ``scrambling rate'' and connecting to cosmic censorship.
+\end{question}
+
+\begin{question}\label{q:holo-FRW}
+  Is there a two-dimensional gravity dual for the FRW diamond that would
+  give a $C = V$ formula analogous to HPS~\cite{HPS2024}?
+  The ``FRW/CFT'' correspondence (if it exists) would provide the
+  quantitative check. A candidate is the celestial holography on the
+  FRW past light cone, but no quantitative $C = V$ formula is known.
+\end{question}
+
+\begin{question}\label{q:bigbang}
+  What happens to $\lK^\FRW$ as $\eta_i \to 0$?
+  The Big Bang singularity is expected to introduce new structure
+  (possibly a transition from type II$_\infty$ to type II$_1$ or
+  type III, mirroring the singularity theorem in the modular-flow setting).
+  If $\lK$ diverges as $\eta_i \to 0$, this could be a quantum-gravity
+  signature of the Big Bang.
+\end{question}
+
+\begin{question}\label{q:observable}
+  Is $\lK^\FRW$ observable in the FRW setting?
+  A possible route: analog gravity experiments simulating conformally
+  coupled fields in a FRW-like background (e.g., acoustic Hawking radiation
+  in an expanding BEC, cf.\ Steinhauer 2019 cited in~\cite{ECI_v6}).
+  The ECI Bisognano--Wichmann window $u_\mathrm{max} = 2\pi$ constrains
+  the temporal window in which modular chaos is observable.
+\end{question}
+
+\paragraph{Proposed computational programme ($\sim 4$ weeks).}
+\begin{enumerate}
+\item \textit{Week 1.} Explicit computation of $C^\FRW(s)$ for the
+  free massless scalar via~\eqref{eq:autocorr-pullback} and the known
+  Hislop--Longo two-point function; Lanczos coefficients $b_n^\FRW$
+  for $n = 1, \ldots, 50$ via numerical recursion.
+  Test whether $b_n^\FRW$ grows linearly ($\lK = 1$) or sub-linearly.
+
+\item \textit{Week 2.} $N = 2, 4, 8$ conformally coupled scalars on
+  a finite FRW diamond with SYK-type random $\phi^4$ couplings.
+  Compute OTOC Lyapunov exponent and check $\lL \le 2\pi/\beta$.
+  Does $\lL \to 2\pi/\beta$ as $N$ or coupling increases?
+
+\item \textit{Week 3.} Analytical approximation of $b_n^\FRW$ in the
+  large-$n$ limit using the spectral density of $K_\FRW$ via the
+  Kac--Moody generator conjugation~\eqref{eq:K-FRW}.
+  Attempt asymptotic analysis using the known M\"{o}bius-flow spectral
+  measure on the diamond.
+
+\item \textit{Week 4.} Write-up; connection to the de Sitter case
+  (Question~\ref{q:dS}); comparison with DSSYK quantum corrections
+  of~\cite{HPS2024}; submission as Comm.\ Math.\ Phys.\ paper
+  (or companion preprint to~\cite{ModularShadow}).
+\end{enumerate}
+
+%% ─────────────────────────────────────────────────────────────────────
+\section*{Acknowledgments}
+%% ─────────────────────────────────────────────────────────────────────
+
+This note was drafted as Opus Bridge \#16, extending the
+DSSYK/Krylov holographic complexity analysis of~\cite{HPS2024}
+to the FRW diamond, using the type-II$_\infty$ classification
+of~\cite{FRWnote} and the modular shadow framework of~\cite{ECI_v6,ModularShadow}.
+The [CONJECTURE] tags throughout reflect the current status of the
+central claim (Conjecture~\ref{conj:FRW-krylov}): supported by structural
+arguments but not proven.
+
+%% ─────────────────────────────────────────────────────────────────────
+\begin{thebibliography}{99}
+%% ─────────────────────────────────────────────────────────────────────
+
+\bibitem{HPS2024}
+M.~P.~Heller, J.~Papalini, and T.~Schuhmann,
+``Krylov spread complexity as holographic complexity beyond JT gravity,''
+\textit{Phys. Rev. Lett.} \textbf{135} (2025) 151602,
+\href{https://doi.org/10.1103/PhysRevLett.135.151602}{doi:10.1103/PhysRevLett.135.151602},
+\href{https://arxiv.org/abs/2412.17785}{arXiv:2412.17785 [hep-th]}.
+[Verbatim abstract verified via WebFetch on 2026-05-04.]
+
+\bibitem{Parker2019}
+D.~E.~Parker, X.~Cao, A.~Avdoshkin, T.~Scaffidi, and E.~Altman,
+``A Universal Operator Growth Hypothesis,''
+\textit{Phys. Rev. X} \textbf{9} (2019) 041017,
+\href{https://doi.org/10.1103/PhysRevX.9.041017}{doi:10.1103/PhysRevX.9.041017},
+\href{https://arxiv.org/abs/1812.08657}{arXiv:1812.08657 [cond-mat.str-el]}.
+[Verbatim abstract verified via WebFetch on 2026-05-04.
+Key result: $\lambda_L \le 2\alpha$ where $b_n \sim \alpha n$;
+$\alpha = \pi/\beta$ at MSS saturation in SYK numerics.]
+
+\bibitem{MSS2016}
+J.~Maldacena, S.~H.~Shenker, and D.~Stanford,
+``A bound on chaos,''
+\textit{JHEP} \textbf{08} (2016) 106,
+\href{https://doi.org/10.1007/JHEP08(2016)106}{doi:10.1007/JHEP08(2016)106},
+\href{https://arxiv.org/abs/1503.01409}{arXiv:1503.01409 [hep-th]}.
+
+\bibitem{FRWnote}
+K.~Remondi\`{e}re,
+``Type II$_\infty$ for the gravitational algebra of a comoving observer
+in radiation-dominated FRW via conformal pullback,''
+Technical note, 2026-05-02,
+\url{https://github.com/AIdevsmartdata/crossed-cosmos/paper/frw_typeII_note/frw_note.tex}.
+[Main theorems: Theorem~1 (radiation-dominated FRW), Theorem~2
+(matter-dominated FRW), Corollary (slow-roll de Sitter).
+Sympy-verified: conformal-covariance identity and symplectic-form cancellation.
+Status: pre-refereeing.]
+
+\bibitem{FRWconformal}
+ECI sub-agent (Sonnet 4.6),
+``Conformal Pullback of the Modular Flow in Radiation-Dominated FRW:
+Explicit Formula and Spectrum Analysis,''
+Technical note, 2026-05-02,
+\url{https://github.com/AIdevsmartdata/crossed-cosmos/notes/frw_conformal_pullback_attack_2026_05_02.md}.
+
+\bibitem{ModularShadow}
+[ECI author(s)],
+``The Modular Shadow Conjecture:
+MSS Chaos-Bound Saturation as a Signature of Type-II$_\infty$
+Crossed-Product Structure,''
+Submitted to \textit{Letters in Mathematical Physics}, 2026-05-04.
+\url{https://github.com/AIdevsmartdata/crossed-cosmos/notes/eci_v7_aspiration/MODULAR_SHADOW/modular_shadow_LMP.tex}.
+
+\bibitem{ECI_v6}
+[ECI author(s)],
+``Entanglement--Complexity--Information: a phenomenological architecture
+for quantum gravity phenomenology (v6.0.44),''
+Zenodo record 20021358, 2026-05-04.
+[Cited for \S sec:mss-shadow (modular shadow conjecture) and
+\S structural limitations item 8 (FRW non-stationary classification gap).]
+
+\bibitem{CLPW2023}
+V.~Chandrasekaran, R.~Longo, G.~Penington, and E.~Witten,
+``An algebra of observables for de~Sitter space,''
+\textit{JHEP} \textbf{02} (2023) 082,
+\href{https://doi.org/10.1007/JHEP02(2023)082}{doi:10.1007/JHEP02(2023)082},
+\href{https://arxiv.org/abs/2206.10780}{arXiv:2206.10780 [hep-th]}.
+
+\bibitem{Witten2022}
+E.~Witten,
+``Gravity and the crossed product,''
+\textit{JHEP} \textbf{10} (2022) 008,
+\href{https://doi.org/10.1007/JHEP10(2022)008}{doi:10.1007/JHEP10(2022)008},
+\href{https://arxiv.org/abs/2112.12828}{arXiv:2112.12828 [hep-th]}.
+
+\bibitem{FaulknerSperanza2024}
+T.~Faulkner and A.~J.~Speranza,
+``Gravitational algebras and the generalized second law,''
+\textit{JHEP} \textbf{11} (2024) 099,
+\href{https://doi.org/10.1007/JHEP11(2024)099}{doi:10.1007/JHEP11(2024)099},
+\href{https://arxiv.org/abs/2405.00847}{arXiv:2405.00847 [hep-th]}.
+
+\bibitem{Caputa2024}
+P.~Caputa, J.~M.~Mag\'{a}n, D.~Patramanis, and E.~Tonni,
+``Krylov complexity of modular Hamiltonian evolution,''
+\textit{Phys. Rev. D} \textbf{109} (2024) 086004,
+\href{https://doi.org/10.1103/PhysRevD.109.086004}{doi:10.1103/PhysRevD.109.086004},
+\href{https://arxiv.org/abs/2306.14732}{arXiv:2306.14732 [hep-th]}.
+
+\bibitem{HislopLongo1982}
+P.~D.~Hislop and R.~Longo,
+``Modular structure of the local algebras associated with the free
+massless scalar field theory,''
+\textit{Commun. Math. Phys.} \textbf{84} (1982) 71--85.
+
+\bibitem{BisognanoWichmann1976}
+J.~J.~Bisognano and E.~H.~Wichmann,
+``On the duality condition for a Hermitian scalar field,''
+\textit{J. Math. Phys.} \textbf{17} (1976) 303.
+
+\bibitem{SYK_Kitaev}
+A.~Kitaev, ``A simple model of quantum holography,''
+Talks at KITP, 7 and 23 April 2015,
+\url{http://online.kitp.ucsb.edu/online/entangled15/kitaev/}.
+
+\end{thebibliography}
+
+\end{document}

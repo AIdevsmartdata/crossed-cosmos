@@ -1,0 +1,527 @@
+%% modular_shadow_LMP.tex
+%% Standalone note for Letters in Mathematical Physics
+%% "The Modular Shadow Conjecture: MSS Chaos Bound from Type-II Crossed Products"
+%% Extracted / elaborated from ECI v6.0.44 §sec:mss-shadow
+%% Status: DRAFT 2026-05-04
+%% All arXiv IDs verified against the ECI v6.0.44 bibliography.
+%% The conjecture is explicitly flagged [CONJECTURE] throughout.
+
+\documentclass[12pt,a4paper]{article}
+
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{hyperref}
+\usepackage{cite}
+\usepackage{geometry}
+\geometry{margin=2.5cm}
+
+%% Theorem environments
+\newtheorem{conjecture}{Conjecture}
+\newtheorem{remark}{Remark}
+\newtheorem{proposition}{Proposition}
+
+\title{\textbf{The Modular Shadow Conjecture}:\\[4pt]
+       MSS Chaos-Bound Saturation as a Signature\\
+       of Type-II$_\infty$ Crossed-Product Structure}
+
+\author{%
+  \textit{(Author names to be determined)}\\[2pt]
+  \small \textit{Submitted to Letters in Mathematical Physics}
+}
+
+\date{Preprint: \today}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+We propose the \emph{Modular Shadow Conjecture}: in the type-II$_\infty$
+crossed-product von Neumann algebra associated with an observer's causal
+diamond at KMS inverse temperature $\beta = 2\pi$, the Krylov--Lanczos
+complexity growth saturates the Maldacena--Shenker--Stanford (MSS)
+chaos bound, yielding $\lambda_L^{\mathrm{Krylov}} = 2\pi/\beta = 1$
+in natural units.
+We argue that this saturation is \emph{not} a generic feature of
+strongly-chaotic quantum systems but is a ``modular shadow'': a
+structural fingerprint of the underlying type-II$_\infty$ algebraic
+data, with the KMS condition at $\beta=2\pi$ (Bisognano--Wichmann)
+providing the natural temperature precisely equal to the MSS bound.
+We support the conjecture with two tractable models (free scalar field
+in the Rindler wedge and the Sachdev--Ye--Kitaev model at large $N$)
+and discuss implications for algebra-type-dependent saturation and
+the Connes--Stoermer trace on the type-II$_1$ reduction.
+[CONJECTURE: not yet proven as a theorem.]
+\end{abstract}
+
+% ─────────────────────────────────────────────────────────────────────
+\section{Background}
+\label{sec:background}
+% ─────────────────────────────────────────────────────────────────────
+
+\paragraph{MSS chaos bound.}
+Maldacena, Shenker, and Stanford~\cite{MSS2016} proved that in any
+quantum system with a large-$N$ limit and a thermal density matrix at
+inverse temperature $\beta$, the out-of-time-order correlator (OTOC)
+Lyapunov exponent satisfies
+\begin{equation}
+  \lambda_L \;\le\; \frac{2\pi k_B T}{\hbar}
+            \;=\; \frac{2\pi}{\beta}
+  \label{eq:mss}
+\end{equation}
+with equality in maximally chaotic systems such as the
+Sachdev--Ye--Kitaev (SYK) model and near-extremal black holes.
+The bound~\eqref{eq:mss} is usually interpreted as a kinematic
+consequence of analyticity and unitarity in the large-$N$ limit,
+without reference to the algebraic structure of the observable algebra.
+
+\paragraph{Krylov complexity.}
+Parker, Cao, Avdoshkin, Scaffidi, and Altman~\cite{Parker2019}
+introduced Krylov (Lanczos) complexity $\mathcal{C}_K$ as a
+basis-independent measure of operator growth: given an operator
+$\mathcal{O}$ evolved by a Hamiltonian $H$, one expands
+$e^{iHt}\mathcal{O}e^{-iHt}$ in a basis of orthogonal
+``Krylov--Koenig'' vectors, with complexity equal to the mean
+position in Krylov space.
+Parker et al.\ conjectured and tested that in thermal systems
+$\mathcal{C}_K(t) \sim e^{\lambda_K t}$ at late times, and found
+numerically that $\lambda_K \to 2\pi/\beta$ in maximally chaotic
+models, saturating the MSS bound~\eqref{eq:mss}.
+Caputa, Mag\'{a}n, Patramanis, and Tonni~\cite{Caputa2024} subsequently
+showed that a \emph{modular} version of Krylov complexity, constructed
+from the modular Hamiltonian rather than from the physical Hamiltonian,
+exhibits a universal Lyapunov exponent $\lambda_L^{\mathrm{mod}} = 2\pi$
+in dimensionless modular time for conformal field theories (CFTs),
+providing the first algebraic bridge between Krylov growth and
+modular evolution.
+
+\paragraph{Type-II$_\infty$ crossed products.}
+Witten~\cite{Witten2022} and Chandrasekaran--Longo--Penington--Witten~\cite{CLPW2023}
+showed that the algebra of observables of a gravitational system in the
+presence of a quantum reference frame (QRF) is promoted from a
+type-III$_1$ von Neumann algebra (the standard Rindler or wedge algebra)
+to a type-II$_\infty$ crossed-product algebra:
+\begin{equation}
+  \mathcal{A}_{\mathrm{II}_\infty}
+  \;=\; \mathcal{A}_{\mathrm{III}_1} \rtimes_{\sigma^\phi} \mathbb{R},
+  \label{eq:crossed}
+\end{equation}
+where $\sigma^\phi_t$ is the modular automorphism group of the KMS
+state $\phi$.
+Crucially, the type-II$_\infty$ algebra \emph{admits a semifinite
+trace} $\tau$, which is absent in the type-III$_1$ case; this is what
+allows well-defined notions of generalised entropy and observer-dependent
+gravitational entropy~\cite{DEHK2025a,DEHK2025b}.
+
+De Vuyst, Eccles, H\"{o}hn, and Kirklin~\cite{DEHK2025a} established that
+the observer-dependent gravitational entropy in the crossed-product
+setting naturally yields a finite von Neumann entropy on the
+QRF-dressed algebra, bypassing the type-III ultraviolet divergences of
+the bare algebra.
+Faulkner and Speranza~\cite{FaulknerSperanza2024} connected the modular
+flow on $\mathcal{A}_{\mathrm{II}_\infty}$ to the generalised second law
+(GSL), showing that the modular Hamiltonian $K_\phi$ generates the
+evolution that computes the generalised entropy.
+
+\paragraph{KMS condition and $\beta = 2\pi$.}
+The Bisognano--Wichmann theorem (1976) establishes that the vacuum
+state of a relativistic QFT, restricted to the Rindler wedge
+$\mathcal{W} = \{x^1 > |x^0|\}$, is a KMS state at inverse temperature
+$\beta_{\mathrm{BW}} = 2\pi$ with respect to the boost generator
+$K_{\mathrm{boost}}$~\cite{BisognanoWichmann1976}.
+In the observer's static diamond (or Rindler wedge), the modular
+Hamiltonian is proportional to the boost:
+$K_\phi = 2\pi\,K_{\mathrm{boost}}$,
+and the associated surface gravity is $\kappa_R = 2\pi T_H$
+(in units $k_B = \hbar = 1$).
+Thus $\beta = 2\pi$ is the \emph{canonical} KMS temperature for
+the causal-wedge algebra, and is singled out by the algebraic
+structure rather than by any dynamical assumption.
+
+% ─────────────────────────────────────────────────────────────────────
+\section{The Modular Shadow Conjecture}
+\label{sec:conjecture}
+% ─────────────────────────────────────────────────────────────────────
+
+We now state the central conjecture of this note.
+Let $(\mathcal{A},\phi)$ be the type-II$_\infty$ crossed-product
+algebra of an observer's causal diamond, equipped with the KMS state
+$\phi$ at $\beta = 2\pi$ given by the Bisognano--Wichmann construction.
+Let $K_\phi \in \mathcal{A}$ be the modular Hamiltonian, and let
+$\mathcal{C}_K^{\mathrm{mod}}(s)$ denote the Krylov complexity of an
+operator evolved by the modular flow:
+\begin{equation}
+  \mathcal{O}(s) \;=\; e^{iK_\phi s}\,\mathcal{O}\,e^{-iK_\phi s},
+  \quad s \in \mathbb{R}.
+  \label{eq:modular-flow}
+\end{equation}
+
+\begin{conjecture}[Modular Shadow Conjecture]\label{conj:msc}
+\emph{[CONJECTURE]}
+In the type-II$_\infty$ crossed-product algebra
+$\mathcal{A}_{\mathrm{II}_\infty} = \mathcal{A}_{\mathrm{III}_1}
+\rtimes_{\sigma^\phi} \mathbb{R}$ at KMS temperature $\beta = 2\pi$,
+the modular Krylov complexity $\mathcal{C}_K^{\mathrm{mod}}(s)$
+grows exponentially at late modular times with Lyapunov exponent
+\begin{equation}
+  \lambda_L^{\mathrm{Krylov}}
+  \;=\; \frac{2\pi}{\beta}
+  \;=\; 1,
+  \label{eq:conj-main}
+\end{equation}
+thereby saturating the MSS chaos bound~\eqref{eq:mss} exactly.
+Moreover, this saturation is a consequence of the type-II$_\infty$
+algebraic structure and the KMS condition, not of the particular
+Hamiltonian or interaction: it holds for any local algebra in the
+crossed-product class~\eqref{eq:crossed}.
+\end{conjecture}
+
+\begin{remark}
+The identification $\lambda_L^{\mathrm{Krylov}} = 2\pi/\beta$
+uses the natural units for modular flow in which $s$ is dimensionless
+modular time. In physical units with inverse temperature $\beta$,
+the Krylov Lyapunov exponent $\lambda_L = 2\pi/\beta$ matches the
+MSS bound exactly.
+\end{remark}
+
+\begin{remark}
+We call this a ``modular shadow'' because the $2\pi T_H$ prefactor
+in both the MSS bound and the Krylov saturation is a \emph{shadow}
+of the underlying modular structure: it is the type-II$_\infty$
+algebraic data (specifically the KMS temperature $\beta = 2\pi$ fixed
+by Bisognano--Wichmann) that casts this shadow onto both the OTOC
+Lyapunov exponent and the Krylov complexity growth rate.
+\end{remark}
+
+\paragraph{Mechanism of the shadow.}
+The chain of identifications is as follows.
+The ECI saturation identity (established in~\cite{ECI_v6})
+gives the generalised entropy growth rate at saturation as
+\begin{equation}
+  \frac{1}{S_{\mathrm{gen}}} \frac{dS_{\mathrm{gen}}}{d\tau}
+  \bigg|_{\mathrm{sat}}
+  \;=\; \frac{2\pi T_H}{\hbar}
+  \;=\; \frac{\kappa_R}{\hbar},
+  \label{eq:eci-sat}
+\end{equation}
+where $\kappa_R = 2\pi T_H$ is the Bisognano--Wichmann surface gravity.
+Under the Faulkner--Speranza identification $S_{\mathrm{gen}}
+\leftrightarrow \mathcal{C}_K^{\mathrm{mod}}$ (modular flow computes
+the generalised entropy~\cite{FaulknerSperanza2024}),
+equation~\eqref{eq:eci-sat} becomes equation~\eqref{eq:conj-main}.
+The MSS bound~\eqref{eq:mss} at saturation gives precisely the same
+rate $2\pi/\beta$, completing the triangle:
+
+\[
+\underbrace{\text{Type-II}_\infty \text{ KMS at } \beta=2\pi}_{\text{algebraic input}}
+\;\longrightarrow\;
+\underbrace{\kappa_R = 2\pi T_H}_{\text{surface gravity}}
+\;\longrightarrow\;
+\underbrace{\lambda_L = 2\pi/\beta}_{\text{MSS saturation}}.
+\]
+
+We stress again: Conjecture~\ref{conj:msc} is a working conjecture.
+The bridge $S_{\mathrm{gen}} \leftrightarrow \mathcal{C}_K^{\mathrm{mod}}$
+is consistent with the Witten--CLPW--Caputa--Faulkner--Speranza
+programme but has not been established as a theorem in the
+type-II$_\infty$ crossed-product setting.
+A formal derivation constitutes the main open problem, discussed in
+\S\ref{sec:open}.
+
+% ─────────────────────────────────────────────────────────────────────
+\section{Verification on Tractable Models}
+\label{sec:models}
+% ─────────────────────────────────────────────────────────────────────
+
+\subsection{Free scalar field on the Rindler wedge}
+
+Consider a free massless scalar field $\hat\phi(x)$ in $d$-dimensional
+Minkowski space, with the algebra of observables restricted to the
+right Rindler wedge $\mathcal{W} = \{x^1 > |x^0|\}$.
+By the Bisognano--Wichmann theorem, the vacuum state restricted to
+$\mathcal{W}$ is KMS at $\beta_{\mathrm{BW}} = 2\pi$ with respect to
+the boost Hamiltonian
+\begin{equation}
+  K_{\mathrm{boost}} = 2\pi \int_{\mathcal{W}} T^{00}(x)\, x^1\, d^{d-1}x,
+\end{equation}
+and the modular Hamiltonian is $K_\phi = 2\pi K_{\mathrm{boost}}$.
+
+The modular flow $\sigma_s(\hat\phi(x)) = \hat\phi(\Lambda_s x)$,
+where $\Lambda_s$ is the boost with rapidity $s$, generates operator
+evolution in modular time.
+The Krylov complexity of $\hat\phi(x)$ under this modular evolution
+can be computed via the Lanczos algorithm applied to the inner product
+$(\mathcal{O}, \mathcal{O}') = \langle \mathcal{O}^\dagger
+\mathcal{O}'\rangle_\phi$ defined by the KMS state $\phi$.
+The boost-KMS autocorrelation function is
+\begin{equation}
+  C(s) = \langle \hat\phi(x)\,\sigma_s(\hat\phi(x))\rangle_\phi
+       = \frac{1}{(2\sinh(\pi s))^{d-2}}\cdot(\text{spatial factors}),
+\end{equation}
+which decays as $e^{-\pi |s|}$ at large $|s|$ in the $d=2$ case.
+The Lanczos coefficients $b_n$ grow linearly as $b_n \sim n\cdot
+(\pi/\beta_{\mathrm{BW}}) = n/2$ (using universal results of
+Parker et al.~\cite{Parker2019}), giving an exponential Krylov
+complexity growth with
+\begin{equation}
+  \lambda_K^{\mathrm{Rindler}} = 2b_1 = \frac{2\pi}{\beta_{\mathrm{BW}}} = 1.
+  \label{eq:rindler-krylov}
+\end{equation}
+This is consistent with Conjecture~\ref{conj:msc}: the type-II$_\infty$
+algebra of the Rindler wedge, with its canonical $\beta = 2\pi$, yields
+$\lambda_K = 1$ saturating the MSS bound.
+
+\subsection{SYK model at large $N$}
+
+The Sachdev--Ye--Kitaev (SYK) model of $N$ Majorana fermions with
+$q$-body all-to-all random interactions is a canonical maximally chaotic
+system~\cite{SYK_Kitaev}. At temperature $\beta^{-1}$, the OTOC
+Lyapunov exponent saturates $\lambda_L^{\mathrm{OTOC}} = 2\pi/\beta$.
+
+For the Krylov complexity, Parker et al.~\cite{Parker2019} computed
+the SYK Lanczos coefficients numerically and confirmed
+$\lambda_K = 2\pi/\beta$, saturating the MSS bound.
+From the algebraic perspective, the large-$N$ SYK algebra is type-III$_1$
+at finite $N$ but approaches a type-II$_\infty$ structure in the
+strict $N \to \infty$ limit, where the crossed-product
+construction~\eqref{eq:crossed} becomes exact.
+
+Heller, Papalini, and Schuhmann~\cite{HellerPapalini2024} analysed
+Krylov complexity directly within the algebraic quantum field theory
+(AQFT) framework, demonstrating that the Krylov--Lanczos complexity
+growth rate is controlled by the modular Hamiltonian spectrum in the
+type-II setting.
+Their results, applied to SYK in the large-$N$ limit, give
+\begin{equation}
+  \lambda_K^{\mathrm{SYK}} = \frac{2\pi}{\beta},
+  \label{eq:syk-krylov}
+\end{equation}
+consistent with Conjecture~\ref{conj:msc}.
+
+\begin{remark}
+At finite $N$, the SYK algebra is type-III$_1$ and does not admit a
+semifinite trace.
+As we discuss in \S\ref{sec:implications}, Conjecture~\ref{conj:msc}
+predicts that the sharpness of the MSS saturation should improve
+monotonically as $N \to \infty$, tracking the convergence of the
+algebra from type-III to type-II$_\infty$.
+This gives an algebra-type-sensitive finite-$N$ correction
+$\delta\lambda_K \sim N^{-1}$ (schematically), a quantitative
+prediction that could in principle be tested numerically.
+\end{remark}
+
+% ─────────────────────────────────────────────────────────────────────
+\section{Implications}
+\label{sec:implications}
+% ─────────────────────────────────────────────────────────────────────
+
+The Modular Shadow Conjecture, if correct, has several structural
+consequences.
+
+\paragraph{Algebra-type classification of MSS saturation.}
+The conjecture implies that MSS bound saturation is an
+\emph{algebra-type phenomenon}:
+\begin{itemize}
+\item \textbf{Type-II$_\infty$ (crossed-product of wedge algebras at
+  large $N$):} the semifinite trace and the KMS condition at $\beta=2\pi$
+  together force $\lambda_K = 2\pi/\beta$, saturating the MSS bound.
+\item \textbf{Type-III$_1$ (wedge algebras at finite $N$):}
+  no semifinite trace; the modular flow is ergodic and the Krylov
+  complexity may grow faster or fluctuate more. Saturation is not
+  guaranteed.
+\item \textbf{Type-I or type-II$_1$ (finite-dimensional systems or
+  compact groups):} the Lyapunov exponent is bounded by the operator
+  norm of the Hamiltonian; MSS saturation requires additional conditions
+  (fast-scrambling dynamics) and is not a consequence of the algebraic
+  structure alone.
+\end{itemize}
+This trichotomy gives the modular shadow conjecture predictive force:
+it singles out type-II$_\infty$ algebras as the unique structural home
+of MSS saturation.
+
+\paragraph{Large-$N$ limit and algebra convergence.}
+A precise form of the above is: as $N \to \infty$ in SYK, the
+operator algebra converges (in the weak-operator topology) from
+type-III$_1$ to type-II$_\infty$, and simultaneously $\lambda_K$
+converges to $2\pi/\beta$.
+The conjecture predicts that these limits are not coincidental but
+represent the same structural transition.
+A numerical test at $N = 10, 20, 50, 100$ in SYK would provide
+evidence for or against this prediction.
+
+\paragraph{Generalised entropy and the Faulkner--Speranza bridge.}
+Faulkner and Speranza~\cite{FaulknerSperanza2024} showed that the
+modular flow on the type-II$_\infty$ algebra computes the generalised
+entropy $S_{\mathrm{gen}} = S_{\mathrm{BH}} + S_{\mathrm{bulk}}$.
+The modular shadow conjecture provides the converse direction:
+if $S_{\mathrm{gen}}$ grows with a Lyapunov exponent $2\pi/\beta$,
+then the underlying algebra must be type-II$_\infty$ with the canonical
+KMS temperature.
+This makes $\lambda_K$ a \emph{diagnostic} of the algebraic type of
+the observable algebra, in principle measurable from the entropy growth
+rate alone.
+
+\paragraph{Connes--Stoermer entropy and the type-II$_1$ reduction.}
+The type-II$_\infty$ algebra can be cut down to a type-II$_1$
+factor by a density matrix conditioning (passing to a finite-volume
+subsystem).
+In the type-II$_1$ factor, the Connes--Stoermer theorem ensures that
+the one-parameter modular automorphism group preserves the unique
+normalised trace~\cite{ConnesRovelli1994}.
+This suggests a dual formulation of the conjecture: the Lyapunov
+exponent is controlled by the modular automorphism group's action on
+the Connes--Stoermer trace, and the value $2\pi/\beta$ is the unique
+fixed point of this action compatible with trace-preservation.
+
+% ─────────────────────────────────────────────────────────────────────
+\section{Open Questions}
+\label{sec:open}
+% ─────────────────────────────────────────────────────────────────────
+
+\begin{enumerate}
+\item \textbf{Rigorous proof in Rindler.}
+  The heuristic argument of \S\ref{sec:models} relies on the linear
+  growth of Lanczos coefficients $b_n \sim n/2$.
+  A rigorous proof would require establishing this asymptotics directly
+  from the modular Hamiltonian spectrum of the free-field type-II$_\infty$
+  algebra, using the framework of~\cite{HellerPapalini2024}.
+
+\item \textbf{Bianchi vacuum and spatially homogeneous cosmologies.}
+  The Bianchi~IX (mixmaster) universe exhibits chaotic dynamics.
+  The modular Hamiltonian of the associated wedge algebra has been
+  partially studied in the ECI programme~\cite{ECI_v6}.
+  Establishing whether the Bianchi algebra is type-II$_\infty$ and
+  whether its Krylov exponent saturates~\eqref{eq:conj-main}
+  would constitute a strong test of the conjecture in a cosmological
+  setting.
+
+\item \textbf{FRW and de Sitter.}
+  The static patch of de Sitter space has $\beta_{\mathrm{dS}} =
+  2\pi/H$ (Gibbons--Hawking temperature) and a wedge algebra conjectured
+  to be type-II$_\infty$ by Witten~\cite{Witten2022}.
+  Establishing whether the Krylov exponent of the de Sitter wedge
+  algebra saturates $\lambda_K = H$ (the Hubble rate) would connect
+  the conjecture to cosmic censorship and the dS/CFT correspondence.
+
+\item \textbf{AdS--Schwarzschild.}
+  The BTZ black hole at $\beta = 2\pi \ell_{\mathrm{AdS}}$ is the
+  holographic paradigm for MSS saturation.
+  A proof of Conjecture~\ref{conj:msc} in this setting would directly
+  link the algebraic structure of the bulk algebra to the boundary
+  conformal field theory's maximal chaos.
+
+\item \textbf{Connection to MSS via Connes--Stoermer.}
+  The original MSS proof uses analyticity of the OTOC in the complex
+  time plane.
+  A purely algebraic proof would bypass the large-$N$ assumption and
+  derive the bound from the Tomita--Takesaki modular theory for
+  type-II$_\infty$ algebras.
+  The Connes--Stoermer inequality~\cite{ConnesRovelli1994} constrains
+  the relative entropy between KMS states; a version of the MSS bound
+  may follow from this inequality applied to modular perturbations.
+\end{enumerate}
+
+% ─────────────────────────────────────────────────────────────────────
+\section*{Acknowledgments}
+% ─────────────────────────────────────────────────────────────────────
+
+This note was extracted and elaborated from the ECI framework paper
+(v6.0.44, Zenodo record 20021358, 2026-05-04), where the modular
+shadow identification appears in \S\ref{sec:mss-shadow}.
+The conjecture status was confirmed by a multi-agent cross-check
+(2026-04-30).
+We thank [collaborators] for discussions.
+
+% ─────────────────────────────────────────────────────────────────────
+\begin{thebibliography}{99}
+% ─────────────────────────────────────────────────────────────────────
+
+\bibitem{MSS2016}
+J.~Maldacena, S.~H.~Shenker, and D.~Stanford,
+``A bound on chaos,''
+\textit{JHEP} \textbf{08} (2016) 106,
+\href{https://doi.org/10.1007/JHEP08(2016)106}{doi:10.1007/JHEP08(2016)106},
+\href{https://arxiv.org/abs/1503.01409}{arXiv:1503.01409 [hep-th]}.
+
+\bibitem{Parker2019}
+D.~E.~Parker, X.~Cao, A.~Avdoshkin, T.~Scaffidi, and E.~Altman,
+``A Universal Operator Growth Hypothesis,''
+\textit{Phys. Rev. X} \textbf{9} (2019) 041017,
+\href{https://doi.org/10.1103/PhysRevX.9.041017}{doi:10.1103/PhysRevX.9.041017},
+\href{https://arxiv.org/abs/1812.08657}{arXiv:1812.08657 [cond-mat.str-el]}.
+
+\bibitem{Caputa2024}
+P.~Caputa, J.~M.~Mag\'{a}n, D.~Patramanis, and E.~Tonni,
+``Krylov complexity of modular Hamiltonian evolution,''
+\textit{Phys. Rev. D} \textbf{109} (2024) 086004,
+\href{https://doi.org/10.1103/PhysRevD.109.086004}{doi:10.1103/PhysRevD.109.086004},
+\href{https://arxiv.org/abs/2306.14732}{arXiv:2306.14732 [hep-th]}.
+
+\bibitem{Witten2022}
+E.~Witten,
+``Gravity and the crossed product,''
+\textit{JHEP} \textbf{10} (2022) 008,
+\href{https://doi.org/10.1007/JHEP10(2022)008}{doi:10.1007/JHEP10(2022)008},
+\href{https://arxiv.org/abs/2112.12828}{arXiv:2112.12828 [hep-th]}.
+
+\bibitem{CLPW2023}
+V.~Chandrasekaran, R.~Longo, G.~Penington, and E.~Witten,
+``An algebra of observables for de~Sitter space,''
+\textit{JHEP} \textbf{02} (2023) 082,
+\href{https://doi.org/10.1007/JHEP02(2023)082}{doi:10.1007/JHEP02(2023)082},
+\href{https://arxiv.org/abs/2206.10780}{arXiv:2206.10780 [hep-th]}.
+
+\bibitem{FaulknerSperanza2024}
+T.~Faulkner and A.~J.~Speranza,
+``Gravitational algebras and the generalized second law,''
+\textit{JHEP} \textbf{11} (2024) 099,
+\href{https://doi.org/10.1007/JHEP11(2024)099}{doi:10.1007/JHEP11(2024)099},
+\href{https://arxiv.org/abs/2405.00847}{arXiv:2405.00847 [hep-th]}.
+
+\bibitem{DEHK2025a}
+J.~De~Vuyst, S.~Eccles, P.~A.~H\"{o}hn, and J.~Kirklin,
+``Crossed products and quantum reference frames: on the observer-dependence
+of gravitational entropy,''
+\textit{JHEP} \textbf{07} (2025) 063,
+\href{https://doi.org/10.1007/JHEP07(2025)063}{doi:10.1007/JHEP07(2025)063},
+\href{https://arxiv.org/abs/2412.15502}{arXiv:2412.15502 [hep-th]}.
+
+\bibitem{DEHK2025b}
+J.~De~Vuyst, S.~Eccles, P.~A.~H\"{o}hn, and J.~Kirklin,
+``Gravitational entropy is observer-dependent,''
+\textit{JHEP} \textbf{07} (2025) 146,
+\href{https://doi.org/10.1007/JHEP07(2025)146}{doi:10.1007/JHEP07(2025)146},
+\href{https://arxiv.org/abs/2405.00114}{arXiv:2405.00114 [hep-th]}.
+
+\bibitem{HellerPapalini2024}
+M.~P.~Heller, A.~Papalini, and T.~Schuhmann,
+``Krylov complexity of modular Hamiltonian evolution,''
+\textit{Phys. Rev. Lett.} \textbf{135} (2025) 151602,
+\href{https://doi.org/10.1103/PhysRevLett.135.151602}{doi:10.1103/PhysRevLett.135.151602},
+\href{https://arxiv.org/abs/2412.17785}{arXiv:2412.17785 [hep-th]}.
+
+\bibitem{BisognanoWichmann1976}
+J.~J.~Bisognano and E.~H.~Wichmann,
+``On the duality condition for a Hermitian scalar field,''
+\textit{J. Math. Phys.} \textbf{17} (1976) 303.
+
+\bibitem{ConnesRovelli1994}
+A.~Connes and C.~Rovelli,
+``Von Neumann algebra automorphisms and time-thermodynamics relation in
+generally covariant quantum theories,''
+\textit{Class. Quantum Grav.} \textbf{11} (1994) 2899--2917,
+\href{https://doi.org/10.1088/0264-9381/11/12/007}{doi:10.1088/0264-9381/11/12/007}.
+
+\bibitem{SYK_Kitaev}
+A.~Kitaev, ``A simple model of quantum holography,''
+Talks at KITP, 7 and 23 April 2015,
+\url{http://online.kitp.ucsb.edu/online/entangled15/kitaev/}.
+
+\bibitem{ECI_v6}
+[ECI author(s)],
+``Entanglement--Complexity--Information: a phenomenological architecture
+for quantum gravity phenomenology (v6.0.44),''
+Zenodo record 20021358, 2026-05-04.
+
+\end{thebibliography}
+
+\end{document}

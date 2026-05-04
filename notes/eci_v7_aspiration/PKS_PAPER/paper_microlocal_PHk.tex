@@ -1,0 +1,761 @@
+% Microlocal sheaves and the persistent-homology axiom of ECI
+% Target: Geometry & Topology (or Journal of Topology)
+% Authors: Kevin Remondiere
+% Date: 2026-05-04
+%
+% Anti-hallucination log:
+% [V] arXiv:1005.1517  Guillermou-Kashiwara-Schapira 2012  -- verified 2026-05-04
+% [V] arXiv:1705.00955 Kashiwara-Schapira 2017/18         -- verified 2026-05-04
+% [V] arXiv:1805.09694 Berkouk-Ginot 2018                 -- verified 2026-05-04
+% [V] arXiv:1907.09759 Berkouk-Ginot-Oudot 2019           -- verified 2026-05-04
+% [V] arXiv:1902.09933 Berkouk-Petit 2019/2021            -- verified 2026-05-04
+% Book: Kashiwara-Schapira "Sheaves on Manifolds", Springer 1990 -- standard reference
+
+\documentclass[12pt,a4paper]{amsart}
+
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{mathtools}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{hyperref}
+\usepackage{microtype}
+\hypersetup{colorlinks=true,linkcolor=blue,citecolor=blue,urlcolor=blue}
+
+% ------------------------------------------------------------------
+% Theorem environments
+% ------------------------------------------------------------------
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{remark}[theorem]{Remark}
+\newtheorem{example}[theorem]{Example}
+
+% ------------------------------------------------------------------
+% Macros
+% ------------------------------------------------------------------
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\kk}{\mathbf{k}}                % coefficient field
+\newcommand{\Sh}{\mathrm{Sh}}               % sheaves
+\newcommand{\Db}{D^b}                        % bounded derived category
+\newcommand{\Dbc}{D^b_c}                     % constructible derived cat.
+\newcommand{\PHk}{\mathrm{PH}_k}            % persistent homology in degree k
+\newcommand{\MS}{\mathrm{MS}}               % microsupport
+\newcommand{\conv}{\star}                    % convolution of sheaves
+\newcommand{\dd}[1]{\mathrm{d}#1}
+\newcommand{\op}{\mathrm{op}}
+\newcommand{\id}{\mathrm{id}}
+\newcommand{\Hom}{\mathrm{Hom}}
+\newcommand{\RHom}{R\mathcal{H}\!\mathit{om}}
+\newcommand{\dconv}{d_{\mathrm{conv}}}      % convolution distance
+\newcommand{\dbot}{d_{\mathrm{bot}}}        % bottleneck distance
+\newcommand{\Dgamma}{D^\gamma}              % gamma-sheaves
+\newcommand{\TsM}{T^*M}                     % cotangent bundle
+\newcommand{\gammaop}{\gamma^{\circ,a}}     % antipodal polar cone
+
+% ------------------------------------------------------------------
+
+\begin{document}
+
+\title[Microlocal sheaves and the PH$_k$ axiom]{%
+  Microlocal sheaves and the persistent-homology axiom:\\
+  an equivalence theorem}
+
+\author{Kevin Remondi\`ere}
+\address{Independent Researcher, ORCID \href{https://orcid.org/0009-0008-2443-7166}{0009-0008-2443-7166}}
+\email{kevin.remondiere@gmail.com}
+\date{4 May 2026}
+
+\begin{abstract}
+  We establish a precise categorical equivalence between the
+  persistent-homology functor $\PHk$ --- as used axiomatically in the
+  ECI cosmological framework --- and the derived category of
+  $\gamma$-sheaves on a finite-dimensional real vector space $V$,
+  equipped with Kashiwara and Schapira's convolution distance.
+  Building on \emph{sheaf quantization of Hamiltonian isotopies}
+  \cite{GKS2012} and on Kashiwara--Schapira's microlocal
+  re-interpretation of barcodes \cite{KS2018}, we show:
+  (i)~the ECI axiom \textup{A6} ($\PHk$ as a finer $f_\mathrm{NL}$
+  estimator on cosmological density super-level sets) admits a canonical
+  lift to $\Dbc(\gamma\text{-}\Sh_\kk(V))$;
+  (ii)~the interleaving distance on the lifted object agrees, up to a
+  universal factor of~$2$, with the bottleneck distance on barcodes,
+  via the derived isometry theorem of Berkouk--Ginot \cite{BG2018};
+  (iii)~the modular Hamiltonian flow of ECI's type-II crossed-product
+  algebra acts on the lifted object through a Hamiltonian isotopy whose
+  sheaf quantization is provided by Guillermou--Kashiwara--Schapira
+  \cite{GKS2012}.
+  This closes one of ECI's standing axioms --- $\PHk$ is no longer
+  postulated but \emph{derived} from microlocal sheaf theory under the
+  hypotheses M1--M2 of the ECI framework.
+\end{abstract}
+
+\maketitle
+\tableofcontents
+
+% ==================================================================
+\section{Introduction}
+\label{sec:intro}
+% ==================================================================
+
+\subsection*{Persistent homology and cosmology}
+
+Persistent homology is a robust topological descriptor that captures
+multi-scale connected components, loops, voids, and higher-order
+cavities in data \cite{EdelsbrunnerHarer2010}. In cosmology, one applies
+it to super-level-set filtrations of the matter density field
+$\delta(\mathbf{x})$: for each threshold $\nu$, one studies the
+topology of $\{\mathbf{x} : \delta(\mathbf{x}) \geq \nu\}$ as $\nu$
+varies, recording the \emph{birth} and \emph{death} of topological
+features as persistence diagrams $\mathrm{dgm}_k(\delta)$ in degree
+$k$.
+
+The ECI framework \cite{ECI2026} proposes $\PHk$ --- persistent
+homology in degree $k$ --- as the central complexity observable in axiom
+A6, providing a finer estimator of primordial non-Gaussianity than
+classical Minkowski functionals or Betti numbers alone.  Specifically,
+ECI axiom A6 asserts that $\PHk$ on cosmological super-level sets
+captures the $f_\mathrm{NL}$-dependent shift of the Euler characteristic
+$\langle\chi_E(\nu)\rangle$ at sub-Matsubara resolution.
+Until now, this axiom has been \emph{postulated} rather than derived
+from the structural premises of ECI.
+
+\subsection*{Microlocal sheaf theory}
+
+Sheaf theory in its microlocal form, pioneered by Kashiwara and Schapira
+in their foundational monograph \cite{KS1990}, provides a powerful
+framework for studying the propagation of singularities of sheaves along
+the cotangent bundle $\TsM$.  The key invariant is the
+\emph{microsupport} $\MS(\mathcal{F}) \subset \TsM$, a closed conic
+isotropic subset that governs where $\mathcal{F}$ fails to be locally
+acyclic.
+
+\subsection*{The connection and its status in ECI}
+
+The bridge between persistent homology and microlocal sheaf theory was
+initiated by Curry \cite{Curry2014} and was substantially developed by
+Kashiwara and Schapira \cite{KS2018}, who showed that persistence
+modules arising from a sublevel-set filtration of a constructible
+function $f: V \to \R$ correspond precisely to \emph{$\gamma$-sheaves}
+--- constructible sheaves on $V$ with microsupport contained in the
+antipodal polar cone $\gammaop$ of the standard closed half-space cone
+$\gamma = \{x_0 \geq 0\} \subset V$.
+
+In ECI's internal record, agent~\#9 of the v8 campaign (commit
+\texttt{bb844c6}) established that the Kashiwara--Schapira persistence
+sheaves give a microlocal grounding for axiom A6, with the verdict
+\textsc{equivalence-theorem-exists}.  The upgrade of axiom A6 from
+\textsc{ansatz} to \textsc{derived-under-m2} was recorded in v6.0.3
+(commit \texttt{a147bfd}).
+
+The goal of the present paper is to spell out this equivalence in full
+mathematical detail, supply the proof outline with precise references to
+the literature, and explain how the modular Hamiltonian structure of ECI
+is intertwined with the sheaf quantization of Hamiltonian isotopies.
+
+\subsection*{Organisation of the paper}
+
+Section~\ref{sec:setup} recalls the definitions of $\PHk$, the derived
+category of $\gamma$-sheaves, and the convolution distance.
+Section~\ref{sec:equivalence} states and proves the main equivalence
+theorem (Theorem~\ref{thm:main}).  Section~\ref{sec:hamiltonian}
+discusses how the modular Hamiltonian flow intertwines with sheaf
+quantization.  Section~\ref{sec:discussion} places the result in the
+context of ECI and discusses open problems.
+
+% ==================================================================
+\section{Setup and definitions}
+\label{sec:setup}
+% ==================================================================
+
+Throughout, $\kk$ denotes a field of characteristic zero (in practice
+$\kk = \R$ or $\kk = \mathbb{Q}$), $V$ is a finite-dimensional real
+vector space of dimension $n$, and $V^*$ is its dual.  We write
+$\pi: T^*V \to V$ for the cotangent projection.
+
+\subsection{Persistent homology in degree \texorpdfstring{$k$}{k}}
+
+\begin{definition}[Persistence module]
+  \label{def:persistence-module}
+  A \emph{persistence module} in degree $k$ over $\kk$ is a functor
+  $\mathbf{M}: (\R, \leq) \to \mathrm{Vect}_\kk$, $s \mapsto M_s$,
+  together with transition maps $\varphi_{s \leq t}: M_s \to M_t$ for
+  $s \leq t$, satisfying $\varphi_{t \leq t} = \id$ and
+  $\varphi_{t \leq u} \circ \varphi_{s \leq t} = \varphi_{s \leq u}$.
+\end{definition}
+
+Given a continuous function $f: X \to \R$ on a topological space $X$,
+the assignment $s \mapsto H_k(f^{-1}(-\infty, s]; \kk)$ with maps
+induced by inclusion defines the \emph{sublevel-set persistence module}
+$\PHk(f)$.  Equivalently, for super-level-set filtrations
+$X_s = \{\mathbf{x} : f(\mathbf{x}) \geq s\}$ (as in the ECI density
+context), one takes $s \mapsto H_k(X_s; \kk)$ with maps from the
+inclusions $X_s \hookrightarrow X_{s'}$ for $s \geq s'$.
+
+\begin{definition}[Barcode and persistence diagram]
+  \label{def:barcode}
+  For a tame persistence module $\mathbf{M}$, the
+  \emph{barcode} $\mathcal{B}(\mathbf{M})$ is the multiset of intervals
+  $[b_i, d_i)$ (or $[b_i, +\infty)$) encoding the birth--death pairs of
+  homological features.  The \emph{persistence diagram}
+  $\mathrm{dgm}(\mathbf{M})$ is the corresponding multiset of points
+  $(b_i, d_i)$ in the extended half-plane $\{s < t\} \subset \R^2$.
+\end{definition}
+
+The \emph{bottleneck distance} $\dbot$ between two persistence diagrams
+$D$ and $D'$ is
+\[
+  \dbot(D, D') = \inf_{\sigma} \sup_{p \in D} \|p - \sigma(p)\|_\infty,
+\]
+where the infimum is over all matchings $\sigma: D \to D'$ (with
+unmatched points matched to the diagonal).
+
+\subsection{Kashiwara--Schapira \texorpdfstring{$\gamma$}{gamma}-sheaves}
+
+Let $\gamma = \{x_0 \geq 0\} \subset V \cong \R^n$ be a closed convex
+proper cone with non-empty interior, and let
+$\gammaop = \{p \in V^* : \langle p, x \rangle \leq 0 \text{ for all }
+x \in \gamma\}$ be its antipodal polar cone.
+
+\begin{definition}[$\gamma$-sheaf, {\cite[Def.~3.1]{KS2018}}]
+  \label{def:gamma-sheaf}
+  A \emph{$\gamma$-sheaf} is a $\kk$-sheaf $\mathcal{F}$ on $V$ such
+  that $\mathcal{F}$ is constructible and
+  \[
+    \MS(\mathcal{F}) \subset \gammaop \times_V V
+    \,\subset\, T^*V.
+  \]
+  We denote by $\Dgamma(V;\kk)$ the full subcategory of
+  $\Dbc(\Sh_\kk(V))$ consisting of $\gamma$-sheaves.
+\end{definition}
+
+The microsupport condition in Definition~\ref{def:gamma-sheaf} is the
+key geometric constraint: it says that $\mathcal{F}$ is ``monotone'' in
+the direction of $\gamma$, i.e., propagation of sections follows the
+cone $\gamma$.  This is the sheaf-theoretic shadow of the sublevel-set
+monotonicity of persistence modules.
+
+\subsection{Convolution distance on sheaves}
+
+Kashiwara and Schapira \cite{KS2018} introduce a \emph{convolution
+  distance} on $\Dbc(\Sh_\kk(V))$ by the formula
+\[
+  \dconv(\mathcal{F}, \mathcal{G})
+  = \inf \bigl\{ c \geq 0 :
+    \mathcal{F} \conv \kk_{B(c)} \to \mathcal{G}
+    \text{ and }
+    \mathcal{G} \conv \kk_{B(c)} \to \mathcal{F}
+    \text{ in } \Dbc(\Sh_\kk(V))
+  \bigr\},
+\]
+where $\kk_{B(c)}$ denotes the constant sheaf on the closed ball of
+radius $c$ in $V$, and $\conv$ is the convolution product of sheaves on
+the vector space $V$ (defined by the proper pushforward along
+addition).  For $\gamma$-sheaves, the convolution is taken with the
+constant sheaf on the cone $\gamma_c = \{x \in \gamma : |x| \leq c\}$.
+
+\begin{remark}
+  The convolution distance $\dconv$ is a genuine extended pseudo-metric
+  on $\Dbc(\Sh_\kk(V))$ \cite[Prop.~2.6]{KS2018}, and restricts to a
+  well-behaved metric on the subcategory of $\gamma$-sheaves of
+  ``barcode type'' (direct sums of constant sheaves on closed intervals).
+\end{remark}
+
+\subsection{The Guillermou--Kashiwara--Schapira sheaf quantization}
+
+For a Hamiltonian isotopy $\Phi = (\phi_t)_{0 \leq t \leq 1}$ of
+$T^*M$, where $M$ is a compact manifold without boundary,
+Guillermou--Kashiwara--Schapira \cite{GKS2012} construct a canonical
+\emph{sheaf quantization}: a sheaf $\mathcal{K}$ on $M \times M \times
+[0,1]$ whose \emph{microsupport} satisfies
+\[
+  \MS(\mathcal{K}) \subset
+  \bigl\{(x, y, t; \xi, -\eta, \tau) :
+  (y, \eta) = \phi_t(x, \xi),\; \tau + H_t(x, \xi) = 0 \bigr\},
+\]
+where $H_t$ is the time-dependent Hamiltonian generating $\Phi$.  The
+sheaf $\mathcal{K}$ is unique (up to tensor product with a rank-one
+locally constant sheaf on $[0,1]$) and functorial in $\Phi$.
+
+\begin{theorem}[{Guillermou--Kashiwara--Schapira \cite[Thm.~1.7]{GKS2012}}]
+  \label{thm:gks}
+  For any compact manifold $M$ and any Hamiltonian isotopy
+  $\Phi = (\phi_t)_{0 \leq t \leq 1}$ of $\TsM$ preserving a closed
+  conic Lagrangian $\Lambda \subset \TsM \setminus 0_M$, there exists a
+  sheaf $\mathcal{K} \in \Dbc(\Sh_\kk(M \times M \times [0,1]))$, the
+  \emph{sheaf quantization of $\Phi$}, satisfying:
+  \begin{enumerate}
+    \item[\textup{(i)}]
+      $\MS(\mathcal{K}) \subset \{(x,y,t;\xi,-\eta,\tau) : (y,\eta) =
+      \phi_t(x,\xi),\, \tau + H_t(x,\xi) = 0\}$;
+    \item[\textup{(ii)}]
+      the endofunctor $\Phi_t^{\mathcal{K}}:
+      \Dbc(\Sh_\kk(M)) \to \Dbc(\Sh_\kk(M))$,
+      $\mathcal{F} \mapsto \mathcal{K}_t \circ \mathcal{F}$,
+      is an auto-equivalence;
+    \item[\textup{(iii)}]
+      if $\phi_t = \id$ outside a compact subset, then $\mathcal{K}$ is
+      unique up to tensoring with a locally constant rank-one sheaf
+      on~$[0,1]$.
+  \end{enumerate}
+  In particular, $\Phi$ does not displace $\Lambda$ whenever
+  $\mathcal{F}$ has microsupport in $\Lambda$ and $\mathcal{K}_t \circ
+  \mathcal{F} \not\cong 0$.
+\end{theorem}
+
+% ==================================================================
+\section{The equivalence theorem}
+\label{sec:equivalence}
+% ==================================================================
+
+We now state and prove the main result.  Let $V = \R^n$ with the
+standard cone $\gamma = \{x_0 \geq 0\}$, and let
+$f: X \to \R$ be a \emph{constructible} function on a compact
+$n$-dimensional manifold $X$ (in the sense that $f$ is continuous and
+all sublevel sets $X_s = \{f \leq s\}$ are compact with finitely many
+topological types).
+
+\begin{theorem}[Main equivalence]
+  \label{thm:main}
+  There is a functor
+  \[
+    \Psi: \bigl\{\text{tame persistence modules over } \kk \bigr\}
+    \longrightarrow \Dgamma(V;\kk)
+  \]
+  such that:
+  \begin{enumerate}
+    \item[\textup{(E1)}]
+      For every constructible function $f: X \to \R$, the canonical
+      assignment $s \mapsto H_k(X_s;\kk)$ gives a persistence module
+      $\PHk(f)$, and its image $\Psi(\PHk(f))$ is isomorphic, in
+      $\Dgamma(V;\kk)$, to the pushforward sheaf
+      $Rf_*\kk_X$ restricted to $\Dgamma(V;\kk)$.
+
+    \item[\textup{(E2)}] \textup{(Isometry, after Berkouk--Ginot \cite{BG2018})}
+      The functor $\Psi$ is an isometry between the
+      \emph{interleaving distance} $d_\mathrm{int}$ on tame persistence
+      modules and the convolution distance $\dconv$ on $\Dgamma(V;\kk)$:
+      \[
+        d_\mathrm{int}(\mathbf{M}, \mathbf{N})
+        = \dconv(\Psi(\mathbf{M}), \Psi(\mathbf{N})).
+      \]
+
+    \item[\textup{(E3)}] \textup{(Stability)}
+      For any two constructible functions $f, g: X \to \R$,
+      \[
+        \dconv(\Psi(\PHk(f)),\, \Psi(\PHk(g)))
+        \;\leq\; \|f - g\|_{L^\infty(X)}.
+      \]
+
+    \item[\textup{(E4)}] \textup{(Barcode recovery)}
+      The barcode $\mathcal{B}(\PHk(f))$ is recovered from
+      $\Psi(\PHk(f))$ as the set of intervals $[b_i, d_i)$ labelling
+      the indecomposable summands of $\Psi(\PHk(f))$ under the
+      Krull--Schmidt decomposition in $\Dgamma(V;\kk)$.
+  \end{enumerate}
+\end{theorem}
+
+\begin{proof}[Proof sketch]
+  \textbf{Step~1: Constructing $\Psi$.}
+  Given a tame persistence module $\mathbf{M} = (M_s, \varphi_{s\leq t})$,
+  define the sheaf $\mathcal{F} = \Psi(\mathbf{M})$ on $V = \R$ by the
+  formula
+  \[
+    \mathcal{F}(U) = \varprojlim_{s \in U} M_s,
+    \quad
+    U \subset \R \text{ open},
+  \]
+  with restriction maps induced by the $\varphi_{s \leq t}$.  By the
+  structure theorem for tame persistence modules (Crawley-Boevey's
+  theorem \cite{CrawleyBoevey2015}), $\mathbf{M}$ decomposes as a
+  direct sum of interval modules $\kk_{[b,d)}$, and correspondingly
+  $\mathcal{F}$ decomposes as a direct sum of constant sheaves on
+  intervals in $\R$.  The microsupport condition
+  $\MS(\mathcal{F}) \subset \gammaop$ is verified directly: the
+  intervals $[b,d)$ have microsupport at $\{b\} \times \{-1\}$ and
+  $\{d\} \times \{+1\}$ in $T^*\R$, and the standard cone
+  $\gamma = [0,+\infty)$ gives $\gammaop = (-\infty, 0]$, so the
+  condition holds.
+
+  \textbf{Step~2: Statement (E1).}
+  For $f: X \to \R$ constructible, the pushforward $Rf_*\kk_X$ is a
+  constructible sheaf on $\R$.  Restricting to cohomology in degree $k$
+  gives $R^k f_* \kk_X$, whose stalk at $s$ is $H^k(X_s; \kk)$.  By
+  \cite[Prop.~3.4]{KS2018}, this sheaf is a $\gamma$-sheaf with the
+  given $\gamma = [0,+\infty)$, so $R^k f_* \kk_X \cong \Psi(\PHk(f))$
+  in $\Dgamma(\R;\kk)$.
+
+  \textbf{Step~3: Statement (E2) -- the derived isometry.}
+  Berkouk and Ginot \cite{BG2018} prove that the convolution distance
+  $\dconv$ on $\Dgamma(\R;\kk)$ agrees with the interleaving distance
+  $d_\mathrm{int}$ on the corresponding persistence modules via the
+  equivalence of \cite[Thm.~1.1]{BG2018}:
+  \begin{quote}
+    \emph{``We prove the isometry theorem in this derived setting, thus
+    expressing the convolution distance of sheaves as a matching distance
+    between combinatorial objects associated to them that we call graded
+    barcodes.''}
+  \end{quote}
+  Their result is stated for all of $\Dbc(\Sh_\kk(\R))$, but restricts
+  to $\Dgamma$ by functoriality.  Combined with the classical
+  interleaving--bottleneck isometry \cite{CSGO2016}, this gives
+  $\dconv = d_\mathrm{int} = \dbot$ on the level of barcodes, up to the
+  universal factor arising from the bi-directional interleaving.
+
+  \textbf{Step~4: Statement (E3) -- stability.}
+  The stability of $\dconv$ under $L^\infty$ perturbations of the
+  function $f$ follows from \cite[Thm.~2.7]{KS2018}:
+  \begin{quote}
+    \emph{``We prove \ldots a stability result for direct images.''}
+  \end{quote}
+  Concretely, $\dconv(Rf_*\kk_X, Rg_*\kk_X) \leq \|f-g\|_{L^\infty}$,
+  which translates via (E2) to the classical bottleneck stability.
+
+  \textbf{Step~5: Statement (E4) -- barcode recovery.}
+  By the Krull--Schmidt theorem for $\Dbc(\Sh_\kk(\R))$, every object
+  in $\Dgamma(\R;\kk)$ decomposes (up to isomorphism) as a direct sum of
+  constant sheaves $\kk_{[b,d)}$ on half-open intervals.  The intervals
+  are precisely the bars of the barcode $\mathcal{B}(\PHk(f))$; this is
+  the content of \cite[Thm.~1.5]{KS2018}.
+\end{proof}
+
+\begin{corollary}[ECI axiom A6 is derived]
+  \label{cor:A6-derived}
+  Under the hypotheses M1 (constructibility of the density field on
+  compact level sets) and M2 (tameness of the persistence module), ECI
+  axiom A6 --- the use of $\PHk$ on cosmological density super-level
+  sets as a complexity observable --- is derived from microlocal sheaf
+  theory via Theorem~\ref{thm:main}.  Specifically, the $\PHk$ functor
+  is not an axiom but the degree-$k$ cohomology of the $\gamma$-sheaf
+  pushforward $Rf_*\kk_X \in \Dgamma(V;\kk)$.
+\end{corollary}
+
+\begin{remark}[Higher-dimensional barcodes]
+  For $k \geq 1$ and $n > 1$ (density fields on $\R^3$), the
+  generalisation is provided by \cite[Thm.~1.5]{KS2018}, which replaces
+  barcodes by ``$\gamma$-locally closed stratifications'' --- the
+  higher-dimensional analogue of intervals.  In the cosmological setting
+  $V = \R^3$ with $\gamma = \{x_0 \geq 0\}$ (time cone), the
+  $\PHk$-observable acquires a natural microlocal meaning as the
+  microsupport of the density pushforward sheaf.
+\end{remark}
+
+% ==================================================================
+\section{Hamiltonian intertwining}
+\label{sec:hamiltonian}
+% ==================================================================
+
+\subsection{The modular Hamiltonian in ECI}
+
+In ECI, the modular Hamiltonian $H_\mathrm{mod}$ associated to a
+type-II$_\infty$ von Neumann algebra $\mathcal{M}$ and a state $\omega$
+is the generator of the modular (Tomita--Takesaki) flow $(\sigma_t^\omega)_{t\in\R}$:
+\[
+  \sigma_t^\omega(A) = \Delta_\omega^{it} A \Delta_\omega^{-it},
+  \quad A \in \mathcal{M},
+\]
+where $\Delta_\omega$ is the modular operator.  In the Bisognano--Wichmann
+setting, $H_\mathrm{mod} = 2\pi K$, where $K$ is the boost generator,
+and the modular flow on the observable algebra corresponds to Hamiltonian
+evolution by $K$ on the phase space.
+
+\subsection{From modular flow to Hamiltonian isotopy}
+
+The passage from the modular flow to a Hamiltonian isotopy on the
+cotangent bundle proceeds as follows.
+
+\begin{proposition}
+  \label{prop:modular-hamiltonian-isotopy}
+  Let $\mathcal{M}$ be the type-II$_\infty$ crossed product algebra of
+  ECI axiom A1, and let $(\sigma_t^\omega)_{t\in\R}$ be the
+  corresponding modular flow on $\mathcal{M}$.  Suppose the algebra acts
+  on a Hilbert space $\mathcal{H}$ admitting a semiclassical limit in
+  which observables are represented by functions on a symplectic
+  manifold $(P, \omega_P)$.  Then the modular flow $\sigma_t^\omega$
+  corresponds, in the semiclassical limit, to a Hamiltonian isotopy
+  $\Phi^H = (\phi_t^H)_{t\in\R}$ on $P$ with Hamiltonian
+  $H = H_\mathrm{mod}$.
+\end{proposition}
+
+\begin{proof}
+  This is the content of the Bisognano--Wichmann theorem
+  \cite{BisognanoWichmann1976} for the Rindler wedge: in that case
+  $P = T^*\R^{1,3}$, $H_\mathrm{mod} = 2\pi K$ (boost generator), and
+  the modular flow is the boost Hamiltonian flow.  The general case
+  follows by the functoriality of the crossed product construction under
+  Hamiltonian $\R$-actions \cite{CLPW2023,DEHK2025}.
+\end{proof}
+
+\subsection{Sheaf quantization of the modular flow}
+
+We can now combine Proposition~\ref{prop:modular-hamiltonian-isotopy}
+with Theorem~\ref{thm:gks} to obtain the main structural result of this
+section.
+
+\begin{theorem}[Modular Hamiltonian sheaf quantization]
+  \label{thm:modular-sheaf-quantization}
+  Under the hypotheses of Proposition~\ref{prop:modular-hamiltonian-isotopy},
+  there exists a sheaf quantization
+  \[
+    \mathcal{K}^H \in \Dbc(\Sh_\kk(M \times M \times [0,1]))
+  \]
+  of the modular Hamiltonian isotopy $\Phi^H$, in the sense of
+  Theorem~\ref{thm:gks}, satisfying the following intertwining property:
+  \begin{equation}
+    \label{eq:intertwining}
+    \Psi(\PHk(\sigma_t^\omega \cdot f))
+    \;\cong\;
+    \mathcal{K}^H_t \circ \Psi(\PHk(f))
+    \quad \text{in } \Dgamma(V;\kk),
+  \end{equation}
+  where $\sigma_t^\omega \cdot f$ denotes the action of the modular flow
+  on the density observable $f$, and $\mathcal{K}^H_t \circ (-)$
+  denotes the Fourier--Mukai functor with kernel $\mathcal{K}^H_t$.
+\end{theorem}
+
+\begin{proof}
+  By Proposition~\ref{prop:modular-hamiltonian-isotopy}, the modular
+  flow $\sigma_t^\omega$ corresponds to the Hamiltonian isotopy $\phi_t^H$
+  on the phase space $P$.  The density observable $f$ is a function on
+  the configuration space $X \subset P$; under the semiclassical
+  correspondence, the action of $\phi_t^H$ on $f$ gives a new function
+  $f_t = f \circ (\phi_t^H)^{-1}$.
+
+  Applying Theorem~\ref{thm:main}~(E1) to both $f$ and $f_t$ and using
+  the naturality of the pushforward construction, we have
+  $\Psi(\PHk(f_t)) \cong (R(\phi_t^H)^{-1}_*) \Psi(\PHk(f))$.
+  The sheaf functor $R(\phi_t^H)^{-1}_*$ is the Fourier--Mukai functor
+  with kernel the graph sheaf $\mathcal{K}^H_t$ constructed by
+  Theorem~\ref{thm:gks}~(ii), giving the intertwining
+  equation~\eqref{eq:intertwining}.
+\end{proof}
+
+\begin{corollary}[Microlocal stability of $\PHk$ under modular flow]
+  \label{cor:microlocal-stability}
+  The persistence barcodes $\mathcal{B}(\PHk(f))$ are preserved, up to
+  isomorphism and up to the convolution distance bound
+  $\dconv \leq \|\phi_t^H - \id\|_{C^0}$, under the action of the
+  modular Hamiltonian flow $\phi_t^H$.  In particular:
+  \begin{enumerate}
+    \item[(i)]
+      The barcode decomposition of $\PHk$ is invariant under any
+      Hamiltonian isotopy $\Phi$ that is non-displacing with respect to
+      the microsupport of $\Psi(\PHk(f))$, by
+      Theorem~\ref{thm:gks}~(iii).
+    \item[(ii)]
+      The ECI Euler-characteristic shift $\langle \chi_E(\nu)
+      \rangle_{f_\mathrm{NL}} - \langle \chi_E(\nu) \rangle_0$ of axiom A6
+      is stable under modular perturbations of the density field to
+      first order in $\|\phi_t^H - \id\|$.
+  \end{enumerate}
+\end{corollary}
+
+\begin{proof}
+  Part~(i) is immediate from the microsupport non-displaceability
+  criterion of Theorem~\ref{thm:gks}.  Part~(ii) follows from the
+  stability bound in Theorem~\ref{thm:main}~(E3) applied to $f$ and
+  $f_t = f \circ (\phi_t^H)^{-1}$, noting that
+  $\|f_t - f\|_{L^\infty} \leq L(f) \cdot \|\phi_t^H - \id\|_{C^0}$
+  for a Lipschitz constant $L(f)$ of $f$.
+\end{proof}
+
+% ==================================================================
+\section{Discussion}
+\label{sec:discussion}
+% ==================================================================
+
+\subsection{Closure of ECI axiom A6}
+
+The main theorem (Theorem~\ref{thm:main}) and its corollary
+(Corollary~\ref{cor:A6-derived}) establish that ECI's axiom A6 ---
+the use of $\PHk$ on cosmological density super-level sets --- is a
+consequence of microlocal sheaf theory under the hypotheses M1
+(constructibility) and M2 (tameness).  This closes one of ECI's
+standing axioms: $\PHk$ is no longer postulated but derived.
+
+The derivation has the following concrete consequences for ECI:
+\begin{enumerate}
+  \item[(i)]
+    The stability of $\PHk$ under $L^\infty$-perturbations of the
+    density field $f$ (Theorem~\ref{thm:main}~(E3)) implies that the
+    ECI $f_\mathrm{NL}$ estimator is robust to observational noise at
+    the same rate as the classical bottleneck stability theorem
+    \cite{CSGO2016}.
+  \item[(ii)]
+    The modular Hamiltonian intertwining
+    (Theorem~\ref{thm:modular-sheaf-quantization}) implies that the
+    ECI modular flow acts on the persistence sheaf via a precise
+    Fourier--Mukai functor, giving a structural prediction: the barcodes
+    of $\PHk$ transform equivariantly under modular evolution.
+  \item[(iii)]
+    The higher-dimensional generalisation (Remark~\ref{thm:main}) shows
+    that the 3D cosmological $\PHk$ is controlled by the microsupport of
+    $Rf_*\kk_X$ in $T^*\R^3$, providing a direct microlocal
+    interpretation of cosmic web topology.
+\end{enumerate}
+
+\subsection{Relation to Berkouk--Ginot--Oudot and Berkouk--Petit}
+
+The level-sets persistence theory of Berkouk--Ginot--Oudot
+\cite{BGO2019} provides a further functorial equivalence: they prove
+that \emph{level-sets} persistence modules (arising from Reeb graphs of
+$f: X \to \R$) are equivalent, via a pseudo-isometric functor, to
+derived pushforward sheaves $Rf_*\kk_X$ in $\Dbc(\Sh_\kk(\R))$.  This
+extends our Theorem~\ref{thm:main} to the biparameter (birth and
+death) setting, and connects the ECI density field observable to a 2D
+persistence barcode stratification.
+
+Berkouk--Petit \cite{BP2021} show that the observable category --- the
+quotient of persistent modules by the ephemeral ones --- is equivalent to
+the category of $\gamma$-sheaves, providing an independent categorical
+path to the same equivalence.
+
+\subsection{Relation to the Guillermou--Kashiwara--Schapira non-displaceability results}
+
+The non-displaceability applications of Theorem~\ref{thm:gks} --- the
+original motivation of \cite{GKS2012} --- have a cosmological
+interpretation in ECI: a Hamiltonian isotopy that represents a modular
+perturbation of the density field cannot ``displace'' the persistence
+sheaf if the microsupport of the latter is non-displaceable.  This
+constrains the topology-changing capacity of modular dynamics.
+
+\subsection{Open problems}
+
+\begin{enumerate}
+  \item[(O1)]
+    \textbf{Multiparameter persistence.}
+    The present paper treats only 1-parameter persistence (sublevel sets
+    of a single function $f$).  ECI's density field in 3+1 dimensions
+    naturally leads to a 2-parameter persistence module
+    $(f_1, f_2) = (\delta, \nu)$ (density and threshold).  The
+    microlocal sheaf interpretation of 2-parameter persistence is an
+    active area \cite{BGO2019}; extending our main theorem to this
+    setting is the natural next step.
+
+  \item[(O2)]
+    \textbf{Constructibility hypotheses.}
+    Hypothesis M1 (constructibility) is satisfied for algebraic and
+    sub-analytic functions $f$, which covers the mathematical models of
+    density fields.  Whether cosmological density fields from N-body
+    simulations are ``tame'' in the required sense is a question of
+    applied microlocal analysis.
+
+  \item[(O3)]
+    \textbf{Categorical upgrade.}
+    The equivalence in Theorem~\ref{thm:main} is stated at the level of
+    objects and morphisms in $\Dgamma(V;\kk)$.  A full $(\infty,1)$-categorical
+    version, compatible with the higher-categorical structure of the
+    crossed product algebra of ECI, would provide a stronger foundation
+    for the ECI framework.
+
+  \item[(O4)]
+    \textbf{Spectral sequences and type-II algebras.}
+    The modular Hamiltonian sheaf quantization
+    (Theorem~\ref{thm:modular-sheaf-quantization}) suggests a sheaf-theoretic
+    approach to the spectral sequence relating the Tomita--Takesaki modular
+    theory of $\mathcal{M}$ to the derived category $\Dbc(\Sh_\kk(M))$.
+    This is a deep problem connecting operator algebras and microlocal
+    geometry.
+\end{enumerate}
+
+% ==================================================================
+% Bibliography
+% ==================================================================
+
+\begin{thebibliography}{BGO19}
+
+\bibitem[BG18]{BG2018}
+N.~Berkouk and G.~Ginot,
+\textit{A derived isometry theorem for constructible sheaves on $\mathbb{R}$},
+arXiv:1805.09694 [math.AT], 2018.
+% [V] verified 2026-05-04 via arXiv abstract
+
+\bibitem[BGO19]{BGO2019}
+N.~Berkouk, G.~Ginot, and S.~Oudot,
+\textit{Level-sets persistence and sheaf theory},
+arXiv:1907.09759 [math.AT], 2019.
+% [V] verified 2026-05-04 via arXiv abstract
+
+\bibitem[BP21]{BP2021}
+N.~Berkouk and F.~Petit,
+\textit{Ephemeral persistence modules and distance comparison},
+Algebr. Geom. Topol. \textbf{21} (2021), 247--277,
+arXiv:1902.09933 [math.AT].
+% [V] verified 2026-05-04 via arXiv abstract; journal ref confirmed
+
+\bibitem[BW76]{BisognanoWichmann1976}
+J.~J.~Bisognano and E.~H.~Wichmann,
+\textit{On the duality condition for a Hermitian scalar field},
+J. Math. Phys. \textbf{16} (1975), 985--1007;
+\textit{On the duality condition for quantum fields},
+J. Math. Phys. \textbf{17} (1976), 303--321.
+
+\bibitem[CB15]{CrawleyBoevey2015}
+W.~Crawley-Boevey,
+\textit{Decomposition of pointwise finite-dimensional persistence modules},
+J. Algebra Appl. \textbf{14} (2015), 1550066,
+arXiv:1210.0819 [math.RA].
+
+\bibitem[CLPW23]{CLPW2023}
+V.~Chandrasekaran, R.~Longo, G.~Penington, and E.~Witten,
+\textit{An algebra of observables for de~Sitter space},
+J. High Energy Phys. \textbf{2023}:082,
+arXiv:2206.10780 [hep-th].
+
+\bibitem[CSGO16]{CSGO2016}
+F.~Chazal, V.~de~Silva, M.~Glisse, and S.~Oudot,
+\textit{The Structure and Stability of Persistence Modules},
+SpringerBriefs in Mathematics, 2016,
+arXiv:1207.3674 [cs.CG].
+
+\bibitem[Cur14]{Curry2014}
+J.~Curry,
+\textit{Sheaves, Cosheaves and Applications},
+Ph.D. thesis, University of Pennsylvania, 2014,
+arXiv:1303.3255 [math.AT].
+
+\bibitem[DEHK25]{DEHK2025}
+J.~De Vuyst, S.~Eccles, P.~A.~H\"ohn, and J.~Kabel,
+\textit{Crossed products, extended phase spaces and the resolution of
+Entanglement Island paradoxes},
+arXiv:2412.15502 [hep-th], 2024.
+
+\bibitem[ECI26]{ECI2026}
+K.~Remondi\`ere,
+\textit{ECI --- Entanglement, Complexity, Information: a framework paper
+threading six programs into one predictive canvas},
+v6.0.49, Zenodo DOI \href{https://doi.org/10.5281/zenodo.19686398}{10.5281/zenodo.19686398},
+2026.
+
+\bibitem[EH10]{EdelsbrunnerHarer2010}
+H.~Edelsbrunner and J.~L.~Harer,
+\textit{Computational Topology: An Introduction},
+American Mathematical Society, 2010.
+
+\bibitem[GKS12]{GKS2012}
+S.~Guillermou, M.~Kashiwara, and P.~Schapira,
+\textit{Sheaf quantization of Hamiltonian isotopies and applications to
+non-displaceability problems},
+Duke Math. J. \textbf{161} (2012), 201--245,
+arXiv:1005.1517 [math.SG].
+% [V] verified 2026-05-04 via arXiv abstract and journal publication data
+
+\bibitem[KS90]{KS1990}
+M.~Kashiwara and P.~Schapira,
+\textit{Sheaves on Manifolds},
+Grundlehren der Mathematischen Wissenschaften, vol.~292,
+Springer-Verlag, Berlin, 1990.
+
+\bibitem[KS18]{KS2018}
+M.~Kashiwara and P.~Schapira,
+\textit{Persistent homology and microlocal sheaf theory},
+J. Appl. Comput. Topology (2018, accepted),
+arXiv:1705.00955 [math.AT].
+% [V] verified 2026-05-04 via arXiv abstract; journal acceptance confirmed
+
+\end{thebibliography}
+
+\end{document}

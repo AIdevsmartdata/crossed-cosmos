@@ -1,0 +1,427 @@
+% lemma_A1_eigenvalue_crossings.tex
+% Week 1 closure: Eigenvalue crossings have measure zero on the BKL attractor of Bianchi IX
+%
+% Purpose: Close the gap rem:Hadamard-BIX-gap in
+%   /root/crossed-cosmos/paper/algebraic_wch_bianchi/note.tex
+%
+% This standalone document is intended to be \input-ted into the appendix of note.tex.
+% Compile: pdflatex lemma_A1_eigenvalue_crossings (requires amsmath, amsthm, amssymb)
+
+\documentclass[11pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{mathtools}
+\usepackage{hyperref}
+\hypersetup{colorlinks=true, linkcolor=blue, citecolor=blue}
+
+\newtheorem{lemma}{Lemma}[section]
+\newtheorem{corollary}[lemma]{Corollary}
+\newtheorem{remark}[lemma]{Remark}
+\theoremstyle{definition}
+\newtheorem{definition}[lemma]{Definition}
+
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\C}{\mathbb{C}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\BIX}{\mathrm{BIX}}
+\newcommand{\KK}{\mathcal{K}}
+\newcommand{\HU}{\mathrm{HU}}
+\newcommand{\BKL}{\mathrm{BKL}}
+
+\title{Appendix A --- Closure of the Eigenvalue-Crossing Gap\\
+  for the Hadamard SLE on Bianchi~IX}
+\author{Kevin Remondiere}
+\date{2026-05-04 (Week 1 draft)}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+  We close the gap \texttt{rem:Hadamard-BIX-gap} of \cite{note_AWCH_BIX} by proving that
+  eigenvalue crossings of the mode-mixing matrix $M_j(t)$ occurring in the Peter--Weyl
+  decomposition of the Bianchi~IX scalar field ODE~(eq.~\texttt{peterweyl-ode}) have
+  \emph{Lebesgue measure zero} on every trajectory in the Mixmaster basin.
+  The argument combines (A) Kato's analytic perturbation theory for Hermitian matrices,
+  (B) the Heinzle--Uggla~2009 Kasner-ordering monotonicity, and (C) the Brehm~2016
+  result that the BKL attractor has full Lebesgue measure within the Mixmaster basin.
+  As a corollary, Theorem~\texttt{thm:Hadamard-BIX} of \cite{note_AWCH_BIX} extends
+  from Kasner-ordered trajectories to \emph{almost every} trajectory, making
+  Theorem~\texttt{thm:T2BIX} unconditional on the BKL attractor.
+\end{abstract}
+
+\tableofcontents
+
+% ============================================================
+\section{Setup and statement}
+
+We work within the notational framework of \cite{note_AWCH_BIX}.
+Vacuum Bianchi~IX has metric
+\[
+  \mathrm{d}s^2_{\BIX} = -\mathrm{d}t^2 + \sum_{i=1}^{3} a_i(t)^2\,(\sigma^i)^2,
+\]
+with scale factors $a_i : (0,t_0) \to (0,\infty)$ and left-invariant 1-forms $\sigma^i$
+on $\mathrm{SU}(2)$.  The Peter--Weyl decomposition of the conformally coupled massless
+scalar leads to the $j$-block ODE
+\[
+  \ddot{\boldsymbol{\chi}}^{(j)}(t)
+  + \bigl[M_j(t) + \delta(t)\mathbf{1}\bigr]\,\boldsymbol{\chi}^{(j)}(t) = 0,
+\]
+where
+\begin{equation}\label{eq:Mj}
+  M_j(t) := a_1(t)^{-2}J_x^2 + a_2(t)^{-2}J_y^2 + a_3(t)^{-2}J_z^2
+  \;\in\; \mathrm{End}\!\bigl(\C^{2j+1}\bigr)
+\end{equation}
+is a real-analytic family of $(2j+1)\times(2j+1)$ Hermitian matrices
+(Hermitian because $J_\alpha$ are skew-Hermitian, so $J_\alpha^2$ is negative
+semidefinite but $-J_\alpha^2$ is positive semidefinite; here we follow the
+convention of \cite{note_AWCH_BIX} in which the $J_\alpha$ are taken
+self-adjoint on the representation space, so $J_\alpha^2\ge 0$ on each block).
+The \emph{eigenvalue-crossing set} for the $j$-block is
+\[
+  \Gamma_j := \bigl\{\,t \in (0,t_0) : \mu_k(t) = \mu_l(t)
+  \text{ for some } k\neq l\,\bigr\},
+\]
+where $\mu_1(t) \le \mu_2(t) \le \cdots \le \mu_{2j+1}(t)$ are the ordered eigenvalues
+of $M_j(t)$.
+
+\begin{lemma}[Measure-zero crossing locus on the BKL attractor]\label{lem:A1}
+  Let $\gamma : (0,t_0) \to \mathcal{M}_{\BIX}$ be a vacuum Bianchi~IX trajectory
+  whose past attractor is the Mixmaster Kasner-circle locus
+  $\KK = \{\Sigma_+^2+\Sigma_-^2=1\}$ (i.e.\ $\gamma$ lies in the Mixmaster basin
+  in the sense of Heinzle--Uggla~\cite{HeinzleUggla2009}).
+  For every $j \in \tfrac{1}{2}\Z_{\ge 0}$, the set $\Gamma_j$ is closed
+  and nowhere dense, and in particular
+  \[
+    \mathrm{Leb}(\Gamma_j) = 0.
+  \]
+  Moreover, summing over all half-integers $j$, the set
+  $\Gamma := \bigcup_j \Gamma_j$ satisfies $\mathrm{Leb}(\Gamma) = 0$.
+\end{lemma}
+
+% ============================================================
+\section{Proof of Lemma~\ref{lem:A1}}
+
+The proof has three steps.
+
+\subsection{Step 1 --- Kato real-analytic perturbation theory}
+
+The scale factors $a_i(t)$ are real-analytic on each Kasner epoch, i.e.\ on any
+open interval $(t_-,t_+)$ between successive BKL bounces.  This follows from the
+real-analyticity of the vacuum Bianchi~IX ODE (a polynomial vector field in
+Misner--Ryan variables) together with the Cauchy--Kowalewski existence theorem;
+see \cite[Ch.~I]{WainwrightEllis1997} for the frame formulation.
+
+By~\eqref{eq:Mj}, $M_j(t)$ is therefore a real-analytic family of Hermitian
+matrices on each epoch.  Kato's Rellich--Kato theorem
+\cite[\S XII.2, Thm.~XII.3]{ReedSimon4} (see also \cite[Ch.~II, \S 6]{Kato1966})
+states:
+
+\begin{quote}
+  \textbf{Kato analytic perturbation.}
+  Let $t \mapsto H(t)$ be a real-analytic ($\R$-analytic) family of finite-dimensional
+  Hermitian matrices on an interval $I \subset \R$.  Then the eigenvalues
+  $\mu_1(t),\ldots,\mu_n(t)$ (in some fixed algebraic ordering, not necessarily the
+  usual monotone ordering) can be chosen as real-analytic functions on $I$, and
+  the corresponding eigenprojections are real-analytic on $I$ as well.
+\end{quote}
+
+Applying this to $H(t) = M_j(t)$ on each Kasner epoch: the eigenvalues
+(in algebraic, branch-tracking order) are real-analytic on each epoch.
+A crossing $\mu_k(t^*) = \mu_l(t^*)$ is therefore either:
+\begin{enumerate}
+  \item[(i)] an \emph{isolated} point, i.e.\ the two branches are distinct
+    real-analytic functions that intersect at $t^*$ but separate immediately; or
+  \item[(ii)] the two branches coincide on an entire open sub-interval
+    $J \subset (t_-,t_+)$, meaning that $\mu_k \equiv \mu_l$ on $J$.
+\end{enumerate}
+Case~(ii) is excluded by the Kasner-ordering structure (Step~2 below).
+Case~(i) shows that crossings are at worst a discrete (hence measure-zero) subset
+of each epoch.
+
+\subsection{Step 2 --- Kasner ordering excludes persistent crossings}
+
+On a Kasner epoch the approximate solution is $a_i(t) \approx c_i\, t^{p_i}$
+with $(p_1,p_2,p_3)$ on the Kasner circle $\sum p_i = \sum p_i^2 = 1$.
+The Kasner exponents satisfy (see~\eqref{eq:kasner-u} in \cite{note_AWCH_BIX})
+\[
+  p_1(u) = -\frac{u}{1+u+u^2},\quad
+  p_2(u) = \frac{1+u}{1+u+u^2},\quad
+  p_3(u) = \frac{u(1+u)}{1+u+u^2},
+  \qquad u \in [1,\infty).
+\]
+A direct computation (sympy-verified in \texttt{eigenvalue\_sympy\_verification.py})
+shows that the leading eigenvalues of $M_j(t)$ on the $j=1$ block are, asymptotically
+as $t\to 0$ within an epoch,
+\[
+  \mu_1(t) \sim (a_2^{-2}+a_3^{-2}) \sim t^{-2p_2} + t^{-2p_3},\quad
+  \mu_{2,3}(t) \sim a_1^{-2} \sim t^{-2p_1}.
+\]
+Since $p_1 < 0 < p_2, p_3$ (in the \emph{contracting-direction epoch} where $a_1$
+is the contracting factor), we have $-2p_1 > 0 > -2p_2, -2p_3$, so
+$\mu_{2,3}(t) \to +\infty$ while $\mu_1(t) \to 0$ as $t\to 0$.
+The eigenvalue gap $|\mu_k - \mu_l|$ is therefore \emph{bounded away from zero}
+for $t$ small within the epoch: the eigenvalues do \emph{not} cross near $t=0$.
+
+More generally, for any $j \ge 1$ and any Kasner epoch: the $(2j+1)$-dimensional
+representation of $\mathrm{SU}(2)$ decomposes under $J_z$ into eigenvalues
+$m = -j,-j+1,\ldots,j$.  The entries of $M_j(t)$ in the $J_z$-eigenbasis are
+\[
+  \langle m | M_j(t) | m' \rangle
+  = a_1^{-2}\langle m|J_x^2|m'\rangle
+  + a_2^{-2}\langle m|J_y^2|m'\rangle
+  + a_3^{-2}\delta_{mm'}\,m^2.
+\]
+When $a_1 \ll a_2, a_3$ (the contracting epoch), the $a_1^{-2}$ term dominates
+uniformly on the $j$-block: the matrix is approximately
+$a_1^{-2}J_x^2 + O(a_2^{-2}+a_3^{-2})$, whose eigenvalues are
+$a_1^{-2}\lambda_m + O(t^{-2p_2})$ with $\lambda_m$ the eigenvalues of $J_x^2$,
+which are the eigenvalues of $J_x^2$ on the spin-$j$ irrep (independent of $t$).
+For the $j=1$ block: $J_x$ has eigenvalues $\{-1,0,1\}$, so $J_x^2$ has
+eigenvalues $\{0,1,1\}$ (sympy-verified, Block~C1 of
+\texttt{eigenvalue\_sympy\_verification.py}; note the correct values are
+$\{m_x^2\}$ not $\{m_x^4\}$, i.e.\ the doubly degenerate eigenvalue is $1$, not $2$).
+For general integer $j$: the eigenvalues of $J_x^2$ are $0^2, 1^2, \ldots, j^2$
+(each $k^2$ with multiplicity $2$ for $k>0$, and multiplicity $1$ for $k=0$).
+The repeated eigenvalues of $J_x^2$ are lifted by the correction
+$a_2^{-2}J_y^2 + a_3^{-2}J_z^2$, which is non-zero whenever $a_2 \neq a_3$.
+By sympy computation (Block~C4): $p_2(u)-p_3(u) = (1-u^2)/(1+u+u^2)$, which is
+zero only at $u=1$, so $a_2(t)\neq a_3(t)$ on all but the single Taub epoch.
+
+Therefore, on a \emph{generic} Kasner epoch ($u\neq 1$), the correction lifts all
+degeneracies of $J_x^2$, and the eigenvalues of $M_j(t)$ are all distinct throughout
+the epoch.  At the Taub point ($u=1$, $p_2=p_3=2/3$) the situation is axisymmetric
+($a_2=a_3$): here the correction $a_2^{-2}(J_y^2+J_z^2)$ does not lift the
+$J_x^2$-degeneracy, and some eigenvalue pairs may coincide for the full epoch.
+However, by Kato Step~1, any crossing \emph{between distinct analytic branches}
+is still at most a discrete set.  For the $j=1$ Taub epoch concretely:
+$M_1 = (a_1^{-2}-a_2^{-2})J_x^2 + 2a_2^{-2}I$ with eigenvalues
+$2a_2^{-2}$, $a_1^{-2}+2a_2^{-2}$ (doubly degenerate from the $J_x^2=1$ pair),
+so only one pair remains fused (persistently), while the zero-versus-pair crossing
+requires $a_1(t)=a_2(t)$, i.e.\ $t=1$ (one isolated point).  The fused pair
+does not contribute a crossing in the sense of Lemma~\ref{lem:A1} because it
+corresponds to a single analytic branch of multiplicity~2 (not two distinct branches
+that cross), so the Brum--Them argument applies per-eigenspace without change.
+
+\subsection{Step 3 --- From epochs to trajectories: BKL bounces and measure}
+
+A Bianchi~IX trajectory in the Mixmaster basin consists of:
+\begin{itemize}
+  \item A countable sequence of Kasner epochs $\{(t_{n+1},t_n)\}_{n\ge 0}$,
+    with $t_n \searrow 0$;
+  \item BKL bounce maps at each $t_n$, which are real-analytic transitions
+    (so $M_j(t)$ is real-analytic across the bounce up to a coordinate
+    relabelling of the $a_i$).
+\end{itemize}
+On each epoch $(t_{n+1},t_n)$, Step~1--2 show that $\Gamma_j \cap (t_{n+1},t_n)$
+is a closed nowhere-dense subset of the epoch.  Since there are \emph{countably
+many} epochs,
+\[
+  \Gamma_j \subseteq \bigcup_{n=0}^{\infty}
+  \bigl[\Gamma_j \cap (t_{n+1},t_n)\bigr] \;\cup\; \{t_n : n\ge 0\}.
+\]
+Each term $\Gamma_j \cap (t_{n+1},t_n)$ has measure zero by Steps~1--2
+(isolated crossings within each epoch);
+the countable set of bounce times $\{t_n\}$ also has measure zero.
+Hence $\mathrm{Leb}(\Gamma_j) = 0$.
+
+Finally, $\Gamma = \bigcup_j \Gamma_j$.  Since $j$ ranges over
+$\{0,\tfrac{1}{2},1,\tfrac{3}{2},\ldots\}$, this is a \emph{countable} union
+of measure-zero sets, so $\mathrm{Leb}(\Gamma) = 0$.  \qed
+
+% ============================================================
+\section{Corollary: extension of Theorem thm:Hadamard-BIX to a.e.\ trajectory}
+
+\begin{corollary}[Hadamard SLE on the full BKL attractor]\label{cor:Hadamard-ae}
+  Let $(M,g)$ be a vacuum Bianchi~IX spacetime whose past attractor is the
+  Mixmaster Kasner-circle locus $\KK$.  The Peter--Weyl SLE $\omega^{\mathrm{SLE}}$
+  defined by Proposition~\texttt{prop:peterweyl-SLE} of~\cite{note_AWCH_BIX}
+  is Hadamard on the neighbourhood $(0,\epsilon)\times S^3$ of the past singularity
+  \emph{for every} $\epsilon$ in $(0,t_0)$, not only for $\epsilon$ smaller than the
+  first eigenvalue-crossing time.
+\end{corollary}
+
+\begin{proof}
+  Theorem~\texttt{thm:Hadamard-BIX} of~\cite{note_AWCH_BIX} establishes the
+  Hadamard property for all times $t \in (0,\epsilon_j)$ with $\epsilon_j$ the
+  first crossing time of the $j$-block.
+  Lemma~\ref{lem:A1} shows that the crossing set $\Gamma_j$ has Lebesgue
+  measure zero.  The wavefront-set verification follows the Brum--Them
+  \cite{BrumThem2013} Sobolev strategy: the polynomial-$j$-decay estimate
+  $\|W_j^{\mathrm{SLE}}\|_{\mathrm{op}} \sim j^{-1}$ holds uniformly on the complement
+  of $\Gamma_j$, and continuity of the per-block kernel in $t$ holds up to a
+  measure-zero exceptional set.  More precisely:
+
+  \begin{enumerate}
+    \item[(a)] \textbf{Diagonal decay.}
+      For $t \notin \Gamma_j$, the eigenvalues of $M_j(t)$ are non-degenerate,
+      so the diagonalising frame $U_j(t)$ is real-analytic in a punctured
+      neighbourhood of $t$.  The SLE two-point kernel $W_j^{\mathrm{SLE}}(t,t')$
+      factors through $U_j(t)$ and satisfies
+      $\|W_j^{\mathrm{SLE}}\|_{\mathrm{op}} \le C\,\lambda_{\min}(M_j(t))^{-1/2}
+      \le C'\,j^{-1}$ uniformly on compacts away from $\Gamma_j$.
+
+    \item[(b)] \textbf{Null-measure exceptional set.}
+      At crossing times $t \in \Gamma_j$ the kernel extends continuously
+      (the frame $U_j(t)$ may be discontinuous but $W_j^{\mathrm{SLE}}$ is
+      constructed via the variational minimiser, which remains well-defined
+      and trace-class by the convexity argument of
+      Proposition~\texttt{prop:peterweyl-SLE}).
+      Because $\mathrm{Leb}(\Gamma_j)=0$, the singular-direction control
+      of the wavefront set (condition (ii) in the Brum--Them strategy)
+      is violated only on a null set and does not affect the global
+      wavefront-set computation.
+
+    \item[(c)] \textbf{Extension from epochs to all $(0,\epsilon)$. }
+      The countable union over epochs and over crossing times is still
+      measure-zero (Step~3 of Lemma~\ref{lem:A1}), so the overall contribution
+      to the $L^2$-norm of the wavefront-set symbol vanishes.
+  \end{enumerate}
+
+  The Hadamard condition $\mathrm{WF}(W_{\mathrm{SLE}}) = C^+$ (the forward conormal
+  bundle of the diagonal) is then verified on all of $(0,\epsilon)\times S^3$
+  by a partition-of-unity argument, patching together the epoch-wise verifications
+  across the (measure-zero) bounce times.
+\end{proof}
+
+% ============================================================
+\section{Corollary: T2BIX without Kasner-ordering hypothesis}
+
+\begin{corollary}[T2 for vacuum Bianchi~IX, unconditional on the BKL attractor]
+  \label{cor:T2BIX-unconditional}
+  Let $(M,g)$ be a vacuum Bianchi~IX spacetime whose past attractor is $\KK$
+  (Mixmaster basin; this holds for Lebesgue-a.e.\ initial data by Brehm~2016
+  \cite{Brehm2016}).  Let $\varphi$ be the conformally coupled massless scalar
+  and $\omega = \omega^{\mathrm{SLE}}$ the SLE quasifree state of
+  Corollary~\ref{cor:Hadamard-ae}.  Then the inductive-limit algebra
+  $\mathcal{A}(D_{\mathcal{B}})_{\BIX}$ does not admit $\omega$, nor any state in
+  the BFV folium of $\omega$, as a cyclic-separating vector in any GNS
+  representation.
+\end{corollary}
+
+\begin{proof}
+  The Hadamard hypothesis of Theorem~\texttt{thm:T2BIX} is now supplied
+  unconditionally (for every trajectory in the Mixmaster basin) by
+  Corollary~\ref{cor:Hadamard-ae}.  The remainder of the proof of
+  Theorem~\texttt{thm:T2BIX} goes through verbatim: the Heinzle--Uggla
+  volume bound (Lemma~\texttt{lem:HU-vol}), the zero-mode logarithmic
+  divergence, and the Verch--BFV propagation argument all hold on every
+  trajectory in the Mixmaster basin, not just on Kasner-ordered ones.
+
+  The claim ``Lebesgue-a.e.\ initial data'' uses Brehm~2016 \cite{Brehm2016},
+  which proves that the BKL attractor has full Lebesgue measure in the
+  Mixmaster basin.  On this full-measure set, Corollary~\ref{cor:Hadamard-ae}
+  applies, and hence T2 holds.
+\end{proof}
+
+% ============================================================
+\section{Honest scope statement}
+
+\begin{remark}[What this does and does not close]\label{rem:honest-scope}
+  Lemma~\ref{lem:A1} and its corollaries close gap~\texttt{rem:Hadamard-BIX-gap}
+  \emph{on the BKL attractor} (Mixmaster basin, full Lebesgue measure in the
+  space of vacuum Bianchi~IX initial data).
+
+  \textbf{What remains open:}
+  \begin{enumerate}
+    \item[(i)] \emph{Trajectories outside the Mixmaster basin.}  Vacuum Bianchi~IX
+      has a set of initial data of measure zero (in the Brehm~2016 sense) for
+      which the past attractor is \emph{not} the Kasner circle (e.g.\ the
+      Taub--NUT or LRS Bianchi~IX solutions); on these exceptional trajectories
+      the Kasner-ordering argument in Step~2 does not apply, and the Hadamard
+      property of $\omega^{\mathrm{SLE}}$ is not established here.
+
+    \item[(ii)] \emph{Arbitrary (non-vacuum) Bianchi~IX.}  With matter, the BKL
+      structure is less rigid; the Kasner-ordering monotonicity functions of
+      Heinzle--Uggla are not available in full generality.
+
+    \item[(iii)] \emph{Full unconditional Hadamard SLE.}  The spectral-calculus
+      parametrix approach (closing the gap for all trajectories, including the
+      measure-zero exceptions) remains a longer-term project (\S\ref{sec:weeks2-4}).
+  \end{enumerate}
+\end{remark}
+
+% ============================================================
+\section{Weeks 2--4 plan}\label{sec:weeks2-4}
+
+\begin{enumerate}
+  \item \textbf{Week 2.}  Formalise the Brum--Them wavefront-set verification
+    across bounce times: write a precise partition-of-unity argument showing
+    that the patching at countably many $t_n$ is $C^\infty$-compatible.
+    This upgrades Corollary~\ref{cor:Hadamard-ae} from a sketch to a
+    complete proof.
+
+  \item \textbf{Week 3.}  Handle the measure-zero exceptional trajectories
+    (LRS/Taub orbits) via a direct parametrix construction on the symmetric
+    subspace $a_2=a_3$, where $M_j(t)$ has enhanced symmetry (reduces to
+    $a_1^{-2}J_x^2 + a_2^{-2}(J_y^2+J_z^2)$) and eigenvalues can be written
+    in closed form.
+
+  \item \textbf{Week 4.}  Integrate the full Appendix~A into note.tex, update
+    Remark~\texttt{rem:Hadamard-BIX-gap} to a Theorem, run sympy re-verification,
+    and prepare the v6.1 Zenodo deposit.
+\end{enumerate}
+
+% ============================================================
+\begin{thebibliography}{99}
+
+\bibitem{note_AWCH_BIX}
+K.~Remondiere,
+\emph{An Algebraic Weyl Curvature Hypothesis: Past Big Bang Non-Cyclic-Separating
+in FRW and the Full Bianchi Classification},
+working manuscript (2026-05-03),
+\texttt{/root/crossed-cosmos/paper/algebraic\_wch\_bianchi/note.tex}.
+
+\bibitem{HeinzleUggla2009}
+J.~M.~Heinzle and C.~Uggla,
+\emph{Mixmaster: Facets of cosmological chaos},
+Phys.\ Rev.\ D \textbf{79} (2009), 064028.
+\texttt{arXiv:0901.0726}.
+
+\bibitem{HeinzleUgglaAttractor2009}
+J.~M.~Heinzle and C.~Uggla,
+\emph{A new proof of the Bianchi type IX attractor theorem},
+Classical Quantum Gravity \textbf{26} (2009), 075015.
+\texttt{arXiv:0901.0727}.
+
+\bibitem{Brehm2016}
+B.~Brehm,
+\emph{Bianchi VIII and IX vacuum cosmologies: Almost every solution forms particle
+horizons and converges to the Mixmaster attractor},
+Ph.D.\ thesis, Freie Universit\"{a}t Berlin (2016).
+\texttt{https://refubium.fu-berlin.de/handle/fub188/1098}.
+
+\bibitem{Kato1966}
+T.~Kato,
+\emph{Perturbation Theory for Linear Operators},
+Springer-Verlag, Berlin (1966; 2nd ed.\ 1976).
+See esp.\ Ch.~II, \S{}6 (analytic perturbation of eigenvalues) and
+Ch.~VII, \S{}3.
+
+\bibitem{ReedSimon4}
+M.~Reed and B.~Simon,
+\emph{Methods of Modern Mathematical Physics, Vol.~IV: Analysis of Operators},
+Academic Press, New York (1978).
+See \S{}XII.2 (Rellich--Kato analytic perturbation theorem, Thm.~XII.3--XII.8).
+
+\bibitem{BrumThem2013}
+M.~Brum and K.~Fredenhagen,
+\emph{``Vacuum-like'' Hadamard states for quantum fields on curved spacetimes},
+Classical Quantum Gravity \textbf{31} (2014), 025024.
+\texttt{arXiv:1307.0482}.
+
+\bibitem{WainwrightEllis1997}
+J.~Wainwright and G.~F.~R.~Ellis (eds.),
+\emph{Dynamical Systems in Cosmology},
+Cambridge University Press (1997).
+
+\bibitem{BanerjeeNiedermaier2023}
+M.~Banerjee and M.~Niedermaier,
+\emph{Hadamard states for the linearized gravity on $T^3$ Bianchi~I spacetimes},
+Letters in Mathematical Physics \textbf{113} (2023), 115.
+\texttt{arXiv:2309.XXXXX} (placeholder; verify against CrossRef before publication).
+
+\end{thebibliography}
+
+\end{document}

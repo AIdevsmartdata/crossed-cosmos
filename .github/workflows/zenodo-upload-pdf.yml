@@ -17,8 +17,16 @@ name: Upload release PDFs to Zenodo
 #     (fallback pour les retries)
 
 on:
-  release:
-    types: [published]
+  # Auto-fire on release disabled 2026-05-04: the script's --tag path is missing
+  # `publication_date` in the metadata PUT, which the new Zenodo API rejects with
+  # HTTP 400 "Missing data for required field." Since v6.0.42 we publish directly
+  # via the legacy /api/deposit/depositions/{parent}/actions/newversion path from
+  # the VPS (scripts in /tmp on the dev box; cf. zenodo_v644.py), so the auto-
+  # fire is redundant and only created orphan unsubmitted drafts (e.g. 20021426
+  # from v6.0.44 release, deleted manually). Keep workflow_dispatch as a manual
+  # fallback. Re-enable when the script is fixed to always include publication_date.
+  # release:
+  #   types: [published]
   workflow_dispatch:
     inputs:
       tag:

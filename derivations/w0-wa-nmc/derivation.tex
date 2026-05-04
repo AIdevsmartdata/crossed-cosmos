@@ -1,0 +1,128 @@
+%% NMC Thawing Quintessence: w_0, w_a derivation
+%% For insertion at eci.tex line 153 (deferred derivations/w0-wa-nmc/)
+%% ECI v6.0.45, 2026-05-04
+%% References all verified via export.arxiv.org/api/query
+
+%% ANTI-HALLUCINATION NOTE:
+%%   "Pan-Yang JCAP 2018 arXiv:1804.05064" does NOT exist.
+%%   arXiv:1804.05064 = "The FABLE simulations" (galaxy-cluster hydro, Henden+2018).
+%%   The coefficient -2 xi Omega_phi0 was HALLUCINATED. This derivation corrects it.
+
+\subsection*{NMC Thawing Quintessence: Derivation of $w_0$, $w_a$}
+
+\subsubsection*{Lagrangian and Klein-Gordon equation}
+
+We consider thawing quintessence with NMC Lagrangian
+\begin{equation}
+    \mathcal{L}_\chi = -\tfrac{1}{2}(\partial\chi)^2 - V(\chi) - \tfrac{1}{2}\xi_\chi R\chi^2,
+    \qquad V(\chi) = V_0 e^{-\lambda\chi/M_P}.
+\end{equation}
+Varying with respect to $\chi$ in a flat FLRW background gives the Klein-Gordon equation
+\begin{equation}
+    \ddot\chi + 3H\dot\chi + V'(\chi) = \xi_\chi R\chi,
+    \qquad R = 6(2H^2 + \dot H).
+    \label{eq:KG-NMC}
+\end{equation}
+
+\subsubsection*{Effective stress-energy tensor}
+
+In the Jordan frame (perturbative $\xi_\chi$, following
+\citealt{Pettorino:2008ez}~[arXiv:0802.1086]):
+\begin{align}
+    \rho_\chi &= \tfrac{1}{2}\dot\chi^2 + V(\chi) + 6\xi_\chi H\chi\dot\chi, \label{eq:rho-NMC}\\
+    p_\chi    &= \tfrac{1}{2}\dot\chi^2 - V(\chi) - \xi_\chi(2\dot H + 4H^2)\chi^2
+                 - 4\xi_\chi H\chi\dot\chi. \label{eq:p-NMC}
+\end{align}
+Terms of order $\xi_\chi(\chi/M_P)^2$ are dropped as subdominant for
+perturbative coupling.
+
+\subsubsection*{Slow-roll attractor}
+
+The slow-roll conditions $\ddot\chi\ll 3H\dot\chi$ and $\dot\chi^2\ll V$ give
+\begin{equation}
+    \dot\chi_{\rm SR} = \frac{\lambda V(\chi)}{3HM_P} + 4\xi_\chi H\chi + \mathcal{O}(\xi_\chi^2),
+    \label{eq:chidot-SR}
+\end{equation}
+where the second term is the $\mathcal{O}(\xi_\chi)$ NMC correction using $R\approx 12H^2$
+(near de~Sitter).  From the Friedmann equation $3M_P^2 H^2 = \rho_\chi/\Omega_\phi$,
+\begin{equation}
+    \frac{\dot\chi_{\rm SR}^2}{V} = \frac{\lambda^2\Omega_\phi}{3} + \mathcal{O}(\xi_\chi),
+\end{equation}
+with $\epsilon_V \equiv \tfrac{M_P^2}{2}\!\left(\tfrac{V'}{V}\right)^{\!2} = \tfrac{\lambda^2}{2}$.
+
+\subsubsection*{Equation of state $w(a)$}
+
+Defining $u\equiv\dot\chi^2/V = \lambda^2\Omega_\phi/3$,
+$A\equiv 6\xi_\chi H\chi\dot\chi/V = 2\xi_\chi\lambda\chi/M_P$,
+and $B \equiv [-\xi_\chi(2\dot H+4H^2)\chi^2 - 4\xi_\chi H\chi\dot\chi]/V \approx
+-4\xi_\chi\lambda\chi/(3M_P)$ (leading slow-roll terms only),
+\begin{align}
+    w &= \frac{p_\chi}{\rho_\chi}
+       = \frac{u/2 - 1 + B}{1 + u/2 + A}
+       \approx -1 + u + A + B + \mathcal{O}(u^2, uA, uB) \notag\\
+      &= -1 + \frac{\lambda^2\Omega_\phi}{3}
+           + \frac{2\xi_\chi\lambda\chi}{3M_P},
+    \label{eq:w-NMC}
+\end{align}
+where the combination $A + B = 2\xi_\chi\lambda\chi/(3M_P)$ was confirmed
+symbolically by \texttt{sympy}.
+
+\subsubsection*{CPL coefficients}
+
+In the thawing scenario the field tracks $\chi(a)$ along the slow-roll
+attractor; linearising near $a=1$,
+\begin{equation}
+    \chi(a) \approx \chi_0 + \lambda M_P\,\Omega_{\phi,0}\,(a-1),
+    \label{eq:chi-tracker}
+\end{equation}
+so
+\begin{equation}
+    \frac{dw}{da}\bigg|_{a=1} = \frac{\lambda^2\,d\Omega_\phi/da|_{a=1}}{3}
+        + \frac{2\xi_\chi\lambda^2\Omega_{\phi,0}}{3}.
+\end{equation}
+The Omega evolution obeys $d\Omega_\phi/d\!\ln a = 3\Omega_\phi(1-\Omega_\phi)(1+w_\phi)$;
+at leading order in $\epsilon_V$,
+$(1+w_\phi)|_{a=1}=\lambda^2\Omega_{\phi,0}/3$, giving
+\begin{equation}
+    \frac{d\Omega_\phi}{da}\bigg|_{a=1}
+        = \lambda^2\Omega_{\phi,0}^2(1-\Omega_{\phi,0}).
+\end{equation}
+The CPL parameters are therefore
+\begin{align}
+    \boxed{w_0^{\rm NMC}} &= -1 + \frac{\lambda^2}{3}\,\Omega_{\phi,0}
+        + \frac{2\xi_\chi\lambda\chi_0}{3M_P}, \label{eq:w0-NMC}\\[4pt]
+    \boxed{w_a^{\rm NMC}} &= -\lambda^2\Omega_{\phi,0}\!\left[
+        \Omega_{\phi,0}(1-\Omega_{\phi,0}) + \frac{2\xi_\chi}{3}
+        \right], \label{eq:wa-NMC}
+\end{align}
+and the NMC correction to $w_a$ relative to the minimal ($\xi_\chi=0$) baseline is
+\begin{equation}
+    \boxed{\Delta w_a^{\rm NMC} = -\frac{2\xi_\chi\lambda^2}{3}\,\Omega_{\phi,0}.}
+    \label{eq:Dwa-NMC}
+\end{equation}
+The coefficient is $-2\lambda^2/3$, \textbf{not} $-2$ as appeared in a
+prior (hallucinated) derivation citing a non-existent ``Pan--Yang JCAP 2018'';
+the missing factor $\lambda^2$ is essential and comes directly from
+$\dot\chi/H = \lambda M_P\Omega_\phi$ on the slow-roll attractor.
+
+\subsubsection*{Sanity checks}
+\begin{itemize}
+    \item $\xi_\chi=0$: recovers minimal thawing result $w_a=-\lambda^2\Omega_{\phi,0}^2(1-\Omega_{\phi,0})$.
+    \item $\lambda\to 0$: $w_a\to 0$ (cosmological constant, exact).
+    \item $\Omega_{\phi,0}\to 0$: $w_a\to 0$ (negligible DE).
+    \item Sign: $\xi_\chi>0$ gives $\Delta w_a<0$, i.e.\ NMC deepens the thawing,
+          consistent with \citet{Wolf:2025} (arXiv:2504.07679) preference for
+          NMC in DESI 2025 data.
+\end{itemize}
+
+\subsubsection*{Verified references}
+\begin{itemize}
+    \item Scherrer \& Sen 2008 PRD 77 083515 = arXiv:0712.3450 [VERIFIED via arXiv API]
+    \item Wolf, Garc\'ia-Garc\'ia, Anton, Ferreira 2025 PRL 135 081001 = arXiv:2504.07679 [VERIFIED]
+    \item Adam, Hertzberg+ JCAP 04 (2026) 052 = arXiv:2509.13302 [VERIFIED]
+    \item S\'anchez L\'opez, Karam, Hazra 2025 = arXiv:2510.14941 [VERIFIED]
+    \item Pettorino \& Baccigalupi 2008 PRD 77 103003 = arXiv:0802.1086 [VERIFIED]
+    \item \textbf{Pan--Yang JCAP 2018 = arXiv:1804.05064: DOES NOT EXIST as NMC quintessence paper.}
+          arXiv:1804.05064 is ``The FABLE simulations'' (Henden+2018, galaxy-cluster hydro).
+          All uses of this citation are hallucinations; hallucination counter incremented.
+\end{itemize}

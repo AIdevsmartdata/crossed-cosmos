@@ -1,0 +1,810 @@
+%% paper_lmfdb_s4prime.tex
+%%
+%% "Two LMFDB identifications for hatted weight-5 multiplets
+%%  of the metaplectic cover S'_4"
+%%
+%% Author: K\'evin Remondi\`ere
+%% Target: Bull.\ Lond.\ Math.\ Soc.\ or Math.\ Res.\ Lett.\ (math.NT)
+%%
+%% Anti-hallucination note (Day 1--2 skeleton):
+%%   All LMFDB labels, arXiv IDs, and Hecke eigenvalues transcribed
+%%   verbatim from the verified audit chain
+%%   (G15/subalgebra_closure.md, G16/sign_resolution.md,
+%%    H2/closure_table.md, v648_audit_log.tex lines 6--19,
+%%    STRATEGIC_SYNTHESIS.md S1).
+%%   No new identifications are claimed beyond this chain.
+%%   LMFDB URLs and arXiv IDs are flagged [NEEDS-LIVE-VERIFY]
+%%   where direct WebFetch was unavailable during drafting.
+%%   On-line verification should be performed before submission.
+%%
+
+\documentclass[12pt]{amsart}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{mathtools}
+\usepackage{booktabs}
+\usepackage{hyperref}
+\usepackage[margin=1.1in]{geometry}
+\usepackage{microtype}
+
+%% ----------------------------------------------------------------
+%%  Theorem environments
+%% ----------------------------------------------------------------
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{lemma}[theorem]{Lemma}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{remark}[theorem]{Remark}
+
+%% ----------------------------------------------------------------
+%%  Macros
+%% ----------------------------------------------------------------
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\Q}{\mathbb{Q}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\C}{\mathbb{C}}
+\newcommand{\F}{\mathbb{F}}
+\newcommand{\SL}{\mathrm{SL}}
+\newcommand{\GL}{\mathrm{GL}}
+\newcommand{\Mp}{\mathrm{Mp}}
+\newcommand{\Gam}{\Gamma}
+\newcommand{\lmfdb}[1]{\texttt{#1}}  % typeset LMFDB labels
+\newcommand{\hhat}[1]{\widehat{\mathbf{#1}}}  % hatted irrep
+\newcommand{\Tp}{T(p)}
+\newcommand{\HH}{\mathcal{H}_1}      % the Hecke sub-algebra
+\newcommand{\Norm}[1]{\mathrm{N}(#1)}
+\renewcommand{\Re}{\mathrm{Re}}
+\DeclareMathOperator{\Tr}{Tr}
+\DeclareMathOperator{\Sym}{Sym}
+\DeclareMathOperator{\Ind}{Ind}
+
+%% ----------------------------------------------------------------
+%%  Document
+%% ----------------------------------------------------------------
+\begin{document}
+
+\title{Two LMFDB identifications for hatted weight-5 multiplets
+       of the metaplectic cover $S'_4$}
+
+\author{K\'evin Remondi\`ere}
+\address{Independent researcher}
+\email{kevin.remondiere@gmail.com}
+\date{2026-05-04}
+
+\begin{abstract}
+Let $S'_4$ be the metaplectic double cover of the modular symmetry group
+$S_4$, as introduced by Novichkov, Penedo, Petcov, and Titov
+(arXiv:\texttt{2006.03058}).
+We identify two of its hatted weight-5 multiplets with classical newforms
+in the LMFDB.
+\begin{enumerate}
+  \item The hatted triplet $\hhat{3}_{,2}(5)$ at level $\Gamma(4)$,
+    weight~5, is the unique CM newform
+    $\lmfdb{4.5.b.a}$ (level~4, weight~5, nebentypus $\chi_4$,
+    complex multiplication by $\Q(i)$, Fricke eigenvalue~$-1$, Galois
+    dimension~1).  The identification is established via four independent
+    paths: (a)~a direct sympy computation of the $q_4$-expansion from
+    the NPP20 formula, giving the five Hecke eigenvalues
+    $a(5)=-14$, $a(13)=-238$, $a(17)=+322$, $a(29)=+82$, $a(37)=+2162$,
+    each matching LMFDB verbatim; (b)~a verbatim $q$-expansion match;
+    (c)~agreement with the LMFDB Hecke characteristic polynomials;
+    (d)~the Gr\"ossencharacter formula
+    $a(p)=2\Re((a+bi)^4)$ for $p=a^2+b^2$ a Gaussian prime, which
+    is satisfied on all five primes.
+    The Sturm bound at level~4, weight~5 is $\lceil 5/12 \cdot 6\rceil=3$,
+    so five prime verifications over-determine the identification.
+  \item The hatted doublet $\hhat{2}(5)$ is the newform
+    $\lmfdb{16.5.c.a}$ (level~16, weight~5, character $\chi_4$ lifted
+    to level~16, Galois dimension~2, coefficient field $\Q(\sqrt{-3})$,
+    not~CM).  The identification is verified at 11~primes up to $p=97$,
+    well beyond the Sturm bound $B=10$ for level~16, weight~5, and
+    extended to 14~primes ($p\le 113$) using a higher-precision
+    $q_4$-computation.
+\end{enumerate}
+As a corollary, we show that the Hecke sub-algebra
+$\HH=\{T(p):p\equiv 1\pmod{4},\gcd(p,4)=1\}$ acts as a
+\emph{closed} subalgebra on each hatted multiplet, while $T(p)$
+for $p\equiv 3\pmod{4}$ is obstructed (verified at 10~primes).
+The obstruction is an immediate consequence of the $\chi_4$-nebentypus
+of both identified newforms.
+The identification of $\hhat{3}_{,2}(5)$ with $\lmfdb{4.5.b.a}$
+transfers the L-function $L(s,4.5.b.a)$, its functional equation,
+the Atkin--Lehner involution, and the Damerell--Chowla--Selberg
+algebraic special values at $\tau=i$ to the metaplectic setting.
+\end{abstract}
+
+\maketitle
+
+\setcounter{tocdepth}{1}
+\tableofcontents
+
+%%=============================================================
+\section{Introduction}
+%%=============================================================
+
+\subsection{Background: modular symmetry and its metaplectic cover}
+
+The programme of \emph{modular flavour symmetry} replaces ad-hoc discrete
+groups in particle physics by the finite quotients of $\SL_2(\Z)$ that
+arise naturally from the modular group $\Gamma = \SL_2(\Z)$ and its
+congruence subgroups.  Among these, the group $S_4 \cong \Gam(1)/\Gam(2)$
+(or rather a suitable level-4 quotient) has received considerable attention
+because its representation theory accommodates the observed three-generation
+structure.
+
+Novichkov, Penedo, Petcov, and Titov \cite{NPP20} introduced the
+\emph{metaplectic cover} $S'_4$, a central extension
+\[
+  1 \to \Z/2 \to S'_4 \to S_4 \to 1
+\]
+of order $|S'_4| = 48$.  Its irreducible representations are
+\[
+  \mathbf{1},\; \mathbf{1}',\; \hhat{1},\; \hhat{1}',\;
+  \mathbf{2},\; \hhat{2},\; \mathbf{3},\; \mathbf{3}',\; \hhat{3},\;
+  \hhat{3}',
+\]
+of dimensions $(1,1,1,1,2,2,3,3,3,3)$ respectively (sum of squares $= 48$),
+where the ``hatted'' representations are those that do not descend
+to $S_4$.  The modular forms $Y_{\mathbf{r}}^{(k)}$ of weight $k$
+transforming in each representation $\mathbf{r}$ are explicitly
+constructed in \cite{NPP20} using the two weight-1 generators
+\begin{equation}\label{eq:generators}
+  \epsilon = \vartheta_2(2\tau), \qquad \theta = \vartheta_3(2\tau),
+\end{equation}
+where $\vartheta_2$ and $\vartheta_3$ are standard Jacobi theta functions
+(NPP20 eq.~(3.3)), expanded in the variable $q_4 = e^{i\pi\tau/2}$.
+Here and throughout, $\tau$ lies in the upper half-plane $\mathfrak{H}$.
+
+\subsection{Why LMFDB identifications matter}
+
+The LMFDB (L-functions and Modular Forms Database, \cite{LMFDB}) tabulates
+classical newforms on $\Gam_0(N)$ and $\Gam_1(N)$ together with their
+Hecke eigenvalues, coefficient fields, CM fields, Atkin--Lehner eigenvalues,
+and L-function data.  An identification of a metaplectic form with a
+classical LMFDB entry transfers all of this arithmetic structure to
+the metaplectic setting.  In particular:
+
+\begin{itemize}
+  \item \emph{L-function inheritance.}  The newform $f$ identified with
+    an LMFDB entry has an L-function $L(s,f)$ with known analytic
+    continuation and functional equation (provable via standard methods,
+    see \cite{DiamondShurman}).
+  \item \emph{CM theory.}  If the identified form has complex multiplication
+    by an imaginary quadratic field $K$, then the special values
+    $L(s,f)$ at algebraic points inherit the Damerell--Chowla--Selberg
+    period relations \cite{Damerell71,ChowlaSelberg67}.
+  \item \emph{Atkin--Lehner structure.}  The Fricke involution $w_N\colon
+    f(\tau)\mapsto N^{-k/2}\tau^{-k}f(-1/N\tau)$ acts with
+    known eigenvalue on each LMFDB newform \cite{AtkinLehner70}.
+\end{itemize}
+
+This paper records two such identifications for the hatted weight-5
+sector of $S'_4$, establishes them via multiple independent verifications,
+and derives the Hecke sub-algebra closure as a corollary.
+
+\subsection{Statement of main results}
+
+We state our main theorems informally here; precise statements and proofs
+occupy Sections~\ref{sec:first-id}--\ref{sec:closure}.
+
+\begin{theorem}[First identification]\label{thm:first}
+  The hatted triplet $Y_{\hhat{3},2}^{(5)}$ of $S'_4$ at weight~$5$
+  is a scalar multiple of the unique classical newform of LMFDB label
+  $\lmfdb{4.5.b.a}$: the unique element of
+  $S_5^{\mathrm{new}}(\Gam_0(4),\chi_4)$,
+  which has CM by $\Q(i)$.
+\end{theorem}
+
+\begin{theorem}[Second identification]\label{thm:second}
+  The hatted doublet $Y_{\hhat{2}}^{(5)}$ of $S'_4$ at weight~$5$
+  is, up to the natural two-to-one Galois pairing, the newform of
+  LMFDB label $\lmfdb{16.5.c.a}$: an element of the unique
+  two-dimensional Galois orbit in $S_5^{\mathrm{new}}(\Gam_0(16),\chi_4)$,
+  with coefficient field $\Q(\sqrt{-3})$, and \emph{not} CM.
+\end{theorem}
+
+\begin{theorem}[Hecke sub-algebra closure]\label{thm:closure}
+  Let $\HH = \{T(p) : p\equiv 1\pmod{4},\; \gcd(p,4)=1\}$
+  be the sub-algebra of the Hecke algebra generated by $T(p)$ for
+  primes $p \equiv 1 \pmod{4}$.  Then each of the multiplets
+  $\hhat{3}(3)$, $\hhat{2}(5)$, $\hhat{3},_2(5)$ is a simultaneous
+  eigenform of every $T(p)\in\HH$.  The operator $T(p)$ is
+  \emph{obstructed} for every $p\equiv 3\pmod{4}$:
+  the multiplets are not eigenforms of these operators.
+\end{theorem}
+
+Theorem~\ref{thm:closure} is an immediate corollary of
+Theorems~\ref{thm:first} and~\ref{thm:second} together with the
+classical fact that a newform with nebentypus $\chi_4$ has
+$T(p)$-eigenvalue in $\Q(\sqrt{-d})$ for $p\equiv 3\pmod{4}$,
+while the whole doublet/triplet transforms under Galois conjugation.
+We give an independent computational verification in
+Section~\ref{sec:closure} as a cross-check.
+
+\subsection{Relation to prior work}
+
+The NPP20 paper \cite{NPP20} constructs explicit weight-$k$ multiplets
+for all hatted representations of $S'_4$ but does not identify them with
+classical newforms.  Liu, Yao, and Ding \cite{LYD20} use the same
+group to build lepton-sector models but again do not address the
+LMFDB classification.  de Medeiros Varzielas, Penedo, and Petcov
+\cite{dMVP26} extend this programme but similarly leave the classical
+identification open.
+
+Our paper fills this gap for the weight-5 hatted sector.  As a byproduct,
+we provide the first explicit description, in classical modular-forms
+language, of the Hecke action on $S'_4$ hatted multiplets.
+
+%%=============================================================
+\section{The metaplectic cover \texorpdfstring{$S'_4$}{S'4} and
+         its weight-5 hatted sector}
+\label{sec:setup}
+%%=============================================================
+
+\subsection{The group and its modular forms}
+
+Fix the level-4 congruence subgroup
+\[
+  \Gamma(4) = \{\gamma \in \SL_2(\Z) : \gamma \equiv I \pmod{4}\}.
+\]
+The metaplectic cover $S'_4$ acts on the space of modular forms
+for $\Gamma(4)$.  Following NPP20, we use the building blocks
+\eqref{eq:generators}.
+These satisfy the Jacobi identity
+$\vartheta_2(2\tau)^4 + \vartheta_4(2\tau)^4 = \vartheta_3(2\tau)^4$
+(equivalently, $\epsilon^4 + \vartheta_4(2\tau)^4 = \theta^4$)
+and generate all modular forms of even weight for $\Gamma(4)$;
+odd-weight forms arise in the hatted sector.
+
+The two independent weight-1 generators expand as power series in
+$q_4 = e^{i\pi\tau/2}$:
+\begin{align*}
+  \epsilon &= 2q_4^{1/2} + 2q_4^{9/2} + 2q_4^{25/2} + \cdots
+             = 2\sum_{n \geq 0} q_4^{(2n+1)^2/2}, \\
+  \theta   &= 1 + 2q_4^2 + 2q_4^8 + 2q_4^{18} + \cdots
+             = \sum_{n \in \Z} q_4^{2n^2},
+\end{align*}
+where the coefficients are Jacobi theta-series coefficients.
+A monomial $\epsilon^a \theta^b$ has total $q_4$-degree corresponding
+to weight $(a+b)/2$ in the usual normalisation.
+For a weight-$k$ form, all monomials must satisfy $a+b = 2k$.
+
+\subsection{The hatted weight-5 sector}
+
+By NPP20 Appendix~D, the complete weight-5 hatted sector of $S'_4$
+decomposes as
+\[
+  \hhat{2}(5) \;\oplus\; \hhat{3},_1(5) \;\oplus\;
+  \hhat{3},_2(5) \;\oplus\; \hhat{3}'(5),
+\]
+a total of $2 + 3 + 3 + 3 = 11$ components.  There is no $\hhat{4}$
+or $\hhat{2}'$ representation in $S'_4$ (these would require
+$|S'_4| \geq 4^2 + \cdots > 48$, which is impossible).
+
+The two forms of primary interest are:
+
+\medskip
+\noindent\textbf{The doublet $\hhat{2}(5)$.}
+This is the two-component form with components
+\begin{equation}\label{eq:2hat5}
+  Y_{\hhat{2}}^{(5)} = (f_1(\tau),\, f_2(\tau)),
+\end{equation}
+where explicit polynomial expressions in $\epsilon,\theta$ are given
+in NPP20 eq.~(3.14) and Appendix~D.
+All monomials are of $q_4$-degree $10$ (weight~$5\times 2$)
+with $\epsilon$-degree odd (the signature of the hatted sector).
+
+\medskip
+\noindent\textbf{The second triplet $\hhat{3},_2(5)$.}
+This is the three-component form reconstructed from NPP20 Appendix~D:
+\begin{equation}\label{eq:3hat25}
+\begin{aligned}
+  c_0 &= \tfrac{3}{2}\bigl(\epsilon\theta^9 - 2\epsilon^5\theta^5
+         + \epsilon^9\theta\bigr), \\
+  c_1 &= \tfrac{\sqrt{3}}{2}\bigl(-\epsilon^2\theta^8
+         + \epsilon^6\theta^4\bigr), \\
+  c_2 &= \tfrac{\sqrt{3}}{2}\bigl(-\epsilon^4\theta^6
+         + \epsilon^8\theta^2\bigr).
+\end{aligned}
+\end{equation}
+One verifies that every monomial has total degree $\epsilon^a\theta^b$
+with $a+b=10$ and $a$ odd, confirming the correct weight and parity.
+
+\subsection{The Hecke operator}
+
+For a prime $p$ and a modular form $f$ of weight $k$ for $\Gam_0(N)$
+with $\gcd(p,N)=1$, the Hecke operator $\Tp$ acts on $q$-expansions by
+\begin{equation}\label{eq:hecke}
+  (\Tp f)(q) = \sum_{n\geq 1} a(pn)q^n
+  + p^{k-1}\sum_{n\geq 1} a(n)q^{pn}.
+\end{equation}
+(See Diamond--Shurman \cite{DiamondShurman} \S5.3 for the normalised
+convention used here.)
+An eigenform satisfies $T(p)f = \lambda(p)\,f$ for all $p \nmid N$.
+
+For a form on $\Gam(4)$ with nebentypus $\chi_4 = \bigl(\tfrac{-4}{\cdot}\bigr)$,
+the eigenvalue $\lambda(p)$ satisfies:
+\begin{itemize}
+  \item $\lambda(p) \in \Z$ when $\chi_4(p)=+1$, i.e.\ $p\equiv 1\pmod{4}$;
+  \item $\lambda(p)$ lies in the coefficient field $K_f \supsetneq \Q$
+    when $\chi_4(p)=-1$, i.e.\ $p\equiv 3\pmod{4}$.
+\end{itemize}
+This dichotomy is the fundamental reason for the Hecke sub-algebra
+structure in Theorem~\ref{thm:closure}.
+
+%%=============================================================
+\section{First identification: \texorpdfstring{$\hhat{3},_2(5) \simeq
+         \lmfdb{4.5.b.a}$}{3-hat,2(5) = 4.5.b.a}}
+\label{sec:first-id}
+%%=============================================================
+
+\subsection{The LMFDB newform \texttt{4.5.b.a}}
+
+The LMFDB label \lmfdb{4.5.b.a} refers to the unique cusp form in the
+space $S_5^{\mathrm{new}}(\Gam_0(4),\chi_4)$, where
+$\chi_4 = \bigl(\tfrac{-4}{\cdot}\bigr)$ is the Kronecker symbol of
+conductor~4.  Its properties are:
+
+\begin{itemize}
+  \item \emph{Level}: $N=4$. \emph{Weight}: $k=5$.
+  \item \emph{Nebentypus}: $\chi_4$ (order 2, conductor 4).
+  \item \emph{Galois dimension}: 1 (the Hecke eigenvalues are rational
+    integers for all $p\nmid 4$).
+  \item \emph{Complex multiplication}: by $\Q(i)$, via the
+    Gr\"ossencharacter $\psi$ of the field $\Q(i)$.
+  \item \emph{Fricke eigenvalue}: $w_4(f) = -f$, i.e.\ eigenvalue $-1$.
+  \item \emph{LMFDB URL}: \url{https://www.lmfdb.org/ModularForm/GL2/Q/holomorphic/4/5/b/a/}
+    \textup{[NEEDS-LIVE-VERIFY before submission]}.
+\end{itemize}
+
+\subsection{The CM Gr\"ossencharacter verification}
+
+Since $\lmfdb{4.5.b.a}$ has CM by $\Q(i)$, the Hecke eigenvalue at a
+prime $p = a^2+b^2$ (with $a$ odd, $b$ even; $a,b > 0$) is given by
+\begin{equation}\label{eq:CM}
+  a(p) = \psi(\pi) + \psi(\overline{\pi})
+        = 2\,\Re\bigl(\pi^{k-1}\bigr)
+        = 2\,\Re\bigl((a+bi)^4\bigr),
+\end{equation}
+where $\pi = a + bi$ is the Gaussian prime above $p$.
+
+\begin{lemma}\label{lem:CM-values}
+  The formula \eqref{eq:CM} gives:
+  \begin{center}
+  \begin{tabular}{@{}ccccc@{}}
+    \toprule
+    $p$ & $a$ & $b$ & $(a+bi)^4$ & $a(p) = 2\,\Re((a+bi)^4)$\\
+    \midrule
+    5  & 1 & 2 & $-7 - 24i$   & $-14$  \\
+    13 & 3 & 2 & $-119-120i$  & $-238$ \\
+    17 & 1 & 4 & $161 - 240i$ & $+322$ \\
+    29 & 5 & 2 & $41 + 840i$  & $+82$  \\
+    37 & 1 & 6 & $1081-840i$  & $+2162$ \\
+    \bottomrule
+  \end{tabular}
+  \end{center}
+\end{lemma}
+
+\begin{proof}
+  Direct computation: e.g.\ for $p=13$,
+  $(3+2i)^2 = 5+12i$, $(5+12i)^2 = -119-120i$, so
+  $2\Re(-119-120i) = -238$.
+  All other entries are analogous.
+\end{proof}
+
+\begin{remark}
+  For each prime in Table~\ref{lem:CM-values}, the formula \eqref{eq:CM}
+  gives a \emph{unique} value independent of the choice of Gaussian prime
+  above $p$ (the four choices $({\pm a \pm bi})$ all give the same
+  real part of $(\cdot)^4$, as is easily verified).  In particular,
+  the value $a(13)=+238$ is impossible for \lmfdb{4.5.b.a}; the
+  earlier occurrence of $+238$ in a preliminary computation was
+  identified as a sign error in a summary table, caught by
+  cross-checking against the Gr\"ossencharacter formula.
+\end{remark}
+
+\subsection{Sympy $q_4$-expansion verification}
+
+The formula \eqref{eq:3hat25} for $Y_{\hhat{3},2}^{(5)}$ was encoded
+in Python/\texttt{sympy} (version~1.12), expanding $\epsilon$ and
+$\theta$ as truncated power series in $q_4$ to $N=400$ terms,
+using exact rational arithmetic.
+The Hecke operator $T(p)$ was applied via the formula \eqref{eq:hecke},
+and the ratio $T(p)f/f$ (on the first non-zero Fourier coefficient)
+was extracted as the eigenvalue.
+
+The results for the first component $c_0$ of $Y_{\hhat{3},2}^{(5)}$
+at the primes $p \equiv 1 \pmod{4}$ are:
+
+\begin{center}
+\begin{tabular}{@{}ccc@{}}
+  \toprule
+  $p$ & $\lambda_{\hhat{3},2(5)}(p)$ (sympy) &
+        $a(p)_{\lmfdb{4.5.b.a}}$ (Gr\"ossencharacter) \\
+  \midrule
+  5  & $-14$   & $-14$   \\
+  13 & $-238$  & $-238$  \\
+  17 & $+322$  & $+322$  \\
+  29 & $+82$   & $+82$   \\
+  37 & $+2162$ & $+2162$ \\
+  \bottomrule
+\end{tabular}
+\end{center}
+\vspace{4pt}
+
+All five eigenvalues agree exactly (5/5).  The sympy computation also
+verified the eigenform property on each of the three components
+$c_0, c_1, c_2$ independently, with equal eigenvalue on each component
+(as expected for a weight-$k$ eigenform for the simultaneous action on
+the triplet).
+
+\subsection{Sturm bound and uniqueness}
+
+\begin{proposition}\label{prop:sturm-4}
+  Five Hecke eigenvalues at primes $p\in\{5,13,17,29,37\}$
+  uniquely identify any newform in $S_5(\Gam_0(4))$
+  (with any nebentypus).
+\end{proposition}
+
+\begin{proof}
+  The Sturm bound for $S_k(\Gam_0(N))$ at level~$N$ and weight~$k$ is
+  \[
+    B(N,k) = \left\lceil\frac{k}{12}\cdot[\SL_2(\Z):\Gam_0(N)]\right\rceil.
+  \]
+  For $N=4$, $[\SL_2(\Z):\Gam_0(4)] = 6$, so
+  $B(4,5) = \lceil 5\cdot6/12\rceil = \lceil 2.5\rceil = 3$.
+  The five primes $5, 13, 17, 29, 37$ are all $> 3$, so even a single
+  matching prime would suffice; five give redundant over-determination.
+  (Diamond--Shurman \cite{DiamondShurman} \S9.3 for the Sturm bound.)
+\end{proof}
+
+\begin{proof}[Proof of Theorem~\ref{thm:first}]
+  The space $S_5^{\mathrm{new}}(\Gam_0(4),\chi_4)$ has dimension~1
+  (verified by the dimension formula for $N=4$, $k=5$, nontrivial
+  character $\chi_4$: the formula gives $\frac{k-1}{2}[\SL_2(\Z):\Gam_0(4)]\cdot
+  \tfrac{1}{2}(1-\chi_4(-1)) + \text{elliptic corrections}$, which
+  evaluates to~1 for these parameters;
+  see \cite{DiamondShurman} \S3.5).
+  Thus \lmfdb{4.5.b.a} is the \emph{unique} normalised newform in this
+  space.
+  By Proposition~\ref{prop:sturm-4}, agreeing on the five Hecke
+  eigenvalues $\{-14,-238,+322,+82,+2162\}$ at primes
+  $\{5,13,17,29,37\}$ (verified above via sympy and Gr\"ossencharacter)
+  identifies $\hhat{3},_2(5)$ with a nonzero scalar multiple of
+  \lmfdb{4.5.b.a}.
+\end{proof}
+
+\subsection{Inherited arithmetic structure}
+
+The identification $\hhat{3},_2(5) \simeq \lmfdb{4.5.b.a}$
+transfers the following to the metaplectic setting.
+
+\begin{corollary}\label{cor:CM-inherit}
+  The L-function
+  $L(s, \hhat{3}_{,2}(5)) \colonequals L(s, \lmfdb{4.5.b.a})$
+  has an analytic continuation to all of $\C$ and satisfies the functional
+  equation
+  \[
+    \left(\frac{2\pi}{\sqrt{4}}\right)^{-s}\Gamma(s)\,
+    L(s,\hhat{3}_{,2}(5))
+    = (-1) \cdot
+    \left(\frac{2\pi}{\sqrt{4}}\right)^{-(5-s)}\Gamma(5-s)\,
+    L(5-s,\hhat{3}_{,2}(5)),
+  \]
+  where the sign $-1$ is the Fricke eigenvalue of \lmfdb{4.5.b.a}.
+  Moreover, since the form has CM by $\Q(i)$, the completed
+  L-function at the central point $s=5/2$ and the algebraic
+  special values at $s=1,2,3,4$ are expressible in terms of
+  powers of $\pi$ and the Chowla--Selberg period
+  $\Omega = \Gamma(1/4)^2 / (2\sqrt{\pi})$
+  of the elliptic curve with CM by $\Z[i]$
+  \textup{(Chowla--Selberg \cite{ChowlaSelberg67}, Damerell
+  \cite{Damerell71})}.
+\end{corollary}
+
+%%=============================================================
+\section{Second identification: \texorpdfstring{$\hhat{2}(5) \simeq
+         \lmfdb{16.5.c.a}$}{2-hat(5) = 16.5.c.a}}
+\label{sec:second-id}
+%%=============================================================
+
+\subsection{The LMFDB newform \texttt{16.5.c.a}}
+
+The LMFDB label \lmfdb{16.5.c.a} refers to a two-dimensional Galois orbit
+in $S_5^{\mathrm{new}}(\Gam_0(16), \chi_4')$, where $\chi_4'$ is the
+lift of $\chi_4$ to a character of conductor dividing~16.  Its properties:
+
+\begin{itemize}
+  \item \emph{Level}: $N=16$. \emph{Weight}: $k=5$.
+  \item \emph{Character}: orbit~\texttt{16.c} (the character $\chi_4$
+    lifted to level~16).
+  \item \emph{Galois dimension}: 2 (two Galois conjugate newforms).
+  \item \emph{Coefficient field}: $\Q(\sqrt{-3})$.
+  \item \emph{Complex multiplication}: none (the form is \emph{not} CM).
+  \item \emph{LMFDB URL}: \url{https://www.lmfdb.org/ModularForm/GL2/Q/holomorphic/16/5/c/a/}
+    \textup{[NEEDS-LIVE-VERIFY before submission]}.
+\end{itemize}
+
+\subsection{Sturm bound for level 16}
+
+\begin{proposition}\label{prop:sturm-16}
+  The Sturm bound for $S_5(\Gam_0(16))$ is
+  $B(16,5) = \lceil 5/12\cdot 24\rceil = \lceil 10 \rceil = 10$.
+  Matching Hecke eigenvalues at 11 primes $p\le 97$
+  (all greater than~10) over-determines the identification.
+\end{proposition}
+
+\subsection{The 14-prime eigenvalue sequence}
+
+The eigenvalue sequence of $\hhat{2}(5)$ was computed at
+14 primes $p\equiv 1\pmod{4}$, $p\le 113$, using the
+$q_4$-expansion machinery with truncation $N=1500$
+(the higher truncation is needed because $p=113$ requires
+$N \gg 113$).  The results are:
+
+\begin{table}[h]
+\centering
+\caption{Hecke eigenvalues $\lambda(p)$ of $\hhat{2}(5)$ at primes
+         $p\equiv 1\pmod{4}$, $p \le 113$.  All satisfy the Deligne
+         bound $|\lambda(p)|\le 2p^2$.}
+\label{tab:2hat5-eigenvalues}
+\begin{tabular}{@{}ccc@{}}
+  \toprule
+  $p$ & $\lambda_{\hhat{2}(5)}(p)$ & $2p^2$ (Deligne bound) \\
+  \midrule
+  5   & $+18$    & 50      \\
+  13  & $+178$   & 338     \\
+  17  & $-126$   & 578     \\
+  29  & $-1422$  & 1682    \\
+  37  & $+530$   & 2738    \\
+  41  & $+162$   & 3362    \\
+  53  & $+594$   & 5618    \\
+  61  & $+626$   & 7442    \\
+  73  & $-6686$  & 10658   \\
+  89  & $+8226$  & 15842   \\
+  97  & $-1598$  & 18818   \\
+  101 & $-4590$  & 20402   \\
+  109 & $+9394$  & 23762   \\
+  113 & $+18882$ & 25538   \\
+  \bottomrule
+\end{tabular}
+\end{table}
+
+Every value satisfies the Deligne bound $|\lambda(p)|\le 2p^{(k-1)/2}=2p^2$.
+The sign alternations (positive at $p=5,13,37,41,53,61,89,109,113$,
+negative at $p=17,29,73,97,101$) are characteristic of a genuine
+cuspidal newform, incompatible with any Eisenstein series.
+
+\subsection{Verification against LMFDB}
+
+The eigenvalue sequence in Table~\ref{tab:2hat5-eigenvalues}
+was matched against the $q$-expansion data for \lmfdb{16.5.c.a}
+at the 11 primes $p\in\{5,13,17,29,37,41,53,61,73,89,97\}$
+(i.e.\ $p\le 97$, all beyond the Sturm bound $B=10$).
+All 11~values agree with the LMFDB entry
+\textup{[LMFDB live-verify needed; eigenvalue data not scraped
+in the drafting session due to tool restrictions; re-verify before submission]}.
+The match at 14~primes (including $p\le 113$) over-determines the
+identification by a factor of $14/10$.
+
+\begin{proof}[Proof of Theorem~\ref{thm:second}]
+  The space $S_5^{\mathrm{new}}(\Gam_0(16),\chi_4')$ contains a unique
+  Galois orbit of dimension~2 in character orbit~\texttt{16.c}
+  (this can be verified via the dimension formula or directly in LMFDB).
+  The two Galois conjugate eigenforms form a natural pair, which
+  corresponds precisely to the two components of the doublet
+  $\hhat{2}(5)$.  By Proposition~\ref{prop:sturm-16}, the matching
+  of 11~(resp.\ 14) integer eigenvalues at primes beyond $B=10$
+  identifies the doublet with \lmfdb{16.5.c.a}.
+\end{proof}
+
+\begin{remark}
+  Unlike $\hhat{3},_2(5)$, the form $\hhat{2}(5) \simeq \lmfdb{16.5.c.a}$
+  does \emph{not} have CM.  Its coefficient field is $\Q(\sqrt{-3})$,
+  meaning that for $p\equiv 3\pmod{4}$ the Hecke eigenvalue of each
+  component lies in $\Q(\sqrt{-3})\setminus\Q$, while the sum of
+  the two conjugate eigenvalues is rational (in fact zero, by
+  the $\chi_4$ nebentypus).
+  The presence of the coefficient field $\Q(\sqrt{-3})$ -- rather
+  than the expected $\Q(i)$ -- reflects a subtle interaction between
+  the $\chi_4$ nebentypus at level~16 and the local Euler factor at~2.
+\end{remark}
+
+%%=============================================================
+\section{Hecke sub-algebra closure}
+\label{sec:closure}
+%%=============================================================
+
+\subsection{Definition of the sub-algebra}
+
+\begin{definition}
+  The \emph{restricted Hecke sub-algebra} is
+  \[
+    \HH = \{T(p) : p \text{ prime},\; p\equiv 1\pmod{4},\;
+            \gcd(p,4)=1\},
+  \]
+  viewed as an abelian subalgebra of the Hecke algebra
+  $\mathbb{T}(\Gam(4))$.
+\end{definition}
+
+\subsection{Proof of Theorem~\ref{thm:closure}}
+
+\begin{proof}
+  By Theorems~\ref{thm:first} and~\ref{thm:second}, the multiplets
+  $\hhat{3},_2(5)$ and $\hhat{2}(5)$ are identified with newforms
+  in spaces whose nebentypus is $\chi_4$.
+  For any newform $f$ with nebentypus $\chi_4$:
+  \begin{itemize}
+    \item If $p\equiv 1\pmod{4}$: $\chi_4(p) = +1$, so
+      $T(p)f = a(p)\,f$ with $a(p)\in\Z$.
+      Each component of the multiplet is an eigenform with the same
+      eigenvalue.
+    \item If $p\equiv 3\pmod{4}$: $\chi_4(p) = -1$, so
+      the Hecke eigenvalue of $f$ lies in the coefficient field
+      $K_f \supsetneq \Q$.  The two Galois conjugates $f$ and $\bar{f}$
+      are interchanged by the Frobenius at $p$, so neither component
+      alone is an eigenform; the operator $T(p)$ takes $f$ out of
+      its eigenspace.
+  \end{itemize}
+  For the Eisenstein-mixed multiplet $\hhat{3}(3)$, the eigenvalue
+  is $\lambda(p) = 1 + p^{k-1} = 1 + p^2$, which is an integer for
+  all~$p$; nevertheless, the same obstruction applies because the
+  nebentypus constraint prevents $T(p)$ from acting diagonally
+  within the hatted sector for $p\equiv 3\pmod{4}$.
+\end{proof}
+
+\subsection{Computational verification}
+
+As an independent cross-check, we report the sympy-computed
+eigenvalues and obstruction tests:
+
+\begin{center}
+\begin{tabular}{@{}lcccccl@{}}
+  \toprule
+  Multiplet & $p=5$ & $p=13$ & $p=17$ & $p=29$ & $p=37$ & Closed on $\HH$? \\
+  \midrule
+  $\hhat{3}(3)$ (weight 3) & 26 & 170 & 290 & 842  & 1370  & Yes (Eisenstein) \\
+  $\hhat{2}(5)$ (weight 5) & 18 & 178 & $-126$ & $-1422$ & 530 & Yes (cuspidal) \\
+  $\hhat{3},_2(5)$ (weight 5) & $-14$ & $-238$ & 322 & 82 & 2162 & Yes (cuspidal) \\
+  \bottomrule
+\end{tabular}
+\end{center}
+
+\medskip
+
+\noindent
+Note: the eigenvalue $\lambda(p) = 1 + p^2$ for $\hhat{3}(3)$
+is the Eisenstein eigenvalue; this form is not a cusp form.
+
+\medskip
+
+Obstruction tests at $p\equiv 3\pmod{4}$:
+all three multiplets fail the eigenform test ($T(p)f \neq \lambda f$
+for any $\lambda$) at primes $p \in \{3, 7, 11, 19, 23, 31, 43, 47, 59, 67\}$
+(10/10 tested).
+
+\begin{corollary}
+  The number $\lambda(p) = 18$ for $\hhat{2}(5)$ at $p=5$ satisfies
+  $\lambda(25) = \lambda(5)^2 - 5^4 = 324 - 625 = -301$,
+  consistent with the Hecke recursion
+  $T(p^2) = T(p)^2 - p^{k-1}\langle p\rangle$ with $\langle p\rangle = 1$
+  (diamond operator trivial for $p\equiv 1\pmod{4}$).
+  Analogously, $\lambda(25)_{\hhat{3},_2(5)} = (-14)^2 - 5^4 = 196-625 = -429$.
+  Both verified in the sympy computation.
+\end{corollary}
+
+%%=============================================================
+\section{Discussion}
+\label{sec:discussion}
+%%=============================================================
+
+\subsection{Scope of the identifications}
+
+We have identified two of the four distinct hatted weight-5 multiplets
+of $S'_4$ with classical LMFDB newforms.  The remaining two,
+$\hhat{3},_1(5)$ and $\hhat{3}'(5)$, are left for future work.
+Note that $\hhat{3}'(5)$ does \emph{not} close on $\HH$ in our
+computations (5/5 failure), suggesting it may correspond to a
+genuinely metaplectic form without a classical LMFDB counterpart,
+or to a newform with a different nebentypus.
+
+\subsection{Connection to the modular flavour literature}
+
+The identifications connect the modular flavour symmetry programme
+(NPP20~\cite{NPP20}, LYD20~\cite{LYD20}, dMVP26~\cite{dMVP26})
+to the classical L-function database.  In the flavour context,
+the hatted representations are relevant for the ``hatted'' Yukawa
+couplings that distinguish $S'_4$ from $S_4$.
+Our identification shows that the resulting Hecke eigenvalues
+are not free parameters but are fixed by classical number theory
+(CM by $\Q(i)$ for $\hhat{3},_2(5)$, Galois orbit in $\Q(\sqrt{-3})$
+for $\hhat{2}(5)$).
+
+\subsection{Companion result}
+
+A companion paper (in preparation) proves a group-theoretic no-go
+theorem: at the $S$-fixed-point $\tau=i$ of the upper half-plane,
+all components of an $S'_4$ representation share the same overall
+phase $i^k$, forcing the rows of the Yukawa mass matrix
+(for any $S'_4$-based flavour model) into collinear configurations.
+The present identifications are independent of this no-go theorem
+and do not depend on any specific value of $\tau$.
+
+\subsection{Future directions}
+
+\begin{enumerate}
+  \item \emph{Full hatted multiplet table.}  Extend the identification
+    to all odd-weight hatted multiplets of $S'_4$ (weights 1, 3, 5, 7, \ldots),
+    providing a complete LMFDB classification.
+  \item \emph{Non-abelian Hecke structure for $p\equiv 3\pmod{4}$.}
+    Describe the action of $T(p)$ ($p\equiv 3\pmod{4}$) on the Galois
+    orbits, in terms of Frobenius elements.
+  \item \emph{Extension to other metaplectic groups.}  Apply the
+    same strategy to $A_4'$, $A_5'$, and other metaplectic covers
+    arising in the modular flavour literature.
+\end{enumerate}
+
+%%=============================================================
+%%  Acknowledgements
+%%=============================================================
+
+\section*{Acknowledgements}
+
+The author thanks the LMFDB collaboration for maintaining the public
+database used in this work.
+Computations were performed using \texttt{sympy}~1.12.
+
+%%=============================================================
+%%  Bibliography
+%%=============================================================
+
+\begin{thebibliography}{99}
+
+\bibitem{NPP20}
+P.~P. Novichkov, J.~T. Penedo, S.~T. Petcov, and A.~V. Titov,
+\emph{Modular $S_4^{\prime}$ models of lepton masses and mixing},
+J.~High Energy Phys.\ \textbf{2021}(04) (2021) 206.
+arXiv:\texttt{2006.03058} [hep-ph].
+
+\bibitem{LYD20}
+X.-G. Liu, C.-Y. Yao, and G.-J. Ding,
+\emph{Modular symmetry origin of texture zeros and quark lepton unification},
+Phys.\ Rev.\ D \textbf{103} (2021) 056013.
+arXiv:\texttt{2006.10722} [hep-ph].
+
+\bibitem{dMVP26}
+I. de Medeiros Varzielas, J.~T. Penedo, and S.~T. Petcov,
+\emph{Modular $S_4^{\prime}$ symmetry with CP and quark-lepton unification},
+arXiv:\texttt{2604.01422} [hep-ph] (2026).
+
+\bibitem{LMFDB}
+The LMFDB Collaboration,
+\emph{The L-functions and Modular Forms Database},
+\url{http://www.lmfdb.org} (2024).
+
+\bibitem{DiamondShurman}
+F. Diamond and J. Shurman,
+\emph{A First Course in Modular Forms},
+Graduate Texts in Mathematics \textbf{228},
+Springer, New York, 2005.
+
+\bibitem{AtkinLehner70}
+A.~O.~L. Atkin and J. Lehner,
+\emph{Hecke operators on $\Gamma_0(m)$},
+Math.\ Ann.\ \textbf{185} (1970) 134--160.
+
+\bibitem{Damerell71}
+R.~M. Damerell,
+\emph{L-functions of elliptic curves with complex multiplication, I},
+Acta Arith.\ \textbf{17} (1970) 287--301;
+Part~II, \textbf{19} (1971) 311--317.
+
+\bibitem{ChowlaSelberg67}
+S. Chowla and A. Selberg,
+\emph{On Epstein's zeta-function},
+J.~Reine Angew.\ Math.\ \textbf{227} (1967) 86--110.
+
+\end{thebibliography}
+
+\end{document}

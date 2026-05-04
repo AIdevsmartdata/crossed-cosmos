@@ -37,10 +37,14 @@ Checks performed:
     (purely symbolic / dictionary-based check; sympy is overkill).
 
 (C) Stress-tensor conjugation (Lemma 3.3 of FRW note).
-    For FRW d=4, conformally coupled massless scalar:
+    For FRW d=4, conformally coupled massless scalar, the canonical
+    CFT g-raising chain (with both indices raised by g_FRW) gives
        T_FRW^{μν}(x) = a^{-6}(t)  U  T_Mink^{μν}(x)  U^*
-    where U is the conformal pullback. We check the d=4 conformal
-    weight (a^{-6}) explicitly using sympy.
+    where U is the conformal pullback. This block verifies the
+    canonical weight a^{-6}. The companion paper uses the alternative
+    eta-raising chain (lower index from a^{d-2}, both indices raised
+    by η_Mink) which yields a^{d-6}=a^{-2} downstream — see eq.
+    (Lemma33-FRW) of note.tex for the cross-check between the two.
 """
 
 import sympy as sp

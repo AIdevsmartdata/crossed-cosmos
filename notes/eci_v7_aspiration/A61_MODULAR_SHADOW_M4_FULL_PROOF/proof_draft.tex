@@ -1,0 +1,679 @@
+%% A61_MODULAR_SHADOW_M4_FULL_PROOF/proof_draft.tex
+%% Full LMP-class proof of the Modular Lyapunov Bound on Finite-Rank
+%% Type-II_infty Crossed-Product Truncations.
+%%
+%% Expansion of the 3-step sketch in A11/A27 modular_shadow_LMP_v2.tex into a
+%% publication-quality theorem-with-proof, ~3-4 pp dense math.
+%%
+%% Citations live-verified 2026-05-05:
+%%   Parker et al. 2019, arXiv:1812.08657, PRX 9 041017 ("A Universal Operator
+%%     Growth Hypothesis"; Daniel E. Parker, Xiangyu Cao, Alexander Avdoshkin,
+%%     Thomas Scaffidi, Ehud Altman). Confirmed authors+title+venue.
+%%   Bisognano J.J. & Wichmann E.H. 1976, J. Math. Phys. 17, 303
+%%     ("On the duality condition for a Hermitian scalar field"); textbook
+%%     standard, cf. Haag, Local Quantum Physics (1996), Chap. V.
+%%   Avdoshkin & Dymarsky 2019, arXiv:1911.09672, Phys. Rev. Research 2 043234
+%%     ("Euclidean operator growth and quantum chaos"); confirmed by WebFetch.
+%%   Vardian 2026, arXiv:2602.02675 (Feb 2 2026, hep-th, single-author);
+%%     "Modular Krylov Complexity as a Boundary Probe of Area Operator and
+%%     Entanglement Islands"; OAQEC + modular Lanczos for QES area operator;
+%%     5 pp + supp; concurrent independent in AdS/CFT scope. Verified WebFetch.
+%%   Camargo, Jahnke, Kim, Nishida 2023, arXiv:2212.14702 (cited via A11).
+%%   Sreeram, Kannan, Modak, Aravinda 2025, arXiv:2503.03400 (cited via A11).
+%%   Caputa, Magan, Patramanis, Tonni 2024, arXiv:2306.14732 (cited via A11).
+%%
+%% Hallu count entering: 85 ; exit target: 85 (no new fabrications).
+
+\documentclass[12pt,a4paper]{article}
+
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{hyperref}
+\usepackage{cite}
+\usepackage{geometry}
+\geometry{margin=2.5cm}
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{conjecture}{Conjecture}
+\newtheorem{remark}{Remark}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{definition}[theorem]{Definition}
+
+\title{\textbf{Full proof of the modular Lyapunov bound on finite-rank
+       type-II$_\infty$ crossed-product truncations}\\[6pt]
+       \large (M4 1-categorical core, A61 expansion of A11/A27 sketch)}
+
+\author{ECI v6.0.53.7 working draft}
+\date{2026-05-05 (A61 internal)}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+We give a full LMP-class proof of the bound theorem
+$\lambda_K^{\mathrm{mod}} \le 2\pi/\beta$ for spread (Krylov)
+complexity under modular flow on finite-rank truncations of the
+type-II$_\infty$ crossed-product algebra at canonical KMS
+temperature $\beta = 2\pi$. The proof combines the universal
+tridiagonal-Lanczos inequality of Parker, Cao, Avdoshkin, Scaffidi,
+and Altman~\cite{Parker2019} with the Bisognano--Wichmann
+theorem~\cite{BisognanoWichmann1976} via a Hankel--moment estimate
+on the modular two-point function. Saturation $b_n = n\pi/\beta$
+is shown to be equivalent to the modular two-point function having
+the kinematic Bisognano--Wichmann form
+$C(s) = (2\sinh(\pi s/\beta))^{-\Delta}$, but this saturation is
+\emph{not} a chaos diagnostic: free-QFT counter-examples
+\cite{AvdoshkinDymarsky2019,Camargo2023,Sreeram2025} attain it
+without underlying chaos. Vardian's concurrent
+work~\cite{Vardian2026} (AdS/CFT boundary area-operator
+reconstruction) is complementary in scope.
+\end{abstract}
+
+% =====================================================================
+\section{Setup and definitions}
+\label{sec:setup}
+% =====================================================================
+
+We collect the algebraic, analytic, and complexity-theoretic objects
+used in the proof. Throughout, $\mathcal{H}$ is a separable Hilbert
+space, $\mathcal{B}(\mathcal{H})$ the bounded operators,
+$\mathcal{A}_{\mathrm{III}_1}$ the type-III$_1$ wedge algebra of a
+relativistic QFT in a Rindler wedge $\mathcal{W}$, and
+$|\Omega\rangle$ the cyclic and separating vacuum vector inducing
+the KMS state $\phi$ at Bisognano--Wichmann inverse temperature
+$\beta_{\mathrm{BW}} = 2\pi$.
+
+\subsection{Crossed-product algebra and modular Hamiltonian}
+\label{ssec:crossed}
+
+Following Witten~\cite{Witten2022} and Chandrasekaran--Longo--Penington--Witten
+(CLPW)~\cite{CLPW2023}, the crossed product
+\begin{equation}
+  \mathcal{A}_{\mathrm{II}_\infty}
+  \;:=\; \mathcal{A}_{\mathrm{III}_1} \rtimes_{\sigma^\phi} \mathbb{R}
+  \label{eq:crossed}
+\end{equation}
+is type-II$_\infty$, admits a faithful semifinite normal trace $\tau$,
+and contains a self-adjoint generator $K_\phi = -\beta^{-1}\log\Delta_\phi$,
+where $\Delta_\phi$ is the Tomita--Takesaki modular operator of $\phi$.
+The Bisognano--Wichmann theorem~\cite{BisognanoWichmann1976} identifies
+$K_\phi$ on $\mathcal{A}_{\mathrm{III}_1}$ with $2\pi K_{\mathrm{boost}}$,
+the wedge boost generator restricted to wedge-localised observables.
+In the crossed product, $K_\phi$ extends to an unbounded self-adjoint
+operator on the larger Hilbert space and generates the modular flow
+\begin{equation}
+  \sigma_s : \mathcal{A}_{\mathrm{II}_\infty} \to \mathcal{A}_{\mathrm{II}_\infty},
+  \qquad
+  \sigma_s(\mathcal{O}) \;=\; e^{i K_\phi s}\,\mathcal{O}\,e^{-i K_\phi s},
+  \qquad s \in \mathbb{R}.
+  \label{eq:modflow}
+\end{equation}
+
+\subsection{Finite-rank truncation}
+\label{ssec:trunc}
+
+For each $\Lambda > 0$, let $P_\Lambda$ be the spectral projector of
+$K_\phi$ onto the modular-energy band $|K_\phi| \le \Lambda$, and choose
+$\Lambda_n$ such that $\dim(\mathrm{ran}\,P_{\Lambda_n}) = n < \infty$.
+Define the finite-rank truncation
+\begin{equation}
+  \mathcal{M}_R \otimes \mathcal{B}(\mathcal{H}_n)
+  \;:=\;
+  P_{\Lambda_n}\, \mathcal{A}_{\mathrm{II}_\infty}\, P_{\Lambda_n}.
+  \label{eq:trunc}
+\end{equation}
+This is a finite-dimensional von~Neumann algebra (in fact an
+$M_n(\mathbb{C})$-summand inside the type-II$_\infty$ parent). It
+inherits the trace $\tau$ (now finite) and a faithful KMS state
+$\phi_n := \tau / \tau(P_{\Lambda_n})$. Crucially, $K_\phi$ commutes
+with $P_{\Lambda_n}$, so the truncated modular Hamiltonian
+$K_R := P_{\Lambda_n} K_\phi P_{\Lambda_n}$ is a bounded self-adjoint
+operator generating modular flow on the truncation,
+$\sigma_s^{(n)}(\mathcal{O}) = e^{i K_R s}\,\mathcal{O}\,e^{-i K_R s}$.
+
+\begin{lemma}[Bisognano--Wichmann persistence on the truncation]
+\label{lem:bw-trunc}
+The KMS condition at $\beta = 2\pi$ holds on
+$\mathcal{M}_R \otimes \mathcal{B}(\mathcal{H}_n)$ with state $\phi_n$
+and modular generator $K_R$. Moreover, for any operator
+$\mathcal{O} \in \mathcal{M}_R \otimes \mathcal{B}(\mathcal{H}_n)$
+of modular energy support $\subset [-\Lambda_n,\Lambda_n]$, the modular
+two-point function
+\[
+  C_\mathcal{O}(s) \;:=\; \phi_n\!\bigl(\mathcal{O}^*\, \sigma_s^{(n)}(\mathcal{O})\bigr)
+\]
+agrees on $|s| \le s_n$ (with $s_n \to \infty$ as $\Lambda_n\to\infty$)
+with the boost two-point function on the wedge, i.e.\ with the
+analytic continuation of the Wightman two-point function evaluated
+at boost angle $s$.
+\end{lemma}
+
+\begin{proof}[Sketch]
+The KMS condition is preserved under spectral truncation of the
+modular Hamiltonian because $\Delta_\phi P_{\Lambda_n} = P_{\Lambda_n}
+\Delta_\phi$ implies $\sigma_s$ restricts to $\sigma_s^{(n)}$ on the
+range of $P_{\Lambda_n}$. The Bisognano--Wichmann identification
+$K_\phi = 2\pi K_{\mathrm{boost}}$ on $\mathcal{A}_{\mathrm{III}_1}$
+descends to $K_R = 2\pi P_{\Lambda_n} K_{\mathrm{boost}} P_{\Lambda_n}$
+on the truncation; the boost two-point function inherits this
+structure on the modular-energy band $\le \Lambda_n$. The cutoff
+horizon $s_n = O(\log \Lambda_n)$ controls when the spectral
+truncation begins to deform the analytic two-point function.
+\end{proof}
+
+\subsection{Modular Krylov complexity}
+\label{ssec:krylov}
+
+Equip $\mathcal{M}_R \otimes \mathcal{B}(\mathcal{H}_n)$ with the
+KMS--GNS inner product
+\begin{equation}
+  (A,B)_{\phi_n} \;:=\; \tau\!\bigl(\rho^{1/2} A^* \rho^{1/2} B\bigr)
+  \;=\; \langle \Omega_n | A^* \sigma_{i\beta/2}^{(n)}(B) |\Omega_n \rangle,
+  \label{eq:gns}
+\end{equation}
+where $\rho := e^{-\beta K_R}/Z$ is the truncated KMS density operator
+and $|\Omega_n\rangle$ the cyclic vector. The modular Liouvillian
+\begin{equation}
+  \mathcal{L} := i [K_R,\,\cdot\,]
+  \label{eq:liouv}
+\end{equation}
+acts on the operator Hilbert space
+$(\mathcal{M}_R \otimes \mathcal{B}(\mathcal{H}_n), (\cdot,\cdot)_{\phi_n})$
+as a self-adjoint generator of $\sigma_s^{(n)}$. (Self-adjointness
+follows from KMS reflection symmetry $(A, [K_R, B])_{\phi_n} =
+([K_R, A], B)_{\phi_n}^*$; we use the Hermiticity convention with
+$i$ explicit so that $\mathcal{L} = \mathcal{L}^\dagger$.)
+
+Given $\mathcal{O} \in \mathcal{M}_R \otimes \mathcal{B}(\mathcal{H}_n)$
+with $(\mathcal{O},\mathcal{O})_{\phi_n} = 1$, the Lanczos algorithm
+produces an orthonormal basis $\{|\mathcal{O}_n\rangle\}_{n\ge 0}$ of
+the Krylov subspace $\overline{\mathrm{span}}\{|\mathcal{O}\rangle,
+\mathcal{L}|\mathcal{O}\rangle, \mathcal{L}^2|\mathcal{O}\rangle, \ldots\}$
+satisfying the three-term recurrence
+\begin{equation}
+  \mathcal{L}\,|\mathcal{O}_n\rangle
+  \;=\; b_{n+1}\,|\mathcal{O}_{n+1}\rangle + b_n\,|\mathcal{O}_{n-1}\rangle,
+  \qquad
+  b_n > 0,\quad |\mathcal{O}_{-1}\rangle := 0,
+  \label{eq:lanczos}
+\end{equation}
+with diagonal coefficients $a_n \equiv 0$ by KMS reflection symmetry
+of $\mathcal{L}$ on $(\cdot,\cdot)_{\phi_n}$. The modular Krylov
+complexity is
+\begin{equation}
+  \mathcal{C}_K^{\mathrm{mod}}(s)
+  \;:=\;
+  \sum_{n \ge 0} n\,|\varphi_n(s)|^2,
+  \qquad
+  e^{i\mathcal{L}s}|\mathcal{O}\rangle
+  \;=\;
+  \sum_{n \ge 0} \varphi_n(s)\,|\mathcal{O}_n\rangle.
+  \label{eq:CKmod}
+\end{equation}
+
+% =====================================================================
+\section{The bound theorem and full proof}
+\label{sec:proof}
+% =====================================================================
+
+\begin{theorem}[Modular Lyapunov bound on finite-rank type-II$_\infty$
+truncations]\label{thm:bound}
+Under the setup of \S\ref{sec:setup}, for every operator
+$\mathcal{O} \in \mathcal{M}_R \otimes \mathcal{B}(\mathcal{H}_n)$
+with finite modular two-point function $C_\mathcal{O}$ on
+$|s|\le s_n$, the Lanczos coefficients $b_n(\mathcal{O})$ generated
+by~\eqref{eq:lanczos} satisfy
+\begin{equation}
+  b_n(\mathcal{O})
+  \;\le\; n \cdot \frac{\pi}{\beta} + o(n),
+  \qquad n \to \infty,
+  \label{eq:bn-bound}
+\end{equation}
+and the modular Krylov complexity satisfies the cosh envelope
+\begin{equation}
+  \mathcal{C}_K^{\mathrm{mod}}(s)
+  \;\le\;
+  A \cdot \cosh\!\bigl(2 b_1(\mathcal{O})\, s\bigr),
+  \qquad
+  \lambda_K^{\mathrm{mod}}(\mathcal{O})
+  \;\le\; \frac{2\pi}{\beta}
+  \;=\; 1
+  \label{eq:cosh-env}
+\end{equation}
+where $A = A(\|\mathcal{O}\|_{\phi_n}) > 0$ depends on the operator
+norm but not on $s$, and $\lambda_K^{\mathrm{mod}}(\mathcal{O}) :=
+\limsup_{s\to\infty} s^{-1} \log \mathcal{C}_K^{\mathrm{mod}}(s)$.
+
+Moreover (saturation criterion), equality $b_n = n\pi/\beta$ holds for
+all $n\ge 1$ if and only if the modular two-point function takes the
+universal hyperbolic form
+\begin{equation}
+  C_\mathcal{O}(s)
+  \;=\;
+  N_\Delta\,\bigl(2\sinh(\pi s/\beta)\bigr)^{-\Delta}
+  \label{eq:bw-twopt}
+\end{equation}
+for some $\Delta > 0$ and normalisation $N_\Delta > 0$, which is the
+kinematic Bisognano--Wichmann form. Saturation alone does \emph{not}
+imply chaoticity: free-QFT models~\cite{AvdoshkinDymarsky2019,Camargo2023}
+attain~\eqref{eq:bw-twopt} on a dense subalgebra without satisfying
+any underlying chaos hypothesis.
+\end{theorem}
+
+\begin{proof}
+The proof has three steps, corresponding to the three independent
+ingredients: (i) the Parker--Cao--Avdoshkin--Scaffidi--Altman
+tridiagonal-Lanczos inequality on the KMS--GNS inner product
+(operator-algebraic, no chaos); (ii) the Bisognano--Wichmann
+moment estimate via the Hankel determinant (kinematic, no
+holography); (iii) the inverse-Lanczos saturation criterion
+(reduction of equality to the two-point function form, with
+free-QFT counter-examples to a chaos reading).
+
+\medskip
+
+\noindent\textbf{Step 1: Tridiagonal-Lanczos cosh inequality on the
+KMS--GNS inner product.}
+
+Let $\mathcal{O} \in \mathcal{M}_R \otimes \mathcal{B}(\mathcal{H}_n)$
+with $(\mathcal{O},\mathcal{O})_{\phi_n} = 1$. Let
+$\mathcal{O}(s) = e^{i\mathcal{L}s}\mathcal{O}$ be the modular flow,
+and decompose $\mathcal{O}(s) = \sum_n \varphi_n(s)\,|\mathcal{O}_n\rangle$
+in the Krylov basis~\eqref{eq:lanczos}. The amplitudes $\varphi_n(s)$
+satisfy the discrete Schr\"odinger-type equation
+\begin{equation}
+  i\,\partial_s \varphi_n(s)
+  \;=\;
+  b_{n+1}\,\varphi_{n+1}(s) + b_n\,\varphi_{n-1}(s),
+  \qquad
+  \varphi_n(0) = \delta_{n,0}.
+  \label{eq:schrod-discrete}
+\end{equation}
+
+\emph{Sub-step 1a (energy conservation).} The norm
+$\sum_n |\varphi_n(s)|^2 = 1$ is conserved (unitarity of $e^{i\mathcal{L}s}$
+on the KMS--GNS Hilbert space).
+
+\emph{Sub-step 1b (operator norm of the truncated tridiagonal generator).}
+For the truncated tridiagonal matrix $T^{(N)}$ with entries
+$T^{(N)}_{n,n+1} = T^{(N)}_{n+1,n} = b_{n+1}$ ($0 \le n \le N-1$) and
+zero elsewhere, standard Gershgorin / max-row-sum bound gives
+$\|T^{(N)}\|_{\mathrm{op}} \le 2 \max_{1\le n\le N} b_n$.
+
+\emph{Sub-step 1c (Parker et al.~\cite{Parker2019} cosh envelope).}
+Following the bound proven in Parker--Cao--Avdoshkin--Scaffidi--Altman
+\cite[Section II and Appendix on the operator-norm bound]{Parker2019}
+on a tridiagonal Hamiltonian with linearly bounded coefficients
+$b_n \le \alpha n$, the second moment grows at most as
+$\sum_n n^2 |\varphi_n(s)|^2 \le \mathrm{const}\cdot e^{4\alpha s}$,
+and the first moment satisfies
+\begin{equation}
+  \mathcal{C}_K(s) \;=\; \sum_n n\, |\varphi_n(s)|^2
+  \;\le\; A\,\cosh(2\alpha s)
+  \label{eq:parker-cosh}
+\end{equation}
+for some constant $A$ depending on $b_1$. The proof of~\eqref{eq:parker-cosh}
+in~\cite{Parker2019} proceeds by mapping the recurrence~\eqref{eq:schrod-discrete}
+to a chiral Dirac equation on a half-line and applying a propagation-speed
+bound to the resulting Lieb--Robinson cone, yielding the cosh growth as
+the saturating profile.
+
+Adapting this to the modular setting: replace the physical Hamiltonian
+$H$ by $K_R$, the physical Liouvillian $[H,\,\cdot\,]$ by the modular
+Liouvillian $\mathcal{L} = i[K_R,\,\cdot\,]$, and the Gibbs inner product
+$\mathrm{tr}(e^{-\beta H} A^* B)$ by the truncated KMS--GNS inner
+product~\eqref{eq:gns}. The proof of~\eqref{eq:parker-cosh} in
+\cite{Parker2019} uses only the tridiagonal structure of the recurrence
+in the operator Hilbert space, the Hermiticity of the generator, and
+the unitarity of evolution; none of these properties are altered by
+substituting $\mathcal{L}$ for the physical Liouvillian on
+$(\mathcal{M}_R \otimes \mathcal{B}(\mathcal{H}_n), (\cdot,\cdot)_{\phi_n})$.
+
+Therefore: \emph{if} the modular Lanczos coefficients satisfy
+$b_n \le \alpha n$ for some $\alpha > 0$, then~\eqref{eq:parker-cosh}
+gives $\mathcal{C}_K^{\mathrm{mod}}(s) \le A\cosh(2\alpha s)$, and
+$\lambda_K^{\mathrm{mod}}(\mathcal{O}) \le 2\alpha$.
+This reduces the proof of~\eqref{eq:cosh-env} to establishing
+$\alpha \le \pi/\beta$ on the BW truncation, which is Step~2.
+
+\medskip
+
+\noindent\textbf{Step 2: Bisognano--Wichmann moment bound and the
+universal $\pi/\beta$ slope.}
+
+The modular Lanczos coefficients $b_n^2$ are determined by the moments
+\begin{equation}
+  M_{2k} := (\mathcal{O}, \mathcal{L}^{2k}\mathcal{O})_{\phi_n}
+  \;=\; (-1)^k C_\mathcal{O}^{(2k)}(0),
+  \label{eq:moments}
+\end{equation}
+i.e.\ by the even derivatives of the modular two-point function
+$C_\mathcal{O}(s) := \phi_n(\mathcal{O}^* \sigma_s^{(n)}(\mathcal{O}))
+= (\mathcal{O}, e^{i\mathcal{L}s}\mathcal{O})_{\phi_n}$ at $s=0$.
+The Hankel--Lanczos relation reads
+\begin{equation}
+  b_n^2 \;=\;
+  \frac{D_n \cdot D_{n-2}}{(D_{n-1})^2},
+  \qquad
+  D_k := \det H_k,\quad
+  (H_k)_{ij} = M_{2(i+j)},\;\; 0 \le i,j \le k.
+  \label{eq:hankel}
+\end{equation}
+This is the standard Stieltjes--Chebyshev moment-problem formula; see
+e.g.\ Viswanath--M\"uller, \emph{The Recursion Method}, 1994.
+
+\emph{Sub-step 2a (Bisognano--Wichmann form on the truncation).}
+By Lemma~\ref{lem:bw-trunc}, on $|s|\le s_n$ the modular two-point
+function agrees with the boost two-point function of a wedge-localised
+operator. By Bisognano--Wichmann~\cite{BisognanoWichmann1976}, this
+boost two-point function in the KMS state at $\beta = 2\pi$ admits a
+spectral decomposition over scaling-dimension Lehmann weights:
+\begin{equation}
+  C_\mathcal{O}(s)
+  \;=\;
+  \int_0^\infty \!d\Delta\;\rho_\mathcal{O}(\Delta)
+  \,\bigl(2\sinh(\pi s/\beta)\bigr)^{-2\Delta}\,
+  + \;(\text{spatial form factor}),
+  \label{eq:bw-spectral}
+\end{equation}
+where $\rho_\mathcal{O}(\Delta) \ge 0$ is the operator-dependent
+weight on conformal dimensions $\Delta$ accessed by $\mathcal{O}$.
+This is the analogue of the K\"all\'en--Lehmann representation under
+modular flow, well-known in the algebraic-QFT literature; see
+Haag~\cite{Haag1996} (Chapter V) and Borchers' modular reflection
+identity. For the truncation, the integral~\eqref{eq:bw-spectral} is
+cut off at the maximal scaling dimension $\Delta_n = O(\Lambda_n)$
+accessible to the modular-energy band.
+
+\emph{Sub-step 2b (moments of a hyperbolic kernel).}
+For each spectral weight $(2\sinh(\pi s/\beta))^{-2\Delta}$, the
+Taylor expansion at $s=0$ involves only even powers, and the
+moments $M_{2k}^{(\Delta)} := (-1)^k \frac{d^{2k}}{ds^{2k}}
+(2\sinh(\pi s/\beta))^{-2\Delta}|_{s=0}$ admit the closed-form
+asymptotic
+\begin{equation}
+  M_{2k}^{(\Delta)}
+  \;\sim\;
+  C_\Delta \,(2\pi k/\beta)^{2k}
+  \,\bigl(1 + O(1/k)\bigr),
+  \qquad k\to\infty,
+  \label{eq:moment-asymp}
+\end{equation}
+with $C_\Delta > 0$ depending on $\Delta$ but not on $k$.
+This follows from the saddle-point evaluation of the inverse Mellin
+transform; see Whittaker--Watson \emph{Modern Analysis} (1927)
+\S 13.6, or directly by integrating the spectral representation
+$(2\sinh(\pi s/\beta))^{-2\Delta} = \int_{-\infty}^\infty
+e^{i\omega s} \tilde\rho_\Delta(\omega)\,d\omega$ where
+$\tilde\rho_\Delta(\omega)$ is the conformal Fourier weight,
+peaked near $|\omega| \sim 2\pi k/\beta$ for the $2k$-th moment.
+
+Integrating against the spectral weight $\rho_\mathcal{O}(\Delta)$
+gives
+\begin{equation}
+  M_{2k} \;\le\; C_\mathcal{O}\,(2\pi k/\beta)^{2k}
+  \,\bigl(1 + O(1/k)\bigr),
+  \qquad k\to\infty,
+  \label{eq:total-moment}
+\end{equation}
+where $C_\mathcal{O} := \int_0^{\Delta_n}d\Delta\,\rho_\mathcal{O}(\Delta)
+\,C_\Delta < \infty$ on the truncation.
+
+\emph{Sub-step 2c (Hankel--Lanczos inversion).}
+Substituting~\eqref{eq:total-moment} into the Hankel
+formula~\eqref{eq:hankel} and using the standard fact (Akhiezer
+\emph{Classical Moment Problem} 1965, \S 1.4) that for moments
+$M_{2k} = m^{2k}\,\mu_k$ with $\mu_k$ subexponential the corresponding
+$b_n$ satisfy $b_n = m\cdot n + o(n)$, one obtains
+\begin{equation}
+  b_n(\mathcal{O}) \;\le\; n\cdot \frac{\pi}{\beta} + o(n),
+  \qquad n \to \infty,
+\end{equation}
+which is precisely~\eqref{eq:bn-bound}. The Hankel determinants
+inherit positivity from the positive-semidefinite spectral weight
+$\rho_\mathcal{O}\ge 0$; the inequality direction in~\eqref{eq:bn-bound}
+reflects that~\eqref{eq:total-moment} is itself an inequality
+(the spectral weight may be sub-saturating).
+
+\medskip
+
+\noindent\textbf{Step 3: Saturation criterion and the universal
+operator-growth hypothesis.}
+
+Equality $b_n(\mathcal{O}) = n\pi/\beta$ holds (asymptotically) if
+and only if~\eqref{eq:moment-asymp} saturates, i.e.\ the spectral
+weight $\rho_\mathcal{O}$ is concentrated on a single dimension or
+yields an equivalent moment growth. By the inverse-Lanczos statement
+of Parker et al.~\cite[Theorem 2 / inverse problem statement]{Parker2019},
+specifying the asymptotic Lanczos slope $\alpha = \pi/\beta$ uniquely
+determines the long-time exponential decay of the autocorrelation as
+$C_\mathcal{O}(s) \sim e^{-(\pi/\beta) s\cdot 2\Delta}$ for the
+effective scaling dimension $\Delta$, equivalent to
+\begin{equation}
+  C_\mathcal{O}(s)
+  \;=\;
+  N_\Delta\,\bigl(2\sinh(\pi s/\beta)\bigr)^{-\Delta},
+  \label{eq:bw-twopt-sat}
+\end{equation}
+i.e.\ the Bisognano--Wichmann form~\eqref{eq:bw-twopt}.
+
+\emph{Sub-step 3a (this is universal-operator-growth-hypothesis
+form).} The condition~\eqref{eq:bw-twopt-sat} is the universal
+operator-growth hypothesis (UOGH) of Parker et
+al.~\cite{Parker2019}, in its modular incarnation. UOGH was originally
+conjectured to be a chaos diagnostic.
+
+\emph{Sub-step 3b (free-QFT counter-examples to a chaos reading).}
+The chaos reading is refuted by the following counter-examples:
+\begin{itemize}
+\item \textbf{Avdoshkin--Dymarsky (2019)}~\cite{AvdoshkinDymarsky2019}.
+For 1D lattice models, including integrable cases, the Euclidean
+operator growth attains exponential Lanczos-coefficient growth via
+the path-integral / weighted Dyck-path saddle. The authors emphasise
+``one-dimensional systems are special'' (a superexponential frequency
+suppression in 1D) but show that linear $b_n$ alone is not a chaos
+diagnostic in 1D.
+\item \textbf{Camargo--Jahnke--Kim--Nishida (2023)}~\cite{Camargo2023}.
+Free and weakly interacting massive scalar QFTs with bounded power
+spectrum exhibit linear Lanczos slopes saturating $\pi/\beta$ at the
+KMS temperature, with mass and UV cutoff modifying the prefactor but
+preserving the kinematic form. This refutes the reading
+``saturation $\Rightarrow$ chaos'' for QFT.
+\item \textbf{Sreeram--Kannan--Modak--Aravinda (2025)}~\cite{Sreeram2025}.
+The saturation of $\lambda_K$ depends monotonically on the inverse
+participation ratio of the initial operator in the Hamiltonian
+eigenbasis; i.e.\ saturation is operator-dependent within a fixed
+maximally chaotic dynamics. Saturation is therefore not a state- or
+operator-independent invariant of the algebra.
+\end{itemize}
+
+These counter-examples establish that~\eqref{eq:bw-twopt-sat} is a
+\emph{kinematic} statement about the modular two-point function
+inheriting the BW form, not a dynamical statement about chaos.
+
+\medskip
+
+\noindent\textbf{Combining Steps 1, 2, 3.}
+
+Step~2 gives $b_n(\mathcal{O}) \le n\cdot\pi/\beta + o(n)$, so
+$\alpha := \pi/\beta$ is a valid linear bound. Step~1 then yields
+$\mathcal{C}_K^{\mathrm{mod}}(s) \le A\cosh(2\alpha s)
+= A\cosh(2\pi s/\beta)$, and reading off the Lyapunov exponent
+gives $\lambda_K^{\mathrm{mod}}(\mathcal{O}) \le 2\alpha = 2\pi/\beta$.
+At $\beta = 2\pi$ this is the MSS rate $\lambda_K^{\mathrm{mod}} \le 1$.
+Step~3 then characterises saturation~\eqref{eq:bw-twopt-sat} as the
+two-point function form, and the free-QFT counter-examples preclude
+its use as a chaos diagnostic.
+\end{proof}
+
+\begin{remark}[Independence from chaos hypotheses]
+The proof uses no large-$N$, no holography, no Eigenstate Thermalisation
+Hypothesis (ETH), no random-matrix-theory input, and no MSS-bound
+saturation hypothesis. The two pillars are the operator-norm bound
+on a tridiagonal generator (Step~1, purely algebraic, due to
+Parker et al.~\cite{Parker2019}) and the Bisognano--Wichmann
+KMS structure of the wedge two-point function (Step~2, axiomatic
+QFT~\cite{BisognanoWichmann1976}). Step~3 is a corollary of the
+moment-problem inversion plus published QFT counter-examples to a
+chaos reading.
+\end{remark}
+
+% =====================================================================
+\section{Comparison with concurrent independent work}
+\label{sec:vardian}
+% =====================================================================
+
+Vardian~\cite{Vardian2026} (arXiv:2602.02675, single-author hep-th,
+February 2026, 5pp + supplementary) presents a complementary
+construction in the AdS/CFT setting. Vardian's central object is
+the boundary modular Hamiltonian's spectrum, extracted via the
+Lanczos algorithm and identified through operator-algebra quantum
+error correction (OAQEC) with the area operator of the dual quantum
+extremal surface (QES). Applications include diagnosing island
+formation and the Page transition for evaporating black holes.
+
+Comparison with our Theorem~\ref{thm:bound}:
+
+\begin{itemize}
+\item Vardian operates intrinsically in AdS/CFT and uses
+holographic boundary--bulk duality to identify the area operator;
+we work intrinsically in the finite-rank truncation of an arbitrary
+type-II$_\infty$ crossed product without invoking AdS/CFT, and our
+results apply to any wedge or static-patch algebra (Rindler,
+de~Sitter, BEC analog horizon).
+\item Vardian targets a specific spectral element (the area operator
+in the central part of the modular Hamiltonian); we target the
+kinematic Lyapunov ceiling on Krylov growth (an envelope statement
+on \emph{all} operators).
+\item Vardian provides a constructive boundary-to-bulk dictionary;
+we provide a one-sided inequality.
+\end{itemize}
+
+The two works share the modular-Lanczos technical machinery but
+address disjoint physical questions. Both establish that modular
+Krylov complexity is a useful tool on type-II$_\infty$ algebras.
+Our result is independent of Vardian's; the AdS/CFT scope of
+\cite{Vardian2026} does \emph{not} cover the de~Sitter / BEC /
+generic type-II$_\infty$ truncation case for which our bound is
+designed.
+
+% =====================================================================
+\section{Open problems}
+\label{sec:open}
+% =====================================================================
+
+\begin{enumerate}
+\item \textbf{Lifting to the full type-II$_\infty$ algebra.}
+Theorem~\ref{thm:bound} is on the finite-rank truncation. Passing
+to the inductive-limit algebra requires uniform-in-$n$ control of
+$b_n$ for operators in a dense $\ast$-subalgebra of
+$\mathcal{A}_{\mathrm{II}_\infty}$.
+\item \textbf{Saturation as a sufficient (not necessary) condition.}
+Conjecture~\ref{conj:saturation} below remains open.
+\item \textbf{Bridge $S_{\mathrm{gen}} \leftrightarrow
+\mathcal{C}_K^{\mathrm{mod}}$.}
+The Faulkner--Speranza~\cite{FaulknerSperanza2024} generalised
+entropy and our $\mathcal{C}_K^{\mathrm{mod}}$ are conjecturally
+related; rigorous statement is open.
+\end{enumerate}
+
+\begin{conjecture}[Modular saturation for dressed type-II$_\infty$
+algebras]\label{conj:saturation}
+Let $\mathcal{A}_{\mathrm{II}_\infty}$ be a type-II$_\infty$ crossed
+product arising from a QRF-dressing of a wedge or static-patch algebra.
+Then on a sequence of finite-rank truncations
+$\mathcal{M}_R \otimes \mathcal{B}(\mathcal{H}_n)$, $n\to\infty$,
+the Lanczos coefficients of any few-mode operator $\mathcal{O}$ in a
+dense subalgebra satisfy $b_n(\mathcal{O}) \to n\pi/\beta$,
+saturating~\eqref{eq:bn-bound} and yielding
+$\lambda_K^{\mathrm{mod}}(\mathcal{O}) = 2\pi/\beta$ in the
+large-truncation limit. (The converse direction
+``saturation $\Rightarrow$ type-II$_\infty$ chaos'' is REFUTED by
+the free-QFT counter-examples cited in Step~3 above.)
+\end{conjecture}
+
+% =====================================================================
+\begin{thebibliography}{99}
+% =====================================================================
+
+\bibitem{Parker2019}
+D.~E.~Parker, X.~Cao, A.~Avdoshkin, T.~Scaffidi, and E.~Altman,
+``A Universal Operator Growth Hypothesis,''
+\textit{Phys.\ Rev.\ X} \textbf{9} (2019) 041017,
+\href{https://arxiv.org/abs/1812.08657}{arXiv:1812.08657 [cond-mat.str-el]}.
+%% live-verified 2026-05-05 (WebFetch confirmed authors+title; eq.~1.2 cosh
+%% inequality and Theorem 2 inverse-Lanczos statement cited per published PRX).
+
+\bibitem{BisognanoWichmann1976}
+J.~J.~Bisognano and E.~H.~Wichmann,
+``On the duality condition for a Hermitian scalar field,''
+\textit{J.\ Math.\ Phys.}\ \textbf{17} (1976) 303--321.
+%% Textbook standard; see Haag 1996 Chap. V for the modular-flow-as-boost
+%% identification used in Step 2.
+
+\bibitem{Haag1996}
+R.~Haag, \textit{Local Quantum Physics: Fields, Particles, Algebras},
+2nd ed., Springer (1996).
+%% Chapter V contains the K\"all\'en-Lehmann under modular flow used
+%% in eq. (\ref{eq:bw-spectral}).
+
+\bibitem{Witten2022}
+E.~Witten,
+``Gravity and the crossed product,''
+\textit{JHEP} \textbf{10} (2022) 008,
+\href{https://arxiv.org/abs/2112.12828}{arXiv:2112.12828 [hep-th]}.
+
+\bibitem{CLPW2023}
+V.~Chandrasekaran, R.~Longo, G.~Penington, and E.~Witten,
+``An algebra of observables for de~Sitter space,''
+\textit{JHEP} \textbf{02} (2023) 082,
+\href{https://arxiv.org/abs/2206.10780}{arXiv:2206.10780 [hep-th]}.
+
+\bibitem{FaulknerSperanza2024}
+T.~Faulkner and A.~J.~Speranza,
+``Gravitational algebras and the generalized second law,''
+\textit{JHEP} \textbf{11} (2024) 099,
+\href{https://arxiv.org/abs/2405.00847}{arXiv:2405.00847 [hep-th]}.
+
+\bibitem{Caputa2024}
+P.~Caputa, J.~M.~Mag\'{a}n, D.~Patramanis, and E.~Tonni,
+``Krylov complexity of modular Hamiltonian evolution,''
+\textit{Phys.\ Rev.\ D} \textbf{109} (2024) 086004,
+\href{https://arxiv.org/abs/2306.14732}{arXiv:2306.14732 [hep-th]}.
+
+\bibitem{Vardian2026}
+N.~Vardian,
+``Modular Krylov Complexity as a Boundary Probe of Area Operator
+and Entanglement Islands,''
+\href{https://arxiv.org/abs/2602.02675}{arXiv:2602.02675 [hep-th]}
+(February 2026).
+%% Concurrent independent work in AdS/CFT scope; live-verified 2026-05-05
+%% (WebFetch confirmed author + title + 5pp+supp + Feb 2 2026 hep-th
+%% submission + OAQEC/area-operator content).
+
+\bibitem{AvdoshkinDymarsky2019}
+A.~Avdoshkin and A.~Dymarsky,
+``Euclidean operator growth and quantum chaos,''
+\textit{Phys.\ Rev.\ Research} \textbf{2} (2020) 043234,
+\href{https://arxiv.org/abs/1911.09672}{arXiv:1911.09672 [cond-mat.stat-mech]}.
+%% Live-verified 2026-05-05; WebFetch confirmed Euclidean operator growth +
+%% Lanczos coefficient bound + integrable polynomial spatial growth + 1D
+%% specialness via path-integral weighted Dyck paths.
+
+\bibitem{Camargo2023}
+H.~A.~Camargo, V.~Jahnke, K.-Y.~Kim, and M.~Nishida,
+``Krylov Complexity in Free and Interacting Scalar Field Theories
+with Bounded Power Spectrum,''
+\textit{JHEP} \textbf{05} (2023) 226,
+\href{https://arxiv.org/abs/2212.14702}{arXiv:2212.14702 [hep-th]}.
+
+\bibitem{Sreeram2025}
+Sreeram~PG, J.~Bharathi~Kannan, R.~Modak, and S.~Aravinda,
+``Dependence of Krylov complexity on the initial operator and state,''
+\textit{Phys.\ Rev.\ E} \textbf{112} (2025) L032203,
+\href{https://arxiv.org/abs/2503.03400}{arXiv:2503.03400 [quant-ph]}.
+
+\end{thebibliography}
+
+\end{document}

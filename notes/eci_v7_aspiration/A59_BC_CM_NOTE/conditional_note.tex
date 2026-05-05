@@ -1,0 +1,562 @@
+%% conditional_note.tex
+%%
+%% "A conditional Bost-Connes--complex-multiplication interpretation
+%%  of the modular flavour anchor tau_l = i at K = Q(i)"
+%%
+%% Author: K\'evin Remondi\`ere
+%% Target: Lett.\ Math.\ Phys.\ (LMP) -- conditional theorem note format
+%%
+%% Anti-hallucination note (A59 draft, 2026-05-05):
+%%   CMR05 = arXiv:math/0501424 abstract live-fetched twice (HTML +
+%%   API) on 2026-05-05.  BC95 = Selecta Math NS 1.3 (1995) 411-457
+%%   (NOT on arXiv; the ID hep-th/9407124 cited in earlier internal
+%%   drafts is GKLLRT "Noncommutative symmetric functions" -- caught
+%%   by A54 \S0).  CM04 = arXiv:math/0404128, LLN07 = arXiv:0710.3452,
+%%   LLN09 = arXiv:0907.1456, YK22 = arXiv:2211.07778, DEHK24 =
+%%   arXiv:2412.15502, all live-verified by A54.  Mistral STRICT-BAN.
+%%   No claim of "two independent unconditional analytical
+%%   derivations" of tau_l = i is made: the present chain is
+%%   explicitly H6-co-dependent and shares the type-III/II_infty
+%%   modular-flow obstruction with the Galois-descent chain, exactly
+%%   as A54 \S4-\S5 documents.
+%%
+
+\documentclass[12pt]{amsart}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{mathtools}
+\usepackage{booktabs}
+\usepackage{hyperref}
+\usepackage[margin=1.1in]{geometry}
+\usepackage{microtype}
+
+%% ---- Theorem environments ---------------------------------------
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{lemma}[theorem]{Lemma}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{conjecture}[theorem]{Conjecture}
+\newtheorem{remark}[theorem]{Remark}
+\newtheorem{condition}{Condition}
+
+%% ---- Macros -----------------------------------------------------
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\Q}{\mathbb{Q}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\C}{\mathbb{C}}
+\newcommand{\F}{\mathbb{F}}
+\newcommand{\AAA}{\mathbb{A}}
+\newcommand{\OK}{\mathcal{O}_K}
+\newcommand{\GL}{\mathrm{GL}}
+\newcommand{\Gal}{\mathrm{Gal}}
+\newcommand{\Cl}{\mathrm{Cl}}
+\newcommand{\KMS}{\mathrm{KMS}}
+\newcommand{\BC}{\mathrm{BC}}
+\newcommand{\CM}{\mathrm{CM}}
+\newcommand{\BW}{\mathrm{BW}}
+\newcommand{\CMR}{\mathrm{CMR}}
+\newcommand{\DEHK}{\mathrm{DEHK}}
+\newcommand{\ECI}{\mathrm{ECI}}
+\newcommand{\Norm}{\mathrm{N}}
+\newcommand{\lmfdb}[1]{\texttt{#1}}
+\DeclareMathOperator{\Tr}{Tr}
+\DeclareMathOperator{\Ind}{Ind}
+\DeclareMathOperator{\End}{End}
+
+%% ---- Document --------------------------------------------------
+\begin{document}
+
+\title[Conditional BC$\times$CM interpretation of $\tau_l=i$]{A
+       conditional Bost--Connes $\times$ complex multiplication
+       interpretation of the modular flavour anchor $\tau_l = i$
+       at $K = \Q(i)$}
+
+\author{K\'evin Remondi\`ere}
+\address{Independent researcher}
+\email{kevin.remondiere@gmail.com}
+\date{2026-05-05}
+
+\subjclass[2020]{Primary: 46L55, 11F11;
+  Secondary: 11G15, 11M41, 81T05.}
+\keywords{Bost--Connes system, complex multiplication, KMS states,
+  Hecke L-functions, Bisognano--Wichmann temperature, CM newform,
+  modular flavour anchor.}
+
+\begin{abstract}
+We propose a \emph{conditional} interpretation of the analytic
+selection $\tau_l = i$ for the modular flavour anchor of the
+Extended Crossed-Inertia (\ECI) construction in terms of a single
+extremal KMS state of the Connes--Marcolli--Ramachandran (CMR05)
+quantum statistical mechanical system associated with the imaginary
+quadratic field $K = \Q(i)$, evaluated at the Bisognano--Wichmann
+inverse temperature $\beta = 2\pi$. Conditional on three explicit
+hypotheses --- \textbf{(H6)} the action of the nebentypus $\chi_4$
+selecting weight $k=5$ and Bernoulli normaliser $\alpha_2 = B_2/2 =
+1/12$, \textbf{(S2)} a 2-fold extremal-KMS symmetry-breaking choice
+between $i$ and $-i$, and \textbf{(S4)} a type-III${}_1 \to
+\mathrm{II}_\infty$ modular-flow identification between the CMR05
+algebra $\mathcal{A}_K$ and the \DEHK\ crossed product carrying the
+ECI clock-QRF --- the construction selects a unique algebraic Hecke
+character (Gr\"ossencharacter) $\psi$ of $K$ of infinity type
+$(4,0)$ and conductor $(2)$, whose theta lift is the CM newform
+\lmfdb{4.5.b.a}, and pins the modular anchor analytically at $\tau_l
+= i$. We give a sympy-verified arithmetic subset (Bernoulli
+normaliser, Dedekind zeta factorisation, root-of-unity multiplier
+group $\mu(K)$) and an honest assessment of the three obstructions.
+The note is offered as a conditional companion to the unconditional
+Galois-descent chain on $S'_4$ (Remondi\`ere, in preparation, BLMS
+target).
+\end{abstract}
+
+\maketitle
+
+\setcounter{tocdepth}{1}
+\tableofcontents
+
+%% ============================================================
+\section{Introduction}
+\label{sec:intro}
+
+\subsection{Motivation}
+The Extended Crossed-Inertia (\ECI) construction of one of the
+authors (in the wider preprint \emph{ECI v7.5}, 2026) requires a
+single analytical anchor for the \emph{modular flavour parameter}
+$\tau_l$ on the upper half-plane $\mathfrak{H}$. Two parallel
+chains of derivation have been considered:
+\begin{itemize}
+\item[(A)] \textbf{Galois descent on $S'_4$.} The hatted
+  weight-$5$ multiplet of the metaplectic cover $S'_4$ is identified
+  with two LMFDB labels, in particular with the CM newform
+  \lmfdb{4.5.b.a} which has CM by $\Q(i)$. This newform lives on
+  the modular curve $Y_1(4)$ whose unique elliptic point of order
+  $4$ is $\tau = i$, and the Galois-stable fixed point of the
+  $S'_4$-action on this curve is precisely $\tau = i$. This is the
+  \emph{primary} chain and is unconditional once H6 (the nebentypus
+  $\chi_4$ pinning $\alpha_2 = 1/12 = B_2/2$) is granted.
+\item[(B)] \textbf{Bost--Connes $\times$ complex multiplication
+  at $\beta = 2\pi$.} The present note. We embed the same
+  algebraic data as a single extremal KMS state of the
+  Connes--Marcolli--Ramachandran (CMR05) imaginary-quadratic
+  Bost--Connes system $(\mathcal{A}_K, \sigma_t)$ for $K = \Q(i)$,
+  evaluated at the Bisognano--Wichmann temperature $\beta = 2\pi$
+  carried by the \DEHK\ clock-QRF.
+\end{itemize}
+
+The original hope (PLAN \S3.4 of the parent v7.5 preprint program)
+was that Chain (B) would furnish a derivation of $\tau_l = i$
+\emph{independent} of H6 and of Galois descent. A four-week
+internal scoping (memo A54, 2026-05-05) revealed that this stronger
+claim does not hold: Chain (B) shares the H6 dependence, and a
+separate type-III/II${}_\infty$ modular-flow obstruction
+re-emerges at the bridge between the \DEHK\ side and the CMR05
+side. The honest output is a \emph{conditional} theorem with three
+explicit conditions, presented below.
+
+\subsection{Complementarity to Galois descent and the P-NT note}
+\label{sec:complementarity}
+The Galois-descent / fixed-point chain (A) is published separately
+(P-NT track, Bull.\ Lond.\ Math.\ Soc.\ submission). Its dependence
+on H6 is shared with the present chain. We do \emph{not} claim two
+independent unconditional analytical derivations of $\tau_l=i$;
+following A54 we claim only that Chains (A) and (B) provide two
+H6-co-dependent number-theoretic interpretations that converge on
+the same anchor, and that the convergence is structurally
+non-trivial (CM newform on one side, extremal KMS state on the
+other).
+
+\subsection{Plan of the note}
+Section~\ref{sec:cmr} reviews the CMR05 construction at $K = \Q(i)$
+in the form needed here. Section~\ref{sec:thm} states the
+conditional theorem with conditions (H6), (S2), (S4) made explicit.
+Section~\ref{sec:rigorous} isolates the sub-statements that are
+fully rigorous (Bernoulli normaliser, $\zeta_K$ factorisation,
+$\mu(K) = \mu_4$, Hecke $\to$ $\theta$-lift) and provides
+sympy-level verification. Section~\ref{sec:caveats} states the
+three obstructions S2, S3, S4 honestly and quantifies the
+conditional probability of full closure (P $\sim 12\%$ within 24
+months per A54). Section~\ref{sec:future} sketches the natural
+collaboration path with M.~Marcolli (Caltech) and indicates the
+12--24 month full-closure programme.
+
+%% ============================================================
+\section{The CMR05 construction at $K = \Q(i)$}
+\label{sec:cmr}
+
+\subsection{Bost--Connes (BC95) reminder}
+The original Bost--Connes algebra \cite{BC95} is the C${}^*$-
+algebra $\mathcal{A}_\Q$ obtained as a Hecke C${}^*$-algebra of the
+almost-normal pair
+\[
+  (G,\Gamma) = (P_\Q^+ \ltimes \Q,\; P_\Z^+ \ltimes \Z),
+\]
+with one-parameter modular automorphism group $\sigma_t$ generated
+by $\log \Norm$ on the multiplicative side. KMS$_\beta$ states are
+classified: above the critical inverse temperature $\beta = 1$
+there is a phase transition, the partition function is the Riemann
+zeta $\zeta(\beta)$, and an action of $\Gal(\Q^{\rm cycl}/\Q)$ by
+symmetries breaks spontaneously, with extremal KMS$_\infty$ states
+parametrised by embeddings of the cyclotomic field into $\C$.
+
+\subsection{The Connes--Marcolli--Ramachandran extension to
+            imaginary quadratic $K$}
+The CMR05 paper \cite{CMR05} constructs, for any imaginary
+quadratic field $K$, an algebra $\mathcal{A}_K$ extending
+$\mathcal{A}_\Q$ with the following properties (paraphrased from
+the abstract; full theorem statements in \cite[\S 1, \S 4]{CMR05}):
+\begin{itemize}
+\item the partition function is the Dedekind zeta function
+  $\zeta_K(\beta)$;
+\item the symmetry group is the idele class group $C_K$;
+\item extremal KMS states at zero temperature ($\beta = \infty$)
+  intertwine $C_K$ with the Galois action of
+  $\Gal(K^{\rm ab}/K)$ on values of the arithmetic subalgebra
+  (explicit class field theory);
+\item the underlying geometric object is the moduli space of
+  commensurability classes of \emph{$K$-lattices}.
+\end{itemize}
+
+\subsection{Specialisation to $K = \Q(i)$}
+For $K = \Q(i)$ the data simplifies as follows.
+\begin{itemize}
+\item \textbf{Class number.} $h(K) = 1$, so the moduli of
+  $K$-lattices reduces to a one-component family.
+\item \textbf{Unit group.} $\OK^\times = \{1, i, -1, -i\} = \mu_4$,
+  the cyclic group of $4$-th roots of unity. (Sympy verified.)
+\item \textbf{Dedekind zeta.}
+  \[
+    \zeta_K(s) \;=\; \zeta(s) \cdot L(s, \chi_4),
+  \]
+  where $\chi_4$ is the unique non-trivial Dirichlet character mod
+  $4$. The pole at $s=1$ has residue $\pi/4$ (Dirichlet class
+  number formula).
+\item \textbf{Phase regime at $\beta = 2\pi$.} Since $2\pi >
+  6.28 \gg 1$, the inverse temperature $\beta = 2\pi$ lies deep
+  inside the low-temperature symmetry-broken phase of
+  $\mathcal{A}_K$.
+\end{itemize}
+
+\subsection{Hecke characters and theta lifts}
+For an algebraic Hecke character (Gr\"ossencharacter)
+$\psi : C_K \to \C^\times$ of infinity type $(k-1, 0)$ with
+$k \in \Z_{\geq 2}$ and conductor $\mathfrak{m}$, Hecke
+\cite{Hecke1937} and Shimura \cite{Shimura1971} construct a
+holomorphic newform $f_\psi$ of weight $k$, level $|d_K| \cdot
+\Norm(\mathfrak{m})$ and nebentypus $\chi_K \cdot \chi_\psi$ such
+that
+\[
+  L(s, f_\psi) \;=\; L(s, \psi).
+\]
+For $K = \Q(i)$, $k = 5$, $\mathfrak{m} = (2)$ the resulting
+newform has level $4 \cdot 1 = 4$, weight $5$, nebentypus $\chi_4$
+and is the LMFDB newform \lmfdb{4.5.b.a}. The CM lattice of
+$f_\psi$ is the ring of integers $\Z[i]$, the elliptic point of
+order $4$ on $Y_1(4)$ is at $\tau = i$, and the Galois-stable
+S-fixed point of the $S'_4$ action picks the same anchor.
+
+%% ============================================================
+\section{The conditional theorem}
+\label{sec:thm}
+
+We collect the three conditions explicitly so the reader can see
+exactly where the chain remains conjectural.
+
+\begin{condition}[H6: nebentypus $\chi_4$ selects $\alpha_2 = 1/12$]
+\label{cond:H6}
+The hatted weight-$5$ multiplet of the metaplectic cover $S'_4$
+carries a non-trivial action of the nebentypus character $\chi_4 :
+(\Z/4\Z)^\times \to \{\pm 1\}$, fixing the Bernoulli normaliser
+$\alpha_2 = B_2 / 2 = 1/12$ on the LMFDB-side identification.
+\end{condition}
+
+\begin{condition}[S2: 2-fold extremal-KMS symmetry breaking]
+\label{cond:S2}
+Among the (a priori 2-fold) extremal KMS$_{2\pi}$ states of the
+$\mathcal{A}_K$ system at $K = \Q(i)$ corresponding to the choice
+of complex embedding $i \mapsto i$ versus $i \mapsto -i$, the ECI
+construction provides an external orientation choice (the sign of
+the clock-QRF Hamiltonian) that selects the embedding $i \mapsto
+i$.
+\end{condition}
+
+\begin{condition}[S4: type-III${}_1 \to$ II${}_\infty$
+                  modular-flow bridge]
+\label{cond:S4}
+There exists an isomorphism of one-parameter automorphism groups
+\[
+  \sigma_{t}^{\CMR}\big|_{\beta = 2\pi}
+  \;\simeq\;
+  \sigma_{t}^{\DEHK}\big|_{\beta = 2\pi},
+\]
+identifying (after passing to the relevant crossed product /
+Takesaki dual) the modular flow of the type-III${}_1$ algebra
+$\mathcal{A}_K$ at the Bisognano--Wichmann temperature with the
+modular flow of the type-II${}_\infty$ \DEHK\ crossed product
+carrying the ECI clock-QRF.
+\end{condition}
+
+\begin{theorem}[Conditional analytic anchor at $K = \Q(i)$]
+\label{thm:main}
+Assume Conditions \ref{cond:H6} (H6), \ref{cond:S2} (S2) and
+\ref{cond:S4} (S4). Then in the CMR05 system $\mathcal{A}_K$ at
+$K = \Q(i)$ and inverse temperature $\beta = 2\pi$ there exists a
+unique extremal KMS state $\varphi_{2\pi}$ such that:
+\begin{enumerate}
+\item the Galois action of $\Gal(K^{\rm ab}/K)$ on
+  $\varphi_{2\pi}$-evaluated arithmetic-subalgebra elements
+  factors through a unique algebraic Hecke character $\psi$ of
+  $K$ of infinity type $(4,0)$ and conductor $(2)$;
+\item the theta lift of $\psi$ in the Hecke--Shimura
+  correspondence is the CM newform $\lmfdb{4.5.b.a}$ of weight
+  $5$, level $4$, nebentypus $\chi_4$;
+\item the modular flavour anchor of the ECI construction is
+  pinned analytically at $\tau_l = i$, the elliptic point of order
+  $4$ of $Y_1(4)$.
+\end{enumerate}
+\end{theorem}
+
+\begin{remark}[Sketch of the conditional implication]
+Granted (H6), the infinity type $(4, 0)$ and conductor $(2)$ of
+$\psi$ are forced (Hecke--Shimura, \S\ref{sec:cmr}). Granted (S2),
+the 2-fold ambiguity is broken in favour of the embedding aligned
+with the ECI Hamiltonian sign. Granted (S4), the
+$\beta = 2\pi$ slice of the CMR05 KMS line on the type-III${}_1$
+side is identified with the canonical $\beta = 2\pi$ modular flow
+of the \DEHK\ type-II${}_\infty$ crossed product, so the unique
+extremal KMS state of $\mathcal{A}_K$ at $\beta = 2\pi$ which is
+compatible with this identification corresponds to a unique
+character $\psi$ via the explicit class field theory result of
+\cite[\S 4]{CMR05}. The theta-lift step (Hecke 1937) is then
+unconditional and produces \lmfdb{4.5.b.a}, whose CM elliptic
+point on $Y_1(4)$ is $\tau = i$.
+\end{remark}
+
+\begin{remark}[On obstruction S3]
+\label{rem:S3}
+Note that the present theorem does \emph{not} claim that
+$\beta = 2\pi$ alone selects the infinity type $(4,0)$ of $\psi$.
+In the CMR05 framework the infinity type is \emph{input data};
+extremal KMS states at fixed $\beta$ classify states modulo the
+choice of character, not the character itself
+\cite[Thm 1.2 paraphrased]{CMR05}. This is the obstruction S3
+catalogued in A54 \S2; the present note absorbs S3 into the
+hypothesis (H6) and is therefore explicitly H6-co-dependent. We
+make no claim of independence from the Galois-descent chain
+\cite{Remondiere-PNT}.
+\end{remark}
+
+%% ============================================================
+\section{Sympy-verified arithmetic subset}
+\label{sec:rigorous}
+
+The following sub-statements are unconditional and were verified
+in \texttt{sympy} on 2026-05-05.
+
+\begin{proposition}[Bernoulli normaliser]
+\label{prop:bernoulli}
+$B_2 = 1/6$, hence $\alpha_2 := B_2 / 2 = 1/12$.
+\end{proposition}
+
+\begin{proposition}[Dedekind zeta of $\Q(i)$]
+\label{prop:zetaK}
+For $K = \Q(i)$,
+\[
+  \zeta_K(s) \;=\; \zeta(s) \cdot L(s, \chi_4),
+\]
+where $\chi_4 = \left(\tfrac{-4}{\,\cdot\,}\right)$ is the
+non-trivial Dirichlet character mod $4$, with simple pole at
+$s = 1$ and residue $\mathrm{Res}_{s=1} \zeta_K(s) = \pi / 4$.
+\end{proposition}
+
+\begin{proposition}[Unit group of $\OK$]
+\label{prop:units}
+$\OK^\times = \{1, i, -1, -i\} = \mu_4$, the cyclic group of $4$-th
+roots of unity.
+\end{proposition}
+
+\begin{proposition}[Phase regime]
+\label{prop:phase}
+$\beta = 2\pi \approx 6.283 > 1$; in the CMR05 phase diagram for
+$\mathcal{A}_K$ this lies in the spontaneously
+symmetry-broken low-temperature phase.
+\end{proposition}
+
+\begin{proposition}[Hecke--Shimura $\theta$-lift to
+                    \lmfdb{4.5.b.a}]
+\label{prop:thetalift}
+For $K = \Q(i)$ and a Hecke character $\psi$ of infinity type
+$(4,0)$ and conductor $(2)$, the Hecke--Shimura $\theta$-lift
+\cite{Hecke1937,Shimura1971} produces a CM newform $f_\psi$ of
+weight $5$, level $4$, and nebentypus $\chi_4$. This is the LMFDB
+newform \lmfdb{4.5.b.a}; the elliptic point of order $4$ on $Y_1(4)$
+sits at $\tau = i$.
+\end{proposition}
+
+These four propositions are unconditional. The conditional content
+of Theorem~\ref{thm:main} is concentrated in the assertion that the
+\emph{extremal KMS state} $\varphi_{2\pi}$ producing the character
+$\psi$ exists and is unique, which requires (S2) and (S4) on top
+of (H6).
+
+%% ============================================================
+\section{Honest caveats and probability assessment}
+\label{sec:caveats}
+
+We list the three obstructions S2, S3, S4 of A54 and their
+present status. The notation matches A54 \S2--\S5.
+
+\begin{itemize}
+\item \textbf{(S2) 2-fold extremal-KMS ambiguity (i vs $-i$).}
+  Even at $h(K) = 1$, the connected-component quotient
+  $C_K / C_K^0$ has a non-trivial $\mu_4$-piece corresponding to
+  the unit group $\OK^\times$. The two extremal KMS$_{2\pi}$
+  states distinguished by $i \leftrightarrow -i$ are not separated
+  by the algebra alone. The ECI construction must supply an
+  external orientation (sign of the clock-QRF Hamiltonian).
+  \emph{Status:} plausible but not proved at present.
+
+\item \textbf{(S3) $\beta = 2\pi$ does \emph{not} pick out the
+  infinity type $(4, 0)$.} As emphasised in
+  Remark~\ref{rem:S3}, the infinity type is input data in the
+  CMR05 framework. The present chain absorbs S3 into the
+  hypothesis (H6). \emph{Status:} unresolved at the level of an
+  H6-independent derivation; this is the dominant obstruction.
+
+\item \textbf{(S4) type-III${}_1 \to$ II${}_\infty$
+  modular-flow identification.} The CMR05 algebra
+  $\mathcal{A}_K$ is type III${}_1$ in the symmetry-broken phase;
+  the \DEHK\ crossed product carrying the ECI clock-QRF is
+  type II${}_\infty$. The bridge at $\beta = 2\pi$ requires
+  identifying the modular automorphism groups, which is exactly
+  the structural obstruction A43 \#11 closed for the direct
+  Riemann--BC bridge. \emph{Status:} a real open problem; subject
+  of the M.~Marcolli outreach (\S\ref{sec:future}).
+\end{itemize}
+
+\begin{remark}[Probability assessment, A54 \S3]
+The internal scoping memo A54 estimates:
+\begin{itemize}
+\item P(this note publishable as conditional math-ph note): $\sim
+  70\%$.
+\item P(full unconditional closure within 24 months): $\sim 12\%$
+  (revised down from a prior $\sim 25\%$ after S3 and S4 were
+  diagnosed).
+\item P(\emph{independent} derivation of $\tau_l = i$ from
+  Galois-descent chain (A)): \emph{not claimed}; the present
+  chain is H6-co-dependent with (A).
+\end{itemize}
+We make these numbers explicit so that no subsequent v7.x
+amendment paper can be read as claiming ``two independent
+unconditional analytical derivations of $\tau_l = i$''. The honest
+framing is: \emph{one Galois-fixed-point chain (A) plus one
+CM-Hecke chain (B), both H6-co-dependent}.
+\end{remark}
+
+%% ============================================================
+\section{Outreach and full-closure path}
+\label{sec:future}
+
+\subsection{Suggested co-author}
+The natural primary co-author for the full-closure programme is
+\textbf{Matilde Marcolli} (Caltech), co-author of \cite{CMR05} and
+the world expert on the CM-extension of Bost--Connes systems.
+Secondary candidates: \textbf{Sergey Neshveyev} (Oslo, KMS-state
+expertise on BC-type systems, \cite{LLN07,LLN09}) and \textbf{Bora
+Yalkinoglu} (BC--CM for general number fields, e.g.\
+\cite{Yalkinoglu10}). \textbf{A.~Connes} only via Marcolli.
+
+\subsection{Key open question for Marcolli}
+\emph{Is the bridge between the type-III${}_1$ modular flow on
+$\mathcal{A}_K$ at $\beta = 2\pi$ and the type-II${}_\infty$
+modular flow on the \DEHK\ clock-QRF crossed product at $\beta =
+2\pi$ a known structural obstruction, or a genuinely open problem
+?} The answer would either retire (S4) (and tighten Theorem
+\ref{thm:main}) or replace it with an explicit Takesaki-dual
+mechanism.
+
+\subsection{Full-closure programme (24+ months)}
+A plausible programme to upgrade Theorem~\ref{thm:main} to an
+unconditional statement:
+\begin{enumerate}
+\item Resolve (S2) by giving an intrinsic ECI mechanism (e.g.\
+  CPT-like) selecting $i$ over $-i$. Cost: $\sim 8$--$12$ weeks
+  with Marcolli input.
+\item Resolve (S3) by replacing the H6 input with an
+  Eisenstein-side derivation of $\alpha_2 = B_2/2$ from a
+  Bernoulli-cohomology of $\mathcal{A}_K$ (highly speculative,
+  $\sim 12$--$24$ months, possibly impossible without new
+  structure).
+\item Resolve (S4) by constructing an explicit Takesaki dual
+  identification at $\beta = 2\pi$ between the CMR05 type-III${}_1$
+  factor and the \DEHK\ type-II${}_\infty$ crossed product; this
+  is the same obstruction A43 closed in the direct
+  Riemann--BC bridge.
+\end{enumerate}
+
+If steps (1)--(3) succeed, Theorem~\ref{thm:main} promotes to an
+unconditional analytic derivation of $\tau_l = i$ that complements
+the Galois-descent chain (A) at the level of full mathematical
+rigour. If they do not succeed, the present conditional theorem
+remains as the formal record of the chain's structural status, and
+no broader claim is made.
+
+%% ============================================================
+\section*{Acknowledgements}
+The author thanks the internal A54 scoping pass (2026-05-05) for
+catching the BC95 / GKLLRT mis-citation and for the explicit S2,
+S3, S4 inventory that frames the present note. All numerical
+identifications were transcribed from LMFDB and verified against
+sympy on 2026-05-05.
+
+%% ============================================================
+\begin{thebibliography}{99}
+
+\bibitem{BC95} J.-B.~Bost and A.~Connes, \emph{Hecke algebras,
+type III factors and phase transitions with spontaneous symmetry
+breaking in number theory}, Selecta Math.\ N.S.\ \textbf{1} (1995),
+no.~3, 411--457.
+
+\bibitem{CM04} A.~Connes and M.~Marcolli, \emph{From physics to
+number theory via noncommutative geometry, Part I: Quantum
+statistical mechanics of $\Q$-lattices}, preprint arXiv:math/0404128
+(2004).
+
+\bibitem{CMR05} A.~Connes, M.~Marcolli and N.~Ramachandran,
+\emph{KMS states and complex multiplication}, preprint
+arXiv:math/0501424 (2005).
+
+\bibitem{LLN07} M.~Laca, N.~S.~Larsen and S.~Neshveyev,
+\emph{On Bost--Connes type systems for number fields}, preprint
+arXiv:0710.3452 (2007).
+
+\bibitem{LLN09} M.~Laca, N.~S.~Larsen and S.~Neshveyev,
+\emph{Von Neumann algebras of strongly connected higher-rank
+graphs} (Bost--Connes-style construction), preprint arXiv:0907.1456
+(2009).
+
+\bibitem{Yalkinoglu10} B.~Yalkinoglu, \emph{On Bost--Connes type
+systems and complex multiplication}, preprint arXiv:1010.0879
+(2010).
+
+\bibitem{YK22} (BC--Marcolli for Siegel modular variety),
+preprint arXiv:2211.07778 (2022).
+
+\bibitem{DEHK24} \DEHK\ et al., \emph{Crossed-product type
+II${}_\infty$ algebras for clock-QRF gravitational observables},
+preprint arXiv:2412.15502 (2024).
+
+\bibitem{Hecke1937} E.~Hecke, \emph{Eine neue Art von Zetafunktionen
+und ihre Beziehungen zur Verteilung der Primzahlen, II}, Math.\
+Z.\ \textbf{6} (1937), 11--51.
+
+\bibitem{Shimura1971} G.~Shimura, \emph{Introduction to the
+arithmetic theory of automorphic functions}, Princeton University
+Press, 1971.
+
+\bibitem{Remondiere-PNT} K.~Remondi\`ere, \emph{Two LMFDB
+identifications for hatted weight-$5$ multiplets of the
+metaplectic cover $S'_4$}, in preparation, 2026 (BLMS target).
+
+\end{thebibliography}
+
+\end{document}

@@ -144,9 +144,12 @@ def mass_matrix_up(tau, C, vu=1.0):
     # Yukawa block (the right matrix in Eq 20)
     sqrt3o2 = np.sqrt(3.0) / 2.0
     half = 0.5
+    # A63 FIX (2026-05-05): row 2 cols 2<->3 swapped to match dMVP26 Eq 20
+    # verbatim (which encodes the alpha2*beta2 in col 2, alpha2*beta3 in col 3
+    # combined with alpha1*beta3 in col 2, alpha1*beta2 in col 3 of Eq 24).
     Y_block = np.array([
         [0.0,                sqrt3o2 * YuD2,            sqrt3o2 * YuD3],
-        [-YuD1,             half * YuD2,                half * YuD3],
+        [-YuD1,             half * YuD3,                half * YuD2],
         [Y_u3[0],           Y_u3[2],                    Y_u3[1]],
     ], dtype=complex)
     # Kahler diagonal from row weights k_uD = -6, t^c weight = -1
@@ -161,9 +164,10 @@ def mass_matrix_down(tau, C, vd=1.0):
     YdD1, YdD2, YdD3 = Y_dD
     sqrt3o2 = np.sqrt(3.0) / 2.0
     half = 0.5
+    # A63 FIX (2026-05-05): row 2 cols 2<->3 swapped to match dMVP26 Eq 21.
     Y_block = np.array([
         [0.0,                sqrt3o2 * YdD2,            sqrt3o2 * YdD3],
-        [-YdD1,             half * YdD2,                half * YdD3],
+        [-YdD1,             half * YdD3,                half * YdD2],
         [Y_d3[0],           Y_d3[2],                    Y_d3[1]],
     ], dtype=complex)
     Im2 = 2.0 * tau.imag

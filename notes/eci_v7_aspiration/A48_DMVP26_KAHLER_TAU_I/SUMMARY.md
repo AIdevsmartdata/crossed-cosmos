@@ -6,7 +6,15 @@
 
 ## Verdict
 
-**SURVIVES τ = i (PARTIAL)**
+**SURVIVES τ = i (PARTIAL — REVISED post-A63)**
+
+⚠️ **A63 update (2026-05-05 night)**: The original A48 ×90 norm gap was a **TRANSCRIPTION ERROR** in A48's `kahler_tau_i.py` (Eq 24 α₂-row swap forgotten on Y_uD row), NOT a Kähler/C-G normalisation issue. After 2-char fix:
+- **Up sector** survives τ=i (<4% shift) ✅
+- **Down sector** BREAKS at τ=i exactly: y_d/y_s drops 4500× near τ=i (sharp non-analytic suppression). Im(τ) sweep 1.00705 → 1.00000 sends y_d/y_s 5e-2 → 3.6e-2 → 1.1e-5.
+- **v7.5 §4.b graft must NOT strictly pin τ=i**; needs Im(τ)≈1.007 + Re(τ)~10⁻³ (which dMVP26 anyway proves analytically via ε-expansion p.9).
+- CM-anchor framing weakens from "τ=i" to "τ in τ_S=i vicinity".
+
+See A63 SUMMARY for full diagnostic.
 
 dMVP26's mass hierarchies are essentially unchanged when τ is pinned at the CP fix-point τ_S = i instead of the published best-fit τ* = 0.00455 + 1.00705 i. Up-sector ratios shift by < 5%, down-sector y_d/y_s by ~20%.
 

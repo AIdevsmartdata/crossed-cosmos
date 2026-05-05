@@ -1,9 +1,11 @@
 # EREPR_REOPEN — Campaign Status + Weeks 2-4 Plan
 
 **Campaign:** ER=EPR <-> v6 crossed product re-open (W7 Agent 13)
-**Last updated:** 2026-05-04 (Week 2 scoping complete)
+**Last updated:** 2026-05-05 (Week 4 spectrum-match REFUTED; A10 final memo posted)
 **Predecessor:** commit f70b59f (v8:agent-13, verdict CONJECTURAL)
 **W7 audit priors:** 35% success probability, 4-6 weeks, $25-45 compute budget
+
+**Week 4 verdict (A10_WEEK4_SPECTRUM.md, 2026-05-05):** SPECTRA MISMATCH. HPS chord spectrum E(theta) = -cos(theta)/sqrt(2|log q|(1-q^2)) is bounded continuous on [-E_max, +E_max]; CLPW/DEHK K_R = beta_dS . H_xi + p has continuous unbounded spectrum on R. A6's Case A REFUTED. Case A/B/C: 5/30/65 (was 25/50/25). Recommended downgrade: MVT2-class no-go remark for v6.2 S2 (see A10 Section 7). Hallu count 77 (no increment). Brief-internal flag: HOPSW 5th-author Wang was misspelled "Wakai" in A10 mission brief.
 
 ---
 
@@ -122,7 +124,9 @@ All three outcomes yield a publishable v6.2 S2 addition.
 | A13_1_petz_recovery_memo.md | Week 1 scoping memo | COMPLETE |
 | A13_1_tfd_2plus2_qubit.py | Toy: Petz deficit on 2+2 qubit systems | COMPLETE |
 | A13_2_araki_modular_memo.md | Week 2 scoping memo: Araki relative modular operator | COMPLETE |
-| A13_2_modular_flow.py | Week 3 toy: verify dS_gen ~ <K_R>_rho numerically | PLANNED |
-| A13_2b_dssyk_kR_bridge.md | Week 3 note: HPS <-> DEHK bridge problem | PLANNED |
-| A13_3_chm_typeII.md | Week 3 memo: CHM route for type-II_inf | PLANNED |
+| A6_WEEK3_BERRY_STINESPRING.md | Week 3: Berry-Stinespring channel C_BS construction | COMPLETE |
+| A10_WEEK4_SPECTRUM.md | Week 4: chord-vs-K_R spectrum match REFUTED | COMPLETE |
+| A13_2_modular_flow.py | Week 3 toy: verify dS_gen ~ <K_R>_rho numerically | OBSOLETE (refuted by A10) |
+| A13_2b_dssyk_kR_bridge.md | Week 3 note: HPS <-> DEHK bridge problem | OBSOLETE (refuted by A10) |
+| A13_3_chm_typeII.md | Week 3 memo: CHM route for type-II_inf | OBSOLETE (refuted by A10) |
 | SUMMARY.md | Campaign status | CURRENT |

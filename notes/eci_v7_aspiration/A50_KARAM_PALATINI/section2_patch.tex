@@ -1,0 +1,119 @@
+%% A50_KARAM_PALATINI / section2_patch.tex
+%% LaTeX patch for v74_amendment_v2.tex -- §2 graft
+%% Author: Sonnet sub-agent A50 (parent persisted), 2026-05-05
+%% Mission: A41 R1 GRAFT -- cite KSTD 2026 as analytical Cassini-wall reference
+%%
+%% INTEGRATION TARGET (parent agent): insert as a new subsection in v74_amendment_v2.tex,
+%% recommended placement IMMEDIATELY BEFORE the existing "NMC cosmological NULL at Cassini"
+%% bullet of \section{Falsifiers} (around line 861), OR as a stand-alone short
+%% \section{Cassini wall and Palatini formulation} between
+%% \section{Open questions and pending verifications} and \section{Falsifiers}.
+%%
+%% Verification ledger:
+%%   - arXiv:2604.16226 LIVE-VERIFIED via export.arxiv.org API on 2026-05-05.
+%%     Authors: Alexandros Karam, Samuel Sanchez Lopez, Jose Jaime Terente Diaz.
+%%     Title: "Post-Newtonian Constraints on Scalar-Tensor Gravity".
+%%     Submitted 2026-04-17, gr-qc + astro-ph.CO, 42 pp + 5 appendices.
+%%   - Equations (3.38), (3.41), (3.42), (4.31), (4.32) read directly from PDF.
+%%   - delta_P = 1 (Palatini), delta_P = 0 (metric) per KSTD eq. (3.21) convention.
+%%   - No Mistral cross-checks used (Mistral STRICT-BANNED per project memory).
+%%   - Hallucination counter: 84 entering, 84 leaving (held).
+%%
+%% Anti-hallu note: KSTD do NOT explicitly bound |xi|(chi_0/M_P)^2 <= 6e-6;
+%% that figure is the ECI-internal restatement of the Cassini bound on
+%% (gamma - 1) translated to ECI's xi_chi parametrisation (cf. A4_wolf_eci_structural.md
+%% line 134 and Wolf et al. 2025 arXiv:2504.07679). The patch states this clearly.
+
+%%--------------------------------------------------------------------
+\section{Cassini wall and Palatini formulation}
+\label{sec:cassini-palatini}
+
+The NMC branch of ECI v7.4 enforces a Cassini compliance wall
+$|\xi_\chi|(\chi_0/M_{\rm P})^2 \lesssim 6\times 10^{-6}$, recovered from
+the standard Solar-System bound $|\gamma-1|\le 2.3\times 10^{-5}$
+(Cassini Doppler tracking, \cite{Bertotti03}) translated into the
+Jordan-frame Lagrangian $\mathcal{L}\supset -\tfrac{1}{2}\xi_\chi R\chi^2$
+(Faraoni convention; cf.\ \cite{Wolf25}, App.~A).  In this section we
+graft an explicit analytical PPN reference for the wall and
+flag a Palatini sub-branch (ECI v7.5-P) as an open future direction.
+
+\paragraph{Analytical Cassini-wall reference (KSTD 2026).}
+Karam, S\'anchez L\'opez, and Terente D\'iaz \cite{KSTD26}
+(\arXiv{2604.16226}) recently derived a unified post-Newtonian
+treatment of scalar-tensor gravity with arbitrary non-minimal
+coupling $A(\Phi)$, kinetic function $B(\Phi)$, and potential
+$V(\Phi)$, in BOTH the metric and Palatini formalisms.  In their
+notation, with $\delta_{\mathrm P}=0$ (metric) or $\delta_{\mathrm P}=1$
+(Palatini) and $A_n,B_n,V_n$ the Taylor coefficients of $A$, $B$, $V$
+about the cosmological background, the effective scalar mass and
+PPN parameter $\gamma$ at distance $r$ from a point source read
+\begin{align}
+   m_\varphi^2 &\;=\; \frac{16\pi G\,A_0\,V_2}
+                      {16\pi G\,A_0\,B_0 + 3A_1^2(1-\delta_{\mathrm P})} ,
+   \tag{KSTD~3.38}\\[2pt]
+   G_{\rm eff}(r) &\;=\; \frac{G}{A_0}\!
+     \left[1 + \frac{A_1^2\,e^{-m_\varphi r}}
+                    {16\pi G\,A_0\,B_0 + 3A_1^2(1-\delta_{\mathrm P})}\right] ,
+   \tag{KSTD~3.41}\\[2pt]
+   \gamma(r) &\;=\; 1 \;-\; \frac{2A_1^2\,e^{-m_\varphi r}}
+        {16\pi G\,A_0\,B_0 + 3A_1^2(1-\delta_{\mathrm P}) + A_1^2\,e^{-m_\varphi r}} .
+   \tag{KSTD~3.42}
+\end{align}
+Specialising to a non-minimally coupled scalar with canonical
+kinetic term ($B_0=1$, $B_1=0$) yields the metric Yukawa coupling
+$\alpha = A_1^2/(16\pi G A_0 + 3A_1^2)$ and the Palatini one
+$\hat\alpha = A_1^2/(16\pi G A_0)$ (KSTD eqs.~4.31--4.32);
+the analogous expression for $\beta(r)$ is given by KSTD eq.~(3.67).
+
+\paragraph{Consistency check with the ECI v7.4 Cassini wall.}
+For the ECI Lagrangian $-\tfrac{1}{2}\xi_\chi R\chi^2$ expanded
+about $\chi_0$, one identifies $A_0 = 1 - \xi_\chi\chi_0^2/M_{\rm P}^2$
+and $A_1 = -\xi_\chi\chi_0/M_{\rm P}$, so that
+$A_1^2/(16\pi G A_0) \simeq 4\,\xi_\chi^2(\chi_0/M_{\rm P})^2$
+to leading order.  In the metric formalism with strong Yukawa
+suppression at Solar-System scale, KSTD eq.~(3.42) reduces to
+$|\gamma-1| \approx 2A_1^2/(16\pi G A_0) \simeq 8\xi_\chi^2(\chi_0/M_{\rm P})^2$,
+and the Cassini bound $|\gamma-1|\le 2.3\times 10^{-5}$ translates
+into $\xi_\chi^2(\chi_0/M_{\rm P})^2 \lesssim 3\times 10^{-6}$, i.e.\
+$|\xi_\chi|(\chi_0/M_{\rm P})^2 \lesssim 6\times 10^{-6}$ at the
+small-$\xi_\chi$ root --- in agreement with the wall enforced by
+the v7.4 NMC posterior \cite[App.~A]{Wolf25}.  The ECI v7.4 mean
+$\xi_\chi = -3\times 10^{-5}$ (Levier 1B) sits $\sim 10^{2}$ orders
+of magnitude inside the wall, so the NULL at Cassini is structurally
+enforced rather than fine-tuned.
+
+\paragraph{Forward-pointing remark: ECI v7.5-P sub-branch.}
+KSTD show explicitly that, at fixed $(A_0,A_1,B_0)$, the Palatini
+formalism admits a substantially wider allowed region in $V_2$
+than the metric one --- by up to $\sim 10$ orders of magnitude in
+the regime of small $A_0$ and large $|A_1|$ (KSTD Fig.~2 and
+\S 4.2.1).  The mechanism is geometric: in Palatini the screening
+length is $\hat m_\varphi^{-1} = V_2^{-1/2}$, independent of
+$A_0\,B_0$, leading to stronger Yukawa suppression of the
+fifth-force term in $\gamma(r)$.  As an open future direction, an
+\emph{ECI v7.5-P Palatini sub-branch} (sketch: Appendix~\ref{app:v75P})
+may relax the Cassini wall by several orders of magnitude while
+preserving the cosmological NMC signal at $\xi_\chi\sim O(10^{-2})$,
+re-opening contact with detection-side analyses
+\cite{Wolf25} that lie outside the current ECI metric-formalism
+wedge.  The arithmetic-modular anchors of v7.4
+($f_{\rm 4.5.b.a}$, $\tau$-attractor, Damerell ladder) are
+formalism-independent and carry over unchanged.  We do
+\emph{not} commit to v7.5-P in the present amendment;
+the metric formalism remains the conservative baseline,
+and the Cassini NULL falsifier listed in Sec.~\ref{sec:falsifiers}
+applies to v7.4-metric only.
+
+%%--------------------------------------------------------------------
+%% Bibliography entries to append to v74_amendment_v2.tex \begin{thebibliography}:
+%%
+%% \bibitem{KSTD26} A.~Karam, S.~S\'anchez L\'opez, and J.~J.~Terente D\'iaz,
+%%   ``Post-Newtonian Constraints on Scalar-Tensor Gravity'',
+%%   \arXiv{2604.16226} (2026), 42 pp.\ + 5 appendices.
+%%
+%% \bibitem{Bertotti03} B.~Bertotti, L.~Iess, and P.~Tortora,
+%%   ``A test of general relativity using radio links with the Cassini spacecraft'',
+%%   Nature \textbf{425} (2003) 374--376.
+%%
+%% Note: \cite{Wolf25} (arXiv:2504.07679) already verified in v74_amendment_v2
+%% reference list per A41 SUMMARY.

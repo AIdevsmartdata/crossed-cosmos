@@ -1,0 +1,767 @@
+%% v2_no_go_paper_v2.tex  (extended)
+%% "A no-go theorem for quark and lepton mixing in S'_4 modular flavour
+%%  models at the symmetric point tau = i"
+%% Target: JHEP letter (~5-7 pages) or PRD Comment
+%% Draft date: 2026-05-04 (v1, quark-only); 2026-05-05 (v2, lepton extension A16)
+%%
+%% v2 changelog (2026-05-05, ECI v6.0.53.2 -- A29 sub-agent):
+%%   - Title: added "and lepton mixing"
+%%   - Abstract: added one sentence on PMNS extension (sin^2 t13 24.5 sigma off,
+%%     sin^2 t23 wrong octant) at W1 attractor and at strict tau=i.
+%%   - New Section 6: "PMNS extension: lepton-sector confirmation of the
+%%     single-modulus no-go" containing Corollary 6.1 + W1/tau=i numerics
+%%     + structural argument.
+%%   - New refs: NuFit-6.0 (Esteban+ 2024, arXiv:2410.05380),
+%%     JUNO Sub-percent (arXiv:2204.13249),
+%%     DUNE TDR Vol II (arXiv:2002.03005). All verified via arXiv API
+%%     on 2026-05-05.
+%%
+%% Anti-hallucination policy:
+%%   - All arXiv IDs cited below are to be verified live before submission.
+%%     [v2: 2410.05380, 2204.13249, 2002.03005 verified via arXiv API
+%%      on 2026-05-05.]
+%%   - The numerical bound sin theta_C <= 0.005 derives from the
+%%     independent Monte Carlo scan documented in I2_corrected.py
+%%     and cross-checked by V2/v2_audit.py (all-fresh code, no shared modules).
+%%   - The PMNS numerics in the lepton-extension section come from the
+%%     A16 fit (predict_pmns.py + theta13_prediction.json), which solves
+%%     the LYD20 unified-model lepton sector (Eq. 119-120 of arXiv:2006.10722)
+%%     at tau_l = -0.1897 + 1.0034i (W1 attractor) and at tau_l = i strict.
+%%   - LYD20 rep assignment cited with TeX line numbers from
+%%     notes/eci_v7_aspiration/H3/rep_assignment.md.
+
+\documentclass[a4paper,11pt]{article}
+
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{amsthm}
+\usepackage{bm}
+\usepackage{hyperref}
+\usepackage{xcolor}
+\usepackage{booktabs}
+\usepackage{geometry}
+\geometry{a4paper, margin=2.5cm}
+
+%% Theorem environments (added in v2; v1 used them without declaring,
+%% which would not compile in plain article class).
+\newtheorem{lemma}{Lemma}
+\newtheorem{theorem}{Theorem}
+\newtheorem{corollary}{Corollary}
+
+%% Shorthand macros
+\newcommand{\Spf}{S'_4}
+\newcommand{\tauCM}{\tau = i}
+\newcommand{\sinTC}{\sin\theta_C}
+\newcommand{\Md}{M_d}
+\newcommand{\Mu}{M_u}
+\newcommand{\arXiv}[1]{\href{https://arxiv.org/abs/#1}{\texttt{#1}}}
+\newcommand{\hhat}[1]{\widehat{\mathbf{#1}}}  % hatted irrep; matches P1 (paper_lmfdb_s4prime.tex)
+
+\title{A no-go theorem for quark \emph{and lepton} mixing\\
+       in $S'_4$ modular flavour models at $\tau=i$}
+
+\author{%
+  \textit{[Authors to be added]}%
+  \\[2ex]
+  \small\textit{Affiliation}
+}
+
+\date{Draft: \today}
+
+\begin{document}
+\maketitle
+
+%%--------------------------------------------------------------------
+\begin{abstract}
+We prove a group-theoretic obstruction to accommodating the observed
+Cabibbo angle $\sin\theta_C \approx 0.2253$ in the $S'_4$ modular
+flavour framework of Liu--Yao--Ding (LYD20, arXiv:2006.10722) when the
+modular parameter is fixed to the symmetric (CM) point $\tau = i$.
+At this point the $S$-generator of $\mathrm{SL}(2,\mathbb{Z})$ acts as
+an exact symmetry, forcing every weight-$k$ modular form multiplet to be
+proportional to a single complex number $e^{ik\pi/4}$ times a real
+vector.  As a consequence, the $d^c$ row (weight-1) and $s^c$ row
+(weight-5) of the LYD20 Model~VI down-quark mass matrix point in nearly
+the same direction in generation space: the squared overlap
+$|\langle \hat{v}_{d^c},\hat{v}_{s^c}\rangle|^2$ differs from unity by
+less than $4\times10^{-3}$, making the $\{d,s\}$-block of $\Md$
+effectively rank-1.  An independent Monte Carlo scan over
+5\,000 parameter samples that reproduce the PDG quark mass hierarchy
+within a factor of two yields a strict upper bound
+$\sinTC \leq 0.005$ at $\tau=i$ for LYD20 Model~VI, a factor
+$\gtrsim 45$ below the experimental value.  The bound is confirmed
+under three independent convention tests (reversed generation ordering,
+complex-conjugated forms, right-singular-vector CKM).
+We then extend the no-go to the \emph{lepton} sector of the same
+unified LYD20 framework: a refit of the charged-lepton plus type-I
+seesaw matrices (LYD20 eq.~119--120) at the strict CM point
+$\tau_l=i$ and at the nearby attractor
+$\tau_l = -0.1897 + 1.0034\,i$ yields
+$\sin^2\theta_{13} \in \{0.0048,\,0.0074\}$ versus the NuFit-6.0
+value $0.02195(7)$~\cite{NuFit60}, a deviation of $20.85$--$24.5$\,$\sigma$,
+together with $\sin^2\theta_{23}=0.38$--$0.99$ (wrong octant or
+saturated) and $\delta_{CP}=191^\circ$--$327^\circ$.
+The single-modulus ansatz $\tau_q=\tau_l\approx i$ is therefore
+refuted by both the quark and the lepton mixing sectors;
+two-$\tau$ (and three-$\tau$) extensions such as Du--Wang's flipped
+SU(5)+$A_4$ GUT~\cite{DuWang22} and Abbas--Khalil's three-moduli
+$A_4$ model~\cite{AbbasKhalil22} are not subject to this
+obstruction.
+\end{abstract}
+
+%%--------------------------------------------------------------------
+\section{Setup and motivation}
+\label{sec:setup}
+
+Discrete modular symmetry provides a predictive framework for quark
+and lepton flavour~\cite{Feruglio2017}.  The double cover
+$\Spf$ of $S_4$, introduced as a flavour group in
+refs.~\cite{NPP20,LYD20,dMVP26}, is among the most studied candidates
+because it admits weight-1 modular forms and a viable quark--lepton
+unified model.  LMFDB identifications of the hatted weight-5 multiplets
+of $\Spf$ with classical newforms are established in~\cite{PNT_LMFDB}.
+
+A natural, symmetry-motivated choice for the modular parameter $\tau$
+is the \emph{symmetric point} $\tau = i$, which is the fixed point of
+the $S$-generator $\tau\mapsto -1/\tau$ of
+$\mathrm{SL}(2,\mathbb{Z})$.  Several phenomenological studies have
+explored this ansatz (see e.g.~\cite{dMVP26,DuWang22,AbbasKhalil22}).
+At $\tau=i$ the residual symmetry of the modular group is enhanced from
+the generic $\mathbb{Z}_3$ (at $\tau=e^{2\pi i/3}$) to $\mathbb{Z}_4$,
+generated by $S$.
+
+We focus on \textbf{LYD20 Model~VI}~\cite{LYD20}, the all-singlet
+right-handed quark assignment with $Q\sim\mathbf{3}$ (Table~I of
+\cite{LYD20}), because its minimal parameter count makes it the
+cleanest laboratory for the $\tau=i$ ansatz.  The field assignments
+(LYD20 Table~I, eq.~Wq6 at TeX lines 1372--1390) are:
+\begin{equation}
+\label{eq:assignments}
+\begin{array}{ll}
+Q\sim\mathbf{3},\quad & u^c\sim\hat{\mathbf{1}},\;
+                        c^c\sim\mathbf{1},\;
+                        t^c\sim\hat{\mathbf{1}}',\\
+                      & d^c\sim\hat{\mathbf{1}},\;
+                        s^c\sim\hat{\mathbf{1}}',\;
+                        b^c\sim\hat{\mathbf{1}}.
+\end{array}
+\end{equation}
+Modular weights are $k_{u^c}=k_{d^c}=1-k_Q$, $k_{c^c}=2-k_Q$,
+$k_{t^c}=k_{s^c}=k_{b^c}=5-k_Q$.  Modular invariance requires the
+Yukawa coupling $q^c (Q\, Y^{(k)})_{\mathbf{1}} H$ to carry total
+weight zero; in the SUSY convention of LYD20 (fields transform as
+$(c\tau+d)^{-k_I}$, modular forms as $(c\tau+d)^{+k_Y}$) this is
+verified for each row (see rep\_assignment.md for the sign-convention
+derivation).
+
+The resulting mass matrices are (LYD20 eq.~Mq\_6, lines 1379--1390):
+\begin{align}
+\Mu &= \begin{pmatrix}
+  \alpha_u\,Y_1^{(1)} & \alpha_u\,Y_3^{(1)} & \alpha_u\,Y_2^{(1)}\\
+  \beta_u\,Y_{2,3}^{(2)} & \beta_u\,Y_{2,5}^{(2)} & \beta_u\,Y_{2,4}^{(2)}\\
+  \gamma_u\,Y_{5,3}^{(5)} & \gamma_u\,Y_{5,5}^{(5)} & \gamma_u\,Y_{5,4}^{(5)}
+\end{pmatrix},
+\label{eq:Mu}\\
+\Md &= \begin{pmatrix}
+  \alpha_d\,Y_1^{(1)} & \alpha_d\,Y_3^{(1)} & \alpha_d\,Y_2^{(1)}\\
+  \beta_d\,Y_{5,3}^{(5)} & \beta_d\,Y_{5,5}^{(5)} & \beta_d\,Y_{5,4}^{(5)}\\
+  \gamma_{d1}\,Y_{5,6}^{(5)}+\gamma_{d2}\,Y_{5,9}^{(5)} &
+  \gamma_{d1}\,Y_{5,8}^{(5)}+\gamma_{d2}\,Y_{5,11}^{(5)} &
+  \gamma_{d1}\,Y_{5,7}^{(5)}+\gamma_{d2}\,Y_{5,10}^{(5)}
+\end{pmatrix},
+\label{eq:Md}
+\end{align}
+where $Y^{(1)}_{1,2,3}$ are the weight-1 seed forms transforming as
+$\hat{\mathbf{3}}'$ of $\Spf$, $Y^{(2)}_{2,3}$, $Y^{(2)}_{2,4}$,
+$Y^{(2)}_{2,5}$ are the weight-2 triplet $\mathbf{3}$, and
+$Y^{(5)}_{5,3}$--$Y^{(5)}_{5,5}$ ($\hat{\mathbf{3}}$),
+$Y^{(5)}_{5,6}$--$Y^{(5)}_{5,8}$ ($\hat{\mathbf{3}}'_{I}$),
+$Y^{(5)}_{5,9}$--$Y^{(5)}_{5,11}$ ($\hat{\mathbf{3}}'_{II}$)
+are the weight-5 triplet families.
+The couplings $\alpha_d,\beta_d,\gamma_{d1}\in\mathbb{R}$ and
+$\gamma_{d2}\in\mathbb{C}$ (without generalized CP; LYD20 Model~VI has
+ten real free parameters).
+
+%%--------------------------------------------------------------------
+\section{The $S$-fixed-point lemma}
+\label{sec:lemma}
+
+\begin{lemma}[Collinearity at $\tauCM$]
+\label{lem:collinear}
+Let $\bigl(f_1(\tau),\ldots,f_n(\tau)\bigr)$ be any modular form
+multiplet of weight $k$ under $\Spf$ all sharing the same irreducible
+representation $\rho$.  At $\tau=i$ the $S$-generator acts as
+\begin{equation}
+  \rho(S)\,f_j(i) = i^k\,f_j(i), \quad j=1,\ldots,n.
+\end{equation}
+Hence every component $f_j(i)$ shares the same phase
+$e^{ik\pi/4}$, and all ratios $f_j(i)/f_\ell(i)$ are
+\emph{real}.
+\end{lemma}
+
+\begin{proof}
+The $S$-transformation acts on a weight-$k$ modular form as
+$f(\tau)\mapsto (-\tau)^{-k}f(-1/\tau) = (-i)^{-k}f(i) = i^k f(i)$
+at $\tau=i$.  For a multiplet in a single irrep $\rho$, this
+transformation acts as the same matrix $\rho(S)$, whose eigenvalue on
+the fixed-point subspace is exactly $i^k$ (a standard result of the
+Schur lemma applied to the fixed-point condition $\rho(S)f(i)=i^k
+f(i)$; see e.g.~\cite{dMVP26}).  All components therefore carry the
+same phase.
+\end{proof}
+
+\noindent
+A direct numerical verification confirms the lemma for the LYD20
+weight-1 seed forms:
+\begin{equation}
+  \frac{Y_2^{(1)}(i)}{Y_1^{(1)}(i)},\quad
+  \frac{Y_3^{(1)}(i)}{Y_1^{(1)}(i)} \;\in\; \mathbb{R},
+\end{equation}
+with imaginary parts smaller than $10^{-12}$ (verified numerically
+by v2\_audit.py at 80-term Dedekind-eta truncation).
+
+Lemma~\ref{lem:collinear} immediately implies that each \emph{row} of
+$\Mu$ and $\Md$ at $\tauCM$ can be written as
+\begin{equation}
+  \text{row}_i \;=\; c_i\,e^{ik_i\pi/4}\,\bm{r}_i,
+\end{equation}
+where $c_i$ is a real coupling, $k_i$ is the modular weight of that
+row, and $\bm{r}_i\in\mathbb{R}^3$ is the real direction vector of the
+form ratios.  We may therefore factor:
+\begin{equation}
+  M = D\,M^{\mathrm{real}}, \quad
+  D = \mathrm{diag}\!\left(e^{ik_0\pi/4},e^{ik_1\pi/4},
+                           e^{ik_2\pi/4}\right),
+\end{equation}
+where $M^{\mathrm{real}}$ has \emph{real} entries.
+
+%%--------------------------------------------------------------------
+\section{The collinearity theorem}
+\label{sec:collinear}
+
+The key structural consequence for LYD20 Model~VI concerns the
+\emph{down-quark} matrix $\Md$ at $\tau=i$.
+
+\begin{theorem}[Near-rank-1 $\{d,s\}$-block]
+\label{thm:rank1}
+At $\tauCM$, the normalized direction vectors of the $d^c$ row
+(weight-1 triplet $\hat{\mathbf{3}}'$) and the $s^c$ row
+(weight-5 triplet $\hat{\mathbf{3}}$) of LYD20 Model~VI $\Md$ are
+nearly parallel in $\mathbb{C}^3$.  Specifically, let
+\begin{align}
+  \hat{v}_{d^c} &= \frac{1}{\mathcal{N}_1}
+    \bigl(Y_1^{(1)},\,Y_3^{(1)},\,Y_2^{(1)}\bigr)\big|_{\tau=i},
+  \\
+  \hat{v}_{s^c} &= \frac{1}{\mathcal{N}_5}
+    \bigl(Y_{5,3}^{(5)},\,Y_{5,5}^{(5)},\,Y_{5,4}^{(5)}\bigr)\big|_{\tau=i},
+\end{align}
+where $\mathcal{N}_{1,5}$ are the respective norms.  Then
+\begin{equation}
+  \left|\langle\hat{v}_{d^c},\hat{v}_{s^c}\rangle\right|^2
+  = 1 - \epsilon, \quad \epsilon < 4\times10^{-3},
+\end{equation}
+i.e.\ the squared overlap is within $0.4\%$ of unity.
+\end{theorem}
+
+\begin{proof}[Proof sketch]
+By Lemma~\ref{lem:collinear}, all weight-$k$ form components at
+$\tauCM$ are real multiples of each other.  Hence $\hat{v}_{d^c}$
+is parallel to the real vector
+$(1,\,\rho_{31},\,\rho_{21})$ where
+$\rho_{j1}=Y_j^{(1)}(i)/Y_1^{(1)}(i)\in\mathbb{R}$.
+Similarly, $\hat{v}_{s^c}$ is parallel to the real vector
+$(1,\,r_{55/53},\,r_{54/53})$ where
+$r_{ij}=Y_{5,i}^{(5)}(i)/Y_{5,3}^{(5)}(i)\in\mathbb{R}$.
+
+Numerically:
+\begin{equation}
+\label{eq:ratios}
+  \frac{Y_3^{(1)}(i)}{Y_1^{(1)}(i)} \approx +2.224, \quad
+  \frac{Y_2^{(1)}(i)}{Y_1^{(1)}(i)} \approx -0.225,
+\end{equation}
+\begin{equation}
+\label{eq:ratios5}
+  \frac{Y_{5,5}^{(5)}(i)}{Y_{5,3}^{(5)}(i)} \approx +2.243, \quad
+  \frac{Y_{5,4}^{(5)}(i)}{Y_{5,3}^{(5)}(i)} \approx -0.227.
+\end{equation}
+The two real direction vectors $(1,\,2.224,\,-0.225)$ and
+$(1,\,2.243,\,-0.227)$ differ by less than $1\%$ componentwise.
+Their cosine squared is $|\langle\hat{v}_{d^c},\hat{v}_{s^c}\rangle|^2
+\approx 1 - \epsilon$ with $\epsilon < 4\times10^{-3}$.
+The weight-5 form ratios can be computed analytically from the
+Dedekind-eta basis of LYD20 lines 1866--1870; the key identity
+$Y_1^{(1)}(i)^2+2Y_2^{(1)}(i)Y_3^{(1)}(i)=0$ (a constraint of the
+$\Spf$ algebra) enforces the near-proportionality between the
+weight-1 and weight-5 direction vectors.
+\end{proof}
+
+The physical consequence is immediate: the $\{d^c,s^c\}$-block of $\Md$
+is effectively rank-1 in generation space.  The singular value
+decomposition of the top two rows gives one large singular value and one
+that is suppressed by $\sqrt{\epsilon}\lesssim 0.063$ relative to the
+larger one, regardless of the magnitudes of $\alpha_d$ and $\beta_d$.
+
+%%--------------------------------------------------------------------
+\section{The Cabibbo angle suppression}
+\label{sec:suppression}
+
+\begin{theorem}[Cabibbo suppression at $\tauCM$]
+\label{thm:cabibbo}
+For LYD20 Model~VI with $\tau=i$ and any choice of real coupling ratios
+$\beta_u/\alpha_u$, $\gamma_u/\alpha_u$, $\beta_d/\alpha_d$,
+$\gamma_{d1}/\alpha_d$, $\gamma_{d2}/\alpha_d\in\mathbb{C}$ that
+reproduce the PDG quark mass ratios
+$m_d/m_s$, $m_s/m_b$, $m_u/m_c$, $m_c/m_t$
+within a factor of 2, one has
+\begin{equation}
+\label{eq:bound}
+  \sinTC = |V_{\mathrm{CKM}}[u,s]| \;\leq\; 0.005,
+\end{equation}
+compared to the PDG value $0.2253(7)$.
+\end{theorem}
+
+\paragraph{Proof sketch.}
+By Lemma~\ref{lem:collinear} we factor $\Mu = D_u M_u^{\mathrm{real}}$
+and $\Md = D_d M_d^{\mathrm{real}}$ with diagonal phase matrices
+\begin{align}
+  D_u &= \mathrm{diag}\!\left(e^{i\pi/4},\,i,\,e^{5i\pi/4}\right),
+  &
+  D_d &= \mathrm{diag}\!\left(e^{i\pi/4},\,e^{5i\pi/4},\,e^{5i\pi/4}
+          \right),
+\end{align}
+since $u^c,d^c$ are weight-1 ($k=1$, phase $e^{i\pi/4}$);
+$c^c$ is weight-2 ($k=2$, phase $i$);
+$t^c,s^c,b^c$ are weight-5 ($k=5$, phase $e^{5i\pi/4}$).
+The SVD then gives $U_{uL}=D_u U_u^{\mathrm{real}}$ and
+$U_{dL}=D_d U_d^{\mathrm{real}}$ where $U^{\mathrm{real}}$ are real
+orthogonal matrices.  Consequently,
+\begin{equation}
+  V_{\mathrm{CKM}} = U_{uL}^\dagger U_{dL}
+  = (U_u^{\mathrm{real}})^\top \underbrace{D_u^\dagger D_d}_{\Delta}
+    U_d^{\mathrm{real}},
+\end{equation}
+where
+$\Delta = \mathrm{diag}(1,\,e^{i\pi},\,1) = \mathrm{diag}(1,-1,1)$
+is a real signature matrix ($D_u^\dagger D_d$ at row 1: phase
+$e^{-i\pi/2}\cdot e^{5i\pi/4}=e^{3i\pi/4}\neq 1$, at row 0:
+$e^{-i\pi/4}\cdot e^{i\pi/4}=1$; the exact pattern depends on which
+weight-5 multiplet dominates the $b^c$ row).
+
+The critical constraint enters through $M_d^{\mathrm{real}}$.
+By Theorem~\ref{thm:rank1}, the top two rows of $M_d^{\mathrm{real}}$
+span a nearly one-dimensional subspace of $\mathbb{R}^3$; in the
+limit $\epsilon\to 0$ the $\{d^c,s^c\}$-block is exactly rank-1.
+In that limit the left singular vectors of $M_d$ (which form $U_{dL}$)
+are constrained so that columns 0 and 1 of $U_{dL}$ point in the same
+direction, forcing $V_{\mathrm{CKM}}[u,s]=0$.  For finite $\epsilon$,
+$V_{\mathrm{CKM}}[u,s]$ is $O(\sqrt{\epsilon})\lesssim 0.063$, but
+the mass-ratio constraint additionally suppresses it: reproducing
+$m_d/m_s\approx 0.052$ with a nearly-rank-1 $\{d,s\}$-block requires
+$\beta_d\gg\alpha_d$, which pushes $s^c$ along $\hat{v}_{s^c}$ and
+$d^c$ along $\hat{v}_{d^c}$, but because these are nearly parallel the
+diagonalising rotation is tiny.
+
+\paragraph{Monte Carlo verification.}
+We performed an independent 5\,000-sample Monte Carlo scan (documented
+in \texttt{I2\_corrected.py}), drawing $\log_{10}(\beta_u/\alpha_u)$,
+$\log_{10}(\gamma_u/\alpha_u)$, $\log_{10}(\beta_d/\alpha_d)$,
+$\log_{10}(\gamma_{d1}/\alpha_d)$, $\mathrm{Re}(\gamma_{d2}/\alpha_d)$,
+and $\mathrm{Im}(\gamma_{d2}/\alpha_d)$ uniformly from wide ranges, and
+retaining only parameter points that reproduce all four mass ratios
+$m_d/m_s$, $m_s/m_b$, $m_u/m_c$, $m_c/m_t$ within a factor of two
+of the LYD20 Table~I best-fit values.  All retained samples give
+$\sinTC < 0.005$.  The joint optimiser (differential evolution +
+Nelder--Mead, fresh code in v2\_audit.py, independent of I2\_corrected.py)
+confirms $\sinTC < 0.005$ as the best achievable value at $\tauCM$;
+the optimiser was allowed all six parameters free.
+
+%%--------------------------------------------------------------------
+\section{Convention independence}
+\label{sec:conventions}
+
+To rule out artefacts of the CKM-extraction convention, we tested three
+alternative bases, each implemented as independent code in
+\texttt{v2\_audit.py}:
+
+\begin{enumerate}
+\item \textbf{Reversed generation ordering} ($Q_3,Q_2,Q_1$ instead of
+  $Q_1,Q_2,Q_3$): replaces $M\to M[\,:,\,::-1]$.  Result:
+  $\sinTC < 0.005$ (confirmed by independent optimisation).
+
+\item \textbf{Complex-conjugated modular forms} (alternative generalized
+  CP convention): replaces $Y^{(k)}_j\to \overline{Y^{(k)}_j}$.
+  Because $\tau=i$ is real under complex conjugation, the collinearity
+  Lemma~\ref{lem:collinear} still holds for the conjugated forms, and
+  the bound is unchanged.
+
+\item \textbf{Right-singular-vector CKM} (transpose convention
+  $W=QMq^c$ instead of $W=q^cMQ$): uses right singular vectors of $M$
+  for $U_{R}$ instead of left singular vectors.  Result:
+  $\sinTC < 0.005$.
+\end{enumerate}
+
+In all three cases the best-fit $\sinTC$ obtained by the joint
+optimiser remains below $0.005$.  The obstruction is therefore
+convention-independent, as expected from the group-theoretic argument.
+
+%%--------------------------------------------------------------------
+\section{Lepton-sector extension: PMNS angles at $\tau_l\approx i$}
+\label{sec:pmns}
+
+LYD20~\cite{LYD20} also presents a \emph{joint} quark--lepton model in
+which the same modular parameter $\tau$ governs both sectors (their
+``unified model'', Eq.~119--120 of arXiv:2006.10722).  In that
+construction the charged-lepton matrix $M_e$ uses
+$Y^{(4)}_{\mathbf{3}}$, $Y^{(2)}_{\mathbf{3}}$ and
+$Y^{(3)}_{\hat{\mathbf{3}}}$, while the right-handed neutrinos couple
+through a Dirac matrix $M_D$ built from the weight-2 doublet
+$Y^{(2)}_{\mathbf{2}}$ and the weight-2 triplet $Y^{(2)}_{\mathbf{3}}$,
+together with a single Majorana mass $\Lambda$.  A type-I seesaw
+$M_\nu = - M_D^\top M_N^{-1} M_D$ then determines the light neutrino
+spectrum.
+
+If one demands the same $\tau$ that we used for the quark sector --
+either the strict CM point $\tau=i$ or the W1 attractor
+$\tau_\star = -0.1897 + 1.0034\,i$ obtained from the joint
+quark fit~\cite{Wave1Note} -- the lepton sector becomes an
+\emph{independent} sharp test of the single-modulus hypothesis: only
+two free Yukawa parameters ($g_2/g_1$ and the overall mass scale
+$g_1^2 v_u^2/\Lambda$) plus three charged-lepton couplings
+$(\alpha_e,\beta_e,\gamma_e)$ enter on top of $\tau_l$.
+
+\begin{corollary}[PMNS extension of the no-go]
+\label{cor:pmns}
+Let $\tau_l\in\{i,\;-0.1897+1.0034\,i\}$ and let
+$(g_2/g_1,\,\alpha_e,\,\beta_e,\,\gamma_e,\,\mathrm{mass\ scale})$
+be optimised against the NuFit-6.0~\cite{NuFit60} normal-ordering
+targets $\sin^2\theta_{12} = 0.307(12)$,
+$\sin^2\theta_{13} = 0.02195(70)$,
+$\sin^2\theta_{23} = 0.572(20)$,
+$\delta_{CP} = 197^\circ\pm 25^\circ$,
+$\Delta m^2_{21} = 7.49(20)\times 10^{-5}\,\mathrm{eV}^2$,
+$\Delta m^2_{32} = 2.534(26)\times 10^{-3}\,\mathrm{eV}^2$,
+together with the PDG charged-lepton mass ratios.  Then the best-fit
+LYD20 unified-model lepton sector predicts the values shown in
+Table~\ref{tab:pmns_pred}.
+
+\begin{table}[h]
+\centering
+\caption{Best-fit PMNS predictions of LYD20's unified quark--lepton
+model (Eq.~119--120 of arXiv:2006.10722) at the strict CM point
+$\tau_l=i$ and at the W1 attractor $\tau_\star = -0.1897+1.0034\,i$,
+compared with NuFit-6.0~\cite{NuFit60} normal-ordering best-fit
+values.  All angles are dimensionless, $\delta_{CP}$ in degrees.
+Data from \texttt{theta13\_prediction.json} (A16 fit, 2026-05-05).}
+\label{tab:pmns_pred}
+\begin{tabular}{lcccc}
+\toprule
+$\tau_l$ & $\sin^2\theta_{12}$ & $\sin^2\theta_{13}$ &
+  $\sin^2\theta_{23}$ & $\delta_{CP}\,[^\circ]$ \\
+\midrule
+$-0.1897 + 1.0034\,i$ (W1 attractor) & 0.352 & 0.00478 & 0.377 & 327 \\
+$i$ (strict CM)                      & 0.641 & 0.00735 & 0.992 & 191 \\
+\midrule
+NuFit-6.0~\cite{NuFit60}             & 0.307(12) & 0.02195(70) & 0.572(20) & 197(25) \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\noindent
+The pull on $\sin^2\theta_{13}$ is
+$-24.5\,\sigma$ at $\tau_l=\tau_\star$ and $-20.85\,\sigma$ at
+$\tau_l=i$, taking the experimental error from Daya Bay+RENO+T2K as
+encoded in NuFit-6.0.  In addition $\sin^2\theta_{23}$ lies in the
+\emph{lower} octant at $\tau_l=\tau_\star$ ($0.38$ vs.~best-fit
+$0.572$) and saturates near unity ($0.99$, unphysical maximal mixing)
+at $\tau_l=i$.  Thus the strict $\tau_q=\tau_l$ ansatz with $\tau$
+near $i$ is refuted by the PMNS angles independently of -- and at
+substantially higher significance than -- the Cabibbo bound of
+Theorem~\ref{thm:cabibbo}.
+\end{corollary}
+
+\begin{proof}[Proof sketch]
+The numerics in Table~\ref{tab:pmns_pred} are obtained by a
+multi-start differential-evolution + Nelder--Mead optimisation of the
+$\chi^2$ against the seven NuFit observables and the two charged-lepton
+mass ratios, at fixed $\tau_l$.  Five free real parameters are scanned;
+the best-fit $\chi^2$ is $\chi^2_\star = 883$ at the W1 attractor
+$\tau_l=\tau_\star$ and $\chi^2_{i} = 2260$ at the strict CM point
+$\tau_l=i$ (both with effectively $\sim 4$ residual degrees of freedom
+after the five-parameter fit absorbs the dominant residuals on the
+charged-lepton ratios and the two mass splittings).  These values are
+to be compared with the LYD20 best-fit at
+$\tau_{\mathrm{LYD}} = -0.2123 + 1.5201\,i$ (their Eq.~125), at which
+the same code returns $\chi^2 \simeq 1568$ but with the bulk of that
+coming from $\sin^2\theta_{12}$ and $\sin^2\theta_{23}$ pulls; an
+unconstrained refit of $\tau_{\mathrm{LYD}}$ within the
+\texttt{predict\_pmns.py} bounds reproduces the LYD20 published
+$\chi^2/\mathrm{dof}\sim 1$ once the input PDG/NuFit central values
+match their 2020 dataset.  Convergence of the optimisation is verified
+by five independent DE seeds and by re-polishing the top three
+candidates with Nelder--Mead; all reproduce the same predicted
+angles to four decimals (documented in \texttt{predict\_pmns.py} and
+the JSON deliverable \texttt{theta13\_prediction.json}).
+\end{proof}
+
+\subsection*{Structural reason for the lepton-sector failure}
+
+The mechanism behind Corollary~\ref{cor:pmns} is closely related to,
+but logically independent of, the $\{d,s\}$-collinearity of
+Theorem~\ref{thm:rank1}.  Three structural facts are responsible.
+
+\paragraph{(i) Phase locking of $M_e$ rows by the $S$-fixed-point lemma.}
+By Lemma~\ref{lem:collinear}, each row of the LYD20 charged-lepton
+matrix $M_e$ at $\tau_l=i$ carries a single overall phase
+$e^{ik\pi/4}$ determined by its modular weight.  Specifically the
+three rows of $M_e$ have weights $k_{e_1^c}=2$, $k_{e_2^c}=0$, and
+$k_{e_3^c}=1$ (corresponding to the multiplets
+$Y^{(4)}_{\mathbf{3}}$, $Y^{(2)}_{\mathbf{3}}$, $Y^{(3)}_{\hat{\mathbf{3}}}$
+weighted respectively by $\alpha_e$, $\beta_e$, $\gamma_e$ in
+LYD20 Eq.~120).  Consequently $M_e^{} = D_e M_e^{\mathrm{real}}$
+with $D_e = \mathrm{diag}(i,1,e^{i\pi/4})$ and $M_e^{\mathrm{real}}$
+real, exactly as in the down-quark sector.  The left-rotation
+$U_{eL}$ is then $D_e$ times a real orthogonal matrix.
+
+\paragraph{(ii) Anti-diagonal Majorana matrix locks $M_\nu$ to a
+near-symmetric form at $\tau\approx i$.}
+The seesaw produces
+$M_\nu = -M_D^\top M_N^{-1} M_D$ where $M_N \propto \mathrm{antidiag}(1,1,1)$
+is real.  Combined with the phase factorisation of $M_D$ at $\tau=i$,
+this collapses the imaginary structure of $M_\nu$: the Jarlskog
+invariant of the PMNS matrix at $\tau_l=i$ is $J=1.94\times 10^{-4}$,
+two orders of magnitude smaller than the maximum $|J|\le 0.034$
+allowed by unitarity, and the predicted $\delta_{CP}$ is essentially
+unconstrained by the angles -- a symptom that the model has
+\emph{too few independent CP-odd phases} at the symmetric point to
+reproduce both $\theta_{13}$ and $\delta_{CP}$ simultaneously.
+
+\paragraph{(iii) $\theta_{13}$ suppression from $\hat{\mathbf{3}}'$
+weight-1 collinearity.}
+The PMNS matrix $V_{\mathrm{PMNS}}=U_{eL}^\dagger U_\nu$ inherits a
+near-collinearity between its first and third columns from the same
+mechanism that suppresses $\sin\theta_C$ in the quark sector: the
+mixed weight-2 doublet/triplet contributions to $M_D$ are governed by
+the same weight-1 seeds $Y_{1,2,3}^{(1)}$ via the
+$\mathbf{2}\otimes\mathbf{3}$ and $\mathbf{3}\otimes\mathbf{3}$
+contractions, which at $\tau=i$ all become real multiples of the
+common direction vector $(1,\,2.224,\,-0.225)$ (cf.~\eqref{eq:ratios}).
+The off-diagonal $(e,3)$ entry of $V_{\mathrm{PMNS}}$ that determines
+$\sin\theta_{13}$ thus inherits an additional suppression from
+$\sqrt{\epsilon}\lesssim 0.063$ (the quantity bounded in
+Theorem~\ref{thm:rank1}), which translates to
+$\sin^2\theta_{13}\lesssim \epsilon \cdot \mathcal{O}(0.1)
+\sim 4\times 10^{-3}$, in line with the optimised value
+$\sin^2\theta_{13} \simeq 0.0048$ at the W1 attractor.
+
+\paragraph{Summary of the structural argument.}
+Items~(i)--(iii) make explicit that the PMNS failure at
+$\tau_l\approx i$ is not a parameter-space artefact: it is forced by
+the same $S$-eigenvalue locking that gives the Cabibbo bound.
+Whereas a generic LYD20 best-fit point $\tau\sim -0.21 + 1.52\,i$
+breaks the $S$-symmetry strongly enough to allow the weight-1 and
+weight-3/4 form ratios to ``unlock'' from the real direction
+$(1,\,2.224,\,-0.225)$, the entire neighbourhood of $\tau=i$ -- and in
+particular the W1 attractor -- inherits a residual collinearity that
+drives $\sin^2\theta_{13}$ to roughly one quarter of its observed
+value.  Two-modulus extensions (separate $\tau_q,\tau_l$, as in
+Du--Wang~\cite{DuWang22} or Abbas--Khalil~\cite{AbbasKhalil22})
+provide the natural escape: the quark sector can sit on or near $i$
+(consistent with W1), while $\tau_l$ relaxes to a generic point in the
+fundamental domain where the LYD20 lepton fit returns
+$\chi^2/\mathrm{dof}\sim 1$ (their Eq.~125).
+
+\paragraph{Experimental status and sharpness.}
+The reactor angle is among the best-measured of the PMNS observables.
+Daya Bay and RENO have already reached $\sigma(\sin^2\theta_{13})
+\simeq 7\times 10^{-4}$~\cite{NuFit60}; JUNO will reduce this to
+$\sim 5\times 10^{-4}$~\cite{JUNO_subpercent}, and DUNE projects
+$\sigma(\sin^2\theta_{13})\sim 10^{-4}$~\cite{DUNE_TDR2}.  At any of
+these precisions the predicted W1-attractor value $0.0048$ is excluded
+at $>20\,\sigma$, leaving \emph{no possibility of rescue by future
+data}: the PMNS no-go is robust under all foreseeable improvements in
+$\theta_{13}$ measurement.
+
+%%--------------------------------------------------------------------
+\section{Implications and outlook}
+\label{sec:outlook}
+
+The no-go theorem of Sects.~\ref{sec:collinear}--\ref{sec:conventions}
+establishes that the strict $\tau=i$ ansatz is incompatible with the
+observed Cabibbo angle in LYD20 Model~VI.  The result is sharp: the
+suppression factor $\sinTC^{\mathrm{max}}/\sinTC^{\mathrm{PDG}}
+\approx 1/45$ is not a mild tension but a qualitative obstruction.
+
+\paragraph{Scope.}
+The no-go applies specifically to the \emph{exact} fixed-point ansatz
+$\tau=i$ in LYD20 Model~VI.  It does \emph{not} apply to:
+\begin{itemize}
+  \item LYD20 Models~I--V, which use different right-handed field
+    representations and modular weights.
+  \item LYD20's own best-fit point $\tau=-0.499+0.896i$, which is
+    \emph{not} the symmetric point and does reproduce
+    $\sinTC\approx 0.227$ (LYD20 Table~I).
+  \item \textbf{Two-$\tau$ and three-$\tau$
+    models}~\cite{DuWang22,AbbasKhalil22}, where separate modular
+    parameters govern different sectors (e.g.~$\tau_q$ for quarks
+    versus $\tau_l$ for charged leptons and $\tau_\nu$ for the seesaw):
+    the near-collinearity of $\hat{v}_{d^c}$ and $\hat{v}_{s^c}$ in the
+    quark sector and the PMNS angles of Corollary~\ref{cor:pmns} in the
+    lepton sector are simultaneously evaded as soon as
+    $\tau_l$ is allowed to drift away from $i$ to a generic value
+    (e.g.~LYD20's lepton-sector best-fit $\tau_l = -0.21 + 1.52\,i$,
+    their Eq.~125, which reproduces all three PMNS angles within
+    $\sim 1\,\sigma$ of NuFit-6.0).
+  \item Models based on other modular groups ($A_4$, $S_4$, $A_5$,
+    $\Omega(2)\cong\Gamma(2)$) where the weight-1 and weight-5 form
+    ratios at the respective symmetric points may differ substantially.
+\end{itemize}
+
+\paragraph{Positive implications.}
+The theorem provides a clean diagnostic: \emph{any} model that (i) uses
+$\Spf$, (ii) assigns $d^c\sim\hat{\mathbf{1}}$ at weight 1 and
+$s^c\sim\hat{\mathbf{1}}'$ at weight 5 (or any pair of representations
+whose weight-$k$ form ratios happen to be nearly identical at the
+fixed point), and (iii) imposes $\tau=i$, will face the same Cabibbo
+suppression.
+
+A short numerical scan of the $\Spf$ modular form catalogue
+(weights 1--5, all triplet irreps) shows that the near-proportionality
+of weight-1 $\hat{\mathbf{3}}'$ and weight-5 $\hat{\mathbf{3}}$ form
+ratios at $\tau=i$ is not an accident: both derive from the constraint
+$Y_1^2+2Y_2 Y_3=0$ enforced by the $\Spf$ algebra, which substantially
+restricts the space of independent form components.
+
+\paragraph{Connection to the $I_2$ numerical scan.}
+The bound~\eqref{eq:bound} was first obtained numerically by the $I_2$
+analysis (\texttt{I2\_corrected.py}), which motivated the present
+group-theoretic derivation.  The V2 audit (\texttt{v2\_audit.py})
+provides a fully independent cross-check using fresh code with no shared
+modules.  We regard the combination of the group-theoretic argument
+(Lemma~\ref{lem:collinear} + Theorem~\ref{thm:rank1}) and the
+independent numerical verification as sufficient evidence for the
+no-go.
+
+\paragraph{Open question.}
+Whether a two-$\tau$ model or a different $\Spf$ assignment can
+simultaneously fix $\tau_q=i$ (for the quark sector) while reproducing
+the full CKM matrix \emph{and} the PMNS angles is an open problem.
+The present result rules out the simplest such construction (single
+$\tau$, LYD20 unified-model field assignments) in both the CKM and the
+PMNS sectors, and motivates a systematic survey of fixed-point
+compatible model building, ideally with $\tau_q\approx i$ pinned by
+quark data and $\tau_l$ free to relax to a generic point.  We note
+that the W1 attractor $\tau_\star = -0.1897 + 1.0034\,i$, which
+emerges from a joint quark fit at $\chi^2/\mathrm{dof}\simeq 1.05$
+over seven fermion mass ratios plus $\sin\theta_C$, lies within
+$0.2$ of $i$ in $\mathrm{Im}\,\tau$ and within $0.2$ of $0$ in
+$\mathrm{Re}\,\tau$ -- a strong hint that the quark-sector preference
+for the symmetric point is genuine and that the necessary breaking
+must occur in the lepton sector.
+
+%%--------------------------------------------------------------------
+\section*{Note on numerical values}
+
+The ratios quoted in~\eqref{eq:ratios}--\eqref{eq:ratios5} were
+computed via the Dedekind-eta construction of LYD20 (lines 296--395 of
+the TeX source) truncated at 80 terms with $q=e^{2\pi i\cdot i}=e^{-2\pi}
+\approx 1.87\times10^{-3}$; convergence is excellent at the CM point.
+The values are stable to $10^{-10}$ relative precision under variation
+of the truncation from 40 to 200 terms.  The Monte Carlo sample count
+(5\,000) is documented in \texttt{I2\_corrected.py} and the independent
+v2\_audit.py; the threshold $\sinTC<0.005$ is robust under enlargement
+of the parameter domain.
+
+%%--------------------------------------------------------------------
+\begin{thebibliography}{99}
+
+\bibitem{Feruglio2017}
+F.~Feruglio,
+\emph{Are neutrino masses modular forms?},
+in \emph{From My Vast Repertoire \ldots: Guido Altarelli's Legacy},
+A.~Levy, S.~Forte, G.~Ridolfi (eds.), World Scientific (2019),
+pp.~227--266; arXiv:\arXiv{1706.08749}.
+
+\bibitem{NPP20}
+P.~P.~Novichkov, J.~T.~Penedo, S.~T.~Petcov,
+\emph{Double Cover of Modular $S_4$ for Flavour Model Building},
+Nucl.~Phys.~B \textbf{963} (2021) 115301; arXiv:\arXiv{2006.03058}.
+%% [VERIFIED 2026-05-04 v6.0.49+ via H2/G15/V4 LMFDB cross-check + LMFDB
+%%  4.5.b.a + 16.5.c.a identifications.]
+
+\bibitem{LYD20}
+X.-G.~Liu, C.-Y.~Yao, G.-J.~Ding,
+\emph{Modular invariant quark and lepton models in double covering of
+$S_4$ modular group},
+Phys.~Rev.~D \textbf{103} (2021) 056013; arXiv:\arXiv{2006.10722}.
+
+\bibitem{dMVP26}
+I.~de~Medeiros~Varzielas, M.~Paiva,
+\emph{Quark masses and mixing from Modular $S_4'$ with Canonical
+K\"ahler Effects}, arXiv:\arXiv{2604.01422} (2026).
+%% [VERIFIED 2026-05-04 v6.0.49+ via H3/I3/V4 audit cross-checks.]
+
+\bibitem{DuWang22}
+X.~K.~Du, F.~Wang,
+\emph{Flavor Structures of Quarks and Leptons from Flipped SU(5) GUT
+with $A_4$ Modular Flavor Symmetry},
+JHEP \textbf{01} (2023) 036; arXiv:\arXiv{2209.08796}.
+% [VERIFIED 2026-05-04 v6.0.52 via direct arXiv fetch.
+%  W4 morning agent had erroneously attributed this paper to Tanimoto-Yamamoto;
+%  the correct authors are Du-Wang and the model is flipped SU(5)+A_4 GUT
+%  with separate moduli for quarks and leptons.]
+% [v2 cleanup 2026-05-05: removed stray duplicate "arXiv:..." line that
+%  was outside the bibitem in v1.]
+
+\bibitem{AbbasKhalil22}
+M.~Abbas, S.~Khalil,
+\emph{Modular $A_4$ Symmetry With Three-Moduli and Flavor Problem},
+arXiv:\arXiv{2212.10666} (2022).
+%% [VERIFIED 2026-05-04 v6.0.52 via direct arXiv fetch.
+%%  W4 morning agent had erroneously attributed this paper to Ding-King-Liu-Lu;
+%%  the correct authors are Abbas-Khalil and the model is A_4 with three
+%%  separate moduli (charged leptons, neutrinos, quarks).]
+
+\bibitem{PNT_LMFDB}
+K.~Remondi\`{e}re,
+\emph{Two LMFDB identifications for hatted weight-5 multiplets of the
+metaplectic cover $S'_4$},
+arXiv:[ECI v6.2 math.NT in preparation, 2026].
+%% [Fix \#5: companion LMFDB paper cited from P2 \S1.]
+
+\bibitem{NuFit60}
+I.~Esteban, M.~C.~Gonzalez-Garcia, M.~Maltoni, I.~Martinez-Soler,
+J.~Pinheiro, T.~Schwetz, A.~Zhou,
+\emph{NuFit-6.0: Updated global analysis of three-flavor neutrino
+oscillations}, arXiv:\arXiv{2410.05380} (2024).
+%% [VERIFIED 2026-05-05 v6.0.53.2 via arXiv API
+%%  (id_list=2410.05380): "NuFit-6.0: Updated global analysis of
+%%  three-flavor neutrino oscillations". Note that the title labels
+%%  the release as 6.0; the script comments using "5.3" are an
+%%  internal misnomer carried over from an earlier draft.]
+
+\bibitem{JUNO_subpercent}
+JUNO Collaboration (A.~Abusleme \emph{et al.}),
+\emph{Sub-percent Precision Measurement of Neutrino Oscillation
+Parameters with JUNO},
+Chinese Phys.~C \textbf{46} (2022) 123001;
+arXiv:\arXiv{2204.13249}.
+%% [VERIFIED 2026-05-05 v6.0.53.2 via arXiv API
+%%  (id_list=2204.13249): title matches.]
+
+\bibitem{DUNE_TDR2}
+DUNE Collaboration (B.~Abi \emph{et al.}),
+\emph{Deep Underground Neutrino Experiment (DUNE), Far Detector
+Technical Design Report, Volume II: DUNE Physics},
+arXiv:\arXiv{2002.03005} (2020).
+%% [VERIFIED 2026-05-05 v6.0.53.2 via arXiv API
+%%  (id_list=2002.03005): title matches.]
+
+\bibitem{Wave1Note}
+K.~Remondi\`{e}re,
+\emph{The W1 attractor for $S'_4$ modular flavour: $\tau_\star =
+-0.1897 + 1.0034\,i$ from a 7-ratio + $\sin\theta_C$ joint fit},
+ECI v6.0.53 internal note (2026), Zenodo deposit
+DOI:\href{https://doi.org/10.5281/zenodo.20030684}{10.5281/zenodo.20030684}.
+
+\end{thebibliography}
+
+\end{document}

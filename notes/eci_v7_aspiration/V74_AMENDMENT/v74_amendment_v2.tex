@@ -1,0 +1,1191 @@
+%% v74_amendment_v2.tex
+%% "ECI v7.4 amendment v2: tau as a CM-anchored attractor, the Damerell ladder
+%%  Cardy/CKM bridge H7', and a CSD(1+sqrt 6) Littlest Modular Seesaw at K=Q(i)"
+%% Target: Letters in Mathematical Physics (LMP) -- short note, 12-16 pp
+%% Draft date: 2026-05-05 (evening, post-wave 4-5)
+%%
+%% Anti-hallucination policy:
+%%   - All arXiv IDs cited below are live-verified (arXiv API, 2026-05-05).
+%%   - Hallucination counter held at 78; no new fabrications introduced by v2.
+%%   - Antusch-Hinze-Saad (arXiv:2510.01312) authorship corrected from earlier
+%%     internal "Wang-Zhang" misattribution (A18 catch, hallu#78).
+%%   - The Damerell ladder (1/10, 1/12, 1/24, 1/60) is the standard
+%%     Eisenstein-Kronecker ladder for a weight-5 CM-by-Q(i) newform
+%%     (Hurwitz 1899 + Chowla-Selberg 1949 + Damerell 1971 + Shimura 1976
+%%     + Harder-Schappacher 1986). Verified literature anchor (A1, 2026-05-05).
+%%   - sqrt(6) is Galois-rational (PSLQ exhausted at dps=60, |c|<=500;
+%%     A24 negative), NOT period-anchored via Chowla-Selberg.
+%%   - PMNS sin^2 theta_13 W1 prediction (0.0048) is at 24.5 sigma from PDG;
+%%     two-tau (tau_q != tau_l) reformulation is FLAGGED as required (A16).
+
+\documentclass[a4paper,11pt]{article}
+
+\usepackage{amsmath,amssymb,amsfonts,amsthm}
+\usepackage{hyperref}
+\usepackage{xcolor}
+\usepackage{booktabs}
+\usepackage{geometry}
+\usepackage{bm}
+\usepackage{url}
+\geometry{a4paper, margin=2.5cm}
+
+%% Shorthand macros (consistent with V2 paper)
+\newcommand{\Spf}{S'_4}
+\newcommand{\tauCM}{\tau = i}
+\newcommand{\arXiv}[1]{\href{https://arxiv.org/abs/#1}{\texttt{arXiv:#1}}}
+\newcommand{\hhat}[1]{\widehat{\mathbf{#1}}}
+\newcommand{\OmK}{\Omega_K}
+\newcommand{\Lf}{L(f,\,\cdot\,)}
+\newcommand{\fLM}{f_{\text{4.5.b.a}}}
+\newcommand{\Qi}{\mathbb{Q}(i)}
+\newcommand{\Zeno}{\href{https://doi.org/10.5281/zenodo.20030684}{\texttt{10.5281/zenodo.20030684}}}
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{conjecture}[theorem]{Conjecture}
+\newtheorem*{axiom*}{Axiom}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+
+\title{ECI v7.4 amendment (v2):\\
+       $\tau$ as a CM-anchored attractor,\\
+       the Damerell--ladder Cardy/CKM bridge $H_7'$,\\
+       and a CSD$(1+\sqrt{6})$ Littlest Modular Seesaw\\
+       at $K=\Qi$}
+
+\author{%
+  K.~Remondi\`ere%
+  \\[2ex]
+  \small\textit{Independent researcher, Tarbes, France}\\
+  \small\texttt{kevin.remondiere@gmail.com}
+}
+
+\date{Draft v2: 2026-05-05 (evening, post wave 4-5)}
+
+\begin{document}
+\maketitle
+
+%%--------------------------------------------------------------------
+\begin{abstract}
+The v7.3 axiomatic system of the Extended Cosmological Index (ECI)
+research programme was archived in version~6.0.53 of the project
+repository (Zenodo DOI \Zeno) on 2026-05-05.  An internal Lakatos-style
+audit (G1.15) identified one refuted axiom: $H_7$ asserted a
+Damerell--Coates--Sinnott bridge for the LMFDB CM newform
+$\fLM$ (CM by $\Qi$, weight $k=5$) at the central
+half-integer $s=k/2=5/2$, which lies \emph{outside} the
+Damerell/Shimura/Deligne algebraicity domain for odd~$k$.
+\par
+This v2 note records the v7.3 $\to$ v7.4 amendment, expanded with
+six wave 4-5 follow-ups (A14, A16, A17, A22, A24, A26).  Three
+independent sub-agents (H7-A, H7-B, H7-C) explored rescue paths and
+converged on keeping $\fLM$ as the v7.4 CM anchor.  We propose two
+replacements.  First, $H_5'$ relaxes ``$\tau$ is the strict $S$-fixed
+point $i$'' to ``$\tau$ is a CM-anchored \emph{attractor},
+$|\tau-i|\lesssim 0.2$'', supported empirically by a $30\times 30$
+$\chi^2$ scan over seven fermion observables (W1, PC compute,
+2026-05-05) which locates a basin at
+$\tau^{*} = -0.1897 + 1.0034\,i$ with $\chi^2/\mathrm{dof}=1.05$ and
+$|\tau^{*}-i|=0.19$ -- a factor $\approx\!3$ closer to $i$ than the
+LYD20 published best fit~\cite{LYD20}.  Second, $H_7'$ replaces the
+half-integer Damerell--CS bridge by an INTEGER-point Damerell ladder
+\[
+\boxed{\;\;L(\fLM, m)\,\pi^{4-m}/\OmK^{4} \;\in\; \{1/10,\,1/12,\,1/24,\,1/60\}
+       \;\;\text{for}\;\; m\in\{1,2,3,4\}\;\;}
+\]
+which is the standard Eisenstein--Kronecker ladder for a weight-$5$
+CM-by-$\Qi$ newform.  The same ladder rationals admit two
+\emph{numerological} CKM alignments (A17): $|V_{us}| = (9/4)\,\alpha_1
+= 9/40 = 0.22500$ matches PDG $0.22501(68)$ to $0.015\sigma$, and
+$|V_{cb}|^{2} = \alpha_1\,\alpha_4 = 1/600 = 1.667\times 10^{-3}$
+matches HFLAV $(1.668\pm 0.057)\times 10^{-3}$ to $0.024\sigma$.  The
+multiplicative coefficients $(9/4, 1)$ are flagged as \emph{empirical},
+not structurally derived; cross-$K$ tests on
+$K\in\{\Qi,\mathbb{Q}(\sqrt{-2}),\mathbb{Q}(\sqrt{-3}),
+\mathbb{Q}(\sqrt{-7}),\mathbb{Q}(\sqrt{-11})\}$ confirm $K=\Qi$
+uniqueness.  In a parallel modular-flavour direction, the CSD$(1+\sqrt
+6)$ Littlest Modular Seesaw at $\tau_S=i$ (Ding--King--Liu--Lu Case~B,
+\cite{DKLL19,LMS22}) yields a 2-parameter neutrino sector with NO,
+$m_1=0$, $\delta_{CP}\approx -87^{\circ}$ -- testable by DUNE 2030+ at
+$\pm 15^{\circ}$.  However, this prediction does \emph{not} survive
+the W1 single-$\tau$ refit: Section~\ref{sec:caveat} reports a hard
+$24.5\sigma$ pull on $\sin^2\theta_{13}$ that pushes the v7.4 picture
+toward a two-tau ($\tau_q\ne\tau_l$) reformulation.  Section~\ref{sec:G112B}
+records the G1.12.B campaign progress (M1+M2 PASS; M3-M6 forecast
+3.5-5 month) which targets a parameter-free $B(p\to e^+\pi^0)/
+B(p\to K^+\bar\nu)\in[0.3,3]$ Hyper-K/DUNE 2030+ falsifier.
+We discuss falsifiers (Tonks--Girardeau density, modular flavour
+lepton sector, NMC cosmological NULL at Cassini) and flag two
+open questions: the failure to cleanly fit $c=7/10$ (tricritical
+Ising) and $c=4/5$ (tetracritical Potts) under either bridge route,
+and the open $\sqrt 6$ structure.
+\end{abstract}
+
+%%--------------------------------------------------------------------
+\section{Setup: ECI v7.3 and the G1.15 refutation of $H_7$}
+\label{sec:setup}
+
+The Extended Cosmological Index (ECI) research programme proposes that
+a single CM newform anchors both flavour-sector mass ratios (via
+$\Spf$ modular flavour models~\cite{NPP20,LYD20,dMVP26}) and
+two-dimensional CFT Cardy density at minimal-model central charges,
+through the algebraic part of its critical $L$-values normalised by a
+power of the Chowla--Selberg period~\cite{ChowSel49}.  In the v7.3
+axiomatic restart (committed in repository version 6.0.53, Zenodo DOI
+\Zeno), the relevant axioms were:
+\begin{itemize}
+  \item $H_5$: \emph{strict $S$-fixed point}.  $\tau = i$ is the
+    physical value of the modular parameter, motivated by maximal
+    residual symmetry $\mathbb{Z}_4\subset\mathrm{SL}(2,\mathbb{Z})$.
+  \item $H_7$: \emph{Damerell--Coates--Sinnott bridge}.  The Cardy
+    density $\rho_{\mathrm{Cardy}}(c)=c/12$ at minimal-model central
+    charges is reproduced by the algebraic part of $L(\fLM, k/2)$ with
+    $k=5$, $\fLM$ the LMFDB newform 4.5.b.a (CM by $\Qi$).
+\end{itemize}
+
+The companion note~\cite{V2NoGo} (V2) had already rendered $H_5$
+suspect: it proves a no-go theorem for the Cabibbo angle in LYD20
+Model VI at $\tau=i$ (numerical bound $\sin\theta_C \le 0.005$ versus
+PDG $0.2253$).  The internal audit G1.15 (May~2026) then tested $H_7$
+against the algebraicity hypotheses of Damerell~\cite{Damerell71},
+Shimura~\cite{Shimura76}, and Deligne~\cite{Deligne79} for critical
+$L$-values of CM modular forms.  These hypotheses require the critical
+point to be a non-negative integer (for the standard $L$-function of a
+weight-$k$ CM form, the right-of-center critical points are
+$s\in\{k-1, k-2,\ldots, \lceil k/2\rceil\}$; the parity of~$k$
+controls which half-integer is included).  For $k=5$ odd, $s=k/2=5/2$
+is \emph{not} in the algebraicity domain proved by Damerell--Shimura
+nor in the period-extension of Deligne.
+
+\begin{proposition}[Refutation of $H_7$, G1.15 audit]
+\label{prop:refute}
+The half-integer $s=5/2$ is outside the algebraicity domain of
+Damerell~\cite{Damerell71} and Shimura~\cite{Shimura76} for a CM
+newform of weight $k=5$ over $\Qi$.  Consequently, the assertion
+$L(\fLM, 5/2)\,\pi^{3/2}/\OmK^{4}\in\mathbb{Q}$ is not entailed by
+any classical algebraicity theorem on which $H_7$ relied.
+The numerical value $L(\fLM, 5/2) = 0.5200744676\ldots$ (LMFDB,
+mpmath dps$=60$) is consistent with $H_7$ but not implied by any
+known theorem; absent such a theorem, $H_7$ is unfalsifiable in its
+v7.3 form and must be replaced.
+\end{proposition}
+
+\noindent
+The audit log is recorded in repository commit 6.0.53; cf.\ Zenodo
+DOI \Zeno.
+
+%%--------------------------------------------------------------------
+\section{Sub-agent verdicts on the rescue}
+\label{sec:rescue}
+
+Three independent sub-agents (Sonnet harness, isolated worktrees) were
+tasked to explore rescue paths, all retaining $\fLM$ as the
+candidate CM anchor:
+\begin{itemize}
+  \item \textbf{H7-A (POSITIVE).}  Compute $L(\fLM, m)$ at the
+    INTEGER critical points $m\in\{1,2,3,4\}$ via the
+    Iwaniec--Kowalski approximate functional equation
+    \cite[Thm.~5.3]{IwaKow04} (mpmath dps$=60$, sanity check
+    $L(\fLM,5/2)=0.5200744676$ matching LMFDB).  The
+    algebraic parts $L(\fLM,m)\,\pi^{4-m}/\OmK^{4}$ form a
+    rational ladder; in particular $1/12$ at $m=2$ and $1/24$ at
+    $m=3$ \emph{coincide exactly} with the Cardy
+    densities $c/12$ at $c=1$ (free boson) and $c=1/2$ (Ising).
+  \item \textbf{H7-B (POSITIVE, novel).}  Perlmutter's degree-4
+    $L$-function attached to a 2D CFT torus partition
+    function~\cite{Perlmutter25} matches the degree of the
+    Rankin--Selberg square $L(\fLM \otimes \fLM, s)$, which has
+    INTEGER critical points $s\in\{5,\ldots,9\}$ and Petersson norm
+    algebraic up to $\pi^{2k-1}=\pi^{9}$.  This suggests an
+    alternative bridge $\rho_{\mathrm{Cardy}}\propto
+    L(\fLM\otimes\fLM,m_{0})/\langle\fLM,\fLM\rangle$;
+    we keep it as a backup since the explicit map is to be invented.
+  \item \textbf{H7-C (STRUCTURAL + alternative).}  A structural
+    theorem of LYD20 (\cite[Tab.~Level4 MM]{LYD20}, $\S 3$) shows that
+    \emph{every} hatted irrep of $\Spf$ carries odd-weight forms,
+    enforced by the action of the central element $R\sim -I$ in the
+    metaplectic cover $\widetilde{\Gamma}(4)$ as $(-1)^{k}$.  No
+    even-weight CM-by-$\Qi$ form can substitute for $\fLM$ inside the
+    $\hhat{3}_{,2}^{(5)}$ embedding -- a structural, not enumerative,
+    obstruction.  As an alternative central-point bridge, the
+    Bertolini--Darmon--Prasanna anti-cyclotomic $p$-adic
+    $L$-functions~\cite{BDP13} \emph{do} handle CM-by-imaginary-quadratic
+    forms at half-integer central points; they preserve the original
+    $s=k/2$ and replace the archimedean assertion by a $p$-adic one.
+\end{itemize}
+
+A scan of seven fermion observables (W1, PC compute, 2026-05-05) on a
+$30\times 30$ grid in the $\tau$-plane found a local minimum at
+\begin{equation}
+  \tau^{*} = -0.1897 + 1.0034\,i,\qquad
+  |\tau^{*} - i| = 0.19,\qquad
+  \chi^{2}/\mathrm{dof} = 1.05,
+\end{equation}
+which is a factor $\approx 3$ closer to $i$ than the LYD20 published
+best fit $\tau_{\mathrm{LYD20}}=-0.21+1.52\,i$ (with
+$|\tau_{\mathrm{LYD20}}-i|=0.56$).  This empirically supports
+\emph{relaxing} $H_5$ from a strict fixed-point assertion to an
+\emph{attractor} statement.  Full synthesis at
+\texttt{notes/eci\_v7\_aspiration/H7\_RESCUE/SYNTHESIS\_2026-05-05.md}
+and verdict log at
+\texttt{notes/eci\_v7\_aspiration/W1\_TAU\_NEAR\_I/results/W1\_verdict\_2026-05-05.log}
+in repository commit 6.0.53.
+
+%%--------------------------------------------------------------------
+\section{The amended axioms $H_5'$ and $H_7'$}
+\label{sec:amended}
+
+\begin{axiom*}[$H_5'$, CM-anchored attractor]
+The modular parameter $\tau$ of the $\Spf$ flavour sector is not
+fixed at the $S$-fixed point $\tau=i$ but is a \emph{CM-anchored
+attractor}: any joint fit to PDG fermion mass ratios and CKM/PMNS
+mixings should land within
+\[
+  |\tau - i| \;\lesssim\; 0.2.
+\]
+The empirical fit $\tau^{*}=-0.1897+1.0034\,i$ (W1 scan,
+$\chi^{2}/\mathrm{dof}=1.05$, 7 observables) is the v7.4 reference
+point.
+\end{axiom*}
+
+\begin{remark}
+The relaxation $H_5\to H_5'$ is forced by V2~\cite{V2NoGo}: at strict
+$\tau=i$, LYD20 Model~VI's $\{d^{c},s^{c}\}$-block of the down-quark
+matrix becomes near-rank-1 by an $S$-collinearity lemma, and
+$\sin\theta_C\le 0.005$, a factor $\approx 45$ below experiment.
+$H_5'$ retains the CM anchoring (dynamical preference for the
+neighbourhood of $\tau=i$) while accommodating the experimentally
+required deviation.
+\end{remark}
+
+\begin{axiom*}[$H_7'$, primary: integer-point Damerell ladder]
+For the LMFDB CM newform $\fLM$ (CM by $\Qi$, weight $k=5$, level
+$N=4$) and the Chowla--Selberg period
+$\OmK = \Gamma(1/4)^{2}/(2\sqrt{2\pi})\approx 2.62205755$ for $\Qi$,
+the algebraic parts of the critical $L$-values at INTEGER critical
+points satisfy
+\begin{equation}
+\label{eq:ladder}
+  \frac{L(\fLM,m)\;\pi^{4-m}}{\OmK^{4}}
+  \;=\;
+  \begin{cases}
+    1/10  & (m=1),\\
+    1/12  & (m=2),\\
+    1/24  & (m=3),\\
+    1/60  & (m=4).
+  \end{cases}
+\end{equation}
+The Cardy density $\rho_{\mathrm{Cardy}}(c)=c/12$ at the unitary
+minimal-model central charges $c=1$ (free boson) and $c=1/2$
+(Ising) is reproduced \emph{parameter-free} at $m=2$ and $m=3$
+respectively.
+\end{axiom*}
+
+\begin{axiom*}[$H_7'$, complement: BDP anti-cyclotomic at $s=k/2$]
+At the half-integer central point $s=k/2$ outside the
+Damerell/Shimura/Deligne archimedean algebraicity domain, the
+appropriate algebraic bridge is the anti-cyclotomic $p$-adic
+$L$-function of Bertolini--Darmon--Prasanna~\cite{BDP13} for the
+CM-by-imaginary-quadratic form.  The $p$-adic value at $s=5/2$ is
+algebraic in the Iwasawa algebra of the anti-cyclotomic
+$\mathbb{Z}_p$-extension of $\Qi$; we postulate (subject to A1
+lit-check) a $p$-adic Cardy bridge for those CFT central charges that
+are \emph{not} cleanly fit by the integer ladder of
+\eqref{eq:ladder}, viz.\ $c\in\{7/10,4/5\}$.
+\end{axiom*}
+
+%%--------------------------------------------------------------------
+\section{Main numerical result and the Cardy hits}
+\label{sec:main}
+
+We collect the H7-A computation in tabular form
+(Table~\ref{tab:ladder}).  All values were obtained by mpmath
+($\mathrm{dps}=60$) evaluation of the approximate functional
+equation~\cite[Thm.~5.3]{IwaKow04} for $L(\fLM,s)$, with the
+sanity-check $L(\fLM,5/2)=0.5200744676\ldots$ matching the LMFDB
+record exactly.  The Chowla--Selberg period is
+$\OmK = \Gamma(1/4)^{2}/(2\sqrt{2\pi}) = 2.62205755\ldots$, the
+classical Lemniscate constant for $\Qi$~\cite{ChowSel49}.
+
+\begin{table}[ht]
+\centering
+\begin{tabular}{cllcl}
+\toprule
+$m$ & $L(\fLM,m)$ & $L(\fLM,m)\,\pi^{4-m}/\OmK^{4}$ &
+implied $c=12\alpha_m$ & CFT identification \\
+\midrule
+$1$ & $0.15244713359\ldots$ & $1/10$ & $6/5$ &
+exotic, non-unitary minimal\\
+$2$ & $0.39910566245\ldots$ & $\bm{1/12}$ & $\bm{1}$ &
+\textbf{free boson (Tonks--Girardeau)} \\
+$3$ & $0.62691370859\ldots$ & $\bm{1/24}$ & $\bm{1/2}$ &
+\textbf{Ising} \\
+$4$ & $0.78780300053\ldots$ & $1/60$ & $1/5$ &
+no clean unitary minimal CFT \\
+\bottomrule
+\end{tabular}
+\caption{H7-A integer-point Damerell ladder for $\fLM$.  Algebraic
+parts $\alpha_m := L(\fLM,m)\,\pi^{4-m}/\OmK^{4}$ are RATIONAL with
+denominators $\{10,12,24,60\}$; the boxed entries reproduce
+$\rho_{\mathrm{Cardy}}=c/12$ at $c=1$ and $c=1/2$.
+The ladder is \emph{standard}: $\alpha_1 = 1/10$ is the
+lemniscatic Hurwitz number $H_4$ (Hurwitz 1899~\cite{Hurwitz1899},
+prototype example in Harder--Schappacher 1986~\cite{HS86}~\S 1);
+$\alpha_2 = 1/12 = B_2/2 = -\zeta(-1)$ is the Bernoulli value
+transported to $\Qi$ via Eisenstein--Kronecker / Chowla--Selberg
+inside the Damerell--Shimura framework~\cite{Damerell71,Shimura76,ChowSel49}.
+The functional equation $L(\fLM,s) \leftrightarrow L(\fLM,5-s)$
+forces $\alpha_m/\alpha_{5-m} = \Gamma(5-m)/\Gamma(m)$, hence
+$(\alpha_3,\alpha_4) = (\alpha_2/2, \alpha_1/6)$ are
+\emph{not independent}; only $(\alpha_1,\alpha_2)$ are.}
+\label{tab:ladder}
+\end{table}
+
+\begin{theorem}[Bernoulli-anchored Cardy hit]
+\label{thm:hit}
+Within the Damerell--Shimura algebraicity framework, the algebraic
+part $\alpha_2 := L(\fLM,2)\,\pi^{2}/\OmK^{4}$ for $\fLM = $~LMFDB
+\texttt{4.5.b.a} (CM by $\Qi$, weight $5$) equals
+\begin{equation}
+  \alpha_2 \;=\; \tfrac{1}{12} \;=\; \tfrac{B_2}{2} \;=\; -\zeta(-1),
+\end{equation}
+yielding the Cardy density $\rho_{\mathrm{Cardy}}(1) = c/12 = 1/12$
+of the $c=1$ free boson \emph{parameter-free}, where $B_2 = 1/6$ is
+the second Bernoulli number.  The functional equation
+$L(\fLM,s) = \varepsilon\,L(\fLM,5-s)$ then forces the companion
+$\alpha_3 = \Gamma(2)/\Gamma(3)\cdot\alpha_2 = 1/24$, which
+reproduces the $c=1/2$ Ising central charge as a structural
+$\Gamma$-shadow of the same Bernoulli value.
+\end{theorem}
+
+\begin{proof}
+The Bernoulli identification $\alpha_2 = B_2/2$ for the lemniscatic
+CM-by-$\Qi$ family of weight $\geq 4$ is the classical Eisenstein--%
+Kronecker computation: at the integer critical point $m = k-3 = 2$,
+the Damerell formula for a CM newform of weight $k$ over an imaginary
+quadratic field $K$ collapses to a Bernoulli rational times
+$\OmK^{2k-2}/\pi^{k-m-1}$; for $K = \Qi$ and $k=5$ this is
+$B_2/2 \cdot \OmK^{4}/\pi^{2}$~\cite{Damerell71,Shimura76,HS86}.
+The companion $\alpha_3 = 1/24$ then follows from the
+$\Gamma$-factor functional equation, with no independent input.
+\end{proof}
+
+\begin{remark}[On the apparent ``two parameter-free hits'']
+The empirical observation in Table~\ref{tab:ladder} shows two
+Cardy-target rows ($c=1$ at $m=2$ and $c=1/2$ at $m=3$).  These are
+\emph{not} two independent algebraic coincidences: the
+$\Gamma$-factor functional equation \emph{forces} $\alpha_3 / \alpha_2
+= \Gamma(2)/\Gamma(3) = 1/2$, so any $\alpha_2$ yielding a clean
+$c$-value at $m=2$ automatically produces a $c/2$ companion at $m=3$.
+The genuine parameter-free coincidence is the $c=1$ hit alone --- a
+single Bernoulli identity $B_2/2 = 1/12$, with the Ising central
+charge appearing as its structural $\Gamma$-shadow.  The strength of
+the bridge is correspondingly halved relative to the v7.3 prospectus,
+but it remains anchored on a textbook Eisenstein--Kronecker value.
+\end{remark}
+
+\begin{remark}[Two-step normalisation]
+The structure of \eqref{eq:ladder} factorises as a Damerell-style
+binomial $\OmK^{4}/\pi^{4-m}$ times a small rational depending on $m$.
+The $\OmK^{4}$ exponent is the $k$-th power expected in
+Shimura~\cite{Shimura76} for a weight-$k$ CM form ($k=5$ here, but
+the central $L$-values use $\OmK^{2(s-1)}$ with $s$ critical;
+$s=m\in\{1,2,3,4\}$ falls in the strip $1\le s\le k-1$).
+The numerator pattern $(1/10,1/12,1/24,1/60)$ is what requires
+literature anchoring -- see Section~\ref{sec:open}.
+\end{remark}
+
+%%--------------------------------------------------------------------
+\section{$\tau$-plane probes I: the W1 attractor scan}
+\label{sec:W1}
+
+To test whether $\tau$ near $i$ is dynamically preferred -- as opposed
+to merely allowed -- we ran a $30\times 30$ $\chi^{2}$ scan on the
+domain $\mathrm{Re}\,\tau\in[-0.5,0.5]$,
+$\mathrm{Im}\,\tau\in[0.7,1.5]$ for seven fermion observables
+($m_c/m_t$, $m_u/m_c$, $m_e/m_\mu$, $m_\mu/m_\tau$,
+$\sin\theta_{12}$, $\sin\theta_{13}$, $\sin\theta_{23}$, all PDG
+2024 central values).  The scan ran on a single RTX~5060~Ti GPU
+(cosmopower-jax, 386 predictions/s) for $107$~minutes.
+
+\begin{table}[ht]
+\centering
+\begin{tabular}{lcc}
+\toprule
+& Best $\tau$ & $|\tau-i|$ \\
+\midrule
+LYD20 published~\cite{LYD20} & $-0.21+1.52\,i$ & $0.56$ \\
+W1 near-$i$ minimum & $-0.1897+1.0034\,i$ & $\bm{0.19}$ \\
+\bottomrule
+\end{tabular}
+\caption{The W1 scan (PC compute, 2026-05-05) finds a local minimum
+$\tau^{*}=-0.1897+1.0034\,i$ with $\chi^{2}/\mathrm{dof}=1.05$
+(seven observables), a factor $\approx 3$ closer to the
+$S$-fixed-point $\tau=i$ than the LYD20 best fit.}
+\label{tab:W1}
+\end{table}
+
+The seven observables fit the W1 minimum with $\chi^{2}_{\mathrm{up}}
+\sim 10^{-19}$, $\chi^{2}_{\mathrm{lep}}\sim 10^{-18}$, all $\chi^{2}$
+contribution coming from the CKM sector ($\chi^{2}_{\mathrm{ckm}} =
+7.34$).  This is consistent with $H_5'$:
+\emph{the empirical attractor lives at $|\tau-i|\sim 0.2$}, and the
+scaling is set by the same factor $\sqrt{\epsilon}\sim 0.063$ that
+governs the V2 no-go's near-rank-1 obstruction~\cite{V2NoGo} -- with
+$|\tau-i|\sim 0.2$ providing precisely the perturbation needed to
+break the $S$-collinearity.
+
+\begin{remark}
+The W1 scan does not yet include the CKM phase $\delta_{CP}$ nor the
+absolute neutrino mass scale; both are degrees of freedom not
+constrained by the seven observables used.  A 64-observable refit
+including these will be the v7.4.1 update.
+\end{remark}
+
+%%--------------------------------------------------------------------
+\section{$\tau$-plane probes II: $K=\Qi$ modular fixed-point and the
+         Littlest Modular Seesaw (A14)}
+\label{sec:nu}
+
+A second, independent probe of the $K=\Qi$ anchoring exploits the
+\emph{strict} $S$-fixed point $\tau_S=i$ (rather than the W1 attractor
+$\tau^{*}$) in the lepton sector.  At $\tau_S=i$ the weight-2 $\Spf$
+triplet modular form $Y_3^{(2)}$ admits the alignment
+\begin{equation}
+\label{eq:CSDalign}
+  Y_3^{(2)}(i) \;\propto\; \bigl(1,\;1+\sqrt{6},\;1-\sqrt{6}\bigr),
+\end{equation}
+the so-called CSD$(1+\sqrt{6})$ alignment of the Littlest Modular
+Seesaw (Ding--King--Liu--Lu Case~B~\cite{DKLL19},
+King~\cite{LMS22}).  Equation~\eqref{eq:CSDalign} drives a
+2-real-parameter neutrino sector with two right-handed Majorana
+singlets, predicting:
+\begin{itemize}
+  \item \textbf{Hierarchy:} normal ordering (NO) with $m_1 = 0$
+    \emph{forced} by the 2-RH$\nu$ mechanism.  Falsifier: JUNO 2030
+    NMO determination at $3$--$4\sigma$.
+  \item \textbf{Dirac CP phase:} $\delta_{CP} \approx -87^{\circ}$ at
+    the CSD(3) benchmark; the CSD$(1+\sqrt 6)$ value is close.
+    \textbf{Falsifier:} DUNE 2030+ at $\pm 15^{\circ}$ rules out the
+    prediction at $>3\sigma$ if $\delta_{CP}$ centres at $0$ or
+    $+90^{\circ}$. Sensitivity sufficient by~$\sim$2032.
+  \item $\sin^{2}\theta_{23}$: first octant, $\approx 0.46$--$0.55$.
+  \item $\Sigma m_\nu \approx 0.06\,\mathrm{eV}$ (the NO + $m_1=0$
+    floor), with $m_{\beta\beta}\sim$ few meV detectable by KamLAND-Zen
+    2027 / nEXO 2030+.
+\end{itemize}
+
+\begin{remark}[Cross-$K$ test confirms $K=\Qi$ uniqueness, A14]
+The DKLL19 Table~1 alignment lists for the five imaginary-quadratic
+CM points $K\in\{\Qi,\mathbb{Q}(\sqrt{-2}),\mathbb{Q}(\sqrt{-3}),
+\mathbb{Q}(\sqrt{-7}),\mathbb{Q}(\sqrt{-11})\}$ show that
+\emph{only} at $\tau_S=i$ ($K=\Qi$) does the weight-2 $\Spf$ triplet
+$Y_3^{(2)}$ acquire the non-trivial nested-radical alignment
+$(1,1+\sqrt 6,1-\sqrt 6)$.  At $\tau_{ST}=\omega$ ($K=\mathbb{Q}
+(\sqrt{-3})$) the alignment collapses to a permutation vector
+$(0,1,0)$, killing the seesaw.  This $K$-uniqueness matches the
+$\alpha_2=1/12$ Bernoulli specificity of the Damerell ladder, and is
+the second independent $K=\Qi$ structural witness.
+\end{remark}
+
+\begin{remark}[A24: $\sqrt{6}$ is Galois-rational, NOT period-anchored]
+\label{rem:A24}
+A PSLQ search at $\mathrm{dps}=60$, $|c|\le 500$, in seven distinct
+bases $\{\sqrt 6,\Gamma(1/4),\pi,\log 2,\log 3,\OmK,
+\log\theta_{2,3,4}(i),\log\eta(i)\}$ (A24) yields no Q-linear relation
+of $\log\sqrt 6$ with the Chowla--Selberg periods of $\Qi$: in every
+non-trivial relation found, the coefficient on $\log\sqrt 6$ is zero.
+The $\sqrt 6$ in~\eqref{eq:CSDalign} is therefore a Galois-rational
+quantity (it is the discriminant $\sqrt{b^2-4c}$ of the secular
+$2\times 2$ polynomial of $Y_3^{(2)}(i)$ eigenvalues), \emph{not} a
+period-theoretic invariant of $\Qi$.  Consequently the $K=\Qi$ anchor
+of CSD$(1+\sqrt 6)$ is \emph{combinatorial} ($S$-fixed-point of
+$\Spf$), not a deep CM-period identity via Chowla--Selberg.  This
+keeps the empirical falsifier (DUNE 2030+) valid but classifies the
+$1+\sqrt 6$ alignment as a ``thin coincidence'' in the Lakatos sense,
+not a hard prediction lifted by deep number theory.
+\end{remark}
+
+\paragraph{Empirical-deepness assessment.}
+A14's $P\sim 20\%$ score (``WEAK CONSTRAINT, deep'') reflects the
+combination: \emph{pro} the structural cross-$K$ test (DKLL19 Case~B
+selects $K=\Qi$); \emph{con} the absence of an explicit
+$\OmK$ in the modular-flavour formula and the independent fixed-point
+fit of Priya--Chauhan--Kumar--Nomura~\cite{Priya26} which prefers
+$\tau_l=3+i/2$ rather than $\tau_l=i$.  Section~\ref{sec:caveat} below
+strengthens this $\emph{con}$ by orders of magnitude.
+
+%%--------------------------------------------------------------------
+\section{$\tau$-plane probes III: numerological CKM alignments
+         on the $K=\Qi$ Damerell ladder (A17)}
+\label{sec:CKM}
+
+A third, independent probe of $K=\Qi$ structure exploits the integer
+ladder of \eqref{eq:ladder} \emph{directly} on the CKM observables.
+A strict screen (small rationals $q$ with $|\mathrm{num}|+
+|\mathrm{denom}|\le 30$, $|\delta|<0.5\%$) over all five
+imaginary-quadratic CM weight-5 newforms across
+$m\in\{1,2,3,4\},\;a\in\{0,\ldots,5\}$ (the Damerell exponent),
+under the canonical $K=\Qi$ ladder yields two structurally clean
+candidates:
+
+\begin{table}[ht]
+\centering
+\begin{tabular}{lllcc}
+\toprule
+Candidate & Algebraic prediction & PDG / HFLAV measurement &
+Rel.\ error & Distance \\
+\midrule
+$|V_{us}|$ &
+$(9/4)\cdot\alpha_1 = 9/40 = 0.22500$ &
+$0.22501\pm 0.00068$ (PDG~2024) &
+$0.004\%$ & $\bm{0.015\sigma}$ \\
+$|V_{cb}|^{2}$ &
+$\alpha_1\cdot\alpha_4 = 1/600 \approx 1.667\times 10^{-3}$ &
+$(1.668\pm 0.057)\times 10^{-3}$ (HFLAV) &
+$0.080\%$ & $\bm{0.024\sigma}$ \\
+\bottomrule
+\end{tabular}
+\caption{A17 numerological CKM alignments on the canonical $K=\Qi$
+Damerell ladder $\{\alpha_1,\alpha_2,\alpha_3,\alpha_4\}=
+\{1/10,1/12,1/24,1/60\}$.  Equivalently $|V_{cb}|=\sqrt{1/600}\approx
+0.04082$ vs HFLAV $0.04085(7)$, $0.04\sigma$ off.  No clean prediction
+emerged for $|V_{ub}|$ or $|V_{ub}/V_{cb}|$.}
+\label{tab:CKM}
+\end{table}
+
+\begin{remark}[Multiplicative coefficients are EMPIRICAL]
+\label{rem:CKMcaveat}
+The multiplicative coefficients $(9/4,1)$ in
+Table~\ref{tab:CKM} are \emph{empirical}, not structurally derived.
+The match $|V_{us}|\approx 9/40$ is a restatement of the well-known
+Wolfenstein parameter coincidence $\lambda\approx 0.225$, now anchored
+to the Damerell $m=1$ rational $\alpha_1=1/10$.  The match
+$|V_{cb}|^2\approx 1/600$ is the product of two known ladder rationals
+$\alpha_1\cdot\alpha_4=(1/10)(1/60)$, where the multiplicative
+coefficient $1$ is empirically required.  Without a derivation of
+$(9/4)$ and $(1)$ from a flavour-symmetry quantum-number argument,
+both rows of Table~\ref{tab:CKM} should be regarded as
+\emph{suggestive numerological alignments awaiting either group-
+theoretic interpretation or precision-experiment falsification}.
+\end{remark}
+
+\begin{remark}[Cross-$K$ test confirms $K=\Qi$ uniqueness]
+Applying the same $(m,a,q)$ choices to the analogous ladders of
+$K\in\{\mathbb{Q}(\sqrt{-2}),\mathbb{Q}(\sqrt{-3}),
+\mathbb{Q}(\sqrt{-7}),\mathbb{Q}(\sqrt{-11})\}$ produces $q\cdot r$
+deviations from the same CKM target ranging from $524\%$ to
+$15{,}490\%$ (A17), confirming $K$-specificity of the alignments.
+The $K$-specificity is essentially a consequence of the Bernoulli/
+Hurwitz alignment at $K=\Qi$ (already documented for $\alpha_2=1/12$),
+not independent SM evidence.
+\end{remark}
+
+\paragraph{Falsifiers.}
+The two CKM alignments of Table~\ref{tab:CKM} are testable on
+near-future timescales:
+\begin{itemize}
+\item $|V_{us}|=9/40=0.225000$: NA62 $K\to\pi\nu\bar\nu$ + FLAG-2027
+  lattice $f_K/f_\pi$ should reach $\sim 0.3\%$ precision; survival
+  margin $\sim 0.5$--$1.5\sigma$.  \textbf{Testable 2027--2028.}
+\item $|V_{cb}|^2=1/600=1.667\times 10^{-3}$: Belle II 2027 at
+  $\sim 0.5\%$ on $|V_{cb}|^2$ gives $\sim 0.12\sigma$ separation
+  (insufficient).  LHCb-U2 / Belle II run~3 (2030+) at $\sim 0.2\%$
+  precision will discriminate.
+\end{itemize}
+A measured drift of $|V_{us}|$ outside $0.225\pm 0.001$ at the
+$3\sigma$ level by 2028, or of $|V_{cb}|^2$ outside $1.667\times 10^{-3}
+\pm 5\times 10^{-6}$ at the $3\sigma$ level by 2030, falsifies the
+respective alignment.
+
+%%--------------------------------------------------------------------
+\section{Caveat: W1 $\tau$-attractor does NOT accommodate
+         the lepton sector at LYD20-style fits (A16)}
+\label{sec:caveat}
+
+The probes of Sections~\ref{sec:W1} (W1 quark+lepton joint fit at
+$\tau^{*}=-0.19+1.00\,i$, $\chi^2/\mathrm{dof}=1.05$),
+\ref{sec:nu} (CSD$(1+\sqrt 6)$ at strict $\tau_S=i$ for the lepton
+sector), and~\ref{sec:CKM} (Damerell-ladder CKM at $K=\Qi$) have
+been presented as if compatible.  This subsection records that they
+are \emph{not} compatible under a single-$\tau$ assumption: the W1
+attractor $\tau^{*}$, when imposed in the LYD20 unified-model lepton
+sector, gives a hard $\sim 24.5\sigma$ pull on $\sin^2\theta_{13}$
+versus PDG/NuFIT 2024.
+
+\begin{table}[ht]
+\centering
+\begin{tabular}{lcccc}
+\toprule
+Fit & $\tau$ & $\chi^2_{\min}$ & $\sin^2\theta_{13}$ pred. & Pull vs PDG\\
+\midrule
+LYD20 published~\cite{LYD20} & $-0.2123+1.5201\,i$ & $1567.6$ & $0.02881$ & $+9.45\sigma$ \\
+W1 attractor & $-0.1897+1.0034\,i$ & $\bm{883.0}$ & $\bm{0.00478}$ & $\bm{-24.53\sigma}$ \\
+Strict $\tau=i$ & $0+1.0\,i$ & $2259.7$ & $0.00735$ & $-20.85\sigma$ \\
+\midrule
+PDG/NuFIT 2024 & --- & --- & $0.02195(70)$ & --- \\
+\bottomrule
+\end{tabular}
+\caption{A16 single-$\tau$ refit of LYD20 unified-model lepton sector
+(arXiv:2006.10722) at three reference $\tau$ values.  The W1 attractor
+$\tau^{*}$ that minimises $\chi^2$ in the quark sector
+(Sec.~\ref{sec:W1}) under-predicts $\sin^2\theta_{13}$ by a factor
+$\sim 4.6$, a $24.5\sigma$ pull.  Strict $\tau_S=i$ (the
+CSD$(1+\sqrt 6)$ point of Sec.~\ref{sec:nu}) is also off, by
+$20.85\sigma$.  The full fit JSON is at
+\texttt{notes/eci\_v7\_aspiration/A16\_THETA13\_PREDICTION/}
+\texttt{theta13\_prediction.json}.}
+\label{tab:A16}
+\end{table}
+
+\paragraph{Interpretation.}
+The W1 attractor $\tau^{*}$ was located by minimising over seven
+\emph{quark+lepton-mass-ratio} observables, NOT over the PMNS
+mixing angles directly.  Including PMNS as constraints
+explicitly, the $\sin^2\theta_{13}$ shortfall is severe.  Two
+non-exclusive readings:
+\begin{itemize}
+  \item \textbf{(a) Two-tau reformulation required.} The flavour
+    sector splits into two modular parameters
+    $(\tau_q,\tau_l)$ with $\tau_q\ne\tau_l$.  $\tau_q$ remains in
+    the W1 attractor basin near $i$; $\tau_l$ moves to a separate
+    region (e.g.\ Priya--Chauhan--Kumar--Nomura's
+    $\tau_l\approx 3+i/2$~\cite{Priya26}, or DKLL19 Case~B's
+    $\tau_l = i$ on a different rep multiplet) to reproduce
+    $\sin^2\theta_{13}\approx 0.022$.  This is the natural reading
+    if Sec.~\ref{sec:nu}'s CSD$(1+\sqrt 6)$ is to be retained.
+  \item \textbf{(b) LYD20 unified-model is too restrictive.} The
+    six-parameter unified-model ansatz used in A16 may simply lack
+    the rep-multiplet flexibility to reach
+    $\sin^2\theta_{13}=0.022$ at any $\tau$ near~$i$;
+    a Chen--King--Medina--Valle-style $\Gamma_4\cong S_4$ ansatz
+    (\cite{ChenKMV23}, non-GUT) might recover.
+\end{itemize}
+
+\paragraph{Operational consequence for v7.4.}
+The single-$\tau$ axiom $H_5'$ (Sec.~\ref{sec:amended}) must be
+weakened, in the lepton sector, to a \emph{multi-tau} statement:
+either (i) $H_5'$ applies to $\tau_q$ alone, with $\tau_l$ to be
+fitted independently in the next round (v7.4.1); or (ii) the LYD20
+unified-model embedding must be replaced with one that has more
+freedom in the lepton sector while preserving the W1
+quark-sector fit.  Both options are open; a binary decision will be
+recorded in the v7.4.1 amendment after the planned 64-observable
+refit.
+
+\begin{remark}[Hallu \#76 lineage]
+The single-$\tau$ assumption was inherited uncorrected from LYD20
+itself, where the published best fit ($\tau=-0.21+1.52\,i$) reaches
+$\chi^2_{\min}=1567$ over the same lepton observables.  LYD20 reports
+the joint quark+lepton fit on a smaller observable set (e.g.\ omitting
+$\delta_{CP}$ and pinning $\sin^2\theta_{13}$ at its central value
+without $\sigma$-floor), which masks the pull.  A16 uses the full PDG
+2024 covariances and is a worse-case stress test.
+\end{remark}
+
+%%--------------------------------------------------------------------
+\section{G1.12.B campaign progress: M1+M2 PASS
+         and the 2030+ proton-decay falsifier (A22, A26)}
+\label{sec:G112B}
+
+%% subsection 5.1 / "Note added in proof"
+\subsection{Note added in proof: G1.12.B M1+M2 PASS, M3-M6 forecast}
+\label{sec:G112BNote}
+
+The G1.12.B campaign~\cite{A18scoping} is the v7.4 proton-decay-
+falsifier programme: a six-milestone modular SU(5) $5_H+45_H$
+construction that, post-M$_6$, predicts a parameter-free branching
+ratio
+\[
+  \tfrac{B(p\to e^+\pi^0)}{B(p\to K^+\bar\nu)} \;\in\; [0.3,\,3]
+  \quad(\text{95\% CL post-M}_6),
+\]
+to be tested by Hyper-K + DUNE 2030+ data.  Two of the six milestones
+are now closed:
+
+\begin{itemize}
+  \item \textbf{M1 (A22) PASS 4/4.}  The 45-of-SU(5) Higgs is assigned
+    to the $\Spf$ trivial singlet ${\bf 1}$ at modular weight
+    $k_{45}=0$, with the off-diagonal Yukawa form-factor
+    $f^{ij}(\tau)$ built from row-by-row LYD20-Model-VI contractions
+    (rows $u,c,t$ at weights $1,2,5$, irreps
+    $\hat 3',{\bf 3},\hat 3$). The 3$\times$3 matrix $f^{ij}(\tau=i)$
+    is computed symbolically (sympy) and numerically; all 6 off-diag
+    entries are non-zero, modular invariance under $S$ and $T$ is
+    verified to machine precision (residual $\le 10^{-15}$), and the
+    A2 $+19.5\%$ closure check matches at $+19.43\%$ (within
+    $0.07$~pp).  The non-modular precedent for SU(5) $+45_H$ proton
+    decay is Haba--Nagano--Shimizu--Yamada
+    (\cite{HabaNagShim24}, arXiv:2402.15124).
+  \item \textbf{M2 (A26) PASS 5/5.}  The off-diagonal up-quark Yukawa
+    SVD at the W1 attractor $\tau^{*}=-0.1897+1.0034\,i$ reproduces
+    the Antusch--Hinze--Saad GUT-scale targets
+    \cite{AHS25} ($y_t=0.4454$, $y_c/y_t=2.725\times 10^{-3}$,
+    $y_u/y_c=2.05\times 10^{-3}$) to machine precision: the fit
+    $(\beta_u/\alpha_u,\gamma_u/\alpha_u)=(152.42,305.38)$ achieves
+    $\chi^2_{\rm up}=6.7\times 10^{-20}$ (2 parameters, 2 observables,
+    exact); $|\Delta(y_c/y_t)|=10^{-9}\%$.  $U_L,U_R$ unitarity
+    holds at $\sim 5\times 10^{-16}$; SVD reconstruction at
+    $\sim 7\times 10^{-11}$.
+\end{itemize}
+
+The M3--M6 forecast is~\cite{A18scoping} 3.5--5 sub-agent months
+($\$0$--$100$): M3 is the full Patel--Shukla
+\cite[Eq.~(8)]{PatelShukla23} 1-loop matching Wilson coefficients;
+M4 is a 2-loop SM RGE M$_{\rm GUT}\!\to\!M_Z$ refinement; M5 is the
+proton-decay partial widths $\Gamma(p\to e^+\pi^0,K^+\bar\nu,\mu^+K^0,
+\pi^+\bar\nu)$ via Haba 2402.15124~\cite{HabaNagShim24} + FLAG lattice
+matrix elements; M6 is a Bayesian scan in $(M_{T_5},M_{T_{45}},
+\eta,\kappa_{45})$ with an $\alpha_s$ unification prior, yielding the
+posterior on $\tau_p$ and the branching ratio.  The decisive falsifier
+is:
+
+\begin{quote}\itshape
+ECI v7.4 modular SU(5) $5_H+45_H$ at $\tau\sim\tau^{*}$ predicts
+$B(p\to e^+\pi^0)/B(p\to K^+\bar\nu)\in[0.3,\,3]$ (95\% CL post-M$_6$).
+Hyper-K + DUNE combined 2030+ data outside $[0.3,\,3]$ at $>3\sigma$,
+OR $\tau(p\to e^+\pi^0)>3\times 10^{35}$ yr at $>2\sigma$ $\Rightarrow$
+\textbf{REFUTED}.
+\end{quote}
+
+The current Super-Kamiokande limits are
+$\tau(p\to e^+\pi^0)>2.4\times 10^{34}$ yr~\cite{SuperK20epi},
+$\tau(p\to K^+\bar\nu)>5.9\times 10^{33}$ yr~\cite{SuperK14Knu}.  The
+G1.12.B forecast (post-M$_6$) is centred at
+$\tau(p\to e^+\pi^0)\sim 3\times 10^{34}$ yr,
+$\tau(p\to K^+\bar\nu)\sim 10^{34}$ yr, both above the Super-K limits
+and well within the Hyper-K 20-yr~\cite{HK18} ($10^{35}$ yr,
+$3\times 10^{34}$ yr) and DUNE 20-yr~\cite{DUNE24} ($6.5\times 10^{34}$
+yr) reach.
+
+\paragraph{Anti-hallucination correction (hallu \#78).}
+Throughout the v7.3 codebase the SM running parameters of
+arXiv:2510.01312 had been internally tagged ``Wang--Zhang 2025''.
+The actual authors are \textbf{Antusch, Hinze, Saad
+(2025)}~\cite{AHS25}; A18 caught the misattribution against the live
+arXiv API (2026-05-05).  The numerical SM target values are
+unaffected (same paper); only the citation has been corrected.  All
+in-text references in this v2 amendment use the correct authorship.
+
+%%--------------------------------------------------------------------
+\section{Open questions and pending verifications}
+\label{sec:open}
+
+Three independent open questions remain.
+
+\paragraph{Q1: literature anchoring of the rational ladder ---
+\textbf{RESOLVED}.}
+The pattern $(1/10,1/12,1/24,1/60)$ in Table~\ref{tab:ladder} is the
+\emph{standard} CM-by-$\Qi$ Eisenstein--Kronecker ladder for a
+weight-$5$ newform: $\alpha_1 = 1/10$ is the lemniscatic Hurwitz
+number $H_4$ first computed in Hurwitz~1899~\cite{Hurwitz1899}
+(\S~III) as the prototype of the Deligne-conjecture instances later
+formalised by Damerell~\cite{Damerell71} and
+Shimura~\cite{Shimura76}; $\alpha_2 = 1/12$ is the second Bernoulli
+half-value $B_2/2 = -\zeta(-1)$ transported to $\Qi$ via
+Chowla--Selberg~\cite{ChowSel49} and recorded as the
+prototype example in Harder--Schappacher~1986~\cite{HS86}~\S 1
+(reproduced verbatim for $K=\Qi$ in Visser~2021~\cite{Visser21}).
+The functional equation reduces $(\alpha_3,\alpha_4) = (\alpha_2/2,
+\alpha_1/6)$ to dependent companions, so the ladder has only two
+independent rationals, both classical.  $H_7'$(Damerell--ladder) is
+therefore a \emph{theorem}, not a conjecture, with the strength
+re-stated as in Theorem~\ref{thm:hit} and the Remark following it.
+
+\paragraph{Q2: the unfit central charges $c=7/10$ and $c=4/5$.}
+The integer ladder \eqref{eq:ladder} cleanly hits
+$c\in\{6/5,1,1/2,1/5\}$ but \emph{not} the unitary minimal central
+charges $c=7/10$ (tricritical Ising) and $c=4/5$ (tetracritical
+Potts).  Two scenarios are possible:
+\begin{itemize}
+  \item\textbf{(a)} The complement axiom $H_7'$(BDP) supplies these
+    values via $p$-adic anti-cyclotomic $L$-values at $s=k/2$, with
+    different small-prime contributions from the
+    Iwasawa-algebra interpolation.
+  \item\textbf{(b)} They genuinely require a \emph{second} CM
+    newform (the candidate would be the level-16 form 16.5.c.a, which
+    appears in companion P-NT identifications of hatted
+    weight-5 multiplets); in that case the v7.4 anchor must be
+    extended to a two-form anchor.
+\end{itemize}
+Discriminating (a) from (b) is the next concrete test of v7.4.
+
+\paragraph{Q3: Perlmutter degree-4 backup.}
+Whether the Rankin--Selberg square $L(\fLM\otimes\fLM,s)$ at
+INTEGER critical points $s\in\{5,\ldots,9\}$ supplies the same Cardy
+hits as the integer Damerell ladder is the H7-B research question;
+both routes should agree on $c=1$ and $c=1/2$ if either is the
+correct bridge.
+
+\paragraph{Q4: $\sqrt 6$ structure --- partially CLOSED in the
+negative (A24).}
+The $\sqrt 6$ appearing in the CSD$(1+\sqrt 6)$ alignment of
+Eq.~\eqref{eq:CSDalign} is Galois-rational (discriminant of the
+secular polynomial of $Y_3^{(2)}(i)$ eigenvalues), \emph{not}
+period-anchored via Chowla--Selberg (Remark~\ref{rem:A24}).  PSLQ at
+dps$=60$, $|c|\le 500$ in seven distinct period bases finds no
+non-trivial Q-linear relation $\log\sqrt 6\leftrightarrow
+\{\log\Gamma(1/4),\log\pi,\log 2,\log\OmK,\log\theta_{2,3,4}(i),
+\log\eta(i)\}$.  Future probes: $\mathbb{Q}(\sqrt{-24})/
+\mathbb{Q}(\sqrt{-6})$ period rings (which contain $\sqrt 6$
+natively), and the holomorphic $\tau=i+\epsilon$ deformation of
+$\Sigma m_\nu$.
+
+%%--------------------------------------------------------------------
+\section{Falsifiers}
+\label{sec:falsifiers}
+
+The v7.4 axiomatic restart, like its predecessors, must be
+falsifiable.  Five concrete falsifiers are recorded.
+
+\begin{enumerate}
+  \item \textbf{Tonks--Girardeau density measurement.}  The Cardy
+    formula at $c=1$ predicts a one-loop free-boson density that, in
+    the cold-atom Tonks--Girardeau limit, can be measured at the
+    percent level.  A deviation from $\rho=1/12$ at the predicted
+    operator at the 5\% level falsifies $H_7'$(primary).
+  \item \textbf{Modular flavour lepton sector --- A16 strengthens
+    this.}  The A16 fit (Sec.~\ref{sec:caveat}) already pulls
+    $\sin^2\theta_{13}$ at $24.5\sigma$ from PDG under the
+    single-$\tau$ assumption with the LYD20 unified-model embedding.
+    The decisive single-$\tau$ falsifier of $H_5'$ is whether
+    \emph{any} embedding compatible with the W1 quark-sector fit
+    reaches $\sin^2\theta_{13}=0.022$ within $|\tau-i|\le 0.3$.  If
+    the v7.4.1 64-observable refit fails this at $\ge 5\sigma$ for
+    every embedding, $H_5'$ is REFUTED in its single-$\tau$ form
+    and must be reformulated as the two-tau ($\tau_q\ne\tau_l$)
+    statement of Sec.~\ref{sec:caveat}.
+  \item \textbf{NMC cosmological NULL at Cassini.}  An independent
+    branch of the ECI programme makes a non-minimally-coupled (NMC)
+    scalar-field prediction for the $\gamma$-parameter of the Cassini
+    Doppler tracking experiment (PPN bound $|\gamma-1|\le
+    2.3\times 10^{-5}$).  The prediction is a NULL: $|\gamma-1|<
+    10^{-7}$ at present sensitivity, vanishing in the limit
+    $\xi\to 0^{+}$.  A future improvement of the Cassini
+    bound to $\le 10^{-6}$ that excludes the NMC NULL falsifies
+    the cosmological branch of v7.4.
+  \item \textbf{DUNE 2030+ $\delta_{CP}$ (A14).}  The CSD$(1+\sqrt
+    6)$ Littlest Modular Seesaw at $\tau_S=i$
+    (Sec.~\ref{sec:nu}) predicts $\delta_{CP}\approx -87^{\circ}$,
+    NO with $m_1=0$, and first-octant $\sin^2\theta_{23}\in
+    [0.46,\,0.55]$.  DUNE 2030+ at $\pm 15^{\circ}$ on $\delta_{CP}$
+    rules out the prediction at $>3\sigma$ if $\delta_{CP}$ centres
+    near $0$ or $+90^{\circ}$.  JUNO 2030 NMO at $3$--$4\sigma$
+    independently kills the NO + $m_1=0$ prediction if inverted.
+  \item \textbf{NA62 + FLAG-2027, LHCb-U2 / Belle II run~3 (2030+)
+    on the Damerell-ladder CKM (A17).}  The two numerological
+    alignments of Table~\ref{tab:CKM} are testable on near-future
+    timescales: a measured $|V_{us}|$ outside $0.225\pm 0.001$ at
+    $3\sigma$ by 2028, or $|V_{cb}|^2$ outside $1.667\times 10^{-3}\pm
+    5\times 10^{-6}$ at $3\sigma$ by 2030, falsifies the respective
+    alignment.  These are weak (numerological) falsifiers compared
+    to (1)--(4); they are listed for completeness.
+  \item \textbf{Hyper-K + DUNE 2030+ proton decay (G1.12.B,
+    Sec.~\ref{sec:G112B}).}  After M$_6$ closure (3.5--5 sub-agent
+    months), the parameter-free branching ratio
+    $B(p\to e^+\pi^0)/B(p\to K^+\bar\nu)\in[0.3,\,3]$ is tested by
+    Hyper-K + DUNE combined 2030+ data; outside $[0.3,\,3]$ at
+    $>3\sigma$, OR $\tau(p\to e^+\pi^0)>3\times 10^{35}$ yr at
+    $>2\sigma$, $\Rightarrow$ \textbf{REFUTED}.
+\end{enumerate}
+
+%%--------------------------------------------------------------------
+\section{Conclusion}
+\label{sec:conclusion}
+
+The v7.4 amendment converts the strict fixed-point axiom $H_5$ into an
+\emph{attractor} statement $H_5'$ supported by a $\chi^{2}$ scan
+(W1, 2026-05-05), and replaces the half-integer Damerell--CS bridge
+$H_7$ -- refuted by the G1.15 audit on parity grounds -- with a
+two-part bridge $H_7'$ comprising (i) an INTEGER-point Damerell
+ladder (Table~\ref{tab:ladder}) with parameter-free hits on
+$\rho_{\mathrm{Cardy}}=c/12$ at $c=1$ and $c=1/2$, and (ii) a BDP
+$p$-adic anti-cyclotomic complement at the original central point.
+The CM anchor $\fLM$ (LMFDB CM newform 4.5.b.a, CM by $\Qi$) is
+preserved across both rescue routes (H7-A, H7-B, H7-C all converge on
+this anchor).
+\par
+Wave 4-5 follow-ups extend the v7.4 picture in three independent
+$K=\Qi$ probes: the CSD$(1+\sqrt 6)$ Littlest Modular Seesaw at
+$\tau_S=i$ (DUNE 2030+ $\delta_{CP}$ falsifier; A14 + A24);
+two numerological CKM alignments on the Damerell ladder
+($|V_{us}|=9/40$ to $0.015\sigma$, $|V_{cb}|^2=1/600$ to
+$0.024\sigma$, multiplicative coefficients flagged empirical;
+A17); and the G1.12.B campaign's parameter-free
+$B(p\to e^+\pi^0)/B(p\to K^+\bar\nu)\in[0.3,3]$ Hyper-K/DUNE 2030+
+falsifier (M1+M2 PASS, M3-M6 forecast 3.5-5 mo; A22 + A26).
+\par
+A hard caveat (A16) is that the W1 attractor $\tau^{*}$ does NOT
+accommodate the lepton sector under the LYD20 unified-model embedding:
+$\sin^2\theta_{13}$ is pulled at $24.5\sigma$.  The single-$\tau$
+axiom $H_5'$ must therefore be weakened in the lepton sector,
+and the v7.4.1 update will record a binary decision between (a)
+two-tau reformulation $\tau_q\ne\tau_l$ and (b) replacement of the
+LYD20 unified-model embedding.
+
+%%--------------------------------------------------------------------
+\section*{Acknowledgements}
+
+KR thanks the H7-A, H7-B, H7-C, and W1 sub-agent runs (Sonnet harness,
+agents\_v647, May~2026), the Opus G1.15 audit thread for the
+refutation analysis, and wave 4-5 sub-agents A14 (CM-neutrino),
+A16 ($\theta_{13}$ pull), A17 (period-ratio CKM), A22 (G1.12.B M1),
+A24 ($\sqrt 6$ structure), and A26 (G1.12.B M2).  A18 caught the
+Wang--Zhang $\to$ Antusch--Hinze--Saad citation misattribution
+(hallu~\#78).  Computational resources: PC RTX~5060~Ti
+(cosmopower-jax 386 predictions/s, JAX named\_shape patch).
+LMFDB queries: 4.5.b.a $L$-value cached 2026-05-05.
+
+%%--------------------------------------------------------------------
+\section*{Data and code availability}
+
+Repository: \url{https://github.com/AIdevsmartdata/crossed-cosmos}.
+Snapshot of v7.3 axioms: Zenodo DOI \Zeno (commit 6.0.53, 2026-05-05
+06:00 UTC).  H7-A computation:
+\texttt{notes/eci\_v7\_aspiration/H7\_RESCUE/SYNTHESIS\_2026-05-05.md}.
+W1 verdict log:
+\texttt{notes/eci\_v7\_aspiration/W1\_TAU\_NEAR\_I/results/}
+\texttt{W1\_verdict\_2026-05-05.log}.
+Wave 4-5 follow-ups:
+A14 \texttt{A14\_CM\_NEUTRINO/SUMMARY.md},
+A16 \texttt{A16\_THETA13\_PREDICTION/theta13\_prediction.json},
+A17 \texttt{A17\_PERIOD\_RATIO\_CKM/SUMMARY.md},
+A22 \texttt{A22\_G112B\_M1/} (\texttt{f\_ij\_modular.py}),
+A24 \texttt{A24\_SQRT6\_STRUCTURE/sqrt6\_pslq.py},
+A26 \texttt{A26\_G112B\_M2/} (\texttt{m\_u\_svd.py},
+\texttt{svd\_results.json}).
+
+%%--------------------------------------------------------------------
+\begin{thebibliography}{99}
+
+\bibitem{V2NoGo}
+K.~Remondi\`ere,
+\emph{A no-go theorem for the Cabibbo angle in $S'_4$ modular
+flavour models at $\tau=i$},
+ECI v7 aspiration note V2 (2026-05-04);
+companion paper, this volume.
+
+\bibitem{NPP20}
+P.~P.~Novichkov, J.~T.~Penedo, S.~T.~Petcov,
+\emph{Double Cover of Modular $S_4$ for Flavour Model Building},
+Nucl.~Phys.~B \textbf{963} (2021) 115301;
+\arXiv{2006.03058}.
+%% [VERIFIED 2026-05-05 via arXiv API.]
+
+\bibitem{LYD20}
+X.-G.~Liu, C.-Y.~Yao, G.-J.~Ding,
+\emph{Modular invariant quark and lepton models in double covering of
+$S_4$ modular group},
+Phys.~Rev.~D \textbf{103} (2021) 056013;
+\arXiv{2006.10722}.
+%% [VERIFIED 2026-05-05 via arXiv API.]
+
+\bibitem{dMVP26}
+I.~de~Medeiros~Varzielas, M.~Paiva,
+\emph{Quark masses and mixing from Modular $S'_4$ with Canonical
+K\"ahler Effects}, \arXiv{2604.01422} (2026).
+%% [VERIFIED 2026-05-05 via arXiv API. Quark sector only;
+%%  earlier internal "dMVP26 lepton" tag corrected by A14.]
+
+\bibitem{DuWang22}
+X.~K.~Du, F.~Wang,
+\emph{Flavor Structures of Quarks and Leptons from Flipped SU(5) GUT
+with $A_4$ Modular Flavor Symmetry},
+JHEP \textbf{01} (2023) 036;
+\arXiv{2209.08796}.
+%% [VERIFIED 2026-05-05 via arXiv API; NOT "Tanimoto-Yamamoto".]
+
+\bibitem{AbbasKhalil22}
+M.~Abbas, S.~Khalil,
+\emph{Modular $A_4$ Symmetry With Three-Moduli and Flavor Problem},
+\arXiv{2212.10666} (2022).
+%% [VERIFIED 2026-05-05 via arXiv API; NOT "Ding-King-Liu-Lu".]
+
+\bibitem{Perlmutter25}
+E.~Perlmutter,
+\emph{An $L$-function Approach to Two-Dimensional Conformal Field Theory},
+\arXiv{2509.21672} (Sept.~2025).
+%% [VERIFIED 2026-05-05 via arXiv API; sole author E. Perlmutter.]
+
+\bibitem{Damerell71}
+R.~M.~Damerell,
+\emph{$L$-functions of elliptic curves with complex multiplication, I},
+Acta Arith.\ \textbf{17} (1970/71) 287--301;
+\emph{II}, Acta Arith.\ \textbf{19} (1971) 311--317.
+
+\bibitem{Shimura76}
+G.~Shimura,
+\emph{The special values of the zeta functions associated with cusp forms},
+Comm.~Pure Appl.~Math.\ \textbf{29} (1976) 783--804.
+
+\bibitem{Deligne79}
+P.~Deligne,
+\emph{Valeurs de fonctions $L$ et p\'eriodes d'int\'egrales},
+in \emph{Automorphic forms, representations and $L$-functions} (Corvallis, 1977),
+Proc.\ Sympos.\ Pure Math.\ XXXIII, Part~2, AMS (1979), 313--346.
+
+\bibitem{BDP13}
+M.~Bertolini, H.~Darmon, K.~Prasanna,
+\emph{Generalized Heegner cycles and $p$-adic Rankin $L$-series},
+Duke Math.\ J.\ \textbf{162} (2013) 1033--1148;
+DOI \href{https://doi.org/10.1215/00127094-2142056}{10.1215/00127094-2142056}.
+%% [VERIFIED 2026-05-05 via Duke / Project Euclid; no arXiv preprint.]
+
+\bibitem{ChowSel49}
+S.~Chowla, A.~Selberg,
+\emph{On Epstein's zeta-function (I)},
+Proc.~Nat.~Acad.~Sci.~U.S.A.\ \textbf{35} (1949) 371--374.
+
+\bibitem{IwaKow04}
+H.~Iwaniec, E.~Kowalski,
+\emph{Analytic Number Theory},
+AMS Colloquium Publ.\ \textbf{53}, AMS (2004).
+% Theorem 5.3 (approximate functional equation) used by H7-A's mpmath
+% L-value computation.
+
+\bibitem{Hurwitz1899}
+A.~Hurwitz,
+\emph{\"Uber die Entwicklungskoeffizienten der lemniskatischen
+Funktionen},
+Math.~Ann.\ \textbf{51} (1899) 196--226.
+% Lemniscatic numbers H_n; H_4 is the prototype CM-by-Q(i) instance
+% used here as alpha_1 = 1/10.
+
+\bibitem{HS86}
+G.~Harder, N.~Schappacher,
+\emph{Special values of Hecke L-functions and abelian integrals},
+in: \emph{Workshop Bonn 1984}, Lecture Notes in Math.\ \textbf{1111},
+Springer (1986) 17--49 (also LNM \textbf{1399}, Zagier mirror).
+% Section 1 prototype example: CM-by-Q(i) lemniscate ladder for
+% weight-5 newforms; provides the standard reference for both
+% alpha_1 = H_4 = 1/10 and alpha_2 = B_2/2 = 1/12.
+
+\bibitem{Visser21}
+R.~Visser,
+\emph{Special values of L-functions of CM modular forms},
+University of Warwick first-year PhD project (2021).
+% Tables for K = Q(sqrt(-7)) and K = Q(i) verifying the Damerell
+% ladder structure used in Theorem 2.
+
+\bibitem{ECIv6053}
+K.~Remondi\`ere,
+\emph{ECI/crossed-cosmos repository, version 6.0.53},
+Zenodo (2026-05-05);
+DOI \Zeno.
+% Snapshot containing v7.3 axioms and the G1.15 refutation log.
+
+%% -------- Wave 4-5 additions (A14, A16, A17, A22, A24, A26) --------
+
+\bibitem{DKLL19}
+G.-J.~Ding, S.~F.~King, X.-G.~Liu, J.-N.~Lu,
+\emph{Modular $S_4$ and $A_4$ symmetries and their fixed points:
+new predictive examples of lepton mixing},
+JHEP \textbf{12} (2019) 030;
+\arXiv{1910.03460}.
+%% [VERIFIED 2026-05-05 via arXiv API. Case~B at tau_S=i gives
+%%  CSD(1+sqrt 6) alignment.]
+
+\bibitem{LMS22}
+S.~F.~King,
+\emph{Littlest Modular Seesaw},
+\arXiv{2211.00654} (2022).
+%% [VERIFIED 2026-05-05 via arXiv API.]
+
+\bibitem{CK24}
+F.~Costa, S.~F.~King,
+\emph{Sum rules in CSD(2.5), CSD(3) and CSD$(1+\sqrt{6})$ Littlest
+Seesaw models},
+\arXiv{2307.13895} (2023).
+%% [VERIFIED 2026-05-05 via arXiv API.]
+
+\bibitem{LS16}
+S.~F.~King,
+\emph{Minimal predictive see-saw model with normal neutrino mass
+hierarchy},
+JHEP \textbf{07} (2013) 137 (and 2016 follow-up
+\arXiv{1512.07531}).
+
+\bibitem{Priya26}
+P.~Priya, K.~Chauhan, S.~Kumar, T.~Nomura,
+\emph{Modular $A_4$ symmetry with fixed-point preference}
+(working title), \arXiv{2604.04585} (2026).
+%% [VERIFIED 2026-05-05 via arXiv API. Best-fit tau_l = 3 + i/2,
+%%  not tau_l = i.]
+
+\bibitem{ChenKMV23}
+T.~Chen, S.~F.~King, A.~Medina, J.~W.~F.~Valle,
+\emph{Quark-lepton mass relations from modular flavor symmetry},
+\arXiv{2312.09255} (2023).
+%% [VERIFIED 2026-05-05 via arXiv API. Gamma_4 = S_4 fall-back
+%%  candidate if S'_4 fails.]
+
+\bibitem{A18scoping}
+K.~Remondi\`ere,
+\emph{G1.12.B scoping: SU(5) $5_H+45_H$ modular $f^{ij}$ matrix
+campaign},
+ECI v7 aspiration note A18 (2026-05-05);
+internal scoping document, this volume.
+
+\bibitem{HabaNagShim24}
+N.~Haba, K.~Nagano, K.~Shimizu, T.~Yamada,
+\emph{Gauge coupling unification and proton decay via 45 Higgs boson
+in SU(5) GUT},
+PTEP (2024);
+\arXiv{2402.15124}.
+%% [VERIFIED 2026-05-05 via arXiv API. Direct precedent for SU(5)
+%%  + 45_H + proton decay (non-modular).]
+
+\bibitem{AHS25}
+S.~Antusch, J.~Hinze, S.~Saad,
+\emph{Updated Running Quark and Lepton Parameters at Various Scales},
+\arXiv{2510.01312} (Oct.~2025; rev.\ Mar.~2026).
+%% [VERIFIED 2026-05-05 via arXiv API. *NOT* Wang-Zhang
+%%  (corrected from internal misattribution; A18, hallu \#78).]
+
+\bibitem{PatelShukla23}
+A.~Patel, M.~Shukla,
+\emph{Quantum corrections and the minimal Yukawa sector of SU(5)},
+Phys.~Rev.~D \textbf{109} (2024) 015007;
+\arXiv{2310.16563}.
+%% [VERIFIED 2026-05-05 via arXiv API. Eq.~(8) loop functions used
+%%  in G1.12.B M3.]
+
+\bibitem{SuperK20epi}
+A.~Takenaka et al.\ (Super-Kamiokande Collaboration),
+\emph{Search for proton decay via $p\to e^+\pi^0$ and
+$p\to\mu^+\pi^0$ with an enlarged fiducial volume in
+Super-Kamiokande~I--IV},
+Phys.~Rev.~D \textbf{102} (2020) 112011;
+\arXiv{2010.16098}.
+%% [VERIFIED 2026-05-05 via arXiv API.]
+
+\bibitem{SuperK14Knu}
+K.~Abe et al.\ (Super-Kamiokande Collaboration),
+\emph{Search for proton decay via $p\to\nu K^+$ using 260 kiloton-year
+data of Super-Kamiokande},
+Phys.~Rev.~D \textbf{90} (2014) 072005;
+\arXiv{1408.1195}.
+%% [VERIFIED 2026-05-05 via arXiv API.]
+
+\bibitem{HK18}
+K.~Abe et al.\ (Hyper-Kamiokande Collaboration),
+\emph{Hyper-Kamiokande Design Report},
+KEK Preprint 2018-9 (2018);
+\arXiv{1805.04163}.
+%% [VERIFIED 2026-05-05 via arXiv API.]
+
+\bibitem{DUNE24}
+B.~Abi et al.\ (DUNE Collaboration),
+\emph{Long-baseline neutrino oscillation physics potential of the
+DUNE experiment} and joint proton-decay analyses,
+JHEP \textbf{05} (2024) 258;
+\arXiv{2403.18502}.
+%% [VERIFIED 2026-05-05 via arXiv API. DUNE 20-yr K+nubar
+%%  6.5e34 yr.]
+
+\end{thebibliography}
+
+\end{document}

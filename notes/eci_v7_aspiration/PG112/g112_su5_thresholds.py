@@ -6,7 +6,7 @@ Goal: compute the 1-loop GUT threshold correction to (Y_u)_22/(Y_u)_33
       the extended SU(5) Higgs sector: 5_H + 45_H.
 
 Gap to close: H3 gives y_c/y_t = 2.725e-3 at M_GUT; SM 2-loop running
-(Wang-Zhang 2025, arXiv:2510.01312) requires y_c/y_t = 3.256e-3.
+(Antusch-Hinze-Saad 2025, arXiv:2510.01312) requires y_c/y_t = 3.256e-3.
 Required fractional shift: +19.5%.
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -112,15 +112,15 @@ import os
 # The actual matrix is not diagonal; only the singular values (eigenvalues of
 # sqrt(Y_u Y_u†)) are physically relevant for mass ratios.
 
-# From G1.9 (Wang-Zhang 2025 calibrated, live-fetched 2026-05-04):
-#   y_t(M_GUT) = 0.4454  (Wang-Zhang Table 2 reference value)
+# From G1.9 (Antusch-Hinze-Saad 2025 calibrated, live-fetched 2026-05-04):
+#   y_t(M_GUT) = 0.4454  (Antusch-Hinze-Saad 2025 Table 2 reference value)
 #   y_c/y_t(M_GUT) = 3.256e-3  (target from SM 2-loop running with PDG BC)
 # H3 prediction:
 #   y_c/y_t(M_GUT) = 2.7247e-3  (LYD20 Model VI, tau=i, best-fit coupling ratios)
 # Gap: (3.256e-3 - 2.7247e-3) / 3.256e-3 = +19.5% needed upward shift
 
-WZ_yt_GUT   = 0.4454      # y_t at M_GUT, Wang-Zhang Table 2
-WZ_ratio_GUT = 3.256e-3   # y_c/y_t at M_GUT, Wang-Zhang (PDG 2024 BC)
+WZ_yt_GUT   = 0.4454      # y_t at M_GUT, Antusch-Hinze-Saad 2025 Table 2
+WZ_ratio_GUT = 3.256e-3   # y_c/y_t at M_GUT, Antusch-Hinze-Saad 2025 (PDG 2024 BC)
 H3_ratio_GUT = 2.7247e-3  # H3 prediction (LYD20 Model VI, tau=i)
 
 M_GUT = 2.0e16  # GeV, SU(5) unification scale
@@ -134,7 +134,7 @@ print("G1.12 — SU(5) 5_H + 45_H Threshold Corrections to y_c/y_t")
 print("=" * 70)
 print()
 print(f"H3 GUT ratio (LYD20 Model VI, τ=i): y_c/y_t = {H3_ratio_GUT:.4e}")
-print(f"SM target (Wang-Zhang 2025):         y_c/y_t = {WZ_ratio_GUT:.4e}")
+print(f"SM target (Antusch-Hinze-Saad 2025):         y_c/y_t = {WZ_ratio_GUT:.4e}")
 print(f"Required fractional shift at M_GUT:  +{FRAC_TARGET*100:.2f}%")
 print()
 
@@ -202,7 +202,7 @@ def loop_h(m1_sq, m2_sq, mu_sq=None):
 # ─────────────────────────────────────────────────────────────────────────────
 # SECTION 2: SU(5) gauge coupling at M_GUT
 # ─────────────────────────────────────────────────────────────────────────────
-# From G1.9: at M_GUT, gauge couplings from 2-loop SM running (Wang-Zhang calibrated)
+# From G1.9: at M_GUT, gauge couplings from 2-loop SM running (Antusch-Hinze-Saad calibrated)
 # g1 = g2 = g3 = g_GUT at unification (approximate; exact value below)
 
 g_GUT = 0.530  # alpha_GUT ~ g^2/(4pi) ~ 0.530^2/(4pi) ~ 0.0224
@@ -785,7 +785,7 @@ print()
 print("ANTI-HALLUCINATION REGISTER:")
 print("  [LIVE-VERIFIED 2026-05-04] arXiv:2310.16563 (Patel-Shukla, PRD 109:015007)")
 print("  [LIVE-VERIFIED 2026-05-04] arXiv:0804.0717 (Antusch-Spinrath, PRD 78:075020)")
-print("  [LIVE-VERIFIED 2026-05-04] arXiv:2510.01312 (Wang-Zhang, WZ Table 2 values)")
+print("  [LIVE-VERIFIED 2026-05-04] arXiv:2510.01312 (Antusch-Hinze-Saad 2025, Table 2 values)")
 print("  [TRAINING-KNOWLEDGE] Georgi-Jarlskog (-3) factor for 45_H [PLB86:297, 1979]")
 print("    -> FLAGGED: not verified live. Standard textbook result but needs crosscheck.")
 print("  [TRAINING-KNOWLEDGE] Loop function f[m^2, 0] = (1/16pi^2) * ln(mu^2/m^2)")

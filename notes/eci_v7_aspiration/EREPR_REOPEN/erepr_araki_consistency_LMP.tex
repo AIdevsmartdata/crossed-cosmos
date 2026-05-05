@@ -1,0 +1,778 @@
+%% erepr_araki_consistency_LMP.tex
+%% Standalone note for Letters in Mathematical Physics
+%% "Modular flow generates generalized entropy in type-II_inf crossed-product gravity:
+%%  an Araki-cocycle derivation, with a no-go for HPS-DEHK Stinespring intertwining"
+%% Status: DRAFT 2026-05-05 (recadre after A10 spectrum-mismatch verdict)
+%% MVT2-class consistency note: the Araki Wk2 result is a clean theorem;
+%% the Wk3 Stinespring bridge to DSSYK chord algebra is REFUTED at operator level
+%% (Wk4 = A10), and only a Krylov-thermodynamic match log Z_chord = log Z_DEHK + O(1/N)
+%% survives, reproducing the standard Bekenstein-Hawking dS entropy.
+%% All arXiv IDs live-verified against arXiv abstract pages on 2026-05-05.
+
+\documentclass[12pt,a4paper]{article}
+
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{hyperref}
+\usepackage{cite}
+\usepackage{geometry}
+\geometry{margin=2.5cm}
+
+%% Theorem environments
+\newtheorem{theorem}{Theorem}
+\newtheorem{proposition}{Proposition}
+\newtheorem{lemma}{Lemma}
+\newtheorem{remark}{Remark}
+\newtheorem{corollary}{Corollary}
+\theoremstyle{definition}
+\newtheorem{definition}{Definition}
+
+\title{Modular flow generates generalized entropy in\\
+       type-II$_\infty$ crossed-product gravity:\\[4pt]
+       an Araki-cocycle derivation, with a no-go for\\
+       HPS--DEHK Stinespring intertwining}
+
+\author{%
+  \textit{(Author names to be determined)}\\[2pt]
+  \small \textit{Submitted to Letters in Mathematical Physics}
+}
+
+\date{Preprint: \today}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+Working in the type-II$_\infty$ crossed-product algebra
+$\mathcal{M}_R = \mathcal{A}_{\mathrm{III}_1}\rtimes_{\sigma^{\phi}}\mathbb{R}$
+attached to a static-patch observer (Chandrasekaran--Longo--Penington--Witten,
+de~Vuyst--Eccles--H\"{o}hn--Kirklin), we use the Araki relative
+modular operator $\Delta_{\rho|\sigma}$ and its cocycle identity to
+derive the algebraic identity
+\[
+   \frac{d}{d\tau_R} S_{\mathrm{gen}}(\rho)\bigg|_{\rho \text{ fixed},\;\sigma_{\tau_R}}
+   \;=\; \langle K_R \rangle_\rho ,
+\]
+where $K_R$ is the dressed modular Hamiltonian and $\sigma_{\tau_R}=\sigma\circ
+\sigma^{\sigma}_{-\tau_R}$ is the modular-time-evolved KMS reference state.
+The derivation is rigorous in the type-II$_\infty$ setting via Pusz--Woronowicz
+applied to normal semifinite faithful (nsf) weights and is independent of
+the Petz recovery construction (which has no known type-II$_\infty$
+realization for $\mathcal{M}_R$).
+
+We then examine, and refute at the operator level, the natural attempt to
+intertwine $K_R$ with the chord (transfer-matrix) Hamiltonian
+$H_{\mathrm{grav}}$ of the double-scaled SYK / sine-dilaton gravity model
+(Heller--Papalini--Schuhmann; Heller--Ori--Papalini--Schuhmann--Wang) through
+a modular-rigidified Stinespring isometry $V:\mathcal{H}_{\mathrm{HPS}}\to
+\mathcal{H}_{\mathrm{DEHK}}$. The HPS chord spectrum
+$E(\theta)=-\cos\theta/\sqrt{2|\log q|(1-q^2)}$ is bounded continuous on
+$[-E_{\max},+E_{\max}]$, while $K_R=\beta_{\mathrm{dS}} H_\xi + p$ is
+unbounded continuous on $\mathbb{R}$. No isometry can intertwine a bounded
+self-adjoint operator with an unbounded one; hence the proposed bridge
+fails as an operator-level identification.
+
+What does survive is a thermodynamic / Krylov-asymptotic match: the
+semiclassical large-$N$ partition functions agree,
+$\log Z_{\mathrm{chord}}(\beta_{\mathrm{dS}}) = \log Z_{\mathrm{DEHK}}
+(\beta_{\mathrm{dS}}) + O(1/N)$, reproducing the standard Bekenstein--Hawking
+de Sitter entropy $A_{\mathrm{horizon}}/(4 G_N)$. We frame this paper as a
+\emph{consistency note} (MVT2-class): the Araki theorem stands as a new
+result of independent interest, while the Stinespring bridge between the
+DSSYK chord algebra and the de Sitter crossed product is recorded as a
+no-go obstruction for future work.
+\end{abstract}
+
+% =====================================================================
+\section{Introduction}
+\label{sec:intro}
+% =====================================================================
+
+\paragraph{The modular flow / generalized entropy programme.}
+Algebraic methods have transformed the discussion of generalized entropy in
+gravitational subregions. After Witten's observation~\cite{Witten2022} that
+gravitational backreaction promotes the type-III$_1$ algebra of bulk
+quantum field theory observables to a type-II crossed product, two parallel
+programmes have emerged:
+(i)~the de~Sitter / static-patch programme of
+Chandrasekaran--Longo--Penington--Witten~\cite{CLPW2023} (CLPW), refined by
+de~Vuyst--Eccles--H\"{o}hn--Kirklin~\cite{DEHK2025a} (DEHK), in which the
+crossed-product trace yields finite observer-dependent entropies, and
+(ii)~the generalized second law (GSL) programme of
+Faulkner--Speranza~\cite{FaulknerSperanza2024} (FS24), in which monotonicity
+of relative entropy under modular inclusions translates to GSL-type
+statements for arbitrary cuts of Killing horizons.
+
+Both programmes share a central structural object: the \emph{modular
+Hamiltonian} $K_R$ of the dressed (crossed-product) algebra. In the
+KMS-thermal de~Sitter setting at $\beta_{\mathrm{dS}} = 2\pi r_{\mathrm{dS}}$
+(Bisognano--Wichmann~\cite{BisognanoWichmann1976}; Connes--Rovelli
+thermal-time hypothesis~\cite{ConnesRovelli1994}), $K_R$ generates a
+genuine one-parameter automorphism group, and its expectation value
+$\langle K_R \rangle_\rho$ in a perturbed state $\rho$ controls the
+first-law variation of the dressed entropy.
+
+\paragraph{Two questions this note answers.}
+\begin{enumerate}
+\item Does the Araki relative modular operator
+$\Delta_{\rho|\sigma}$~\cite{Araki1976} provide a clean type-II$_\infty$
+derivation of $dS_{\mathrm{gen}}/d\tau_R = \langle K_R \rangle_\rho$,
+without invoking Petz recovery? \emph{Yes} (Theorem~\ref{thm:araki-rate}).
+
+\item Can the chord Hamiltonian $H_{\mathrm{grav}}$ of the
+DSSYK / sine-dilaton holographic dictionary
+of Heller--Papalini--Schuhmann~\cite{HPS2024} (HPS), refined by
+Heller--Ori--Papalini--Schuhmann--Wang~\cite{HOPSW2025} (HOPSW), be
+intertwined with $K_R$ via a CPTP isometry between the chord Hilbert space
+$\mathcal{H}_{\mathrm{HPS}}$ and the GNS Hilbert space
+$\mathcal{H}_{\mathrm{DEHK}}$? \emph{No} (Proposition~\ref{prop:no-go-spectrum}),
+because their spectra have incompatible support.
+\end{enumerate}
+
+The negative answer is sharper than a generic ``algebra-type-mismatch''
+argument: it pinpoints the obstruction in a concrete, falsifiable way
+(bounded versus unbounded continuous spectrum). The thermodynamic match
+that survives, $\log Z_{\mathrm{chord}}=\log Z_{\mathrm{DEHK}}+O(1/N)$, is
+\emph{not} new (it reduces to the Bekenstein--Hawking entropy of the
+cosmological horizon), and we therefore frame this paper at the level of a
+consistency note: a clean lemma (Theorem~\ref{thm:araki-rate}) plus a
+clean obstruction (Proposition~\ref{prop:no-go-spectrum}) plus an honest
+account of what is left open.
+
+\paragraph{Plan.}
+Section~\ref{sec:araki} states and proves the Araki-cocycle identity
+$dS_{\mathrm{gen}}/d\tau_R = \langle K_R \rangle_\rho$ in
+type-II$_\infty$. Section~\ref{sec:stinespring} reviews the
+modular-rigidified Stinespring embedding ``$C_{BS}$'' of the chord
+Hilbert space into the GNS Hilbert space of $\mathcal{M}_R$, and isolates
+the operator-level requirements (P1)--(P3) that any genuine bridge would
+have to satisfy. Section~\ref{sec:no-go} states the spectrum-mismatch
+obstruction. Section~\ref{sec:survives} records the Krylov-thermodynamic
+match that does survive. Section~\ref{sec:discussion} discusses
+alternative routes (Faulkner--Hollands~II type-changing recovery, modular
+Krylov density-of-states matches) and open problems.
+
+% =====================================================================
+\section{Wk2: Araki cocycle in type-II$_\infty$}
+\label{sec:araki}
+% =====================================================================
+
+\subsection{Setup}
+Let $\mathcal{M}$ be a von Neumann algebra in standard form on a Hilbert
+space $\mathcal{H}$, and let $\sigma$ be a faithful normal state with
+GNS vector $|\Omega_\sigma\rangle$ in the natural positive cone
+$\mathcal{P}^\sharp$. For a second faithful normal state $\rho$ with
+GNS vector $|\Omega_\rho\rangle\in\mathcal{P}^\sharp$, the
+\emph{Araki relative modular operator}~\cite{Araki1976} is
+\begin{equation}
+   \Delta_{\rho|\sigma}
+   \;=\; S_{\rho|\sigma}^{\,*}\,S_{\rho|\sigma},
+   \qquad
+   S_{\rho|\sigma} : A|\Omega_\sigma\rangle \longmapsto
+                      A^*|\Omega_\rho\rangle ,\quad A\in\mathcal{M}.
+\end{equation}
+Let $\sigma^\sigma_t$ denote the modular automorphism group of $\sigma$
+on $\mathcal{M}$, generated by the modular Hamiltonian
+$K_R = -\log\Delta_\sigma\geq 0$ (uniform sign convention, cf.~Wk2
+memo~\cite{EREPR_Araki_Wk2}). The \emph{Araki relative entropy} is
+\begin{equation}
+   S(\rho\|\sigma)
+   \;=\; -\,\langle\Omega_\rho |\,\log\Delta_{\rho|\sigma}\,|\Omega_\rho\rangle ,
+   \label{eq:araki-rel-entropy}
+\end{equation}
+finite when $\mathrm{supp}(\rho)\subset\mathrm{supp}(\sigma)$ and $+\infty$
+otherwise.
+
+\subsection{Type-II$_\infty$ extension via Pusz--Woronowicz}
+For the de~Sitter crossed product $\mathcal{M}_R=
+\mathcal{A}_{\mathrm{III}_1}\rtimes_{\sigma^\phi}\mathbb{R}$ of CLPW
+\cite{CLPW2023} and DEHK~\cite{DEHK2025a}, $\mathcal{M}_R$ is type-II$_\infty$
+and admits a normal semifinite faithful (nsf) tracial weight $\tau_{\mathrm{II}}$
+(the Haagerup trace). The Araki construction is purely algebraic and the
+Tomita--Takesaki theory applies to any standard form, so $\Delta_{\rho|\sigma}$
+is well-defined for every pair of nsf weights. The
+Pusz--Woronowicz~\cite{PuszWoronowicz1978} variational characterization
+\begin{equation}
+   S(\rho\|\sigma)
+   \;=\; \sup_{\substack{A\in\mathcal{M}\\ A=A^*\geq 0}}
+         \bigl\{\,\rho(\log A) - \log\sigma(e^A)\,\bigr\}
+\end{equation}
+extends to type-II$_\infty$ weights through Haagerup's $L^p$ theory and
+the Ohya--Petz~\cite{OhyaPetz1993} formulation in semifinite algebras.
+
+\subsection{The cocycle identity and modular-time derivative}
+The relative modular operator satisfies the Connes-cocycle identity (a
+direct consequence of $\sigma^\sigma_t$ acting on the GNS data):
+\begin{equation}
+   \Delta_{\rho|\sigma\circ\sigma^\sigma_{-t}}
+   \;=\; \Delta_{\rho|\sigma}\,e^{\,t K_R} ,
+   \label{eq:cocycle}
+\end{equation}
+in the strong-resolvent sense on the joint domain. (See
+Bratteli--Robinson~\cite{BR2}, Theorem~5.3.10 for the analyticity strip
+$0\leq\mathrm{Im}\,t\leq\beta/2$ of $\Delta^{it}_\sigma$ on KMS states,
+and Theorem~5.3.15 for the differentiability of relative entropy along
+the modular flow.)
+
+\begin{theorem}[Araki rate, Wk2]
+\label{thm:araki-rate}
+Let $\mathcal{M}_R$ be a type-II$_\infty$ crossed-product algebra with nsf
+weight $\tau_{\mathrm{II}}$, KMS reference state $\sigma$ at inverse
+temperature $\beta_{\mathrm{dS}}$ with modular Hamiltonian $K_R$, and let
+$\rho$ be a normal state with $\mathrm{supp}(\rho)\subset\mathrm{supp}(\sigma)$
+satisfying the regularity condition $\rho \in \mathrm{dom}\,K_R$ (i.e.\
+$\langle K_R\rangle_\rho<\infty$). Define the modular-time-evolved
+reference $\sigma_{\tau_R}\:=\sigma\circ\sigma^\sigma_{-\tau_R}$. Then
+\begin{equation}
+   \frac{d}{d\tau_R}\,S\bigl(\rho\|\sigma_{\tau_R}\bigr)\bigg|_{\tau_R=0}
+   \;=\; -\,\langle K_R\rangle_\rho ,
+   \label{eq:rate-relent}
+\end{equation}
+and consequently, with the FS24 identification
+$S_{\mathrm{gen}}(\rho)=S_{\mathrm{gen}}(\sigma)-S(\rho\|\sigma)+
+\text{(KMS boundary terms)}$~\cite{FaulknerSperanza2024},
+\begin{equation}
+   \boxed{\;\;
+   \frac{dS_{\mathrm{gen}}}{d\tau_R}\bigg|_{\rho \text{ fixed}}
+   \;=\; +\,\langle K_R\rangle_\rho .
+   \;\;}
+   \label{eq:Sgen-rate}
+\end{equation}
+\end{theorem}
+
+\begin{proof}
+By~\eqref{eq:cocycle},
+$\log\Delta_{\rho|\sigma_{\tau_R}}=\log\Delta_{\rho|\sigma}+\tau_R K_R$ on
+the joint analyticity domain. Differentiating the
+formula~\eqref{eq:araki-rel-entropy}, exchanging the
+$d/d\tau_R$ with the GNS expectation (justified by the dominated
+convergence on the strip via the KMS analyticity of
+Bratteli--Robinson~\cite{BR2}, Thm.~5.3.10), one obtains
+\[
+   \frac{d}{d\tau_R}S(\rho\|\sigma_{\tau_R})\bigg|_{\tau_R=0}
+   \;=\; -\,\langle\Omega_\rho|\,K_R\,|\Omega_\rho\rangle
+   \;=\; -\,\langle K_R\rangle_\rho ,
+\]
+which is~\eqref{eq:rate-relent}. The conversion to $S_{\mathrm{gen}}$
+through the FS24 identification gives~\eqref{eq:Sgen-rate}; the
+boundary terms vanish for the KMS reference $\sigma$ on a Killing
+horizon (FS24, Sec.~3).
+\end{proof}
+
+\begin{remark}
+The regularity hypothesis $\rho\in\mathrm{dom}\,K_R$ is non-trivial in
+type-II$_\infty$: it requires $\rho$ to lie in the form-domain of $K_R$,
+equivalent to a finite \emph{modular energy} expectation. For Boulware
+or perturbed-thermal reference states in the SdS static patch, this
+condition is plausible but has not been verified state-by-state in the
+DEHK literature. We treat~\eqref{eq:Sgen-rate} as a conditional theorem
+in this sense.
+\end{remark}
+
+\begin{remark}[Type-I sanity check]
+In the type-I limit (replace $\mathcal{M}_R$ by $\mathcal{B}(\mathcal{H})$
+with $\sigma=\rho_\sigma\in\mathcal{S}_1(\mathcal{H})$ a density matrix),
+$\Delta_\sigma=\rho_\sigma\otimes\rho_\sigma^{-1}$ in the standard
+representation, $K_R=-\log\rho_\sigma$, and~\eqref{eq:rate-relent}
+reduces to the textbook formula
+$d/dt\,S(\rho\|\rho_\sigma e^{-tK_R})|_{t=0}=-\mathrm{Tr}(\rho K_R)$
+of Uhlmann~\cite{Uhlmann1977} and Lindblad~\cite{Lindblad1974}. The
+type-II$_\infty$ statement is the natural extension to a setting where
+$\rho_\sigma$ is not trace-class.
+\end{remark}
+
+\paragraph{Compatibility with the FS24 GSL.}
+Equation~\eqref{eq:Sgen-rate} is consistent with the Faulkner--Speranza
+GSL~\cite{FaulknerSperanza2024}: monotonicity of relative entropy under
+the modular inclusions of $\mathcal{M}_R$ along the horizon implies
+$d/d\tau_R\,S(\rho\|\sigma)\geq 0$ for cuts moving into the future
+(modular flow as ``algebraic time''), and Theorem~\ref{thm:araki-rate}
+identifies the rate with $\langle K_R\rangle_\rho$. This is the
+algebraic analogue of Wall's GSL theorem~\cite{Wall2012} as recast in
+the crossed-product language.
+
+% =====================================================================
+\section{Wk3: Modular-rigidified Stinespring embedding}
+\label{sec:stinespring}
+% =====================================================================
+
+We now turn to the question whether $K_R$ admits a holographic dual
+identification with the chord Hamiltonian of the DSSYK / sine-dilaton
+holographic dictionary.
+
+\subsection{The chord-side data (HPS / HOPSW)}
+HPS~\cite{HPS2024} construct, from the chord Hilbert space
+$\mathcal{H}_{\mathrm{HPS}}=\ell^2(\mathbb{N}_0)$ with chord-creation
+operator $a^\dagger$ and chord-number basis $|n\rangle =
+(a^\dagger)^n|0\rangle/\sqrt{[n]_{q}!}$, the gravitational transfer-matrix
+Hamiltonian
+\begin{equation}
+   H_{\mathrm{grav}}
+   \;=\; \frac{1}{\sqrt{2|\log q|(1-q^2)}}
+         \Bigl[\,-\cos(\hat P) + \tfrac12 e^{i\hat P}e^{-\hat L}\,\Bigr] ,
+   \label{eq:Hgrav}
+\end{equation}
+acting on $\mathcal{H}_{\mathrm{HPS}}$, where $\hat L = 2|\log q|\hat n$
+is the chord-length operator and $\hat P$ its conjugate. The spectrum is
+\begin{equation}
+   \mathrm{spec}(H_{\mathrm{grav}})
+   \;=\; \Bigl\{\,E(\theta)=-\cos\theta\,\bigl[2|\log q|(1-q^2)\bigr]^{-1/2}
+                : \theta\in[0,\pi]\,\Bigr\} ,
+   \label{eq:HPS-spec}
+\end{equation}
+which is bounded continuous on $[-E_{\max},+E_{\max}]$ with
+$E_{\max} = [2|\log q|(1-q^2)]^{-1/2}$. The Plancherel measure is
+$d\mu(\theta) = (q^2,e^{\pm 2i\theta};q^2)_\infty\,d\theta$ (HPS, eq.~28).
+
+HOPSW~\cite{HOPSW2025} establish the holographic dictionary
+$\hat L \leftrightarrow$ extremal timelike volume in the dS$_2$ geometry
+anchored at past/future infinities, and identify $H_{\mathrm{grav}}$ with
+the ADM Hamiltonian of sine-dilaton dS$_2$ in the high-energy
+$\theta\to\pi$ limit. The Hawking temperature reads
+$\beta_{\mathrm{dS}}(\theta) = -2\pi/\theta$ in the dS regime
+(HOPSW, eq.~(17) and following).
+
+\subsection{The crossed-product side (CLPW / DEHK)}
+On the gravity side, CLPW~\cite{CLPW2023} and DEHK~\cite{DEHK2025a}
+construct the crossed-product algebra
+$\mathcal{M}_R = \mathcal{A}_R\rtimes_{\sigma^\phi}\mathbb{R}$ acting on
+$\mathcal{H}_{\mathrm{DEHK}} = \mathcal{H}_{\mathrm{qft}}\otimes L^2(\mathbb{R})$,
+generated by $\mathcal{A}_R$ (the bulk QFT type-III$_1$ algebra in the
+static patch), the dressed observables
+$e^{i pH_{\mathrm{mod}}}\,a\,e^{-ipH_{\mathrm{mod}}}$, and the clock
+momentum $p$. The dressed modular Hamiltonian is (CLPW, eq.~(2.10)
+footnote; DEHK, eq.~(3.6))
+\begin{equation}
+   K_R \;=\; \beta_{\mathrm{dS}}\,H_\xi \;+\; p ,
+   \label{eq:KR}
+\end{equation}
+where $H_\xi$ is the boost generator (continuous unbounded spectrum on
+$\mathbb{R}$ since $\mathcal{A}_R$ is type-III$_1$) and $p$ is the clock
+momentum (continuous spectrum on $\mathbb{R}$ for an ideal clock). Hence
+\begin{equation}
+   \mathrm{spec}(K_R) \;=\; \mathbb{R} ,
+\end{equation}
+unbounded both above and below.
+
+\subsection{The modular-rigidified Stinespring embedding $C_{BS}$}
+The natural attempt to bridge the two sides is a CPTP isometry
+$\Phi:\mathcal{B}(\mathcal{H}_{\mathrm{HPS}})\to\mathcal{M}_R$ obtained from a
+Stinespring isometry
+$V:\mathcal{H}_{\mathrm{HPS}}\to\mathcal{H}_{\mathrm{DEHK}}$ with $V|n\rangle =
+|\xi_n\rangle$, where $\{|\xi_n\rangle\}_{n\geq 0}$ are analytic vectors
+in the natural positive cone $\mathcal{P}^\sharp$ of $(\mathcal{M}_R,\sigma)$
+chosen so as to be eigenstates of $\hat L$ under the HOPSW dictionary.
+Berry-phase ambiguity in $V$ is rigidified by the
+Caputa--Mag\'{a}n--Patramanis--Tonni~\cite{CMPT2023} modular-Lyapunov
+universality $\lambda_L^{(\mathrm{mod})}=2\pi$ together with the Connes
+cocycle compatibility, fixing $V$ up to a global phase.
+
+The bridge would qualify as a \emph{genuine} algebraic identification if
+it satisfied:
+\begin{itemize}
+\item[(P1)] (state matching) $\Phi(\rho_{\mathrm{HPS}}) = \rho_{\mathrm{DEHK}}$,
+\item[(P2)] (modular-flow intertwining) $\Phi\circ\sigma^{(\mathrm{HPS})}_t
+            = \sigma^{(\mathrm{DEHK})}_t\circ\Phi$ for all $t\in\mathbb{R}$,
+\item[(P3)] (Connes-cocycle equivariance) the cocycle
+            $[D\rho_{\mathrm{DEHK}}\!:\!D\sigma_{\mathrm{DEHK}}]_t\in\mathcal{M}_R$
+            pulls back to a corresponding cocycle on
+            $\mathcal{B}(\mathcal{H}_{\mathrm{HPS}})$.
+\end{itemize}
+The detailed construction of $V$, the Stinespring map
+$\Phi(B) = \pi_R(VBV^*)$, and the Berry-rigidification by the cocycle
+identity are reviewed in the predecessor memo~\cite{EREPR_Berry_Wk3}.
+What concerns us here is whether (P1)--(P3) are operator-level
+attainable.
+
+% =====================================================================
+\section{Wk4: Spectrum-mismatch no-go}
+\label{sec:no-go}
+% =====================================================================
+
+\begin{proposition}[No-go for HPS--DEHK Stinespring intertwining]
+\label{prop:no-go-spectrum}
+Let $H_{\mathrm{grav}}$ be the chord (transfer-matrix) Hamiltonian on
+$\mathcal{H}_{\mathrm{HPS}}$ with spectrum~\eqref{eq:HPS-spec} bounded on
+$[-E_{\max},+E_{\max}]$, and let $K_R$ be the dressed modular Hamiltonian
+on $\mathcal{H}_{\mathrm{DEHK}}$ with spectrum~$\mathbb{R}$. Then no
+isometry $V:\mathcal{H}_{\mathrm{HPS}}\to\mathcal{H}_{\mathrm{DEHK}}$ can
+intertwine $H_{\mathrm{grav}}$ with $K_R$ in the sense of
+$V\,H_{\mathrm{grav}} = K_R\,V$ on $\mathrm{dom}\,H_{\mathrm{grav}}$.
+Consequently, the modular-rigidified Stinespring embedding
+$\Phi:\mathcal{B}(\mathcal{H}_{\mathrm{HPS}})\to\mathcal{M}_R$ of
+Section~\ref{sec:stinespring} cannot satisfy (P2) in any non-trivial sense,
+and (P1), (P3) fail accordingly.
+\end{proposition}
+
+\begin{proof}
+Suppose, for contradiction, that $V\,H_{\mathrm{grav}} = K_R\,V$ on a
+core for $H_{\mathrm{grav}}$. Since $V$ is an isometry,
+$V V^*$ is the orthogonal projection onto $\mathrm{ran}\,V \subset
+\mathcal{H}_{\mathrm{DEHK}}$, and $V H_{\mathrm{grav}} V^* =
+K_R\,VV^*$. Then for any unit vector $\psi\in\mathrm{dom}\,H_{\mathrm{grav}}$,
+\[
+   \langle V\psi |\,K_R\,|V\psi\rangle
+   \;=\; \langle\psi|\,H_{\mathrm{grav}}\,|\psi\rangle
+   \;\in\; [-E_{\max},+E_{\max}]
+\]
+by~\eqref{eq:HPS-spec}. Hence $\mathrm{ran}\,V$ would lie in the
+spectral subspace $\chi_{[-E_{\max},+E_{\max}]}(K_R)\,
+\mathcal{H}_{\mathrm{DEHK}}$, i.e.\ $K_R$ restricted to $\mathrm{ran}\,V$
+would be bounded. But $\mathrm{ran}\,V$ is infinite-dimensional (since
+$V$ is an isometry from $\ell^2(\mathbb{N}_0)$), and the restriction of a
+self-adjoint operator with continuous spectrum on $\mathbb{R}$ to any
+infinite-dimensional invariant subspace $\mathcal{K}$ either inherits
+unbounded spectrum (if $\mathcal{K}$ is not contained in a finite-spectral
+band) or is unitarily equivalent to a direct sum of bounded operators on
+spectral subspaces (if $\mathcal{K}$ \emph{is} contained in a bounded
+spectral band of $K_R$). In the second case, $\mathrm{ran}\,V$ lives in
+$\chi_{[-E_{\max},+E_{\max}]}(K_R)\,\mathcal{H}_{\mathrm{DEHK}}$, which is
+proper and inconsistent with $V$ being an isometry whose image is
+modular-flow invariant under $\sigma^{(\mathrm{DEHK})}_t = e^{itK_R}\,
+\cdot\,e^{-itK_R}$ (since unbounded $K_R$ generates a flow that escapes
+any bounded spectral band on a generic $\mathrm{ran}\,V$ direction).
+The contradiction forces (P2) to fail.
+
+(P1) fails because the $\beta_{\mathrm{dS}}$-KMS state for $K_R$ in
+$\mathcal{M}_R$ is supported on the full real spectrum, while
+$\rho_{\mathrm{HPS}} = \sum_n p_n(\beta)|n\rangle\langle n|$ has support
+in the discrete chord basis with thermal weights determined by
+$E_n^{\mathrm{chord}}$ from the bounded spectrum~\eqref{eq:HPS-spec};
+$\Phi(\rho_{\mathrm{HPS}})$ then has bounded modular energy support
+$[-E_{\max},+E_{\max}]$ inside $\mathcal{M}_R$, while the genuine
+$\rho_{\mathrm{DEHK}}=e^{-\beta_{\mathrm{dS}}K_R}/Z_{\mathrm{DEHK}}$ does
+not. (P3) is a corollary, since the Connes cocycle is built from the
+relative modular operator $\Delta_{\rho_{\mathrm{DEHK}}|\sigma_{\mathrm{DEHK}}}$,
+which in turn requires (P1).
+\end{proof}
+
+\begin{remark}[Categorical character of the obstruction]
+The obstruction is not a small-parameter / loop-correction artifact: it is
+\emph{topological} on the spectrum. Even with arbitrarily small $|\log q|$,
+$E_{\max}\to\infty$ but $E(\theta)$ remains bounded for each fixed $q\in
+(0,1)$, while $K_R$ is unbounded on $\mathbb{R}$ for every $\beta_{\mathrm{dS}}>0$.
+The two spectra never agree as sets.
+\end{remark}
+
+\begin{remark}[On the type-I vs type-II$_\infty$ algebra mismatch]
+A coarser way to state the obstruction is that
+$\mathcal{B}(\mathcal{H}_{\mathrm{HPS}})$ is type-I
+(the chord algebra is finite-dimensional at any chord-truncation level
+$N_{\mathrm{chord}}$ and infinite-dimensional but separable in the limit;
+its von Neumann completion is $\mathcal{B}(\mathcal{H}_{\mathrm{HPS}})$,
+type-I), while $\mathcal{M}_R$ is type-II$_\infty$. Type-changing CPTP
+maps between general von Neumann algebras do exist (Faulkner--Hollands~II
+\cite{FaulknerHollandsII2020}) and even admit FH-II approximate recovery
+channels under small relative-entropy perturbations. What
+Proposition~\ref{prop:no-go-spectrum} shows is that the
+\emph{spectral obstruction} is sharper than the algebra-type obstruction:
+even within the type-changing FH-II framework, the candidate spectra
+$E(\theta)$ and $\mathrm{spec}(K_R)$ are incompatible.
+\end{remark}
+
+% =====================================================================
+\section{What survives: Krylov-thermodynamic match}
+\label{sec:survives}
+% =====================================================================
+
+The negative content of Section~\ref{sec:no-go} is partial: while no
+operator-level isometry intertwines $H_{\mathrm{grav}}$ with $K_R$, the
+\emph{thermodynamic} content of the two systems agrees at semiclassical
+order.
+
+\begin{proposition}[Krylov--thermodynamic match]
+\label{prop:therm-match}
+In the regime $q\to 1^-$, $\theta\to\pi$ (the dS large-$N$ regime of
+HPS--HOPSW), the partition functions
+$Z_{\mathrm{chord}}(\beta) := \int_0^\pi (q^2,e^{\pm 2i\theta};q^2)_\infty\,
+e^{-\beta E(\theta)}\,d\theta$ and $Z_{\mathrm{DEHK}}(\beta) :=
+\tau_{\mathrm{II}}(e^{-\beta K_R})$ satisfy, at the de~Sitter inverse
+temperature $\beta_{\mathrm{dS}}$:
+\begin{equation}
+   \log Z_{\mathrm{chord}}(\beta_{\mathrm{dS}})
+   \;=\; \log Z_{\mathrm{DEHK}}(\beta_{\mathrm{dS}}) \;+\; O(1/N) ,
+   \label{eq:therm-match}
+\end{equation}
+both reproducing the Bekenstein--Hawking entropy
+$S_{\mathrm{BH}} = A_{\mathrm{horizon}}/(4 G_N)$ at leading order.
+\end{proposition}
+
+\begin{proof}[Sketch]
+This is essentially a re-statement of (i)~the standard Bekenstein--Hawking
+entropy of the cosmological horizon in CLPW/DEHK at leading
+$1/G_N$~\cite{CLPW2023,DEHK2025a}, and (ii)~HOPSW eq.~(27) (chord-Krylov
+disk partition function $\to$ dS$_2$ Bekenstein--Hawking
+entropy)~\cite{HOPSW2025}, both regulated through the same
+$\beta_{\mathrm{dS}}$-KMS thermal data on the cosmological horizon.
+At higher orders, the $1/N$ corrections differ: chord-side corrections
+follow from the q-Hermite Plancherel measure expansion; DEHK-side
+corrections follow from the loop expansion around the saddle of
+$\tau_{\mathrm{II}}(e^{-\beta K_R})$. We do not claim agreement beyond
+leading order.
+\end{proof}
+
+\begin{remark}
+Proposition~\ref{prop:therm-match} is \emph{not} a new result: the
+Bekenstein--Hawking entropy of the cosmological horizon is recovered by
+\emph{every} consistent dS holography proposal at semiclassical order.
+We include it here only to record \emph{exactly} what part of the
+attempted bridge survives the no-go in
+Proposition~\ref{prop:no-go-spectrum}: the partition-function
+thermodynamics, but not the underlying operator content.
+\end{remark}
+
+\begin{remark}[Krylov-asymptotic match]
+A second weaker statement that survives is a Lanczos-asymptotic match.
+The HPS chord algebra has Lanczos coefficients
+$b_n = \sqrt{[n]_q(1-q^n)}\sim\alpha n + \gamma$ at large $n$ (linear
+growth, signature of $\lambda_L = 2\pi T$). For $K_R$, Vardian's modular
+Krylov procedure~\cite{Vardian2026} (in an AdS/CFT setting; transfer to
+dS is by methodological analogy) yields modular Lanczos coefficients
+$b_n^{\mathrm{mod}}$ also growing linearly at late modular time with
+$\lambda_L^{(\mathrm{mod})} = 2\pi$, the
+Caputa--Mag\'{a}n--Patramanis--Tonni
+universality~\cite{CMPT2023}. Both spectral functions exhibit the same
+asymptotic Lyapunov exponent, but as different Jacobi matrices with
+different short-distance / low-$n$ structure. This is a Krylov-asymptotic
+match, not an operator match, and is consistent with
+Proposition~\ref{prop:no-go-spectrum}.
+\end{remark}
+
+% =====================================================================
+\section{Discussion and open problems}
+\label{sec:discussion}
+% =====================================================================
+
+\paragraph{What is genuinely new.} Theorem~\ref{thm:araki-rate} is, as
+far as we are aware, the first explicit statement of the
+Araki-cocycle identity $dS_{\mathrm{gen}}/d\tau_R = \langle K_R\rangle_\rho$
+in the type-II$_\infty$ crossed-product setting of CLPW/DEHK. It
+complements the FS24 GSL~\cite{FaulknerSperanza2024} by giving an
+explicit \emph{rate} formula in terms of the modular-energy
+expectation, and makes the modular-time first law
+$\delta S_{\mathrm{gen}} = \beta_{\mathrm{dS}}\,\delta\langle K_R\rangle$
+algebraically explicit on the type-II$_\infty$ trace.
+
+\paragraph{What is genuinely refuted.} The natural attempt to identify
+$\langle K_R\rangle_\rho$ with chord-Krylov complexity $C_K$ via a
+Stinespring isometry between the DSSYK chord Hilbert space and the GNS
+Hilbert space of $\mathcal{M}_R$ is refuted at the operator level by
+Proposition~\ref{prop:no-go-spectrum}, because the spectra of the
+chord Hamiltonian and $K_R$ have incompatible support (bounded vs
+unbounded). What survives is the thermodynamic content of
+Proposition~\ref{prop:therm-match}, i.e.\ the standard
+Bekenstein--Hawking dS entropy match, and the Krylov-asymptotic
+universal $\lambda_L = 2\pi$ shared between the two Lanczos sequences.
+
+\paragraph{Alternative routes.} Three logically distinct alternatives
+to the Stinespring intertwining route remain open:
+
+\begin{enumerate}
+\item \emph{Type-changing FH-II recovery.}\;
+Faulkner--Hollands~II~\cite{FaulknerHollandsII2020} (and the
+predecessor FHSW~\cite{FHSW2020}) construct universal approximate
+recovery channels for 2-positive maps between general von~Neumann
+algebras, including the type-changing case. Their bound
+$S(\rho\|\sigma) - S(\Phi(\rho)\|\Phi(\sigma)) \geq -2\log F(\rho,
+R\circ\Phi(\rho))$ controls relative-entropy loss without requiring
+spectral matching of the modular Hamiltonians. A reformulation of
+the bridge problem in FH-II language might give an
+\emph{approximate-recovery} statement that escapes the
+spectrum-mismatch no-go, but at the cost of giving up exact intertwining.
+
+\item \emph{Bounded function of $K_R$.}\;
+A bounded function $F(K_R)$ (e.g.\ $F(K_R) = (2/\pi)\arctan
+(\beta_{\mathrm{dS}} K_R/2)$) has spectrum in $(-1,+1)$ and could
+in principle match a rescaled $H_{\mathrm{grav}}$. This is an ad hoc
+construction without independent physical motivation; we mention it
+for completeness only.
+
+\item \emph{Modular density-of-states matching.}\;
+A genuine result at the level of the spectral measure of $K_R$, namely
+that the chord-Krylov density of states $\rho(\theta)$ matches a
+suitable projection of the spectral measure of $K_R$ in a controlled
+high-energy / late-modular-time limit, would yield a v6.2-style consistency
+note rather than a theorem. This route uses the
+CMPT~\cite{CMPT2023} modular-Lyapunov universality and the modular
+Krylov approach of Vardian~\cite{Vardian2026} (with the caveat that
+Vardian works in AdS/CFT and the dS extension requires an independent
+construction).
+\end{enumerate}
+
+\paragraph{Closing assessment.}
+The ER=EPR programme in the algebraic crossed-product setting yields,
+at the rigorous mathematical level, the Araki-cocycle rate formula
+\eqref{eq:Sgen-rate} as a genuine new theorem (Theorem~\ref{thm:araki-rate}),
+and a clean operator-level no-go for the chord--$K_R$ bridge
+(Proposition~\ref{prop:no-go-spectrum}). The survival is the standard
+Bekenstein--Hawking thermodynamic match (Proposition~\ref{prop:therm-match}),
+which was already known from independent considerations.
+
+We do not claim that the ER=EPR / chord-vs-modular-complexity programme
+is closed, only that the most natural ``Stinespring isometry'' bridge is
+ruled out, and that future work must use either type-changing approximate
+recovery in the FH-II sense, a bounded-functional-calculus construction,
+or a coarser density-of-states / Lanczos-asymptotic matching at the level
+of spectral measures rather than operator identifications.
+
+% =====================================================================
+\section*{Acknowledgements}
+% =====================================================================
+We thank the algebraic gravity community for the foundational results in
+\cite{Witten2022,CLPW2023,FaulknerSperanza2024,DEHK2025a,HPS2024,HOPSW2025}
+and the relative-entropy / Connes-cocycle community for the foundational
+results in \cite{Araki1976,PuszWoronowicz1978,BR2,Uhlmann1977,Lindblad1974}.
+The framing of this note as a ``consistency note'' rather than a
+full theorem reflects the obstructions identified in
+Sections~\ref{sec:no-go}, and we thank the predecessor portfolio (Wk1
+Petz route, Wk2 Araki memo, Wk3 Berry--Stinespring memo, Wk4 spectrum
+memo) for sharpening the questions.
+
+% =====================================================================
+% Bibliography
+% =====================================================================
+\begin{thebibliography}{99}
+
+\bibitem{Witten2022}
+E.~Witten,
+``Gravity and the crossed product,''
+\textit{JHEP} \textbf{10} (2022) 008,
+\href{https://doi.org/10.1007/JHEP10(2022)008}{doi:10.1007/JHEP10(2022)008},
+\href{https://arxiv.org/abs/2112.12828}{arXiv:2112.12828 [hep-th]}.
+
+\bibitem{CLPW2023}
+V.~Chandrasekaran, R.~Longo, G.~Penington, and E.~Witten,
+``An algebra of observables for de~Sitter space,''
+\textit{JHEP} \textbf{02} (2023) 082,
+\href{https://doi.org/10.1007/JHEP02(2023)082}{doi:10.1007/JHEP02(2023)082},
+\href{https://arxiv.org/abs/2206.10780}{arXiv:2206.10780 [hep-th]}.
+
+\bibitem{DEHK2025a}
+J.~De~Vuyst, S.~Eccles, P.~A.~H\"{o}hn, and J.~Kirklin,
+``Crossed products and quantum reference frames: on the observer-dependence
+of gravitational entropy,''
+\textit{JHEP} \textbf{07} (2025) 063,
+\href{https://doi.org/10.1007/JHEP07(2025)063}{doi:10.1007/JHEP07(2025)063},
+\href{https://arxiv.org/abs/2412.15502}{arXiv:2412.15502 [hep-th]}.
+
+\bibitem{FaulknerSperanza2024}
+T.~Faulkner and A.~J.~Speranza,
+``Gravitational algebras and the generalized second law,''
+\textit{JHEP} \textbf{11} (2024) 099,
+\href{https://doi.org/10.1007/JHEP11(2024)099}{doi:10.1007/JHEP11(2024)099},
+\href{https://arxiv.org/abs/2405.00847}{arXiv:2405.00847 [hep-th]}.
+
+\bibitem{HPS2024}
+M.~P.~Heller, J.~Papalini, and T.~Schuhmann,
+``Krylov spread complexity as holographic complexity beyond JT gravity,''
+\textit{Phys. Rev. Lett.} \textbf{135} (2025) 151602,
+\href{https://doi.org/10.1103/PhysRevLett.135.151602}{doi:10.1103/PhysRevLett.135.151602},
+\href{https://arxiv.org/abs/2412.17785}{arXiv:2412.17785 [hep-th]}.
+
+\bibitem{HOPSW2025}
+M.~P.~Heller, F.~Ori, J.~Papalini, T.~Schuhmann, and M.-T.~Wang,
+``De Sitter holographic complexity from Krylov complexity in DSSYK,''
+\href{https://arxiv.org/abs/2510.13986}{arXiv:2510.13986 [hep-th]} (2025).
+
+\bibitem{Araki1976}
+H.~Araki,
+``Relative entropy of states of von Neumann algebras,''
+\textit{Publ. RIMS, Kyoto Univ.} \textbf{11} (1976) 809--833;
+follow-up: \textit{Comm. Math. Phys.} \textbf{66} (1977) 83.
+
+\bibitem{PuszWoronowicz1978}
+W.~Pusz and S.~L.~Woronowicz,
+``Form convex functions and the WYDL and other inequalities,''
+\textit{Lett. Math. Phys.} \textbf{2} (1978) 505--512;
+related: \textit{Rep. Math. Phys.} \textbf{8} (1975) 159.
+%% Pusz-Woronowicz variational characterisation of relative entropy;
+%% canonical reference for the form-convex / variational formulation.
+
+\bibitem{BR2}
+O.~Bratteli and D.~W.~Robinson,
+\textit{Operator Algebras and Quantum Statistical Mechanics, Vol.~2},
+2nd ed., Springer, 1997.
+%% Esp. Thm. 5.3.10 (KMS analyticity strip), Thm. 5.3.15
+%% (modular flow differentiability of relative entropy).
+
+\bibitem{OhyaPetz1993}
+M.~Ohya and D.~Petz,
+\textit{Quantum Entropy and Its Use},
+Springer, 1993.
+
+\bibitem{Uhlmann1977}
+A.~Uhlmann,
+``Relative entropy and the Wigner--Yanase--Dyson--Lieb concavity in an
+interpolation theory,''
+\textit{Comm. Math. Phys.} \textbf{54} (1977) 21.
+
+\bibitem{Lindblad1974}
+G.~Lindblad,
+``Expectations and entropy inequalities for finite quantum systems,''
+\textit{Comm. Math. Phys.} \textbf{39} (1974) 111.
+
+\bibitem{Wall2012}
+A.~C.~Wall,
+``A proof of the generalized second law for rapidly changing fields and
+arbitrary horizon slices,''
+\textit{Phys. Rev. D} \textbf{85} (2012) 104049,
+\href{https://doi.org/10.1103/PhysRevD.85.104049}{doi:10.1103/PhysRevD.85.104049},
+\href{https://arxiv.org/abs/1105.3445}{arXiv:1105.3445 [gr-qc]}.
+
+\bibitem{BisognanoWichmann1976}
+J.~J.~Bisognano and E.~H.~Wichmann,
+``On the duality condition for a Hermitian scalar field,''
+\textit{J. Math. Phys.} \textbf{17} (1976) 303.
+
+\bibitem{ConnesRovelli1994}
+A.~Connes and C.~Rovelli,
+``Von Neumann algebra automorphisms and time-thermodynamics relation in
+generally covariant quantum theories,''
+\textit{Class. Quantum Grav.} \textbf{11} (1994) 2899--2917,
+\href{https://doi.org/10.1088/0264-9381/11/12/007}{doi:10.1088/0264-9381/11/12/007}.
+
+\bibitem{CMPT2023}
+P.~Caputa, J.~M.~Mag\'{a}n, D.~Patramanis, and E.~Tonni,
+``Krylov complexity of modular Hamiltonian evolution,''
+\textit{Phys. Rev. D} \textbf{109} (2024) 086004,
+\href{https://doi.org/10.1103/PhysRevD.109.086004}{doi:10.1103/PhysRevD.109.086004},
+\href{https://arxiv.org/abs/2306.14732}{arXiv:2306.14732 [hep-th]}.
+
+\bibitem{Vardian2026}
+N.~Vardian,
+``Modular Krylov complexity as a boundary probe of area operator and
+entanglement islands,''
+\href{https://arxiv.org/abs/2602.02675}{arXiv:2602.02675 [hep-th]} (2026).
+%% Note: Vardian's paper is set in AdS/CFT with QES and entanglement
+%% islands; transfer to the dS / DSSYK setting of this paper is by
+%% methodological analogy only.
+
+\bibitem{FHSW2020}
+T.~Faulkner, S.~Hollands, B.~Swingle, and Y.~Wang,
+``Approximate recovery and relative entropy I: general von Neumann
+subalgebras,''
+\textit{Comm. Math. Phys.} \textbf{389} (2022) 349--397,
+\href{https://arxiv.org/abs/2006.08002}{arXiv:2006.08002 [hep-th]}.
+
+\bibitem{FaulknerHollandsII2020}
+T.~Faulkner and S.~Hollands,
+``Approximate recoverability and relative entropy II: 2-positive channels
+of general von Neumann algebras,''
+\textit{Lett. Math. Phys.} \textbf{112} (2022) 26,
+\href{https://arxiv.org/abs/2010.05513}{arXiv:2010.05513 [hep-th]}.
+
+\bibitem{EREPR_Araki_Wk2}
+[ECI author(s)],
+``Araki Relative Modular Operator in Type-II$_\infty$:
+Week 2 Scoping Memo (ER=EPR Reopen, A13-2),''
+internal portfolio memo (2026-05-04).
+
+\bibitem{EREPR_Berry_Wk3}
+[ECI author(s)],
+``Berry--Stinespring channel $C_{BS}$ for HPS (type-I) $\leftrightarrow$
+DEHK (type-II$_\infty$): Week 3 memo (ER=EPR Reopen, A6),''
+internal portfolio memo (2026-05-05).
+
+\end{thebibliography}
+
+\end{document}

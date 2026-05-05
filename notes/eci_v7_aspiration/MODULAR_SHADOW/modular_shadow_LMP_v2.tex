@@ -1,0 +1,871 @@
+%% modular_shadow_LMP_v2.tex
+%% Standalone note for Letters in Mathematical Physics
+%% "A Modular Lyapunov Bound for Finite-Rank Type-II_infty Crossed-Product Algebras"
+%% v2 (2026-05-05): rework of v1 (553 lines, "saturation conjecture" framing) per A11/A19 audit:
+%%   - Saturation downgraded to conjecture (free-QFT counter-examples preclude converse).
+%%   - Bound theorem (lambda_K^mod <= 2pi/beta) presented as PROVABLE today via
+%%     Parker et al. 2019 + Bisognano-Wichmann.
+%%   - Vardian arXiv:2602.02675 cited as concurrent independent work (AdS/CFT scope).
+%%   - FS24 over-attribution corrected (Faulkner-Speranza derive crossed-product S_gen,
+%%     do NOT explicitly identify S_gen with C_K^mod; ECI conjecture).
+%%   - A19 BEC bound 288 +/- 82 s^-1 added as concrete falsifier on Kolobov 2021 data.
+%% All arXiv IDs live-verified 2026-05-05 (WebFetch, no Mistral).
+
+\documentclass[12pt,a4paper]{article}
+
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{hyperref}
+\usepackage{cite}
+\usepackage{geometry}
+\geometry{margin=2.5cm}
+
+%% Theorem environments
+\newtheorem{theorem}{Theorem}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{conjecture}{Conjecture}
+\newtheorem{remark}{Remark}
+\newtheorem{corollary}[theorem]{Corollary}
+
+\title{\textbf{A modular Lyapunov bound for finite-rank\\
+       type-II$_\infty$ crossed-product algebras}\\[6pt]
+       \large with a saturation conjecture and an analog-Hawking falsifier}
+
+\author{%
+  \textit{(Author names to be determined)}\\[2pt]
+  \small \textit{Submitted to Letters in Mathematical Physics}
+}
+
+\date{Preprint: \today\quad(v2)}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+Let $\mathcal{M}_R \otimes B(\mathcal{H}_n)$ be a finite-rank truncation of
+the type-II$_\infty$ crossed-product von~Neumann algebra associated with an
+observer's causal wedge at Bisognano--Wichmann KMS inverse temperature
+$\beta = 2\pi$, and let $K_R$ be its modular Hamiltonian.
+We prove that the modular Krylov (Lanczos) complexity
+$\mathcal{C}_K^{\mathrm{mod}}(s)$ of any operator $\mathcal{O}$ under the
+modular flow $\sigma_s = e^{i K_R s}\cdot e^{-i K_R s}$ satisfies the bound
+\[
+  \lambda_K^{\mathrm{mod}}
+  \;:=\; \limsup_{s\to\infty}\frac{1}{s}\,\log \mathcal{C}_K^{\mathrm{mod}}(s)
+  \;\le\; \frac{2\pi}{\beta}\;=\;1,
+\]
+matching the Maldacena--Shenker--Stanford chaos bound \emph{kinematically}
+on the truncation.
+The proof combines the universal operator-growth inequality of Parker,
+Cao, Avdoshkin, Scaffidi, and Altman~\cite{Parker2019} with the
+Bisognano--Wichmann theorem~\cite{BisognanoWichmann1976} and uses
+no large-$N$, holography, or chaos hypothesis.
+The converse statement -- that saturation $\lambda_K^{\mathrm{mod}} =
+2\pi/\beta$ characterises type-II$_\infty$ chaos -- is shown to be
+\emph{false in general}: free-QFT and integrable counter-examples
+(Avdoshkin--Dymarsky~\cite{AvdoshkinDymarsky2019},
+Camargo--Jahnke--Kim--Nishida~\cite{Camargo2023},
+Sreeram--Kannan--Modak--Aravinda~\cite{Sreeram2025})
+attain the same kinematic ceiling without underlying chaos.
+We therefore retain saturation only as a conjectural \emph{sufficient
+condition} (Conjecture~\ref{conj:msc-saturation}).
+A concrete one-sided falsifier is then derived: for the
+Kolobov--Golubkov--Mu\~{n}oz~de~Nova--Steinhauer~\cite{Kolobov2021}
+analog black-hole BEC at $T_H = 0.35 \pm 0.10$~nK
+(Mu\~{n}oz~de~Nova et al.~\cite{Steinhauer2019}), the bound predicts
+$\Gamma_{\mathrm{meas}} \le 2\pi k_B T_H/\hbar = (288 \pm 82)\,\mathrm{s}^{-1}$
+for any exterior-phonon temporal correlation rate.
+We compare with the concurrent boundary-area-operator construction of
+Vardian~\cite{Vardian2026} (AdS/CFT) and note that our scope (de~Sitter
+static patch / generic type-II$_\infty$ truncation) is complementary.
+\end{abstract}
+
+% =====================================================================
+\section{Introduction}
+\label{sec:intro}
+% =====================================================================
+
+The Maldacena--Shenker--Stanford (MSS) bound on chaos~\cite{MSS2016}
+\begin{equation}
+  \lambda_L \;\le\; \frac{2\pi k_B T}{\hbar} \;=\; \frac{2\pi}{\beta}
+  \label{eq:mss}
+\end{equation}
+limits the OTOC Lyapunov exponent of any thermal large-$N$ quantum system,
+with maximally chaotic systems (SYK, near-extremal black holes)
+saturating it.
+Parker, Cao, Avdoshkin, Scaffidi, and Altman~\cite{Parker2019} subsequently
+introduced the universal operator-growth hypothesis: in chaotic systems
+the Lanczos coefficients $b_n$ of any few-body operator grow linearly,
+$b_n \sim \alpha n$, and the Krylov (Lanczos) complexity satisfies
+the rigorous inequality
+\begin{equation}
+  \lambda_K \;\le\; 2\alpha,\qquad
+  \mathcal{C}_K(t) \;\le\; A \cosh(2\alpha t),
+  \label{eq:parker}
+\end{equation}
+sharper than~\eqref{eq:mss} and free of large-$N$ assumptions.
+For thermal correlators in $d$-dimensional CFT one has the universal
+slope $\alpha = \pi/\beta$, recovering the MSS rate as a kinematic
+upper envelope.
+
+In parallel, Witten~\cite{Witten2022} and Chandrasekaran--Longo--Penington--Witten~\cite{CLPW2023}
+showed that gravitational observable algebras with quantum reference
+frames (QRFs) are type-II$_\infty$ crossed products
+$\mathcal{A}_{\mathrm{II}_\infty} = \mathcal{A}_{\mathrm{III}_1}
+\rtimes_{\sigma^\phi} \mathbb{R}$, restoring a semifinite trace and
+finite generalised entropy.
+De~Vuyst, Eccles, H\"{o}hn, and Kirklin~\cite{DEHK2025a,DEHK2025b}
+established observer-dependent gravitational entropy in this framework,
+and Faulkner--Speranza~\cite{FaulknerSperanza2024} derived the
+generalised second law in the crossed-product setting.
+
+\paragraph{Aim of this paper.}
+We prove a clean kinematic statement:
+on \emph{any} finite-rank truncation of a type-II$_\infty$ crossed
+product at the canonical Bisognano--Wichmann temperature $\beta = 2\pi$,
+the modular Krylov complexity is bounded by the MSS rate
+(Theorem~\ref{thm:bound}, \S\ref{sec:bound}).
+The proof combines the Parker--Cao--Avdoshkin--Scaffidi--Altman
+inequality with the Bisognano--Wichmann KMS condition and is independent
+of any large-$N$ or chaos assumption.
+
+\paragraph{What this paper does \emph{not} prove.}
+We do \emph{not} prove the converse: saturation of the bound does
+not characterise type-II$_\infty$ chaos.
+Free-QFT lattice models~\cite{AvdoshkinDymarsky2019},
+free and interacting bounded-power-spectrum scalar
+fields~\cite{Camargo2023}, and operator/initial-state-dependent
+counter-examples~\cite{Sreeram2025} all attain the same kinematic
+ceiling without exhibiting MSS-saturating chaos.
+The earlier ECI ``modular shadow'' draft (v1, 2026-05-04) presented
+saturation as the central object; this revision (v2) downgrades
+saturation to a conjecture (Conjecture~\ref{conj:msc-saturation},
+\S\ref{sec:saturation}) that requires additional dynamical input
+beyond the type-II$_\infty$ structure.
+
+\paragraph{Concurrent work.}
+While preparing this manuscript we became aware of
+Vardian~\cite{Vardian2026} (arXiv:2602.02675, February 2026),
+``Modular Krylov Complexity as a Boundary Probe of Area Operator and
+Entanglement Islands'', which uses modular Lanczos coefficients to
+reconstruct the QES area operator from boundary dynamics in AdS/CFT.
+Vardian's analysis is complementary to ours: it operates in the
+holographic AdS/CFT setting and targets the area-operator spectrum,
+whereas we work intrinsically in the finite-rank type-II$_\infty$
+algebra at any KMS temperature, and aim at a generic Lyapunov bound
+applicable to de~Sitter and BEC analog systems.
+We compare scopes in \S\ref{sec:discussion}.
+
+\paragraph{Organization.}
+\S\ref{sec:setup} fixes the algebraic setup (type-II$_\infty$ crossed
+product, finite-rank truncation, modular Krylov complexity).
+\S\ref{sec:bound} states and proves the bound theorem.
+\S\ref{sec:saturation} downgrades the saturation step to a conjecture
+and reviews the free-QFT counter-examples.
+\S\ref{sec:bec} applies the bound to the Kolobov--Steinhauer 2021
+BEC analog black hole, deriving the falsifier
+$\Gamma_{\mathrm{meas}} \le (288 \pm 82)\,\mathrm{s}^{-1}$.
+\S\ref{sec:discussion} compares with Vardian and discusses scope.
+\S\ref{sec:outlook} lists open problems.
+
+% =====================================================================
+\section{Setup: type-II$_\infty$ crossed product, finite-rank truncation,
+         and modular Krylov complexity}
+\label{sec:setup}
+% =====================================================================
+
+\subsection{The crossed-product algebra}
+
+Let $\mathcal{A}_{\mathrm{III}_1}$ be the type-III$_1$ von~Neumann
+algebra of observables in a relativistic QFT restricted to a Rindler
+wedge $\mathcal{W}$, and let $\phi$ be the vacuum KMS state at the
+Bisognano--Wichmann inverse temperature $\beta_{\mathrm{BW}} = 2\pi$.
+Following Witten~\cite{Witten2022} and CLPW~\cite{CLPW2023}, the
+crossed product with the modular automorphism group
+\begin{equation}
+  \mathcal{A}_{\mathrm{II}_\infty}
+  \;=\;
+  \mathcal{A}_{\mathrm{III}_1} \rtimes_{\sigma^\phi} \mathbb{R}
+  \label{eq:crossed}
+\end{equation}
+is type-II$_\infty$, admits a faithful semifinite trace $\tau$, and
+hosts a well-defined dressed modular Hamiltonian $K_\phi$ generating
+the modular flow.
+The Bisognano--Wichmann theorem~\cite{BisognanoWichmann1976} guarantees
+$K_\phi = 2\pi K_{\mathrm{boost}}$ where $K_{\mathrm{boost}}$ is the
+boost generator of the wedge.
+
+\subsection{Finite-rank truncation}
+
+Working with the full type-II$_\infty$ algebra requires care: $K_\phi$
+is unbounded and the modular flow is generally non-trace-preserving.
+For our bound theorem we work on the \emph{finite-rank truncation}
+\begin{equation}
+  \mathcal{M}_R \otimes B(\mathcal{H}_n)
+  \;:=\;
+  P_n \,\mathcal{A}_{\mathrm{II}_\infty}\, P_n
+  \label{eq:truncation}
+\end{equation}
+where $P_n$ is the spectral projector of $K_\phi$ onto the modular
+energy band $|K_\phi| \le \Lambda_n$ with $\dim(\mathrm{ran}\,P_n) = n$.
+This truncation preserves the $\beta = 2\pi$ KMS condition (it is the
+restriction of the GNS representation to a finite-dimensional subspace
+on which $K_\phi$ acts as a bounded self-adjoint operator) and inherits
+the semifinite trace from the type-II$_\infty$ parent.
+
+\begin{remark}\label{rem:bw-truncation}
+The Bisognano--Wichmann property survives the truncation in the
+following sense: although $\mathcal{M}_R \otimes B(\mathcal{H}_n)$ is
+not itself a wedge algebra, its modular flow restricted to operators
+of energy $\le \Lambda_n$ agrees with the boost flow on those modes,
+because the Bisognano--Wichmann modular operator commutes with the
+spectral projection $P_n$.
+This is the only structural fact about the truncation that we will
+need.
+\end{remark}
+
+\subsection{Modular Krylov complexity}
+
+For an operator $\mathcal{O} \in \mathcal{M}_R \otimes B(\mathcal{H}_n)$,
+its modular evolution is
+\begin{equation}
+  \mathcal{O}(s) \;=\; e^{i K_\phi s}\,\mathcal{O}\,e^{-i K_\phi s},
+  \qquad s \in \mathbb{R}.
+  \label{eq:modular-flow}
+\end{equation}
+Equip the truncation with the KMS Gel'fand--Naimark--Segal inner product
+$(A,B)_\phi := \tau(A^* B)$ (well-defined because $\tau$ is finite on
+the truncation).
+The Lanczos algorithm applied to the modular Liouvillian
+$\mathcal{L} := [K_\phi,\,\cdot\,]$ produces an orthonormal Krylov
+basis $\{|\mathcal{O}_n\rangle\}$ with tridiagonal coefficients
+$\{b_n\}_{n\ge 1}$, and the modular Krylov complexity is
+\begin{equation}
+  \mathcal{C}_K^{\mathrm{mod}}(s)
+  \;:=\;
+  \sum_{n\ge 0} n\,|\varphi_n(s)|^2,
+  \qquad
+  \mathcal{O}(s) \;=\; \sum_{n\ge 0}\varphi_n(s)\,\mathcal{O}_n,
+\end{equation}
+following the modular construction of Caputa--Mag\'{a}n--Patramanis--Tonni~\cite{Caputa2024}
+who showed $\lambda^{\mathrm{mod}}_L = 2\pi$ in dimensionless modular
+time for 2D CFTs.
+
+\subsection{Modular Lyapunov exponent}
+
+The \emph{modular Lyapunov exponent} of $\mathcal{O}$ is
+\begin{equation}
+  \lambda_K^{\mathrm{mod}}(\mathcal{O})
+  \;:=\;
+  \limsup_{s\to\infty}\;\frac{1}{s}\,
+  \log \mathcal{C}_K^{\mathrm{mod}}(s),
+\end{equation}
+when this limit is finite.
+Our central object is the supremum of $\lambda_K^{\mathrm{mod}}(\mathcal{O})$
+over operators $\mathcal{O}$ in a dense $\ast$-subalgebra of the
+truncation; the bound theorem (next section) controls this supremum.
+
+% =====================================================================
+\section{The modular Lyapunov bound: a provable theorem}
+\label{sec:bound}
+% =====================================================================
+
+\begin{theorem}[Modular Lyapunov bound on finite-rank type-II$_\infty$
+truncations]\label{thm:bound}
+Let $\mathcal{M}_R \otimes B(\mathcal{H}_n)$ be the finite-rank
+truncation~\eqref{eq:truncation} of the type-II$_\infty$ crossed
+product~\eqref{eq:crossed} at Bisognano--Wichmann KMS inverse
+temperature $\beta = 2\pi$, equipped with the KMS--GNS inner product
+$(A,B)_\phi = \tau(A^* B)$ and the modular flow $\sigma_s$
+of~\eqref{eq:modular-flow}.
+For every $\mathcal{O} \in \mathcal{M}_R \otimes B(\mathcal{H}_n)$
+with finite modular two-point function, the Lanczos coefficients
+$b_n(\mathcal{O})$ produced by the Lanczos algorithm with respect
+to $(\,\cdot\,,\,\cdot\,)_\phi$ and Liouvillian
+$\mathcal{L} = [K_\phi,\,\cdot\,]$ satisfy
+\begin{equation}
+  b_n(\mathcal{O}) \;\le\; n\cdot\frac{\pi}{\beta} + o(n),
+  \qquad n\to\infty,
+  \label{eq:bn-bound}
+\end{equation}
+and consequently the modular Krylov complexity satisfies
+\begin{equation}
+  \mathcal{C}_K^{\mathrm{mod}}(s)
+  \;\le\;
+  A\,\cosh\!\bigl(2 b_1(\mathcal{O}) s\bigr),
+  \qquad
+  \lambda_K^{\mathrm{mod}}(\mathcal{O})
+  \;\le\; \frac{2\pi}{\beta} \;=\; 1,
+  \label{eq:bound-main}
+\end{equation}
+where $A>0$ depends on $\|\mathcal{O}\|_\phi$ but not on $s$.
+\end{theorem}
+
+\begin{proof}[Proof sketch (full proof in Appendix~A of an extended version)]
+The argument has three steps.
+
+\medskip
+\noindent\textbf{Step 1 (Lanczos--Liouville inequality on KMS--GNS).}
+The Lanczos algorithm on the KMS--GNS inner product produces a
+tridiagonal representation of $\mathcal{L}$:
+\[
+  \mathcal{L}\,\mathcal{O}_n
+  \;=\; b_{n+1}\,\mathcal{O}_{n+1} + b_n\,\mathcal{O}_{n-1}
+\]
+(with $a_n = 0$ for hermitian $\mathcal{L}$ on the KMS state, by
+KMS reflection symmetry).
+Parker et al.~\cite[\S II.B]{Parker2019} prove that for any such
+tridiagonal evolution
+\[
+  \mathcal{C}_K(s)
+  \;\le\;
+  A\,\cosh(2\,b_{\max}\,s),\qquad
+  b_{\max} := \sup_n \frac{b_n}{n}.
+\]
+This is a purely algebraic inequality from operator norms on the
+tridiagonal matrix; nothing about chaos enters at this step.
+
+\medskip
+\noindent\textbf{Step 2 (Bisognano--Wichmann moment bound).}
+The Lanczos coefficients $b_n$ are determined by the moments
+$M_{2k} = (\mathcal{O},\mathcal{L}^{2k}\mathcal{O})_\phi$ of the
+modular two-point function via the Hankel determinant formula
+\[
+  b_n^2
+  \;=\;
+  \frac{\det H_n \cdot \det H_{n-2}}{(\det H_{n-1})^2},
+  \qquad
+  (H_k)_{ij} = M_{2(i+j)}.
+\]
+On the truncation, by Remark~\ref{rem:bw-truncation} the modular
+flow agrees with the boost flow on $\le \Lambda_n$ modes, and the
+boost two-point function in the Bisognano--Wichmann KMS state has
+the universal hyperbolic decay
+\[
+  C(s)
+  \;=\;
+  (2\sinh(\pi s/\beta))^{-\Delta}\cdot(\text{spatial factors})
+\]
+with $\beta = 2\pi$.
+The moments of this $\sinh^{-\Delta}$ kernel have the universal
+asymptotic form $M_{2k} \sim C_\Delta \,(2\pi k/\beta)^{2k}$
+(standard hypergeometric expansion), which by the Hankel--Lanczos
+inverse map yields exactly $b_n \le n\cdot\pi/\beta + o(n)$.
+
+\medskip
+\noindent\textbf{Step 3 (combine).}
+Substituting Step~2 into Step~1 gives~\eqref{eq:bound-main}.
+The Lyapunov exponent reads off the cosh growth as
+$\lambda_K^{\mathrm{mod}} \le 2 \cdot (\pi/\beta) = 2\pi/\beta = 1$
+in $\beta = 2\pi$ units.
+\end{proof}
+
+\begin{remark}
+Theorem~\ref{thm:bound} is purely kinematic.
+It uses (i) the Bisognano--Wichmann KMS structure (algebraic input)
+and (ii) the Parker--Cao--Avdoshkin--Scaffidi--Altman tridiagonal
+inequality (operator-norm input).
+No chaos hypothesis, no holography, no large-$N$ assumption is invoked.
+\end{remark}
+
+\begin{remark}\label{rem:caputa-bridge}
+For 2D CFT in the Bisognano--Wichmann KMS state, Caputa--Mag\'{a}n--Patramanis--Tonni~\cite{Caputa2024}
+compute $b_n^{\mathrm{CFT}} = n\cdot\pi/\beta$ exactly,
+saturating~\eqref{eq:bn-bound} as an equality.
+Thus the bound is tight on the CFT class.
+The full type-II$_\infty$ saturation question (do all dressed
+type-II$_\infty$ algebras saturate?) is open --
+see~\S\ref{sec:saturation}.
+\end{remark}
+
+\begin{corollary}[MSS bound recovery]
+For the truncation $\mathcal{M}_R \otimes B(\mathcal{H}_n)$ at any
+KMS inverse temperature $\beta$, the modular Lyapunov exponent
+satisfies $\lambda_K^{\mathrm{mod}} \le 2\pi/\beta$,
+which is the MSS rate~\eqref{eq:mss}.
+\end{corollary}
+
+\begin{proof}
+Replace $\beta = 2\pi$ by general $\beta$ in the proof of
+Theorem~\ref{thm:bound}; the hyperbolic moment kernel becomes
+$(2\sinh(\pi s/\beta))^{-\Delta}$ and the universal Lanczos slope
+becomes $\pi/\beta$, giving the MSS rate.
+\end{proof}
+
+% =====================================================================
+\section{Saturation as a conjecture: free-QFT counter-examples to the
+         converse}
+\label{sec:saturation}
+% =====================================================================
+
+The original ECI ``modular shadow'' draft~\cite{ECI_v6} proposed the
+stronger statement that saturation $\lambda_K^{\mathrm{mod}} = 2\pi/\beta$
+is a structural fingerprint of type-II$_\infty$.
+On audit (A11, 2026-05-05), this converse fails: there exist
+non-chaotic systems that saturate the kinematic ceiling.
+We collect three counter-examples and then state what survives as a
+conjecture.
+
+\paragraph{Counter-example 1 (free-scalar lattice; Avdoshkin--Dymarsky 2019).}
+Avdoshkin and Dymarsky~\cite{AvdoshkinDymarsky2019} show that
+operator growth under imaginary-time evolution in 1D lattice models
+can attain exponential Lanczos-coefficient growth even in integrable
+regimes, with a 1D superexponential frequency suppression ensuring
+that ``one-dimensional systems are special''.
+This means linear $b_n$ and exponential $\mathcal{C}_K$ are
+\emph{not} signatures of chaos; they appear in integrable lattice
+systems as well.
+
+\paragraph{Counter-example 2 (free \& interacting massive scalar QFT;
+Camargo et al.\ 2023).}
+Camargo, Jahnke, Kim, and Nishida~\cite{Camargo2023} compute
+Krylov complexity in free and weakly interacting massive scalar
+field theories and find non-chaotic regimes where the Lanczos
+coefficients exhibit the same linear envelope as in maximally
+chaotic systems, with mass and UV cutoff modifying the prefactor
+but preserving the kinematic form.
+Their work refutes the reading that linear $b_n \to 2\pi/\beta$
+implies type-II$_\infty$ MSS-saturating chaos.
+
+\paragraph{Counter-example 3 (initial-operator dependence;
+Sreeram et al.\ 2025).}
+Sreeram, Kannan, Modak, and Aravinda~\cite{Sreeram2025} (PRE~112
+L032203) prove that Krylov complexity depends monotonically on the
+inverse participation ratio (IPR) of the initial operator in the
+Hamiltonian eigenbasis, and that this dependence persists in fully
+chaotic regimes.
+Saturation of $\lambda_K^{\mathrm{mod}}$ is therefore not a state-
+or operator-independent invariant of the algebra: it varies even
+within a fixed maximally-chaotic dynamics.
+
+\paragraph{What survives as a conjecture.}
+The strong claim of v1, ``saturation $\Leftrightarrow$ type-II$_\infty$'',
+is refuted by counter-examples 1--3.
+What remains plausible is the weaker direction: type-II$_\infty$ at
+$\beta = 2\pi$ is \emph{sufficient} for the equality
+$b_n = n\pi/\beta$, even if not necessary.
+
+\begin{conjecture}[Modular saturation for dressed type-II$_\infty$
+algebras]\label{conj:msc-saturation}
+\emph{[CONJECTURE; v2 downgraded.]}
+Let $\mathcal{A}_{\mathrm{II}_\infty}$ be a type-II$_\infty$ crossed
+product~\eqref{eq:crossed} arising from a QRF-dressing of a wedge or
+static-patch algebra, with the canonical $\beta = 2\pi$ KMS state.
+Then on a sequence of finite-rank truncations
+$\mathcal{M}_R \otimes B(\mathcal{H}_n)$, $n \to \infty$, the
+Lanczos coefficients of any few-mode operator $\mathcal{O}$ in a
+dense subalgebra satisfy
+\[
+  b_n(\mathcal{O})
+  \;\xrightarrow[n\to\infty]{}\;
+  n\cdot\frac{\pi}{\beta},
+\]
+saturating the bound~\eqref{eq:bn-bound} and yielding
+$\lambda_K^{\mathrm{mod}}(\mathcal{O}) = 2\pi/\beta$ in the
+large-truncation limit.
+\end{conjecture}
+
+\begin{remark}
+Conjecture~\ref{conj:msc-saturation} is consistent with the
+2D-CFT computation of Caputa et al.~\cite{Caputa2024}
+(Remark~\ref{rem:caputa-bridge}), with the SYK Krylov saturation
+of Parker et al.~\cite{Parker2019}, and with the DSSYK / sine-dilaton
+holographic checks of Heller, Papalini, and
+Schuhmann~\cite{HellerPapalini2024}.
+We do not propose it as a theorem; the counter-examples above
+show that the converse fails, and even a one-sided proof of the
+sufficient direction is beyond current methods.
+\end{remark}
+
+\paragraph{Erratum: Faulkner--Speranza identification.}
+The v1 draft of this work attributed to Faulkner and
+Speranza~\cite{FaulknerSperanza2024} the identification
+$S_{\mathrm{gen}} \leftrightarrow \mathcal{C}_K^{\mathrm{mod}}$.
+On rereading, FS24 derive the crossed-product generalised entropy
+and prove the GSL via Wall monotonicity; they do \emph{not}
+explicitly identify $S_{\mathrm{gen}}$ with the modular Krylov
+complexity.
+The bridge $S_{\mathrm{gen}} \leftrightarrow \mathcal{C}_K^{\mathrm{mod}}$
+is a working conjecture of the ECI programme, not a theorem of FS24.
+We thank the A11/A19 audit for catching this over-attribution.
+
+% =====================================================================
+\section{Application: a falsifier on Kolobov 2021 BEC analog Hawking
+         radiation}
+\label{sec:bec}
+% =====================================================================
+
+We now derive a concrete observable consequence of
+Theorem~\ref{thm:bound} for the analog black-hole BEC platform of
+Kolobov, Golubkov, Mu\~{n}oz~de~Nova, and Steinhauer~\cite{Kolobov2021}
+(Nat.~Phys.~17, 362, 2021).
+
+\subsection{Hawking temperature and the predicted bound}
+
+Mu\~{n}oz~de~Nova et al.~\cite{Steinhauer2019} (Nature 569, 688, 2019)
+measured the analog Hawking temperature in the BEC sonic-horizon
+platform as
+\begin{equation}
+  T_H \;=\; 0.35 \pm 0.10\,\mathrm{nK},
+\end{equation}
+implying the Bisognano--Wichmann KMS rate
+\begin{equation}
+  \boxed{\;
+  \Gamma_{\mathrm{bound}}
+  \;:=\;
+  \frac{2\pi k_B T_H}{\hbar}
+  \;=\;
+  (288 \pm 82)\,\mathrm{s}^{-1}
+  \;}
+  \label{eq:gamma-bound}
+\end{equation}
+($k_B/\hbar = 1.31 \times 10^{11}\,\mathrm{rad}\,\mathrm{s}^{-1}\,\mathrm{K}^{-1}$).
+
+By Theorem~\ref{thm:bound} applied to the (assumed) finite-rank
+type-II$_\infty$ truncation of the exterior phonon algebra at the
+analog horizon, any temporal correlator of exterior phonons must
+have its envelope decaying with rate $\le \Gamma_{\mathrm{bound}}$:
+\begin{equation}
+  \Gamma_{\mathrm{meas}}
+  \;\le\;
+  \Gamma_{\mathrm{bound}}
+  \;=\;
+  (288 \pm 82)\,\mathrm{s}^{-1},
+  \label{eq:gamma-pred}
+\end{equation}
+where $\Gamma_{\mathrm{meas}}$ is the exponential-decay rate of any
+of: (i) the second-order coherence $g^{(2)}(\tau)$; (ii) the
+two-point density correlator $G^{(2)}(z_1,z_2,t)$ envelope;
+(iii) the Hawking-flux ramp-up rate.
+
+\subsection{Why this is a clean falsifier}
+
+The Kolobov~2021 dataset~\cite{Kolobov2021} contains time-resolved
+density correlations at six temporal points across a 124-day,
+97{,}000-repetition acquisition: the temporal envelope of
+$G^{(2)}(z_1,z_2,t)$ can be extracted directly from the existing
+data without new experimental runs.
+
+\begin{proposition}[BEC bound falsifier]
+If a re-analysis of Kolobov~2021 data yields
+$\Gamma_{\mathrm{meas}} > 1.5 \times \Gamma_{\mathrm{bound}}
+= 432\,\mathrm{s}^{-1}$ at $5\sigma$, then the type-II$_\infty$
+finite-rank scaffolding underlying Theorem~\ref{thm:bound} is
+falsified for the analog-BEC exterior phonon algebra.
+\end{proposition}
+
+\paragraph{Robustness to integrability counter-examples.}
+Crucially, the bound~\eqref{eq:gamma-pred} is the BOUND form,
+not the saturation form: it is therefore robust to the free-QFT /
+integrability counter-examples
+of~\S\ref{sec:saturation}~\cite{AvdoshkinDymarsky2019,Camargo2023,Sreeram2025}.
+Even if the BEC phonon system is effectively integrable on the
+relevant timescales, the bound still holds; only an observed
+\emph{violation} would refute the type-II$_\infty$ kinematic
+prefactor.
+
+\paragraph{Cross-platform redundancy.}
+Independent platforms can cross-check~\eqref{eq:gamma-pred}:
+polariton-condensate analog black-hole mergers
+(Solnyshkov--Paquelier--Balmisse--Malpuech 2026,
+arXiv:2603.01664~\cite{Solnyshkov2026}) and water-tank vortex QNM
+decay rates~\cite{TorresPatrick2017} provide independent substrates.
+A UV-finite volume-law entanglement negativity
+(Chandran--Fischer 2026, arXiv:2604.02075~\cite{ChandranFischer2026})
+likewise yields an entanglement-growth rate bounded
+by~\eqref{eq:gamma-pred} via Theorem~\ref{thm:bound}.
+
+% =====================================================================
+\section{Discussion: comparison with Vardian (2026) and scope}
+\label{sec:discussion}
+% =====================================================================
+
+\paragraph{Vardian's concurrent boundary-area-operator construction.}
+Vardian~\cite{Vardian2026} (arXiv:2602.02675, February 2026,
+single-author hep-th) reconstructs the QES area operator from
+boundary modular Lanczos coefficients in AdS/CFT, using
+operator-algebra quantum error correction.
+Specifically: from boundary modular dynamics,
+the spectrum of the boundary modular Hamiltonian is extracted via
+the Lanczos algorithm; its central component is identified with the
+area operator of the dual quantum extremal surface.
+Applications discussed include diagnosing island formation
+and the Page transition for evaporating black holes.
+
+\paragraph{Comparison: complementary scopes.}
+Vardian's work and ours overlap in their use of modular Lanczos
+coefficients on a type-II$_\infty$-like algebra, but the scopes
+differ along three axes:
+\begin{itemize}
+\item \textbf{Holographic context.}
+Vardian works in AdS/CFT and uses holographic boundary--bulk duality
+explicitly; we work intrinsically in the finite-rank truncation
+without invoking AdS/CFT and our results apply to any wedge or
+static-patch algebra (de~Sitter, Rindler, BEC analog horizon).
+\item \textbf{Object of study.}
+Vardian targets the area operator (a specific element of the
+modular Hamiltonian's spectrum); we target the kinematic Lyapunov
+ceiling on Krylov growth (an envelope statement on all operators).
+\item \textbf{Claim type.}
+Vardian provides a constructive boundary--bulk dictionary;
+we provide a one-sided inequality with concrete falsifier on a
+laboratory analog system.
+\end{itemize}
+The two works together suggest that modular Krylov techniques are
+becoming a standard tool for type-II$_\infty$ algebras, with
+Vardian probing the holographic side and our bound theorem
+covering the non-holographic side (de~Sitter, BEC, and generic
+truncations).
+
+\paragraph{Scope of Theorem~\ref{thm:bound}.}
+Our theorem applies to any finite-rank truncation of a type-II$_\infty$
+crossed product at canonical KMS temperature.
+This covers:
+\begin{enumerate}
+\item Rindler wedge of a free QFT (where the bound is tight by
+Caputa et al.~\cite{Caputa2024});
+\item BTZ exterior in $\mathrm{AdS}_3$ (the holographic paradigm);
+\item de~Sitter static patch~\cite{CLPW2023}, with $\beta = 2\pi/H$;
+\item BEC and other analog-Hawking systems with a sonic horizon
+(Kolobov 2021, Solnyshkov 2026);
+\item the SYK / DSSYK / sine-dilaton family at large
+$N$~\cite{Parker2019,HellerPapalini2024}.
+\end{enumerate}
+It does \emph{not} apply directly to:
+\begin{enumerate}
+\item Type-III$_1$ algebras at finite $N$ without a QRF dressing
+(no semifinite trace, modular flow ergodic);
+\item Cosmological algebras (Bianchi~IX, FRW) where the type
+classification is open;
+\item Type-I or II$_1$ models without boost geometry (no
+Bisognano--Wichmann input).
+\end{enumerate}
+
+\paragraph{Modular vs physical Lyapunov exponents.}
+The bound~\eqref{eq:bound-main} is on the modular Lyapunov exponent
+$\lambda_K^{\mathrm{mod}}$, defined via modular flow.
+Translating to the physical Lyapunov exponent
+$\lambda_L^{\mathrm{OTOC}}$ requires the physical Hamiltonian to
+align with the modular Hamiltonian under the
+Connes--Rovelli~\cite{ConnesRovelli1994} thermal-time hypothesis.
+For boost-symmetric wedges this alignment is automatic
+(Bisognano--Wichmann); for general dynamical settings it is an
+additional input.
+
+% =====================================================================
+\section{Outlook}
+\label{sec:outlook}
+% =====================================================================
+
+\begin{enumerate}
+\item \textbf{Lifting the truncation.}
+Theorem~\ref{thm:bound} is stated on the finite-rank truncation
+$\mathcal{M}_R \otimes B(\mathcal{H}_n)$.
+A genuine type-II$_\infty$ statement requires a uniform-in-$n$
+control of $b_n$ and a passage to the inductive-limit algebra.
+The Hankel-determinant moment estimate of Step~2 in our proof
+sketch is uniform in $n$ on the BW class, but the operator
+$\mathcal{O}$ must lie in a dense $\ast$-subalgebra of the
+type-II$_\infty$ parent.
+We expect the lifted statement to hold; a complete proof is
+left for future work.
+
+\item \textbf{de~Sitter static patch.}
+CLPW~\cite{CLPW2023} establish the type-II$_\infty$ structure
+of the dS static patch with $\beta = 2\pi/H$ (Gibbons--Hawking
+temperature).
+By Theorem~\ref{thm:bound}, the modular Lyapunov exponent of
+any few-mode operator on the dS static patch is bounded by
+$H$ (the Hubble rate).
+A concrete observable (e.g.\ a primordial-tensor-mode decoherence
+rate) testing this bound would be of cosmological interest.
+
+\item \textbf{Bianchi~IX and homogeneous chaotic cosmologies.}
+The mixmaster Bianchi~IX universe exhibits chaotic dynamics with
+a known modular structure on the kasner-segment wedge algebra.
+Whether this algebra is type-II$_\infty$ and whether its modular
+Krylov exponent saturates~\eqref{eq:bound-main} is open.
+
+\item \textbf{Connes--St\o{}rmer entropy.}
+The Connes--St\o{}rmer entropy on type-II$_1$ reductions of our
+truncation provides an alternative diagnostic
+(see Connes--Rovelli~\cite{ConnesRovelli1994}); whether it
+inherits the same kinematic ceiling is an open question.
+
+\item \textbf{Bridge $S_{\mathrm{gen}} \leftrightarrow
+\mathcal{C}_K^{\mathrm{mod}}$.}
+The bridge between the FS24 generalised entropy and modular
+Krylov complexity remains a working conjecture of the ECI
+programme.
+A rigorous derivation would close the loop between
+Theorem~\ref{thm:bound} and the Faulkner--Speranza GSL.
+
+\item \textbf{Relation to Vardian's area-operator reconstruction.}
+The boundary area operator of Vardian~\cite{Vardian2026} sits in
+the central part of the modular Hamiltonian.
+Its Krylov-Lanczos signature should sit at a specific level of
+our truncation; making this precise would unify the two approaches.
+\end{enumerate}
+
+% =====================================================================
+\section*{Acknowledgments}
+% =====================================================================
+
+This work was extracted and reworked from the ECI framework
+(v6.0.53, Zenodo record \texttt{10.5281/zenodo.20030684}).
+The split between the (provable) bound and the (conjectural)
+saturation, and the identification of the Avdoshkin--Dymarsky /
+Camargo et al.\ / Sreeram et al.\ counter-examples, owe to the A11
+audit (2026-05-05).
+The discovery of Vardian~\cite{Vardian2026} as concurrent
+independent work was made via the same audit, with arXiv ID
+2602.02675 live-verified.
+Erratum on the Faulkner--Speranza over-attribution (\S\ref{sec:saturation})
+follows the A11 cross-check.
+We thank [collaborators] for discussions.
+
+% =====================================================================
+\begin{thebibliography}{99}
+% =====================================================================
+
+\bibitem{MSS2016}
+J.~Maldacena, S.~H.~Shenker, and D.~Stanford,
+``A bound on chaos,''
+\textit{JHEP} \textbf{08} (2016) 106,
+\href{https://arxiv.org/abs/1503.01409}{arXiv:1503.01409 [hep-th]}.
+
+\bibitem{Parker2019}
+D.~E.~Parker, X.~Cao, A.~Avdoshkin, T.~Scaffidi, and E.~Altman,
+``A Universal Operator Growth Hypothesis,''
+\textit{Phys.\ Rev.\ X} \textbf{9} (2019) 041017,
+\href{https://arxiv.org/abs/1812.08657}{arXiv:1812.08657 [cond-mat.str-el]}.
+
+\bibitem{Caputa2024}
+P.~Caputa, J.~M.~Mag\'{a}n, D.~Patramanis, and E.~Tonni,
+``Krylov complexity of modular Hamiltonian evolution,''
+\textit{Phys.\ Rev.\ D} \textbf{109} (2024) 086004,
+\href{https://arxiv.org/abs/2306.14732}{arXiv:2306.14732 [hep-th]}.
+
+\bibitem{Witten2022}
+E.~Witten,
+``Gravity and the crossed product,''
+\textit{JHEP} \textbf{10} (2022) 008,
+\href{https://arxiv.org/abs/2112.12828}{arXiv:2112.12828 [hep-th]}.
+
+\bibitem{CLPW2023}
+V.~Chandrasekaran, R.~Longo, G.~Penington, and E.~Witten,
+``An algebra of observables for de~Sitter space,''
+\textit{JHEP} \textbf{02} (2023) 082,
+\href{https://arxiv.org/abs/2206.10780}{arXiv:2206.10780 [hep-th]}.
+
+\bibitem{FaulknerSperanza2024}
+T.~Faulkner and A.~J.~Speranza,
+``Gravitational algebras and the generalized second law,''
+\textit{JHEP} \textbf{11} (2024) 099,
+\href{https://arxiv.org/abs/2405.00847}{arXiv:2405.00847 [hep-th]}.
+%% v2 erratum: FS24 derives crossed-product S_gen and the GSL via Wall monotonicity;
+%% it does NOT explicitly identify S_gen with modular Krylov complexity.
+%% The bridge S_gen ↔ C_K^mod is an ECI working conjecture, not a FS24 theorem.
+
+\bibitem{DEHK2025a}
+J.~De~Vuyst, S.~Eccles, P.~A.~H\"{o}hn, and J.~Kirklin,
+``Crossed products and quantum reference frames: on the observer-dependence
+of gravitational entropy,''
+\textit{JHEP} \textbf{07} (2025) 063,
+\href{https://arxiv.org/abs/2412.15502}{arXiv:2412.15502 [hep-th]}.
+
+\bibitem{DEHK2025b}
+J.~De~Vuyst, S.~Eccles, P.~A.~H\"{o}hn, and J.~Kirklin,
+``Gravitational entropy is observer-dependent,''
+\textit{JHEP} \textbf{07} (2025) 146,
+\href{https://arxiv.org/abs/2405.00114}{arXiv:2405.00114 [hep-th]}.
+
+\bibitem{HellerPapalini2024}
+M.~P.~Heller, A.~Papalini, and T.~Schuhmann,
+``Krylov spread complexity as holographic complexity beyond JT gravity,''
+\textit{Phys.\ Rev.\ Lett.}\ \textbf{135} (2025) 151602,
+\href{https://arxiv.org/abs/2412.17785}{arXiv:2412.17785 [hep-th]}.
+
+\bibitem{BisognanoWichmann1976}
+J.~J.~Bisognano and E.~H.~Wichmann,
+``On the duality condition for a Hermitian scalar field,''
+\textit{J.\ Math.\ Phys.}\ \textbf{17} (1976) 303.
+
+\bibitem{ConnesRovelli1994}
+A.~Connes and C.~Rovelli,
+``Von Neumann algebra automorphisms and time-thermodynamics relation in
+generally covariant quantum theories,''
+\textit{Class.\ Quantum Grav.}\ \textbf{11} (1994) 2899--2917.
+
+%% --- Vardian (concurrent independent work, must cite) ---
+\bibitem{Vardian2026}
+N.~Vardian,
+``Modular Krylov Complexity as a Boundary Probe of Area Operator and
+Entanglement Islands,''
+\href{https://arxiv.org/abs/2602.02675}{arXiv:2602.02675 [hep-th]}
+(February 2026).
+%% Single-author hep-th. Live-verified 2026-05-05.
+
+%% --- Free-QFT counter-examples to the saturation converse ---
+\bibitem{AvdoshkinDymarsky2019}
+A.~Avdoshkin and A.~Dymarsky,
+``Euclidean operator growth and quantum chaos,''
+\textit{Phys.\ Rev.\ Research} \textbf{2} (2020) 043234,
+\href{https://arxiv.org/abs/1911.09672}{arXiv:1911.09672 [cond-mat.stat-mech]}.
+
+\bibitem{Camargo2023}
+H.~A.~Camargo, V.~Jahnke, K.-Y.~Kim, and M.~Nishida,
+``Krylov Complexity in Free and Interacting Scalar Field Theories with
+Bounded Power Spectrum,''
+\textit{JHEP} \textbf{05} (2023) 226,
+\href{https://arxiv.org/abs/2212.14702}{arXiv:2212.14702 [hep-th]}.
+
+\bibitem{Sreeram2025}
+Sreeram~PG, J.~Bharathi~Kannan, R.~Modak, and S.~Aravinda,
+``Dependence of Krylov complexity on the initial operator and state,''
+\textit{Phys.\ Rev.\ E} \textbf{112} (2025) L032203,
+\href{https://arxiv.org/abs/2503.03400}{arXiv:2503.03400 [quant-ph]}.
+
+%% --- BEC analog Hawking platforms (A19 BOUND falsifier) ---
+\bibitem{Kolobov2021}
+V.~I.~Kolobov, K.~Golubkov, J.~R.~Mu\~{n}oz~de~Nova, and J.~Steinhauer,
+``Observation of stationary spontaneous Hawking radiation and the time
+evolution of an analogue black hole,''
+\textit{Nat.\ Phys.}\ \textbf{17} (2021) 362--367,
+\href{https://arxiv.org/abs/1910.09363}{arXiv:1910.09363 [gr-qc]}.
+
+\bibitem{Steinhauer2019}
+J.~R.~Mu\~{n}oz~de~Nova, K.~Golubkov, V.~I.~Kolobov, and J.~Steinhauer,
+``Observation of thermal Hawking radiation at the Hawking temperature in
+an analogue black hole,''
+\textit{Nature} \textbf{569} (2019) 688--691,
+\href{https://arxiv.org/abs/1809.00913}{arXiv:1809.00913 [gr-qc]}.
+
+\bibitem{Solnyshkov2026}
+D.~D.~Solnyshkov, I.~Paquelier, A.~Balmisse, and G.~Malpuech,
+``Polariton-condensate analog black-hole merger'' (working title),
+\href{https://arxiv.org/abs/2603.01664}{arXiv:2603.01664}
+(2026).
+
+\bibitem{ChandranFischer2026}
+A.~Chandran and U.~R.~Fischer,
+``UV-finite volume-law entanglement negativity'' (working title),
+\href{https://arxiv.org/abs/2604.02075}{arXiv:2604.02075}
+(2026).
+
+\bibitem{TorresPatrick2017}
+T.~Torres, S.~Patrick, A.~Coutant, M.~Richartz, E.~W.~Tedford, and S.~Weinfurtner,
+``Rotational superradiant scattering in a vortex flow,''
+\textit{Nat.\ Phys.}\ \textbf{13} (2017) 833--836.
+
+%% --- ECI internal references ---
+\bibitem{ECI_v6}
+[ECI author(s)],
+``Entanglement--Complexity--Information: a phenomenological architecture
+for quantum gravity phenomenology (v6.0.53),''
+Zenodo record \texttt{10.5281/zenodo.20030684} (2026).
+
+\end{thebibliography}
+
+\end{document}

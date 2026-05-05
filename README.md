@@ -1,23 +1,23 @@
-# crossed-cosmos — ECI v6.0.53.7
+# crossed-cosmos — ECI v6.0.53.8
 
 **Extended Cosmological Index:** quantum-gravity + cosmology unified via type-II_∞ crossed-product algebras, modular flavour S'₄, Cassini-clean NMC, and SU(5) GUT closure.
 
-**Version:** v6.0.53.7 (commit 507e0ca)  
-**Published:** Zenodo DOI [10.5281/zenodo.20042732](https://doi.org/10.5281/zenodo.20042732)  
+**Version:** v6.0.53.8 (2026-05-05)  
+**Published:** Zenodo DOI [10.5281/zenodo.20043755](https://doi.org/10.5281/zenodo.20043755)  
 **Concept record:** [10.5281/zenodo.19686398](https://doi.org/10.5281/zenodo.19686398)
 
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.19686398.svg)](https://doi.org/10.5281/zenodo.19686398)
 [![License: CC BY 4.0](https://img.shields.io/badge/License-CC_BY_4.0-lightgrey.svg)](https://creativecommons.org/licenses/by/4.0/)
 [![ORCID](https://img.shields.io/badge/ORCID-0009--0008--2443--7166-a6ce39)](https://orcid.org/0009-0008-2443-7166)
 [![arXiv](https://img.shields.io/badge/arXiv-submission--ready-brightgreen)](https://arxiv.org/a/remondiere_k_1)
-[![Papers](https://img.shields.io/badge/papers-9-blue)](PAPERS.md)
+[![Papers](https://img.shields.io/badge/papers-10-blue)](PAPERS.md)
 [![GitHub Releases](https://img.shields.io/badge/releases-GitHub-black)](https://github.com/AIdevsmartdata/crossed-cosmos/releases)
 
 **Keywords** — cosmology · quantum gravity · dark energy · non-minimal coupling · quintessence · von Neumann algebras · crossed product · DESI DR2 · Pantheon+ · modular symmetry · persistent homology · proton decay · generalised second law
 
 ---
 
-## Nine Submission-Ready Papers
+## Ten Submission-Ready Papers
 
 | # | Paper | Pages | Target Journal | Status | Source |
 |---|---|---|---|---|---|
@@ -30,6 +30,24 @@
 | 7 | DSSYK Krylov-FRW extension (crossing universe boundary) | 21 | JHEP/hep-th | Compiled 2026-05-05 | PDSSYK_FRW / dssyk_krylov_FRW_extension.pdf |
 | 8 | G1.12.B SU(5) proton decay, M1+M2 PASS, M3–M6 forecast | 14–16 | PRD | M1+M2 PASS | OPUS_G112B_M6 / proton_decay_prediction_PRD.tex |
 | 9 | BEC Steinhauer sonic horizon falsifier (Krylov saturation) | companion | companion | Companion | paper/bec_steinhauer_krylov / Γ_meas ≤ 288 s⁻¹ |
+| 10 | AWCH Bianchi IX algebraic crossing-product (FRW null-boundary) | 25 | CMP | Compiled 2026-05-05 | paper/algebraic_wch_bianchi / note.tex |
+
+---
+
+## Wave 12 Phase 1 — In Flight (12 Agents)
+
+**Status:** 8 Sonnets (A69, A72, A73, A75–A79) + 4 Haiku (H11–H14) launched 2026-05-05 evening
+
+**Axes under investigation:**
+- **H₀ cosmology** (A69): Wolf 2025 arXiv:2504.07679 lit-extract → A70 likelihood + A71 PC GPU MCMC Bayes contest design
+- **Damerell ladder extension** (A72): additional algebraic invariants K=Q(i) surviving A62 null-test
+- **RG running ξ** (A73): non-minimal coupling M_Z → M_GUT 1-loop with right-handed neutrino thresholds
+- **Twistor space scoping** (A75): Penrose-Mason-Skinner ↔ ECI modular sector — probable dead-end
+- **Adelic L-functions au-delà CM** (A76): Tate / Iwasawa / p-adic L-functions ↔ Damerell ladder
+- **Modular bootstrap higher genus** (A77): g≥2 extension of Modular Shadow A11/A27 finite-rank theorem
+- **H6 χ_4 nebentypus relaxation** (A78): χ_3 / χ_8 / χ_12 alternative chains + LMFDB stress-test
+- **H1 type-II_∞ FRW** (A79): post-CLPW 2024-26 lit revue (Witten, Faulkner, Jensen)
+- **Utility** (H11-H14): PDF compile sanity, README update, hallu audit log, arXiv API cross-check
 
 ---
 
@@ -67,7 +85,7 @@ ECI is an **integrative platform** bridging quantum gravity (observer-dependent 
 
 Pre-print PDFs from GitHub Releases: [Release page](https://github.com/AIdevsmartdata/crossed-cosmos/releases)
 
-Submission packages for all nine papers include:
+Submission packages for all ten papers include:
 - Full LaTeX source + compiled PDF
 - Live-verified bibliography (arXiv API checked 2026-05-05)
 - Suggested referees and cover letters
@@ -75,9 +93,9 @@ Submission packages for all nine papers include:
 
 ## Documentation
 
-- [`PAPERS.md`](PAPERS.md) — index of 9 submission-ready papers with abstracts and submission status
+- [`PAPERS.md`](PAPERS.md) — index of 10 submission-ready papers with abstracts and submission status
 - [`RESULTS.md`](RESULTS.md) — key numerical results
-- [`CHANGELOG.md`](CHANGELOG.md) — version history (v1 → v6.0.53.7)
+- [`CHANGELOG.md`](CHANGELOG.md) — version history (v1 → v6.0.53.8)
 - `notes/eci_v7_aspiration/` — 100+ sub-agent audit memos, derivations, and cross-checks
 - `derivations/V6-claims-audit-pipeline.py` — automated rigour checking (18/18 PASS)
 - `paper/eci.bib` — verified bibliography (DOIs live-checked via arXiv API and CrossRef)
@@ -96,9 +114,9 @@ cd notes/eci_v7_aspiration/PDSSYK_FRW && pdflatex dssyk_krylov_FRW_extension.tex
 ```bibtex
 @software{Remondiere2026ECI,
   author = {Remondière, Kévin},
-  title  = {crossed-cosmos: Extended Cosmological Index v6.0.53.7},
+  title  = {crossed-cosmos: Extended Cosmological Index v6.0.53.8},
   year   = {2026},
-  doi    = {10.5281/zenodo.20042732},
+  doi    = {10.5281/zenodo.20043755},
   url    = {https://github.com/AIdevsmartdata/crossed-cosmos}
 }
 ```
@@ -113,7 +131,13 @@ cd notes/eci_v7_aspiration/PDSSYK_FRW && pdflatex dssyk_krylov_FRW_extension.tex
 ## Roadmap (v7 pathway)
 
 - [x] v6.0.53 baseline snapshot (Zenodo 10.5281/zenodo.20030684)
-- [x] Nine submission-ready papers (2026-05-05 cutoff)
+- [x] Ten submission-ready papers (2026-05-05 cutoff)
+- [ ] **Wave 12 Phase 1** (12 agents in flight, 8 Sonnets + 4 Haiku — 2026-05-05 evening)
+  - H₀ Wolf 2025 lit-extract (A69) → A70+A71 likelihood + PC GPU MCMC contest
+  - Damerell extension (A72), RG running ξ (A73)
+  - Twistor scoping (A75), Adelic L-functions (A76), Modular bootstrap higher genus (A77)
+  - H6 χ_4 relaxation (A78), H1 type-II_∞ FRW lit (A79)
+  - Utility: PDFs sanity, README, hallu log, arXiv cross-check (H11-H14)
 - [ ] arXiv endorsement + submission wave 1 (PNT, V74_AMENDMENT, EREPR_REOPEN)
 - [ ] LMP submissions (CARDY_PAPER, MODULAR_SHADOW, Geom. Topology)
 - [ ] PRD proton-decay campaign (OPUS_G112B, M3–M6 forecast)

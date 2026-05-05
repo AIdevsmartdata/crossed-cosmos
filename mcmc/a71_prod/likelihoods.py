@@ -348,7 +348,7 @@ def _make_synthetic_sne_data(n_sn: int = 200,
     def chi_numpy(z_t, n_steps=100):
         zz = np.linspace(0, z_t, n_steps + 1)
         H = H0_fid * np.sqrt(Om_fid * (1+zz)**3 + (1-Om_fid))
-        return np.trapz(C_KMS / H, zz)
+        return np.trapezoid(C_KMS / H, zz)
 
     mu_true = np.array([
         5 * np.log10((1+z) * chi_numpy(z)) + 25 + MB_fid

@@ -92,7 +92,7 @@ def chi(z_target: jnp.ndarray, H0: jnp.ndarray,
         z_grid = jnp.linspace(0.0, z_t, n_steps + 1)
         integrands = _chi_integrand(z_grid, H0, Omega_m, w0, wa)
         dz = z_t / n_steps
-        return jnp.trapz(integrands, z_grid)
+        return jnp.trapezoid(integrands, z_grid)
 
     return jax.vmap(chi_scalar)(jnp.atleast_1d(z_target))
 
@@ -249,7 +249,7 @@ def chi_eci_from_emulator(z_target: jnp.ndarray,
         z_int = jnp.linspace(0.0, z_t, n_interp + 1)
         H_int = jnp.interp(z_int, z_grid, H_emu)
         integrand = _C_KMS / H_int
-        return jnp.trapz(integrand, z_int)
+        return jnp.trapezoid(integrand, z_int)
 
     return jax.vmap(chi_scalar)(jnp.atleast_1d(z_target))
 

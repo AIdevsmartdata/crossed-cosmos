@@ -25,7 +25,10 @@ The Week 1 memo recommended pivoting to the Araki relative modular operator appr
 
 Let M be a von Neumann algebra acting on a Hilbert space H. Let sigma be a faithful normal state on M with cyclic separating GNS vector |sigma> in H.
 
-For a second faithful normal state rho with GNS vector |rho> (in the natural positive cone P^sharp of M), the **Araki relative modular operator** Delta_{rho|sigma} is defined via the closure of the antilinear map:
+For a second faithful normal state rho with GNS vector |rho> (in the natural positive cone P^sharp of M), the **Araki relative modular operator** Delta_{rho|sigma} is defined via the closure of the antilinear map.
+The modular Hamiltonian is defined with the uniform convention K_R = -log Delta_sigma >= 0
+(adopted throughout this portfolio; in the type-I toy, Delta_sigma = sigma in the GNS sense,
+so both conventions K_R = -log sigma and K_R = -log Delta_sigma coincide):
 
 ```
 S_{rho|sigma} : A|sigma> --> A*|rho>   (A in M)
@@ -81,6 +84,10 @@ Let:
   ```
   tau_t(A) = e^{i t K_R} A e^{-i t K_R}   (in the GNS representation)
   ```
+  **Convention note**: We adopt the uniform sign convention K_R = -log Delta_sigma >= 0
+  (so that K_R is a non-negative operator and the modular flow is e^{i t K_R}).
+  In the type-I toy, Delta_sigma = sigma in the GNS sense, so K_R = -log sigma,
+  and both conventions coincide.
 - sigma_t = sigma o tau_{-t} (the state evolved in modular time)
 - rho = a perturbed state (e.g. Boulware vacuum, or state with additional matter)
 
@@ -287,6 +294,17 @@ This will verify the formula d/dt S(rho||sigma_t) = -<K_R>_rho in a type-I setti
 **C_k bridge (speculative, Week 3-4)**:
 - Check whether the DSSYK modular Hamiltonian (the chord number operator) can be identified with K_R
 - This requires reading HPS sections 3-4 (bulk length as modular Hamiltonian?) and checking compatibility with DEHK
+
+---
+
+## 7b. Cross-portfolio Links
+
+This memo is the primary reference for the ER=EPR Araki route
+(`\cite{EREPR_Araki}` in the portfolio bibtex).
+
+- **Modular Shadow Conjecture** [P4, modular_shadow_LMP.tex]: The $S_\mathrm{gen} \leftrightarrow C_K^\mathrm{mod}$ bridge conjecture motivating this route is developed in the companion Modular Shadow paper. The Open Questions §5 of that paper (`\cite{ModularShadow}`) explicitly calls for an algebraic proof via Connes--Stoermer, which the Araki route addresses.
+
+- **DSSYK FRW Extension** [P7, dssyk_krylov_FRW_extension.tex]: The principal obstruction identified in §5.3 of the DSSYK FRW paper (`\cite{DSSYK_FRW}`) is precisely the $S_\mathrm{gen} \leftrightarrow C_\mathrm{Krylov}$ bridge in type-II$_\infty$ — the problem this memo addresses via the Araki formula $dS_\mathrm{gen}/d\tau_R = \langle K_R \rangle_\rho$.
 
 ---
 

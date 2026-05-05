@@ -70,7 +70,7 @@ log L_total = log L_BAO + log L_SN + log L_WL + log L_CMB
 
 - **L_BAO:** `bao.desi_dr2.desi_bao_all` (7 z_eff bins, full covariance)
 - **L_SN:** `sn.pantheonplus` (1701 light curves / 1550 distinct SNe; M_B marginalised)
-- **L_WL Phase 1:** Gaussian prior S_8 = 0.759 +0.024/−0.021 via `cobaya_nmc/eci_kids_s8.py`
+- **L_WL Phase 1:** Gaussian prior — UPDATE NEEDED: KiDS-Legacy 2025 (Wright et al., arXiv:2503.19441) supersedes KiDS-1000 (Asgari et al. 2021, arXiv:2007.15633). Current value: S_8 = 0.815 +0.016/−0.021 (KiDS-Legacy 2025, only 0.73σ from Planck). Original `cobaya_nmc/eci_kids_s8.py` uses Asgari 2021 value 0.759 +0.024/−0.021 — to be patched before pre-registration commit. The S_8 tension prior to use in 2026 is the KiDS-Legacy value (Gemini cross-check verified 2026-05-04; Mistral cross-check hallucinated 0.754 ± 0.019 with fabricated arXiv ID 2404.02929 — re-confirming `feedback_crosscheck_fabrication` discipline).
 - **L_CMB:** `planck_2018_lowl.{TT,EE}` + `planck_2018_highl_plik.TTTEEE_lite` + `act_dr6_lenslike.ACTDR6LensLike`
 
 Partial-dataset runs (BAO-only, +SN, +WL) generated as by-products to trace dataset-pulling.

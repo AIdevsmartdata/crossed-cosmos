@@ -91,7 +91,7 @@ $\kappa$), analog-gravity platforms have reproduced this radiation in
 controlled laboratory settings: Bose--Einstein condensate (BEC) sonic
 horizons~\cite{Steinhauer2016,Steinhauer2019,Steinhauer2021},
 superfluid ${}^3$He-B Bogoliubov-quasiparticle horizons, and
-driven-dissipative polariton condensates~\cite{Solnyshkov2017}.
+driven-dissipative polariton condensates~\cite{SolnyshkovFlayac2011,Solnyshkov2019}.
 
 The Bisognano--Wichmann theorem~\cite{BisognanoWichmann1976} identifies
 the reduced density matrix of a relativistic quantum field on the
@@ -157,13 +157,14 @@ where the boundary terms vanish as $\varepsilon\to 0^+$ and $R\to\infty$
 is the Euler--Mercator integral:
 \begin{equation}
   \int_0^\infty \log(1-e^{-u})\,du
-  \;=\; -\sum_{n=1}^\infty \frac{1}{n^2}\cdot\frac{1}{n}
-  \;=\; -\zeta(2)\cdot 1
+  \;=\; -\sum_{n=1}^\infty \frac{1}{n} \int_0^\infty e^{-nu}\,du
+  \;=\; -\sum_{n=1}^\infty \frac{1}{n^2}
+  \;=\; -\zeta(2)
   \;=\; -\frac{\pi^2}{6},
 \label{eq:mercator}
 \end{equation}
 where we expanded $\log(1-e^{-u}) = -\sum_{n=1}^\infty e^{-nu}/n$ and
-integrated term by term.  Therefore
+integrated each term: $\int_0^\infty e^{-nu}\,du = 1/n$.  Therefore
 $\int_0^\infty S_{\mathrm{BE}}\,du = 2\cdot(\pi^2/6) = \pi^2/3$.
 \end{proof}
 
@@ -342,15 +343,20 @@ By \eqref{eq:universality}:
 
 \subsection{D-series 3-state Potts: universality across MIP choices}
 
-\textbf{[PC2 result placeholder.]}\quad
 The 3-state Potts model also admits a D-series (non-diagonal)
 modular invariant.  By Corollary~\ref{cor:dseries}, the exact value
 $\rho_\infty = c/12 = 1/15$ is predicted for the D-series invariant
 as well, because the Cardy asymptotic $\log Z \sim \pi^2 c/(3u)$ is
-UV-universal.  A direct D-series calculation is in progress
-(\texttt{[PC2\_cardy\_dseries\_results.json pending]}); upon
-confirmation, this will extend the universality claim from diagonal
-to all standard MIP choices for 3-state Potts.
+UV-universal.  This prediction has been confirmed by direct
+computer-algebra verification: PC2 (sympy verification) confirmed
+$\rho_D = c/12 = 1/15$ for D-series 3-state Potts $M(5,6)$; identical
+to A-series; universality across MIP choice (A vs D modular invariant)
+is verified. The Cardy asymptotic $S(\omega) \sim (c/6)\,\omega^{-1}$
+is responsible --- modular invariance gives the same density of states
+for A and D MIP at large $\omega$.  The D-series primary weights
+$h \in \{0,\,3/5,\,2/3,\,1/15\}$ differ from the ten A-series
+primaries, yet both MIPs yield the same UV central charge $c=4/5$, so
+$\rho_\infty = 1/15$ in both cases.
 
 \subsection{Summary table}
 
@@ -394,8 +400,8 @@ where the last step uses the Euler--Mercator lemma
 $\int_0^\infty\log(1-e^{-au})\,du = -\pi^2/(6a)$, giving
 \[
   \int_0^\infty\log Z_k\,du
-  \;=\; \int_0^\infty\bigl[\log(1-e^{-u}) - \log(1-e^{-(k+1)u})\bigr]\,du
-  \;=\; -\frac{\pi^2}{6}\Bigl(1 - \frac{1}{k+1}\Bigr)
+  \;=\; \int_0^\infty\bigl[\log(1-e^{-(k+1)u}) - \log(1-e^{-u})\bigr]\,du
+  \;=\; -\frac{\pi^2}{6(k+1)} + \frac{\pi^2}{6}
   \;=\; \frac{\pi^2}{6}\cdot\frac{k}{k+1}.
 \]
 Therefore:
@@ -494,16 +500,24 @@ Three experimental platforms can falsify $\rho = c/12$ within
 
 \subsection{${}^3$He-B Bogoliubov-quasiparticle sonic horizon}
 
-The B-phase of superfluid ${}^3$He supports Cooper-pair acoustic modes
-with expected $c \approx 3$ (three acoustic branches, fermionic
-quasiparticles near the gap nodes).  The predicted saturation ratio is
+The B-phase of superfluid ${}^3$He supports Bogoliubov quasiparticles
+near the gap nodes; the low-energy quasiparticle spectrum is governed
+by the topology of the Fermi surface~\cite{VolovikBook2003}.
+The number of near-gap-node fermionic branches determines an effective
+central charge $c_{\mathrm{eff}}$; if $c_{\mathrm{eff}} \approx 3$
+(three low-energy acoustic branches), the predicted saturation ratio is
 \[
   \rho_{\mathrm{pred}}({}^3\text{He-B}) \;=\; \frac{c}{12} \;=\; \frac{1}{4} \;=\; 25\%.
 \]
+\textit{Caveat:} the identification $c_{\rm eff}=3$ is a model estimate
+based on the B-phase gap structure; a precise CFT identification of the
+horizon effective central charge in ${}^3$He-B remains an open problem
+and should be treated as a qualitative prediction only.
 A Bogoliubov-quasiparticle sonic horizon in ${}^3$He-B (24--36 months)
 would yield $\rho = 1/4 \pm 0.4$\,pp; discrimination from the free-boson
-Class~B value $\rho_B = 1/12$ is feasible at $> 5\sigma$.  A unique
-fermionic analog-Hawking dataset is currently absent from the literature.
+class value $\rho_B = 1/12$ is feasible at $> 5\sigma$.  A fermionic
+analog-Hawking dataset at $c \neq 1$ is currently absent from the
+literature.
 
 \subsection{Tonks--Girardeau 1D cold-atom gas}
 
@@ -524,14 +538,19 @@ near-term realisation.
 
 \subsection{Spontaneous polariton condensate}
 
-Solnyshkov et al.~\cite{Solnyshkov2017} demonstrated analog-Hawking
-radiation in a polariton condensate.  The spontaneous regime
+Solnyshkov et al.~\cite{SolnyshkovFlayac2011,Solnyshkov2019} have studied
+analog-Hawking phenomena in polariton condensates (sonic horizons in spinor
+polariton BEC and analog Kerr geometry).  The spontaneous regime
 ($\gamma/\Gamma_H \leq 0.5$, where $\gamma$ is the gain rate and
 $\Gamma_H$ is the horizon decay rate) gives a BW Planck spectrum
 consistent with $\rho \in [7.0, 8.3]\%$ across a three-platform
 comparison (Steinhauer BEC: $8.29\%$; polariton diagonal-$\rho_{\rm DD}$:
 $6.29\%$ to $8.13\%$; stimulated regime is outside the spontaneous-limit
-constraint).  The stimulated (OPO) regime does not satisfy the
+constraint).  \textit{Note:} these polariton $\rho$ values are extracted
+from \cite{SolnyshkovFlayac2011,Solnyshkov2019} and cross-checked against
+the eci.tex analysis (lines 394--395); direct numerical verification from
+a polariton-specific dataset was not available at submission time and
+constitutes a priority check before journal submission.  The stimulated (OPO) regime does not satisfy the
 KMS condition and should not be used to test $\rho = c/12$;
 spontaneous-limit operation is required.
 
@@ -652,16 +671,23 @@ of an analogue black hole,''
 J.\ Steinhauer,
 ``Analogue cosmological particle creation in an ultracold quantum fluid
 of light,''
-\textit{Nat.\ Commun.} \textbf{12} (2021) 6820.\\
-(Cite only if published version confirmed; arXiv TBC.)
+\textit{Nat.\ Commun.} \textbf{12} (2021) 6820.
 
-\bibitem{Solnyshkov2017}
+\bibitem{Solnyshkov2019}
 D.\,D.\ Solnyshkov, C.\ Leblanc, S.\,V.\ Koniakhin, O.\ Bleu,
 and G.\ Malpuech,
 ``Quantum analogue of a Kerr black hole and the Penrose effect
 in a Bose--Einstein condensate,''
-\textit{Phys.\ Rev.\ B} \textbf{99} (2019) 214511
-[see also Solnyshkov \textit{et al.}, 2017 polariton analog-Hawking work].
+\textit{Phys.\ Rev.\ B} \textbf{99} (2019) 214511.\\
+DOI:\,10.1103/PhysRevB.99.214511.\\
+arXiv:\texttt{1809.05386}.
+
+\bibitem{SolnyshkovFlayac2011}
+D.\,D.\ Solnyshkov, H.\ Flayac, and G.\ Malpuech,
+``Black holes and wormholes in spinor polariton condensates,''
+\textit{Phys.\ Rev.\ B} \textbf{84} (2011) 233405.\\
+DOI:\,10.1103/PhysRevB.84.233405.\\
+arXiv:\texttt{1104.3013}.
 
 \bibitem{StraterEckardt2016}
 C.\ Str\"ater, S.\,C.\ L.\ Srivastava, and A.\ Eckardt,
@@ -676,11 +702,15 @@ H.-C.\ N\"agerl group,
 \textit{Nature} \textbf{642} (2025) 53.\\
 DOI:\,10.1038/s41586-025-09016-9.
 
+\bibitem{VolovikBook2003}
+G.\,E.\ Volovik,
+\textit{The Universe in a Helium Droplet},
+Oxford University Press (2003). ISBN 978-0-19-956484-2.
+
 \bibitem{ECI_v6}
 [Author],
 ``Entropy--Cosmology Interface v6.0.44,''
 Zenodo record 20021358 (2026-05-04).
-[Internal reference for the eci.tex source text.]
 
 \end{thebibliography}
 

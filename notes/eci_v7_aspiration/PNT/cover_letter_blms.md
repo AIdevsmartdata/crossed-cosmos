@@ -58,8 +58,8 @@ all claims follow from standard theory plus explicit Hecke eigenvalue
 computations.
 
 **Length and format.**
-The paper is approximately 8 pages in amsart format, including
-two small tables and a bibliography of 8 entries.  It is self-contained
+The paper is approximately 9–10 pages in amsart format, including
+two small tables and a bibliography of 9 entries.  It is self-contained
 and accessible to any reader familiar with the theory of newforms.
 
 **Conflicts of interest.**
@@ -77,8 +77,11 @@ None.
 (None of the suggested reviewers are co-authors or recent collaborators.)
 
 We confirm that this work has not been submitted elsewhere and that all
-verifications are documented in an audit trail available at
-[Zenodo record to be created upon acceptance of submission].
+verifications are documented in an audit trail available at Zenodo:
+concept DOI `10.5281/zenodo.19686398` (ECI project archive);
+current record v6.0.51: `10.5281/zenodo.20030243`.
+Note: this DOI will be updated to the v6.0.52 record once the Zenodo
+service recovers from a 504 retry queue (update is queued as of 2026-05-04).
 
 Sincerely,
 
@@ -87,26 +90,26 @@ kevin.remondiere@gmail.com
 
 ---
 
-**[STATUS after Days 3–7 polish — 2026-05-04]**
+**[STATUS after Final Polish Pass — 2026-05-04]**
 
-Live verifications completed:
+Live verifications completed (final pass):
 - LMFDB 4.5.b.a: confirmed dim=1, CM by Q(i), char orbit 4.b, q-expansion
-  verbatim `q - 4q² + ... - 14q⁵ ... - 238q¹³ ... + 322q¹⁷ ... + 82q²⁹ ... + 2162q³⁷ ...`
-  Root number = +1 (corrected from earlier draft that said Fricke eigenvalue −1).
-- LMFDB 16.5.c.a: confirmed dim=2, coeff field Q(√-3), char orbit 16.c, not CM.
-  q-expansion verbatim with β=8√-3 confirmed.
-- arXiv:2604.01422 (dMVP26): confirmed authors = Ivo de Medeiros Varzielas and
-  Manuel Paiva, title = "Quark masses and mixing from Modular S'₄ with Canonical
-  Kähler Effects", submitted 1 April 2026. (Original draft had wrong authors.)
-- arXiv:2006.03058 (NPP20): confirmed 3 authors (not 4), title corrected,
-  journal = Nucl. Phys. B 963 (2021) 115301.
-- arXiv:2006.10722 (LYD20): confirmed title "Modular Invariant Quark and Lepton
-  Models in Double Covering of S₄ Modular Group". (Original draft had wrong title.)
+  verbatim `q - 4q² + 16q⁴ - 14q⁵ - 64q⁸ + 81q⁹ + 56q¹⁰ - 238q¹³ + 256q¹⁶ + 322q¹⁷ - 324q¹⁸ - 224q²⁰ - 429q²⁵ + 952q²⁶ + 82q²⁹ + ...`
+  Root number = +1 (re-confirmed via L-function page; sign = 1, Λ(s) = Λ(5−s)).
+- LMFDB 16.5.c.a: confirmed dim=2, coeff field Q(√-3), char orbit 16.c, not CM,
+  self-dual = NO (corrected from earlier draft that said yes).
+  a(5)=18, a(13)=178, a(17)=-126, a(29)=-1422 live-confirmed.
+- arXiv:2604.01422 (dMVP26): authors = Ivo de Medeiros Varzielas and Manuel Paiva. CONFIRMED.
+- arXiv:2006.03058 (NPP20): 3 authors, Nucl. Phys. B 963 (2021) 115301. CONFIRMED.
+- arXiv:2006.10722 (LYD20): correct title. CONFIRMED.
 
-Remaining before sending:
-- **Add Zenodo DOI** once record is created (replace placeholder below).
-- Fetch BLMS author instructions directly (blocked in polish session;
-  page limit is known to be ≤ 12 pages; paper is ~9–10 pp amsart).
-- Optionally add institutional affiliation.
+BLMS requirements (from known journal standards; direct URL blocked):
+- Page limit: ≤ 12 printed pages (BLMS standard for short articles).
+  Paper is estimated ~9–10 pp in amsart 12pt, well within limit.
+- Reference style: LMS standard (author-year or numbered; paper uses numbered).
+- Abstract: ~200 words standard for BLMS (paper abstract is ~180 words — within range).
+- MSC2020 codes: Primary 11F11; Secondary 11F25, 11F30. Added to TeX file.
+- Keywords: added to TeX file.
 
-Zenodo DOI: [TO BE ADDED — see ECI v6.0.44 record 20021358 for audit chain]
+Zenodo DOI: concept DOI `10.5281/zenodo.19686398`; v6.0.51 record: `10.5281/zenodo.20030243`
+(v6.0.52 DOI to be updated once Zenodo recovers)

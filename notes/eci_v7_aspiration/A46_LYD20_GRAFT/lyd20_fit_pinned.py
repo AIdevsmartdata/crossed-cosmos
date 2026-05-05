@@ -426,7 +426,8 @@ def chi2_joint(params, F):
 # --------------------------------------------------------------------
 
 def fit_joint(tau, label, n_de_rounds=4, popsize=30, maxiter=800, seed=42, verbose=True):
-    """Joint Q+L fit at fixed tau."""
+    """Joint Q+L fit at fixed tau. Seeds initial population with LYD20-best
+    parameter guess for faster convergence."""
     F = extra_forms(tau)
     bounds = [
         (0.0, 12.0),    # log beta_u/alpha_u   (LYD20 ~325 -> log ~5.78)
@@ -441,17 +442,57 @@ def fit_joint(tau, label, n_de_rounds=4, popsize=30, maxiter=800, seed=42, verbo
         (-3.0, 3.0),    # g2/g1                (LYD20 ~0.683)
         (-12.0, 0.0),   # log mass_scale (eV)  (LYD20 ~3e-4 meV -> log ~-8)
     ]
+    # LYD20 published best-fit (line 1535-1538) as warm start
+    lyd_best = np.array([
+        log(325.6502),     # beta_u/alpha_u
+        log(2427.3101),    # gamma_u/alpha_u
+        log(219.3019),     # delta_u/alpha_u
+        log(466.6990),     # beta_d/alpha_d
+        log(234.0473),     # |gamma_d|/alpha_d
+        -1.0,              # sign(gamma_d) = -1
+        log(2.3388),       # delta_d/alpha_d
+        log(0.0187),       # beta_e/alpha_e
+        log(0.1466),       # gamma_e/alpha_e
+        0.6834,            # g2/g1
+        log(0.3043e-3),    # mass_scale (eV)
+    ])
     best = (1e20, None)
     rng = np.random.default_rng(seed)
     t0 = time.time()
+
+    # First, polish from LYD-best starting point (fast)
+    try:
+        res0 = minimize(chi2_joint, lyd_best, args=(F,),
+                        method="Nelder-Mead",
+                        options={"xatol": 1e-7, "fatol": 1e-5, "maxiter": 5000})
+        if res0.fun < best[0]:
+            best = (float(res0.fun), res0.x)
+        if verbose:
+            print(f"    [{label}] LYD-warmstart NM chi2={res0.fun:.3f} t={time.time()-t0:.1f}s", flush=True)
+    except Exception:
+        pass
+
     for r in range(n_de_rounds):
         try:
+            # Hybrid init: LYD-best in pop[0], rest from sobol/lhs over full bounds
+            n_pop = popsize * 11
+            sobol_eng = np.random.default_rng(seed + 173 * r)
+            init_pop = np.zeros((n_pop, 11))
+            for i in range(n_pop):
+                for j, (lo, hi) in enumerate(bounds):
+                    init_pop[i, j] = sobol_eng.uniform(lo, hi)
+            # seed first population members with LYD-best + small perturbations
+            init_pop[0] = np.clip(lyd_best, [b[0] for b in bounds], [b[1] for b in bounds])
+            for k in range(1, min(5, n_pop)):
+                init_pop[k] = np.clip(
+                    lyd_best + 0.5 * sobol_eng.standard_normal(11),
+                    [b[0] for b in bounds], [b[1] for b in bounds])
             res = differential_evolution(
                 chi2_joint, bounds, args=(F,),
                 maxiter=maxiter, tol=1e-9, seed=seed + 173 * r,
                 popsize=popsize, mutation=(0.5, 1.5), recombination=0.9,
                 workers=1, disp=False,
-                init='sobol' if r == 0 else 'latinhypercube',
+                init=init_pop,
             )
             if res.fun < best[0]:
                 best = (float(res.fun), res.x)
@@ -460,15 +501,15 @@ def fit_joint(tau, label, n_de_rounds=4, popsize=30, maxiter=800, seed=42, verbo
         except Exception as e:
             if verbose:
                 print(f"    [{label}] DE round {r+1} FAIL: {e}", flush=True)
-    # Polish
+    # Polish (lightweight: 5 perturb-and-NM with bounded iterations)
     if best[1] is not None:
-        for k in range(15):
+        for k in range(5):
             try:
                 x0 = best[1] + 0.04 * rng.standard_normal(len(best[1]))
                 res = minimize(chi2_joint, x0, args=(F,),
                                method="Nelder-Mead",
-                               options={"xatol": 1e-12, "fatol": 1e-12,
-                                        "maxiter": 30000})
+                               options={"xatol": 1e-8, "fatol": 1e-6,
+                                        "maxiter": 3000})
                 if res.fun < best[0]:
                     best = (float(res.fun), res.x)
             except Exception:
@@ -559,19 +600,19 @@ def main():
 
     print("[A] FIT at tau = i (CM-anchor; pinned, no Re/Im freedom)", flush=True)
     print("-" * 78, flush=True)
-    res_i = fit_joint(tau_i, "tau_i_pinned", n_de_rounds=3, popsize=25, maxiter=500)
+    res_i = fit_joint(tau_i, "tau_i_pinned", n_de_rounds=2, popsize=15, maxiter=200)
     print(f"    chi2 = {res_i['chi2_min']:.3f}", flush=True)
     print(flush=True)
 
     print("[B] REPRODUCE LYD20 fit at their best-fit tau", flush=True)
     print("-" * 78, flush=True)
-    res_LYD = fit_joint(tau_LYD, "tau_LYD20_best", n_de_rounds=3, popsize=25, maxiter=500)
+    res_LYD = fit_joint(tau_LYD, "tau_LYD20_best", n_de_rounds=2, popsize=15, maxiter=200)
     print(f"    chi2 = {res_LYD['chi2_min']:.3f}", flush=True)
     print(flush=True)
 
     print("[C] FIT at W1 attractor tau* = -0.19 + 1.00i", flush=True)
     print("-" * 78, flush=True)
-    res_W1 = fit_joint(tau_W1, "tau_W1_attractor", n_de_rounds=3, popsize=25, maxiter=500)
+    res_W1 = fit_joint(tau_W1, "tau_W1_attractor", n_de_rounds=2, popsize=15, maxiter=200)
     print(f"    chi2 = {res_W1['chi2_min']:.3f}", flush=True)
     print(flush=True)
 

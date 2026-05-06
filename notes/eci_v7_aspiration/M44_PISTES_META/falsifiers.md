@@ -23,19 +23,27 @@ type: project
 
 **Cost**: 5 CPU-hr SageMath / LMFDB. Local laptop.
 
-## F5 — M28 anticyclotomic IMC paragraph (CHEAP: 20 CPU-hr)
+## F5 — M28 anticyclotomic IMC paragraph (CHEAP: 20 CPU-hr) — **EXECUTED 2026-05-06: FALSIFIED**
 
 **Conjecture under test**: M28 anticyclotomic IMC paragraph for f=4.5.b.a is logically valid (not just speculation).
 
 **Protocol**:
-1. Re-read Hsieh 2014 *Compositio* hypothesis list for anticyclotomic IMC
-2. Re-read Arnold 2007 hypothesis list
-3. Check if either explicitly excludes p ramified in K (likely: Hsieh assumes p split or inert)
-4. If excluded: paragraph is vacuous/wrong WITHOUT Kriz 2021 extension
+1. Re-read Hsieh 2014 ***Documenta Math.*** vol. 19, 709-767 (NOT Compositio — original F5 metadata was wrong; M46 corrected) hypothesis list
+2. Re-read Chida-Hsieh 2015 *Compositio* 151, 863-897 hypothesis list (arXiv:1304.3311)
+3. Re-read Arnold 2007 *Crelle* 606, 41-78 hypothesis list
+4. Re-read Pollack-Weston 2011 hypothesis list
+5. If any explicitly excludes p ramified in K AND/OR k odd AND/OR supersingular: paragraph vacuous
 
-**Falsifying outcome**: Hypothesis check fails ⇒ paragraph cannot be salvaged without explicit Kriz extension (which itself is conjectural).
+**EXECUTED VERDICT (M46 sub-agent, 2026-05-06): FALSIFIED**
+- Hsieh 2014 Theorem 1.3: *"p unramified in F/Q"* → EXCLUDES our p=2 ramified
+- Chida-Hsieh 2015 Assumption 1.1(2)(3): p ordinary + p > k+1 → EXCLUDES p=2 (supersingular, p<k+1=6)
+- Arnold 2007: p split in K + even weight → DOUBLE EXCLUSION (p=2 ramified, k=5 odd)
+- Pollack-Weston 2011: N = N⁺N⁻ split/inert split, NO ramified slot → EXCLUDES N=4=2² ramified
+- Kriz 2021: p-adic L-functions OK in supersingular ramified, but IMC theorem NOT established
 
-**Cost**: 20 CPU-hr book reading + cross-check. No compute.
+**Outcome**: M28 paragraph replaced with honest [TBD: prove] framing requiring Kriz-style IMC extension. WIN for epistemic discipline.
+
+**Cost**: 20 CPU-hr equivalent (~5min Opus M46 in practice). No actual compute, pure book triangulation.
 
 ## F1 — M13.1(a) FE-symmetric interpolation (50 CPU-hr)
 

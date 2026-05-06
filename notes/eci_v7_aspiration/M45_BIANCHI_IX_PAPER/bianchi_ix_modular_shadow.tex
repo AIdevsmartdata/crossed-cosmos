@@ -1,0 +1,632 @@
+%% bianchi_ix_modular_shadow.tex
+%% M45 draft v0.1 (2026-05-06)
+%% Conjecture-paper for Comm. Math. Phys.
+%% "Type-II_infty modular-shadow algebra for Bianchi IX vacuum sector
+%%  via Manin-Marcolli symbolic dynamics"
+%%
+%% Author: Kevin Remondiere (independent), Tarbes, France
+%% Status: DRAFT — 6 [TBD: prove] markers explicit; conjecture paper, not theorem.
+%% All 14 arXiv IDs WebFetch-verified 2026-05-06.
+%% Hallu count entering: 86. Held.
+
+\documentclass[12pt,a4paper]{article}
+
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{booktabs}
+\usepackage{hyperref}
+\usepackage{geometry}
+\geometry{margin=2.5cm}
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{conjecture}{Conjecture}
+\newtheorem{remark}{Remark}
+\newtheorem{definition}[theorem]{Definition}
+
+\title{\textbf{A type-II$_\infty$ modular-shadow algebra for the\\
+       Bianchi IX vacuum sector via\\
+       Manin--Marcolli symbolic dynamics}\\[6pt]
+       \large (conjecture paper, with falsifier protocol)}
+
+\author{%
+  K\'evin Remondi\`ere\\[2pt]
+  \small Independent researcher, Tarbes, France\\[2pt]
+  \small \textit{Draft for Communications in Mathematical Physics}
+}
+
+\date{Preprint: \today\quad(M45 v0.1)}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+We propose a type-II$_\infty$ modular-shadow algebra
+$\mathcal{M}_{\mathrm{BIX}}^{\mathrm{II}_\infty}$ for the vacuum sector
+of Bianchi~IX cosmology in the Belinski--Khalatnikov--Lifshitz (BKL)
+mixmaster phase, obtained as the Speranza (2025)
+crossed product of a wedge-complement type-III$_1$ field algebra
+$\mathcal{N}$ by the Connes--Takesaki modular automorphism flow.
+Combining Manin--Marcolli's (2015) symbolic-dynamics
+representation of the BKL Kasner bounce sequence as the geodesic flow
+of the modular surface $X(2) = \Gamma(2)\backslash\mathbb{H}$ with the
+generic crossed-product framework of Witten (2022)
+and Speranza (2025), we
+\emph{conjecture} that the modular flow rate on
+$\mathcal{M}_{\mathrm{BIX}}^{\mathrm{II}_\infty}$ equals
+$\lambda_{\mathrm{mod}} = 2\pi\,\lambda_{\mathrm{BKL}}$, where
+$\lambda_{\mathrm{BKL}} = h_{\mathrm{KS}}(\sigma_{\mathrm{Gauss}})$ is
+the Kolmogorov--Sinai entropy of the Gauss-shift symbolic encoding of
+BKL Kasner bounces.
+This in turn predicts a Maldacena--Shenker--Stanford-style modular
+Krylov-complexity bound
+$\mathcal{C}_K^{\mathrm{mod}}(s) \le A\,\cosh(2\pi\,\lambda_{\mathrm{BKL}}\,s)$
+on $\mathcal{M}_{\mathrm{BIX}}^{\mathrm{II}_\infty}$.
+The construction is presented as four explicit conjectures
+(Conjectures M45.1.A--M45.1.D) and a one-sided numerical falsifier
+based on direct computation of $\lambda_{\mathrm{BKL}}$ via the Gauss
+shift and comparison with Krylov-rate growth in a discretised
+Bianchi~IX wave-function evolution.
+We do \emph{not} prove any of the four conjectures; six explicit
+``[TBD: prove]'' markers are flagged.
+The proposal is compatible with
+the Heinzle--Uggla (2009) Bianchi~IX attractor theorem
+and with our companion work on the Modular Shadow MSS bound for the
+isotropic FLRW sector.
+\end{abstract}
+
+% =====================================================================
+\section{Introduction}\label{sec:intro}
+% =====================================================================
+
+The Maldacena--Shenker--Stanford (MSS) bound on chaos~\cite{MSS2016}
+states that the Lyapunov rate of any large-$N$ thermal quantum system
+satisfies $\lambda_L \le 2\pi/\beta$.
+Its modular-Krylov refinement
+of Caputa--Mag\'{a}n--Patramanis--Tonni~\cite{Caputa2023} and the
+universal operator-growth inequality of
+Parker--Cao--Avdoshkin--Scaffidi--Altman~\cite{Parker2019} give a
+sharper, large-$N$-free statement on the operator-Hilbert space of
+modular evolution.
+
+In parallel, the program initiated by Witten~\cite{Witten2018,Witten2022}
+and Chandrasekaran--Longo--Penington--Witten~\cite{CLPW2022} has
+established that gravitational observable algebras with quantum
+reference frames are type-II$_\infty$ crossed products
+$\mathcal{A}_{\mathrm{II}_\infty} = \mathcal{A}_{\mathrm{III}_1}
+\rtimes_{\sigma^\phi} \mathbb{R}$, restoring a semifinite trace.
+Speranza~\cite{Speranza2025} extended this to a generic
+\emph{intrinsic} cosmological observer construction, applicable to
+backgrounds without a global timelike Killing vector.
+Kudler-Flam--Leutheusser--Satishchandran~\cite{KLS2024} concurrently
+worked out the FLRW (isotropic) case in detail.
+
+The Bianchi~IX vacuum, with its anisotropic SO(3)-symmetric metric and
+three independent scale factors, is the canonical \emph{anisotropic}
+analog of FLRW.
+In the BKL approach to its initial-singularity behaviour, generic
+solutions exhibit a chaotic infinite sequence of Kasner epochs
+separated by bounces governed by a hyperbolic billiard in Misner
+variables~\cite{DamourHenneauxNicolai2002,CornishLevin1996}.
+Manin--Marcolli~\cite{ManinMarcolli2015} proved a remarkable
+correspondence:
+\begin{equation}
+  \text{Mixmaster BKL bounce sequence}
+  \quad \longleftrightarrow \quad
+  \text{geodesic flow on } X(2) = \Gamma(2)\backslash\mathbb{H},
+  \label{eq:MM-corr}
+\end{equation}
+realised by a two-sided continued-fraction shift, with Gauss measure
+as the unique invariant probability of maximal entropy.
+Fan--Fathizadeh--Marcolli~\cite{FFM2015} further showed that the
+Connes spectral action on Bianchi~IX gravitational instantons admits
+modular-form expansions of weights $2$, $14$, $18$.
+
+\paragraph{Aim of this paper.}
+We propose a \emph{conjectural} synthesis of the two pictures: combine
+the Speranza/CLPW crossed-product construction with the
+Manin--Marcolli geodesic-flow representation of BKL chaos, identify
+the resulting type-II$_\infty$ algebra
+$\mathcal{M}_{\mathrm{BIX}}^{\mathrm{II}_\infty}$ as the
+\emph{modular-shadow algebra} of the Bianchi~IX vacuum sector, and
+\emph{conjecture} that its modular flow rate equals $2\pi$ times the
+Kolmogorov--Sinai entropy $\lambda_{\mathrm{BKL}}$ of the Gauss shift.
+This in turn predicts an MSS-style Krylov-complexity bound at
+$\beta_{\mathrm{eff}} = 2\pi/\lambda_{\mathrm{BKL}}$.
+
+\paragraph{What this paper does \emph{not} prove.}
+None of the four sub-conjectures
+(Conjectures~\ref{conj:wedge}--\ref{conj:bound}) is proved.
+Six explicit ``[TBD: prove]'' markers are flagged in the
+construction sketch (\S\ref{sec:construction}).
+This is a \emph{programmatic} note: it identifies a precise, testable
+target, sketches the construction, and presents a one-sided numerical
+falsifier (\S\ref{sec:falsifier}).
+
+\paragraph{Honesty bar.}
+The Manin--Marcolli correspondence~\eqref{eq:MM-corr} is a theorem;
+the type-II$_\infty$ crossed-product framework of
+Witten/Speranza/CLPW is established; the MSS bound and its
+Krylov refinement are established.
+The \emph{novelty} here lies entirely in identifying the rate of the
+Speranza modular flow with $2\pi\lambda_{\mathrm{BKL}}$.
+That identification is open.
+
+\paragraph{Organization.}
+\S\ref{sec:prelim} reviews the three preliminary frameworks.
+\S\ref{sec:conjecture} states the central Conjecture~M45.1.
+\S\ref{sec:construction} sketches the four-step construction.
+\S\ref{sec:bound} formulates the MSS-style Krylov bound.
+\S\ref{sec:lemma} relates to our Bianchi~IX Lemma~A.1 (paper~\#5).
+\S\ref{sec:falsifier} presents a numerical falsifier protocol.
+\S\ref{sec:outlook} lists open problems.
+
+% =====================================================================
+\section{Preliminaries: three frameworks}\label{sec:prelim}
+% =====================================================================
+
+\subsection{Manin--Marcolli BKL $\leftrightarrow$ X(2) geodesic flow}\label{ssec:MM}
+
+Misner variables for Bianchi~IX vacuum reduce the dynamics to the
+geodesic flow of an indefinite metric on a hyperbolic billiard table
+in $\mathbb{H}^2$~\cite{DamourHenneauxNicolai2002}.
+Cornish--Levin~\cite{CornishLevin1996} demonstrated, via observer-independent
+fractal methods, the existence of a strange repellor in the
+mixmaster dynamics.
+Manin--Marcolli~\cite{ManinMarcolli2015} showed that the BKL
+Kasner-bounce sequence is conjugate to the two-sided shift
+$\sigma:\Sigma_2\to\Sigma_2$ associated with the continued-fraction
+expansion, equivalently the geodesic flow on the modular surface
+$X(2) = \Gamma(2)\backslash\mathbb{H}$ along its imaginary axis.
+The unique invariant probability of maximal entropy for $\sigma$ is
+the Gauss measure
+\begin{equation}
+  d\mu_{\mathrm{Gauss}}(x)
+  = \frac{1}{\log 2}\,\frac{dx}{1+x},\qquad x\in[0,1],
+  \label{eq:gauss-measure}
+\end{equation}
+with topological entropy $h_{\mathrm{top}}(\sigma) = \pi^2/6$ (the
+``Lochs--Khinchin'' constant; see~\cite{ManinMarcolli2015} \S2.4).
+
+\begin{definition}[BKL Lyapunov rate]\label{def:lambda-BKL}
+We denote by
+\begin{equation}
+  \lambda_{\mathrm{BKL}}
+  \;:=\; h_{\mathrm{KS}}(\sigma,\mu_{\mathrm{Gauss}})
+  \;=\; \frac{\pi^2}{6\log 2}
+  \;\approx\; 2.3731,
+  \label{eq:lambda-BKL}
+\end{equation}
+the Kolmogorov--Sinai entropy of the Gauss shift with respect to
+$\mu_{\mathrm{Gauss}}$ (Manin--Marcolli~\cite{ManinMarcolli2015},
+Theorem~2.4 and~\cite{FFM2015}).
+\end{definition}
+
+\subsection{Witten II$_\infty$ crossed product}\label{ssec:Witten}
+
+Let $\mathcal{N}$ be the type-III$_1$ von~Neumann algebra of
+gauge-invariant local field operators on a wedge-complement region of
+some background spacetime, in the cyclic-and-separating GNS
+representation of a KMS state $\phi$ at inverse temperature $\beta$.
+Tomita--Takesaki gives the modular automorphism group
+$\sigma_t^\phi:\mathcal{N}\to\mathcal{N}$.
+Witten~\cite{Witten2022} and CLPW~\cite{CLPW2022}
+showed that the crossed product
+$\mathcal{N}\rtimes_{\sigma^\phi}\mathbb{R}$
+is type-II$_\infty$, semifinite, with trace dual to the modular flow.
+The Connes--Takesaki flow of weights identifies the natural rate
+of $\sigma_t^\phi$ with $2\pi/\beta$ (in normalised units).
+
+\subsection{Speranza intrinsic observer}\label{ssec:Speranza}
+
+For backgrounds without a global timelike Killing vector
+(de~Sitter static patch, FLRW, Bianchi),
+Speranza~\cite{Speranza2025} constructs an \emph{intrinsic
+cosmological observer}: a worldline $\gamma$ equipped with a
+quantum reference clock, and an associated crossed-product algebra
+\begin{equation}
+  \mathcal{A}_\gamma^{\mathrm{II}_\infty}
+  \;=\; \mathcal{A}_{\gamma^c}^{\mathrm{III}_1}
+        \rtimes_{\sigma^{\phi_\gamma}}\mathbb{R},
+  \label{eq:speranza}
+\end{equation}
+where $\mathcal{A}_{\gamma^c}^{\mathrm{III}_1}$ is the type-III$_1$
+algebra of fields on the wedge complement of $\gamma$, and
+$\phi_\gamma$ is the geometric (vacuum-like) state for which a local
+modular automorphism is well-defined.
+Kudler-Flam--Leutheusser--Satishchandran~\cite{KLS2024} worked this
+out explicitly for FLRW backgrounds.
+For Bianchi~IX, the construction has not yet been carried out; this
+gap is precisely what Conjectures~M45.1.B and M45.1.C below address.
+
+% =====================================================================
+\section{Central conjecture}\label{sec:conjecture}
+% =====================================================================
+
+Let $M_{\mathrm{BIX}}$ denote a Bianchi~IX vacuum spacetime in
+mixmaster (BKL) phase, $\gamma$ an intrinsic Speranza observer with
+worldline parametrised by Misner volume time $\tau$, and
+$\mathcal{A}_{\mathrm{obs}} := \mathcal{A}_{\gamma^c}^{\mathrm{III}_1}$
+the type-III$_1$ algebra of bounded gauge-invariant local field
+observables on the wedge complement of $\gamma$ in
+$M_{\mathrm{BIX}}$.
+
+\begin{conjecture}[Bianchi~IX modular-shadow algebra,
+Conjecture~M45.1]\label{conj:central}
+There exists a faithful normal representation
+$\pi:\mathcal{A}_{\mathrm{obs}}\to B(\mathcal{H}_{\mathrm{BIX}})$
+on a Hilbert space $\mathcal{H}_{\mathrm{BIX}}$ unitarily equivalent
+to $L^2(X(2),\mu_{\mathrm{Gauss}})\otimes\ell^2$, such that:
+\begin{enumerate}
+\item[(i)] the Speranza crossed product
+$\mathcal{M}_{\mathrm{BIX}}^{\mathrm{II}_\infty}
+:= \mathcal{A}_{\mathrm{obs}}\rtimes_{\sigma^{\phi_\gamma}}\mathbb{R}$
+is a type-II$_\infty$ factor with semifinite trace $\tau_{\mathrm{II}}$;
+\item[(ii)] the modular automorphism $\sigma_t^{\phi_\gamma}$ is
+implemented (up to inner automorphism) by the Manin--Marcolli geodesic
+flow $g_t$ on $L^2(X(2),\mu_{\mathrm{Gauss}})$;
+\item[(iii)] consequently, the natural modular flow rate is
+$\lambda_{\mathrm{mod}} = 2\pi\,\lambda_{\mathrm{BKL}}$ with
+$\lambda_{\mathrm{BKL}}$ from Definition~\ref{def:lambda-BKL}.
+\end{enumerate}
+\end{conjecture}
+
+We split this into four sub-conjectures (\S\ref{sec:construction})
+and derive the falsifiable Krylov bound
+(Conjecture~\ref{conj:bound}, \S\ref{sec:bound}).
+
+% =====================================================================
+\section{Sketch of construction}\label{sec:construction}
+% =====================================================================
+
+\subsection{Step A: Wedge algebra setup}\label{ssec:wedge}
+
+Choose an intrinsic observer $\gamma$ in $M_{\mathrm{BIX}}$ with
+worldline parametrised by Misner volume time $\tau$.
+The wedge complement $\gamma^c$ is the spacelike-separated region
+relative to $\gamma$ (well-defined locally, since SO(3) symmetry
+provides a foliation by homogeneous slices~\cite{HeinzleUggla2009}).
+
+\begin{conjecture}[Wedge algebra type, M45.1.A]\label{conj:wedge}
+The algebra $\mathcal{A}_{\mathrm{obs}}$ of bounded gauge-invariant
+local field observables on $\gamma^c$ is type-III$_1$, in analogy with
+the Bisognano--Wichmann theorem for Rindler wedges and the
+Kudler-Flam--Leutheusser--Satishchandran result for
+FLRW~\cite{KLS2024}.
+\end{conjecture}
+
+\noindent\textbf{[TBD-1: prove]} The Bisognano--Wichmann argument uses
+the global boost Killing vector of Minkowski space, which is absent in
+Bianchi~IX. The KLS argument uses the FLRW conformal-time global
+slicing, also absent. A new argument is needed, plausibly via
+Buchholz-Junglas split property combined with the SO(3)
+homogeneity of Bianchi~IX slices.
+
+\subsection{Step B: Crossed product}\label{ssec:crossed}
+
+Given Conjecture~\ref{conj:wedge}, Tomita--Takesaki provides the
+modular automorphism $\sigma_t^{\phi_\gamma}$ for any KMS state
+$\phi_\gamma$, e.g., the Hartle--Hawking-analogue state on
+$M_{\mathrm{BIX}}$ (whose existence is itself non-trivial in
+Bianchi~IX; see~\cite{HeinzleUggla2009}).
+
+\begin{conjecture}[Speranza transfer, M45.1.B]\label{conj:speranza}
+The Speranza intrinsic-observer crossed-product
+construction~\eqref{eq:speranza} applies to $M_{\mathrm{BIX}}$ with
+$\tau$-foliation, yielding a type-II$_\infty$ factor
+$\mathcal{M}_{\mathrm{BIX}}^{\mathrm{II}_\infty}
+= \mathcal{A}_{\mathrm{obs}}\rtimes_{\sigma^{\phi_\gamma}}\mathbb{R}$
+with semifinite trace $\tau_{\mathrm{II}}$.
+\end{conjecture}
+
+\noindent\textbf{[TBD-2: prove]} Speranza's flow-of-weights argument
+uses cosmological time. Bianchi~IX has no global cosmological time:
+only the Misner volume $\tau = -\frac{1}{3}\log V$ plays a comparable
+role, and $\tau$ is monotonic only in the BKL backward direction.
+The argument must handle the non-globality of $\tau$.
+
+\subsection{Step C: Modular-flow $=$ Manin--Marcolli geodesic flow}\label{ssec:mm-flow}
+
+This is the load-bearing identification.
+
+\begin{conjecture}[Flow identification, M45.1.C]\label{conj:flow}
+On $\mathcal{H}_{\mathrm{BIX}} \cong L^2(X(2),\mu_{\mathrm{Gauss}})\otimes\ell^2$,
+the modular flow $\sigma_t^{\phi_\gamma}$ of Conjecture~\ref{conj:speranza}
+acts (up to inner automorphism on the $\ell^2$ factor) as
+\begin{equation}
+  \sigma_t^{\phi_\gamma}(f)
+  \;=\; f \circ g_{-c\,t},\qquad
+  f \in L^2(X(2),\mu_{\mathrm{Gauss}}),
+  \label{eq:flow-id}
+\end{equation}
+where $g_t$ is the Manin--Marcolli geodesic flow on $X(2)$ and
+$c > 0$ is a normalisation constant identified below.
+\end{conjecture}
+
+\noindent\textbf{[TBD-3: prove]} The identification of the
+Speranza-Connes-Takesaki flow with the Manin--Marcolli geodesic flow
+is the deepest open step. A possible route: realise
+$\mathcal{A}_{\mathrm{obs}}$ as a sub-algebra of the Bost--Connes type
+arithmetic algebra associated with $\Gamma(2)$ (Connes--Marcolli
+\emph{Noncommutative Geometry, Quantum Fields and Motives}, Ch.~III),
+where the modular flow has an intrinsic geometric realisation by the
+geodesic flow on $X(2)$.
+
+\subsection{Step D: Modular-flow rate}\label{ssec:rate}
+
+Given Conjecture~\ref{conj:flow}, the rate of $\sigma_t^{\phi_\gamma}$
+relative to the natural Gauss-measure parametrisation is
+$\lambda_{\mathrm{mod}} = 2\pi/\beta_{\mathrm{eff}}$ where
+$\beta_{\mathrm{eff}}$ is the inverse Hawking-like temperature of the
+Bianchi~IX intrinsic observer.
+
+\begin{conjecture}[Rate identification, M45.1.D]\label{conj:rate}
+The normalisation constant $c$ in~\eqref{eq:flow-id} is fixed by
+\begin{equation}
+  \lambda_{\mathrm{mod}} \;=\; 2\pi\,\lambda_{\mathrm{BKL}}
+  \;=\; \frac{\pi^3}{3\log 2}
+  \;\approx\; 14.907\quad\text{(natural BKL units)},
+  \label{eq:rate}
+\end{equation}
+where $\lambda_{\mathrm{BKL}} = h_{\mathrm{KS}}(\sigma_{\mathrm{Gauss}})
+= \pi^2/(6\log 2)$ from Definition~\ref{def:lambda-BKL}.
+\end{conjecture}
+
+\noindent\textbf{[TBD-4: prove]} The factor $2\pi$ comes from the
+Bisognano--Wichmann normalisation $\beta_{\mathrm{BW}}=2\pi$ in the
+absence of explicit boost generator.
+
+% =====================================================================
+\section{Modular Krylov complexity bound}\label{sec:bound}
+% =====================================================================
+
+Combining Conjectures~M45.1.A--M45.1.D with the modular-Krylov
+formalism of Caputa--Mag\'{a}n--Patramanis--Tonni~\cite{Caputa2023} and
+the universal Lanczos-cosh bound of
+Parker--Cao--Avdoshkin--Scaffidi--Altman~\cite{Parker2019} yields a
+falsifiable target.
+
+\begin{conjecture}[Bianchi~IX modular Krylov bound]\label{conj:bound}
+For any operator $\mathcal{O}\in\mathcal{M}_{\mathrm{BIX}}^{\mathrm{II}_\infty}$
+with finite modular two-point function
+$(\mathcal{O},\mathcal{O})_{\phi_\gamma}<\infty$, the modular Krylov
+complexity satisfies
+\begin{equation}
+  \mathcal{C}_K^{\mathrm{mod}}(\mathcal{O};s)
+  \;\le\;
+  A_{\mathcal{O}}\;\cosh\!\bigl(2\pi\,\lambda_{\mathrm{BKL}}\,s\bigr),
+  \label{eq:Krylov-bound}
+\end{equation}
+with $A_{\mathcal{O}}$ a state-dependent prefactor and
+$\lambda_{\mathrm{BKL}} = \pi^2/(6\log 2)$.
+The corresponding modular Lyapunov exponent is bounded by
+$\lambda_K^{\mathrm{mod}} \le 2\pi\,\lambda_{\mathrm{BKL}}$.
+\end{conjecture}
+
+\noindent\textbf{[TBD-5: prove]} The Parker--Cao argument
+in~\cite{Parker2019} requires linearly growing Lanczos coefficients
+$b_n \sim \alpha n$. Their argument transposes from
+Hamiltonian to modular evolution (this is the
+Caputa~et~al.~\cite{Caputa2023} step) but the
+\emph{slope} $\alpha = \pi\lambda_{\mathrm{BKL}}$ is conjectural.
+
+\paragraph{Counter-example caveat.}
+Bhattacharjee--Cao--Nandy--Pathak~\cite{BCNP2022} exhibit
+saddle-dominated scrambling systems where Krylov complexity grows
+exponentially without underlying chaos. In Bianchi~IX, the BKL
+stochasticity is genuine (Gauss-shift entropy is positive); but the
+\emph{converse} statement --- saturation of~\eqref{eq:Krylov-bound}
+implies BKL chaos --- is \emph{not} claimed here.
+
+\paragraph{Effective temperature.}
+Define the effective inverse temperature of the Bianchi~IX intrinsic
+observer by
+\begin{equation}
+  \beta_{\mathrm{eff}}
+  \;:=\; \frac{2\pi}{\lambda_{\mathrm{BKL}}}
+  \;=\; \frac{12\log 2}{\pi}
+  \;\approx\; 2.6479.
+  \label{eq:beta-eff}
+\end{equation}
+This is a \emph{prediction}: the intrinsic Hawking-like temperature
+of an observer in the BKL phase of Bianchi~IX is
+$T_{\mathrm{eff}} = 1/\beta_{\mathrm{eff}} \approx 0.3777$ in natural
+BKL units.
+The von~Neumann coupling constant of
+$\mathcal{M}_{\mathrm{BIX}}^{\mathrm{II}_\infty}$
+(in the Murray--von Neumann sense) is conjecturally
+proportional to $\lambda_{\mathrm{BKL}}^{-1}$.
+
+\noindent\textbf{[TBD-6: prove]} The proportionality constant in the
+von~Neumann coupling identification is undetermined and constitutes
+the main content of the rate conjecture beyond the symbolic-dynamics
+input.
+
+% =====================================================================
+\section{Connection to Lemma~A.1 (paper~\#5)}\label{sec:lemma}
+% =====================================================================
+
+In~\cite{ECI-paper5} we proved (Lemma~A.1) that the set of
+configurations in Bianchi~IX vacuum with eigenvalue crossings of the
+spatial Ricci tensor has Lebesgue measure zero in the Misner
+configuration space.
+This is consistent with Conjecture~M45.1: eigenvalue crossings
+correspond to non-generic Kasner-bounce orbits, which form a
+measure-zero subset of $X(2)$ under $\mu_{\mathrm{Gauss}}$ (the
+periodic orbits of $\sigma$, dense but countable).
+
+\paragraph{Compatibility check.}
+The Fan--Fathizadeh--Marcolli~\cite{FFM2015} expansion of the
+Connes spectral action on Bianchi~IX in modular forms of weight
+$2,14,18$ should restrict on
+$\mathcal{M}_{\mathrm{BIX}}^{\mathrm{II}_\infty}$ to a graded
+trace-class component; this is a non-trivial consistency check on
+Conjecture~M45.1.
+
+% =====================================================================
+\section{Falsifier protocol}\label{sec:falsifier}
+% =====================================================================
+
+The construction above is falsifiable.
+A concrete numerical protocol (developed in detail in the companion
+note \texttt{falsifier\_protocol.md}) consists of:
+
+\begin{enumerate}
+\item[(F1)] \emph{Numerical verification of $\lambda_{\mathrm{BKL}}$.}
+Iterate the Gauss shift $\sigma:[0,1]\to[0,1]$,
+$\sigma(x)=\{1/x\}$, on $N=10^6$ trajectories of length $T=10^4$,
+sample the Lyapunov rate via finite-time Birkhoff averages, and
+verify $\lambda_{\mathrm{BKL}} = \pi^2/(6\log 2) \approx 2.3731$ to
+four significant figures. (This is a textbook exercise; serves as
+sanity check.)
+
+\item[(F2)] \emph{Discretised Bianchi~IX Krylov rate.}
+Take a truncation of the WDW (Wheeler--DeWitt) Hamiltonian on
+Bianchi~IX in Misner variables to $n_{\mathrm{rank}}=10^3$ basis
+modes, compute the Lanczos coefficients $b_n$ of a generic local
+field operator under the truncated modular evolution, and extract the
+Krylov-complexity growth rate $\lambda_K^{\mathrm{trunc}}$.
+
+\item[(F3)] \emph{Rate comparison.}
+Conjecture~\ref{conj:bound} predicts
+$\lambda_K^{\mathrm{trunc}} \le 2\pi\,\lambda_{\mathrm{BKL}}
+\approx 14.907$, with saturation in the BKL-chaotic regime and
+violation only in the (measure-zero) periodic-Kasner orbits.
+A numerical Lyapunov rate exceeding $14.907$ by more than the truncation
+error would falsify Conjecture~M45.1.
+
+\item[(F4)] \emph{Lemma~A.1 compatibility.}
+Verify that the periodic-orbit subset of $X(2)$ (of $\sigma$-measure
+zero) maps to the eigenvalue-crossing set of paper~\#5
+Lemma~A.1 under the Misner-to-modular-surface change of variables.
+\end{enumerate}
+
+% =====================================================================
+\section{Outlook}\label{sec:outlook}
+% =====================================================================
+
+\begin{itemize}
+\item \emph{Lean formalization.} Step~A (\S\ref{ssec:wedge}) and the
+Gauss-shift entropy computation~\eqref{eq:lambda-BKL} are tractable
+in mathlib (continued fractions and ergodic theory both exist).
+Steps B, C, D require von~Neumann algebras (sparse in mathlib as of
+2026).
+\item \emph{Extension to Bianchi class A (types VIII, VI$_{-1/9}$).}
+The Manin--Marcolli framework
+extends~\cite{ManinMarcolli2015} to all class~A Bianchi types; the
+construction here should also extend.
+\item \emph{Genus-$g\ge 2$.} The companion paper~\#4 (Modular Shadow
+LMP v2.5) noted that the genus-$g\ge 2$ extension fails for the FLRW
+case. The Bianchi~IX setting is intrinsically tied to $X(2)$ (genus
+zero) and so the question is moot here; but extension to higher level
+$X(N)$ is interesting.
+\item \emph{Co-authors targeted.} Matilde Marcolli (Caltech, for the
+symbolic-dynamics half) and Antony Speranza (Maryland, for the
+intrinsic-observer construction); see the companion
+\texttt{outreach\_strategy.md}.
+\end{itemize}
+
+% =====================================================================
+\section*{Discipline statement}
+% =====================================================================
+
+\begin{itemize}
+\item All 14 arXiv references in the bibliography below were
+WebFetch-verified on 2026-05-06 against \texttt{arxiv.org} directly.
+\item Six \textbf{[TBD: prove]} markers are flagged in
+\S\ref{sec:construction}--\ref{sec:bound}; this paper proves
+\emph{none} of the four conjectures M45.1.A--M45.1.D.
+\item No large-language-model output was treated as authoritative
+without independent live re-verification (Mistral strict-banned per
+project policy).
+\item This is a \emph{conjecture paper}: the Manin--Marcolli
+correspondence~\eqref{eq:MM-corr} is a theorem, the
+Speranza/Witten/CLPW crossed-product framework is established, but
+the identification $\sigma_t^{\phi_\gamma} \leftrightarrow g_t$
+(Conjecture~\ref{conj:flow}) is the load-bearing open step.
+\end{itemize}
+
+% =====================================================================
+\begin{thebibliography}{99}
+% =====================================================================
+
+\bibitem{MSS2016}
+J.~Maldacena, S.~H.~Shenker, D.~Stanford,
+\emph{A bound on chaos},
+JHEP \textbf{08} (2016) 106, arXiv:1503.01409.
+
+\bibitem{Parker2019}
+D.~E.~Parker, X.~Cao, A.~Avdoshkin, T.~Scaffidi, E.~Altman,
+\emph{A Universal Operator Growth Hypothesis},
+Phys.~Rev.~X \textbf{9}, 041017 (2019), arXiv:1812.08657.
+
+\bibitem{Caputa2023}
+P.~Caputa, J.~M.~Mag\'{a}n, D.~Patramanis, E.~Tonni,
+\emph{Krylov complexity of modular Hamiltonian evolution},
+Phys.~Rev.~D \textbf{109}, 086013 (2024), arXiv:2306.14732.
+
+\bibitem{Witten2018}
+E.~Witten,
+\emph{Notes on Some Entanglement Properties of Quantum Field Theory},
+Rev.~Mod.~Phys. \textbf{90}, 045003 (2018), arXiv:1803.04993.
+
+\bibitem{Witten2022}
+E.~Witten,
+\emph{Gravity and the Crossed Product},
+JHEP \textbf{10} (2022) 008, arXiv:2112.12828.
+
+\bibitem{CLPW2022}
+V.~Chandrasekaran, R.~Longo, G.~Penington, E.~Witten,
+\emph{An Algebra of Observables for de Sitter Space},
+JHEP \textbf{02} (2023) 082, arXiv:2206.10780.
+
+\bibitem{KLS2024}
+J.~Kudler-Flam, S.~Leutheusser, G.~Satishchandran,
+\emph{Algebraic Observational Cosmology},
+arXiv:2406.01669 (2024).
+
+\bibitem{Speranza2025}
+A.~J.~Speranza,
+\emph{An intrinsic cosmological observer},
+arXiv:2504.07630 (2025).
+
+\bibitem{ManinMarcolli2015}
+Yu.~Manin, M.~Marcolli,
+\emph{Symbolic Dynamics, Modular Curves, and Bianchi IX Cosmologies},
+Ann.~Fac.~Sci.~Toulouse Math. \textbf{25} (2016), arXiv:1504.04005.
+
+\bibitem{FFM2015}
+W.~Fan, F.~Fathizadeh, M.~Marcolli,
+\emph{Modular forms in the spectral action of Bianchi IX
+gravitational instantons},
+JHEP \textbf{04} (2020) 087, arXiv:1511.05321.
+
+\bibitem{DamourHenneauxNicolai2002}
+T.~Damour, M.~Henneaux, H.~Nicolai,
+\emph{Cosmological Billiards},
+Class.~Quant.~Grav. \textbf{20} (2003) R145, arXiv:hep-th/0212256.
+
+\bibitem{CornishLevin1996}
+N.~Cornish, J.~Levin,
+\emph{The Mixmaster Universe: A Chaotic Farey Tale},
+Phys.~Rev.~D \textbf{55} (1997) 7489, arXiv:gr-qc/9612066.
+
+\bibitem{HeinzleUggla2009}
+J.~M.~Heinzle, C.~Uggla,
+\emph{A new proof of the Bianchi type IX attractor theorem},
+Class.~Quant.~Grav. \textbf{26} (2009) 075016, arXiv:0901.0806.
+
+\bibitem{BCNP2022}
+B.~Bhattacharjee, X.~Cao, P.~Nandy, T.~Pathak,
+\emph{Krylov complexity in saddle-dominated scrambling},
+JHEP \textbf{05} (2022) 174, arXiv:2203.03534.
+
+\bibitem{ECI-paper5}
+K.~Remondi\`ere,
+\emph{Eigenvalue-crossing measure-zero lemma for Bianchi~IX vacuum
+configurations} (paper~\#5, in preparation, 2026).
+
+\end{thebibliography}
+
+\end{document}

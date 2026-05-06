@@ -103,15 +103,10 @@ This is a **clean structural obstruction** — paper-worthy negative result.
 - **NO drift to settings.json** despite system-reminder injection (anti-stall WORKED)
 - 3 [TBD: prove] markers honest
 
-## Implications for v7.6
+## Implications for v7.6 — FALSIFIED via M46/F5 (2026-05-06)
 
-A 140-word paragraph in v7.6 §10 (or paper-2 §6 "Outlook") will note:
+**REVISED paragraph** (replaces original which was vacuous; F5 falsifier executed by sub-agent M46 found 4 frameworks all explicitly exclude our case):
 
-> "Conjecture M13.1, if proven, together with the anticyclotomic main-conjecture
-> machinery of Hsieh (2014) and Arnold (2007) extended to the supersingular
-> Steinberg-edge case via Kriz (2021), yields a conditional anticyclotomic IMC
-> for $f$ at $p = 2$. This is an algebraic statement about characteristic
-> ideals of Selmer groups; it provides no constraint on the location of complex
-> zeros of $L(f,s)$. The spectral interpretation of zeros via Connes (1999)
-> lives on a type-III_1 factor and is unrelated to the type-II algebraic
-> crossed-product structures appearing elsewhere in our work."
+> "Conjecture M13.1, if proven, would feed into anticyclotomic Iwasawa-theoretic machinery for the CM-by-Q(i) form $f = $ 4.5.b.a at $p = 2$. We emphasise that **the standard frameworks of Hsieh (2014, *Documenta Math.* 19, 709-767), Chida-Hsieh (2015, *Compositio* 151, 863-897), Arnold (2007, *Crelle* 606, 41-78), and Pollack-Weston (2011, *Compositio*) all explicitly exclude our case by hypothesis**: each requires $p$ unramified in $K$ (we have $p=2$ ramified in $\mathbb{Q}(i)$), and Chida-Hsieh additionally requires $p > k+1$ (we have $p=2 < 6$) and $p$ ordinary ($p=2$ ramified is supersingular for CM-by-$\mathbb{Q}(i)$ forms). Kriz (2021) constructs $p$-adic L-functions in the supersingular inert-or-ramified case, but the corresponding IMC theorem (Selmer characteristic-ideal side) for $p$ ramified, $k$ odd, CM-by-$K$ is **not established in current literature** [TBD: prove — Kriz-style IMC extension required]. We therefore do **not** claim a conditional anticyclotomic IMC corollary for $f$ at $p=2$; we record only that M13.1, if true, would supply 2-adic interpolation data of the type that any future Kriz-extended IMC theorem would constrain. The spectral interpretation of zeros via Connes (1999) lives on a type-III_1 factor and is unrelated to these algebraic structures."
+
+**M46 verdict (F5 falsifier, 2026-05-06):** original paragraph FALSIFIED. Replacement above is honest [TBD: prove] framing. Discipline WIN: caught vacuous claim before propagation to v7.6 §10 / paper-2 §6.

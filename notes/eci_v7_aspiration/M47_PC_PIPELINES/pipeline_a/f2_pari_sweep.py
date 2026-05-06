@@ -123,10 +123,17 @@ def v2_of_fraction(f: Fraction) -> int:
 
 TESTS = [
     # (label, level, weight, mfinit_char, cm_disc, comment)
-    ("4.5.b.a", 4, 5, -4, -4, "ANCHOR (Steinberg @ p=2, CM Q(i))"),
-    ("100.5.b.a", 100, 5, -4, -4, "level promotion 4×25, CM Q(i)"),
-    ("27.5.b.a", 27, 5, -3, -3, "different K=Q(ω)"),
-    # ("25.5.b.a", 25, 5, -3, -3, "may not be in LMFDB but try PARI directly"),
+    # Q(i) CM dim=1 newforms (LMFDB-confirmed)
+    ("4.5.b.a", 4, 5, -4, -4, "ANCHOR — N=p²=2² simply ramified, Steinberg, dim=1"),
+    ("36.5.d.a", 36, 5, -4, -4, "Q(i) level 4·9 mixed primes, a2=4, dim=1"),
+    ("64.5.c.a", 64, 5, -4, -4, "Q(i) level 2⁶ pure power, NOT p² simply ramified, dim=1"),
+    ("100.5.b.a", 100, 5, -4, -4, "Q(i) level 4·25 mixed primes, a2=4, dim=1"),
+    # Q(ω) CM dim=1 newforms (LMFDB-confirmed)
+    ("12.5.c.a", 12, 5, -3, -3, "Q(ω) level 4·3, dim=1"),
+    ("27.5.b.a", 27, 5, -3, -3, "Q(ω) level 3³, dim=1"),
+    ("48.5.e.a", 48, 5, -3, -3, "Q(ω) level 16·3, dim=1"),
+    ("75.5.c.a", 75, 5, -3, -3, "Q(ω) level 3·25, dim=1"),
+    ("75.5.c.b", 75, 5, -3, -3, "Q(ω) level 3·25, dim=1, second"),
 ]
 
 

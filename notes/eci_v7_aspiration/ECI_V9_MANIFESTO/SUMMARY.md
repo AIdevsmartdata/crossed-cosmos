@@ -67,7 +67,9 @@ SUGRA Kähler manifold (𝓗, K = -3 log 2 Im τ) ≡ Manin-Marcolli modular sur
 
 **Modulus**: $\tau_L = i$, $K_L = \mathbb{Q}(i)$, $D_L = -4$, $h(K_L) = 1$ (Heegner-Stark)
 
-**N=1 SUGRA**: $W^L = (j-1728)/\eta^6$ (weight -3 Dedekind multiplier, M134)
+**N=1 SUGRA**: $W^L = (j-1728)/\eta^6$ ≡ $E_6^2/\eta^{30}$ (Klein identity M164.1, weight -3 Dedekind multiplier, M134)
+
+**Theorem M164.1 (proved mpmath dps=40)**: $(j(\tau) - 1728)/\eta(\tau)^6 \equiv E_6(\tau)^2/\eta(\tau)^{30}$ via Klein 1728Δ = E_4³ - E_6². This puts $W^L$ in the canonical F-theory functional family ("modular form / η^k") with Curio-Lust 1997 (weight -2) and Donagi-Grassi-Witten 1996 (weight 4).
 - $V_F^L(\tau_L = i) = 0$ Minkowski SUSY (E_6(i) = 0 Klein → double zero of (j-1728))
 - $m_{\tau_L}^2 = 2^{16} \cdot 3^6 \cdot \pi \cdot \Gamma(1/4)^4 \approx 2.59 \times 10^{10}$ M_Pl²
 - $\tau_L = i$ unique global Minkowski minimum on F
@@ -131,6 +133,35 @@ $$W(\tau_L, \tau_Q) = c_L \cdot \frac{j(\tau_L) - 1728}{\eta(\tau_L)^6} + c_Q \c
 **(D) Reframing**: SUGRA Kähler ≡ MM modular surface IS the same Anosov manifold. V_F's role is to define $\tau_L = i$ fixed point ; chaos coexists with (does not derive from) the V_F structure.
 
 **DCH-Y 2025 (arXiv:2507.08788)** [Hartnoll group Cambridge] : ALREADY constructs Bianchi WDW = odd Maass cusp forms for PSL(2,O), O ∈ {Z, Z[i], Z[ω]}, with both Sato-Tate (Hecke) and Poisson (Maass) numerically verified. ECI cannot claim novelty here.
+
+## §4.5 F-theory embedding candidate (M164, NEW)
+
+**Kanno-Watari arXiv:2012.01111** (Kavli IPMU, 2021) Borcea-Voisin CY 4-fold:
+$$Y = (X^{(1)} \times X^{(2)})/\mathbb{Z}_2$$
+with both K3 surfaces of CM-type, matches ECI v9 two-modulus structure:
+
+| ECI v9 | Kanno-Watari |
+|---|---|
+| $\tau_L = i$ ($K_L = \mathbb{Q}(i)$) | $X^{(1)} = $ Kummer K3 with $T_{X^{(1)}} \otimes \mathbb{Q} \cong \mathbb{Q}(i)$ |
+| $\tau_Q = i\sqrt{11/2}$ ($K_Q = \mathbb{Q}(\sqrt{-22})$) | $X^{(2)} = $ singular K3 with $T_{X^{(2)}} \otimes \mathbb{Q} \cong \mathbb{Q}(\sqrt{-22})$ |
+
+Vacuum loci of $W_{KW} = \int_Y G \wedge \Omega_Y$ (F-term + Minkowski Noether-Lefschetz at CM-type) **coincide** with ECI v9 vacuum at $(\tau_L, \tau_Q) = (i, i\sqrt{11/2})$. Explicit derivation of $W_{ECI}$ from $W_{KW}$ is a specialist gap (M164 (D)→(B), 20-50pp via Chowla-Selberg + Shimura reciprocity, M169 attempting).
+
+**Mohseni-Vafa generic disclaimer (verbatim p.16)**: *"it would be interesting to actually find examples of theories with N=1 modular geometries realized in a consistent string landscape, as none is currently known!"* ECI v9 is in the SAME generic open-problem bucket — not a specific deficit but a field-wide open question.
+
+## §4.6 Architectural asymmetry lepton vs quark (M167.1, NEW pending M168)
+
+**Theorem M167.1 (numerically verified)**:
+- $\mathrm{stab}_{\mathrm{SL}(2,\mathbb{Z})}(\tau_L = i) = \{\pm I, \pm S\} \to \mathbb{Z}_2$ in PSL via $S = \begin{pmatrix} 0 & -1 \\ 1 & 0 \end{pmatrix}$
+- $\mathrm{stab}_{\mathrm{SL}(2,\mathbb{Z})}(\tau_Q = i\sqrt{11/2}) = \{\pm I\}$ trivial in PSL
+
+**STRUCTURAL ASYMMETRY**: lepton modulus has non-trivial residual symmetry $\mathbb{Z}_2$ ; quark modulus has trivial residual.
+
+**Conjectural axiom H18** (NEW, pending M168 verification): Lepton modulus is on PSL(2,ℤ)-non-trivial-stab CM point ($\tau \in \{i, \rho\}$) ; quark modulus on generic trivial-stab CM. This explains arithmetically WHY:
+- Lepton sector has Z_2-protected Yukawa structure (NPP20+CSD's restrictive form)
+- Quark sector has free CKM 4-parameter freedom (K-K's 10 free params)
+
+If verified by M168 (combinatorial classification), this becomes a major architectural axiom for ECI v9.1.
 
 ## §5 Operator-algebra backbone
 
@@ -209,6 +240,14 @@ ECI v9 explicitly does NOT contribute new content to:
 | **GRH** | M146 + M153 | (C) NEGATIVE — 4-obstruction stack (II_∞ vs III_1, infinity-type ramification per M157, Kähler conformal not spectral, Bogomolny-Leyvraz-Schmit anomaly) | "ECI is GRH-observer" |
 | **Hodge** | M147 | (C) NEGATIVE >99% — Markman 2024 + Schoen 1989 + Tate-K.Murty cover M(f) ; Pohlmann 1968 attribution corrected (Hodge-RING vs algebraicity) | Precision update |
 | **Yang-Mills** | M148 | (C) NEGATIVE ~93% — All directions closed ; M29 obstruction strengthened | "DO NOT contact Connes/Glimm" |
+
+**Phase 7 wave 8 additional checks (NEW)**:
+
+| Domain | M-mission | Verdict | Documentation |
+|---|---|---|---|
+| **Crypto isogeny** (CSIDH/SQISIGN) | M163 | (D) PARTIAL pedagogical analogy ; ECI h=2 ordinary CM = trivially-computable, opposite side of crypto easy/hard divide | "no operational content" |
+| **B-meson anomalies** (R(K), R(K*), R(D)) | M167 | (C) NEGATIVE ~70-75% — ECI v9 quark predicts only Re τ_Q=0 + Im τ_Q=√(11/2) | NOT R(K) (resolved 2022), R(D) (3.31σ b→cτν unrelated to τ_Q), Belle II B+→K+νν |
+| **F-theory K3×K3** (Kanno-Watari) | M164 | (D)→(B) STRONG candidate ; vacuum loci coincide at (i, i√(11/2)) | Specialist 20-50pp gap, M169 attempting |
 
 **Other CLOSED/REDUCED items**:
 - Sagnier 2017 extension to (4,0): NOT outside L² ; obstruction is (1+i) ramification (M157 reframe)

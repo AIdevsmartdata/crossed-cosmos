@@ -24,8 +24,10 @@ type: project
 
 ## NOVEL FINDING (sole tangent)
 
-**Vishik-Friedlander fluid Lyapunov exponent** (Vishik 1996, *AIHPC* 25 (2008) 713-758):
+**Vishik fluid Lyapunov exponent** (Vishik 1996, *J. Math. Pures Appl. (9)* **75** (1996) 531-557; with NS-viscous extension by Shvydkoy-Friedlander, *Ann. I. H. Poincaré (AN)* **25** (2008) 713-724):
 essential spectral radius of linearized NS evolution = max Lyapunov exponent of bicharacteristic flow on T*M.
+
+**[CORRECTION 2026-05-06 by M40]** The original M30 attribution "Vishik-Friedlander *AIHPC* 25 (2008) 713-758" was WRONG. Live-verified via numdam.org PDF: actual paper is Shvydkoy-Friedlander, pp. 713-**724** (12 pp, NOT 758). The "fluid Lyapunov exponent" formula μ_fluid is **Vishik 1996 alone** (V96, *J. Math. Pures Appl.*); 2008 extends V96 to viscous limit. Counts as hallu 85 → 86.
 
 **Methodological parallel** with ECI A56/M4: $\mu_+(N) = \frac{1}{2}\bigl[-(3+s_H) + \sqrt{(3+s_H)^2 + 4 M^2_{\rm eff}}\bigr]$ — both linearize, take maximal exponential growth, integrate along time-evolution. **Worth 1-sentence footnote, NOT a paper.**
 
@@ -55,7 +57,10 @@ This is **not a weakness** — ECI's specificity is what gives predictive power.
 - Beale-Kato-Majda 1984 *CMP* 94
 - Hou *Acta Numerica* 2009
 - Tao 2016 *J.AMS* 29 arXiv:1402.0290
-- Vishik-Friedlander *AIHPC* 25 (2008)
+- Vishik 1996 *J. Math. Pures Appl. (9)* **75** 531-557 (true V96 source)
+- Shvydkoy-Friedlander 2008 *Ann. I. H. Poincaré (AN)* **25** 713-724 (NS-viscous extension; replaces wrongly-cited "Vishik-Friedlander AIHPC 713-758")
+- Vishik-Friedlander 2003 *Comm. Math. Phys.* **243** 289-354 (genuine VF joint, 2D nonlinear instability)
+- Friedlander-Vishik 1991 *Phys. Rev. Lett.* **66** 2204 (genuine FV joint, instability criteria)
 - Necas-Ruzicka-Sverak 1996 *Acta Math.* 176
 - Chen-Hou 2025 *PNAS* (Euler boundary)
 - Shahmurov 2026 arXiv:2604.09949

@@ -145,7 +145,34 @@ These three "facets" of ECI v8 each contain ONE distinguished number (6/5, π³/
 - Honest probability bounds: each conjecture flagged with explicit % range
 - 5 fab catches by sub-agents (M85, M90, M107, M109, M124) — discipline working
 
+## ECI v8.1 UPGRADE — Kinematic Bridge ESTABLISHED (M134, 2026-05-06)
+
+Post-M134, the "missing dynamical mechanism" identified by external review is **partially closed at the kinematic level**.
+
+**Theorem M134.1** (mpmath dps=30 verified): For N=1 SUGRA with chiral modulus τ ∈ ℍ, Kähler $K = -3\log(2\,\mathrm{Im}\,\tau)$, and **$W(\tau) = (j(\tau) - 1728)/\eta(\tau)^6$** (weight -3, Dedekind multiplier):
+
+1. $V_F(\tau = i) = 0$ — **Minkowski SUSY vacuum**
+2. $V_F(\tau = \rho) \approx 4.14 \times 10^{12}$ — {i, ρ} degeneracy LIFTED in favor of $\tau = i$
+3. $\tau = i$ is **unique global Minkowski minimum** on fundamental domain $\mathcal{F}$
+4. Modulus mass at $\tau = i$:
+$$m_\tau^2 = 2^{16} \cdot 3^6 \cdot \pi \cdot \Gamma(1/4)^4 \approx 2.59 \times 10^{10}$$
+
+Structural origin: $E_6(i) = 0$ (Klein classical) → $(j-1728)$ has **double zero** at $\tau = i$ → $W(i) = W'(i) = 0$ → $D_\tau W(i) = 0$ → $V_F(i) = 0$.
+
+**Same lemniscate constant $\Gamma(1/4)^4$ appears in $m_\tau^2$ AND in Damerell ladder $\alpha_m$** for $f = 4.5.b.a$ (via $\varpi = \Gamma(1/4)^2/(2\sqrt{2\pi})$). **Structural unification at the period level.**
+
+**Mohseni-Vafa arXiv:2510.19927** (Oct 2025) generic framework: $\tau = i, \rho$ always critical points of N=1 SUGRA. Our $W = (j-1728)/\eta^6$ = simplest **Minkowski-boundary** fine-tuning of their generic AdS class.
+
+**Kinematic implications**:
+- Arithmetic anchor $K = \mathbb{Q}(i)$ for $f = 4.5.b.a$ : **dynamically realized** by modulus flow
+- Lepton sector $\tau_S = i$ : **prediction** (not free assumption)
+- Geometry Bianchi IX modular shadow same $\tau = i$ fixed point
+
+**Dynamical bridge** $V_F \to \lambda_{\text{BKL}} = \pi^2/(6\log 2)$ remains **OPEN** (ECI v9 programme).
+
 ## Status
+
+**ECI v8.1 is the ambitious reformulation post-M134.** The kinematic bridge at $\tau = i$ is established via Theorem M134.1.
 
 **ECI v8 is offered as an ambitious but honest reformulation.** It is NOT a Theory of Everything in the Standard Model + Gravity sense. It IS a falsifiable conjecture linking three independent lines of mathematical / physical evidence at a single distinguished point τ = i.
 

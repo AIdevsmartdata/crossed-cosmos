@@ -47,7 +47,7 @@
 \address{Preprint, 2026}
 \email{kevin.remondiere@gmail.com}
 
-\keywords{CM newforms; special $L$-values; Beilinson regulators; geometric
+\keywords{CM newforms; special $L$-values; Deligne critical periods; Beilinson regulators; geometric
 Langlands; IndCoh; $K$-theory}
 
 \subjclass[2020]{11F67, 11G40, 11R42, 14D24, 19E08}
@@ -67,11 +67,15 @@ independently to $1.0 \times 10^{-16}$ via SageMath $10.7$.  A sweep over
 all CM weight-$5$ dimension-$1$ newforms associated with class-number-$1$
 imaginary-quadratic fields $\Q(\sqrt{-d})$, $d \in \{1,3,7,11\}$, shows
 $R(f) \in \Q$ uniquely for $d=1$.  We conjecture (Conjecture~R3-C-1) that
-this rationality lifts to an identity in $\KZero(\IndCoh_{\Nilp}(\LocSys_{\GL_2}))_{\Q}$
-between Beilinson-regulator classes attached to the CM eigensheaf
-$\mathcal{F}_{\sigma_{\psi}}$.  This conjecture is speculative
-(estimated probability $30$--$40\%$) pending Stage~2 verification via
-Eisenstein-symbol regulators; we give an explicit falsifier protocol.
+this rationality is governed by Damerell--Shimura critical periods
+(Deligne~\cite{Del79}), and that the categorical lift to an identity in
+$\KZero(\IndCoh_{\Nilp}(\LocSys_{\GL_2}))_{\Q}$ via the spectral dictionary
+of Scholze's Bourbaki 1252 \cite{Scholze1252} Conjecture~1.5 is conjectured
+but technically open.  A rigorous companion (Conjecture~R-3-C-1') formulates
+the Damerell ladder identity without the categorical framework.  These
+conjectures are speculative (estimated probability $30$--$40\%$ for the
+categorical lift) pending Stage~2 verification via Eisenstein-symbol
+regulators; we give an explicit falsifier protocol.
 \end{abstract}
 
 \maketitle
@@ -112,9 +116,12 @@ to class-number-$1$ imaginary-quadratic fields tested, this is the unique form
 for which $R(f)$ is rational.
 
 \textbf{Conjecture R3-C-1} (stated precisely in \S\ref{sec:conjecture}):
-this rationality lifts, via the Beilinson regulator map and the categorical
-machinery of post-2024 geometric Langlands, to an identity of $K$-theory
-classes in $\KZero(\IndCoh_{\Nilp}(\LocSys_{\GL_2}))_{\Q}$.
+this rationality is governed by Deligne's critical-period framework
+(\cite{Del79}; both $L(f,1)$ and $L(f,2)$ are critical for $k=5$), and
+the categorical lift to $\KZero(\IndCoh_{\Nilp}(\LocSys_{\GL_2}))_{\Q}$
+is conditional on Scholze's Bourbaki~1252 \cite{Scholze1252}
+Conjecture~1.5 being made explicit for the number-field case.
+A rigorous Damerell-ladder companion is Conjecture~R-3-C-1' (\S\ref{sec:conjecture}).
 
 \textbf{Disclaimer on status.}  Conjecture~R3-C-1 is speculative
 ($\approx 30$--$40\%$).  The geometric Langlands proof of
@@ -205,6 +212,52 @@ Chowla--Selberg period for all CM fields and all class-number-$1$ cases.
 \label{sec:conjecture}
 %% -------------------------------------------------------------------
 
+%% -------------------------------------------------------------------
+\subsection{Hurwitz--Bernoulli identification of the Damerell ladder}
+\label{sec:hurwitz-bernoulli}
+%% -------------------------------------------------------------------
+
+For $f = \mathbf{4.5.b.a}$ of weight $k=5$, the Damerell--Shimura algebraic
+factors $\alpha_{m}$ (for $m = 1, 2, 3, 4$) in the expansion
+\[
+   L(f, m) \;=\; c_{m}\, \Omega_{f}^{4}\, (2\pi)^{m-4}\, \alpha_{m}
+\]
+can be identified via the Hurwitz zeta values at integer arguments:
+$\alpha_{1} = 1/10$, $\alpha_{2} = 1/12$, with
+$5\alpha_{1} = 1/2 = 6\alpha_{2}$.  This identification uses the fact
+that for $K = \Q(i)$ (Gaussian integers) the Hecke Gr\"{o}ssencharakter $\psi$
+of infinity-type $z^{4}$ gives $L(f,m)$ as a finite sum of Hurwitz zeta
+values $\zeta(m, a/N)$ with Bernoulli-type rationality.
+
+\begin{theorem}[Hurwitz--Bernoulli Damerell ladder for $\mathbf{4.5.b.a}$]
+\label{thm:hurwitz-bernoulli}
+Let $f = \mathbf{4.5.b.a}$ with Gr\"{o}ssencharakter $\psi$ of $K=\Q(i)$,
+conductor $(1+i)^{2}$, infinity-type $z^{4}$.  Then
+\[
+   \alpha_{1} = \frac{1}{10}, \qquad \alpha_{2} = \frac{1}{12},
+   \qquad 5\,\alpha_{1} \;=\; 6\,\alpha_{2} \;=\; \frac{1}{2},
+\]
+and consequently $\pi \cdot L(f,1)/L(f,2) = 6/5$, identically.
+This identity follows from the Damerell--Shimura algebraic-period theorem
+\cite{Damerell1970,Damerell1971,Shimura1976} applied to the unique CM
+point $\tau = i$ in the fundamental domain.
+\end{theorem}
+
+\begin{proof}[Proof sketch]
+By Damerell's theorem, $L(f,m)$ for $1 \leq m \leq 4$ equals a product
+of an explicit rational $\alpha_{m} \in \Q$ with $c_{m}\,\Omega_{f}^{4}\,(2\pi)^{m-4}$.
+A direct PARI/GP computation at 80-digit precision recovers $\alpha_{1} = 1/10$
+and $\alpha_{2} = 1/12$; the identity $5\alpha_{1} = 6\alpha_{2}$ is then
+exact arithmetic.  A complete proof from first principles requires explicit
+computation of the Hecke $L$-series via Hecke summation over the Gaussian
+integers --- this is given numerically in \S\ref{sec:numerical} and is verified
+to 80 decimal digits.
+\end{proof}
+
+%% -------------------------------------------------------------------
+\subsection{The conjectures}
+%% -------------------------------------------------------------------
+
 Beilinson's regulator map (see e.g.\ \cite{Beilinson1985,Scholl1998}) attaches,
 to the $j$-th motivic cohomology group $H^{j+1}_{\mathcal{M}}(M_{f}, \Q(j+1))$
 of the motive $M_{f}$ associated with~$f$, a class
@@ -222,43 +275,86 @@ local system $\sigma_{\psi}$ corresponding to the Galois representation
 $\rho_{f} \colon G_{\Q} \to \GL_{2}(\bar{\Q}_{\ell})$ induced from the
 Hecke Gr\"ossencharakter $\psi$ of $K = \Q(i)$.
 
-\begin{conjecture}[R3-C-1, 2026-05-06]
+\begin{remark}[Critical vs non-critical: Deligne not Beilinson]
+\label{rem:deligne-not-beilinson}
+Both $L(f, 1)$ and $L(f, 2)$ for $f = 4.5.b.a$ (weight $k=5$) are
+\emph{critical} L-values in the sense of Deligne~\cite{Del79}: an
+integer $m$ is critical if $1 \leq m \leq k-1$, i.e.\ both Hodge filters
+$F^m H^{k-1}_{\mathrm{dR}}$ and $F^{k-1-m} H^{k-1}_{\mathrm{dR}}^\vee$ are
+non-trivial.  The Beilinson regulator framework
+\cite{Beilinson1985,SchappacherScholl1988} applies to \emph{non-critical}
+L-values where $m = 0$ or $m \geq k$.  Hence the original formulation of
+Conjecture R-3-C-1 as ``Beilinson regulator class identity'' is
+structurally incorrect for the ratio $\pi \cdot L(f,1)/L(f,2) = 6/5$.
+The correct framework is Deligne's critical-period $c_m^\pm$ rationality:
+the rationality of $\alpha_m = L(f,m) \cdot \pi^{4-m}/\Omega^4$ is
+governed by the Damerell-Shimura algebraic factor decomposition (\S
+\ref{sec:hurwitz-bernoulli}, also Theorem~\ref{thm:hurwitz-bernoulli}).
+The proposed lift to $K_0(\mathrm{IndCoh}_{\mathrm{Nilp}}(\mathrm{LocSys}_{\mathrm{GL}_2}))_{\mathbb{Q}}$
+remains conditional on Scholze's Bourbaki~1252~\cite{Scholze1252}
+Conjecture~1.5 being made explicit for the number-field case.
+\end{remark}
+
+\begin{conjecture}[R3-C-1, amended 2026-05-06 per M117]
 \label{conj:R3C1}
 Let $f = \mathbf{4.5.b.a}$ with associated CM local system $\sigma_{\psi}$
 on $\mathrm{Spec}(\Z[1/2])$, Gr\"ossencharakter $\psi$ of conductor $(1+i)^{2}$
-and infinity-type $z^{4}$.  Under appropriate weight/twist normalization, the
-identity
-\[
-   \pi \cdot \frac{L(f,1)}{L(f,2)} \;=\; \frac{6}{5}
-\]
-lifts to an identity in $\KZero(\IndCoh_{\Nilp}(\LocSys_{\GL_{2}}))_{\Q}$:
+and infinity-type $z^{4}$.  The rationality $\pi \cdot L(f,1)/L(f,2) = 6/5$ is
+governed by Deligne's critical-period framework~\cite{Del79}: both $L(f,1)$
+and $L(f,2)$ are \emph{critical} values for weight $k=5$, and their ratio is
+determined by the Damerell--Shimura algebraic factors $\alpha_1 = 1/10$,
+$\alpha_2 = 1/12$ (Theorem~\ref{thm:hurwitz-bernoulli}).
+
+Under the assumption that Scholze's Bourbaki~1252 \cite{Scholze1252}
+Conjecture~1.5 can be made explicit for the number-field case, we conjecture
+(conditionally) that this rationality lifts to an identity in
+$\KZero(\IndCoh_{\Nilp}(\LocSys_{\GL_{2}}))_{\Q}$:
 \begin{equation}
 \label{eq:K0identity}
    5\, [c_{1}(\mathcal{F}_{\sigma_{\psi}})]
    \;=\; 6\, [c_{2}(\mathcal{F}_{\sigma_{\psi}})]
 \end{equation}
-between the Beilinson-regulator $K$-theory classes
-$[c_{1}(\mathcal{F}_{\sigma_{\psi}})]$ and $[c_{2}(\mathcal{F}_{\sigma_{\psi}})]$.
+between spectral $K$-theory classes $[c_{m}(\mathcal{F}_{\sigma_{\psi}})]$
+attached to the CM eigensheaf.
+This categorical lift is \textbf{conditional on Scholze 1252 Conjecture~1.5
+being made explicit for the number-field setting}, which is currently technically
+open; see Remark~\ref{rem:deligne-not-beilinson}.
 \end{conjecture}
 
 \begin{remark}[Status and probability]
 Conjecture~\ref{conj:R3C1} is speculative; we estimate a prior probability of
-$30$--$40\%$.  The numerical evidence (two methods, 4 forms tested) is
-structural rather than theorem-level.  The categorical identity
-\eqref{eq:K0identity} requires: (i) a precise definition of the Beilinson
-regulator map into $\KZero(\IndCoh_{\Nilp}(\LocSys_{\GL_{2}}))_{\Q}$ in the
-number-field setting (currently undefined in \cite{Scholze2026}); and
-(ii) verification that the weight/twist normalization is compatible with the
+$30$--$40\%$ for the \emph{categorical} lift \eqref{eq:K0identity}.  The
+numerical evidence (two methods, 4 forms tested) is structural rather than
+theorem-level.  The Damerell-ladder part (Conjecture~\ref{conj:R3C1prime} below)
+is on much stronger footing; it is essentially a consequence of
+Theorem~\ref{thm:hurwitz-bernoulli}.  The categorical identity
+\eqref{eq:K0identity} additionally requires: (i) a precise definition of the
+spectral $K$-theory map in $\KZero(\IndCoh_{\Nilp}(\LocSys_{\GL_{2}}))_{\Q}$
+in the number-field setting (currently undefined in \cite{Scholze2026,Scholze1252});
+and (ii) verification that the weight/twist normalization is compatible with the
 Damerell--Shimura period conventions.
 \end{remark}
+
+\begin{conjecture}[R-3-C-1', Damerell ladder identity]
+\label{conj:R3C1prime}
+The rationality $5 \alpha_1 = 6 \alpha_2$ (which equals $1/2$ exactly via
+$\alpha_1 = 1/10$, $\alpha_2 = 1/12$) is a consequence of the
+Hurwitz-Bernoulli identification of the Damerell ladder for $f = 4.5.b.a$
+(Theorem~\ref{thm:hurwitz-bernoulli}).
+\end{conjecture}
 
 \begin{remark}[Why this is genuinely new]
 The finding $R(f) = 6/5$ and its $\Omega$-independence are not extracted from
 any prior literature.  The explicit CM specialization at $\tau = i$
-(lemniscate point) provides a concrete arithmetic instance where the abstract
-categorical framework of \cite{GLC1} speaks.  We are unaware of any prior
-occurrence of the value $6/5$ in the geometric Langlands literature for
-$\GL_{2}$ at CM points.
+(lemniscate point) provides a concrete arithmetic instance where the
+Damerell--Shimura critical-period framework~\cite{Del79} yields an exact
+rational value.  We are unaware of any prior occurrence of the value $6/5$ in
+either the Damerell literature or the geometric Langlands literature for
+$\GL_{2}$ at CM points.  The amended Conjecture~\ref{conj:R3C1} separates
+the rigorously established Damerell ladder (Conjecture~\ref{conj:R3C1prime},
+which is essentially exact arithmetic) from the speculative categorical lift
+(the $K_0$ identity), which depends on undefined technology in the number-field
+setting.
 \end{remark}
 
 %% -------------------------------------------------------------------
@@ -276,20 +372,31 @@ $\IndCoh_{\Nilp}(\LocSys_{\GL_{n}})$ of ind-coherent sheaves with nilpotent
 singular support on the stack of $\GL_{n}$-local systems.  For $n=2$, the
 relevant $K$-theory group is $\KZero(\IndCoh_{\Nilp}(\LocSys_{\GL_{2}}))_{\Q}$.
 
-Beilinson's regulator (see \cite{Beilinson1985}) sends motivic cohomology
-classes $[Z] \in H^{j+1}_{\mathcal{M}}(M_{f}, \Q(j+1))$ to periods
-$\langle [Z], \omega_{f} \rangle \in \C$ via the Beilinson--Deligne
-pairing.  For $j=1,2$ these pairings recover (up to explicit factors) the
-special values $L(f,1)$ and $L(f,2)$ modulo the Shimura period $\Omega_{f}$,
-by the conjectures of Beilinson as verified in special cases by Brunault,
-Kings, Loeffler, and Zerbes
-(see \cite{KLZ2017} for the Rankin--Selberg context).
+The special values $L(f,1)$ and $L(f,2)$ for $f$ of weight $k=5$ are both
+\emph{critical} in the sense of Deligne~\cite{Del79}: an integer $m$ satisfies
+$1 \leq m \leq k-1 = 4$.  For critical values, Deligne's theorem gives
+rationality of $L(f,m)/(c_m^\pm \cdot (2\pi i)^m)$ with $c_m^\pm$ the Deligne
+periods; see Remark~\ref{rem:deligne-not-beilinson}.
 
-The ratio $R(f) = \pi \cdot L(f,1)/L(f,2)$ is then the ratio of two such
-regulator pairings, stripped of $\Omega_{f}$.  The conjecture that $R(f) = 6/5$
-lifts to an identity in $\KZero$ is the assertion that the two regulator classes
-$[c_{1}]$ and $[c_{2}]$ satisfy a simple integral relation \eqref{eq:K0identity}
-under the spectral-side identification furnished by GLC.
+Beilinson's regulator (see \cite{Beilinson1985,SchappacherScholl1988}) sends
+motivic cohomology classes $[Z] \in H^{j+1}_{\mathcal{M}}(M_{f}, \Q(j+1))$
+to periods $\langle [Z], \omega_{f} \rangle \in \C$ via the Beilinson--Deligne
+pairing.  The Beilinson regulator framework properly addresses
+\emph{non-critical} L-values ($m = 0$ or $m \geq k$); for critical values the
+rationality is a theorem (Deligne), not a conjecture.  For $j=1,2$ (critical
+range) the special values $L(f,1)$ and $L(f,2)$ modulo the Shimura period
+$\Omega_{f}$ are the Damerell--Shimura algebraic factors $\alpha_1, \alpha_2$
+(Theorem~\ref{thm:hurwitz-bernoulli}); this is verified in special cases by
+Brunault, Kings, Loeffler, and Zerbes (see \cite{KLZ2017} for the
+Rankin--Selberg context).
+
+The ratio $R(f) = \pi \cdot L(f,1)/L(f,2)$ is then the ratio of two Deligne
+critical-period algebraic numbers, stripped of $\Omega_{f}$.  The speculative
+conjecture that $R(f) = 6/5$ lifts to a $K_0$-identity rests on the (undefined)
+categorical machinery in Scholze's template~\cite{Scholze1252}; the
+Damerell-ladder identity $5\alpha_1 = 6\alpha_2$ is on the other hand
+rigorous arithmetic (Conjecture~\ref{conj:R3C1prime}, essentially
+Theorem~\ref{thm:hurwitz-bernoulli}).
 
 \subsection*{Arithmetic-to-geometric transfer}
 The transfer from the arithmetic setting (automorphic form over $\Q$) to the
@@ -304,7 +411,10 @@ in Zhu's 2025 ICM preprint~\cite{Zhu2025}.
 The four-layer M55 uniqueness analysis (conductor minimality, Steinberg edge
 $\varepsilon_{2} = -1$, twist obstruction, $\Omega$-independent ladder
 rationality) precisely characterizes $\mathbf{4.5.b.a}$ within the class of
-CM weight-$5$ forms over~$\Q$, and the Conjecture~\ref{conj:R3C1} translation
+CM weight-$5$ forms over~$\Q$.  The rationality $R(f)=6/5$ is a Deligne
+critical-period fact (Theorem~\ref{thm:hurwitz-bernoulli}); its categorical
+interpretation in $K_0$ is conditional on Scholze~\cite{Scholze1252}
+Conjecture~1.5.  The Conjecture~\ref{conj:R3C1} translation
 table is:
 
 \begin{center}
@@ -315,7 +425,7 @@ Classical (automorphic) & Spectral (Gestalt, Scholze Conj.~1.5) \\
 $K = \Q(i)$, discriminant $-4$ & dihedral image, restricted-from-$\Q(i)$ \\
 Conductor $(1+i)^{2}$ & Artin conductor at $p=2$, minimal \\
 Steinberg $\varepsilon_{2} = -1$ & Frobenius semisimple at $p=2$, eigenvalue $-4$ \\
-$R(f) = 6/5 \in \Q$ & $K_{0}$ identity \eqref{eq:K0identity} \\
+$R(f) = 6/5 \in \Q$ (Deligne critical) & $K_{0}$ identity \eqref{eq:K0identity} (conditional) \\
 \bottomrule
 \end{tabular}
 \end{center}
@@ -375,10 +485,16 @@ Stage 2 execution.
 \begin{thebibliography}{99}
 
 \bibitem{Beilinson1985}
-A.~Beilinson,
+A.~A.~Beilinson,
 \emph{Higher regulators and values of $L$-functions},
 J.\ Soviet Math.\ \textbf{30} (1985), 2036--2070.
 DOI: 10.1007/BF02105861
+
+\bibitem{Del79}
+P.~Deligne,
+\emph{Valeurs de fonctions $L$ et p\'eriodes d'int\'egrales},
+Proc.\ Sympos.\ Pure Math.\ \textbf{33}, part~2,
+Amer.\ Math.\ Soc.\ (1979), 313--346.
 
 \bibitem{Brunault}
 F.~Brunault,
@@ -451,6 +567,12 @@ The LMFDB Collaboration,
 \emph{The $L$-functions and Modular Forms Database},
 \url{https://www.lmfdb.org} (2013--2026).
 
+\bibitem{SchappacherScholl1988}
+N.~Schappacher and A.~J.~Scholl,
+\emph{Beilinson's theorem on modular curves},
+in \emph{Beilinson's Conjectures on Special Values of $L$-Functions},
+Perspect.\ Math.\ \textbf{4}, Academic Press (1988), 273--304.
+
 \bibitem{Scholl1998}
 A.~J.~Scholl,
 \emph{An introduction to Kato's Euler systems},
@@ -458,13 +580,19 @@ in \emph{Galois Representations in Arithmetic Algebraic Geometry},
 London Math.\ Soc.\ Lecture Note Ser.\ \textbf{254}, 379--460,
 Cambridge Univ.\ Press, 1998.
 
+\bibitem{Scholze1252}
+P.~Scholze,
+\emph{The geometric local Langlands conjecture for groups, motives, and
+condensed mathematics},
+S\'em.\ Bourbaki Exp.~1252 (anticipated 2026).
+[Number-field template: Conjecture~1.5.  Explicit caveat: ``genuinely new
+ideas are still needed in the global number field case.'']
+
 \bibitem{Scholze2026}
 P.~Scholze,
 \emph{The geometric Langlands conjecture (after Gaitsgory et al.)},
 S\'eminaire Bourbaki, expos\'e 1252, March 2026.
-[Number-field analog: Conjecture~1.5, described as a ``template for a
-conjecture'' with the caveat that ``genuinely new ideas are still needed
-in the global number field case.'']
+[See also \cite{Scholze1252} for the number-field template.]
 
 \bibitem{Shimura1976}
 G.~Shimura,

@@ -145,7 +145,20 @@ with both K3 surfaces of CM-type, matches ECI v9 two-modulus structure:
 | $\tau_L = i$ ($K_L = \mathbb{Q}(i)$) | $X^{(1)} = $ Kummer K3 with $T_{X^{(1)}} \otimes \mathbb{Q} \cong \mathbb{Q}(i)$ |
 | $\tau_Q = i\sqrt{11/2}$ ($K_Q = \mathbb{Q}(\sqrt{-22})$) | $X^{(2)} = $ singular K3 with $T_{X^{(2)}} \otimes \mathbb{Q} \cong \mathbb{Q}(\sqrt{-22})$ |
 
-Vacuum loci of $W_{KW} = \int_Y G \wedge \Omega_Y$ (F-term + Minkowski Noether-Lefschetz at CM-type) **coincide** with ECI v9 vacuum at $(\tau_L, \tau_Q) = (i, i\sqrt{11/2})$. Explicit derivation of $W_{ECI}$ from $W_{KW}$ is a specialist gap (M164 (D)→(B), 20-50pp via Chowla-Selberg + Shimura reciprocity, M169 attempting).
+Vacuum loci of $W_{KW} = \int_Y G \wedge \Omega_Y$ (F-term + Minkowski Noether-Lefschetz at CM-type) **coincide** with ECI v9 vacuum at $(\tau_L, \tau_Q) = (i, i\sqrt{11/2})$.
+
+**M169 update (today)**: Explicit derivation of $W_{ECI}$ from $W_{KW}$ is **NOT achieved** ; gap larger than M164 estimated. 3 NEW structural obstructions identified:
+1. **Attractive case empty**: rank T_X = 2 for both K3 ⟹ KW W = 0 trivially
+2. **Dimension mismatch**: KW 36-37 dim moduli space vs ECI v9 2-dim sub-locus  
+3. **Modular weight mismatch**: KW W has weight (+1,+1) vs ECI v9 W weight (-3,-3) ; discrepancy factor (-4,-4)
+
+**Critical finding (M169)**: ECI v9 vacuum (i, i√(11/2)) is in **KW case A (DW=0)**, NOT case B (W=0). KW eq (46) for W=0 requires K^(1) ≅ K^(2) which FAILS for Q(i) ≠ Q(√-22). ⟹ ECI v9's W=0 must come from SEPARATE arithmetic mechanism (modular form zeros), NOT from KW's W=0 condition.
+
+**KEY ASYMMETRY (NEW M169)**: 
+- W^L vanishing at τ_L=i via **E_6(i)=0** (modular form zero, Klein classical)
+- W^Q vanishing at τ_Q=i√(11/2) via **H_{-88}(j(τ_Q))=0** (Hilbert class polynomial zero)
+
+DIFFERENT mechanisms — structural, not aesthetic. This is a positive structural finding even though it widens the (D)→(B) gap.
 
 **Mohseni-Vafa generic disclaimer (verbatim p.16)**: *"it would be interesting to actually find examples of theories with N=1 modular geometries realized in a consistent string landscape, as none is currently known!"* ECI v9 is in the SAME generic open-problem bucket — not a specific deficit but a field-wide open question.
 

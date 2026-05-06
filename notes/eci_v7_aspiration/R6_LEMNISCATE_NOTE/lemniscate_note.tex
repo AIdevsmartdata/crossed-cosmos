@@ -524,61 +524,91 @@ $R_{m,n}(f) = A_m / A_n \in K$.  The Galois-descent criterion is therefore:
 
 \subsection{Lemma M108 (the central claim)}
 
-\begin{lemma}[Damerell parity, \textbf{[TBD: prove]}]
+\begin{lemma}[Damerell parity, refined biquadratic formulation, \textbf{[TBD: prove]}]
 \label{lem:M108}
-For class-number-one imaginary quadratic $K = \Q(\sqrt{-d})$, weight $k = 5$, and
-the Damerell algebraic factor $A_m$ of $f = \theta(\psi_{\min})$:
+For class-number-one imaginary quadratic $K = \Q(\sqrt{-d})$, define the
+\emph{biquadratic ambient field}
+$K' := \Q(i, \sqrt{d}) = \Q(\sqrt{-d}, \sqrt{d})$,
+of degree~$4$ over~$\Q$ (collapsing to~$K$ when $d = 1$).  Let $\tau \in
+\mathrm{Gal}(K'/K)$ be the non-trivial element fixing~$K$, with $\tau(\sqrt{d})
+= -\sqrt{d}$.  For weight $k = 5$ and the Damerell algebraic factor~$A_m$ of
+$f = \theta(\psi_{\min})$:
 \begin{enumerate}[label=(\roman*)]
-  \item $K = \Q(i)$ (so $W_K = 4 = k-1$): $c(A_m) = +A_m$ for all
-        $m \in \{1, 2, 3, 4\}$, hence $A_m \in \Q$.
+  \item $K = \Q(i)$ (so $W_K = 4 = k-1$): $K' = K$, $\tau$ trivial; hence
+        $A_m \in \Q$ for all $m \in \{1, 2, 3, 4\}$ (the structural collapse).
   \item $K$ with $W_K \in \{2, 6\}$, i.e.\ $d \in \{2, 3, 7, 11, 19, 43, 67, 163\}$:
-        $c(A_m) = (-1)^m \cdot A_m$, hence $A_m \in \Q$ for $m$ even and
-        $A_m \in \Q \cdot \sqrt{-d}$ for $m$ odd.
+        $A_m \in K'$ and $\tau(A_m) = (-1)^{m-1} \cdot A_m$, hence $A_m \in \Q$
+        for $m$ even and $A_m \in \Q \cdot \sqrt{d}$ for $m$ odd.
 \end{enumerate}
 \end{lemma}
 
+\begin{remark}[Why $K'$ rather than $K$]
+The original parity argument framed in $\mathrm{Gal}(K/\Q)$ alone is internally
+inconsistent with the empirical $9$-field data of Section~\ref{sec:comp}: the
+empirical alternation places $A_m/A_4 \in \Q \cdot \sqrt{d}$ (sign~$+d$) for odd
+$m$, but $\sqrt{d} \notin K = \Q(\sqrt{-d})$ for $d \geq 2$.  Moreover, the
+functional-equation argument of Schütt \cite{Schutt2008} (Lemma~2.2) shows
+$L(\psi, m) \in \R$ for all~$m$, so $A_m$ is real, forcing $A_m \in K \cap \R =
+\Q$ if one insists on $A_m \in K$ --- contradicting $A_1 = 243\sqrt{3}/4 \in
+\Q\sqrt{3} \setminus \Q$ at $d = 3$.  The biquadratic refinement $K' = \Q(i,
+\sqrt{d})$ resolves the contradiction: $A_m \in K'$, the residual square root
+is $\sqrt{d}^{m-1} \pmod{\Q^\times}$, and $\tau \in \mathrm{Gal}(K'/K)$ supplies
+the alternation.  For $d = 3$, $K' = \Q(\zeta_{12})$ (the $12$th cyclotomic
+field), independently confirming the degree-$4$ structure.
+\end{remark}
+
 \begin{remark}[Lemma~\ref{lem:M108} implies Conjecture~\ref{conj:refined} mod-2]
-Combining \eqref{eq:galois-criterion} with the alternation in (ii):
-$c(R_{m,n}) = (-1)^{m-n} R_{m,n}$, so $R_{m,n} \in \Q \Leftrightarrow m \equiv n \pmod 2$.
-For (i), the trivial action gives $R_{m,n} \in \Q$ for all $(m,n)$.
+Combining \eqref{eq:galois-criterion} with the $\tau$-alternation in (ii):
+$\tau(R_{m,n}) = (-1)^{m-n} R_{m,n}$, so $R_{m,n} \in \Q \Leftrightarrow m
+\equiv n \pmod 2$.  For (i), $\tau$ is trivial, giving $R_{m,n} \in \Q$ for all
+$(m,n)$.
 \end{remark}
 
 \subsection{Sketch toward Lemma~\ref{lem:M108}}
 
-The key structural ingredient is the parity of Eisenstein--Kronecker derivatives
-under complex conjugation.  Bannai--Furusho--Kobayashi
-\cite{BFK15} give the explicit formula
+The proof has two ingredients: the structural collapse of~$K'$ to~$K$ at
+$d = 1$, and the Hurwitz--Eisenstein--Kronecker derivation of the residual
+$\sqrt{d}^{m-1}$ in the $W_K \in \{2, 6\}$ cases.
+
+\paragraph{(P2) Structural collapse for $K = \Q(i)$.}
+For $d = 1$, the unit-group order $W_{\Q(i)} = 4 = k-1$ matches the weight, so
+$\psi_{\min}((u)) = u^4 = 1$ for all $u \in \{\pm 1, \pm i\}$, and $\psi_{\min}$
+extends to a Hecke character of $\Q(i)$.  Concretely, $K' = K = \Q(i)$, the
+extension $\mathrm{Gal}(K'/K) = 1$ is trivial, and there is no~$\tau$ to act.
+Combined with the explicit Hurwitz-period formula
+\begin{equation}
+  \sum_{\lambda \in \Z[i] \setminus\{0\}} \lambda^{-2k}
+  \;=\; \frac{(2 \varpi)^{2k}}{(2k)!} \, H_k,
+  \qquad
+  H_2 \;=\; \tfrac{1}{15},
+\label{eq:hurwitz-explicit}
+\end{equation}
+this yields $L(\psi_4, 4) = \varpi^4/60$, so $\alpha_4 = 1/60 \in \Q$.  Hence
+the (P2) sub-claim ``$A_m \in \Q$ for all~$m$ at~$\Q(i)$'' is rigorous modulo
+the Kings--Sprang \cite{KingsSprang2025} algebraicity Theorem~$4.10$ and the
+classical Hurwitz identity~\eqref{eq:hurwitz-explicit}.
+
+\paragraph{(P1) Biquadratic descent for $W_K \in \{2, 6\}$.}
+For $d \geq 2$, the Bannai--Furusho--Kobayashi \cite{BFK15} explicit formula
 \begin{equation}
   E_m^*(z, \psi) \;=\; (m-1)! \sum_\lambda \frac{\overline{\psi(\lambda)}}{(\lambda + z)^m},
 \end{equation}
-with the sum over the lattice of $K$.  At $z = \sqrt{-d}$ (purely imaginary),
-$c(z) = -\bar{z} = z$, but the $m$-th derivative $d^m/dz^m$ contributes a factor
-$(-1)^m$, yielding
+with $\lambda$ over the lattice of~$K$, expresses the Damerell algebraic factor
+as $A_m = (m-1)! \cdot c_m'(K, \psi) \cdot L(\psi, m) / (\Omega_K^{4} \pi^{4-m}) \in
+\overline{\Q}$ via Kings--Sprang Theorem~$4.10$.  The Chowla--Selberg
+expansion
 \begin{equation}
-  c\!\left(E_m^*(\sqrt{-d}, \psi)\right) \;=\; (-1)^m \cdot E_m^*(\sqrt{-d}, \psi^c).
-\label{eq:EK-parity}
+  \Omega_K^2 \;=\; \frac{1}{\sqrt{2 \pi |D_K|}}
+  \prod_{a=1}^{|D_K|-1} \Gamma\!\left(\frac{a}{|D_K|}\right)^{\chi_{D_K}(a)/(2 h_K)}
 \end{equation}
-Combined with the BDP factorisation
-$L(f, s) = L(\psi_{\min}, s) \cdot L(\psi_{\min}^c, s)$ and the explicit form
-\eqref{eq:damerell-bdp}, this gives the alternation
-$c(A_m) = (-1)^m \cdot A_m$ for the $W_K = 2, 6$ cases.
-
-\paragraph{Why $\Q(i)$ is special: a sign cancellation.}
-For $K = \Q(i)$, the unit-group order $W_{\Q(i)} = 4$ satisfies
-$W_K \mid (k-1) = 4$.  This forces $\psi_{\min}((u)) = u^4 = 1$ for all
-$u \in \{\pm 1, \pm i\}$, so $\psi_{\min}$ descends to the ideal class with
-\emph{trivial} finite-order character at the wild conductor $(1+i)^2$.
-
-The finite-order character at $(1+i)^2$ contributes its own $(-1)^m$ sign under
-complex conjugation, which exactly cancels the Eisenstein-derivative sign
-\eqref{eq:EK-parity}.  Net result: $c(A_m) = +A_m$ for $K = \Q(i)$, all $m$.
-
-For $W_K = 2$ ($d \in \{2, 7, 11, 19, 43, 67, 163\}$), no such cancellation
-operates, and the alternation $(-1)^m$ from \eqref{eq:EK-parity} survives.
-
-For $W_K = 6$ ($d = 3$), the unit-group order $6 = 2 \cdot 3$ contributes an
-order-$2$ part with the same parity behaviour as $W_K = 2$ (the order-$3$ part
-does not interact with the parity of the Eisenstein derivative).
+contributes a factor $1/\sqrt{d}$ at the second power, hence~$1/d$ at the
+fourth power: \emph{no $\sqrt{d}$ residue at even powers of~$\Omega_K$}.  The
+residual square root in $A_m$ is therefore $\sqrt{d}^{m-1}$ modulo~$\Q^\times$,
+and the Galois action of $\tau \in \mathrm{Gal}(K'/K)$ sends $\sqrt{d} \to
+-\sqrt{d}$, giving $\tau(A_m) = (-1)^{m-1} A_m$ as claimed.  This step is the
+``specialist 2--4 month'' part of the roadmap, requiring careful tracking of
+the Chowla--Selberg $\Gamma$-product expansion combined with Damerell~\S 4
+denominator analysis.
 
 \subsection{Status and open steps}
 
@@ -591,19 +621,21 @@ ladder of bootstrap values across all nine Heegner--Stark fields is unconditiona
 The two technical steps required to complete Lemma~\ref{lem:M108} are:
 
 \begin{itemize}
-  \item[\rm(P1)] Verify \eqref{eq:EK-parity} rigorously for the specific
-        Hecke characters $\psi_{\min}$ of conductor $(1+i)^2$ and the
-        analogous characters for $d \in \{2, 3, 7, 11, 19, 43, 67, 163\}$, via
-        Damerell~\cite{Dam71} \S 4 or Hsieh's Eisenstein-Kronecker formulas
-        \cite{Hsieh2012}.
-  \item[\rm(P2)] Verify the unit-group sign cancellation for $\Q(i)$ at the
-        conductor $(1+i)^2$ explicitly --- show that the finite-order character
-        contribution at the wild place exactly cancels $(-1)^m$ in
-        \eqref{eq:EK-parity}.
+  \item[\rm(P1)] Establish the Chowla--Selberg + Damerell~\S 4 chain that puts
+        the $\sqrt{d}^{m-1}$ residue (mod~$\Q^\times$) on $A_m$ for the
+        biquadratic $K' = \Q(i, \sqrt{d})$, and confirm that $\tau \in
+        \mathrm{Gal}(K'/K)$ acts as $\tau(A_m) = (-1)^{m-1} A_m$.
+        Probability $\sim 60\%$ in $6$--$12$ months of specialist work.
+  \item[\rm(P2)] Confirm the structural collapse $K' = K$ at $d = 1$ giving
+        $A_m \in \Q$ for all~$m$, via Hurwitz-identity~\eqref{eq:hurwitz-explicit}
+        + Kings--Sprang Theorem~$4.10$.  Already \emph{almost rigorous}
+        ($\sim 95\%$ today): the $\alpha_4 = 1/60 \in \Q$ direct derivation in
+        Section~\ref{sec:hurwitz-bernoulli} uses precisely these two
+        ingredients.
 \end{itemize}
 
-Both steps are standard CM theory.  We estimate completion in $6$--$12$ months
-of specialist work (suggested correspondents: Sprang, Kings, Hsieh).
+Both steps are standard CM theory.  Completion in $6$--$12$ months of specialist
+work (suggested correspondents: Sprang, Kings, Hsieh).
 A proof of Lemma~\ref{lem:M108} would upgrade Conjecture~\ref{conj:refined}
 from an empirical observation across $9$ fields to a structural theorem about
 the parity of Eisenstein--Kronecker derivatives at imaginary-quadratic CM points.

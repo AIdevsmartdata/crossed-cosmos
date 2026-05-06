@@ -21,7 +21,7 @@ Behavior:
   files, publish. Zenodo mints a new DOI for that new version; old
   DOIs stay valid and resolvable.
 
-Concept DOI for crossed-cosmos: 10.5281/zenodo.19686399 (pinned here
+Concept DOI for crossed-cosmos: 10.5281/zenodo.19686398 (concept; pinned here
 so we do not depend on any env var in CI).
 """
 from __future__ import annotations
@@ -38,7 +38,7 @@ from pathlib import Path
 from typing import Optional
 
 ZENODO_BASE = "https://zenodo.org/api"
-CONCEPT_RECORD_ID = "19686399"  # crossed-cosmos concept (parent of all versions)
+CONCEPT_RECORD_ID = "19686398"  # crossed-cosmos concept (parent of all versions)
 
 
 def _req(method: str, url: str, token: Optional[str] = None,

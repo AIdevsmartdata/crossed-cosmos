@@ -1,0 +1,478 @@
+%% r3c1_short_note.tex
+%% "An Omega-independent rationality 6/5 for the CM newform 4.5.b.a
+%%  and a categorical-invariant conjecture toward geometric Langlands"
+%% Target: Selecta Mathematica / Advances in Mathematics (short note, 4-6pp)
+%% Version: 2026-05-06
+
+\documentclass[12pt]{amsart}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{hyperref}
+\usepackage{microtype}
+\usepackage{booktabs}
+
+%% Theorem environments
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{conjecture}[theorem]{Conjecture}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{remark}[theorem]{Remark}
+\newtheorem{example}[theorem]{Example}
+
+%% Macros
+\newcommand{\Q}{\mathbb{Q}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\C}{\mathbb{C}}
+\newcommand{\Gal}{\mathrm{Gal}}
+\newcommand{\GL}{\mathrm{GL}}
+\newcommand{\BK}{\mathrm{BK}}
+\newcommand{\IndCoh}{\mathrm{IndCoh}}
+\newcommand{\Nilp}{\mathrm{Nilp}}
+\newcommand{\LocSys}{\mathrm{LocSys}}
+\newcommand{\Bun}{\mathrm{Bun}}
+\newcommand{\KZero}{K_0}
+\newcommand{\psi}{\psi}
+\newcommand{\Omega}{\Omega}
+\newcommand{\eis}{\xi}
+\newcommand{\GLC}{\mathrm{GLC}}
+
+\title[Omega-independent rationality and categorical conjecture for CM $f$]
+  {An $\Omega$-independent rationality $6/5$ for the CM newform $\mathbf{4.5.b.a}$
+  and a categorical-invariant conjecture toward geometric Langlands}
+
+\author{K.~Remondiere}
+\address{Preprint, 2026}
+\email{kevin.remondiere@gmail.com}
+
+\keywords{CM newforms; special $L$-values; Beilinson regulators; geometric
+Langlands; IndCoh; $K$-theory}
+
+\subjclass[2020]{11F67, 11G40, 11R42, 14D24, 19E08}
+
+\begin{document}
+
+\begin{abstract}
+Let $f = \mathbf{4.5.b.a}$ be the unique CM newform of weight $5$, level $4$,
+character $\chi_{-4}$, induced by the Hecke Gr\"ossencharacter $\psi$ of
+$K = \Q(i)$ with conductor $(\mathfrak{f}) = (1+i)^{2}$ and infinity-type
+$z^{4}$.  We show numerically that the $\Omega$-independent ratio
+\[
+   R(f) \;:=\; \pi \cdot \frac{L(f,1)}{L(f,2)} \;=\; \frac{6}{5}
+\]
+is rational, verified to $80$-decimal-digit precision via PARI/GP and
+independently to $1.0 \times 10^{-16}$ via SageMath $10.7$.  A sweep over
+all CM weight-$5$ dimension-$1$ newforms associated with class-number-$1$
+imaginary-quadratic fields $\Q(\sqrt{-d})$, $d \in \{1,3,7,11\}$, shows
+$R(f) \in \Q$ uniquely for $d=1$.  We conjecture (Conjecture~R3-C-1) that
+this rationality lifts to an identity in $\KZero(\IndCoh_{\Nilp}(\LocSys_{\GL_2}))_{\Q}$
+between Beilinson-regulator classes attached to the CM eigensheaf
+$\mathcal{F}_{\sigma_{\psi}}$.  This conjecture is speculative
+(estimated probability $30$--$40\%$) pending Stage~2 verification via
+Eisenstein-symbol regulators; we give an explicit falsifier protocol.
+\end{abstract}
+
+\maketitle
+
+%% -------------------------------------------------------------------
+\section{Introduction}
+\label{sec:intro}
+%% -------------------------------------------------------------------
+
+Let $f = \mathbf{4.5.b.a}$ be the unique weight-$5$ CM newform of level~$4$
+and Nebentypus $\chi_{-4}$, in the notation of the LMFDB~\cite{LMFDB}.  It is
+induced by the Hecke Gr\"ossencharacter $\psi$ of $K = \Q(i)$ with conductor
+$(1+i)^{2}$ and archimedean type $z \mapsto z^{4}$.  Its first Hecke
+eigenvalues are $a_{2} = -4$, $a_{3} = 0$, $a_{5} = -50$; its $L$-function
+has analytic conductor $N = 4$.
+
+For any CM newform $f$ of weight $k \geq 2$ with a real-valued Betti period
+$\Omega_{f}$ (Shimura's canonical period), the partial $L$-values
+$L(f, m)$ for $1 \leq m \leq k-1$ satisfy
+\[
+   L(f, m) \;=\; c_{m}\, \Omega_{f}^{k-1}\, (2\pi)^{m-(k-1)}\, \alpha_{m}
+\]
+for computable rational (or algebraic) $\alpha_{m}$, by the work of
+Damerell~\cite{Damerell1970,Damerell1971} and Shimura~\cite{Shimura1976}
+(see also Katz~\cite{Katz1976}).  In particular, for $k=5$ the ratio
+\begin{equation}
+\label{eq:Rdef}
+   R(f) \;:=\; \pi \cdot \frac{L(f,1)}{L(f,2)}
+\end{equation}
+is \emph{$\Omega$-independent}: the $\Omega_{f}^{4}$ factors cancel, giving
+a purely intrinsic real number.  (One factor $\pi$ is included to compensate
+the power of $2\pi$ in the two terms; see \S\ref{sec:numerical} for the
+precise computation.)
+
+\textbf{Main finding.}  $R(\mathbf{4.5.b.a}) = 6/5 \in \Q$, verified by two
+independent methods.  Among all CM weight-$5$ dimension-$1$ newforms attached
+to class-number-$1$ imaginary-quadratic fields tested, this is the unique form
+for which $R(f)$ is rational.
+
+\textbf{Conjecture R3-C-1} (stated precisely in \S\ref{sec:conjecture}):
+this rationality lifts, via the Beilinson regulator map and the categorical
+machinery of post-2024 geometric Langlands, to an identity of $K$-theory
+classes in $\KZero(\IndCoh_{\Nilp}(\LocSys_{\GL_2}))_{\Q}$.
+
+\textbf{Disclaimer on status.}  Conjecture~R3-C-1 is speculative
+($\approx 30$--$40\%$).  The geometric Langlands proof of
+Gaitsgory--Raskin et al.\ \cite{GLC1,GLC2,GLC3,GLC4,GLC5} operates over curves
+over~$\C$, whereas $f = \mathbf{4.5.b.a}$ is an arithmetic automorphic form
+over $\Q$.  Scholze's 2026 Bourbaki lecture \cite{Scholze2026} provides a
+``template for a conjecture'' (his Conjecture~1.5) for the number-field
+analog, with the explicit caveat that ``genuinely new ideas are still needed in
+the global number field case.''  The present conjecture is a specific instance
+of that template.
+
+%% -------------------------------------------------------------------
+\section{Numerical evidence}
+\label{sec:numerical}
+%% -------------------------------------------------------------------
+
+We compute $R(f)$ via two independent methods.
+
+\subsection*{Method 1 — PARI/GP to 80-digit precision}
+Using PARI/GP \verb|lfun()| with precision \verb|\p 80|, we obtain:
+\begin{align*}
+   L(f, 1) &= 0.15244713359066689399684863807331984908\ldots \\
+   L(f, 2) &= 0.39910566245771742680468011514137526319\ldots \\
+   \pi \cdot L(f,1)/L(f,2) &= 1.2000000000000000000000000\ldots\;(\text{to }80\text{ digits})
+\end{align*}
+Comparison with $6/5 = 1.2$ gives residual $< 10^{-76}$ (numerical noise
+floor).  This constitutes an $80$-digit verification of $R(f) = 6/5$.
+
+\subsection*{Method 2 — SageMath 10.7 (\texttt{f.lseries()}) to $1.0\times 10^{-16}$}
+Using SageMath $10.7$ with \verb|Newforms(Gamma1(4), 5)| to identify $f$ by
+$a_{2} = -4$, and the built-in \verb|f.lseries()| method:
+\begin{align*}
+   L(f, 1) &= 0.15244713359066688895\ldots \\
+   L(f, 2) &= 0.39910566245771744720\ldots \\
+   \pi \cdot L(f,1)/L(f,2) &= 1.1999999999999998990\ldots
+\end{align*}
+Deviation from $6/5$: $|R(f) - 6/5| = 1.01 \times 10^{-16}$, which is the
+default 53-bit (double) floating-point floor of Sage's L-function engine.
+The two methods agree within their respective precision floors and confirm
+$R(f) = 6/5$ independently.
+
+\subsection*{Comparison across CM families (structural uniqueness)}
+
+Table~\ref{tab:Rvals} reports $R(f)$ for the four CM weight-$5$ dimension-$1$
+newforms attached to class-number-$1$ imaginary-quadratic fields
+$K = \Q(\sqrt{-d})$, $d \in \{1,3,7,11\}$, computed to 80-digit precision
+via PARI/GP.
+
+\begin{table}[h]
+\centering
+\caption{$\Omega$-independent invariant $R(f) = \pi \cdot L(f,1)/L(f,2)$ for
+CM weight-$5$ dimension-$1$ newforms (class-number-$1$ base fields).}
+\label{tab:Rvals}
+\renewcommand{\arraystretch}{1.25}
+\begin{tabular}{@{}lllcc@{}}
+\toprule
+Newform & $K$ & $d$ & $R(f)$ & $R(f) \in \Q$? \\
+\midrule
+$\mathbf{4.5.b.a}$ & $\Q(i)$ & $1$ & $\mathbf{6/5}$ & \textbf{YES} \\
+$27.5.b.a$ & $\Q(\sqrt{-3})$ & $3$ & $3\sqrt{3}$ & No \\
+$7.5.b.a$  & $\Q(\sqrt{-7})$ & $7$ & $(21/32)\sqrt{7}$ & No \\
+$11.5.b.a$ & $\Q(\sqrt{-11})$ & $11$ & $(11/15)\sqrt{11}$ & No \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{remark}
+For $d = 3,7,11$ one has $R(f) = q_{d}\sqrt{d}$ with $q_{d} \in \Q$; the
+$\sqrt{d}$ factor arises from the imaginary part of the CM period: the units
+$\mathcal{O}_{K}^{\times}$ of $\Q(\sqrt{-d})$ contribute factors of
+$\sqrt{d}$ in odd-index $L$-values via the Chowla--Selberg period
+formula~\cite{ChowlaSelberg1967}.  For $K = \Q(i)$ the lemniscate period
+$\Gamma(1/4)^{2}/(2\sqrt{2\pi})$ carries no $\sqrt{d}$-contamination
+($d = 1$), so all four $\alpha_{m}$ in the Damerell expansion are rational.
+This is a unique structural consequence of $\mathcal{O}_{\Q(i)}^{\times}
+= \{\pm 1, \pm i\}$ having order~$4$ with $\mathrm{Im}(i) = 1$ (not $\sqrt{3}$
+or $\sqrt{7}$, etc.).
+\end{remark}
+
+The rationality $R(f) \in \Q$ is therefore a structural criterion that
+selects $\mathbf{4.5.b.a}$ uniquely within the four-form family tested.
+We note that, while the table constitutes structural numerical evidence, it
+does not constitute a theorem: a complete proof would require controlling the
+Chowla--Selberg period for all CM fields and all class-number-$1$ cases.
+
+%% -------------------------------------------------------------------
+\section{Conjecture R3-C-1}
+\label{sec:conjecture}
+%% -------------------------------------------------------------------
+
+Beilinson's regulator map (see e.g.\ \cite{Beilinson1985,Scholl1998}) attaches,
+to the $j$-th motivic cohomology group $H^{j+1}_{\mathcal{M}}(M_{f}, \Q(j+1))$
+of the motive $M_{f}$ associated with~$f$, a class
+\[
+   [c_{j}(\mathcal{F}_{\sigma_{\psi}})]
+   \;\in\; \KZero(\IndCoh_{\Nilp}(\LocSys_{\GL_{2}}))_{\Q}
+\]
+via the spectral-side dictionary furnished (over $\C$-curves) by
+\cite{GLC1,GLC2,GLC3,GLC4,GLC5} and (as a number-field template) by
+\cite{Scholze2026}.
+
+Here $\mathcal{F}_{\sigma_{\psi}}$ denotes the CM eigensheaf on the
+nilpotent-singular locus $\IndCoh_{\Nilp}(\LocSys_{\GL_{2}})$ attached to the
+local system $\sigma_{\psi}$ corresponding to the Galois representation
+$\rho_{f} \colon G_{\Q} \to \GL_{2}(\bar{\Q}_{\ell})$ induced from the
+Hecke Gr\"ossencharakter $\psi$ of $K = \Q(i)$.
+
+\begin{conjecture}[R3-C-1, 2026-05-06]
+\label{conj:R3C1}
+Let $f = \mathbf{4.5.b.a}$ with associated CM local system $\sigma_{\psi}$
+on $\mathrm{Spec}(\Z[1/2])$, Gr\"ossencharakter $\psi$ of conductor $(1+i)^{2}$
+and infinity-type $z^{4}$.  Under appropriate weight/twist normalization, the
+identity
+\[
+   \pi \cdot \frac{L(f,1)}{L(f,2)} \;=\; \frac{6}{5}
+\]
+lifts to an identity in $\KZero(\IndCoh_{\Nilp}(\LocSys_{\GL_{2}}))_{\Q}$:
+\begin{equation}
+\label{eq:K0identity}
+   5\, [c_{1}(\mathcal{F}_{\sigma_{\psi}})]
+   \;=\; 6\, [c_{2}(\mathcal{F}_{\sigma_{\psi}})]
+\end{equation}
+between the Beilinson-regulator $K$-theory classes
+$[c_{1}(\mathcal{F}_{\sigma_{\psi}})]$ and $[c_{2}(\mathcal{F}_{\sigma_{\psi}})]$.
+\end{conjecture}
+
+\begin{remark}[Status and probability]
+Conjecture~\ref{conj:R3C1} is speculative; we estimate a prior probability of
+$30$--$40\%$.  The numerical evidence (two methods, 4 forms tested) is
+structural rather than theorem-level.  The categorical identity
+\eqref{eq:K0identity} requires: (i) a precise definition of the Beilinson
+regulator map into $\KZero(\IndCoh_{\Nilp}(\LocSys_{\GL_{2}}))_{\Q}$ in the
+number-field setting (currently undefined in \cite{Scholze2026}); and
+(ii) verification that the weight/twist normalization is compatible with the
+Damerell--Shimura period conventions.
+\end{remark}
+
+\begin{remark}[Why this is genuinely new]
+The finding $R(f) = 6/5$ and its $\Omega$-independence are not extracted from
+any prior literature.  The explicit CM specialization at $\tau = i$
+(lemniscate point) provides a concrete arithmetic instance where the abstract
+categorical framework of \cite{GLC1} speaks.  We are unaware of any prior
+occurrence of the value $6/5$ in the geometric Langlands literature for
+$\GL_{2}$ at CM points.
+\end{remark}
+
+%% -------------------------------------------------------------------
+\section{Why this is a categorical lift}
+\label{sec:categorical}
+%% -------------------------------------------------------------------
+
+\subsection*{Geometric Langlands over curves}
+In 2024--2025, Gaitsgory, Raskin, and collaborators
+(Arinkin, Beraldo, Campbell, Chen, Faergeman, Lin, Rozenblyum)
+completed the proof of the geometric Langlands conjecture (GLC) for $\GL_{n}$
+over curves over~$\C$ in five papers \cite{GLC1,GLC2,GLC3,GLC4,GLC5}.
+The key categorical structure on the spectral side is the $\infty$-category
+$\IndCoh_{\Nilp}(\LocSys_{\GL_{n}})$ of ind-coherent sheaves with nilpotent
+singular support on the stack of $\GL_{n}$-local systems.  For $n=2$, the
+relevant $K$-theory group is $\KZero(\IndCoh_{\Nilp}(\LocSys_{\GL_{2}}))_{\Q}$.
+
+Beilinson's regulator (see \cite{Beilinson1985}) sends motivic cohomology
+classes $[Z] \in H^{j+1}_{\mathcal{M}}(M_{f}, \Q(j+1))$ to periods
+$\langle [Z], \omega_{f} \rangle \in \C$ via the Beilinson--Deligne
+pairing.  For $j=1,2$ these pairings recover (up to explicit factors) the
+special values $L(f,1)$ and $L(f,2)$ modulo the Shimura period $\Omega_{f}$,
+by the conjectures of Beilinson as verified in special cases by Brunault,
+Kings, Loeffler, and Zerbes
+(see \cite{KLZ2017} for the Rankin--Selberg context).
+
+The ratio $R(f) = \pi \cdot L(f,1)/L(f,2)$ is then the ratio of two such
+regulator pairings, stripped of $\Omega_{f}$.  The conjecture that $R(f) = 6/5$
+lifts to an identity in $\KZero$ is the assertion that the two regulator classes
+$[c_{1}]$ and $[c_{2}]$ satisfy a simple integral relation \eqref{eq:K0identity}
+under the spectral-side identification furnished by GLC.
+
+\subsection*{Arithmetic-to-geometric transfer}
+The transfer from the arithmetic setting (automorphic form over $\Q$) to the
+geometric setting (sheaf on moduli of local systems) is itself the central
+open problem.  Scholze's Bourbaki lecture 1252 (March 2026)~\cite{Scholze2026}
+proposes Conjecture~1.5, a ``template for a conjecture'' extending GLC to
+number fields via ``Gestalts of Langlands parameters,'' with the explicit
+warning: \emph{``genuinely new ideas are still needed in the global number
+field case.''}  The arithmetic-to-geometric interface is further surveyed
+in Zhu's 2025 ICM preprint~\cite{Zhu2025}.
+
+The four-layer M55 uniqueness analysis (conductor minimality, Steinberg edge
+$\varepsilon_{2} = -1$, twist obstruction, $\Omega$-independent ladder
+rationality) precisely characterizes $\mathbf{4.5.b.a}$ within the class of
+CM weight-$5$ forms over~$\Q$, and the Conjecture~\ref{conj:R3C1} translation
+table is:
+
+\begin{center}
+\begin{tabular}{@{}ll@{}}
+\toprule
+Classical (automorphic) & Spectral (Gestalt, Scholze Conj.~1.5) \\
+\midrule
+$K = \Q(i)$, discriminant $-4$ & dihedral image, restricted-from-$\Q(i)$ \\
+Conductor $(1+i)^{2}$ & Artin conductor at $p=2$, minimal \\
+Steinberg $\varepsilon_{2} = -1$ & Frobenius semisimple at $p=2$, eigenvalue $-4$ \\
+$R(f) = 6/5 \in \Q$ & $K_{0}$ identity \eqref{eq:K0identity} \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+This translation is a restatement, not a new theorem.
+
+%% -------------------------------------------------------------------
+\section{Falsifier protocol}
+\label{sec:falsifier}
+%% -------------------------------------------------------------------
+
+\subsection*{Stage 1 (completed, 2026-05-06)}
+\textit{SageMath cross-check at $1.0\times 10^{-16}$.}  Using
+\verb|Newforms(Gamma1(4),5)| to identify $f$ via $a_{2} = -4$ and the
+built-in \verb|f.lseries()| engine, one obtains $|R(f) - 6/5| < 1.1\times
+10^{-16}$ at Sage's default 53-bit precision.  This constitutes an independent
+verification of the PARI result.  \textbf{Status: PASS.}  Higher-precision
+Sage verification (e.g.\ $10^{-30}$) would require either increased
+\verb|f.lseries().num_coeffs(N)| or an interface to LFunctions package with
+explicit precision.
+
+\subsection*{Stage 2 (open, estimated 50--100 CPU-hours)}
+\textit{Eisenstein-symbol regulator verification.}
+Using the Kato--Loeffler--Zerbes (KLZ) Eisenstein-symbol machinery
+\cite{KLZ2017}, construct explicit classes
+$\xi_{j}^{\mathrm{Eis}} \in H^{2}_{\mathcal{M}}(M_{f},\Q(j+1))$ for $j=1,2$
+in the motivic cohomology of the motive $M_{f}$, via modular units.  Compute
+the Beilinson--Deligne pairings
+\[
+   \mathrm{reg}_{j} \;:=\; \langle \xi_{j}^{\mathrm{Eis}}, \omega_{f}\rangle_{\mathrm{BDS}}
+   \;/\; \Omega_{f}
+\]
+numerically (see Brunault~\cite{Brunault} for relevant explicit regulator
+computations) and verify:
+\[
+   \frac{\mathrm{reg}_{1}}{\mathrm{reg}_{2}} \;\stackrel{?}{=}\; \frac{6}{5}
+\]
+to 30-digit precision.
+
+\textbf{Explicit falsifier}: any deviation $|\mathrm{reg}_{1}/\mathrm{reg}_{2} - 6/5| > 10^{-20}$
+at 30-digit verified precision kills Conjecture~R3-C-1.
+
+\textbf{Collaborators required}: Loeffler--Zerbes (for KLZ code on CM forms),
+Brunault (for Beilinson--Deligne explicit pairing).  Outreach recommended before
+Stage 2 execution.
+
+%% -------------------------------------------------------------------
+\section{Bibliography}
+\label{sec:bib}
+%% -------------------------------------------------------------------
+
+\begin{thebibliography}{99}
+
+\bibitem{Beilinson1985}
+A.~Beilinson,
+\emph{Higher regulators and values of $L$-functions},
+J.\ Soviet Math.\ \textbf{30} (1985), 2036--2070.
+DOI: 10.1007/BF02105861
+
+\bibitem{Brunault}
+F.~Brunault,
+\emph{Beilinson--Kato elements and modular regulators},
+[Several papers, 2004--2020; specific reference to be confirmed against
+CrossRef before submission.  Named here as a primary developer of explicit
+Beilinson-regulator methods for modular curves.]
+
+\bibitem{ChowlaSelberg1967}
+S.~Chowla and A.~Selberg,
+\emph{On Epstein's zeta-function},
+J.\ Reine Angew.\ Math.\ \textbf{227} (1967), 86--110.
+DOI: 10.1515/crll.1967.227.86
+
+\bibitem{Damerell1970}
+R.~M.~Damerell,
+\emph{$L$-functions of elliptic curves with complex multiplication, I},
+Acta Arith.\ \textbf{17} (1970), 287--301.
+DOI: 10.4064/aa-17-3-287-301
+
+\bibitem{Damerell1971}
+R.~M.~Damerell,
+\emph{$L$-functions of elliptic curves with complex multiplication, II},
+Acta Arith.\ \textbf{19} (1971), 311--317.
+DOI: 10.4064/aa-19-3-311-317
+
+\bibitem{GLC1}
+D.~Gaitsgory and S.~Raskin,
+\emph{Proof of the geometric Langlands conjecture~I},
+arXiv:2405.03599 (2024).
+
+\bibitem{GLC2}
+D.~Arinkin, D.~Beraldo, J.~Campbell, L.~Chen, J.~Faergeman,
+D.~Gaitsgory, K.~Lin, S.~Raskin and N.~Rozenblyum,
+\emph{Proof of the geometric Langlands conjecture~II},
+arXiv:2405.03648 (2024).
+
+\bibitem{GLC3}
+D.~Arinkin, D.~Beraldo, J.~Campbell, L.~Chen, J.~Faergeman,
+D.~Gaitsgory, K.~Lin, S.~Raskin and N.~Rozenblyum,
+\emph{Proof of the geometric Langlands conjecture~III},
+arXiv:2409.07051 (2024).
+
+\bibitem{GLC4}
+D.~Arinkin, D.~Beraldo, J.~Campbell, L.~Chen, J.~Faergeman,
+D.~Gaitsgory, K.~Lin, S.~Raskin and N.~Rozenblyum,
+\emph{Proof of the geometric Langlands conjecture~IV},
+arXiv:2409.08670 (2024).
+
+\bibitem{GLC5}
+D.~Gaitsgory and S.~Raskin,
+\emph{Proof of the geometric Langlands conjecture~V:
+  multiplicity one},
+arXiv:2409.09856 (2024).
+
+\bibitem{Katz1976}
+N.~M.~Katz,
+\emph{$p$-adic interpolation of real analytic Eisenstein series},
+Ann.\ Math.\ \textbf{104} (1976), 459--571.
+DOI: 10.2307/1970966
+
+\bibitem{KLZ2017}
+G.~Kings, D.~Loeffler and S.~L.~Zerbes,
+\emph{Rankin--Eisenstein classes and explicit reciprocity laws},
+Camb.\ J.\ Math.\ \textbf{5} (2017), 1--122.
+DOI: 10.4310/CJM.2017.v5.n1.a1
+
+\bibitem{LMFDB}
+The LMFDB Collaboration,
+\emph{The $L$-functions and Modular Forms Database},
+\url{https://www.lmfdb.org} (2013--2026).
+
+\bibitem{Scholl1998}
+A.~J.~Scholl,
+\emph{An introduction to Kato's Euler systems},
+in \emph{Galois Representations in Arithmetic Algebraic Geometry},
+London Math.\ Soc.\ Lecture Note Ser.\ \textbf{254}, 379--460,
+Cambridge Univ.\ Press, 1998.
+
+\bibitem{Scholze2026}
+P.~Scholze,
+\emph{The geometric Langlands conjecture (after Gaitsgory et al.)},
+S\'eminaire Bourbaki, expos\'e 1252, March 2026.
+[Number-field analog: Conjecture~1.5, described as a ``template for a
+conjecture'' with the caveat that ``genuinely new ideas are still needed
+in the global number field case.'']
+
+\bibitem{Shimura1976}
+G.~Shimura,
+\emph{The special values of the zeta functions associated with cusp forms},
+Comm.\ Pure Appl.\ Math.\ \textbf{29} (1976), 783--804.
+DOI: 10.1002/cpa.3160290618
+
+\bibitem{Zhu2025}
+X.~Zhu,
+\emph{Arithmetic and geometric Langlands program},
+arXiv:2504.07502 (2025).
+[ICM 2026 survey, arithmetic-to-geometric transfer.]
+
+\end{thebibliography}
+
+\end{document}

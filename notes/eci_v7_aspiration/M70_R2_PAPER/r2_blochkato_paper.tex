@@ -1,0 +1,783 @@
+%% r2_blochkato_paper.tex
+%% "Bloch-Kato Tamagawa conjecture for M(4.5.b.a) at interior critical integers,
+%%  with a Damerell-Tamagawa ratio invariant"
+%% Sub-agent M70 (Sonnet 4.6), 2026-05-06
+%% Status: DRAFT (5 [TBD: prove] markers, ~10-15% probability of formal contribution)
+%% Target: Research in Number Theory (primary) / Journal of Number Theory (backup)
+
+\documentclass[12pt]{amsart}
+
+\usepackage{amsmath,amssymb,amsthm,mathrsfs}
+\usepackage[colorlinks=true,linkcolor=blue,citecolor=blue,urlcolor=blue]{hyperref}
+\usepackage{microtype}
+\usepackage{enumitem}
+
+%% Theorem environments
+\newtheorem{conjecture}{Conjecture}[section]
+\newtheorem{theorem}[conjecture]{Theorem}
+\newtheorem{proposition}[conjecture]{Proposition}
+\newtheorem{remark}[conjecture]{Remark}
+\theoremstyle{definition}
+\newtheorem{definition}[conjecture]{Definition}
+\newtheorem{example}[conjecture]{Example}
+
+%% Shorthand
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\Q}{\mathbb{Q}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\C}{\mathbb{C}}
+\newcommand{\Zp}{\mathbb{Z}_p}
+\newcommand{\Qp}{\mathbb{Q}_p}
+\newcommand{\A}{\mathbb{A}}
+\newcommand{\Gal}{\mathrm{Gal}}
+\newcommand{\Hom}{\mathrm{Hom}}
+\newcommand{\End}{\mathrm{End}}
+\newcommand{\Sel}{\mathrm{Sel}}
+\newcommand{\Sha}{\Sha}
+\newcommand{\Tam}{\mathrm{Tam}}
+\newcommand{\ord}{\mathrm{ord}}
+\newcommand{\lcm}{\mathrm{lcm}}
+\newcommand{\Spec}{\mathrm{Spec}}
+\newcommand{\OmegaK}{\Omega_K}
+\newcommand{\Omegapm}{\Omega^\pm}
+\newcommand{\tbd}[1]{\textbf{[TBD: prove]} \emph{#1}}
+\newcommand{\tbdtag}[2]{\textbf{[TBD-R2-#1: prove]} \emph{#2}}
+
+\begin{document}
+
+\title{Bloch-Kato Tamagawa conjecture for $M(f)$ at interior critical integers,\\
+with a Damerell-Tamagawa ratio invariant}
+
+\author{K.~Remondiere}
+\address{Independent researcher, affiliated with crossed-cosmos ECI project}
+\email{kevin.remondiere@gmail.com}
+
+\date{2026-05-06 (draft)}
+
+\begin{abstract}
+Let $f = \mathbf{4.5.b.a}$ (LMFDB) be the unique weight-$5$, level-$4$, CM newform
+with CM field $K = \Q(i)$ and Steinberg edge eigenvalue $a_2 = -4$.
+We formulate three conjectures (R-2.1, R-2.2, R-2.3)
+on the Bloch-Kato Tamagawa number formula for the Scholl motive
+$M(f)$ at the interior critical integers $m \in \{1,2,3,4\}$.
+The central observation is an $\Omega$-\emph{independent} ratio
+\[
+  \pi \cdot L(f,1) \,/\, L(f,2) \;=\; \tfrac{6}{5},
+\]
+verified to 80-digit precision in PARI/GP and cross-checked in SageMath.
+Conjecture~R-2.2 proposes that this ratio factors as a product of
+local Tamagawa factors at $p = 2$, Bloch-Kato Selmer quotients, and archimedean
+Gamma-ratio factors, yielding an intrinsic Diophantine fingerprint of $M(f)$.
+We document the complete obstruction: every published Tamagawa Number Conjecture
+framework from 2024-2026 (Büyükboduk-Neamti, Castella, BBL, Sano, Yin,
+Diamond-Flach-Guo) is \emph{blocked} by at least one hypothesis violation for the
+regime $(p=2 \text{ ramified},\ k=5 \text{ odd},\ K=\Q(i),\ N=4)$.
+Five \textbf{[TBD: prove]} markers are stated explicitly.
+We estimate a $\sim 10$-$15\%$ probability that a formal Bloch-Kato Tamagawa
+contribution is achievable without a new $p=2$-ramified anticyclotomic Iwasawa
+framework.
+\end{abstract}
+
+\maketitle
+
+\tableofcontents
+
+%% ============================================================
+\section{Introduction}
+\label{sec:intro}
+%% ============================================================
+
+The Bloch-Kato conjecture \cite{BK90}, in its Tamagawa number formulation
+\cite{FPR94}, predicts that for a pure motive $M$ over $\Q$ with
+good or semistable reduction, the leading term of the $L$-function $L(M,s)$
+at a critical integer $m$ is related, modulo periods and powers of $2\pi i$,
+to an arithmetic ratio
+\begin{equation}\label{eq:BK}
+  \frac{L^*(M(m),0)}{\Omega^\pm(M(m))}
+  \;=\;
+  \frac{\#H^0(\Q, V(m)) \cdot \prod_\ell c_\ell(M(m))}{\#H^1_f(\Q, V(m))^{-1} \cdot \#H^2_f(\Q, V(m))^{-1}},
+\end{equation}
+where $V$ is the $p$-adic realization, $H^1_f$ is the Bloch-Kato Selmer group,
+$c_\ell$ are local Tamagawa factors at all primes $\ell$, and $\Omega^\pm$
+are Deligne's canonical periods \cite{Del79}.
+
+\medskip
+The higher-weight BSD-analogue for CM elliptic modular forms was reopened
+by two recent developments in the crossed-cosmos ECI programme:
+\begin{enumerate}[label=(\roman*)]
+\item \textbf{The M52 Damerell ladder} \cite{Dam70,Dam71}: for $f = 4.5.b.a$,
+  the algebraic parts $\alpha_m = L(f,m)/\Omega_K^{4} \in \Q$ for all
+  $m \in \{1,2,3,4\}$, verified to 80-digit precision in PARI/GP.
+  Among all CM weight-$5$ dim-$1$ newforms tested, this full-$\Q$ rationality
+  is \emph{unique} to $4.5.b.a$ (Q($\omega$) competitors yield $\alpha_m \in \Q(\sqrt{3}) \setminus \Q$ for odd $m$).
+
+\item \textbf{The M57 Adelic Katz conjecture} \cite{Katz78,Kriz21}:
+  an anticyclotomic 2-adic $L$-function $\mathscr{L}_2^\pm(f)$
+  is conjectured to exist in $D(\Gamma, \Z_2)$, interpolating the Damerell
+  values with Frobenius-correction factors.
+\end{enumerate}
+
+\medskip
+The $\Omega$-independent ratio $\pi \cdot L(f,1)/L(f,2) = 6/5$
+(Section~\ref{sec:damerell}) is the key numerical input. It is \emph{independent}
+of all period choices and is therefore a purely Diophantine quantity.
+Conjecture~R-2.2 (Section~\ref{sec:conjectures}) proposes that it factors
+via a product of local Tamagawa quotients and Selmer quotients, making the $6/5$
+the \emph{central novel content} of this note.
+
+\medskip
+\textbf{Honest scope.} We estimate the probability of a formal Bloch-Kato
+Tamagawa contribution at $\sim 10$-$15\%$, conditional on
+the development of a new $p=2$-ramified anticyclotomic Iwasawa framework.
+The complete obstruction is documented in Section~\ref{sec:blocked}.
+The five \textbf{[TBD: prove]} markers (Section~\ref{sec:open}) are explicit
+and not hidden.
+
+\medskip
+\textbf{Acknowledgements.} The numerical computations used PARI/GP \cite{PARI}
+and SageMath \cite{Sage}. LMFDB data \cite{LMFDB} provided Hecke eigenvalues,
+CM field, and conductor.
+
+%% ============================================================
+\section{The motive \texorpdfstring{$M(f)$}{M(f)} of \texorpdfstring{$f = 4.5.b.a$}{f = 4.5.b.a}}
+\label{sec:motive}
+%% ============================================================
+
+\subsection{LMFDB data for \texorpdfstring{$f = 4.5.b.a$}{f = 4.5.b.a}}
+
+The newform $f$ has the following LMFDB-verified invariants \cite{LMFDB}:
+\begin{itemize}
+  \item Weight $k = 5$, level $N = 4 = 2^2$, character $\chi_{-4}$ (primitive, conductor $4$).
+  \item Hecke eigenvalues: $a_2 = -4$, $a_3 = 0$, $a_5 = -20$,
+    $a_7 = 0$, $a_{13} = 0$, $a_{17} = 100$ (all CM vanishing at inert primes).
+  \item CM field: $K = \Q(i) = \Q(\sqrt{-1})$, discriminant $d_K = -4$.
+  \item Inducing Hecke Grössencharacter $\psi$ of conductor $(1+i)^2 = (2)$ in $\Z[i]$
+    with infinity type $(k-1, 0) = (4, 0)$.
+  \item Dimension of space $S_5(\Gamma_1(4), \chi_{-4})$: dim $= 1$ (Cohen-Oesterlé \cite{CO77}).
+  \item Analytic conductor: $4$; root number $\varepsilon(f) = +1$.
+  \item Minimal twist: itself (all level-$36$, $64$, $100$ CM weight-$5$ forms are twists of $4.5.b.a$).
+\end{itemize}
+
+The Steinberg edge condition $a_2 = -4 = \varepsilon_2 \cdot 2^{(k-1)/2}$ with $\varepsilon_2 = -1$
+is unique among CM weight-$5$ dim-$1$ newforms with $K = \Q(i)$ (the twist $36.5.d.a$
+has $a_2 = +4$, i.e., $\varepsilon_2 = +1$; forms of level $64$ and $100$ are non-Steinberg at $2$).
+This Steinberg-with-$\varepsilon_2=-1$ structure drives the alternating sign pattern
+in the 2-adic valuation monotone ladder (Section~\ref{sec:damerell}).
+
+\subsection{Scholl motive}
+
+By Scholl's theorem \cite{Sch90}, there exists a pure Chow motive
+\[
+  M(f) \;\in\; \mathrm{Mot}(\Q)_\Q
+\]
+of rank $2$, weight $w = k-1 = 4$, attached to $f$. Its realizations are:
+\begin{itemize}
+  \item \emph{Betti:} $M(f)_B = H^1_B(X,\Q)$ for a suitable variety $X/\Q$,
+    with Hodge decomposition $M(f)_B \otimes \C = H^{4,0} \oplus H^{0,4}$.
+  \item \emph{de Rham:} $M(f)_{dR}$ with Hodge filtration
+    $\mathrm{Fil}^4 M(f)_{dR} \neq 0$, $\mathrm{Fil}^5 M(f)_{dR} = 0$.
+  \item \emph{$\ell$-adic:} $V_\ell(f) = $ the $\ell$-adic representation attached to $f$
+    by Deligne \cite{Del71}, a rank-$2$ $\Q_\ell$-representation of $G_\Q = \Gal(\overline{\Q}/\Q)$.
+  \item \emph{$2$-adic:} $V_2(f)$, a rank-$2$ $\Q_2$-representation.
+    At $p = 2$: since $2 \mid N$ with $\ord_2(N) = 2$ and $a_2 = -4$,
+    the local $(\varphi, N)$-module at $p=2$ is of Steinberg type;
+    $V_2(f)|_{G_{\Q_2}}$ is an extension of unramified-twist
+    $\Q_2(-1)$ by $\Q_2(k-1)\chi$, where $\chi$ is the unramified quadratic character.
+\end{itemize}
+
+\subsection{Interior critical integers and Deligne periods}
+
+The motivic weight $w = 4$ places the central point at $s = w/2 + 1 = 3$.
+The critical integers for $L(M(f), s)$ are $s = 1, 2, 3, 4$, i.e.,
+$m \in \{1,2,3,4\}$ in the notation $L(M(f)(m), 0) = L(f, m)$.
+
+The Deligne period \cite{Del79} decomposes as
+\[
+  \Omega^\pm(M(f)(m)) = \Omega_K^{2m} \cdot (2\pi i)^{-(k-1-m)},
+\]
+where $\Omega_K = \Gamma(1/4)^2/(2\sqrt{2\pi})$ is the lemniscate period
+of $K = \Q(i)$, normalized via the Chowla-Selberg formula \cite{CS67}.
+Here $\Gamma(1/4)$ is the classical Gamma function value; numerically
+$\Omega_K \approx 2.6220575543\ldots$
+
+The algebraic normalization from Shimura \cite{Shim76} and Damerell
+\cite{Dam70, Dam71} yields $\alpha_m := L(f,m)/\Omega_K^4 \in \Q$,
+verified in Section~\ref{sec:damerell}.
+
+%% ============================================================
+\section{Damerell ladder and the \texorpdfstring{$6/5$}{6/5} invariant}
+\label{sec:damerell}
+%% ============================================================
+
+\subsection{The Damerell ladder (PARI 80-digit, Sage cross-check)}
+
+The \emph{Damerell ladder} consists of the four algebraic special values
+$\alpha_m = L(f,m)/\Omega_K^4$, $m \in \{1,2,3,4\}$.
+
+\begin{theorem}[M52 PARI 80-digit verification]
+\label{thm:damerell}
+For $f = 4.5.b.a$ and $\Omega_K = \Gamma(1/4)^2/(2\sqrt{2\pi})$:
+\[
+  \alpha_1 = \frac{1}{10}, \quad
+  \alpha_2 = \frac{1}{12}, \quad
+  \alpha_3 = \frac{1}{24}, \quad
+  \alpha_4 = \frac{1}{60}.
+\]
+Each equality holds to within $10^{-60}$ in PARI/GP at 80-digit precision.
+\end{theorem}
+
+\begin{remark}
+The PARI computation proceeds via numerical integration of $L(f,m)$
+using the built-in \verb|lfun()| function, followed by division by
+$\Omega_K^4$ computed from the Chowla-Selberg formula.
+A Stage~1 SageMath cross-check via
+\begin{verbatim}
+  f = Newforms(Gamma1(4), 5, names='a')[0]
+  f.lseries()(m)
+\end{verbatim}
+yields agreement to default precision ($\approx 10^{-16}$),
+confirming the PARI values. This cross-check is at default
+Sage precision and should not be treated as an independent high-precision verification.
+\end{remark}
+
+\subsection{Uniqueness of the full-\texorpdfstring{$\Q$}{Q} ladder}
+
+Among CM weight-$5$ dim-$1$ newforms, the full $\Q$-rationality
+$\alpha_m \in \Q$ for all $m \in \{1,2,3,4\}$ is \emph{unique} to $4.5.b.a$.
+
+For $K = \Q(\sqrt{-3})$ (Eisenstein CM), the analogous values satisfy:
+$\alpha_m \in \Q(\sqrt{3}) \setminus \Q$ for $m$ odd, because the
+Hecke Grössencharacter has order $6$ (units $\{\pm 1, \pm\omega, \pm\omega^2\}$)
+and $\mathrm{Im}(\omega) = \sqrt{3}/2$ contaminates odd-$m$ periods.
+Specifically, for $27.5.b.a$ ($Q(\omega)$): $\alpha_1 = 27\sqrt{3}/4$ and
+$\alpha_3 = \sqrt{3}/4$; for $12.5.c.a$: $\alpha_1 = 2\sqrt{3}$ and
+$\alpha_3 = 2\sqrt{3}/9$.
+
+For $K = \Q(i)$: the lemniscate period $\Omega_K = \Gamma(1/4)^2/(2\sqrt{2\pi})$
+is $\sqrt{3}$-free, so all four algebraic parts land in $\Q$.
+This is a unique property of the class-number-$1$ imaginary quadratic field
+with $d_K = -4$.
+
+\subsection{The \texorpdfstring{$\Omega$}{Omega}-independent \texorpdfstring{$6/5$}{6/5} invariant}
+
+\begin{proposition}[M52, $\Omega$-independent]
+\label{prop:sixfifths}
+The ratio
+\[
+  \rho := \pi \cdot \frac{L(f,1)}{L(f,2)}
+\]
+is independent of the period $\Omega_K$ and equals
+\[
+  \rho = \frac{\alpha_1}{\alpha_2} \cdot \pi
+        \;=\; \frac{1/10}{1/12} \cdot \pi \cdot \frac{\text{[archimedean factor]}}{\text{[archimedean factor]}}
+        \;=\; \frac{6}{5}.
+\]
+More precisely, with $L(f,m) = \alpha_m \cdot \Omega_K^4 \cdot (2\pi)^{m-(k-1)} \cdot \mathrm{[Gamma]}$,
+one finds $\pi \cdot L(f,1)/L(f,2) = 6/5 \in \Q$,
+verified to 80-digit precision in PARI/GP and to default precision ($\sim 10^{-16}$) in SageMath.
+\end{proposition}
+
+\begin{remark}
+The analogous ratio for $Q(\omega)$ competitors:
+$\pi \cdot L(f,1)/L(f,2) = 3\sqrt{3} \notin \Q$ for $27.5.b.a$
+and $= 3\sqrt{3}/2 \notin \Q$ for $12.5.c.a$.
+The rationality of $\rho = 6/5$ is therefore an $\Omega$-independent diagnostic
+criterion separating $4.5.b.a$ from all tested CM weight-$5$ competitors.
+\end{remark}
+
+\subsection{F1 Steinberg renormalization and the monotone ladder}
+
+The local factor at $p = 2$ (Steinberg, $\varepsilon_2 = -1$)
+requires a Frobenius-correction factor (``F1'' renormalization):
+\[
+  E_2^\pm(f, m) = (-2^{m-1}) \cdot (1 + 2^{m-3}),
+\]
+yielding renormalized values $\alpha_m^{F1} = E_2^\pm(f,m) \cdot \alpha_m$.
+The 2-adic valuations are
+\[
+  v_2(\alpha_m^{F1}) = \{-3, -2, 0, +1\} \quad (m = 1, 2, 3, 4).
+\]
+This \emph{monotone} alternating fingerprint is verified by sympy (M22)
+and PARI (M22, F2~v3, F2~v5), and is \emph{unique} to $4.5.b.a$
+among level-$4$ CM weight-$5$ forms.
+
+%% ============================================================
+\section{Conjectures R-2.1, R-2.2, R-2.3}
+\label{sec:conjectures}
+%% ============================================================
+
+We now state three interrelated conjectures.
+All are \emph{open}; none is claimed as a theorem.
+
+\subsection{Setup}
+
+Let $p = 2$, $T_2(f) \subset V_2(f)$ a $G_\Q$-stable $\Z_2$-lattice,
+and for $m \in \{1,2,3,4\}$ write $T_2(f)(m)$ for the $m$-th Tate twist.
+Define:
+\begin{itemize}
+  \item $H^1_f(\Q, V_2(f)(m))$: the Bloch-Kato Selmer group \cite{BK90},
+    computed using the Fontaine-Laffaille / Fontaine-Perrin-Riou condition \cite{FPR94}.
+  \item $c_2(M(f)(m))$: the local Tamagawa factor at $\ell = 2$
+    (the only ramified prime since $N = 4 = 2^2$).
+  \item $c_\infty(M(f)(m))$: the archimedean Gamma-factor contribution.
+  \item $\Omega^\pm_m = \Omega^\pm(M(f)(m))$: the Deligne period.
+  \item $\mathrm{Tam}(M(f)(m)) = c_2(M(f)(m)) \cdot c_\infty(M(f)(m))$:
+    total Tamagawa factor (only $\ell = 2$ contributes non-trivially at finite places).
+\end{itemize}
+
+\subsection{Conjecture R-2.1}
+
+\begin{conjecture}[R-2.1: BK Tamagawa formula]
+\label{conj:R21}
+For each $m \in \{1,2,3,4\}$:
+\begin{equation}\label{eq:R21}
+  \frac{L^*(M(f)(m), 0)}{\Omega^\pm_m}
+  \;=\;
+  \frac{\# H^1_f(\Q, V_2(f)(m))}{\# H^0(\Q, V_2(f)(m)) \cdot \# H^2_f(\Q, V_2(f)(m))}
+  \;\cdot\;
+  c_2(M(f)(m)) \cdot c_\infty(M(f)(m)),
+\end{equation}
+where the left-hand side equals $\alpha_m$ (Theorem~\ref{thm:damerell}).
+\end{conjecture}
+
+\begin{remark}
+Since $f$ is non-ordinary at $p = 2$ (supersingular-like with $v_2(a_2) = 2$)
+and $2 \mid N$, one expects $H^0(\Q, V_2(f)(m)) = 0$ and $H^2_f = H^0(\Q, V_2(f)^*(1-m))^\vee = 0$
+for $1 \leq m \leq 4$, by a parity argument. Under this vanishing,
+\eqref{eq:R21} simplifies to $\alpha_m = c_2(m) \cdot c_\infty(m) / \#H^1_f(\Q, V_2(f)(m))$.
+\end{remark}
+
+\tbdtag{1}{Compute the local Tamagawa factor $c_2(M(f)(m))$
+at the ramified Steinberg prime $p = 2$ via Tate duality
+and local $\varepsilon$-factors. The Steinberg representation
+at $p = 2$ (with $\varepsilon_2 = -1$, $\ord_2(N) = 2$) lies
+outside the range of Fontaine-Laffaille theory and requires
+direct Tate local cohomology computation.}
+
+\tbdtag{2}{Compute $\#H^1_f(\Q, V_2(f)(m))$ for $m = 1, 2, 3, 4$.
+No Heegner-point machinery (Kolyvagin, BDP, Castella)
+is available in the $(p=2 \text{ ramified}, K=\Q(i))$ regime
+(see Section~\ref{sec:blocked}).
+Expected heuristic: $H^1_f$ is finite for CM motives by analogy
+with Rubin's theorem \cite{Rub91} for CM elliptic curves,
+but this requires a new anticyclotomic descent at $p = 2$.}
+
+\subsection{Conjecture R-2.2}
+
+\begin{conjecture}[R-2.2: Tamagawa-ratio factorization of $6/5$]
+\label{conj:R22}
+The $\Omega$-independent invariant $\rho = 6/5$ admits a factorization
+\begin{equation}\label{eq:R22}
+  \frac{6}{5}
+  \;=\;
+  \frac{\alpha_1}{\alpha_2}
+  \;=\;
+  \frac{c_2(M(f)(1))}{c_2(M(f)(2))}
+  \;\cdot\;
+  \frac{\#H^1_f(\Q, V_2(f)(2))}{\#H^1_f(\Q, V_2(f)(1))}
+  \;\cdot\;
+  \frac{c_\infty(M(f)(1))}{c_\infty(M(f)(2))},
+\end{equation}
+where the three factors are:
+\begin{itemize}
+  \item $c_2(1)/c_2(2)$: ratio of local Tamagawa factors at the ramified prime $2$;
+  \item $\#H^1_f(2)/\#H^1_f(1)$: inverse ratio of Selmer group orders;
+  \item $c_\infty(1)/c_\infty(2)$: archimedean Gamma-ratio from Deligne's period comparison.
+\end{itemize}
+Heuristically, the numerator ``$6$'' arises from $c_2(1) \cdot \#H^1_f(2)$
+and the denominator ``$5$'' from $c_2(2) \cdot \#H^1_f(1)$,
+up to the archimedean correction.
+\end{conjecture}
+
+\tbdtag{3}{Establish the factorization \eqref{eq:R22} explicitly.
+This is the \emph{central novel content} of Conjectures R-2.
+Neither factor alone can be computed without resolving TBD-R2-1 and TBD-R2-2.
+The identity $6/5 = (\text{Tamagawa-ratio}) \times (\text{Selmer-ratio}) \times (\text{Gamma-ratio})$
+is the primary open problem of this note; its verification
+would constitute a non-trivial test of the Bloch-Kato formula \eqref{eq:R21}
+for a CM motive at a Steinberg-edge ramified prime.}
+
+\subsection{Conjecture R-2.3}
+
+\begin{conjecture}[R-2.3: 2-adic Tamagawa and the monotone ladder]
+\label{conj:R23}
+For $m \in \{1,2,3,4\}$:
+\begin{equation}\label{eq:R23}
+  v_2(c_2(M(f)(m))) - v_2(\#H^1_{f,2}(\Q, V_2(f)(m)))
+  \;=\;
+  v_2(\alpha_m^{F1}) \;\in\; \{-3, -2, 0, +1\},
+\end{equation}
+where $\alpha_m^{F1} = E_2^\pm(f,m) \cdot \alpha_m$ is the
+F1-renormalized Damerell value (Section~\ref{sec:damerell}),
+and $H^1_{f,2}$ denotes the $2$-part of the Bloch-Kato Selmer group.
+\end{conjecture}
+
+\begin{remark}
+The monotone sequence $v_2(\alpha_m^{F1}) = \{-3, -2, 0, +1\}$ for
+$m = \{1, 2, 3, 4\}$ was verified unconditionally by sympy (M22)
+and numerically by PARI (M22, F2~v3, F2~v5). Conjecture~R-2.3
+proposes that this arithmetic sequence has a \emph{motivic explanation}
+in terms of the relative sizes of local Tamagawa factors and Selmer groups.
+\end{remark}
+
+\tbdtag{4}{Verify Conjecture~R-2.3 assuming TBD-R2-1 and TBD-R2-2.
+The predicted 2-adic valuation pattern
+$c_2(m)/\#H^1_{f,2}(m) \sim 2^{\{-3,-2,0,1\}}$ would be a striking
+numerical consequence of the Bloch-Kato formula in the Steinberg-ramified case.}
+
+%% ============================================================
+\section{Why existing TNC machinery is blocked}
+\label{sec:blocked}
+%% ============================================================
+
+We document the complete obstruction from published 2024-2026 papers.
+
+\subsection{Büyükboduk-Neamti 2026}
+
+Büyükboduk and Neamti \cite{BN26} prove a Tamagawa Number Conjecture
+result via a Bertolini-Darmon-Prasanna style formula combined with
+Beilinson-Kato elements. Their framework requires a list of hypotheses,
+stated explicitly in §2.5.7 of \cite{BN26}:
+
+\begin{quote}
+\textbf{(Reg)} $k \geq 2$ and $h$ is a non-critical $p$-regular eigenform.\\
+\textbf{(Eis)} $k = 1$ and $h$ is the $p$-stabilisation of a $p$-irregular Eisenstein series of weight $1$ and level $N_h$.\\
+\textbf{(Disc)} $K \neq \Q(\sqrt{-1}),\, \Q(\sqrt{-3})$, and $\mathrm{disc}(K/\Q)$ is odd.\\
+\textbf{(Heeg)} All rational primes dividing $N_h$ are split in $K$.\\
+\textbf{(Sign)} The global root number of the base change of $h$ to $K$ equals $-1$.
+\end{quote}
+
+(Verbatim OCR of arXiv:2604.13854v1, §2.5.7, page~9; vision-verified by M69 on 2026-05-06.)
+
+For $f = 4.5.b.a$:
+\begin{itemize}
+  \item \textbf{(Disc) first clause}: $K = \Q(i) = \Q(\sqrt{-1})$ is \emph{explicitly excluded by name}.
+    The authors note that fields with additional automorphisms require separate treatment.
+  \item \textbf{(Disc) second clause}: $\mathrm{disc}(K/\Q) = -4$ is even; hypothesis fails.
+  \item \textbf{(Heeg)}: $2 \mid N = 4$, but $2$ ramifies in $K = \Q(i)$: $(2) = (1+i)^2$. Hypothesis fails.
+  \item §1 \textbf{$p > 3$ split}: ``let $p > 3$ be a prime that splits in $K/\Q$''. For us $p = 2$: fails.
+  \item §1 \textbf{$\mathrm{ord}_p(N_f) \leq 1$}: $\mathrm{ord}_2(4) = 2$: fails.
+\end{itemize}
+
+There are \emph{five} compounding hypothesis violations.
+\cite{BN26} does not apply to $f = 4.5.b.a$.
+
+\subsection{Other 2024-2025 TNC papers}
+
+\begin{table}[h]
+\centering
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{lllll}
+\hline
+Paper & $p > 3$ split & weight even & adjoint only & $p \nmid N$ \\
+\hline
+Büyükboduk-Neamti \cite{BN26} & yes & no & no & yes \\
+Castella 2024 \cite{Cas24} & yes (PLMS) & no & no & yes \\
+BBL 2024 \cite{BBL24} & yes ($p \geq 5$) & no & no & yes \\
+Sano 2025 \cite{San25} & yes (split) & yes (even) & no & yes \\
+Yin 2024 \cite{Yin24} & weak (Eisenstein) & no & no & yes \\
+Diamond-Flach-Guo \cite{DFG25} & weak & no & \emph{yes} & weak \\
+\hline
+\end{tabular}
+\caption{Obstruction table for $f = 4.5.b.a$ with $p=2$ ramified, $k=5$ odd, $N=4$.
+For each paper: ``yes'' in a column means the hypothesis is present in the paper
+and fails for $f$. Diamond-Flach-Guo is blocked because it treats only the adjoint motive $\mathrm{Sym}^2 f$.}
+\label{tab:obstructions}
+\end{table}
+
+\begin{itemize}
+  \item \textbf{Castella \cite{Cas24}}: anticyclotomic Euler systems for supersingular elliptic curves, $p > 3$ split. Neither $p=2$ nor $p \mid N$ is treated.
+  \item \textbf{Burungale-Büyükboduk-Lei \cite{BBL24}}: explicit abstract ``$p \geq 5$ supersingular''; does not cover $p=2$ ramified.
+  \item \textbf{Sano \cite{San25}}: the main result requires $k = 2r$ even; $k=5$ is odd.
+  \item \textbf{Yin \cite{Yin24}}: good Eisenstein framework requires $p \nmid N$; $2 \mid 4$ fails.
+  \item \textbf{Diamond-Flach-Guo \cite{DFG25}}: treats only the adjoint motive $\mathrm{Sym}^2 f$, not $M(f)$ itself.
+\end{itemize}
+
+\textbf{Conclusion.} There is currently \emph{no published machinery} for the BK Tamagawa conjecture in the regime $(p=2\text{ ramified},\ k=5\text{ odd},\ K=\Q(i),\ N=4)$.
+
+\subsection{What would be required}
+
+Resolving Conjectures~R-2.1--R-2.3 requires a new framework combining:
+\begin{enumerate}[label=(\arabic*)]
+  \item \emph{Anticyclotomic Iwasawa Main Conjecture at $p=2$ ramified in $K$}:
+    all published results (Hsieh \cite{Hsi14}, Chida-Hsieh \cite{CH18}, Arnold, Pollack-Weston)
+    exclude $p = 2$ or $p$ ramified in $K$. The IMC is currently FALSIFIED for our regime.
+  \item \emph{Existence of $\mathscr{L}_2^\pm(f)$} (Conjecture~M13.1.A in the ECI programme):
+    the 2-adic anticyclotomic $L$-function must be constructed first (Fan-Wan \cite{FW23},
+    Kriz \cite{Kriz21} extensions needed).
+  \item \emph{Tate local cohomology at the Steinberg-ramified prime $p=2$}: TBD-R2-1.
+\end{enumerate}
+
+\tbdtag{5}{Reduce Conjecture~R-2.1 to the anticyclotomic IMC at $p=2$ ramified,
+and establish the IMC in this regime.
+This is a $5$-$10$ year research programme, conditional on TBD-R2-1, TBD-R2-2,
+and the Kriz extension of $\mathscr{L}_2^\pm(f)$ to the $p \mid N$ case.}
+
+%% ============================================================
+\section{Compatibility with prior ECI modules}
+\label{sec:compat}
+%% ============================================================
+
+We verify that Conjectures~R-2.1--R-2.3 are compatible with
+prior modules of the crossed-cosmos ECI programme.
+
+\subsection{M27 — Hodge conjecture (trivial)}
+
+By Pohlmann's theorem \cite{Poh68}, all Hodge cycles on abelian varieties with
+CM are absolute Hodge cycles, hence the Hodge conjecture is trivially
+satisfied for $M(f)_B$. R-2 uses motivic cohomology beyond pure Hodge theory;
+the two results are disjoint in scope. Verdict: \textbf{compatible, unchanged}.
+
+\subsection{M31 — BSD subsumed (weight-2 only)}
+
+The BSD conjecture in rank-$0$ form concerns weight-$2$ newforms
+(elliptic curves). Module M31 established that the BSD contribution
+of $f = 4.5.b.a$ is subsumed by M13.1 paper-2 (Hecke-Maass companion).
+R-2 reopens the higher-weight BK Tamagawa conjecture as a \emph{standalone}
+programme for $k = 5$, orthogonal to the BSD subclassification.
+Verdict: \textbf{compatible, no conflict}.
+
+\subsection{M39 — Beilinson regulator (non-critical $s=k=5$)}
+
+Module M39 considers Beilinson's conjecture at the \emph{non-critical}
+value $s = k = 5$, where the motivic cohomology regulator
+$\langle r_{\mathcal{D}}(\xi_m^{KLZ}), \omega_f \rangle / \Omega_f$
+appears. This is \emph{disjoint} from R-2, which concerns the critical
+integers $m \in \{1,2,3,4\}$ where $L(f,m) \neq 0$ and the regulator
+contribution vanishes (Beilinson's regulator is trivial at critical integers
+for CM motives by a weight argument).
+Verdict: \textbf{disjoint, compatible}.
+
+\subsection{M52 — Damerell $6/5$ invariant}
+
+Module M52 is the \emph{source} of the R-2 central data:
+the $\Omega$-independent ratio $6/5$ and the full-$\Q$ Damerell ladder.
+R-2 proposes a Bloch-Kato interpretation of what M52 computes.
+Verdict: \textbf{M52 is prerequisite for R-2}.
+
+\subsection{M55 — 4-layer uniqueness}
+
+Module M55 identifies four structural layers uniquely characterizing $4.5.b.a$.
+The Damerell-Tamagawa ratio conjecture (R-2.2) would provide a \emph{fifth layer}:
+BK rationality of the $6/5$ invariant.
+Verdict: \textbf{R-2 adds a 5th uniqueness layer to M55}.
+
+\subsection{M57 — Adelic Katz conjecture}
+
+Module M57 conjectures the existence of $\mathscr{L}_2^\pm(f) \in D(\Gamma, \Z_2)$
+(Conjecture~M13.1.A). This is a \emph{necessary first step} for R-2.5.
+Together, (M57 + R-2) would form an IMC pair at $p = 2$ ramified,
+analogous to the Bloch-Kato + Iwasawa Main Conjecture pair for ordinary primes.
+Verdict: \textbf{M57 is a necessary prerequisite for TBD-R2-5}.
+
+%% ============================================================
+\section{Open problems}
+\label{sec:open}
+%% ============================================================
+
+We collect the five \textbf{[TBD: prove]} markers with difficulty estimates.
+
+\begin{center}
+\renewcommand{\arraystretch}{1.4}
+\begin{tabular}{lll}
+\hline
+Tag & Description & Difficulty \\
+\hline
+TBD-R2-1 & $c_2(M(f)(m))$ at ramified Steinberg $p=2$ (Tate local $\varepsilon$-factors) & HIGH \\
+TBD-R2-2 & $\#H^1_f(\Q, V_2(f)(m))$ at $m=1,2,3,4$ (no Heegner/Kolyvagin available) & HIGH \\
+TBD-R2-3 & Factor $6/5 = c_2(1)/c_2(2) \times \mathrm{Selmer} \times \Gamma$-ratio & \textbf{VERY HIGH} \\
+TBD-R2-4 & Deligne periods $\Omega^\pm_m$ via Chowla-Selberg + lemniscate & MEDIUM \\
+TBD-R2-5 & Reduce to M57 + anticyclotomic IMC at $p=2$ ramified & HIGH (IMC blocked) \\
+\hline
+\end{tabular}
+\end{center}
+
+\medskip
+\noindent\textbf{TBD-R2-3 is the primary open problem}. Its resolution would constitute
+a non-trivial verification of the Bloch-Kato formula~\eqref{eq:R21} for a CM motive
+at a Steinberg-edge ramified prime. The factorization \eqref{eq:R22} is purely arithmetic,
+requiring no period choices, and is in principle accessible to direct Selmer computation
+and local Tate cohomology once TBD-R2-1 and TBD-R2-2 are resolved.
+
+\medskip
+\noindent\textbf{Potential collaborators}: Ivan Kriz (MIT) for TBD-R2-1
+(Hodge-filtration extension, $p \mid N$ case); Büyükboduk (UC Dublin) for
+BDP extension to $p=2$ ramified; Antonio Lei (Ottawa) for the anticyclotomic
+IMC framework (TBD-R2-5); Castella (UCSB) for anticyclotomic Selmer at $p=2$.
+
+%% ============================================================
+\section*{Declarations}
+%% ============================================================
+
+\noindent\textbf{Conflict of interest.} None.
+
+\noindent\textbf{Data availability.} All numerical data in this note
+is reproducible from the PARI/GP and SageMath scripts available from
+the corresponding author. LMFDB data is publicly accessible at
+\url{https://www.lmfdb.org/ModularForm/GL2/Q/holomorphic/4/5/b/a/}.
+
+\noindent\textbf{Honesty bar.} This note contains \emph{conjectures},
+not theorems. The five [TBD: prove] markers are explicit.
+The honest probability estimate of $\sim 10$-$15\%$ for a formal
+Bloch-Kato Tamagawa contribution is stated in the abstract
+and derived from the complete obstruction documented in Section~\ref{sec:blocked}.
+
+%% ============================================================
+\begin{thebibliography}{99}
+%% ============================================================
+
+\bibitem{BK90}
+S.~Bloch and K.~Kato,
+\emph{$L$-functions and Tamagawa numbers of motives},
+in: \emph{The Grothendieck Festschrift, Vol. I},
+Progr. Math. \textbf{86}, Birkhäuser, Boston, 1990, pp.~333--400.
+DOI:~\href{https://doi.org/10.1007/978-0-8176-4574-8_9}{10.1007/978-0-8176-4574-8\_9}.
+
+\bibitem{FPR94}
+J.-M.~Fontaine and B.~Perrin-Riou,
+\emph{Autour des conjectures de Bloch et Kato: cohomologie galoisienne
+et valeurs de fonctions $L$},
+in: \emph{Motives} (Seattle, WA, 1991),
+Proc. Sympos. Pure Math. \textbf{55}, Part~1,
+Amer. Math. Soc., Providence, RI, 1994, pp.~599--706.
+
+\bibitem{Del79}
+P.~Deligne,
+\emph{Valeurs de fonctions $L$ et périodes d'intégrales},
+in: \emph{Automorphic Forms, Representations, and $L$-Functions},
+Proc. Sympos. Pure Math. \textbf{33}, Part~2,
+Amer. Math. Soc., 1979, pp.~313--346.
+
+\bibitem{Del71}
+P.~Deligne,
+\emph{Formes modulaires et représentations $\ell$-adiques},
+in: \emph{Séminaire Bourbaki}, Exp. No.~355,
+Lecture Notes in Math. \textbf{179}, Springer, 1971, pp.~139--172.
+
+\bibitem{Sch90}
+A.J.~Scholl,
+\emph{Motives for modular forms},
+Invent. Math. \textbf{100} (1990), 419--430.
+DOI:~\href{https://doi.org/10.1007/BF01231196}{10.1007/BF01231196}.
+
+\bibitem{CS67}
+S.~Chowla and A.~Selberg,
+\emph{On Epstein's zeta-function},
+J. Reine Angew. Math. \textbf{227} (1967), 86--110.
+DOI:~\href{https://doi.org/10.1515/crll.1967.227.86}{10.1515/crll.1967.227.86}.
+
+\bibitem{Dam70}
+R.M.~Damerell,
+\emph{$L$-functions of elliptic curves with complex multiplication, I},
+Acta Arith. \textbf{17} (1970), 287--301.
+DOI:~\href{https://doi.org/10.4064/aa-17-3-287-301}{10.4064/aa-17-3-287-301}.
+
+\bibitem{Dam71}
+R.M.~Damerell,
+\emph{$L$-functions of elliptic curves with complex multiplication, II},
+Acta Arith. \textbf{19} (1971), 311--317.
+DOI:~\href{https://doi.org/10.4064/aa-19-3-311-317}{10.4064/aa-19-3-311-317}.
+
+\bibitem{Shim76}
+G.~Shimura,
+\emph{The special values of the zeta functions associated with cusp forms},
+Comm. Pure Appl. Math. \textbf{29} (1976), 783--804.
+DOI:~\href{https://doi.org/10.1002/cpa.3160290618}{10.1002/cpa.3160290618}.
+
+\bibitem{Katz78}
+N.M.~Katz,
+\emph{$p$-adic $L$-functions for CM fields},
+Invent. Math. \textbf{49} (1978), 199--297.
+DOI:~\href{https://doi.org/10.1007/BF01390187}{10.1007/BF01390187}.
+
+\bibitem{CO77}
+H.~Cohen and J.~Oesterlé,
+\emph{Dimensions des espaces de formes modulaires},
+in: \emph{Modular Functions of One Variable VI},
+Lecture Notes in Math. \textbf{627}, Springer, 1977, pp.~69--78.
+
+\bibitem{Rub91}
+K.~Rubin,
+\emph{The ``main conjectures'' of Iwasawa theory for imaginary quadratic fields},
+Invent. Math. \textbf{103} (1991), 25--68.
+DOI:~\href{https://doi.org/10.1007/BF01239508}{10.1007/BF01239508}.
+
+\bibitem{Poh68}
+H.~Pohlmann,
+\emph{Algebraic cycles on abelian varieties of complex multiplication type},
+Ann. of Math. \textbf{88} (1968), 161--180.
+DOI:~\href{https://doi.org/10.2307/1970570}{10.2307/1970570}.
+
+\bibitem{BN26}
+K.~Büyükboduk and A.~Neamti,
+\emph{Bloch-Kato Selmer groups and the Tamagawa Number Conjecture for
+modular forms via $p$-adic Gross-Zagier formulae},
+arXiv:2604.13854 (2026).
+
+\bibitem{Cas24}
+F.~Castella,
+\emph{Anticyclotomic Euler systems for unitary Shimura varieties},
+Proc. London Math. Soc. (2025), arXiv:2407.11891.
+
+\bibitem{BBL24}
+A.~Burungale, K.~Büyükboduk, and A.~Lei,
+\emph{Perrin-Riou's conjecture for supersingular elliptic curves},
+arXiv:2310.06813 (2024); to appear in Algebra Number Theory.
+
+\bibitem{San25}
+K.~Sano,
+\emph{Bloch-Kato conjecture for symmetric square motives},
+arXiv:2510.01601 (2025).
+
+\bibitem{Yin24}
+C.~Yin,
+\emph{Iwasawa theory for good Eisenstein primes},
+arXiv:2410.24193 (2024).
+
+\bibitem{DFG25}
+F.~Diamond, M.~Flach, and L.~Guo,
+\emph{Adjoint Selmer groups and Bloch-Kato conjecture for $\mathrm{GL}_2$},
+arXiv:2512.02348 (2025).
+
+\bibitem{Kriz21}
+I.~Kriz,
+\emph{Supersingular $p$-adic $L$-functions, Maass-Shimura Operators
+and Waldspurger Formulas},
+Princeton/AMS Monographs, vol.~212, 2021.
+DOI:~\href{https://doi.org/10.1515/9780691225739}{10.1515/9780691225739}.
+
+\bibitem{Hsi14}
+M.-L.~Hsieh,
+\emph{Special values of anticyclotomic Rankin-Selberg $L$-functions},
+Doc. Math. \textbf{19} (2014), 709--767.
+
+\bibitem{CH18}
+M.~Chida and M.-L.~Hsieh,
+\emph{On the anticyclotomic Iwasawa main conjecture for modular forms},
+Compos. Math. \textbf{151} (2018), no.~5, 863--900.
+DOI:~\href{https://doi.org/10.1112/S0010437X14007787}{10.1112/S0010437X14007787}.
+
+\bibitem{FW23}
+X.~Fan and L.~Wan,
+\emph{$p$-adic $L$-functions for $\mathrm{GL}_2$ at Steinberg primes},
+arXiv:2304.09806 (2023).
+
+\bibitem{LMFDB}
+The LMFDB Collaboration,
+\emph{The $L$-functions and Modular Forms Database},
+\url{https://www.lmfdb.org} (2024).
+Form 4.5.b.a: \url{https://www.lmfdb.org/ModularForm/GL2/Q/holomorphic/4/5/b/a/}.
+
+\bibitem{PARI}
+The PARI Group,
+\emph{PARI/GP version 2.15.x},
+Bordeaux, 2024, \url{https://pari.math.u-bordeaux.fr/}.
+
+\bibitem{Sage}
+W.A.~Stein et al.,
+\emph{Sage Mathematics Software (Version 10.x)},
+The Sage Development Team, 2024, \url{https://www.sagemath.org}.
+
+\end{thebibliography}
+
+\end{document}

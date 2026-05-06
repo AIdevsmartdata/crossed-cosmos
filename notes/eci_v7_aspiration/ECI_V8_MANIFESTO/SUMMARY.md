@@ -184,6 +184,19 @@ The embedding $q_i : a+bi \mapsto \begin{pmatrix} a & -b \\ b & a \end{pmatrix}$
 
 This is the deepest structural finding of Phase 7 wave 6.
 
+## §5.9 5-fold ϖ kinematic coincidence (M145, post-BSD-CM Millennium check)
+
+**Observation M145.1**: The lemniscate constant $\varpi = \Gamma(1/4)^2/(2\sqrt{2\pi})$ appears simultaneously as:
+1. **Real period** $\Omega_{\text{real}} = 2\varpi$ of $E: y^2=x^3-x$ (LMFDB 32.a3 verified live)
+2. **Yager-Katz period** $\Omega_\infty = \varpi$ of $(E, dx/y)$ (Katz 1977 §3.9 verbatim)
+3. **Weight-5 CM L-value normalization** $\alpha_k$ for $f = 4.5.b.a$ (M142 $\alpha_2 = 1/12$ RIGOROUS)
+4. **N=1 SUGRA modulus mass** $m_\tau^2 \propto \varpi^4$ at $\tau=i$ (M134 RIGOROUS)
+5. **BSD-strong leading term** $L(E,1) = \varpi/4 = \Omega_{\text{real}}/8$ (LMFDB)
+
+**5-fold ϖ-coincidence** : same period across number theory, modular geometry, N=1 SUGRA. Lakatos-style structural support for ECI v8.1 thesis that $\tau = i$ is dynamically-selected modulus VEV across multiple sectors.
+
+**Important honesty**: This is NOT a new BSD theorem. M145 verified BSD-strong for $E: y^2=x^3-x$ is rigorous via Coates-Wiles 1977 (rank>0 ⟹ L=0) + Rubin 1991 (Sha finiteness via Kolyvagin Euler systems). ECI v8.1 doesn't add BSD information ; it adds a **structural-connection observation** at the period level.
+
 ## §5.6 Two-modulus realisation post-M140 (quark sector)
 
 **M140 Theorem M140.1** (mpmath dps=40) : V_F(i+ε) requires ε < 3.2×10⁻⁸ for V_F < 10⁻⁵ M_Pl⁴ (loose inflation cap).

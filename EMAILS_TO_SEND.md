@@ -2,7 +2,7 @@
 
 **Auteur** : Kévin Remondière (kevin.remondiere@gmail.com, github AIdevsmartdata)
 **Date** : 2026-05-06 (Phase 7 wave 2)
-**Total** : 11 emails identifiés, 3 déjà en draft Gmail prêts à envoyer
+**Total** : 12 emails identifiés, 3 déjà en draft Gmail prêts à envoyer + 3 nouveaux drafts M107
 
 ---
 
@@ -18,9 +18,10 @@
 | 6 | Daniel Kriz (MIT) | [TBD: verify] | math.NT collab | **GATED W5** (R-2 ready) | NE PAS ENVOYER avant W5 |
 | 7 | Tiago Fonseca (CNRS/IMJ-PRG) | [TBD: verify webusers.imj-prg.fr/~tiago.fonseca/] | math.NT specialist | **READY** (M84 D4-#7) | À créer après W2 |
 | 8 | Francis Brown (Oxford/IHES) | [TBD: verify] | math.NT senior | **READY** (Brown-Fonseca senior) | Court email après #7 |
-| 9 | Antonio Lei (uOttawa) | [TBD: verify alei@uottawa.ca] | math.NT IMC | **READY** (M86 D4-#10) | À créer |
+| 9 | Antonio Lei (uOttawa) | antonio.lei@uottawa.ca [TBD: verify; was alei@uottawa.ca in M89] | math.NT IMC | **DRAFT READY** (M107) | ✅ email_lei.md |
 | 10 | Francesc Castella (UCSB) | [TBD: verify] | math.NT IMC alt. | **READY** (alternative #9) | À créer si #9 non-réponse |
-| 11 | Aurélien Sagnier (JHU) | [TBD: verify asagnie1@jhu.edu] | NCG arithmetic site | **READY** (M91 F-1) | À créer |
+| 11 | Aurélien Sagnier (JHU) | asagnie1@jhu.edu [TBD: verify] | NCG arithmetic site | **DRAFT READY** (M107) | ✅ email_sagnier.md |
+| 12 | Kâzım Büyükboduk (UCD Dublin) | kazim.buyukboduk@ucd.ie [TBD: verify] | math.NT IMC specialist | **DRAFT READY** (M107) | ✅ email_buyukboduk.md |
 
 ---
 
@@ -63,12 +64,23 @@ Contient drafts complets pour Booker (sent ✓), King (sent ✓), Sotiriou (sent
 
 **Mise à jour à intégrer post-M95** : pour Fonseca, ajouter le 4×4 lattice complet (R[m,n] for m,n∈{1,2,3,4} sur 4 forms) + biextension B_f = Sym⁴ H¹(E_i) ⊗ ℚ(χ_{-4}) explicit.
 
-### M91 Sagnier (NEW M91 finding) — pas encore drafté
+### M107 Sagnier + Buyukboduk + Lei — DRAFTS READY (2026-05-06)
 
-Sagnier identifié à Johns Hopkins (asagnie1@jhu.edu, J.J. Sylvester Asst. Prof.). Email à drafter pour :
-- Question : Theorem 7.2 covers ψ ∞-type (4, 0) ou seulement finite-order angular ?
-- Context : 4.5.b.a (ECI anchor), ψ_min ∞-type (4, 0), bloque RH × CCM
-- Alternative : Caterina Consani (kc@math.jhu.edu, CCM coauthor 2511.22755)
+Trois emails draftés dans `notes/eci_v7_aspiration/M107_OUTREACH_SPECIALISTS/`:
+
+- `email_sagnier.md` — Aurélien Sagnier, JHU, asagnie1@jhu.edu [TBD: verify]
+  - Question : Theorem 7.2 covers ψ ∞-type (4, 0) ou seulement finite-order angular chars ?
+  - Obstruction representation-theoretic (L² vs non-compact |z|^{k-1} factor)
+
+- `email_buyukboduk.md` — Kâzım Büyükboduk, UCD Dublin, kazim.buyukboduk@ucd.ie [TBD: verify]
+  - Anticyclotomic IMC à p=2 ramified dans Q(i) : aucun framework published ne couvre ce cas
+  - Ref correcte : arXiv:1602.07508 (VERIFIED). NOTE: 1709.02912 du brief est une FABRICATION (papier cond-mat WSe2)
+
+- `email_lei.md` — Antonio Lei, uOttawa, antonio.lei@uottawa.ca [TBD: verify; M89 avait alei@uottawa.ca]
+  - Même question que Buyukboduk + cross-ref LVW arXiv:2501.03673 Assumption 1.1 (5/7 hyps FAIL)
+  - Remplace et améliore M89 email_03_lei.md
+
+Alternative si Sagnier ne répond pas : Caterina Consani (kc@math.jhu.edu, CCM coauthor 2511.22755)
 
 ---
 
@@ -84,7 +96,7 @@ Sagnier identifié à Johns Hopkins (asagnie1@jhu.edu, J.J. Sylvester Asst. Prof
 
 **W5 (sem +4)** : Kriz collaboration ask (R-2 finalisé).
 
-**W6+ (mois +1)** : Sagnier + Fonseca + Brown + Lei + Castella selon réponses obtenues.
+**W6+ (mois +1)** : Sagnier + Fonseca + Brown + Lei + Buyukboduk + Castella selon réponses obtenues. Drafts M107 prêts pour Sagnier, Lei, Buyukboduk — vérifier adresses avant envoi.
 
 ---
 
@@ -117,6 +129,8 @@ Avant envoi, vérifie :
 
 - 3/11 emails en draft Gmail prêts à envoyer (Booker, King, Sotiriou)
 - 8/11 documents existent en .md (M79 + M89), à transformer en drafts Gmail au moment opportun
-- 0/11 emails effectivement envoyés (tous gated par review Kevin + send manuel)
+- 0/12 emails effectivement envoyés (tous gated par review Kevin + send manuel)
+- 3 nouveaux drafts M107 ready : email_sagnier.md, email_buyukboduk.md, email_lei.md
 - Zenodo published v6.0.53.61 = DOI 10.5281/zenodo.20056647
 - Tag GitHub : v6.0.53.61
+- M107 ALERT: arXiv:1709.02912 (dans le brief de mission) est une FABRICATION — c'est un papier cond-mat WSe2, pas Buyukboduk-Lei. Ref correcte : 1602.07508 (VERIFIED).

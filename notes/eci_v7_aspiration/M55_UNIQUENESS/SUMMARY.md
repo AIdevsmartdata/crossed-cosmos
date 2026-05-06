@@ -50,6 +50,10 @@ F2 v5 empirical confirmation:
 
 ### Layer 4 — Full-ℚ ladder rationality (M52 F2 v6, Ω-independent)
 
+[See also M74 appendix below: weight-2 vs weight-5 conductor pattern over Q(i).]
+
+
+
 Among all CM weight-5 dim-1 newforms tested, the **Ω-independent ratio π · L(f,1)/L(f,2) ∈ ℚ ONLY for 4.5.b.a** (= 6/5):
 
 | Form | π·L(f,1)/L(f,2) |
@@ -99,6 +103,17 @@ The two HIGH TBDs are the central open content. Resolution = proof of M13.1(c) f
 ## RAG (T5)
 
 Closest paper: **arXiv:2308.15051** W. He, *Math. Ann.* 392 (2025), 399-468, "Stability of p-adic valuations of Hecke L-values" — p-stability in anticyclotomic twist families. Related but does NOT cover conductor-minimality uniqueness or {-3,-2,0,+1}. **No existing theorem matches M55 claim.** Sketch is novel.
+
+## M74 Appendix — Weight-2 vs weight-5 conductor pattern over Q(i) (added 2026-05-06)
+
+> *The minimal Hecke Grössencharacter inducing 4.5.b.a (weight 5) has conductor (1+i)² over Q(i), while the one inducing 32.2.a.a (weight 2) has conductor (1+i)³. The extra power of (1+i) for weight 2 arises because the unit group Z[i]^× = {±1, ±i} acts NON-trivially under ψ for weight 2 (ψ(i)=i, ψ(-1)=-1) but TRIVIALLY for weight 5 (ψ⁴ sends every unit to 1). The smallest conductor where {±1, ±i} are distinguishable mod c is (1+i)³. The corresponding modular forms 4.5.b.a (level 4) and 32.a4 (the Γ_0(N)-optimal curve with j=1728) BOTH have real period equal to the lemniscate constant Ω_∞ = Γ(1/4)²/(2√(2π)), unifying the period structure across weights via Chowla-Selberg.*
+
+**Conductor formula** (provisional, M74 [TBD-M74-2]):
+```
+e_k = 2  if  4 | (k-1)
+e_k = 3  otherwise
+```
+Verified: e_5 = 2 (4.5.b.a) ; e_2 = 3 (32.2.a.a).
 
 ## Discipline
 - 0 fabrications by M55

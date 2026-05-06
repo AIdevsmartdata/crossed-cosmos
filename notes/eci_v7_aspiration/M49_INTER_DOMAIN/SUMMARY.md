@@ -38,11 +38,11 @@ NOT a new bridge.
 
 ## B5 — Cosmo × particles × CM unification (TWO NEW PUBLISHED ANCHORS)
 
-**B5a — Bianchi IX × spectral action × modular forms**:
+**B5a — Bianchi IX × spectral action × modular forms** (REVISED 2026-05-06 post-M53):
 - Fan-Fathizadeh-Marcolli **LMP 2018** (arXiv:1709.08082): Seeley-de Witt heat-kernel coefficients of Dirac-Laplacian on Bianchi IX = **mixed Tate motive periods**
-- arXiv:1511.05321 → **JHEP 01 (2019) 234**: spectral action coefficients = **vector-valued modular forms of weight 2**
-- ECI's f = 4.5.b.a (scalar wt 5 CM Q(i)) lift via Bruinier-Funke / Kohnen-Zagier theta-lift gives the vector-valued companion
-- **Conjectural**: scalar f and Marcolli vector-valued companion are two theta-lifts of the same Q(i) Größencharacter ψ at conductor 4
+- arXiv:1511.05321 (Fan-Fathizadeh-Marcolli; JHEP 01 (2019) 234 UNCONFIRMED via arXiv abstract DOI redirect — flag before paper citation): spectral action coefficients = **vector-valued modular forms of weight 2**, level NOT specified, q-expansion coefficients NOT given
+- True Q(i) CM weight-2 scalar companion = **LMFDB 32.2.a.a** (level 32 = 2⁵, CM disc -4, conductor (1+i)³, η(4z)²η(8z)²) — NOT 4.2.a.a (which doesn't exist; S_2^new(Γ_0(4)) = 0; original M49 brief had this fabrication, M53 caught and corrected)
+- **Conjectural reframed**: scalar f = 4.5.b.a (weight 5, ψ_5 infinity-type z⁴) and the level-2^k weight-2 companion (32.2.a.a with ψ_2 infinity-type z¹) are scalar realizations of TWO DISTINCT characters of the same Q(i) CM tower. Marcolli's vector-valued Φ_Bianchi is conjecturally a vector-valued lift related to one such companion; precise identification requires Marcolli q-expansion data (currently absent — opens M45 paper opportunity to fill this gap)
 
 **B5b — Tavartkiladze 2025 (arXiv:2512.24804)**: minimal Γ_2≃S_3 lepton textures at τ=i predict **inverted neutrino ordering**. ECI's lepton sector should be cross-checked.
 

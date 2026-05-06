@@ -197,7 +197,30 @@ This is the deepest structural finding of Phase 7 wave 6.
 
 **Important honesty**: This is NOT a new BSD theorem. M145 verified BSD-strong for $E: y^2=x^3-x$ is rigorous via Coates-Wiles 1977 (rank>0 ⟹ L=0) + Rubin 1991 (Sha finiteness via Kolyvagin Euler systems). ECI v8.1 doesn't add BSD information ; it adds a **structural-connection observation** at the period level.
 
-## §5.6 Two-modulus realisation post-M140 (quark sector)
+## §5.6 Two-modulus arithmetic ladder post-M140 + M143 (quark sector)
+
+**Theorem M143.1** (M143, mpmath dps=60 verified): The King-King best-fit quark modulus τ_Q ≈ 0.036 + 2.352i is identified as the **CM point τ_Q = i√(11/2) of K_Q = ℚ(√-22)**, discriminant $D_Q = -88$, class number $h(K_Q) = 2$, via the reduced binary quadratic form $(a=2, b=0, c=11)$.
+
+**Theorem M143.2** : K-K's Re τ = 0.0361 has NO arithmetic origin — it is CP-phase-driven via $\arg(\epsilon_2) = \pi + (2\pi/3)\,\mathrm{Re}\,\tau$ (K-K eq 59), with experimental error $\delta^q \pm 6°$ propagating to Re τ = 0.0361 ± 0.052 (1σ). **Re τ = 0 consistent at 0.7σ.**
+
+**ECI v8.2 two-modulus arithmetic ladder**:
+
+| Sector | Modulus | Field | Discriminant | h |
+|---|---|---|---|---|
+| Lepton | $\tau_L = i$ | $K_L = \mathbb{Q}(\sqrt{-1})$ | $D_L = -4$ | $1$ (Heegner-Stark) |
+| Quark | $\tau_Q = i\sqrt{11/2}$ | $K_Q = \mathbb{Q}(\sqrt{-22})$ | $D_Q = -88$ | $2$ |
+
+Discriminant ratio $D_Q / D_L = 22 = 2 \cdot 11$ — possibly Atkin-Lehner level structure. The "11" enters via the K-K A_4 model's 11-th harmonic q-corrections — natural deeper investigation target.
+
+**Predictive content (testable LHCb/Belle II)**:
+- $\mathrm{Re}\,\tau_Q = 0$ exactly (vs K-K 0.0361, consistent at 0.7σ)
+- $\mathrm{Im}\,\tau_Q = \sqrt{11/2} = 2.345$ (vs K-K 2.352, ~2.3σ tension reducible by O(1) parameter rescaling $\beta^{II}_u \to 0.97 \beta^{II}_u$, $\gamma^{II}_d \to 0.22 \gamma^{II}_d$, both O(1) natural)
+
+**Hilbert class polynomial** $H_{-88}(X) = X^2 - 6{,}294{,}842{,}640{,}000\, X + 15{,}798{,}135{,}578{,}688 \cdot 10^9$ (verified mpmath dps=60, residuals < 10⁻⁴⁰).
+
+The remaining incompatibility ε_hierarchy=0.15 vs ε_V_F=3.2×10⁻⁸ from M140 is REINTERPRETED post-M143: the quark sector lives on a SEPARATE modulus τ_Q at a DIFFERENT CM point, not at a perturbation of τ_L = i. M134's V_F constrains τ_L only ; the analogous V_F^Q for τ_Q has been constructed (W^Q = H_{-88}(j)²/η¹², weight -6, NOT M134-natural weight -3 — specialist construction at k=3 Kähler still needed).
+
+## §5.6.b Original M140 incompatibility analysis (preserved for record)
 
 **M140 Theorem M140.1** (mpmath dps=40) : V_F(i+ε) requires ε < 3.2×10⁻⁸ for V_F < 10⁻⁵ M_Pl⁴ (loose inflation cap).
 

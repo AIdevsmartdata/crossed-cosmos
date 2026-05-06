@@ -1,0 +1,127 @@
+A71 Likelihood Unit Tests — Results
+Sub-agent M1, 2026-05-06
+========================================================
+
+Command: python3 mcmc/a71_prod/likelihoods_unit_tests.py
+Environment: VPS (no JAX), pure numpy tests
+Hallu count: 85 → 85
+
+========================================================
+RUNNING: test_planck_cov_positive_definite
+========================================================
+[test_planck_cov_pd]
+  Eigenvalues: [-3.99830533e-06  1.84079874e-08  1.03188882e-07  1.38368020e-05
+  2.05238506e-04]
+  Min eigenvalue = -3.998305e-06
+  det = -2.156799e-29
+  BUG CONFIRMED: non-positive eigenvalue -3.998305e-06
+  chi2 = delta^T C_inv delta is UNBOUNDED BELOW
+  This drives NUTS to prior boundaries (log10As_e10=3.5, n_s=0.9)
+
+  PROPOSED FIX — diagonal-only COV:
+  Eigenvalues: [2.250e-08 9.610e-08 1.440e-06 1.764e-05 1.960e-04]
+  All positive: True
+  => BUG CONFIRMED (COV not PD), FIX IS PD ✓
+
+========================================================
+RUNNING: test_ln_As_bug_diagnosis
+========================================================
+[test_ln_As_bug]
+  A_s = 2.101e-09
+  10^10 A_s = 21.0100
+  log10(10^10 A_s) = 1.3224  (NOT in prior [2.7, 3.5])
+  ln(10^10 A_s)    = 3.0450    (IN prior [2.7, 3.5]) ✓
+
+  WITH BUG: chi2(ln_As term alone) = 80213.12
+  WITH BUG: total chi2 at Planck fiducial = 80222.82
+  -> This is catastrophic: NUTS cannot find the true minimum!
+
+  AFTER FIX: chi2(ln_As term alone) = 0.00
+  AFTER FIX: total chi2 at Planck fiducial = 9.6992
+  (Residual chi2 from theta_MC approx bias, acceptable)
+  => BUG CONFIRMED: chi2 drops from 80223 to 9.70 ✓
+
+========================================================
+RUNNING: test_ln_As_convention_after_fix
+========================================================
+[test_ln_As_after_fix]
+  x (after fix) = [0.02237    0.12       1.04188545 3.044      0.9649    ]
+  mean (Planck) = [0.02237 0.12    1.04092 3.044   0.9649 ]
+  delta          = [0.         0.         0.00096545 0.         0.        ]
+  chi2 = 9.6992
+  Expected: chi2 < 20 (only theta_MC bias ~ 9.7 remains)
+  chi2[omega_b]    = (0.000000/0.000150)^2 = 0.0000
+  chi2[omega_c]    = (0.000000/0.001200)^2 = 0.0000
+  chi2[theta_MC]   = (0.000965/0.000310)^2 = 9.6992
+  chi2[ln_As_e10]  = (0.000000/0.014000)^2 = 0.0000
+  chi2[n_s]        = (0.000000/0.004200)^2 = 0.0000
+  => PASS (chi2 = 9.6992 < 20)
+
+========================================================
+RUNNING: test_theta_MC_at_planck_fiducial
+========================================================
+[test_theta_MC]
+  theta_MC (code) = 1.041885
+  theta_MC (Planck 2018) = 1.040920
+  Error = 3.11 sigma (sigma=0.00031)
+  WARNING: 3.11 sigma off. Acceptable for smoke test but
+  introduces ~0.44 sigma bias in omega_c. Fix before production run.
+  Recommendation: implement EH 1998 / full background integral.
+  => PASS (3.11 sigma)
+
+========================================================
+RUNNING: test_r_d_at_planck_fiducial
+========================================================
+[test_r_d]
+  r_d (EH) = 146.6542 Mpc
+  r_d (CLASS) = 147.0500 Mpc
+  Fractional error = 0.269%
+  OK: < 0.5% from CLASS
+  => PASS
+
+========================================================
+RUNNING: test_pantheon_M_B_marg_sign
+========================================================
+[test_M_B_marg_sign]
+  chi2_fixed (at true M_B) = 6.4288
+  chi2_marg (marginalized)  = 6.2307
+  ll_fixed = -3.2144
+  ll_marg  = -3.1153
+  ll_marg >= ll_fixed: True
+  => PASS: chi2_marg <= chi2_fixed ✓
+
+========================================================
+RUNNING: test_planck_compressed_gradient
+========================================================
+[test_planck_gradient]
+  chi2 at Planck fiducial (after fix) = 9.6992
+  omega_b+3sigma: chi2=18.6992 > 9.6992: True
+  omega_c+3sigma: chi2=18.6992 > 9.6992: True
+  theta_MC+3sigma: chi2=37.3853 > 9.6992: True
+  ln_As_e10+3sigma: chi2=18.6992 > 9.6992: True
+  n_s+3sigma: chi2=18.6992 > 9.6992: True
+  => PASS: chi2 increases in all 5 parameter directions ✓
+
+========================================================
+RUNNING: test_planck_cov_unbounded_below
+========================================================
+[test_cov_unbounded]
+  C_inv eigenvalues: [-2.50105962e+05  4.87238003e+03  7.22710347e+04  9.69096656e+06
+  5.43242440e+07]
+  Most negative C_inv eigenvalue: -2.501060e+05
+  chi2 along most-negative eigenvector (step=0.001): -2.501060e-01
+  => CONFIRMED: chi2 < 0 is possible with NON-PD covariance
+  => NUTS exploits this to 'escape' to -inf chi2 at prior boundaries
+  => PATHOLOGY CONFIRMED ✓
+
+========================================================
+SUMMARY: 8/8 passed
+========================================================
+  ✓ PASS  test_planck_cov_positive_definite
+  ✓ PASS  test_ln_As_bug_diagnosis
+  ✓ PASS  test_ln_As_convention_after_fix
+  ✓ PASS  test_theta_MC_at_planck_fiducial
+  ✓ PASS  test_r_d_at_planck_fiducial
+  ✓ PASS  test_pantheon_M_B_marg_sign
+  ✓ PASS  test_planck_compressed_gradient
+  ✓ PASS  test_planck_cov_unbounded_below

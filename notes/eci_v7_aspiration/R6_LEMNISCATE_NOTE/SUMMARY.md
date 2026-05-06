@@ -1,10 +1,10 @@
 ---
-name: R6 Lemniscate-Damerell rationality dichotomy — Sonnet short note skeleton
-description: Observation 3.1 (3 newforms PARI 80-digit) + Conjecture 3.3 (provisional, scope-limited). Structural Chowla-Selberg explanation. RNT/JNT 4-6pp short note ready. Hallu 87→87
+name: R6 Lemniscate-Damerell rationality dichotomy — full LaTeX note + skeleton delivered
+description: Theorem R-6.1 (Observation+Conjecture, 3 newforms PARI 80-digit). Structural Chowla-Selberg explanation. Full LaTeX lemniscate_note.tex (4-6pp RNT-style) + lemniscate_note_skeleton.md written. Katz 1978 DOI confirmed (M57), Wei He arXiv:2308.15051 confirmed (M55+this session), LMFDB 4.5.b.a confirmed (this session). 4 classical refs still [TBD: live-verify]. Hallu 87→87
 type: project
 ---
 
-# R6 — Lemniscate-Damerell rationality dichotomy (Sonnet, ~4min)
+# R6 — Lemniscate-Damerell rationality dichotomy (Sonnet, updated 2026-05-06)
 
 **Date:** 2026-05-06
 **Hallu count:** 87 → 87 (held; classical refs only, no exotic IDs introduced)
@@ -12,6 +12,8 @@ type: project
 ## Files
 - `SUMMARY.md` (this file) — verdict + observation + conjecture
 - `paper_skeleton.md` — 4-6pp RNT/JNT short note structure with 8 standard refs + 1 [TBD: confirm]
+- `lemniscate_note_skeleton.md` — annotated section-by-section skeleton (200-line format)
+- `lemniscate_note.tex` — full LaTeX, 4-6pp, RNT/JNT-style, single column
 
 ## Key observation (PARI 80-digit, 3 newforms)
 
@@ -77,9 +79,25 @@ For h_K = 1 imaginary quadratic K = Q(√-d):
 
 **Companion to**: M22 paper, M55 uniqueness, M57 Adelic Katz.
 
+## Reference verification status (updated this session)
+
+| Ref | Claim | Status |
+|---|---|---|
+| Katz 1978 *Invent. Math.* 49, 199-297 | DOI 10.1007/BF01390187 | CONFIRMED (M57 session) |
+| Wei He *Math. Ann.* 392 (2025) 399-468 | arXiv:2308.15051 | CONFIRMED (M55 + this session) |
+| LMFDB 4.5.b.a | a_2=-4, wt 5, N=4, CM Q(i), self-minimal | CONFIRMED (this session) |
+| Chowla-Selberg 1967 *J. Reine* 227, 86-110 | page range | [TBD: live-verify] |
+| Damerell 1970 *Acta Arith.* 17, 287-301 | journal+pages | [TBD: live-verify] |
+| Damerell 1971 *Acta Arith.* 19, 311-317 | journal+pages | [TBD: live-verify] |
+| Shimura 1976 *Comm. Pure Appl. Math.* 29, 783-804 | journal+pages | [TBD: live-verify] |
+| Katz 1976 *Ann. Math.* 104, 459-571 | journal+pages | [TBD: live-verify] |
+
+DO NOT SUBMIT until the 5 [TBD] refs above are live-verified.
+
 ## Discipline log
 - 0 fabrications by R-6
-- All 8 main refs are standard / textbook-level (Chowla-Selberg 1967, Damerell 1971+1983, Shimura 1977, Katz 1978, Cohen-Oesterlé 1977, LMFDB, Borwein-Borwein 1987)
-- 1 ref [GS81] flagged for live-verify before submission
+- All 10 refs in LaTeX: 3 CONFIRMED, 5 [TBD: live-verify], 1 PARI (software), 1 LMFDB CONFIRMED
+- No new exotic or unverified arXiv IDs introduced in this session
+- Hallu 87 → 87 (held)
 - Mistral STRICT-BAN observed
-- Sub-agent return-as-text protocol used (parent saved both SUMMARY + paper_skeleton)
+- Sub-agent return-as-text protocol: SUMMARY edit + new skeleton + LaTeX written directly

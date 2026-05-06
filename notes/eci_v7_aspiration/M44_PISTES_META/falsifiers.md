@@ -105,20 +105,20 @@ type: project
 
 **Cost**: 1000 CPU-hr — needs cluster or vast.ai. DEFER until F2 + F5 results in.
 
-## F8 — ECI v7.4 lepton sector neutrino ordering at τ=i (50 CPU-hr) — NEW (M49 B5b)
+## F8 — ECI v7.4 lepton sector neutrino ordering at τ=i — **EXECUTED 2026-05-06: TENSION**
 
-**Conjecture under test**: ECI's lepton sector at τ=i implies a specific neutrino mass ordering.
+**EXECUTED VERDICT (M54 sub-agent, 2026-05-06):**
+- ECI v7.4 NPP20+CSD(1+√6) Littlest Modular Seesaw at τ_S=i: **NORMAL ordering**, **m_1 = 0 exact** (2-RHN seesaw, M_ν rank-2)
+- Verbatim from v75_amendment.tex §8.3: m_1=0, δ_CP ≈ −87°, sin²θ_23 ≈ 0.46-0.55, Σm_ν ≈ 0.06 eV
+- Tavartkiladze 2512.24804 (Γ_2 ≃ S_3): INVERTED — but DIFFERENT modular group → TENSION not refutation
 
-**Protocol**:
-1. SageMath compute the lepton sector mass matrix from ECI v7.4 modular forms at τ=i
-2. Diagonalize and extract neutrino mass ordering
-3. Compare with Tavartkiladze 2025 (arXiv:2512.24804) prediction: **inverted ordering at minimal Γ_2≃S_3 fixed-point τ=i**
+**Conclusion**: τ=i alone does NOT determine ordering; the modular symmetry group matters (Sp'(4)/S'_4 vs Γ_2/S_3). Both M49 B5b paragraph (originally framed as corroboration) and v7.6 §10 unification text need amendment to "TENSION" framing.
 
-**Falsifying outcome**:
-- ECI v7.4 lepton predicts **inverted** ordering: independent corroboration with Tavartkiladze 2025 → strengthens v7.6 §10 unification claim
-- ECI v7.4 lepton predicts **normal** ordering: tension with Tavartkiladze; ECI two-τ scheme is at a different fixed-point sub-class OR lepton sector needs revision
+**NEW sharp prediction unlocked**: m_1 = 0 EXACT (from 2-RHN rank-2 M_ν) → m_ββ ~ m_2 sin²θ_12 × few meV, testable at KamLAND-Zen 2027 / nEXO 2030+ edge.
 
-**Cost**: 50 CPU-hr SageMath modular-form package. Full local on PC (20 cores).
+**Live observational test**: JUNO 2030+ at 3-4σ NMO sensitivity will resolve ordering. If INVERTED measured → ECI v7.4 lepton sector tension; if NORMAL → ECI corroborated.
+
+
 
 ## F7 — H8' Cassini-wall ξ_χ KSTD26 (OBSERVATIONAL — FREE)
 

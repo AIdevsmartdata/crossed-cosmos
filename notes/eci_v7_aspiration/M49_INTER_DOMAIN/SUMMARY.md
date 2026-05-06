@@ -46,8 +46,8 @@ NOT a new bridge.
 
 **B5b — Tavartkiladze 2025 (arXiv:2512.24804)**: minimal Γ_2≃S_3 lepton textures at τ=i predict **inverted neutrino ordering**. ECI's lepton sector should be cross-checked.
 
-**90-word v7.6 §10 paragraph**:
-> "ECI's three a priori-disjoint predictions (H_0 ≈ 68.51 km/s/Mpc DESI BAO; B(p→e+π⁰)/B(K+ν̄) modular-geometry; λ_BKL = π²/(6 log 2) Bianchi IX Modular Shadow) share a common arithmetic anchor: the Hecke Größencharacter ψ on Q(i) of conductor 4 inducing f = 4.5.b.a. This anchor sits within two now-published structural frameworks: (i) Fan-Fathizadeh-Marcolli (LMP 2018; JHEP 01 (2019) 234) showing Seeley-de Witt coefficients of Bianchi IX spectral action are vector-valued modular forms / mixed-Tate periods, and (ii) Tavartkiladze (arXiv:2512.24804, 2025) constructing minimal Γ_2≃S_3 lepton textures near τ = i predicting inverted neutrino ordering."
+**90-word v7.6 §10 paragraph (REVISED 2026-05-06 post-M54 F8 execution)**:
+> "ECI's three a priori-disjoint predictions (H_0 ≈ 68.51 km/s/Mpc DESI BAO; B(p→e+π⁰)/B(K+ν̄) modular-geometry; λ_BKL = π²/(6 log 2) Bianchi IX Modular Shadow) share a common arithmetic anchor: the Hecke Größencharacter ψ on Q(i) of conductor 4 inducing f = 4.5.b.a. This anchor sits within published Fan-Fathizadeh-Marcolli (LMP 2018; JHEP 01 (2019) 234) showing Seeley-de Witt coefficients of Bianchi IX spectral action are vector-valued modular forms / mixed-Tate periods. **Tavartkiladze (arXiv:2512.24804, 2025) shows minimal Γ_2 ≃ S_3 textures at τ=i predict INVERTED ordering — in TENSION with ECI v7.4's NORMAL ordering from Sp'(4)/CSD(1+√6) (M54 F8 executed); illustrating that the τ=i fixed point alone does not determine ordering, the modular group matters. ECI v7.4 predicts m_1 = 0 EXACTLY (2-RHN rank-2 M_ν)** testable at KamLAND-Zen 2027 / nEXO 2030+ via m_ββ at edge of next-gen 0νββ sensitivity. JUNO 2030+ NMO measurement decides between Sp'(4) and Γ_2 frameworks."
 
 **Falsifier F8 (NEW, 50 CPU-hr)**: ECI v7.4 lepton sector implied neutrino ordering at τ=i.
 - If **inverted** → Tavartkiladze 2512.24804 corroboration

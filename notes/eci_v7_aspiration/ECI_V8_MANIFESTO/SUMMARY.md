@@ -168,7 +168,21 @@ Structural origin: $E_6(i) = 0$ (Klein classical) → $(j-1728)$ has **double ze
 - Lepton sector $\tau_S = i$ : **prediction** (not free assumption)
 - Geometry Bianchi IX modular shadow same $\tau = i$ fixed point
 
-**Dynamical bridge** $V_F \to \lambda_{\text{BKL}} = \pi^2/(6\log 2)$ : see §5.7 below — **FALSIFIED** by M141 (Pesin invariance). Reframing (D) holds : SUGRA Kähler manifold $(\mathcal{H}, K = -3\log 2 \mathrm{Im}\,\tau)$ and Manin-Marcolli modular surface $(\mathcal{H}, \mathrm{Poincaré})$ are the **same Anosov manifold up to conformal factor 3:1**.
+**Dynamical bridge** $V_F \to \lambda_{\text{BKL}} = \pi^2/(6\log 2)$ : see §5.7 below — **FALSIFIED** by M141 (Pesin invariance). Reframing (D) holds : SUGRA Kähler manifold $(\mathcal{H}, K = -3\log 2 \mathrm{Im}\,\tau)$ and Manin-Marcolli modular surface $(\mathcal{H}, \mathrm{Poincaré})$ are the **same Anosov manifold up to conformal factor 3:2** (M144 correction: METRIC ratio is 3:2 ; M141's 3:1 was Kähler-POTENTIAL ratio). Per-arc consistency : λ_K · √(3/2) = λ_P, i.e. √(2/3) × √(3/2) = 1 ✓.
+
+## §5.8 TRIPLE-ANCHORING τ=i — major NEW structural insight (M144)
+
+τ = i is **over-determined** as ECI v8.1 fixed point by THREE INDEPENDENT structural reasons :
+
+1. **Geometric** (M134) : V_F(τ=i) = 0 with W = (j-1728)/η⁶ double-zero from $E_6(i) = 0$ (Klein classical)
+2. **Dynamical** (M141) : τ=i is the order-2 elliptic fixed point of the Anosov geodesic flow on $\mathcal{H}/\mathrm{PSL}(2,\mathbb{Z})$ (Manin-Marcolli arXiv:1504.04005)
+3. **Arithmetic** (M144) : τ=i is the unique fixed point of $q_i(\mathbb{Q}(i)^*) \subset \mathrm{GL}_2^+(\mathbb{Q})$ for $K = \mathbb{Q}(i)$, $h_K = 1$ (Connes-Marcolli-Ramachandran arXiv:math/0501424 Selecta Math 11 (2005), 325-347)
+
+The embedding $q_i : a+bi \mapsto \begin{pmatrix} a & -b \\ b & a \end{pmatrix}$ (rotation matrix) automatically fixes $\tau = i$ (sympy verified : $M \cdot i = i$ exactly).
+
+**Triple-anchoring is structurally tighter than any single one** and gives a coherent operator-algebraic backbone for why ECI's bridge across arithmetic / lepton / geometry / SUGRA all hits τ=i. The Connes-Marcolli-Ramachandran 2005 arithmetic algebra A_{Q(i)} provides the explicit operator-algebraic realization, with Hamiltonian H ε_J = log n(J) ε_J on the lemniscate ideal lattice and partition function Z(β) = ζ_{Q(i)}(β).
+
+This is the deepest structural finding of Phase 7 wave 6.
 
 ## §5.6 Two-modulus realisation post-M140 (quark sector)
 

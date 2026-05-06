@@ -115,3 +115,41 @@ R-3 also flagged: M49 B4 brief stated "CHHN II → Acta Math 235:2 (2025), III �
 - Journal placements (Acta Math 2025 / Annals) **NOT confirmed** by R-3's search
 
 Recommendation: re-verify CHHN II + III journal status before any v7.6 §S3 bibitem upgrade. M49 may have stale info.
+
+## R-3 SECOND WAVE — Angle C explicit Conjecture R3-C-1 (NEW, 2026-05-06)
+
+A second R-3 agent run (focused on Angle C only) elevated the categorical M52 translation to an explicit conjecture:
+
+> **Conjecture R3-C-1 (NEW)**: For f = 4.5.b.a with CM local system σ_ψ on Spec(Z[1/2]) attached to Hecke Grössencharacter ψ of conductor (1+i)², infinity-type z⁴: **π · L(f, 1)/L(f, 2) = 6/5** lifts to an identity in K_0(IndCoh_{Nilp}(LocSys_{GL_2}))_ℚ between Beilinson-regulator classes [c_1(F_{σ_ψ})] and [c_2(F_{σ_ψ})] for the CM eigensheaf F_{σ_ψ} under appropriate weight/twist normalization. [TBD: prove]
+
+**Why NEW**: M52 finding (2026-05-06) is recent; Q-rationality + Ω-independence + UNIQUE to 4.5.b.a not previously highlighted in geometric Langlands literature. ECI provides EXPLICIT τ=i CM specialization where Gaitsgory's theorem speaks abstractly.
+
+### 100-word footnote draft (for v7.6 §10 / paper-2 §6 / M52 paper)
+
+> "The CM newform f = 4.5.b.a exhibits an Ω-independent rational diagnostic π · L(f, 1)/L(f, 2) = 6/5 ∈ ℚ (M52, PARI 80-digit verified), unique among class-number-1 imaginary-quadratic CM weight-5 dim-1 newforms tested. In light of the recent proof of the geometric Langlands conjecture (Gaitsgory et al., arXiv:2405.03599, 2405.03648, 2409.07051, 2409.08670, 2409.09856), one may conjecture (R3-C-1) that this rationality lifts to a Beilinson-regulator-class identity in K_0(IndCoh_{Nilp}(LocSys_{GL_2}))_ℚ for the CM eigensheaf attached to ψ; the arithmetic-vs-geometric transfer is itself an open program (Zhu, arXiv:2504.07502). [TBD: prove]"
+
+### Falsifier protocol
+Compute Beilinson regulators for f = 4.5.b.a in K_3(M_f) ⊗ ℚ and K_5(M_f) ⊗ ℚ via BDP 2013 anti-cyclotomic + SageMath modular-form regulator. Verify R3-C-1 numerically (regulator ratio = 6/5 to 30-digit) before structural proof.
+
+**Cost**: 50-100 CPU-hr SageMath + Magma; parallelizable with M27/M28 KLZ-Hsieh chains.
+**Explicit falsifier**: deviation from 6/5 at 30-digit precision kills R3-C-1.
+
+### Live-verified refs (R-3 second wave: 6 arXiv IDs)
+1. arXiv:2405.03599 (Gaitsgory-Raskin GLC I)
+2. arXiv:2405.03648 (GLC II, 9 authors)
+3. arXiv:2409.07051 (GLC III, 7 authors)
+4. arXiv:2409.08670 (GLC IV, 8 authors)
+5. arXiv:2409.09856 (GLC V Gaitsgory-Raskin multiplicity-one)
+6. arXiv:2504.07502 (Zhu, "Arithmetic and Geometric Langlands Program", April 2025 ICM survey)
+7. arXiv:math/9912097 (Braverman-Gaitsgory, Geometric Eisenstein, Invent. Math. 150 — corrects parent-brief FGV/MRL confusion)
+
+### Updated verdict structure (combining R-3 first + second waves)
+- Angle A (H_1 split-prime Hecke): NEGATIVE / DEFER
+- Angle B (S'_4 ↔ geometric Eisenstein): NEGATIVE / DEAD-END
+- **Angle C (M52 6/5 → categorical regulator class): SPECULATIVE-VIABLE-NEW-PISTE (~30-40%)**
+
+### Recommended next step
+- ADD 100-word footnote (above) to v7.6 §10 + M52 paper §6 + paper-2 §6 outlook
+- DO NOT publish R3 standalone paper yet
+- IF R3-C-1 numerical falsifier passes (50-100 CPU-hr): consider Selecta Math / ANT spin-off paper #9
+

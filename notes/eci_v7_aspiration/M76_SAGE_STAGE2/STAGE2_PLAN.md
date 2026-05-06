@@ -51,9 +51,18 @@ unpublished Magma code. No Sage/Python port confirmed as of May 2026. A Sage
 port would need: Eisenstein symbols on elliptic curves (cf. Beilinson 1985 +
 Brunault 2004 explicit formula), evaluated at CM point tau = i in X_1(4)(C).
 
-**TODO #4 notes**: Brunault-Letang arXiv:2402.03247 (2024) provides explicit
-Beilinson-Kato regulator computations. Level 4 weight 5 CM case requires
-adaptation from their existing examples. Contact Brunault for code availability.
+**TODO #4 notes**: ~~arXiv:2402.03247 was a FABRICATION caught by M117 on
+2026-05-06: actual paper is "HEANA: A Hybrid Time-Amplitude Analog Optical
+Accelerator" (Vatsavai-Karempudi-Thakkar, ACM TODAES 2024 — CNN hardware,
+NOT number theory).~~ Replaced with **Brunault arXiv:1602.03025** (Compositio
+Math. 153, 2017, "Régulateurs modulaires explicites via la méthode de
+Rogers-Zudilin"): Theorem 1.1 gives explicit Beilinson regulator on
+Kuga-Sato fibres E^k over Y(N), output Λ*(Eisenstein-product, 0). For our
+case N=4, weight 5 → k=3 (KS 3-fold E³ over X_1(4)), (k_1, k_2) ∈ {(0,3),
+(1,2), (2,1), (3,0)}. **CRITICAL CORRECTION (M117)**: L(f,1) and L(f,2) are
+BOTH critical (Deligne 1979); Beilinson regulator framework applies only to
+NON-critical L-values. Re-state R3-C-1 falsifier at non-critical twists
+L(f,-1)/L(f,6) where Brunault Thm 1.1 + KLZ apply directly.
 
 **Total Sage-doable**: ~11 h
 **Total specialist**: ~30-40 h

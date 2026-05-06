@@ -10,7 +10,16 @@ type: project
 **Source:** Sub-agent M44 Opus, Phase 3.G #3
 **Discipline:** All protocols are EXPLICIT (computational/observational), with SUCCESS CRITERIA stated. No vague "test prediction X" phrasing.
 
-## F2 — M13.1(c) F1 monotone v_2 (CHEAPEST: 5 CPU-hr)
+## F2 — M13.1(c) F1 monotone v_2 (EXECUTED 2026-05-06: PASS)
+
+**EXECUTED VERDICT (M47 Pipeline A v3, PARI/GP, 2026-05-06 14:08 CEST):**
+- Anchor 4.5.b.a v_2(α_m^F1) = **{-3, -2, 0, +1} EXACTLY** confirmed via PARI mfinit + lfunmf
+- Damerell ladder (1/10, 1/12, 1/24, 1/60) empirically verified — H7-A POSITIVE primary now confirmed
+- Q(ω) CM (27.5.b.a): pattern DIVERGES — M44.1(a) Q(i)-specificity SURVIVES
+- Level mixed-primes (100.5.b.a): pattern DIVERGES — M44.1(b) N=p² simply-ramified STRENGTHENED
+- See F2v3_RESULTS.md in M47_PC_PIPELINES/pipeline_a/ for full table
+
+
 
 **Conjecture under test**: F1-renormalised v_2(α_m^F1) = {-3,-2,0,+1} pattern is Steinberg-edge specific (only fires for a_{p²}=±p^((k-1)/2)).
 

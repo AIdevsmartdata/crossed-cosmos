@@ -1,144 +1,74 @@
-# crossed-cosmos — ECI v6.0.53.8
+# crossed-cosmos — ECI v6.0.53.100
 
-**Extended Cosmological Index:** quantum-gravity + cosmology unified via type-II_∞ crossed-product algebras, modular flavour S'₄, Cassini-clean NMC, and SU(5) GUT closure.
+**ECI** (Extended Cosmological Index) — research programme at the intersection of arithmetic CM modular forms, modular flavor symmetries, N=1 SUGRA moduli stabilization, Bianchi IX modular shadow, and Bost-Connes operator algebras.
 
-**Version:** v6.0.53.8 (2026-05-05)  
-**Published:** Zenodo DOI [10.5281/zenodo.20043755](https://doi.org/10.5281/zenodo.20043755)  
-**Concept record:** [10.5281/zenodo.19686398](https://doi.org/10.5281/zenodo.19686398)
+**Version**: v6.0.53.100 (2026-05-06)
+**Latest Zenodo DOI**: [10.5281/zenodo.20060047](https://doi.org/10.5281/zenodo.20060047)
+**Concept DOI** (always-latest): [10.5281/zenodo.19686398](https://doi.org/10.5281/zenodo.19686398)
 
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.19686398.svg)](https://doi.org/10.5281/zenodo.19686398)
 [![License: CC BY 4.0](https://img.shields.io/badge/License-CC_BY_4.0-lightgrey.svg)](https://creativecommons.org/licenses/by/4.0/)
 [![ORCID](https://img.shields.io/badge/ORCID-0009--0008--2443--7166-a6ce39)](https://orcid.org/0009-0008-2443-7166)
-[![arXiv](https://img.shields.io/badge/arXiv-submission--ready-brightgreen)](https://arxiv.org/a/remondiere_k_1)
-[![Papers](https://img.shields.io/badge/papers-10-blue)](PAPERS.md)
-[![GitHub Releases](https://img.shields.io/badge/releases-GitHub-black)](https://github.com/AIdevsmartdata/crossed-cosmos/releases)
 
-**Keywords** — cosmology · quantum gravity · dark energy · non-minimal coupling · quintessence · von Neumann algebras · crossed product · DESI DR2 · Pantheon+ · modular symmetry · persistent homology · proton decay · generalised second law
+## Honest scope
 
----
+This is a **research programme draft**, not a finished theory. It contains:
+- Two formal theorems with rigorous proofs (α_2 = 1/12 via Yager 1982 ; W^Q weight-3 canonical construction)
+- Several conjectures with strong numerical corroboration (M114.B uniqueness Q(i), 21/22 newforms verified)
+- Reductions of open problems to specific specialist gaps
+- Explicit limitations and 4 documented honest negative results on Clay Millennium problems (BSD, GRH, Hodge, Yang-Mills)
 
-## Ten Submission-Ready Papers
+It is **NOT** a Theory of Everything, does **NOT** solve any Clay Millennium problem, and does **NOT** claim "five cosmology tensions closed" or comparable sweeping results. Phenomenological claims are tagged with their experimental status (consistent / tension / falsified / below current sensitivity).
 
-| # | Paper | Pages | Target Journal | Status | Source |
-|---|---|---|---|---|---|
-| 1 | Two LMFDB identifications for hatted weight-5 multiplets of S'₄ | 11 | BLMS | Ready 2026-05-05 | PNT / |
-| 2 | τ as CM-anchored attractor + Damerell-Cardy bridge (H_7'/H_5' amendment) | 14–16 | LMP | Ready 2026-05-05 | V74_AMENDMENT / cover_letter_v2 |
-| 3 | Modular flow generates generalised entropy (type-II_∞ Araki cocycle) | 16–18 | LMP | Ready 2026-05-05 | EREPR_REOPEN / coverage 11.05/11.16 |
-| 4 | Modular Lyapunov bound for type-II_∞ algebras + saturation conjecture | 14–16 | LMP | Ready 2026-05-05 | MODULAR_SHADOW / live-verified 9 arXiv |
-| 5 | Universal analog-Hawking saturation rho = c/12 (diagonal-MIP CFTs) | 12–13 | LMP | Ready 2026-05-05 | CARDY_PAPER / hallu +3 caught |
-| 6 | Microlocal sheaves + persistent-homology axiom (equiv. theorem) | ~16 | Geom. Topology | Ready 2026-05-04 | PKS_PAPER / all refs live-verified |
-| 7 | DSSYK Krylov-FRW extension (crossing universe boundary) | 21 | JHEP/hep-th | Compiled 2026-05-05 | PDSSYK_FRW / dssyk_krylov_FRW_extension.pdf |
-| 8 | G1.12.B SU(5) proton decay, M1+M2 PASS, M3–M6 forecast | 14–16 | PRD | M1+M2 PASS | OPUS_G112B_M6 / proton_decay_prediction_PRD.tex |
-| 9 | BEC Steinhauer sonic horizon falsifier (Krylov saturation) | companion | companion | Companion | paper/bec_steinhauer_krylov / Γ_meas ≤ 288 s⁻¹ |
-| 10 | AWCH Bianchi IX algebraic crossing-product (FRW null-boundary) | 25 | CMP | Compiled 2026-05-05 | paper/algebraic_wch_bianchi / note.tex |
+## Content
 
----
+The repository contains LaTeX sources and PDFs for several research notes and papers in various stages of preparation, plus an extensive set of audit memos in `notes/eci_v7_aspiration/`. The most developed pieces, in order of formal rigor:
 
-## Wave 12 Phase 1 — In Flight (12 Agents)
+1. **R-6 lemniscate note** (`notes/eci_v7_aspiration/R6_LEMNISCATE_NOTE/`) — α_2 = 1/12 RIGOROUS theorem via Yager 1982 *Compositio Math.* 47 + Katz 1977 + Deuring CM correspondence
+2. **R-2 Bloch-Kato note** (`notes/eci_v7_aspiration/M70_R2_PAPER/`) — Tamagawa number for the weight-5 motive M(f) for f = 4.5.b.a, with p=2 ramified Q(i) gap documented
+3. **R-3-C-1 short note** (`notes/eci_v7_aspiration/M71_R3C1_PAPER/`) — Damerell ladder + geometric Langlands tie-in
+4. **Bianchi IX modular shadow** (`notes/eci_v7_aspiration/M45_BIANCHI_IX_PAPER/`) — modular structure of Bianchi IX cosmology with explicit Lyapunov rate
+5. **ECI v9 manifesto** (`notes/eci_v7_aspiration/ECI_V9_MANIFESTO/`) — synthesis document for the research programme (draft)
 
-**Status:** 8 Sonnets (A69, A72, A73, A75–A79) + 4 Haiku (H11–H14) launched 2026-05-05 evening
+Other notes range from preliminary scoping (clearly tagged) to detailed sub-agent audit memos with verbatim verification logs.
 
-**Axes under investigation:**
-- **H₀ cosmology** (A69): Wolf 2025 arXiv:2504.07679 lit-extract → A70 likelihood + A71 PC GPU MCMC Bayes contest design
-- **Damerell ladder extension** (A72): additional algebraic invariants K=Q(i) surviving A62 null-test
-- **RG running ξ** (A73): non-minimal coupling M_Z → M_GUT 1-loop with right-handed neutrino thresholds
-- **Twistor space scoping** (A75): Penrose-Mason-Skinner ↔ ECI modular sector — probable dead-end
-- **Adelic L-functions au-delà CM** (A76): Tate / Iwasawa / p-adic L-functions ↔ Damerell ladder
-- **Modular bootstrap higher genus** (A77): g≥2 extension of Modular Shadow A11/A27 finite-rank theorem
-- **H6 χ_4 nebentypus relaxation** (A78): χ_3 / χ_8 / χ_12 alternative chains + LMFDB stress-test
-- **H1 type-II_∞ FRW** (A79): post-CLPW 2024-26 lit revue (Witten, Faulkner, Jensen)
-- **Utility** (H11-H14): PDF compile sanity, README update, hallu audit log, arXiv API cross-check
+## Selected results (current as of v6.0.53.100)
 
----
+- **α_2 = 1/12 RIGOROUS** for the CM newform f = 4.5.b.a on Q(i) (M142, via Yager 1982 *Compositio Math.* 47)
+- **W^Q weight-3 canonical** : H_{-88}(j(τ))² · f_{88.3.b.a}(τ) / η(τ)^{12} structural double zero at τ_Q = i√(11/2) (M151)
+- **Two-modulus arithmetic ladder** : τ_L = i (D_L = -4) → τ_Q = i√(11/2) (D_Q = -88) (M134, M143, M151)
+- **M114.B uniqueness Q(i) corroboration** : 21/22 newforms across class numbers h=1 + h=2 (M97 + M161B)
+- **Conjecture M161B.2** (new) : α_1/(√d_K · d_K) parity-determined by D mod 4, verified 13/14
+- **4 honest Millennium negatives documented** (BSD, GRH, Hodge, Yang-Mills)
 
-## Key Results (2026-05-05)
+## Anti-fabrication discipline
 
-- **G1.12.B SU(5) M1+M2 PASS:** B(p→e⁺π⁰)/B(p→K⁺ν̄) = 2.06 ± 1
-- **Five cosmology tensions CLOSED:** Muon g-2, W boson mass, S₈, Σmᵥ (DESI-survivable), JWST z>10
-- **CM-by-Q(i) anchor:** 4.5.b.a + 16.5.c.a via Damerell ladder + Cardy bridge
-- **τ near-i viability:** W1 χ²/dof = 1.05 at τ* = -0.19 + 1.00i
-- **Anti-fabrication:** Hallu count 85; 5 catches today (Mistral STRICT-BAN confirmed)
+Working with LLM-assisted research requires explicit anti-fabrication protocols. This project tracks a cumulative count of fabricated references / arithmetic errors caught during the work (currently 102, all explicitly logged). All theorem citations are verified verbatim via PDF reading of source papers ; numerical claims are cross-checked via PARI/GP and mpmath at high precision. Mistral large-latest is excluded from verification chains after 3 confirmed fabrication instances. See `notes/eci_v7_aspiration/feedback_*` for protocol details and `AI_USE.md` for full LLM collaboration disclosure.
 
----
-
-## About
-
-**Author:** Kévin Remondière  
-**Affiliation:** Independent researcher, Tarbes, France  
-**ORCID:** [0009-0008-2443-7166](https://orcid.org/0009-0008-2443-7166)  
-**Email:** kevin.remondiere@gmail.com  
-**GitHub:** [AIdevsmartdata](https://github.com/AIdevsmartdata)
-
-## Framework Overview
-
-ECI is an **integrative platform** bridging quantum gravity (observer-dependent type-II_∞ algebras via crossed products), cosmology (non-minimal coupling with modular-flavour dark sector), and particle physics (SU(5)+45_H GUT with proton-decay falsifiers).
-
-**Six pillars:**
-- Type-II_∞ crossed product gravity (de Sitter, observer-dependent entropy)
-- Modular flavour S'₄ Littlest Seesaw with Damerell CM anchors
-- Cassini-clean non-minimal coupling (τ near-i attractor at χ²/dof=1.05)
-- Persistent-homology complexity observables (primordial non-Gaussianity)
-- Proton-decay and Krylov-saturation falsifiers (Hyper-K, DUNE, BEC)
-- Araki-cocycle rate derivation + generalized second law
-
-## Download PDFs
-
-Pre-print PDFs from GitHub Releases: [Release page](https://github.com/AIdevsmartdata/crossed-cosmos/releases)
-
-Submission packages for all ten papers include:
-- Full LaTeX source + compiled PDF
-- Live-verified bibliography (arXiv API checked 2026-05-05)
-- Suggested referees and cover letters
-- Anti-fabrication audit log (hallu counter tracking)
-
-## Documentation
-
-- [`PAPERS.md`](PAPERS.md) — index of 10 submission-ready papers with abstracts and submission status
-- [`RESULTS.md`](RESULTS.md) — key numerical results
-- [`CHANGELOG.md`](CHANGELOG.md) — version history (v1 → v6.0.53.8)
-- `notes/eci_v7_aspiration/` — 100+ sub-agent audit memos, derivations, and cross-checks
-- `derivations/V6-claims-audit-pipeline.py` — automated rigour checking (18/18 PASS)
-- `paper/eci.bib` — verified bibliography (DOIs live-checked via arXiv API and CrossRef)
-- `AI_USE.md` — disclosure of LLM collaboration and anti-fabrication protocols
-
-## Build LaTeX
+## Build LaTeX (selected papers)
 
 ```bash
-cd notes/eci_v7_aspiration/PNT && pdflatex paper_lmfdb_s4prime.tex
-cd notes/eci_v7_aspiration/V74_AMENDMENT && pdflatex v74_amendment_v2.tex
-cd notes/eci_v7_aspiration/PDSSYK_FRW && pdflatex dssyk_krylov_FRW_extension.tex
+cd notes/eci_v7_aspiration/R6_LEMNISCATE_NOTE && pdflatex lemniscate_note.tex
+cd notes/eci_v7_aspiration/M70_R2_PAPER && pdflatex r2_blochkato_paper.tex
+cd notes/eci_v7_aspiration/M45_BIANCHI_IX_PAPER && pdflatex bianchi_ix_modular_shadow.tex
 ```
 
 ## Cite
 
 ```bibtex
-@software{Remondiere2026ECI,
-  author = {Remondière, Kévin},
-  title  = {crossed-cosmos: Extended Cosmological Index v6.0.53.8},
+@software{crossed_cosmos_2026,
+  title  = {crossed-cosmos: ECI research-programme draft v6.0.53.100},
   year   = {2026},
-  doi    = {10.5281/zenodo.20043755},
+  doi    = {10.5281/zenodo.20060047},
   url    = {https://github.com/AIdevsmartdata/crossed-cosmos}
 }
 ```
 
-## License & Governance
+## License
 
-- **Text & figures:** CC BY 4.0 (see [`LICENSE`](LICENSE))
-- **Code (future):** MIT
-- **Bibliography discipline:** All arXiv/DOI references live-verified via API (2026-05-05)
-- **Fabrication counter:** Hallu#85 (5 fresh catches today; Mistral STRICT-BAN in effect)
+- **Text & figures**: CC BY 4.0 (see [`LICENSE`](LICENSE))
+- **Code**: MIT (when applicable)
 
-## Roadmap (v7 pathway)
+## ORCID
 
-- [x] v6.0.53 baseline snapshot (Zenodo 10.5281/zenodo.20030684)
-- [x] Ten submission-ready papers (2026-05-05 cutoff)
-- [ ] **Wave 12 Phase 1** (12 agents in flight, 8 Sonnets + 4 Haiku — 2026-05-05 evening)
-  - H₀ Wolf 2025 lit-extract (A69) → A70+A71 likelihood + PC GPU MCMC contest
-  - Damerell extension (A72), RG running ξ (A73)
-  - Twistor scoping (A75), Adelic L-functions (A76), Modular bootstrap higher genus (A77)
-  - H6 χ_4 relaxation (A78), H1 type-II_∞ FRW lit (A79)
-  - Utility: PDFs sanity, README, hallu log, arXiv cross-check (H11-H14)
-- [ ] arXiv endorsement + submission wave 1 (PNT, V74_AMENDMENT, EREPR_REOPEN)
-- [ ] LMP submissions (CARDY_PAPER, MODULAR_SHADOW, Geom. Topology)
-- [ ] PRD proton-decay campaign (OPUS_G112B, M3–M6 forecast)
-- [ ] BEC falsifier experiment coordination (Steinhauer group, Innsbruck)
+[0009-0008-2443-7166](https://orcid.org/0009-0008-2443-7166)

@@ -1,0 +1,74 @@
+======================================================================
+F1 FALSIFIER v2 — Conjecture M13.1(a) FE-symmetric 2-adic interpolation
+Sage 10.7 compatibility pass (M76, 2026-05-06)
+Status: SKELETON. Fill TODO subroutines before running.
+======================================================================
+[OK] f = 4.5.b.a confirmed: a_2 = -4
+[OK] Damerell ladder loaded: alpha = {1: 1/10, 2: 1/12, 3: 1/24, 4: 1/60}
+[OK] M13.1(a) predictions:
+     m=1: predicted_plus = 7/120,  predicted_minus = 1/24
+     m=2: predicted_plus = 1/16,  predicted_minus = 1/48
+     m=3: predicted_plus = 1/16,  predicted_minus = -1/48
+     m=4: predicted_plus = 7/120,  predicted_minus = -1/24
+[SCAFFOLD] AnticyclotomicGaloisScaffold initialized (TODO #1, specialist needed).
+[SCAFFOLD] Hecke Grossencharacter psi: implicit via L(f,s) (TODO #2, ~3 h).
+           Sage 10.7: HeckeCharGroup partial support; eigenvalue check feasible.
+
+[DRY RUN] F1 falsifier v2 scaffold summary:
+  Predicted values (M13.1(a) FE-symmetric means):
+    m=1: predicted_plus = 7/120,  predicted_minus = 1/24
+    m=2: predicted_plus = 1/16,  predicted_minus = 1/48
+    m=3: predicted_plus = 1/16,  predicted_minus = -1/48
+    m=4: predicted_plus = 7/120,  predicted_minus = -1/24
+
+  Sage 10.7 TODO status:
+  TODO #1: AnticyclotomicGalois (~5 h, SPECIALIST)
+  TODO #2: Hecke Grossencharacter psi explicit (~3 h, SAGE-DOABLE)
+  TODO #3: BDP Heegner distribution L_2^+/- (~20-30 h, SPECIALIST)
+
+  PASS CRITERION: v_2(integral - predicted) >= 20 for all m
+  FAIL CRITERION: v_2 < 20 for any m  --> M13.1(a) FALSIFIED
+
+======================================================================
+F1 EXECUTED: NOT_RUN
+Conjecture M13.1(a): NOT_TESTED (skeleton only, Stage 2 specialist-blocked)
+======================================================================
+
+SUBROUTINE SUMMARY (Sage 10.7 status per TODO):
+
+  TODO #1  AnticyclotomicGalois(K=Q(i), p=2)
+           Status: SPECIALIST NEEDED (~5 h).
+           Sage 10.7: NOT IN STDLIB for ramified p=2 CM case.
+           References: de Shalit 1987; Rubin Invent. Math. 103; BDP 2001 §2.
+
+  TODO #2  Hecke Grossencharacter psi (conductor (1+i)^2, type (4,0))
+           Status: SAGE-DOABLE (~3 h).
+           Sage 10.7: HeckeCharGroup partial support; eigenvalue check feasible.
+           Can verify psi(p) = a_p(f) for split primes via LMFDB 4.5.b.a.
+
+  TODO #3  BDP Heegner 2-adic distribution L_2^+/-(f)
+           Status: SPECIALIST NEEDED (~20-30 h). CORE SUBROUTINE.
+           Sage 10.7: NOT IN STDLIB. Requires BDP/Kriz p=2 ramified adaptation.
+           pollack_stevens module partial; Kobayashi +/- NOT available.
+           Outreach: Buyukboduk (kazim.buyukboduk@ucd.ie)
+                     Lei (antonio.lei@uottawa.ca)
+           Key references:
+             - BDP 2013 arXiv:1002.4071 §3
+             - Kriz 2021 arXiv:1912.02308 (supersingular p-adic L-functions)
+             - Buyukboduk-Lei arXiv:1709.02912 (anticyclotomic p-adic L-functions)
+
+  TOTAL specialist effort: ~25-35 h (TODOs #1, #3)
+  TOTAL Sage-doable effort: ~3 h (TODO #2)
+  Compute cost once implemented: ~50 CPU-hr (matches M44 F1 estimate)
+
+OBSTRUCTION NOTE (M44 F5 outcome):
+  p=2 RAMIFIED in K=Q(i) AND SUPERSINGULAR for f (v_2(a_2)=2 >= 1).
+  Existing IMC theorems (Hsieh 2014, Chida-Hsieh 2015, Arnold 2007,
+  Pollack-Weston 2011) ALL require at least one of:
+    - p unramified in K, OR
+    - p > k+1, OR
+    - p ordinary.
+  None hold here. The BDP distribution exists in principle (Kriz 2021 regime),
+  but the Iwasawa main conjecture controlling interpolation is OPEN.
+  F1 falsifier tests the interpolation DIRECTLY and is independent of IMC.
+

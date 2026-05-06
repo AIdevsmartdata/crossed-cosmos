@@ -1,0 +1,66 @@
+[OK] mpmath 1.4.1 imported
+[OK] mpmath precision: 75 decimal digits (252 bits)
+
+======================================================================
+R3-C-1 STAGE 1 HIGH-PRECISION: pi*L(f,1)/L(f,2) = 6/5
+  mpmath precision: 75 decimal digits
+======================================================================
+
+[Step 1] Building a_n table for n=1..5000...
+[OK] All n<=50 LMFDB spot-checks passed (50 values)
+  Built in 0.0s
+  a[2] = -4  (expected -4)
+  [OK] Steinberg anchor a_2 = -4
+
+[Method A] Incomplete-Gamma L-series (N_terms=300)...
+  NOTE: This computes the upper Mellin piece only.
+  The ratio L(f,1)/L(f,2) [upper pieces] is computed.
+  If the lower-tail functional equation terms cancel in the ratio,
+  this gives the correct R. Otherwise, see DIAGNOSTIC.
+  Time: 0.0s
+  L(f,1) [method A] = (0.011689665802613375734317520366446777325231022107456 + 0.0j)
+  L(f,2) [method A] = (0.53507551794728611324742237737118866467149519481502 + 0.0j)
+  R_A = pi*L1/L2   = (0.0686336170813704841845836441871621945270305485713407336958101 + 0.0j)
+  |R_A - 6/5|      = 1.13136638292
+  VERDICT_A: FAIL
+
+[Method C] Direct Mellin quadrature (N_terms=200, Y_split=1)...
+  This computes INT_1^inf f(iy) y^{s-1} dy numerically.
+  [TBD-FUNCTIONAL-EQ]: Lower piece (0..1) included via AFE?
+  For now: upper piece only. Check ratio stability.
+  Time: 0.6s
+  L(f,1) upper = (0.001860468095578206829990082371289511455766 + 0.0j)
+  L(f,2) upper = (0.01355362120411399409653502453540811856677 + 0.0j)
+  R_C = pi*L1/L2 = (0.43123773442425691914233433720088681087818637138345 + 0.0j)
+  |R_C - 6/5|   = 0.768762265576
+
+[Method B] PARI/GP subprocess bridge...
+  [PARI] Found PARI/GP at: /home/remondiere/miniforge3/envs/sage/bin/gp
+  PARI/GP output:
+    a_2 = -4   [expected -4, PASS]
+    L(f,1)   = 0.1524471335906668939968486380733198490804650364690543075779997156391066
+    L(f,2)   = 0.3991056624577174268046801151413752631886651558104582999348984624161276
+    pi*L1/L2 = 1.200000000000000000000000000000000000000000000000000000000000000000000
+    target   = 1.20000000000000000000000000000000000000
+    |R - 6/5| = 1.3817869688151111401 E-77
+
+======================================================================
+FINAL SUMMARY
+======================================================================
+  Target: pi * L(f,1) / L(f,2) = 6/5 = 1.2000...  [R3-C-1]
+
+  Method A (Incomplete-Gamma series, N=300):
+    R_A  = (0.0686336170813704841845836441871621945270305485713407336958101 + 0.0j)
+    |R_A - 6/5| = 1.13136638291863
+    VERDICT_A: FAIL
+
+  Method C (Mellin quadrature upper piece, N=200):
+    R_C  = (0.43123773442425691914233433720088681087818637138345 + 0.0j)
+    |R_C - 6/5| = 0.768762265575743
+
+  Method B (PARI/GP): PASS
+
+PRIMARY VERDICT: PASS (PARI)
+
+
+[Timing] Total elapsed: 0.6s

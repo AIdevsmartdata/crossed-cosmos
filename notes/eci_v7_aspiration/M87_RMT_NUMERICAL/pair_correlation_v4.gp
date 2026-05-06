@@ -167,6 +167,44 @@ print_hist(nb, bw, hist, gue_exp, gue_nn, goe_nn) = {
   );
 }
 
+\\ ----------------------------------------------------------
+\\ Verdict helpers: single function call avoids top-level multi-line if()
+\\ ----------------------------------------------------------
+verdict_chi2_pair(c2, threshold) = {
+  if(c2 > threshold,
+    print("  WARNING: chi^2 = ", c2, " > ", threshold);
+    print("  Systematic deviation from GUE detected.");
+    print("  ACTION: Increase N_zeros (extend to T=200), recheck normalization."),
+    print("  PASS: chi^2 = ", c2, " <= ", threshold, " (consistent with GUE)")
+  );
+}
+
+verdict_nn(c2_goe, c2_gue) = {
+  my(ratio_safe);
+  ratio_safe = if(abs(c2_gue) < 1e-30, 1.0, c2_goe / c2_gue);
+  if(c2_goe < c2_gue,
+    print("  NOTE: p(s) CLOSER TO GOE than GUE (ratio = ", ratio_safe, ")");
+    print("  This is CONSISTENT with SO(even) family prediction near central point."),
+    print("  NOTE: p(s) closer to GUE (ratio chi2_goe/chi2_gue = ", ratio_safe, ")")
+  );
+}
+
+verdict_summary_chi2(c2, threshold) = {
+  if(c2 > threshold,
+    print("  OVERALL: WARNING -- pair correlation deviates from GUE");
+    print("  Possible sources: (1) too few zeros; (2) CM arithmetic anomaly");
+    print("  Recommended: extend to T=200 (N~150 zeros) before claiming anomaly"),
+    print("  OVERALL: CONSISTENT WITH GUE pair correlation")
+  );
+}
+
+verdict_summary_nn(c2_goe, c2_gue) = {
+  if(c2_goe < c2_gue,
+    print("  NN spacing: closer to GOE/SO(even) -- EXPECTED for low-lying zeros"),
+    print("  NN spacing: closer to GUE -- EXPECTED for large-height zeros")
+  );
+}
+
 \\ ===========================================================
 \\ MAIN EXECUTION
 \\ ===========================================================
@@ -199,12 +237,7 @@ chi2 = c2_result[1];
 chi2_dof_reduced = c2_result[2];
 print("  Chi^2 = ", chi2, "  with ", chi2_dof_reduced, " effective dof");
 print("  Threshold: ", CHI2_THRESHOLD);
-if(chi2 > CHI2_THRESHOLD,
-  print("  WARNING: chi^2 = ", chi2, " > ", CHI2_THRESHOLD);
-  print("  Systematic deviation from GUE detected.");
-  print("  ACTION: Increase N_zeros (extend to T=200), recheck normalization."),
-  print("  PASS: chi^2 = ", chi2, " <= ", CHI2_THRESHOLD, " (consistent with GUE)")
-);
+verdict_chi2_pair(chi2, CHI2_THRESHOLD);
 
 \\ Step 5: Nearest-neighbor spacing distribution
 print("");
@@ -219,11 +252,7 @@ nn_dof        = nn_result[6];
 
 print("  NN spacing chi^2 vs GUE: ", chi2_nn_gue, "  (dof~", nn_dof, ")");
 print("  NN spacing chi^2 vs GOE: ", chi2_nn_goe, "  (dof~", nn_dof, ")");
-if(chi2_nn_goe < chi2_nn_gue,
-  print("  NOTE: p(s) CLOSER TO GOE than GUE (ratio = ", chi2_nn_goe/chi2_nn_gue, ")");
-  print("  This is CONSISTENT with SO(even) family prediction near central point."),
-  print("  NOTE: p(s) closer to GUE (ratio chi2_goe/chi2_gue = ", chi2_nn_goe/chi2_nn_gue, ")")
-);
+verdict_nn(chi2_nn_goe, chi2_nn_gue);
 
 \\ Step 6: Histogram output
 print("");
@@ -240,16 +269,8 @@ printf("  Chi^2 (pair corr vs GUE):    %.2f  (threshold: %d)\n", chi2, CHI2_THRE
 printf("  Chi^2 (NN spacing vs GUE):   %.2f\n", chi2_nn_gue);
 printf("  Chi^2 (NN spacing vs GOE):   %.2f\n", chi2_nn_goe);
 
-if(chi2 > CHI2_THRESHOLD,
-  print("  OVERALL: WARNING -- pair correlation deviates from GUE");
-  print("  Possible sources: (1) too few zeros; (2) CM arithmetic anomaly");
-  print("  Recommended: extend to T=200 (N~150 zeros) before claiming anomaly"),
-  print("  OVERALL: CONSISTENT WITH GUE pair correlation")
-);
-if(chi2_nn_goe < chi2_nn_gue,
-  print("  NN spacing: closer to GOE/SO(even) -- EXPECTED for low-lying zeros"),
-  print("  NN spacing: closer to GUE -- EXPECTED for large-height zeros")
-);
+verdict_summary_chi2(chi2, CHI2_THRESHOLD);
+verdict_summary_nn(chi2_nn_goe, chi2_nn_gue);
 
 print("");
 print("References:");

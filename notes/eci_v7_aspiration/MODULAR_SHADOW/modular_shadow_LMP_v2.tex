@@ -15,6 +15,7 @@
 \documentclass[12pt,a4paper]{article}
 
 \usepackage{amsmath,amssymb,amsthm}
+\usepackage{booktabs}
 \usepackage{hyperref}
 \usepackage{cite}
 \usepackage{geometry}
@@ -79,6 +80,12 @@ analog black-hole BEC at $T_H = 0.35 \pm 0.10$~nK
 (Mu\~{n}oz~de~Nova et al.~\cite{Steinhauer2019}), the bound predicts
 $\Gamma_{\mathrm{meas}} \le 2\pi k_B T_H/\hbar = (288 \pm 82)\,\mathrm{s}^{-1}$
 for any exterior-phonon temporal correlation rate.
+We additionally present a full signal-to-noise analysis: at
+$N_{\mathrm{pairs}} = 10^4$ phonon-pair detections ($\approx 23$~min
+single-mode), $\Gamma$ is resolved to $1\%$ statistical precision
+(dominated in practice by $\pm 29\%$ from the $T_H$ systematic),
+and derive a saturation conjecture whose converse is precluded by
+the free-QFT counter-examples above.
 We compare with the concurrent boundary-area-operator construction of
 Vardian~\cite{Vardian2026} (AdS/CFT) and note that our scope (de~Sitter
 static patch / generic type-II$_\infty$ truncation) is complementary.
@@ -189,8 +196,10 @@ sketch; full details in Appendix~\ref{app:A61-proof}).
 \S\ref{sec:saturation} downgrades the saturation step to a conjecture
 and reviews the free-QFT counter-examples.
 \S\ref{sec:bec} applies the bound to the Kolobov--Steinhauer 2021
-BEC analog black hole, deriving the falsifier
-$\Gamma_{\mathrm{meas}} \le (288 \pm 82)\,\mathrm{s}^{-1}$.
+BEC analog black hole, deriving the bound and saturation conjectures,
+a full signal-to-noise analysis (Fisher--Cram\'{e}r--Rao--Wilks),
+and the Kolobov~2021 re-analysis falsifier
+$\Gamma_{\mathrm{meas}} > 432\,\mathrm{s}^{-1}$ at $5\sigma$.
 \S\ref{sec:discussion} compares with Vardian and discusses scope.
 \S\ref{sec:outlook} lists open problems.
 
@@ -516,17 +525,29 @@ is a working conjecture of the ECI programme, not a theorem of FS24.
 We thank the A11/A19 audit for catching this over-attribution.
 
 % =====================================================================
-\section{Application: a falsifier on Kolobov 2021 BEC analog Hawking
-         radiation}
+\section{Application: BEC analog Hawking radiation and experimental
+         falsifiers}
 \label{sec:bec}
 % =====================================================================
 
-We now derive a concrete observable consequence of
+We now derive concrete observable consequences of
 Theorem~\ref{thm:bound} for the analog black-hole BEC platform of
 Kolobov, Golubkov, Mu\~{n}oz~de~Nova, and Steinhauer~\cite{Kolobov2021}
 (Nat.~Phys.~17, 362, 2021).
 
+\begin{remark}[Applicability caveat]
+\label{rem:bec-caveat}
+Throughout this section we assume that the BEC exterior phonon algebra
+at finite healing length $\xi$ admits a finite-rank type-II$_\infty$
+truncation in the sense of~\S\ref{sec:setup}, following the crossed-product
+construction of Witten~\cite{Witten2022} and the Verch-folium argument
+for KMS states at $T_H$ in the phononic ($k\xi \ll 1$) regime.
+This assumption is not proven for BEC systems; it is the operative
+hypothesis whose falsification is the goal of the experiments below.
+\end{remark}
+
 \subsection{Hawking temperature and the predicted bound}
+\label{ssec:bec-bound}
 
 Mu\~{n}oz~de~Nova et al.~\cite{Steinhauer2019} (Nature 569, 688, 2019)
 measured the analog Hawking temperature in the BEC sonic-horizon
@@ -547,10 +568,9 @@ implying the Bisognano--Wichmann KMS rate
 \end{equation}
 ($k_B/\hbar = 1.31 \times 10^{11}\,\mathrm{rad}\,\mathrm{s}^{-1}\,\mathrm{K}^{-1}$).
 
-By Theorem~\ref{thm:bound} applied to the (assumed) finite-rank
-type-II$_\infty$ truncation of the exterior phonon algebra at the
-analog horizon, any temporal correlator of exterior phonons must
-have its envelope decaying with rate $\le \Gamma_{\mathrm{bound}}$:
+Under the assumption of Remark~\ref{rem:bec-caveat}, Theorem~\ref{thm:bound}
+implies that any temporal correlator of exterior phonons must have its
+envelope decaying with rate $\le \Gamma_{\mathrm{bound}}$:
 \begin{equation}
   \Gamma_{\mathrm{meas}}
   \;\le\;
@@ -564,31 +584,240 @@ of: (i) the second-order coherence $g^{(2)}(\tau)$; (ii) the
 two-point density correlator $G^{(2)}(z_1,z_2,t)$ envelope;
 (iii) the Hawking-flux ramp-up rate.
 
-\subsection{Why this is a clean falsifier}
+\subsection{Bound and saturation conjectures}
+\label{ssec:bec-conjectures}
 
-The Kolobov~2021 dataset~\cite{Kolobov2021} contains time-resolved
-density correlations at six temporal points across a 124-day,
-97{,}000-repetition acquisition: the temporal envelope of
-$G^{(2)}(z_1,z_2,t)$ can be extracted directly from the existing
-data without new experimental runs.
+The prediction~\eqref{eq:gamma-pred} is a one-sided bound.  It is
+convenient to split the experimental content into two forms, following
+the modular-shadow finite-rank theorem.  Define $\lambda_L^{\mathrm{sonic}}
+:= 2\pi k_B T_H/\hbar = \Gamma_{\mathrm{bound}}$.
+
+\begin{conjecture}[Bound form]
+\label{conj:bec-bound}
+For phonons near the sonic horizon of a BEC analog black hole at
+temperature $T_H$ in the linear-dispersion regime ($k\xi \ll 1$), the
+temporal decay rate $\Gamma_{\mathrm{meas}}$ of the second-order coherence
+$g^{(2)}(\tau)$ satisfies
+\begin{equation}
+  \Gamma_{\mathrm{meas}} \;\le\; \lambda_L^{\mathrm{sonic}}
+    \;=\; \frac{2\pi\,k_B\,T_H}{\hbar},
+  \label{eq:bec-bound-conj}
+\end{equation}
+where $T_H$ is measured independently from the Hawking correlation spectrum.
+This is the provable form: it follows from Theorem~\ref{thm:bound} under
+Remark~\ref{rem:bec-caveat}, via Parker et al.~\cite{Parker2019} and the
+Bisognano--Wichmann modular-flow identification.
+\end{conjecture}
+
+\begin{conjecture}[Saturation form]
+\label{conj:bec-sat}
+Under the same assumptions, the bound is saturated:
+\begin{equation}
+  \Gamma_{\mathrm{meas}} \;=\; \lambda_L^{\mathrm{sonic}}
+    \;=\; \frac{2\pi\,k_B\,T_H}{\hbar}.
+  \label{eq:bec-sat-conj}
+\end{equation}
+\end{conjecture}
+
+\noindent\emph{Status.}
+Conjecture~\ref{conj:bec-sat} is an open working hypothesis.
+The saturation step requires the modular two-point function to take
+the universal hyperbolic Bisognano--Wichmann form
+$C(s) \propto (2\sinh(\pi s/\beta))^{-\Delta}$; this is automatic for
+genuine geometric/holographic flow but is \emph{not} guaranteed in
+the BEC setting.
+The free-QFT and integrable counter-examples of~\S\ref{sec:saturation}
+show that exponential Krylov growth saturating the bound can occur
+without chaos~\cite{AvdoshkinDymarsky2019,Camargo2023,Sreeram2025}.
+Hence saturation $\Rightarrow$ type-II$_\infty$ chaoticity is false in
+general, and Conjecture~\ref{conj:bec-sat} cannot be deduced from
+Conjecture~\ref{conj:bec-bound} alone.
+
+\medskip
+\noindent\textbf{Falsifier regimes.}
+For Steinhauer~2019 parameters $T_H = 0.35\pm 0.10\,\mathrm{nK}$
+the central value is $\lambda_L^{\mathrm{sonic}} = 288\,\mathrm{s}^{-1}$.
+Combining $1\%$ statistical precision (at $N_{\mathrm{pairs}} = 10^4$)
+with the dominant $29\%$ systematic from $T_H$ uncertainty:
+
+\begin{table}[h]
+\centering
+\begin{tabular}{lll}
+\toprule
+$\Gamma_{\mathrm{meas}}$ regime & Conj.~\ref{conj:bec-bound} (Bound) &
+   Conj.~\ref{conj:bec-sat} (Saturation) \\
+\midrule
+$< 0.5\,\lambda_L^{\mathrm{sonic}}$ ($\lesssim 144\,\mathrm{s}^{-1}$) & consistent & refuted \\
+$\in [0.8,\,1.2]\,\lambda_L^{\mathrm{sonic}}$ & consistent & consistent \\
+$> 1.5\,\lambda_L^{\mathrm{sonic}}$ ($> 432\,\mathrm{s}^{-1}$) at $5\sigma$
+  & \textbf{refuted} (Thm.~\ref{thm:bound} falls) & refuted \\
+\bottomrule
+\end{tabular}
+\caption{Falsifier regimes for the BEC $g^{(2)}(\tau)$ decay rate.
+The bound falsifier $\Gamma_{\mathrm{meas}} > 432\,\mathrm{s}^{-1}$
+at $5\sigma$ refutes Theorem~\ref{thm:bound} independently of any
+chaos or saturation hypothesis.}
+\label{tab:bec-falsifier}
+\end{table}
+
+\noindent The two conjectures are not equivalent: the bound form
+admits $\Gamma_{\mathrm{meas}} < \lambda_L^{\mathrm{sonic}}$ as
+compatible, while the saturation form demands equality.
+
+\subsection{Signal-to-noise analysis}
+\label{ssec:bec-sn}
+
+We present the signal-to-noise estimate for a dedicated measurement
+of the $g^{(2)}(\tau)$ decay rate.  All numerical values below are
+consistent with \texttt{sympy} verification on Steinhauer~2019
+parameters~\cite{Steinhauer2019}.
+
+\subsubsection{Phonon pair flux and integration time}
+
+The thermal characteristic frequency at the sonic horizon in the
+linear-dispersion regime is
+\begin{equation}
+  f_{\mathrm{phonon}} \;=\; \frac{k_B\,T_H}{h}
+    \;=\; \frac{\kappa}{4\pi^2}
+    \;\approx\; 7.3\,\mathrm{Hz},
+\end{equation}
+where $\kappa = 2\pi k_B T_H/\hbar$ is the acoustic surface gravity.
+This is the rate of Hawking phonon pairs emitted per mode per unit time.
+
+To resolve the exponential decay $g^{(2)}(\tau) \propto
+e^{-\Gamma\tau}$ to relative error $\delta\Gamma/\Gamma < 5\%$,
+Fisher-information analysis (see below) requires $N_{\mathrm{pairs}}
+\ge 400$.  For a standard run at $N_{\mathrm{pairs}} = 10^4$:
+\begin{equation}
+  t_{\mathrm{total}} \;=\; \frac{N_{\mathrm{pairs}}}{f_{\mathrm{phonon}}}
+    \;\approx\; 1371\,\mathrm{s} \;\approx\; 23\,\mathrm{min}.
+  \label{eq:bec-ttotal}
+\end{equation}
+This is a conservative single-mode estimate; a 1D condensate with
+$\mathcal{O}(L/\xi) \sim 10^3$ modes in parallel would reduce the
+required time proportionally.
+
+\begin{table}[h]
+\centering
+\begin{tabular}{lll}
+\toprule
+Quantity & Value & Unit \\
+\midrule
+$T_H$ (Steinhauer 2019) & $0.35 \pm 0.10$ & nK \\
+$\Gamma_{\mathrm{bound}}$ (ECI prediction) & $287.9 \pm 82.3$ & s$^{-1}$ \\
+Krylov saturation time $1/\Gamma_{\mathrm{bound}}$ & $3.47$ & ms \\
+Phonon emission rate $f_{\mathrm{phonon}}$ & $7.29$ & Hz \\
+BEC coherence time & $\sim 100$ & ms \\
+E-foldings within coherence window & $\sim 29$ & --- \\
+$N_{\mathrm{pairs}}$ for $5\%$ precision & $400$ & pairs \\
+Integration time (single-mode, $N=10^4$) & $23$ & min \\
+Statistical precision at $N=10^4$ & $1.0$ & \% \\
+Systematic limit ($T_H$ uncertainty) & $29$ & \% \\
+\bottomrule
+\end{tabular}
+\caption{Signal-to-noise summary for the BEC $g^{(2)}(\tau)$
+measurement at the sonic horizon.}
+\label{tab:bec-sn}
+\end{table}
+
+\subsubsection{Fisher information and Cramér--Rao bound}
+
+For the single-parameter model $g^{(2)}(\tau) - 1 = A\,e^{-\Gamma\tau}$,
+the maximum-likelihood estimator (MLE) for $\Gamma$ from $N_{\mathrm{pairs}}$
+pair-detection events has Fisher information
+\begin{equation}
+  \mathcal{I}(\Gamma) \;=\; \frac{N_{\mathrm{pairs}}}{\Gamma^2},
+\end{equation}
+giving Cram\'{e}r--Rao standard error
+\begin{equation}
+  \sigma_\Gamma \;=\; \frac{\Gamma}{\sqrt{N_{\mathrm{pairs}}}}.
+\end{equation}
+For $N_{\mathrm{pairs}} = 10^4$:
+\begin{equation}
+  \sigma_\Gamma \;=\; \frac{287.9}{\sqrt{10^4}} \;=\; 2.88\,\mathrm{s}^{-1},
+  \qquad
+  \frac{\sigma_\Gamma}{\Gamma} \;=\; 1.0\%.
+\end{equation}
+The statistical SNR is therefore $\mathrm{SNR} = \sqrt{N_{\mathrm{pairs}}}
+= 100\sigma$.
+
+\subsubsection{Wilks likelihood ratio test}
+
+To distinguish the ECI model ($H_1$: exponential decay at rate
+$\Gamma$) from the null ($H_0$: constant $g^{(2)}$), the Wilks
+likelihood-ratio statistic is
+\begin{equation}
+  \Lambda_W \;=\; -2\log\frac{\mathcal{L}(H_0)}{\mathcal{L}(H_1)}
+    \;\xrightarrow{N\to\infty}\; \chi^2_1
+    \quad\text{under }H_0.
+\end{equation}
+Under $H_1$, the non-centrality parameter is $\lambda_{\mathrm{nc}}
+= N_{\mathrm{pairs}} = 10^4$, giving a formal $Z$-score of
+$\sqrt{10^4} = 100\sigma$.  The $5\sigma$ threshold requires only
+$N_{\mathrm{pairs}} \ge 25$, trivially satisfied.
+
+\subsubsection{Dominant systematic: $T_H$ uncertainty}
+
+The dominant practical limitation is the $\pm 29\%$ uncertainty in
+$T_H = 0.35 \pm 0.10\,\mathrm{nK}$, propagating linearly to $\Gamma$:
+\begin{equation}
+  \frac{\delta\Gamma}{\Gamma} \;=\; \frac{\delta T_H}{T_H} \;\approx\; 29\%.
+\end{equation}
+The 1-sigma band of the ECI prediction is
+$\Gamma \in [205.6,\,370.2]\,\mathrm{s}^{-1}$.
+A precision test of the scaling law $\lambda_L^{\mathrm{sonic}}
+= 2\pi k_B T_H/\hbar$ requires $T_H$ to be re-measured with $<5\%$
+accuracy.
+
+\subsection{Kolobov 2021 re-analysis as a bound falsifier}
+\label{ssec:bec-kolobov}
+
+The Kolobov--Golubkov--Mu\~{n}oz~de~Nova--Steinhauer 2021
+dataset~\cite{Kolobov2021} measured the time evolution of
+$G^{(2)}(z_1, z_2, t)$ at six timepoints across 97{,}000 experimental
+repetitions (124-day acquisition).  Re-analysis of the temporal
+envelope of $G^{(2)}(z_1, z_2, t)$ --- which, by the Wiener--Khintchine
+relation, is the temporal cousin of $g^{(2)}(\tau)$ --- can extract a
+$1\sigma$ upper bound on $\Gamma_{\mathrm{meas}}$ directly from
+published data, without new experimental runs.
 
 \begin{proposition}[BEC bound falsifier]
+\label{prop:bec-falsifier}
 If a re-analysis of Kolobov~2021 data yields
 $\Gamma_{\mathrm{meas}} > 1.5 \times \Gamma_{\mathrm{bound}}
 = 432\,\mathrm{s}^{-1}$ at $5\sigma$, then the type-II$_\infty$
 finite-rank scaffolding underlying Theorem~\ref{thm:bound} is
-falsified for the analog-BEC exterior phonon algebra.
+falsified for the analog-BEC exterior phonon algebra
+(under the assumption of Remark~\ref{rem:bec-caveat}).
 \end{proposition}
 
+\paragraph{Interpretation of Kolobov re-analysis.}
+\begin{itemize}
+\item $\Gamma_{\mathrm{meas}} \le 288\,\mathrm{s}^{-1}$:
+  consistent with Theorem~\ref{thm:bound}.
+  No new physics required; the bound follows from existing
+  modular-flow theory.
+\item $\Gamma_{\mathrm{meas}} \in [205,\,370]\,\mathrm{s}^{-1}$
+  (within the $1\sigma$ band of $\lambda_L^{\mathrm{sonic}}$):
+  non-trivial corroboration of both Conjectures~\ref{conj:bec-bound}
+  and~\ref{conj:bec-sat}.
+\item $\Gamma_{\mathrm{meas}} > 432\,\mathrm{s}^{-1}$ at $5\sigma$:
+  \textbf{bound falsifier triggered.}
+  Theorem~\ref{thm:bound} and the type-II$_\infty$ modular-shadow
+  scaffolding fall \emph{independently of any chaos hypothesis}.
+\end{itemize}
+This re-analysis route is preferable to a fresh dedicated measurement
+because: (a) it requires no new data acquisition; (b) it tests the
+strongest (BOUND) form of the prediction; (c) it is robust to the
+integrability counter-examples~\cite{AvdoshkinDymarsky2019,Camargo2023,Sreeram2025}
+that constrain the saturation form.
+
 \paragraph{Robustness to integrability counter-examples.}
-Crucially, the bound~\eqref{eq:gamma-pred} is the BOUND form,
-not the saturation form: it is therefore robust to the free-QFT /
-integrability counter-examples
-of~\S\ref{sec:saturation}~\cite{AvdoshkinDymarsky2019,Camargo2023,Sreeram2025}.
-Even if the BEC phonon system is effectively integrable on the
-relevant timescales, the bound still holds; only an observed
-\emph{violation} would refute the type-II$_\infty$ kinematic
-prefactor.
+The bound~\eqref{eq:gamma-pred} is the BOUND form, not the saturation
+form: even if the BEC phonon system is effectively integrable on the
+relevant timescales, the bound still holds under the type-II$_\infty$
+assumption.  Only an observed \emph{violation} refutes the
+kinematic prefactor.
 
 \paragraph{Cross-platform redundancy.}
 Independent platforms can cross-check~\eqref{eq:gamma-pred}:
@@ -1039,7 +1268,7 @@ For the truncation, the integral~\eqref{eq:A61-bw-spectral} is cut off
 at the maximal scaling dimension $\Delta_n = O(\Lambda_n)$ accessible
 to the modular-energy band.
 
-\emph{Sub-step 2b (moments of a hyperbolic kernel).}
+\emph{Sub-step 2b (moments of a hyperbolic kernel: explicit Mellin saddle).}
 For each spectral weight $(2\sinh(\pi s/\beta))^{-2\Delta}$, the
 Taylor expansion at $s=0$ involves only even powers, and the moments
 \[
@@ -1056,12 +1285,50 @@ admit the closed-form asymptotic
   \label{eq:A61-moment-asymp}
 \end{equation}
 with $C_\Delta > 0$ depending on $\Delta$ but not on $k$.
-This follows from the saddle-point evaluation of the inverse Mellin
-transform; see Whittaker--Watson, \emph{Modern Analysis} (1927) \S 13.6,
-or directly by integrating the spectral representation
+We give the explicit derivation via the inverse Mellin transform.
+The BW two-point function for scaling dimension $\Delta$ is
+\begin{equation}
+  \langle\mathcal{O}(s)\mathcal{O}(0)\rangle_\beta
+  \;=\;
+  \bigl(\sinh^2(\pi s/\beta)\bigr)^{-\Delta}.
+  \label{eq:A61-bw-twopt-expl}
+\end{equation}
+Its Mellin transform $\widetilde{C}(u) := \int_0^\infty s^{u-1}
+(\sinh^2(\pi s/\beta))^{-\Delta}\,ds$, analytic in $0 < \mathrm{Re}\,u < 2\Delta$, is
+\begin{equation}
+  \widetilde{C}(u)
+  \;=\;
+  \Bigl(\frac{\beta}{\pi}\Bigr)^{2u}
+  \frac{\Gamma(u)\,\Gamma(\Delta - u)}{\Gamma(\Delta)}.
+  \label{eq:A61-mellin-transform}
+\end{equation}
+The $2k$-th moment is then
+\begin{equation}
+  M_{2k}^{(\Delta)}
+  \;=\;
+  \frac{1}{2\pi i}
+  \int_{c-i\infty}^{c+i\infty}
+  \widetilde{C}(u)\;(2k)!\;u^{-2k-1}\,
+  e^{-2k\log(\pi/\beta)}\,du,
+  \label{eq:A61-inverse-mellin}
+\end{equation}
+with $c \in (0,\Delta)$.
+The saddle is located at $u^* = k$ (from $d/du[\log\widetilde{C}(u) - (2k+1)\log u]
+= 0$ and the digamma approximation $\psi(u) \approx \log u$ for large $u$).
+Steepest descent with Stirling's approximation gives
+\begin{equation}
+  M_{2k}^{(\Delta)}
+  \;\sim\;
+  C_\Delta\,\Bigl(\frac{2\pi k}{\beta}\Bigr)^{2k}\bigl(1+O(1/k)\bigr),
+  \label{eq:A61-saddle-result}
+\end{equation}
+confirming~\eqref{eq:A61-moment-asymp}; see Whittaker--Watson, \emph{Modern
+Analysis} (1927) \S 13.6 for the Mellin saddle-point estimate.
+Alternatively, the spectral representation
 $(2\sinh(\pi s/\beta))^{-2\Delta} = \int_{-\infty}^\infty e^{i\omega s}
-\tilde\rho_\Delta(\omega)\,d\omega$ where $\tilde\rho_\Delta(\omega)$
-is peaked near $|\omega| \sim 2\pi k/\beta$ for the $2k$-th moment.
+\tilde\rho_\Delta(\omega)\,d\omega$ gives the same conclusion directly:
+$\tilde\rho_\Delta(\omega)$ is peaked near $|\omega| \sim 2\pi k/\beta$
+for the $2k$-th moment, by Fourier analysis of the hyperbolic kernel.
 
 Integrating against $\rho_\mathcal{O}(\Delta)$ gives
 \begin{equation}

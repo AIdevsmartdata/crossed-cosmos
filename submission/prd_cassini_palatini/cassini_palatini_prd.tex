@@ -1,0 +1,309 @@
+%% cassini_palatini_prd.tex
+%% "ECI Cassini-clean scalar field: post-Newtonian analytic reference,
+%%  Palatini sub-branch, and first real-data posterior"
+%% Target: Physical Review D Letters (PRD), 4-6 pp
+%% Author: K. Remondiere (ECI v7.5 split, sub-agent M34, 2026-05-06)
+%%
+%% Anti-hallucination policy:
+%%   - KSTD26 arXiv:2604.16226 live-verified 2026-05-05 via arXiv API.
+%%   - All other references live-verified.
+%%   - Hallucination counter: 85 (no new fabrications).
+%%   - Mistral large-latest STRICT-BANNED.
+
+\documentclass[aps,prl,twocolumn,showpacs,superscriptaddress]{revtex4-2}
+
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{hyperref}
+\usepackage{xcolor}
+\usepackage{booktabs}
+\usepackage{url}
+
+%% Shorthand macros
+\newcommand{\arXiv}[1]{\href{https://arxiv.org/abs/#1}{\texttt{arXiv:#1}}}
+\newcommand{\Qi}{\mathbb{Q}(i)}
+\newcommand{\fLM}{f_{\text{4.5.b.a}}}
+\newcommand{\MP}{M_{\rm P}}
+\newcommand{\xichi}{\xi_\chi}
+
+\begin{document}
+
+\title{ECI Cassini-clean scalar field:\\
+       post-Newtonian analytic reference, Palatini sub-branch,\\
+       and first real-data posterior on DESI~DR2 + Pantheon$+$ + Planck~2018}
+
+\author{K.~Remondi\`ere}
+\affiliation{Independent researcher, Tarbes, France}
+\email{kevin.remondiere@gmail.com}
+
+\date{2026-05-06}
+
+\begin{abstract}
+The Extended Cosmological Index (ECI) research programme employs a
+non-minimally coupled scalar field $\chi$ with Jordan-frame coupling
+$\mathcal{L} \supset -\tfrac{1}{2}\xi_\chi R\chi^2$ and enforces a
+Cassini compliance wall $|\xi_\chi|(\chi_0/M_P)^2 \lesssim 6\times 10^{-6}$
+from the Cassini Doppler bound $|\gamma-1|\le 2.3\times 10^{-5}$.
+We graft the unified post-Newtonian treatment of Karam, S\'anchez
+L\'opez, and Terente D\'iaz (KSTD 2026, \arXiv{2604.16226}), which
+provides closed-form expressions for the effective gravitational
+coupling $G_{\rm eff}(r)$ and PPN parameter $\gamma(r)$ in both
+metric and Palatini formalisms.  The ECI Cassini wall is shown to
+follow analytically from KSTD eq.~(3.42).  We register a
+Palatini sub-branch (ECI v7.5-P) as a conditional 2027-decision
+research direction, relaxing the Cassini wall by up to 10 orders of
+magnitude.  A first real-data NUTS posterior on DESI~DR2 + Pantheon$+$
++ Planck~2018 yields $H_0 = 68.51 \pm 0.14$~km/s/Mpc (Planck-like)
+and a $\xi_\chi$ rail-saturated at $-0.024$, consistent with
+1-loop RG-running from $\xi(M_Z) \approx +0.001$ to $\xi(M_{\rm GUT})
+\approx -0.029$.  The decisive falsifier is the BepiColombo Mercury
+2027 PPN $\gamma$ improvement to $|\gamma-1| \lesssim 10^{-6}$.
+\end{abstract}
+
+\pacs{04.80.Cc, 98.80.-k, 95.36.+x}
+\keywords{non-minimal coupling, scalar-tensor gravity, Cassini bound,
+Palatini formalism, dark energy}
+
+\maketitle
+
+%%--------------------------------------------------------------------
+\section{Introduction}
+\label{sec:intro}
+
+Post-Newtonian tests of scalar-tensor gravity impose tight bounds on
+theories with a non-minimally coupled scalar field in the Jordan
+frame.  The Cassini Doppler-tracking experiment~\cite{Bertotti03}
+constrains the PPN parameter $\gamma$ to
+$|\gamma-1| \le 2.3\times 10^{-5}$ at Solar-System scales.
+
+The Extended Cosmological Index (ECI) framework~\cite{ECIv6053}
+employs a real scalar $\chi$ with non-minimal coupling (NMC)
+$-\tfrac{1}{2}\xi_\chi R\chi^2$ (Faraoni convention).  The ECI
+v7.4/v7.5 architecture enforces a ``Cassini-clean'' axiom
+$H_8'$~\cite{V74amend} that restricts $\xi_\chi$ to a wedge
+$|\xi_\chi|(\chi_0/\MP)^2 \lesssim 6\times 10^{-6}$.  The ECI
+mean from the v7.4 NMC posterior is $\xi_\chi \approx -3\times 10^{-5}$
+(Levier 1B), well inside the Cassini wall.
+
+In this letter we (i) provide a rigorous analytic grounding of the
+ECI Cassini wall via the KSTD~2026 unified PPN reference~\cite{KSTD26};
+(ii) register the ECI v7.5-P Palatini sub-branch as a conditional
+research direction; and (iii) present the first real-data ECI posterior
+against the joint DESI~DR2 + Pantheon$+$ + Planck~2018 likelihood,
+with its implications for the Cassini-clean axiom.
+
+%%--------------------------------------------------------------------
+\section{ECI Cassini-clean axiom $H_8'$ and KSTD analytic reference}
+\label{sec:kstd}
+
+\paragraph{ECI axiom $H_8'$.}
+The Cassini-clean axiom of ECI v7.5 states:
+\begin{quote}\itshape
+The NMC scalar $\chi$ with coupling $-\tfrac{1}{2}\xi_\chi R\chi^2$
+must satisfy $|\xi_\chi|(\chi_0/\MP)^2 \lesssim 6\times 10^{-6}$
+at the cosmological background $\chi_0$, ensuring
+$|\gamma - 1| \lesssim 2.3\times 10^{-5}$ at Solar-System
+scales (Cassini bound,~\cite{Bertotti03}).
+\end{quote}
+This axiom is the ECI falsifier for any large-$\xi$ cosmological
+signal: a detection of $\xi_\chi \sim \mathcal{O}(1)$ at
+cosmological scales (cf.~\cite{Wolf25}) would require the Palatini
+sub-branch (Section~\ref{sec:palatini}) or refute the metric
+branch.
+
+\paragraph{Analytic reference: KSTD 2026.}
+Karam, S\'anchez L\'opez, and Terente D\'iaz~\cite{KSTD26}
+derived a unified post-Newtonian treatment of scalar-tensor
+gravity with arbitrary non-minimal coupling $A(\Phi)$, kinetic
+function $B(\Phi)$, and potential $V(\Phi)$, in both metric
+($\delta_P = 0$) and Palatini ($\delta_P = 1$) formalisms.
+The effective scalar mass, gravitational coupling, and PPN
+parameter read:
+\begin{align}
+  m_\varphi^2 &\;=\; \frac{16\pi G\,A_0\,V_2}
+                     {16\pi G\,A_0\,B_0 + 3A_1^2(1-\delta_P)},
+  \tag{KSTD~3.38}\\[4pt]
+  G_{\rm eff}(r) &\;=\; \frac{G}{A_0}\!
+    \left[1 + \frac{A_1^2\,e^{-m_\varphi r}}
+                   {16\pi G\,A_0\,B_0 + 3A_1^2(1-\delta_P)}\right],
+  \tag{KSTD~3.41}\\[4pt]
+  \gamma(r) &\;=\; 1 - \frac{2A_1^2\,e^{-m_\varphi r}}
+    {16\pi G\,A_0\,B_0 + 3A_1^2(1-\delta_P) + A_1^2\,e^{-m_\varphi r}}.
+  \tag{KSTD~3.42}
+\end{align}
+
+\paragraph{Consistency with the ECI wall.}
+For the ECI Lagrangian $-\tfrac{1}{2}\xi_\chi R\chi^2$ expanded
+about $\chi_0$, we identify $A_0 = 1 - \xi_\chi\chi_0^2/\MP^2$
+and $A_1 = -\xi_\chi\chi_0/\MP$, so
+$A_1^2/(16\pi G\,A_0) \simeq 4\,\xi_\chi^2(\chi_0/\MP)^2$
+at leading order.  In the metric formalism with Yukawa suppression
+at Solar-System scales, KSTD~(3.42) reduces to
+$|\gamma-1| \approx 8\xi_\chi^2(\chi_0/\MP)^2$, and the Cassini
+bound $|\gamma-1|\le 2.3\times 10^{-5}$ gives
+$|\xi_\chi|(\chi_0/\MP)^2 \lesssim 6\times 10^{-6}$, in exact
+agreement with axiom $H_8'$.
+
+%%--------------------------------------------------------------------
+\section{Palatini sub-branch ECI v7.5-P}
+\label{sec:palatini}
+
+KSTD~\cite{KSTD26} show that, at fixed $(A_0, A_1, B_0)$, the
+Palatini formalism ($\delta_P = 1$) admits a substantially wider
+allowed region in $V_2$ than the metric one --- by up to $\sim 10$
+orders of magnitude in the regime of small $A_0$ and large
+$|A_1|$ (KSTD Fig.~2 and \S 4.2.1).  The mechanism is geometric:
+in Palatini the screening length is
+$\hat{m}_\varphi^{-1} = V_2^{-1/2}$ (independent of $A_0 B_0$),
+giving stronger Yukawa suppression of the fifth-force term in
+$\gamma(r)$.
+
+This motivates an \emph{ECI v7.5-P Palatini sub-branch} (open
+research direction, 2027-decision) with four registered
+predictions:
+\begin{itemize}
+  \item[P1] Palatini posterior: $\xi_\chi\in[+1.5,+3.0]$,
+    $\log B > +5$ vs.\ $\Lambda$CDM.
+  \item[P2] $G_{\rm eff}(z=0)/G_N \in [1.4,1.8]$ in DESI Y3
+    + LSST 2030.
+  \item[P3] $|\gamma-1| < 10^{-9}$ at 1~AU (Palatini Yukawa
+    screening).
+  \item[P4] All ECI arithmetic-modular falsifiers (DUNE
+    $\delta_{CP}$, Hyper-K $p$-decay, CSD$(1+\sqrt{6})$)
+    preserved unchanged.
+\end{itemize}
+The \emph{metric} formalism remains the conservative baseline.
+The decision matrix: confirm the Wolf~2025~\cite{Wolf25} large-$\xi$
+signal independently by 2027 $\Rightarrow$ commit v7.5-P;
+refute it $\Rightarrow$ drop v7.5-P.
+
+%%--------------------------------------------------------------------
+\section{First real-data ECI posterior}
+\label{sec:posterior}
+
+\paragraph{Pipeline.}
+A 4-chain NUTS sampler (\texttt{numpyro}, JAX~0.10, RTX 5060~Ti)
+was run against three likelihoods: DESI~DR2 BAO
+(\arXiv{2503.14738}, 7 $z$-bins, $13\times 13$ covariance);
+Pantheon$+$ SN-Ia (Brout 2022, \arXiv{2202.04077}, 1701 SN-Ia,
+analytic $M_B$ marginalisation); and Planck~2018 compressed
+Gaussian on $(\omega_b,\omega_c,\theta_{\rm MC},\ln 10^{10}A_s,n_s)$
+\cite{Planck18VI}.  Two likelihood bugs were fixed prior to this
+run (M1): non-positive-definite Planck covariance corrected to
+diagonal $\sigma^2$; amplitude variable rescaling fixed (reducing
+$\chi^2_{\rm fid}$ from 80,223 to 9.70).  Parameters:
+$4\times 4000$ warm-up, $4\times 8000$ samples;
+\texttt{cosmopower-jax 0.5.5} emulator (386 predictions/s).
+
+\paragraph{Convergence.}
+$\hat{R}_{\max} = 1.0001$, $\mathrm{ESS}_{\min} = 30{,}683$,
+wall-clock 1133.5\,s.  All 9 sampled parameters satisfy
+$\hat{R} < 1.001$ and $\mathrm{ESS} > 30{,}600$.
+
+\paragraph{Posterior summary.}
+\begin{center}
+\begin{tabular}{lll}
+\toprule
+Parameter & Median $\pm 1\sigma$ & Comment \\
+\midrule
+$H_0$ [km/s/Mpc] & $68.51 \pm 0.14$ & Planck-like \\
+$\omega_b$ & $0.02443 \pm 0.00013$ & $+1.3\sigma$ Planck \\
+$\omega_c$ & $0.11899 \pm 0.00019$ & spot-on \\
+$n_s$ & $0.96493 \pm 0.00419$ & spot-on \\
+$\xi_\chi$ & $-0.0240 \pm 1.8\times 10^{-5}$ & rail-saturated \\
+$\chi_0/\MP$ & $0.00546 \pm 0.00063$ & Cassini-clean \\
+\bottomrule
+\end{tabular}
+\end{center}
+A comparison LCDM run on the same data gives $H_0 = 71.83 \pm 0.13$
+(close to SH0ES); the ECI Cassini-clean scalar shifts the posterior
+by $-3.3$~km/s/Mpc toward the Planck-only value.
+
+\paragraph{$\xi_\chi$ rail at $-0.024$: data signal.}
+The $\xi_\chi$ posterior is rail-saturated at the lower prior
+boundary $-0.024$ with $\sigma = 1.8\times 10^{-5}$.  A
+diagnostic rerun on a widened prior $[-0.10, +0.10]$ still
+produces a rail at $-0.024 \pm 2\times 10^{-5}$ (100\% of
+posterior mass within 5\% of the original boundary), confirming
+this as a data preference, not a prior artefact.
+
+\paragraph{Interpretation via RG-running.}
+The 1-loop RG-running of $\xi$ from $\xi(M_Z) \approx +0.001$
+(ECI Levier~1B, metric branch) to $\xi(M_{\rm GUT}) \approx -0.029$
+(A73 computation) predicts a cosmologically effective $\xi$ at
+intermediate scales.  The data preference $\xi_\chi = -0.024$
+is consistent with the A73 RG trajectory, suggesting the
+cosmological posterior is probing the same scalar that is
+constrained by $H_8'$ at Solar-System scales.  A precise
+scale-matching analysis is deferred to ECI v7.7.
+
+\paragraph{Caveats.}
+This posterior is a smoke test: the $\theta_{\rm MC}$
+approximation incurs a 3.1$\sigma$ bias in the compressed
+Planck likelihood (acceptable for diagnostics, not for
+Bayesian evidence calculation).  A CLASS-grade $\theta_*$
+pipeline is queued for v7.7.
+
+%%--------------------------------------------------------------------
+\section*{Falsifier: BepiColombo 2027 PPN $\gamma$}
+
+A future improvement of the PPN $\gamma$ bound from the Cassini
+level $|\gamma-1| \le 2.3\times 10^{-5}$ to the BepiColombo
+Mercury level $|\gamma-1| \lesssim 10^{-6}$ (expected 2027+)
+would tighten the ECI Cassini wall to
+$|\xi_\chi|(\chi_0/\MP)^2 \lesssim 7\times 10^{-7}$.  If this
+bound were violated by the ECI metric-branch posterior
+$\xi_\chi = -0.024$ at any $\chi_0 > 0$, the metric
+branch would be falsified (but NOT v7.5-P, whose Yukawa
+suppression is $\sim 10$~OOM stronger).
+
+\section*{Acknowledgements}
+
+The author thanks sub-agents A50 (Karam-Palatini Cassini graft),
+A71 (NUTS pipeline), S9 (real data acquisition), M24
+($\xi_\chi$ rail diagnostic), and M1 (likelihood debugging).
+
+%%--------------------------------------------------------------------
+\begin{thebibliography}{99}
+
+\bibitem{ECIv6053}
+K.~Remondi\`ere,
+\emph{ECI/crossed-cosmos repository, version 6.0.53},
+Zenodo (2026-05-05);
+DOI \href{https://doi.org/10.5281/zenodo.20036808}{10.5281/zenodo.20036808}.
+
+\bibitem{V74amend}
+K.~Remondi\`ere,
+\emph{ECI v7.4 amendment (v2): $\tau$ as a CM-anchored attractor,
+the Damerell-ladder Cardy/CKM bridge $H_7'$, and a CSD$(1+\sqrt{6})$
+Littlest Modular Seesaw at $K=\Qi$},
+companion paper, this submission queue (2026-05-05).
+
+\bibitem{KSTD26}
+A.~Karam, S.~S\'anchez L\'opez, J.~J.~Terente D\'iaz,
+\emph{Post-Newtonian Constraints on Scalar-Tensor Gravity},
+\arXiv{2604.16226} (2026), 42 pp.
+%% [LIVE-VERIFIED 2026-05-05 via arXiv API.]
+
+\bibitem{Bertotti03}
+B.~Bertotti, L.~Iess, P.~Tortora,
+\emph{A test of general relativity using radio links with the Cassini
+spacecraft},
+Nature \textbf{425} (2003) 374--376.
+
+\bibitem{Wolf25}
+W.~J.~Wolf et al.,
+\emph{Cosmological constraints on a non-minimally coupled scalar field},
+\arXiv{2504.07679} (2025).
+%% [VERIFIED 2026-05-05.]
+
+\bibitem{Planck18VI}
+N.~Aghanim et al.\ (Planck Collaboration),
+\emph{Planck 2018 results.\ VI.\ Cosmological parameters},
+Astron.~Astrophys.\ \textbf{641} (2020) A6;
+\arXiv{1807.06209}.
+
+\end{thebibliography}
+
+\end{document}
+
+\end{document}

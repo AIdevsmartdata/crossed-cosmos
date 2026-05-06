@@ -181,11 +181,16 @@ verdict_chi2_pair(c2, threshold) = {
 
 verdict_nn(c2_goe, c2_gue) = {
   my(ratio_safe);
-  ratio_safe = if(abs(c2_gue) < 1e-30, 1.0, c2_goe / c2_gue);
-  if(c2_goe < c2_gue,
-    print("  NOTE: p(s) CLOSER TO GOE than GUE (ratio = ", ratio_safe, ")");
-    print("  This is CONSISTENT with SO(even) family prediction near central point."),
-    print("  NOTE: p(s) closer to GUE (ratio chi2_goe/chi2_gue = ", ratio_safe, ")")
+  \\ Guard: both chi^2 near zero means no bins had enough counts (too few zeros).
+  \\ Use epsilon 1e-10 to catch PARI's "0.E-19" style near-zeros.
+  if(abs(c2_gue) < 1e-10 && abs(c2_goe) < 1e-10,
+    print("  NOTE: both chi^2 near zero -- too few gaps for NN histogram (need N_gaps>=100)."),
+    ratio_safe = if(abs(c2_gue) < 1e-10, 999.0, c2_goe / c2_gue);
+    if(c2_goe < c2_gue,
+      print("  NOTE: p(s) CLOSER TO GOE than GUE (ratio = ", ratio_safe, ")");
+      print("  This is CONSISTENT with SO(even) family prediction near central point."),
+      print("  NOTE: p(s) closer to GUE (ratio chi2_goe/chi2_gue = ", ratio_safe, ")")
+    )
   );
 }
 

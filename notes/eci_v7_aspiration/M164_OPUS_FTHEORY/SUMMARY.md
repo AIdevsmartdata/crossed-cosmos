@@ -77,7 +77,7 @@ Estimated 20-50 pages of K3 period theory + Hilbert class polynomial arithmetic.
 ## Honest caveats (5)
 
 1. **No explicit derivation** W_ECI from W_KW ; match is vacuum-locus only.
-2. **Kanno-Watari treat CM K3 with K = Q(ζ_m) cyclotomic** (eq. 46). Q(i) = Q(ζ_4) ✓ but **Q(√-22) is non-cyclotomic** — needs refinement.
+2. ~~Kanno-Watari treat CM K3 with K = Q(ζ_m) cyclotomic (eq. 46). Q(i) = Q(ζ_4) ✓ but Q(√-22) is non-cyclotomic — needs refinement.~~ **CORRECTED by M171 (2026-05-06)**: KW eq (46) is a **field-isomorphism constraint K^(1) ≅ K^(2)**, NOT cyclotomic. The cyclotomic K = Q(ζ_m) requirement appears only in KW §3.2.3 p.43 for Γ=Z_m m>2 (different framework). KW §2.4 (relevant for ECI v9) treats **arbitrary imaginary quadratic K^(i)**. The real obstruction for ECI v9 is K^(1) = Q(i) ≇ Q(√-22) = K^(2), placing ECI v9 in KW Case A (DW=0 only, NOT Case B W=0). This M164 caveat 2 misreading is hallu cluster +1 (102→103).
 3. **Q(√-22) class number h=2** class-group action not directly addressed by Kanno-Watari (M155 covered class-equivariance separately).
 4. **W^L + W^Q SUM structure** (vs product) requires physical justification — likely separation of lepton/quark 7-brane loci, not derived.
 5. **W=0 fine-tuning** — both Kanno-Watari W=0 (via flux choice) and ECI v9 W=0 (via E_6(i)=0 + H_{-88}=0) are non-generic in their respective frameworks.

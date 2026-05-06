@@ -21,7 +21,7 @@ Calibration: (A) <0.001%, (B) <0.01%, (C) ≈99%, (D) tiny bonus = single new st
 | 1 | II_∞ vs III_1 Murray-vN class incompatibility | M28 | LOCKED |
 | 2 | f = 4.5.b.a infinity type (4,0) outside Sagnier 2017 spectral scope | M73 | LOCKED |
 | 3 | M141 SUGRA Kähler ≡ MM modular surface conformal-rescaling, NOT spectral-isomorphism | M141 | LOCKED |
-| 4 | **NEW M146** : Arithmetic surfaces violate generic GUE/RMT via Bogomolny-Schmit-Bohigas anomaly — Hecke commutativity creates Poisson-like deviations from Berry-Keating universality | M146 | LOCKED |
+| 4 | **NEW M146** : Arithmetic surfaces violate generic GUE/RMT via Bogomolny-Leyvraz-Schmit anomaly — Hecke commutativity creates Poisson-like deviations from Berry-Keating universality | M146 | LOCKED |
 
 ## Direction-by-direction
 
@@ -70,7 +70,7 @@ ECI's L(f,s) for f = 4.5.b.a is GRH-conjectured-consistent (Selberg-class ; Rama
 6. Bombieri-Hejhal **1995** *Duke Math. J.* 80(3):821-862 (date corrected from parent brief 1989)
 7. Berry-Keating 1999 *SIAM Rev.* 41:236-266
 8. Yager 1982 *Annals of Math.* 115:411-449
-9. **Bogomolny-Schmit-Bohigas, *Comm. Math. Phys.* 176 (1996) 577-617** (NEW M146 cite)
+9. **Bogomolny-Leyvraz-Schmit, *Comm. Math. Phys.* 176 (1996) 577-617** + **Bogomolny-Georgeot-Giannoni-Schmit, *Phys. Rept.* 291 (1997) 219-324** (M146 cited as "Bogomolny-Schmit-Bohigas" — fabrication caught by M153 ; "Bohigas" comes from separate BGS 1984 PRL conjecture paper, not co-author of CMP 176)
 
 ## Discipline log
 

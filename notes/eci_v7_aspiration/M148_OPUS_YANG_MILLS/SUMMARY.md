@@ -19,7 +19,8 @@ Calibration: (A) <0.05%, (B) <1%, (C) ~93%, (D) ~6% — matches main agent hones
 **A. Connes-Chamseddine spectral action — CLOSED.**
 The action `(ψ,Dψ) + Tr χ(D/Λ)` (hep-th/9606001) explicitly **assumes** positivity (χ ≥ 0) and produces SM action coupled to Einstein-Weyl gravity. Higgs ~170 GeV (later ~126 GeV via grand symmetry, Devastato-Lizzi-Martinetti 2014). Classical action functional, NOT constructive QFT. **No mass-gap theorem ; no Wightman/OS axioms addressed.**
 
-**B. Bianchi IX gauge structure — CLOSED.**
+**B. Bianchi IX gauge structure — CLOSED.** (Note: M153 caught Bogomolny-Schmit-Bohigas misattribution — true Bogomolny-Leyvraz-Schmit *CMP* 176 (1996) + Bogomolny-Georgeot-Giannoni-Schmit *Phys. Rept.* 291 (1997) ; Bohigas only in separate BGS 1984 PRL.)
+
 SO(3)_loc on homogeneous S³ slices = **spatial frame symmetry** of emergent gravitational theory, NOT internal YM SU(2) connection. Known gravitational↔YM instanton bridge (Eguchi-Gilkey-Hanson 1980 ; Belinski-Gibbons-Page-Pope 1978 self-dual Bianchi IX SU(2) instanton ; Berman-Chacon-Luna-White 2018 self-dual classical double copy) is **classical**, not quantum mass gap. Pesin invariance (M141) shows λ_BKL = π²/(6 log 2) intrinsic to modular surface geometry, not field theory.
 
 **C. Bost-Connes Q(i) — CLOSED.**

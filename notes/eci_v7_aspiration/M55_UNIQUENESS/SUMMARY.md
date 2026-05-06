@@ -10,7 +10,7 @@ type: project
 **Owner:** Sub-agent M55 (Sonnet 4.6)
 **Hallu:** 86 → 86 (M55 0 fab; project total now 87 from M53 parent fab catch)
 
-## 3-layer explanation of uniqueness
+## 4-layer explanation of uniqueness (Layer 4 added 2026-05-06 by M52)
 
 ### Layer 1 — Minimal conductor (1+i)² (T2 verified)
 
@@ -47,6 +47,22 @@ F2 v5 empirical confirmation:
 - 36.5.d.a: v_2 = {-2, 1, 0, 0} ≠ {-3, -2, 0, +1}
 - 64.5.c.a: v_2 = {0, -5, 4, 2} ≠ {-3, -2, 0, +1}
 - 100.5.b.a: v_2 = {?, 0, 9, 1} ≠ {-3, -2, 0, +1}
+
+### Layer 4 — Full-ℚ ladder rationality (M52 F2 v6, Ω-independent)
+
+Among all CM weight-5 dim-1 newforms tested, the **Ω-independent ratio π · L(f,1)/L(f,2) ∈ ℚ ONLY for 4.5.b.a** (= 6/5):
+
+| Form | π·L(f,1)/L(f,2) |
+|---|---|
+| **4.5.b.a (Q(i))** | **6/5 ∈ ℚ ✓** |
+| 27.5.b.a (Q(ω)) | 3√3 ∈ ℚ(√3) \ ℚ |
+| 12.5.c.a (Q(ω)) | (3√3)/2 ∈ ℚ(√3) \ ℚ |
+
+For Q(ω) CM forms: α_m ∈ ℚ for m EVEN, but α_m ∈ ℚ(√3) for m ODD (residual √3 from Im(ω) = √3/2 in periods, since χ_-3 is odd order-6 character).
+
+For Q(i) CM 4.5.b.a: lemniscate period Γ(1/4)²/(2√(2π)) is √3-free → all 4 α_m ∈ ℚ.
+
+This is the strongest UNIQUENESS criterion: an Ω-independent diagnostic invariant separating 4.5.b.a from all Q(ω) competitors.
 
 ## Cohen-Oesterlé dim verification (T1)
 

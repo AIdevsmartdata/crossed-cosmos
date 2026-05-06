@@ -44,7 +44,7 @@ $$\Omega_{\text{real}}(E) = 2\varpi, \quad \Omega_\infty = \varpi, \quad m_\tau^
 Fermion sectors anchored on ordered sequence of imaginary quadratic discriminants:
 - **D_L = -4** (lepton, K_L=Q(i), h=1)
 - **D_Q = -88** (quark, K_Q=Q(√-22), h=2)
-- **D_3 = ?** (Higgs ? mixing ? — open, M152B testing)
+- **D_3 ABSENT** (M152B (C) NEGATIVE — no compelling third-rung; ECI v8.2 is structurally two-modulus per 9 hypothesis tests + Abbas-Khalil 2212.10666 3-moduli framework restricts all to h=1)
 
 Ratio $D_Q/D_L = 22 = 2 \cdot 11$. Discriminant 88 = 8·11 — A_4 11th harmonic q-correction connection.
 
@@ -84,7 +84,23 @@ SUGRA Kähler manifold (𝓗, K = -3 log 2 Im τ) ≡ Manin-Marcolli modular sur
 
 **Modulus**: $\tau_Q = i\sqrt{11/2}$, $K_Q = \mathbb{Q}(\sqrt{-22})$, $D_Q = -88$, $h(K_Q) = 2$ (M143)
 
-**N=1 SUGRA**: $W^Q,\text{double} = H_{-88}(j)^2/\eta^{12}$ (weight -6, M155)
+**N=1 SUGRA**: 
+
+**M151 (A) PROVED weight -3 M134-natural construction**:
+$$W^Q(\tau) = \frac{H_{-88}(j(\tau))^2 \cdot f_{88.3.b.a}(\tau)}{\eta(\tau)^{12}}$$
+
+where $f_{88.3.b.a}$ is the LMFDB-verified weight-3 dim-1 CM newform on $\Gamma_0(88)$ with character $\chi_{-22}$ and CM by $\mathbb{Q}(\sqrt{-22})$. Modular weight = 0 + 3 - 6 = -3 ✓.
+
+Theorem M151.1: structural double zero at τ_Q (W=0, W'=0). Theorem M151.2: $m_\tau^2(\tau_Q) \approx 1.611 \times 10^{74}$ M_Pl² closed form via Chowla-Selberg. Verified mpmath dps=50 to 12+ digits over 7 orders of magnitude in ε.
+
+**Canonical (NOT ad-hoc)** : 5 unique-construction arguments (Hilbert poly + squaring + only 2 dim-1 CM newforms 88.3.b.a/b on LMFDB + η^{12} unique + Galois symmetry on both class reps).
+
+**ECI v9 SUGRA superpotential** :
+$$W(\tau_L, \tau_Q) = c_L \cdot \frac{j(\tau_L) - 1728}{\eta(\tau_L)^6} + c_Q \cdot \frac{H_{-88}(j(\tau_Q))^2 \cdot f_{88.3.b.a}(\tau_Q)}{\eta(\tau_Q)^{12}}$$
+
+**Both moduli weight -3 holomorphic, Minkowski-stabilized at CM-anchored τ values.**
+
+(M155 weight -6 W^Q,double = H_{-88}(j)²/η¹² preserved as alternate ; M151 is M134-natural.)
 - Reduced binary form (a=2, b=0, c=11) → τ_Q = i√(11/2)
 - Hilbert class polynomial $H_{-88}(X) = X^2 - 6{,}294{,}842{,}640{,}000\,X + 15{,}798{,}135{,}578{,}688 \cdot 10^9$
 - $V_F(\tau_a = i\sqrt{22}) = V_F(\tau_b = i\sqrt{11/2}) = 0$ (BOTH class reps Minkowski, M155.1)

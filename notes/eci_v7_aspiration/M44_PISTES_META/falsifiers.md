@@ -105,6 +105,21 @@ type: project
 
 **Cost**: 1000 CPU-hr — needs cluster or vast.ai. DEFER until F2 + F5 results in.
 
+## F8 — ECI v7.4 lepton sector neutrino ordering at τ=i (50 CPU-hr) — NEW (M49 B5b)
+
+**Conjecture under test**: ECI's lepton sector at τ=i implies a specific neutrino mass ordering.
+
+**Protocol**:
+1. SageMath compute the lepton sector mass matrix from ECI v7.4 modular forms at τ=i
+2. Diagonalize and extract neutrino mass ordering
+3. Compare with Tavartkiladze 2025 (arXiv:2512.24804) prediction: **inverted ordering at minimal Γ_2≃S_3 fixed-point τ=i**
+
+**Falsifying outcome**:
+- ECI v7.4 lepton predicts **inverted** ordering: independent corroboration with Tavartkiladze 2025 → strengthens v7.6 §10 unification claim
+- ECI v7.4 lepton predicts **normal** ordering: tension with Tavartkiladze; ECI two-τ scheme is at a different fixed-point sub-class OR lepton sector needs revision
+
+**Cost**: 50 CPU-hr SageMath modular-form package. Full local on PC (20 cores).
+
 ## F7 — H8' Cassini-wall ξ_χ KSTD26 (OBSERVATIONAL — FREE)
 
 **Conjecture under test**: KSTD26 wall predicts Δγ < 5e-6 at PPN level; ξ_χ rail is consistent.

@@ -44,14 +44,14 @@ Anticyclotomic Iwasawa algebra: Λ(Γ) = Z_2[[Γ]], Γ = Gal(K_∞^anti/K) ≅ Z
 | Ref | Status |
 |---|---|
 | Tate 1967 Cassels-Frohlich | classical, VERIFY-NEEDED |
-| Katz 1978 Invent. Math. 49, 199-297 | classical pre-arXiv, VERIFY-NEEDED |
-| Pollack 2003 Duke 118, 523-558 | no arXiv, VERIFY-NEEDED |
+| Katz 1978 Invent. Math. 49, 199-297 | ✓ CrossRef DOI 10.1007/bf01390187 |
+| Pollack 2003 Duke 118, 523-558 | ✓ CrossRef DOI 10.1215/s0012-7094-03-11835-9 |
 | LLZ 2010 Asian J. Math. 14 / arXiv:0912.1263 | ✓ LIVE-VERIFIED |
 | KLZ 2017 Camb. J. Math. 5, 1-122 / arXiv:1503.02888 | ✓ LIVE-VERIFIED |
 | Fan-Wan 2023 / arXiv:2304.09806 | ✓ LIVE-VERIFIED (covers p=2 ramified) |
 | Burungale-Buyukboduk-Lei / arXiv:2310.06813 | ✓ LIVE-VERIFIED (to appear ANT) |
 | Buyukboduk-Neamti 2026 / arXiv:2604.13854 | ✓ LIVE-VERIFIED (p-adic GZ via BDP) |
-| Kriz 2021 Princeton AMS-212 | ISBN 9780691216478, VERIFY-NEEDED |
+| Kriz 2021 Princeton AMS-212 | ✓ CrossRef DOI 10.1515/9780691225739 + 10.2307/j.ctv1nj3416 (contains chapter "Supersingular Rankin-Selberg p-adic L-functions" DOI 10.2307/j.ctv1nj3416.12 — directly relevant to ECI M13.1) |
 | LMFDB 4.5.b.a | ✓ LIVE-VERIFIED |
 
 ## Compatibility with other ECI modules

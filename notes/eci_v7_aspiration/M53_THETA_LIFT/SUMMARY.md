@@ -19,7 +19,7 @@ The B5a conjecture is **not falsified**, but framing has 4 errors that need corr
 | Ref | Status | Notes |
 |---|---|---|
 | arXiv:1709.08082 | ✓ VERIFIED | Fan-Fathizadeh-Marcolli, *Lett. Math. Phys.* 108 no.5 (2018) — motives/periods, NO explicit modular forms |
-| arXiv:1511.05321 | ✓ VERIFIED arXiv | "JHEP 01 (2019) 234" UNCONFIRMED from arXiv abstract page (DOI 303 redirect); flag before paper citation |
+| arXiv:1511.05321 | ✓ VERIFIED arXiv + ✓ JHEP 01 (2019) 234 confirmed CrossRef DOI 10.1007/JHEP01(2019)234 by parent post-M53 (M53's flag was a cookie redirect issue, not true DOI fail) |
 | arXiv:math/0212286 | ✓ VERIFIED | Bruinier-Funke geometric theta lifts; no explicit weight-5/2 crossing formula in abstract |
 | LMFDB 4.5.b.a | ✓ VERIFIED | weight 5, level 4, CM Q(i), conductor 4 |
 | **LMFDB 4.2.a.a** | ✗ **DOES NOT EXIST** | S_2^new(Γ_0(4)) = 0 confirmed — parent fabrication |

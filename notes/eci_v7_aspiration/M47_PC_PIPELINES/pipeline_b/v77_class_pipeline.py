@@ -172,15 +172,26 @@ class Frontend:
         )
 
     def _cp_theta(self, omega_b, omega_c, H0, ln_As_e10, n_s, tau_reio):
-        """cosmopower-jax NN emulator for theta_*. JAX-jittable."""
-        # cosmopower-jax 0.5.5 emulators stored at default user dir; user must
-        # pre-load the 'TT_NN' pickle plus the 'theta_s' regression once.
-        # See v77_setup_notes.md for download and JAX patch instructions.
-        from cosmopower_jax.cosmopower_jax import CosmoPowerJAX as CPJ
-        if not hasattr(self, "_cp_theta_emu"):
-            self._cp_theta_emu = CPJ(probe="theta_s", path=None)
-        x = jnp.array([omega_b, omega_c, H0, ln_As_e10, n_s, tau_reio]).reshape(1, -1)
-        return self._cp_theta_emu.predict(x)[0]
+        """cosmopower-jax NN emulator route for theta_*.
+
+        IMPORTANT M50 caveat (2026-05-06, live-probed on PC):
+          cosmopower-jax 0.5.5 supports probes ['cmb_tt','cmb_ee','cmb_te',
+          'cmb_pp','mpk_lin','mpk_boost','mpk_nonlin','custom_log','custom_pca'].
+          There is NO 'theta_s' probe pickle in upstream releases, so the
+          previous code path (probe='theta_s') would raise ValueError on first
+          call. Two honest options:
+            (1) Compute theta_* from full TT spectrum via acoustic peak
+                position fit (slow, ~few ms per eval) — TBD followup.
+            (2) Use the EH+KMJ analytic form (already known to have ~3.1-sigma
+                bias per M26 audit) — documented degradation, NOT 'CLASS-grade'.
+          M50 picks (2) for v7.7 v0 to keep the pipeline runnable end-to-end.
+          The 'CLASS-grade theta_*' claim from M47 is therefore PROVISIONAL —
+          v7.7 v0 is EH+KMJ-grade for theta_*; CLASS-grade requires classy
+          frontend (CPU-bound, ~24-72h for full chain) or a custom theta_s
+          emulator trained against CLASS (TBD M51+).
+        """
+        # M50 fix: deferred to EH+KMJ; document caveat clearly at run start.
+        return self._eh_kmj_theta(omega_b, omega_c, H0)
 
     def _eh_kmj_theta(self, omega_b, omega_c, H0):
         """EH+KMJ analytic approx (M26 documents 3.1-sigma bias)."""
@@ -199,11 +210,8 @@ class Frontend:
 # requires the modified Friedmann + KG ODE from M9 audit.
 
 def H_lcdm(z, H0, Omega_m, w0=-1.0, wa=0.0):
-    """LCDM/CPL Hubble rate."""
+    """LCDM/CPL Hubble rate. Uses CPL exact form for rho_de(z)."""
     Omega_de = 1.0 - Omega_m
-    a = 1.0 / (1.0 + z)
-    w_eff = w0 + wa * (1.0 - a)
-    rho_de = jnp.exp(3.0 * jnp.cumsum(-(1.0 + w_eff) / (1.0 + z)) * 0.0)  # placeholder
     # CPL exact: rho_de(z) = (1+z)^{3(1+w0+wa)} * exp(-3 wa z/(1+z))
     rho_de_exact = (1.0 + z)**(3.0 * (1.0 + w0 + wa)) * \
                    jnp.exp(-3.0 * wa * z / (1.0 + z))
@@ -220,9 +228,18 @@ def H_nmc(z, H0, Omega_m, xi_chi, w0=-1.0, wa=0.0):
     For Cassini-clean ECI-NMC (xi_chi ~ -0.024): correction ~ few percent at z=0.
     For Wolf-NMC (xi = 2.31): correction up to ~factor 2 at low z (KG-failing).
 
-    [TBD: replace with full M9 KG-aware integration once a71_prod/wolf_background.py
-     is verified.] For BAO+SNe likelihoods this simplified form captures the
-     leading distance modification.
+    M50 audit caveat (2026-05-06):
+      The full Wolf-NMC KG integration lives in mcmc/a71_prod/wolf_background.py
+      (`wolf_kg_integrate`, scipy LSODA, NOT JAX-jittable). It models a 5-param
+      scalar field {xi, beta, m2, phi_init, phidot_init} with a Friedmann
+      constraint + KG ODE and a hard physical gate (|phi|<10 M_P, F>0.01,
+      |lnH(0)|<0.05). The M9 audit established that Wolf's xi=2.31 KG-fails
+      at the gate level; this simplified multiplicative form CANNOT reproduce
+      that fact (it is well-defined for any xi_chi). A KG-aware Bayes contest
+      requires the full a71_prod path (CPU-bound). v7.7 v0 (this file) is
+      diagnostic-grade only: it cannot itself decide ECI-vs-Wolf on KG grounds.
+      The contest here is *posterior shape* + harmonic-mean log-Z, NOT KG
+      consistency. See M50 SUMMARY.md for the full caveat.
     """
     H_base2 = H_lcdm(z, H0, Omega_m, w0, wa) ** 2
     Omega_de_z = (1.0 - Omega_m) * \
@@ -385,35 +402,13 @@ def load_data(verbose=True):
     """Load all four data products. Falls back to synthetic if not on PC."""
     data = {}
 
-    # DESI DR2 BAO — use the simplified DESI_DR2_DEFAULT 7-bin set per M47
-    # (full 13x13 cov from a71_prod/likelihoods.py path requires that module)
-    desi_path = os.environ.get(
-        "DESI_DR2_DATA_PATH", "/home/remondiere/data/desi_dr2"
-    )
-    if os.path.isfile(os.path.join(desi_path, "desi_gaussian_bao_ALL_GCcomb_mean.txt")):
-        # Use real data via a71 helper (preferred)
-        sys.path.insert(0, "/home/remondiere/crossed-cosmos")
-        try:
-            from mcmc.a71_prod.likelihoods import _load_desi_dr2_data_from_files
-            real = _load_desi_dr2_data_from_files(desi_path)
-            data["desi"] = []
-            for entry in real["mean_data"]:
-                # Simplified per-bin gaussian using sqrt(diag)
-                data["desi"].append({
-                    "z": entry["z"], "fit": "iso" if "DV" in entry["quantity"] else "aniso",
-                    "DV_rd": entry["value"] if "DV" in entry["quantity"] else 0.0,
-                    "DM_rd": entry["value"] if entry["quantity"] == "DM_over_rs" else 0.0,
-                    "DH_rd": entry["value"] if entry["quantity"] == "DH_over_rs" else 0.0,
-                    "sigma": float(np.sqrt(real["cov"][len(data["desi"]),
-                                                       len(data["desi"])])),
-                    "sig_DM": 1.0, "sig_DH": 1.0, "rho": 0.0,
-                })
-        except Exception as exc:
-            if verbose:
-                sys.stderr.write("[data] desi a71 loader failed: {}\n".format(exc))
-            data["desi"] = _desi_fallback()
-    else:
-        data["desi"] = _desi_fallback()
+    # DESI DR2 BAO — use the verified 7-bin S9 acquisition values
+    # (full 13x13 cov from a71_prod/likelihoods.py is not used here because the
+    #  simplified per-bin loader has a known bug; the 7-bin _desi_fallback
+    #  values were directly extracted by M47 from desi_gaussian_bao mean.txt
+    #  + cov.txt sha256-pinned files in a71_prod sample-acquisition log
+    #  S9 dated 2026-05-06, so they are real PR4 DESI DR2 numbers, not synthetic).
+    data["desi"] = _desi_fallback()
 
     # Pantheon+ SNe
     sne_path = os.environ.get(
@@ -481,16 +476,35 @@ def _sne_fallback():
 
 
 def _planck_pr4_fallback():
-    """Compressed PR4 — uses PR3 Table 2 values as scaffold pending PR4 chain."""
-    # [TBD: replace with Tristram et al. 2024, A&A 682, A37 (arXiv:2309.10034)
-    #  NPIPE compressed numbers when extracted to /home/remondiere/data/planck_pr4/.]
+    """Compressed Planck PR4 NPIPE — Tristram et al. 2024, A&A 682 A37 Table 3 TTTEEE.
+
+    Live-verified from arXiv:2309.10034 PDF (M50 audit, 2026-05-06):
+      Omega_b h^2     = 0.02226 +/- 0.00013   (Table 3 col TTTEEE)
+      Omega_c h^2     = 0.1188  +/- 0.0012
+      100 theta_*     = 1.04108 +/- 0.00026
+      log(10^10 A_s)  = 3.040   +/- 0.014    (natural log per Planck convention)
+      n_s             = 0.9681  +/- 0.0039
+      tau_reio        = 0.0580  +/- 0.0062
+    Derived (consistency checks, not used here):
+      H_0 = 67.64 +/- 0.52   sigma_8 = 0.8070 +/- 0.0065
+      S_8 = 0.819 +/- 0.014  Omega_m = 0.3092 +/- 0.0070
+
+    Cov is diagonal (off-diagonals not yet extracted from public chains).
+    This is a CONSERVATIVE choice — true PR4 cov has e.g. omega_b<->n_s ~+0.3
+    and omega_c<->theta_* ~-0.4 correlations that would tighten constraints.
+    [TBD M51+: extract full 5x5 from public Cobaya/MontePython chains when
+     available at https://pla.esac.esa.int or NERSC PR4 portal.]
+    """
     return {
-        "omega_b": 0.02237, "omega_c": 0.1200, "theta_s_100": 1.04092,
-        "ln_As_e10": 3.044, "n_s": 0.9649,
+        "omega_b": 0.02226, "omega_c": 0.1188, "theta_s_100": 1.04108,
+        "ln_As_e10": 3.040, "n_s": 0.9681,
         "cov_inv": np.diag([
-            1.0 / 0.00015**2, 1.0 / 0.00120**2, 1.0 / 0.00031**2,
-            1.0 / 0.014**2, 1.0 / 0.0042**2,
+            1.0 / 0.00013**2, 1.0 / 0.0012**2, 1.0 / 0.00026**2,
+            1.0 / 0.014**2, 1.0 / 0.0039**2,
         ]),
+        "_ref": "Tristram et al. 2024, A&A 682 A37 Table 3 TTTEEE col"
+                " (arXiv:2309.10034)",
+        "_caveat": "diagonal-only; full off-diagonals TBD",
     }
 
 
@@ -601,12 +615,16 @@ def main():
     print("[v7.7] frontend preference: {}".format(args.frontend))
     frontend = Frontend(prefer=args.frontend)
     print("[v7.7] frontend selected:   {}".format(frontend.name))
+    print("[v7.7] M50 caveat:          theta_* via EH+KMJ analytic "
+          "(cosmopower-jax 0.5.5 has no theta_s probe; ~3.1-sigma bias "
+          "per M26 audit). v7.7 v0 is diagnostic-grade for theta_*.")
 
     print("[v7.7] loading data...")
     data = load_data()
     print("[v7.7] DESI bins:           {}".format(len(data["desi"])))
     print("[v7.7] SNe N:               {}".format(len(data["sne"]["z"])))
-    print("[v7.7] PR4 compressed:      diag-only (scaffold; replace before paper)")
+    print("[v7.7] PR4 compressed:      Tristram 2024 Table 3 TTTEEE "
+          "(diag-only cov; off-diag TBD)")
     print("[v7.7] KiDS S_8 = {} +/- {} (arXiv:2007.15633)".format(
         data["kids"]["S_8"], data["kids"]["sigma_S_8"]))
 
@@ -679,10 +697,15 @@ def main():
             "seed": args.seed,
             "wallclock_s": time.time() - t0,
             "honest_caveats": [
-                "Planck PR4 compressed: diag-only scaffold (replace before paper)",
+                "Planck PR4 compressed: Tristram 2024 A&A 682 A37 Table 3"
+                " TTTEEE means; diagonal-only cov (off-diag TBD)",
+                "theta_* via EH+KMJ analytic (cosmopower-jax has no theta_s"
+                " probe in 0.5.5); ~3.1-sigma bias per M26 audit",
                 "KiDS S_8 compressed only; no full nuisance marginalization",
-                "log-evidence is harmonic-mean (biased); use nested sampling for paper",
-                "NMC H(z) is simplified placeholder; full M9 KG integration TBD",
+                "log-evidence is harmonic-mean (biased); use nested sampling"
+                " for paper",
+                "NMC H(z) is simplified multiplicative form; full Wolf-NMC KG"
+                " contest needs a71_prod/wolf_kg_integrate (CPU-bound)",
             ],
         })]),
     )

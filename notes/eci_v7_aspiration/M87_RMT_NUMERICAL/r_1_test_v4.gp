@@ -1,6 +1,6 @@
 \\ ============================================================
 \\ r_1_test_v4.gp
-\\ M94 — Fixed version of M92 r_1_test_v3.gp
+\\ M94 (iteration 2) -- Fixed version of M92 r_1_test_v3.gp
 \\ PARI/GP 2.11+
 \\ Run: gp -q < r_1_test_v4.gp > r_1_test_v4.log 2>&1
 \\ Estimated runtime: 2-5 min for 50 zeros
@@ -13,14 +13,24 @@
 \\          lfuninit expects an L-data object, not a raw modular form vector.
 \\   FIX:   Use lfunmf(mf, f) to construct the L-data object first, then
 \\          lf = lfuninit(ldata, [50]).
-\\          PARI docs: lfunmf(mf, {f}) — if f given, L-function of the eigenform f
-\\          inside the space mf; if f omitted, L-function of the full space.
+\\          PARI docs: lfunmf(mf, {f}) -- if f given, L-function of eigenform f
+\\          inside space mf; if f omitted, L-function of full space.
 \\
-\\ BUG 2 (vector multi-line syntax error):
-\\   CAUSE: vector(N_zeros - 1, j, \n  expr\n) — PARI batch-mode parser
-\\          reads line-by-line; a bare vector(..., j, <newline> is not valid
-\\          outside a {braced block}.
-\\   FIX:   Put entire vector(N, j, expr) call on a single line.
+\\ BUG 2 (multi-line vector/for syntax error -- batch-mode parser):
+\\   CAUSE A: vector(N_zeros-1, j, <newline> expr) at top level -- PARI batch-mode
+\\            parser treats j as polynomial (t_POL) when argument crosses newline
+\\            outside a {braced block}.
+\\   CAUSE B: for(j=1, N, <newline> printf("...", j, arr[j])<newline>) -- same parser
+\\            issue: j in arr[j] is seen as t_POL, printf crashes.
+\\   FIX:   (a) All vector(N, j, expr) collapsed to single line.
+\\          (b) All for() with printf body wrapped in {braces}:
+\\              for(j=1, N, { printf("...", j, arr[j]) });
+\\
+\\ BUG 3 (verdict_r1 logic: r<0.5 misclassified as BORDERLINE):
+\\   CAUSE: if(r>=0.5&&r<=2.0, PASS, if(r>2.5, ANOMALY, BORDERLINE))
+\\          When r < 0.5 falls to else-of-if(r>2.5) and prints BORDERLINE
+\\          even though r is below the expected range.
+\\   FIX:   Add explicit r < 0.5 LOW check before range comparisons.
 \\
 \\ MATHEMATICAL SETUP (hand-traced, M87 verified):
 \\ f = 4.5.b.a : Gamma_0(4), wt=5, chi=chi_4 (chi(3)=-1), LMFDB label 4.5.b.a
@@ -51,7 +61,7 @@ q_an_val = 4 * (5 / (2*Pi))^2;
 Delta_local(T) = 2*Pi / log(q_an_val * T / (2*Pi));
 
 \\ ----------------------------------------------------------
-\\ Helper: check_coef(got, expected, name) — print and quit on mismatch
+\\ Helper: check_coef(got, expected, name) -- print and quit on mismatch
 \\ ----------------------------------------------------------
 check_coef(got, expected, name) = {
   if(got == expected,
@@ -63,22 +73,27 @@ check_coef(got, expected, name) = {
 }
 
 \\ ----------------------------------------------------------
-\\ Helper: verdict_r1(r) — verdict for first normalized gap
+\\ Helper: verdict_r1(r) -- verdict for first normalized gap
+\\ Bug 3 fix: added r < 0.5 LOW case explicitly
 \\ ----------------------------------------------------------
 verdict_r1(r) = {
-  if(r >= 0.5 && r <= 2.0,
-    print("  r_1 VERDICT: PASS -- r_1 = ", r, " in [0.5, 2.0] (normal GUE/SO(even))"),
-    if(r > 2.5,
-      print("  r_1 VERDICT: ANOMALY -- r_1 = ", r, " > 2.5 (possible CM arithmetic effect)");
-      print("  ACTION: Dispatch M87-followup; cross-cite Hamieh-Wong arXiv:2412.03034"),
-      print("  r_1 VERDICT: BORDERLINE -- r_1 = ", r, " in (2.0, 2.5]");
-      print("  ACTION: Compute pair correlation histogram (pair_correlation_v4.gp)")
+  if(r < 0.5,
+    print("  r_1 VERDICT: LOW -- r_1 = ", r, " < 0.5 (level repulsion or first zero artifact)");
+    print("  ACTION: Check lfunzeros range and normalization; CM forms can have low r_1"),
+    if(r >= 0.5 && r <= 2.0,
+      print("  r_1 VERDICT: PASS -- r_1 = ", r, " in [0.5, 2.0] (normal GUE/SO(even))"),
+      if(r > 2.5,
+        print("  r_1 VERDICT: ANOMALY -- r_1 = ", r, " > 2.5 (possible CM arithmetic effect)");
+        print("  ACTION: Dispatch M87-followup; cross-cite Hamieh-Wong arXiv:2412.03034"),
+        print("  r_1 VERDICT: BORDERLINE -- r_1 = ", r, " in (2.0, 2.5]");
+        print("  ACTION: Compute pair correlation histogram (pair_correlation_v4.gp)")
+      )
     )
   );
 }
 
 \\ ----------------------------------------------------------
-\\ Helper: verdict_mean(dev) — verdict for mean gap
+\\ Helper: verdict_mean(dev) -- verdict for mean gap
 \\ ----------------------------------------------------------
 verdict_mean(dev) = {
   if(dev > 0.15,
@@ -133,11 +148,11 @@ check_coef(a5, -14, "a_5");
 \\ lfunmisc_to_ldata (t_VEC)" because f is a modular form vector, not
 \\ an L-data object.
 \\
-\\ CORRECT sequence (PARI 2.11 manual, §L-functions):
-\\   ldata = lfunmf(mf, f);   -- constructs the L-data from eigenform f in space mf
-\\   lf    = lfuninit(ldata, [50]);  -- precomputes for zeros up to height 50
+\\ CORRECT sequence (PARI 2.11 manual, section L-functions):
+\\   ldata = lfunmf(mf, f);        -- constructs L-data from eigenform f in space mf
+\\   lf    = lfuninit(ldata, [50]); -- precomputes for zeros up to height 50
 \\
-\\ lfunmf(mf, f): if f is provided, returns L-data for the eigenform f in mf.
+\\ lfunmf(mf, f): if f is provided, returns L-data for eigenform f in mf.
 \\ lfuninit(ldata, [T]): precomputes everything needed for lfunzeros up to T.
 
 print("");
@@ -165,9 +180,7 @@ print("  Cross-check: 25/Pi^2 = ", 25/Pi^2);
 
 if(N_zeros < 2, print("ERROR: fewer than 2 zeros; cannot compute gaps."); quit());
 
-\\ M94 FIX (Bug 2): vector(N_zeros-1, j, expr) was split across lines in v3.
-\\ PARI batch mode cannot parse a top-level vector() with a newline inside the
-\\ argument list (outside a {braced block}).  Put on a SINGLE line.
+\\ M94 FIX (Bug 2a): single-line vector() call (was split across 3 lines in v3)
 norm_gaps = vector(N_zeros - 1, j, (zeros[j+1] - zeros[j]) / Delta_local((zeros[j] + zeros[j+1]) / 2));
 
 N_gaps = #norm_gaps;
@@ -209,26 +222,21 @@ print("");
 print("Step 7: All zeros gamma_n (imaginary parts, positive, sorted):");
 print("FORMAT: ZERO n gamma_n norm_gap_to_next");
 
-for(j = 1, N_zeros - 1,
-  printf("ZERO %d  %.10f  gap_next=%.6f\n", j, zeros[j], norm_gaps[j])
-);
+\\ M94 FIX (Bug 2b): multi-line for() with printf body -- wrap body in {braces}
+for(j = 1, N_zeros - 1, { printf("ZERO %d  %.10f  gap_next=%.6f\n", j, zeros[j], norm_gaps[j]) });
 printf("ZERO %d  %.10f  (last zero)\n", N_zeros, zeros[N_zeros]);
 
 \\ Also print raw normalized gaps for easy parsing
 print("");
 print("RAW NORMALIZED GAPS:");
-for(j = 1, N_gaps,
-  printf("GAP %d  %.8f\n", j, norm_gaps[j])
-);
+for(j = 1, N_gaps, { printf("GAP %d  %.8f\n", j, norm_gaps[j]) });
 
 \\ ===========================================================
 \\ STEP 8: Delta values at each zero (diagnostic)
 \\ ===========================================================
 print("");
 print("Step 8: Local mean spacing Delta(gamma_n) at each zero:");
-for(j = 1, N_zeros,
-  printf("DELTA %d  gamma=%.6f  Delta=%.6f\n", j, zeros[j], Delta_local(zeros[j]))
-);
+for(j = 1, N_zeros, { printf("DELTA %d  gamma=%.6f  Delta=%.6f\n", j, zeros[j], Delta_local(zeros[j])) });
 
 print("");
 print("====================================================");

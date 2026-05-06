@@ -1,6 +1,6 @@
 \\ ============================================================
 \\ pair_correlation_v4.gp
-\\ M94 — Fixed version of M92 pair_correlation_v3.gp
+\\ M94 (iteration 2) -- Fixed version of M92 pair_correlation_v3.gp
 \\ PARI/GP 2.11+
 \\
 \\ Usage: run AFTER r_1_test_v4.gp has produced a log file.
@@ -16,16 +16,14 @@
 \\ FIX SUMMARY (M94, 2026-05-06):
 \\
 \\ BUG 1 (lfuninit t_VEC error):
-\\   CAUSE: lfuninit(f, [50]) in do_mode_a() — same as r_1_test_v3 Bug 1.
+\\   CAUSE: lfuninit(f, [50]) in do_mode_a() -- same as r_1_test_v3 Bug 1.
 \\   FIX:   ldata = lfunmf(mf, f); lf = lfuninit(ldata, [50]);
 \\
-\\ BUG 2 (vector multi-line syntax error):
-\\   CAUSE: three vector(N, j, expr) calls in do_mode_a() and in the
-\\          gue_nn_expected/goe_nn_expected assignments were split across lines.
-\\   FIX:   All vector() calls collapsed to single lines.
-\\          Inside do_mode_a() the ng = vector(...) was already inside {braces}
-\\          so technically valid, but collapsed to single line for safety and
-\\          consistency.
+\\ BUG 2 (multi-line vector/for syntax error):
+\\   CAUSE: vector(N,j,expr) across lines AND for(j=1,N, printf(...)) across lines
+\\          -- PARI batch-mode parser treats j as t_POL at top level.
+\\   FIX:   (a) All vector() calls collapsed to single lines.
+\\          (b) for() with printf body wrapped in {braces}.
 \\
 \\ PAIR CORRELATION THEORY (Montgomery 1973, GUE prediction):
 \\ For large T, pairs (gamma_m, gamma_n) with gamma_m != gamma_n:
@@ -107,7 +105,7 @@ do_mode_a() = {
   N_zeros = #zeros;
   if(N_zeros < 2, error("Fewer than 2 zeros returned by lfunzeros."));
 
-  \\ M94 FIX (Bug 2): single-line vector() call (was split across 3 lines in v3)
+  \\ M94 FIX (Bug 2a): single-line vector() call (was split across 3 lines in v3)
   ng = vector(N_zeros - 1, j, (zeros[j+1] - zeros[j]) / Delta_local((zeros[j] + zeros[j+1]) / 2));
   print("  Normalized gaps computed: ", #ng);
   ng;  \\ return value
@@ -148,7 +146,7 @@ N_gaps = #norm_gaps;
 if(N_gaps < 20, print("WARNING: only ", N_gaps, " gaps; pair correlation may be unreliable."));
 
 \\ ----------------------------------------------------------
-\\ STEP 2: Pair correlation histogram — all pairs within window W
+\\ STEP 2: Pair correlation histogram -- all pairs within window W
 \\ ----------------------------------------------------------
 print("");
 print("Step 2: Building pair correlation histogram...");
@@ -225,19 +223,14 @@ print("");
 print("Step 5: Nearest-neighbor spacing distribution p(s)...");
 
 nn_hist = vector(N_BINS, k, 0);
-for(j = 1, N_gaps,
-  my(s, bin_idx);
-  s = norm_gaps[j];
-  bin_idx = floor(s / BIN_WIDTH) + 1;
-  if(bin_idx >= 1 && bin_idx <= N_BINS, nn_hist[bin_idx]++)
-);
+\\ M94 FIX (Bug 2b): for() with index subscript in body -- wrap in {braces}
+for(j = 1, N_gaps, { my(s, bin_idx); s = norm_gaps[j]; bin_idx = floor(s / BIN_WIDTH) + 1; if(bin_idx >= 1 && bin_idx <= N_BINS, nn_hist[bin_idx]++) });
 
 \\ Normalize expected counts to N_gaps total
 gue_nn_unnorm = sum(k=1, N_BINS, p_GUE_wigner((k-0.5)*BIN_WIDTH) * BIN_WIDTH);
 goe_nn_unnorm = sum(k=1, N_BINS, p_GOE_wigner((k-0.5)*BIN_WIDTH) * BIN_WIDTH);
 
-\\ M94 FIX (Bug 2): these vector() calls were split across 2 lines each in v3.
-\\ Collapsed to single lines.
+\\ M94 FIX (Bug 2a): single-line vector() calls (were split across 2 lines each in v3)
 gue_nn_expected = vector(N_BINS, k, N_gaps * p_GUE_wigner((k-0.5)*BIN_WIDTH) * BIN_WIDTH / gue_nn_unnorm);
 goe_nn_expected = vector(N_BINS, k, N_gaps * p_GOE_wigner((k-0.5)*BIN_WIDTH) * BIN_WIDTH / goe_nn_unnorm);
 
@@ -265,11 +258,8 @@ if(chi2_nn_goe < chi2_nn_gue,
 print("");
 print("Step 6: Full histogram output...");
 print("FORMAT: BIN center  observed  GUE_pair_expected  GUE_nn_expected  GOE_nn_expected");
-for(k = 1, N_BINS,
-  my(r_center);
-  r_center = (k - 0.5) * BIN_WIDTH;
-  printf("BIN %.2f  %d  %.4f  %.4f  %.4f\n", r_center, hist[k], gue_expected[k], gue_nn_expected[k], goe_nn_expected[k])
-);
+\\ M94 FIX (Bug 2b): wrap for() body with printf in {braces}
+for(k = 1, N_BINS, { my(r_center); r_center = (k - 0.5) * BIN_WIDTH; printf("BIN %.2f  %d  %.4f  %.4f  %.4f\n", r_center, hist[k], gue_expected[k], gue_nn_expected[k], goe_nn_expected[k]) });
 
 \\ ----------------------------------------------------------
 \\ STEP 7: Summary verdict

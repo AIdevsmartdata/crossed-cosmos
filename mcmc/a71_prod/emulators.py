@@ -255,11 +255,11 @@ def smoke_check(verbose: bool = True) -> bool:
     omega_c = jnp.array(0.1227)
     h     = jnp.array(0.70)
 
-    w_arr = cp_w(xi, lam, phi0, omega_b, omega_c, h)
-    H_arr = cp_H(xi, lam, phi0, omega_b, omega_c, h)
+    w_arr = jnp.atleast_1d(cp_w(xi, lam, phi0, omega_b, omega_c, h))
+    H_arr = jnp.atleast_1d(cp_H(xi, lam, phi0, omega_b, omega_c, h))
 
-    w0_approx = float(w_arr[0])
-    H0_approx = float(H_arr[0])
+    w0_approx = float(w_arr.flatten()[0])
+    H0_approx = float(H_arr.flatten()[0])
 
     ok = (
         jnp.all(jnp.isfinite(w_arr))

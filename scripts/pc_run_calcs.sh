@@ -7,7 +7,8 @@ set -u  # do NOT set -e: we want to continue past failures and log them
 set -o pipefail
 
 # === CONFIG ===
-REPO_ROOT="/home/remondiere/eci-v8"
+# REPO_ROOT can be overridden via env var: REPO_ROOT=/path/to/repo bash pc_run_calcs.sh
+REPO_ROOT="${REPO_ROOT:-/home/remondiere/crossed-cosmos}"
 LOG_ROOT="$REPO_ROOT/logs/run_$(date +%Y%m%d_%H%M%S)"
 mkdir -p "$LOG_ROOT"
 RUN_LOG="$LOG_ROOT/run.log"

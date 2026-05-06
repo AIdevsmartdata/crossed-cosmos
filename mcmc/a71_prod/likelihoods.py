@@ -18,6 +18,7 @@ arXiv verifications (live, 2026-05-05 via export.arxiv.org/api/query):
 Hallu count: 85 (entering) → 85 (leaving). Mistral STRICT-BAN.
 """
 
+import os
 import warnings
 import jax
 import jax.numpy as jnp
@@ -42,83 +43,141 @@ from .background import D_H, D_M, chi, sound_horizon_EH
 #  "iso" : isotropic D_V/r_d only
 #  "aniso": anisotropic D_M/r_d + D_H/r_d
 
-# DESI DR2 data (Table 1, arXiv:2503.14738).
-# NOTE: These values are taken from the published table. Mark as [TBD: confirm
-# exact values against Table 1 of 2503.14738 paper directly — paper not locally
-# cached on VPS].
+# DESI DR2 data — REAL VALUES from CobayaSampler/bao_data (S9 acquisition 2026-05-06).
+# Source: https://github.com/CobayaSampler/bao_data/tree/master/desi_bao_dr2
+# Reference: DESI Collaboration 2025, arXiv:2503.14738 (confirmed).
+# Data files downloaded: desi_gaussian_bao_ALL_GCcomb_mean.txt + _cov.txt
+#   mean sha256: 9ac154ab583ce759c0f7eef3c978c7c70a6ead2d18774caceadf1a350a640585
+#   cov  sha256: 252a143274c8a07c78694c119617d36594f6d7965d00319ca611c6ffb886e509
+#
+# Data ordering in the 13x13 covariance (same as mean file order):
+#  [0] BGS z=0.295 DV/rs (iso)
+#  [1,2] LRG1 z=0.510 (DM/rs, DH/rs)
+#  [3,4] LRG2 z=0.706 (DM/rs, DH/rs)
+#  [5,6] LRG+ELG z=0.934 (DM/rs, DH/rs)
+#  [7,8] ELG z=1.321 (DM/rs, DH/rs)
+#  [9,10] QSO z=1.484 (DM/rs, DH/rs)
+#  [11,12] Lya z=2.330 (DH/rs, DM/rs) — NOTE: Lya has DH first in the file
+#
+# The dict-based API below is used internally. The full 13x13 covariance is
+# loaded from disk when available (preferred) or via _load_desi_dr2_data_from_files().
 DESI_DR2_DEFAULT = {
-    # z_eff, D_M/r_d, D_H/r_d, sigma_DM, sigma_DH, cov_off_diag (DM,DH), fit_type
     # BGS (z_eff=0.295): isotropic D_V/r_d only
     "BGS": {
         "z": 0.295,
-        "DV_rd": 7.93,
-        "sigma_DV_rd": 0.15,
+        "DV_rd": 7.94167639,
+        "sigma_DV_rd": 0.07609196,   # sqrt(cov[0,0])
         "fit": "iso",
     },
     # LRG1 (z_eff=0.510): anisotropic
     "LRG1": {
         "z": 0.510,
-        "DM_rd": 13.62,
-        "DH_rd": 20.98,
-        "sigma_DM_rd": 0.25,
-        "sigma_DH_rd": 0.61,
-        "cov_DM_DH": -0.393,  # correlation coefficient (not covariance); [TBD: confirm sign]
+        "DM_rd": 13.58758434,
+        "DH_rd": 21.86294686,
+        "sigma_DM_rd": 0.16836678,   # sqrt(cov[1,1])
+        "sigma_DH_rd": 0.42886832,   # sqrt(cov[2,2])
+        "cov_DM_DH": -0.4516,        # correlation coefficient cov[1,2]/(sig1*sig2)
         "fit": "aniso",
     },
     # LRG2 (z_eff=0.706): anisotropic
     "LRG2": {
         "z": 0.706,
-        "DM_rd": 16.85,
-        "DH_rd": 20.08,
-        "sigma_DM_rd": 0.32,
-        "sigma_DH_rd": 0.60,
-        "cov_DM_DH": -0.445,
+        "DM_rd": 17.35069094,
+        "DH_rd": 19.45534918,
+        "sigma_DM_rd": 0.17993122,
+        "sigma_DH_rd": 0.33387003,
+        "cov_DM_DH": -0.3953,
         "fit": "aniso",
     },
-    # LRG3+ELG1 (z_eff=0.930): anisotropic
-    "LRG3+ELG1": {
-        "z": 0.930,
-        "DM_rd": 21.71,
-        "DH_rd": 17.88,
-        "sigma_DM_rd": 0.28,
-        "sigma_DH_rd": 0.35,
-        "cov_DM_DH": -0.389,
+    # LRG+ELG (z_eff=0.934): anisotropic
+    "LRG+ELG": {
+        "z": 0.934,
+        "DM_rd": 21.57563956,
+        "DH_rd": 17.64149464,
+        "sigma_DM_rd": 0.16178159,
+        "sigma_DH_rd": 0.20104325,
+        "cov_DM_DH": -0.3472,
         "fit": "aniso",
     },
-    # ELG2 (z_eff=1.317): anisotropic
-    "ELG2": {
-        "z": 1.317,
-        "DM_rd": 27.79,
-        "DH_rd": 13.82,
-        "sigma_DM_rd": 0.69,
-        "sigma_DH_rd": 0.42,
-        "cov_DM_DH": -0.422,
+    # ELG (z_eff=1.321): anisotropic
+    "ELG": {
+        "z": 1.321,
+        "DM_rd": 27.60085612,
+        "DH_rd": 14.17602155,
+        "sigma_DM_rd": 0.32455588,
+        "sigma_DH_rd": 0.22455135,
+        "cov_DM_DH": -0.3983,
         "fit": "aniso",
     },
-    # QSO (z_eff=1.491): anisotropic
+    # QSO (z_eff=1.484): anisotropic
     "QSO": {
-        "z": 1.491,
-        "DM_rd": 30.21,
-        "DH_rd": 13.23,
-        "sigma_DM_rd": 0.79,
-        "sigma_DH_rd": 0.55,
-        "cov_DM_DH": -0.543,
+        "z": 1.484,
+        "DM_rd": 30.51190063,
+        "DH_rd": 12.81699964,
+        "sigma_DM_rd": 0.76355764,
+        "sigma_DH_rd": 0.51801177,
+        "cov_DM_DH": -0.4936,
         "fit": "aniso",
     },
-    # Ly-alpha (z_eff=2.330): anisotropic
+    # Lya (z_eff=2.330): anisotropic
     "Lya": {
         "z": 2.330,
-        "DM_rd": 39.71,
-        "DH_rd": 8.52,
-        "sigma_DM_rd": 0.94,
-        "sigma_DH_rd": 0.17,
-        "cov_DM_DH": -0.477,
+        "DM_rd": 38.98897396,
+        "DH_rd": 8.63154567,
+        "sigma_DM_rd": 0.53168203,
+        "sigma_DH_rd": 0.10106245,
+        "cov_DM_DH": -0.4306,
         "fit": "aniso",
     },
 }
 
-# [TBD: locate /home/remondiere/data/desi_dr2/ on PC and load from file.
-#  If file unavailable, the code uses DESI_DR2_DEFAULT above with a warning.]
+# Path to real DESI DR2 data on PC (or on VPS if copied there)
+_DESI_DR2_DATA_PATH = os.environ.get(
+    "DESI_DR2_DATA_PATH",
+    "/home/remondiere/data/desi_dr2"
+)
+
+
+def _load_desi_dr2_data_from_files(data_path=None):
+    """
+    Load DESI DR2 BAO data from CobayaSampler-format text files.
+
+    Expects:
+      {data_path}/desi_gaussian_bao_ALL_GCcomb_mean.txt  (13 data rows)
+      {data_path}/desi_gaussian_bao_ALL_GCcomb_cov.txt   (13x13 matrix)
+
+    Returns dict with keys "mean_vec", "cov", "cov_inv", "data_info"
+    for use in loglike_desi_dr2_bao_full_cov().
+    Returns None if files not found.
+    """
+    if data_path is None:
+        data_path = _DESI_DR2_DATA_PATH
+    mean_file = os.path.join(data_path, "desi_gaussian_bao_ALL_GCcomb_mean.txt")
+    cov_file  = os.path.join(data_path, "desi_gaussian_bao_ALL_GCcomb_cov.txt")
+    if not (os.path.exists(mean_file) and os.path.exists(cov_file)):
+        return None
+
+    mean_data = []
+    with open(mean_file) as f:
+        for line in f:
+            if line.startswith("#"):
+                continue
+            parts = line.strip().split()
+            mean_data.append({
+                "z": float(parts[0]),
+                "value": float(parts[1]),
+                "quantity": parts[2],
+            })
+
+    cov = np.loadtxt(cov_file)
+    cov_inv = np.linalg.inv(cov)
+
+    return {
+        "mean_data": mean_data,   # list of 13 dicts
+        "cov": cov,               # (13,13) numpy array
+        "cov_inv": cov_inv,       # (13,13) numpy array
+        "_source": mean_file,
+    }
 
 
 def _dv_rd(z, H0, Omega_m, w0, wa, r_d, n_steps=200):
@@ -139,7 +198,13 @@ def loglike_desi_dr2_bao(H0: jnp.ndarray,
                           use_default_warning: bool = True) -> jnp.ndarray:
     """
     DESI DR2 BAO log-likelihood (arXiv:2503.14738).
-    Diagonal covariance + off-diagonal DM-DH correlation per bin.
+
+    Loading priority:
+      1. If data_dict is supplied: use it directly.
+      2. If /home/remondiere/data/desi_dr2/ exists on disk: use full 13x13
+         covariance via loglike_desi_dr2_bao_full_cov() [preferred].
+      3. Else: use DESI_DR2_DEFAULT (real values from S9 acquisition, confirmed
+         against CobayaSampler/bao_data sha256-verified files 2026-05-06).
 
     Args:
       H0: Hubble constant [km/s/Mpc]
@@ -148,7 +213,7 @@ def loglike_desi_dr2_bao(H0: jnp.ndarray,
       omega_b: ω_b h² (for r_d calculation)
       omega_m: ω_m h² = Omega_m * (H0/100)^2 (for r_d calculation)
       data_dict: optional override (dict with same structure as DESI_DR2_DEFAULT)
-      use_default_warning: if True, warn when using hardcoded data
+      use_default_warning: if True, warn when using fallback data
 
     Returns:
       log-likelihood (scalar JAX float)
@@ -156,13 +221,20 @@ def loglike_desi_dr2_bao(H0: jnp.ndarray,
     r_d = sound_horizon_EH(omega_b, omega_m)  # [Mpc]
 
     if data_dict is None:
+        # Attempt to load real data from disk (preferred path: PC production)
+        real_data = _load_desi_dr2_data_from_files()
+        if real_data is not None:
+            return loglike_desi_dr2_bao_full_cov(
+                H0, Omega_m, w0, wa, omega_b, omega_m, real_data
+            )
+        # Fallback: use DESI_DR2_DEFAULT (real values from S9 acquisition)
         data_dict = DESI_DR2_DEFAULT
         if use_default_warning:
-            # This warning fires once at Python level (not inside jitted code)
             warnings.warn(
-                "[TBD: locate /home/remondiere/data/desi_dr2/] "
-                "Using hardcoded DESI DR2 Table 1 values from arXiv:2503.14738. "
-                "Confirm against paper Table 1 before final run.",
+                "DESI DR2: /home/remondiere/data/desi_dr2/ not found on this machine. "
+                "Using DESI_DR2_DEFAULT (real values from CobayaSampler/bao_data, "
+                "S9-acquired 2026-05-06, sha256-verified). "
+                "For full 13x13 covariance: copy data files to /home/remondiere/data/desi_dr2/.",
                 stacklevel=2,
             )
 
@@ -198,6 +270,64 @@ def loglike_desi_dr2_bao(H0: jnp.ndarray,
     return logL
 
 
+def loglike_desi_dr2_bao_full_cov(H0: jnp.ndarray,
+                                    Omega_m: jnp.ndarray,
+                                    w0: jnp.ndarray,
+                                    wa: jnp.ndarray,
+                                    omega_b: jnp.ndarray,
+                                    omega_m: jnp.ndarray,
+                                    real_data: dict) -> jnp.ndarray:
+    """
+    DESI DR2 BAO log-likelihood using the full 13x13 covariance matrix
+    loaded from CobayaSampler-format text files.
+
+    Data ordering (13 elements):
+      [0]  BGS z=0.295 DV/rs
+      [1]  LRG1 z=0.510 DM/rs
+      [2]  LRG1 z=0.510 DH/rs
+      [3]  LRG2 z=0.706 DM/rs
+      [4]  LRG2 z=0.706 DH/rs
+      [5]  LRG+ELG z=0.934 DM/rs
+      [6]  LRG+ELG z=0.934 DH/rs
+      [7]  ELG z=1.321 DM/rs
+      [8]  ELG z=1.321 DH/rs
+      [9]  QSO z=1.484 DM/rs
+      [10] QSO z=1.484 DH/rs
+      [11] Lya z=2.330 DH/rs  (DH first in file)
+      [12] Lya z=2.330 DM/rs
+
+    Args:
+      real_data: dict from _load_desi_dr2_data_from_files()
+
+    Returns:
+      log-likelihood (scalar JAX float)
+    """
+    r_d = sound_horizon_EH(omega_b, omega_m)
+
+    mean_data = real_data["mean_data"]
+    cov_inv = jnp.array(real_data["cov_inv"])   # (13,13)
+
+    # Build theory vector matching data ordering
+    th_vec = []
+    for entry in mean_data:
+        z = jnp.array(entry["z"])
+        qty = entry["quantity"]
+        if qty == "DV_over_rs":
+            th_vec.append(_dv_rd(z, H0, Omega_m, w0, wa, r_d))
+        elif qty == "DM_over_rs":
+            th_vec.append(D_M(jnp.atleast_1d(z), H0, Omega_m, w0, wa)[0] / r_d)
+        elif qty == "DH_over_rs":
+            th_vec.append(D_H(z, H0, Omega_m, w0, wa) / r_d)
+        else:
+            raise ValueError(f"Unknown DESI quantity: {qty}")
+
+    th = jnp.stack(th_vec)
+    obs = jnp.array([entry["value"] for entry in mean_data])
+    delta = th - obs
+    chi2 = delta @ cov_inv @ delta
+    return -0.5 * chi2
+
+
 # =========================================================================
 # SECTION 2 — Pantheon+ SNe Ia likelihood with analytic M_B marginalization
 # =========================================================================
@@ -216,6 +346,72 @@ def loglike_desi_dr2_bao(H0: jnp.ndarray,
 #
 # For FRAMING B we treat M_B as a nuisance param sampled by numpyro
 # (simpler; analytic marginalization available via loglike_pantheonplus_margMB).
+
+# Path to real Pantheon+ data on PC
+_PANTHEONPLUS_DATA_PATH = os.environ.get(
+    "PANTHEONPLUS_DATA_PATH",
+    "/home/remondiere/data/pantheonplus"
+)
+
+# Module-level cache to avoid re-parsing 33MB covariance on each call
+_PANTHEONPLUS_CACHE: dict | None = None
+
+
+def _load_pantheonplus_data_from_files(data_path=None):
+    """
+    Load Pantheon+ data from disk.
+    Files expected:
+      {data_path}/Pantheon+SH0ES.dat          (1701 rows, see README)
+      {data_path}/Pantheon+SH0ES_STAT+SYS.cov (N=1701 header + N^2 elements)
+
+    Returns dict with keys:
+      "z_sn"   : (1701,) float64 redshifts (zHD column)
+      "mu_obs" : (1701,) float64 corrected apparent magnitudes (m_b_corr)
+                 Note: residual = mu_obs - mu_th - M_B where mu_th = 5*log10(D_L)+25
+      "cov_inv": (1701,1701) float64 inverse covariance (stat+sys)
+    Returns None if files not found.
+    """
+    global _PANTHEONPLUS_CACHE
+    if _PANTHEONPLUS_CACHE is not None:
+        return _PANTHEONPLUS_CACHE
+
+    if data_path is None:
+        data_path = _PANTHEONPLUS_DATA_PATH
+
+    dat_file = os.path.join(data_path, "Pantheon+SH0ES.dat")
+    cov_file = os.path.join(data_path, "Pantheon+SH0ES_STAT+SYS.cov")
+
+    if not (os.path.exists(dat_file) and os.path.exists(cov_file)):
+        return None
+
+    # Parse data file
+    rows = []
+    with open(dat_file) as f:
+        header = f.readline().strip().split()
+        for line in f:
+            rows.append(line.strip().split())
+    iz  = header.index("zHD")
+    imb = header.index("m_b_corr")
+    z_sn   = np.array([float(r[iz])  for r in rows], dtype=np.float64)
+    mu_obs = np.array([float(r[imb]) for r in rows], dtype=np.float64)
+
+    # Parse covariance file (N on first line, then N*N elements one per line)
+    with open(cov_file) as f:
+        N = int(f.readline().strip())
+        vals = np.fromiter((float(x) for line in f for x in line.split()),
+                           dtype=np.float64, count=N * N)
+    cov = vals.reshape(N, N)
+    cov_inv = np.linalg.inv(cov)
+
+    _PANTHEONPLUS_CACHE = {
+        "z_sn":    z_sn,
+        "mu_obs":  mu_obs,
+        "cov_inv": cov_inv,
+        "_source": dat_file,
+        "_N":      N,
+    }
+    return _PANTHEONPLUS_CACHE
+
 
 def mu_luminosity(z: jnp.ndarray,
                    H0: jnp.ndarray,
@@ -243,31 +439,38 @@ def loglike_pantheonplus(H0: jnp.ndarray,
     M_B is sampled as a parameter (not analytically marginalized here;
     use loglike_pantheonplus_margMB for analytic version).
 
+    Loading priority:
+      1. If data_dict is supplied: use it directly.
+      2. If /home/remondiere/data/pantheonplus/ exists: load real 1701-SN data
+         with full STAT+SYS covariance (S9-acquired 2026-05-06, sha256-verified).
+      3. Else: synthetic 200-SN fallback (smoke test only).
+
     Args:
       H0, Omega_m, w0, wa: cosmological parameters
       M_B: SN-Ia absolute magnitude [mag]
       data_dict: dict with keys:
         "z_sn"   : (N,) redshifts of SNe
-        "mu_obs" : (N,) observed distance moduli
-        "cov_inv": (N,N) inverse covariance matrix
+        "mu_obs" : (N,) corrected apparent magnitudes (m_b_corr from Pantheon+SH0ES.dat)
+                   residual = mu_obs - mu_th(z) - M_B
+        "cov_inv": (N,N) inverse covariance matrix (STAT+SYS)
         OR:
-        "mu_obs", "mu_err" for diagonal approximation
+        "mu_obs", "mu_err" for diagonal approximation (smoke test)
 
     Returns:
       log-likelihood (scalar)
-
-    [TBD: locate Pantheon+ data files at /home/remondiere/data/pantheonplus/
-     or equivalent PC path. Without real data, smoke test uses synthetic.]
     """
     if data_dict is None:
-        # Synthetic fallback for smoke test ONLY
-        # [TBD: locate real Pantheon+ data on PC]
-        warnings.warn(
-            "[TBD: locate Pantheon+ data] Using synthetic SNe data for smoke test. "
-            "Replace with real Pantheon+ files before production run.",
-            stacklevel=2,
-        )
-        data_dict = _make_synthetic_sne_data()
+        real_data = _load_pantheonplus_data_from_files()
+        if real_data is not None:
+            data_dict = real_data
+        else:
+            warnings.warn(
+                "Pantheon+: /home/remondiere/data/pantheonplus/ not found on this machine. "
+                "Using synthetic 200-SN data (smoke test only). "
+                "Copy Pantheon+SH0ES.dat + Pantheon+SH0ES_STAT+SYS.cov to enable real data.",
+                stacklevel=2,
+            )
+            data_dict = _make_synthetic_sne_data()
 
     z_sn    = jnp.array(data_dict["z_sn"])
     mu_obs  = jnp.array(data_dict["mu_obs"])
@@ -302,11 +505,16 @@ def loglike_pantheonplus_margMB(H0: jnp.ndarray,
     [TBD: verify this is the exact form used by Pantheon+ collaboration]
     """
     if data_dict is None:
-        warnings.warn(
-            "[TBD: locate Pantheon+ data] Using synthetic SNe data.",
-            stacklevel=2,
-        )
-        data_dict = _make_synthetic_sne_data()
+        real_data = _load_pantheonplus_data_from_files()
+        if real_data is not None:
+            data_dict = real_data
+        else:
+            warnings.warn(
+                "Pantheon+ margMB: /home/remondiere/data/pantheonplus/ not found. "
+                "Using synthetic 200-SN data (smoke test only).",
+                stacklevel=2,
+            )
+            data_dict = _make_synthetic_sne_data()
 
     z_sn    = jnp.array(data_dict["z_sn"])
     mu_obs  = jnp.array(data_dict["mu_obs"])
@@ -394,30 +602,75 @@ PLANCK2018_BESTFIT = {
     "n_s": 0.9649,
 }
 
-# Planck 2018 compressed covariance (from PLA chains, approximate diagonal + main off-diags).
-# [TBD: use exact covariance from PLA R3.01 chains — these are approximate values
-#  from public Planck 2018 papers; confirm before final run]
+# Planck 2018 compressed covariance.
+# Diagonal: sigma^2 from published 1-sigma errors in arXiv:1807.06209 Table 2
+#   omega_b: sigma=0.00015 → var=2.25e-8   (confirmed from paper)
+#   omega_c: sigma=0.00120 → var=1.44e-6   (confirmed from paper)
+#   theta_MC_100: sigma=0.00031 → var=9.61e-8  (confirmed from paper)
+#   ln_As_e10:  sigma=0.014   → var=1.96e-4  (confirmed from paper)
+#   n_s: sigma=0.0042 → var=1.764e-5         (confirmed from paper)
+# Off-diagonal: APPROXIMATE — from physical correlations in LCDM Planck chains.
+# [TBD: replace off-diagonal with exact values from PLA R3.01 chains
+#  (COM_CosmoParams_fullGrid_R3.01.zip, ~1.8GB). The diagonal is confirmed
+#  from published Table 2; off-diagonal needs chain extraction.]
 # Parameter order: [omega_b, omega_c, theta_MC_100, ln_As_e10, n_s]
 PLANCK2018_COV_APPROX = np.array([
-    # omega_b      omega_c     theta_MC   ln_As    n_s
-    [ 2.25e-8,    -7.2e-9,    -2.0e-8,   5.0e-7,  5.0e-8],   # omega_b
-    [-7.2e-9,     2.0e-6,     1.0e-7,   -3.0e-5,  -5.0e-7],  # omega_c
-    [-2.0e-8,     1.0e-7,     1.2e-7,    1.0e-7,   1.0e-8],   # theta_MC
-    [ 5.0e-7,    -3.0e-5,     1.0e-7,    3.0e-3,   3.0e-5],   # ln_As_e10
-    [ 5.0e-8,    -5.0e-7,     1.0e-8,    3.0e-5,   2.2e-5],   # n_s
+    # omega_b      omega_c       theta_MC      ln_As         n_s
+    [ 2.25e-8,    -7.2e-9,      -2.0e-8,       5.0e-7,       5.0e-8],   # omega_b
+    [-7.2e-9,     1.44e-6,       1.0e-7,      -3.0e-5,      -5.0e-7],   # omega_c
+    [-2.0e-8,     1.0e-7,        9.61e-8,      1.0e-7,       1.0e-8],   # theta_MC_100
+    [ 5.0e-7,    -3.0e-5,        1.0e-7,       1.96e-4,      3.0e-5],   # ln_As_e10
+    [ 5.0e-8,    -5.0e-7,        1.0e-8,       3.0e-5,       1.764e-5], # n_s
 ], dtype=np.float64)
 
-_PLANCK_COV_INV = np.linalg.inv(PLANCK2018_COV_APPROX)
+# Path to Planck compressed data on PC
+_PLANCK_DATA_PATH = os.environ.get(
+    "PLANCK2018_DATA_PATH",
+    "/home/remondiere/data/planck_2018_compressed"
+)
 
-# Convert to JAX arrays (done at module load)
-_jax_planck_mean = jnp.array([
-    PLANCK2018_BESTFIT["omega_b"],
-    PLANCK2018_BESTFIT["omega_c"],
-    PLANCK2018_BESTFIT["theta_MC_100"],
-    PLANCK2018_BESTFIT["ln_As_e10"],
-    PLANCK2018_BESTFIT["n_s"],
-])
-_jax_planck_cov_inv = jnp.array(_PLANCK_COV_INV)
+
+def _load_planck2018_compressed_from_file(data_path=None):
+    """
+    Load Planck 2018 compressed likelihood parameters from disk.
+    Expects: {data_path}/planck2018_compressed.json with keys:
+      "bestfit": dict of 5 params
+      "cov_approx_5x5": dict with "matrix" key (5x5)
+    Returns (mean_vec, cov_inv) or None if file not found.
+    """
+    import json
+    if data_path is None:
+        data_path = _PLANCK_DATA_PATH
+    json_file = os.path.join(data_path, "planck2018_compressed.json")
+    if not os.path.exists(json_file):
+        return None
+    with open(json_file) as f:
+        d = json.load(f)
+    bf = d["bestfit"]
+    mean_vec = np.array([
+        bf["omega_b"], bf["omega_c"], bf["theta_MC_100"],
+        bf["ln_As_e10"], bf["n_s"]
+    ])
+    cov = np.array(d["cov_approx_5x5"]["matrix"])
+    cov_inv = np.linalg.inv(cov)
+    return mean_vec, cov_inv
+
+
+# Try to load from disk at module import; fallback to PLANCK2018_COV_APPROX
+_planck_loaded = _load_planck2018_compressed_from_file()
+if _planck_loaded is not None:
+    _jax_planck_mean    = jnp.array(_planck_loaded[0])
+    _jax_planck_cov_inv = jnp.array(_planck_loaded[1])
+else:
+    _PLANCK_COV_INV     = np.linalg.inv(PLANCK2018_COV_APPROX)
+    _jax_planck_mean    = jnp.array([
+        PLANCK2018_BESTFIT["omega_b"],
+        PLANCK2018_BESTFIT["omega_c"],
+        PLANCK2018_BESTFIT["theta_MC_100"],
+        PLANCK2018_BESTFIT["ln_As_e10"],
+        PLANCK2018_BESTFIT["n_s"],
+    ])
+    _jax_planck_cov_inv = jnp.array(np.linalg.inv(PLANCK2018_COV_APPROX))
 
 
 def theta_MC_approx(omega_b: jnp.ndarray,

@@ -16,7 +16,7 @@ cosmology. He writes from a home office in France.
   patch, adversarial review, and editorial decision is public in
   [github.com/AIdevsmartdata/crossed-cosmos](https://github.com/AIdevsmartdata/crossed-cosmos)
   and permanently archived at Zenodo DOI
-  [10.5281/zenodo.19686399](https://doi.org/10.5281/zenodo.19686399).
+  [10.5281/zenodo.19686398](https://doi.org/10.5281/zenodo.19686398).
 - **AI-use disclosure**: a separate [`AI_USE.md`](../AI_USE.md) at the
   repository root documents the local-LLM assistance used in LaTeX editing
   and code drafting. All scientific content, derivations, and conclusions are

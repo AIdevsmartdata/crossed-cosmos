@@ -16,6 +16,15 @@ arXiv verifications (live, 2026-05-05 via export.arxiv.org/api/query):
     Cosmological Constraints"
 
 Hallu count: 85 (entering) → 85 (leaving). Mistral STRICT-BAN.
+
+M1 bug-fix 2026-05-06 (Sub-agent M1):
+  BUG A FIXED: PLANCK2018_COV_APPROX was non-positive-definite (eigenvalue=-3.998e-6).
+    Replaced with diagonal-only covariance (sigma from Table 2, arXiv:1807.06209).
+  BUG B FIXED: loglike_planck2018_compressed() multiplied log10As_e10 by ln(10)=2.303,
+    but the parameter IS already ln(10^10 A_s) (prior [2.7,3.5] encodes ln range).
+    Removed the spurious * jnp.log(10.0) factor.
+  These two bugs together produced chi2~80000 at Planck fiducial → NUTS at boundaries.
+  After fix: chi2~9.7 at fiducial (residual from theta_MC approx bias, ~3.1 sigma).
 """
 
 import os
@@ -602,26 +611,36 @@ PLANCK2018_BESTFIT = {
     "n_s": 0.9649,
 }
 
-# Planck 2018 compressed covariance.
-# Diagonal: sigma^2 from published 1-sigma errors in arXiv:1807.06209 Table 2
-#   omega_b: sigma=0.00015 → var=2.25e-8   (confirmed from paper)
-#   omega_c: sigma=0.00120 → var=1.44e-6   (confirmed from paper)
-#   theta_MC_100: sigma=0.00031 → var=9.61e-8  (confirmed from paper)
-#   ln_As_e10:  sigma=0.014   → var=1.96e-4  (confirmed from paper)
-#   n_s: sigma=0.0042 → var=1.764e-5         (confirmed from paper)
-# Off-diagonal: APPROXIMATE — from physical correlations in LCDM Planck chains.
-# [TBD: replace off-diagonal with exact values from PLA R3.01 chains
-#  (COM_CosmoParams_fullGrid_R3.01.zip, ~1.8GB). The diagonal is confirmed
-#  from published Table 2; off-diagonal needs chain extraction.]
+# Planck 2018 compressed covariance — DIAGONAL ONLY (M1 bug-fix 2026-05-06).
+#
+# BUG FIXED: the previous PLANCK2018_COV_APPROX had guessed off-diagonal elements
+# that made the matrix NON-POSITIVE-DEFINITE (eigenvalue = -3.998e-6, det < 0).
+# A non-PD covariance produces a chi2 unbounded below; NUTS exploits this to
+# escape to prior boundaries (observed: log10As_e10=3.5, n_s=0.9, omega_b=0.019).
+#
+# FIX: diagonal-only covariance built from published 1-sigma errors in
+# arXiv:1807.06209 Table 2 (Aghanim et al. 2018, confirmed).
+#   omega_b:      sigma=0.00015 → var=2.25e-8
+#   omega_c:      sigma=0.00120 → var=1.44e-6
+#   theta_MC_100: sigma=0.00031 → var=9.61e-8
+#   ln_As_e10:    sigma=0.014   → var=1.96e-4
+#   n_s:          sigma=0.0042  → var=1.764e-5
+#
+# Off-diagonal is set to zero (safe conservative choice: over-estimates parameter
+# uncertainties marginally; all eigenvalues guaranteed positive).
+# [TBD: replace diagonal with full PLA R3.01 covariance once
+#  COM_CosmoParams_fullGrid_R3.01.zip (~1.8GB) is downloaded and chains extracted.
+#  The known physical correlations (e.g. omega_b ↔ n_s ~0.3, omega_c ↔ theta_MC ~-0.4)
+#  will tighten constraints but the diagonal is conservatively valid.]
+#
 # Parameter order: [omega_b, omega_c, theta_MC_100, ln_As_e10, n_s]
-PLANCK2018_COV_APPROX = np.array([
-    # omega_b      omega_c       theta_MC      ln_As         n_s
-    [ 2.25e-8,    -7.2e-9,      -2.0e-8,       5.0e-7,       5.0e-8],   # omega_b
-    [-7.2e-9,     1.44e-6,       1.0e-7,      -3.0e-5,      -5.0e-7],   # omega_c
-    [-2.0e-8,     1.0e-7,        9.61e-8,      1.0e-7,       1.0e-8],   # theta_MC_100
-    [ 5.0e-7,    -3.0e-5,        1.0e-7,       1.96e-4,      3.0e-5],   # ln_As_e10
-    [ 5.0e-8,    -5.0e-7,        1.0e-8,       3.0e-5,       1.764e-5], # n_s
-], dtype=np.float64)
+PLANCK2018_COV_APPROX = np.diag(np.array([
+    2.25e-8,   # omega_b:      sigma=0.00015 (Table 2, arXiv:1807.06209)
+    1.44e-6,   # omega_c:      sigma=0.00120 (Table 2, arXiv:1807.06209)
+    9.61e-8,   # theta_MC_100: sigma=0.00031 (Table 2, arXiv:1807.06209)
+    1.96e-4,   # ln_As_e10:    sigma=0.014   (Table 2, arXiv:1807.06209)
+    1.764e-5,  # n_s:          sigma=0.0042  (Table 2, arXiv:1807.06209)
+]))
 
 # Path to Planck compressed data on PC
 _PLANCK_DATA_PATH = os.environ.get(
@@ -652,6 +671,21 @@ def _load_planck2018_compressed_from_file(data_path=None):
         bf["ln_As_e10"], bf["n_s"]
     ])
     cov = np.array(d["cov_approx_5x5"]["matrix"])
+
+    # M1 bug-fix 2026-05-06: validate that the loaded covariance is positive definite.
+    # The previous JSON on disk may contain the buggy non-PD matrix.
+    # If non-PD, fall back to the safe diagonal-only matrix.
+    eigvals = np.linalg.eigvalsh(cov)
+    if np.any(eigvals <= 0):
+        warnings.warn(
+            f"Planck compressed covariance from {json_file} is NOT positive definite "
+            f"(min eigenvalue={eigvals.min():.4e}). "
+            f"Falling back to diagonal-only covariance (sigma from Table 2, arXiv:1807.06209). "
+            f"Update the JSON file with a valid PD covariance to suppress this warning.",
+            stacklevel=2,
+        )
+        return None  # triggers fallback to PLANCK2018_COV_APPROX (now diagonal)
+
     cov_inv = np.linalg.inv(cov)
     return mean_vec, cov_inv
 
@@ -705,9 +739,18 @@ def loglike_planck2018_compressed(omega_b: jnp.ndarray,
 
     Parameters are: {ω_b, ω_c, 100θ_MC, ln(10^10 A_s), n_s}.
 
-    Note on A_s convention:
-      A70 priors use log10(10^10 A_s). Planck uses ln(10^10 A_s).
-      Conversion: ln_As = log10As_e10 * ln(10) ≈ log10As_e10 * 2.302585
+    Note on A_s convention (M1 bug-fix 2026-05-06):
+      The parameter 'log10As_e10' is MISNAMED — its prior Uniform[2.7, 3.5]
+      is the range of ln(10^10 A_s), NOT log10(10^10 A_s).
+      At Planck fiducial: A_s = 2.101e-9, so 10^10*A_s = 21.01,
+        log10(21.01) = 1.322  (NOT in [2.7, 3.5])
+        ln(21.01)    = 3.044  (IN [2.7, 3.5]) ✓
+      Therefore log10As_e10 IS ln(10^10 A_s) and must be used directly
+      (identity, no conversion factor).
+      BUG FIXED: the previous code erroneously applied * ln(10) = 2.302585,
+      inflating the chi2_As term by (3.044 * 1.303)^2 / 0.014^2 ≈ 80000.
+      This drove NUTS to the prior boundary at log10As_e10 = 3.5.
+      [TBD: rename parameter to 'ln_As_e10' throughout for clarity]
 
     Note on τ_reio:
       Sampled separately as a Gaussian prior in priors.py (τ ~ N(0.054, 0.007)).
@@ -719,7 +762,8 @@ def loglike_planck2018_compressed(omega_b: jnp.ndarray,
       omega_b: ω_b h²
       omega_c: ω_c h²
       H0: [km/s/Mpc] (for computing theta_MC via h = H0/100, omega_m = omega_c + omega_b)
-      log10As_e10: log10(10^10 A_s)
+      log10As_e10: ln(10^10 A_s) — MISNAMED but correctly represents ln value
+                   (prior Uniform[2.7, 3.5] matches Planck 2018 ln(10^10 A_s) = 3.044)
       n_s: spectral index
       tau_reio: optical depth (unused here; sampled via prior in numpyro_models.py)
 
@@ -728,7 +772,9 @@ def loglike_planck2018_compressed(omega_b: jnp.ndarray,
     """
     h        = H0 / 100.0
     omega_m  = omega_b + omega_c  # (ignoring nu for approximation)
-    ln_As    = log10As_e10 * jnp.log(10.0)  # convert log10 → ln
+    # M1 bug-fix 2026-05-06: the parameter IS ln(10^10 A_s) — use directly, no conversion.
+    # Previous buggy code: ln_As = log10As_e10 * jnp.log(10.0)  [WRONG — factor 2.303 error]
+    ln_As    = log10As_e10  # identity: parameter is already ln(10^10 A_s)
     theta_MC = theta_MC_approx(omega_b, omega_m)
 
     # Parameter vector [omega_b, omega_c, theta_MC_100, ln_As_e10, n_s]
@@ -780,18 +826,21 @@ def loglike_total_framing_b(H0: jnp.ndarray,
 
 
 if __name__ == "__main__":
-    # Quick sanity check at ΛCDM fiducial point
-    print("[likelihoods] Testing at ΛCDM fiducial (H0=67, Omega_m=0.3)...")
+    # Quick sanity check at ΛCDM fiducial point (M1 bug-fix 2026-05-06)
+    # Note: log10As_e10 = 3.044 directly (it IS ln(10^10 A_s), prior [2.7, 3.5])
+    # Previous code had log10As_e10 = 3.044/ln(10) = 1.3220 which is WRONG
+    print("[likelihoods] Testing at ΛCDM fiducial (Planck 2018 bestfit)...")
+    print("[likelihoods] log10As_e10 = 3.044 (= ln(10^10 A_s), no conversion applied)")
 
     import warnings
     with warnings.catch_warnings():
         warnings.simplefilter("ignore")
         ll = loglike_total_framing_b(
-            H0=jnp.array(67.4),
+            H0=jnp.array(67.36),
             omega_b=jnp.array(0.02237),
             omega_c=jnp.array(0.1200),
             n_s=jnp.array(0.9649),
-            log10As_e10=jnp.array(3.044 / jnp.log(10.0)),
+            log10As_e10=jnp.array(3.044),  # = ln(10^10 A_s) directly (M1 fix)
             tau_reio=jnp.array(0.054),
             w0=jnp.array(-1.0),
             wa=jnp.array(0.0),
@@ -799,4 +848,12 @@ if __name__ == "__main__":
             warn=False,
         )
     print(f"[likelihoods] total loglike at fiducial ΛCDM = {float(ll):.3f}")
+
+    # Also check the Planck CMB-only loglike: should be ~ -4.85 (only theta_MC bias)
+    lL_cmb = loglike_planck2018_compressed(
+        jnp.array(0.02237), jnp.array(0.1200), jnp.array(67.36),
+        jnp.array(3.044), jnp.array(0.9649),
+    )
+    print(f"[likelihoods] Planck compressed loglike at fiducial = {float(lL_cmb):.4f}")
+    print(f"[likelihoods]   Expected: ~-4.85 (chi2~9.7, from theta_MC approx bias only)")
     print("[likelihoods] Module OK.")

@@ -113,7 +113,7 @@ def sample_eci_priors() -> dict:
     range rather than a hard gate in Framing B (no KG ODE).
     """
     base = sample_lcdm_priors()
-    xi_chi      = numpyro.sample("xi_chi",      dist.Uniform(-0.024,  0.024))
+    xi_chi      = numpyro.sample("xi_chi",      dist.Uniform(-0.024,  0.024))   # Cassini-clean prior; M24 confirmed posterior preference is real (rail at -0.024 even with [-0.10, +0.10] prior)
     lambda_chi  = numpyro.sample("lambda_chi",  dist.Uniform(0.5,     4.0))
     chi0_over_MP= numpyro.sample("chi0_over_MP",dist.Uniform(5e-3,    5e-2))
 

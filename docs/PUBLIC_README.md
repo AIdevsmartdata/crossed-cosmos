@@ -25,7 +25,7 @@ is claimed and what is merely conjectured lives at
 [`paper/_internal_rag/INDEX.md`](../paper/_internal_rag/INDEX.md).
 
 **How to cite.** Please cite the Zenodo archive —
-DOI [10.5281/zenodo.19686399](https://doi.org/10.5281/zenodo.19686399) — and,
+DOI [10.5281/zenodo.19686398](https://doi.org/10.5281/zenodo.19686398) — and,
 once the paper appears in EPJ C, the journal version. The current release PDF
 is [`submission/epjc/eci_svjour3.pdf`](../submission/epjc/eci_svjour3.pdf).
 The machine-readable citation metadata is in

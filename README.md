@@ -69,6 +69,9 @@ cd notes/eci_v7_aspiration/M45_BIANCHI_IX_PAPER && pdflatex bianchi_ix_modular_s
 - **Text & figures**: CC BY 4.0 (see [`LICENSE`](LICENSE))
 - **Code**: MIT (when applicable)
 
-## ORCID
+## Author
 
-[0009-0008-2443-7166](https://orcid.org/0009-0008-2443-7166)
+**Kévin Remondière** — Independent researcher, Tarbes, France
+ORCID: [0009-0008-2443-7166](https://orcid.org/0009-0008-2443-7166)
+Email: kevin.remondiere@gmail.com
+GitHub: [AIdevsmartdata](https://github.com/AIdevsmartdata)

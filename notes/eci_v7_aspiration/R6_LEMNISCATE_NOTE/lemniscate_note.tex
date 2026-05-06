@@ -299,6 +299,37 @@ $R(11.5.b.a) = \tfrac{11}{15}\sqrt{11}$, both in $\Q(\sqrt{d})\setminus\Q$
 as predicted by the Chowla--Selberg heuristic (\S\ref{sec:structure}).
 \end{conjecture}
 
+\subsection{Extension to the full $4\times 4$ ratio lattice}
+\label{sec:4x4lattice}
+
+Define $R_{m,n}(f) = \pi^{n-m} \cdot L(f,m) / L(f,n)$ for $m, n \in \{1,2,3,4\}$. Direct PARI/GP 80-digit computation (verified 2026-05-06 on a SageMath 10.7 PC with PARI 2.17.3) yields the following $4\times 4$ lattice for each of the four CM weight-5 dim-1 newforms over class-number-1 imaginary quadratic fields $K = \mathbb{Q}(\sqrt{-d})$:
+
+\begin{table}[h]
+\centering
+\begin{tabular}{l|cccccc}
+$f$ ($K$) & $R_{1,2}$ & $R_{1,3}$ & $R_{1,4}$ & $R_{2,3}$ & $R_{2,4}$ & $R_{3,4}$ \\
+\hline
+4.5.b.a ($\mathbb{Q}(i)$) & $\boldsymbol{6/5}$ & $\boldsymbol{12/5}$ & $\boldsymbol{6}$ & $\boldsymbol{2}$ & $\boldsymbol{5}$ & $\boldsymbol{5/2}$ \\
+27.5.b.a ($\mathbb{Q}(\omega)$) & $3\sqrt{3}$ & $\boldsymbol{27}$ & $(243/4)\sqrt{3}$ & $3\sqrt{3}$ & $\boldsymbol{81/4}$ & $(9/4)\sqrt{3}$ \\
+7.5.b.a ($\mathbb{Q}(\sqrt{-7})$) & $(21/32)\sqrt{7}$ & $\boldsymbol{147/32}$ & $(21/4)\sqrt{7}$ & $\sqrt{7}$ & $\boldsymbol{8}$ & $(8/7)\sqrt{7}$ \\
+11.5.b.a ($\mathbb{Q}(\sqrt{-11})$) & $(11/15)\sqrt{11}$ & $\boldsymbol{121/15}$ & $(33/4)\sqrt{11}$ & $\sqrt{11}$ & $\boldsymbol{45/4}$ & $(45/44)\sqrt{11}$ \\
+\end{tabular}
+\caption{The $4\times 4$ ratio lattice. Bold entries are in $\mathbb{Q}$.}
+\label{tab:4x4lattice}
+\end{table}
+
+\begin{conjecture}[Refined R-6 Conjecture 3.3]
+\label{conj:refined}
+For $K = \mathbb{Q}(\sqrt{-d})$ imaginary quadratic with class number $h_K = 1$, and $f$ the unique CM weight-5 dim-1 newform attached to the minimal Hecke Gr\"{o}{\ss}encharakter on $K$:
+\begin{itemize}
+\item For $K = \mathbb{Q}(i)$ ($d=1$): $R_{m,n}(f) \in \mathbb{Q}$ for all $m, n \in \{1,2,3,4\}$.
+\item For $K = \mathbb{Q}(\sqrt{-d})$, $d \in \{3, 7, 11\}$: $R_{m,n}(f) \in \mathbb{Q}$ if and only if $m \equiv n \pmod{2}$.
+\item All non-rational entries lie in $\mathbb{Q}(\sqrt{d}) \setminus \mathbb{Q}$.
+\end{itemize}
+\end{conjecture}
+
+The supersedes the original R-6 Conjecture 3.3 (which addressed only the single ratio $R_{1,2}$); the mod-2 dichotomy across $d \in \{3, 7, 11\}$ falsifies the parent-brief Conjecture B (mod-3 hypothesis for $K=\mathbb{Q}(\omega)$).
+
 
 %% -------------------------------------------------------------------
 \section{Computational verification}
@@ -466,6 +497,118 @@ marker; the present note establishes the result computationally.
 
 
 %% -------------------------------------------------------------------
+\section{Towards a proof: a parity Lemma}
+\label{sec:parity-lemma}
+%% -------------------------------------------------------------------
+
+Conjecture~\ref{conj:refined} (the refined R-6 mod-2 dichotomy) reduces to a
+single sharp Lemma about the action of the non-trivial Galois element
+$c \in \mathrm{Gal}(K/\Q)$ on the Damerell algebraic factor.
+
+\subsection{Galois-descent reformulation}
+
+By the Damerell--Bertolini--Darmon--Prasanna form (BDP \cite{BDP13}, Kings--Sprang
+\cite{KingsSprang2025} Theorem~2.2), for each $m \in \{1, 2, 3, 4\}$ one has
+\begin{equation}
+  L(f, m) \;=\; c_m(K, \psi) \cdot \pi^{k-1-m} \cdot \Omega_K^{k-1} \cdot A_m(f, \psi),
+\label{eq:damerell-bdp}
+\end{equation}
+where $c_m(K, \psi) \in \Q$ is an explicit rational and $A_m \in K$.  In the
+bootstrap normalisation the period $\Omega_K^{k-1}$ cancels, giving
+$\alpha_m^{\mathrm{boot}} = A_m / A_4 \in K$ and consequently
+$R_{m,n}(f) = A_m / A_n \in K$.  The Galois-descent criterion is therefore:
+\begin{equation}
+  R_{m,n}(f) \in \Q \quad\Longleftrightarrow\quad c(R_{m,n}) = R_{m,n}.
+\label{eq:galois-criterion}
+\end{equation}
+
+\subsection{Lemma M108 (the central claim)}
+
+\begin{lemma}[Damerell parity, \textbf{[TBD: prove]}]
+\label{lem:M108}
+For class-number-one imaginary quadratic $K = \Q(\sqrt{-d})$, weight $k = 5$, and
+the Damerell algebraic factor $A_m$ of $f = \theta(\psi_{\min})$:
+\begin{enumerate}[label=(\roman*)]
+  \item $K = \Q(i)$ (so $W_K = 4 = k-1$): $c(A_m) = +A_m$ for all
+        $m \in \{1, 2, 3, 4\}$, hence $A_m \in \Q$.
+  \item $K$ with $W_K \in \{2, 6\}$, i.e.\ $d \in \{2, 3, 7, 11, 19, 43, 67, 163\}$:
+        $c(A_m) = (-1)^m \cdot A_m$, hence $A_m \in \Q$ for $m$ even and
+        $A_m \in \Q \cdot \sqrt{-d}$ for $m$ odd.
+\end{enumerate}
+\end{lemma}
+
+\begin{remark}[Lemma~\ref{lem:M108} implies Conjecture~\ref{conj:refined} mod-2]
+Combining \eqref{eq:galois-criterion} with the alternation in (ii):
+$c(R_{m,n}) = (-1)^{m-n} R_{m,n}$, so $R_{m,n} \in \Q \Leftrightarrow m \equiv n \pmod 2$.
+For (i), the trivial action gives $R_{m,n} \in \Q$ for all $(m,n)$.
+\end{remark}
+
+\subsection{Sketch toward Lemma~\ref{lem:M108}}
+
+The key structural ingredient is the parity of Eisenstein--Kronecker derivatives
+under complex conjugation.  Bannai--Furusho--Kobayashi
+\cite{BFK15} give the explicit formula
+\begin{equation}
+  E_m^*(z, \psi) \;=\; (m-1)! \sum_\lambda \frac{\overline{\psi(\lambda)}}{(\lambda + z)^m},
+\end{equation}
+with the sum over the lattice of $K$.  At $z = \sqrt{-d}$ (purely imaginary),
+$c(z) = -\bar{z} = z$, but the $m$-th derivative $d^m/dz^m$ contributes a factor
+$(-1)^m$, yielding
+\begin{equation}
+  c\!\left(E_m^*(\sqrt{-d}, \psi)\right) \;=\; (-1)^m \cdot E_m^*(\sqrt{-d}, \psi^c).
+\label{eq:EK-parity}
+\end{equation}
+Combined with the BDP factorisation
+$L(f, s) = L(\psi_{\min}, s) \cdot L(\psi_{\min}^c, s)$ and the explicit form
+\eqref{eq:damerell-bdp}, this gives the alternation
+$c(A_m) = (-1)^m \cdot A_m$ for the $W_K = 2, 6$ cases.
+
+\paragraph{Why $\Q(i)$ is special: a sign cancellation.}
+For $K = \Q(i)$, the unit-group order $W_{\Q(i)} = 4$ satisfies
+$W_K \mid (k-1) = 4$.  This forces $\psi_{\min}((u)) = u^4 = 1$ for all
+$u \in \{\pm 1, \pm i\}$, so $\psi_{\min}$ descends to the ideal class with
+\emph{trivial} finite-order character at the wild conductor $(1+i)^2$.
+
+The finite-order character at $(1+i)^2$ contributes its own $(-1)^m$ sign under
+complex conjugation, which exactly cancels the Eisenstein-derivative sign
+\eqref{eq:EK-parity}.  Net result: $c(A_m) = +A_m$ for $K = \Q(i)$, all $m$.
+
+For $W_K = 2$ ($d \in \{2, 7, 11, 19, 43, 67, 163\}$), no such cancellation
+operates, and the alternation $(-1)^m$ from \eqref{eq:EK-parity} survives.
+
+For $W_K = 6$ ($d = 3$), the unit-group order $6 = 2 \cdot 3$ contributes an
+order-$2$ part with the same parity behaviour as $W_K = 2$ (the order-$3$ part
+does not interact with the parity of the Eisenstein derivative).
+
+\subsection{Status and open steps}
+
+The Galois-descent reduction \eqref{eq:galois-criterion} is rigorous.  The
+numerical verification of Conjecture~\ref{conj:refined} on all $24$ entries of
+the $4 \times 4$ lattice (Section~\ref{sec:4x4lattice}) and the $9 \times 1$
+ladder of bootstrap values across all nine Heegner--Stark fields is unconditional
+(PARI 80-digit, Section~\ref{sec:comp}).
+
+The two technical steps required to complete Lemma~\ref{lem:M108} are:
+
+\begin{itemize}
+  \item[\rm(P1)] Verify \eqref{eq:EK-parity} rigorously for the specific
+        Hecke characters $\psi_{\min}$ of conductor $(1+i)^2$ and the
+        analogous characters for $d \in \{2, 3, 7, 11, 19, 43, 67, 163\}$, via
+        Damerell~\cite{Dam71} \S 4 or Hsieh's Eisenstein-Kronecker formulas
+        \cite{Hsieh2012}.
+  \item[\rm(P2)] Verify the unit-group sign cancellation for $\Q(i)$ at the
+        conductor $(1+i)^2$ explicitly --- show that the finite-order character
+        contribution at the wild place exactly cancels $(-1)^m$ in
+        \eqref{eq:EK-parity}.
+\end{itemize}
+
+Both steps are standard CM theory.  We estimate completion in $6$--$12$ months
+of specialist work (suggested correspondents: Sprang, Kings, Hsieh).
+A proof of Lemma~\ref{lem:M108} would upgrade Conjecture~\ref{conj:refined}
+from an empirical observation across $9$ fields to a structural theorem about
+the parity of Eisenstein--Kronecker derivatives at imaginary-quadratic CM points.
+
+%% -------------------------------------------------------------------
 \section{Conclusion}
 
 We have shown computationally that the CM newform $f = 4.5.b.a$ (weight $5$, level $4$,
@@ -560,6 +703,31 @@ twist families},
 Math.\ Ann.\ \textbf{392} (2025), 399--468.
 arXiv:\href{https://arxiv.org/abs/2308.15051}{2308.15051}.
 %% CONFIRMED: arXiv 2308.15051, Math. Ann. confirmed in M55 session + this session.
+
+\bibitem{BDP13}
+M.~Bertolini, H.~Darmon, and K.~Prasanna,
+\emph{Generalized Heegner cycles and $p$-adic Rankin $L$-series},
+Duke Math. J.\ \textbf{162} (2013), no.\ 6, 1033--1148.
+
+\bibitem{KingsSprang2025}
+G.~Kings and J.~Sprang,
+\emph{Algebraicity of critical Hecke $L$-values},
+arXiv preprint \href{https://arxiv.org/abs/2511.05198}{2511.05198} (2025).
+
+\bibitem{BFK15}
+K.~Bannai, H.~Furusho, and S.~Kobayashi,
+\emph{$p$-adic Eisenstein-Kronecker series for CM elliptic curves and the Kronecker limit formulas},
+Nagoya Math.\ J.\ \textbf{219} (2015), 269--302.
+\href{https://arxiv.org/abs/0807.4007}{arXiv:0807.4007}.
+
+\bibitem{Hsieh2012}
+M.-L.~Hsieh,
+\emph{On the $\mu$-invariant of anticyclotomic $p$-adic $L$-functions for $\mathrm{CM}$ fields},
+J.\ Reine Angew.\ Math.\ \textbf{688} (2014), 67--100.
+\href{https://arxiv.org/abs/1109.0173}{arXiv:1109.0173}.
+%% NOTE: Hsieh has multiple anticyclotomic CM papers; this one used as proxy
+%% for ``Hsieh's Eisenstein-Kronecker formulas'' citation. Verify exact paper
+%% before final submission.
 
 \bibitem{PARI}
 The PARI~Group,

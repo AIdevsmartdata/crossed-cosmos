@@ -168,7 +168,39 @@ Structural origin: $E_6(i) = 0$ (Klein classical) → $(j-1728)$ has **double ze
 - Lepton sector $\tau_S = i$ : **prediction** (not free assumption)
 - Geometry Bianchi IX modular shadow same $\tau = i$ fixed point
 
-**Dynamical bridge** $V_F \to \lambda_{\text{BKL}} = \pi^2/(6\log 2)$ remains **OPEN** (ECI v9 programme).
+**Dynamical bridge** $V_F \to \lambda_{\text{BKL}} = \pi^2/(6\log 2)$ : see §5.7 below — **FALSIFIED** by M141 (Pesin invariance). Reframing (D) holds : SUGRA Kähler manifold $(\mathcal{H}, K = -3\log 2 \mathrm{Im}\,\tau)$ and Manin-Marcolli modular surface $(\mathcal{H}, \mathrm{Poincaré})$ are the **same Anosov manifold up to conformal factor 3:1**.
+
+## §5.6 Two-modulus realisation post-M140 (quark sector)
+
+**M140 Theorem M140.1** (mpmath dps=40) : V_F(i+ε) requires ε < 3.2×10⁻⁸ for V_F < 10⁻⁵ M_Pl⁴ (loose inflation cap).
+
+**M140 Theorem M140.2** (King-King 2002.00969 verbatim verified): Reproduces K-K Table 5 exactly (y_s/y_d = 19.67 vs target 19.80) at τ_K-K = 0.036 + 2.35i. At strict τ = i, y_d → 1.4×10⁻²² (essentially zero). Re τ-tilt slope = -1 → ε ≈ 0.15 needed for y_s/y_d ≈ 20.
+
+**Incompatibility ratio ≥ 5×10⁶** : ε_hierarchy = 0.15 vs ε_V_F = 3.2×10⁻⁸ → **single-modulus Re τ tilt RULED OUT**.
+
+**Surviving path : ℚ(i)-decoupling (B-strength)**:
+- $\tau_L$ (lepton modulus) frozen at $\tau_L = i$ by V_F^L = (j-1728)/η⁶ minimum (M134)
+- $\tau_Q$ (quark modulus) separate, K-K best-fit $\tau_Q \approx 0.036 + 2.35i$, possibly with separate V_F^Q
+- Compatible with string multi-modulus naturality (T⁶ = T²(L) × T⁴(Q), heterotic Z3 × T⁴, F-theory K3 × K3 × T²)
+- Mohseni-Vafa Tables 1-2 apply only to τ_L ; τ_Q is free parameter (open in K-K + dMVP26, not ECI-specific)
+
+**What decoupling does NOT predict** : τ_Q value (open across modular flavor literature). ECI v8.1 does not solve this problem.
+
+## §5.7 Dynamical bridge V_F → λ_BKL FALSIFIED (M141)
+
+**M141 finding** (verbatim Manin-Marcolli arXiv:1504.04005 + Gurevich-Katok 2007 + Lévy 1936): V_F **CANNOT** generate λ_BKL = π²/(6 log 2). By Pesin invariance / normal hyperbolicity, V_F coupled to BKL Misner billiard adds stable directions commuting with the chaotic factor — the Lyapunov rate is unchanged.
+
+**Lyapunov spectrum at V_F minimum τ=i = {0, 0, 0, 0}** (confined harmonic oscillator).
+
+**V_F-FREE geodesic flow IS chaotic** : Kähler manifold (𝓗, K = -3 log 2 Im τ) has constant Gaussian curvature K_curv = -2/3, λ_geo = √(2/3) ≈ 0.8165 Anosov.
+
+**λ_BKL = π²/(6 log 2)** emerges from PSL(2,ℤ)\𝓗 geometry + Liouville measure + Markov coding (Series 1985 + Lévy 1936 + Gauss shift Lochs-Khinchin entropy), NOT from any SUGRA potential.
+
+**Reframing (D) — STRUCTURAL INSIGHT NEW** : The SUGRA Kähler manifold and Manin-Marcolli modular surface ARE the same Anosov manifold up to conformal factor 3:1. V_F's role is to define the τ=i fixed point ; chaos is geometric, not potential-driven. The two phenomena coexist :
+- Low energies (modulus era) : V_F dominant, modulus oscillates near τ=i
+- High energies (BKL era) : geodesic kinetic dominant, λ_BKL chaos
+
+**ECI claim discipline** : DO NOT claim V_F generates λ_BKL. DO claim both manifolds are the same Anosov surface (up to known conformal factor). m_τ² (mass) and K_curv (curvature) are independent invariants that cohabit, not derive from each other.
 
 ## Status
 

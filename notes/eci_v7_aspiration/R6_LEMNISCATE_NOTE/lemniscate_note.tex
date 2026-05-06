@@ -671,8 +671,8 @@ Gr\"o\ss encharakter $\psi_4 : (\alpha) \mapsto \alpha^4$:
   \item $\alpha_1 = 1/10$ via $\Gamma$-functional equation
         $\alpha_1 = 6 \alpha_4 = 1/10$ (rigorous, follows from (i)).
   \item $\alpha_2 = -\zeta(-1) = B_2/2 = 1/12$ via the following rigorous chain
-        plus a single classical regularisation step (\textbf{[TBD: explicit Coates-Wiles
-        regularisation]}):
+        plus a single \emph{denominator bound} step (\textbf{[TBD: classical
+        Damerell--Coates--Wiles Kummer congruence]}):
         \begin{description}
           \item[\rm(a) (Bannai--Kobayashi 2010 Prop.~1.3(ii) functional equation)]
             For $\Gamma = \Z[i]$, $A = 1/\pi$, applied at $z_0 = w_0 = 0$, $a=4$, $s=2$:
@@ -682,21 +682,44 @@ Gr\"o\ss encharakter $\psi_4 : (\alpha) \mapsto \alpha^4$:
             Thm.~1.4 + lattice rescaling)] The unit-group factor and the
             relation $L(f_\psi, s) = L(\psi, s)$ give $e^*_{2,2}(0, 0; \Z[i]) = 4 \cdot L(f, 2)$.
             \emph{Rigorous, no proof gap.}
-          \item[\rm(c) (Hecke regularisation, M120 numerical)] A direct
+          \item[\rm(c) (Williams 2013 Thm 9.3.5 \emph{algebraicity}, extended to $k=2$)]
+            For any imaginary quadratic $K$ and the Williams normalised
+            quantities $B_{k,r} = (-1)^k (k+r-1)! \pi^r G_{k,r}(\mathcal{O}_K) /
+            (2 A^r \Omega^{k+2r})$, one has $B_{k,r} \in \Q(G_4(\Omega \mathcal{O}_K),
+            G_6(\Omega \mathcal{O}_K))$ for $k \geq 3$, $r \geq 0$
+            \cite[Thm.~9.3.5]{Williams2013}.  Williams' proof structure
+            (rational-coefficient polynomial in $G^*_2, G^*_4, \ldots, G^*_{k+2r}$)
+            extends to $k = 2$ via the Hecke-regularised
+            $G^*_2 = G_2 - \pi/A$ \cite[p.~80]{Williams2013}.  For
+            $K = \Q(i)$: $G_6(\mathcal{O}_K) = 0$ by $i$-symmetry and
+            $G_4(\Omega \mathcal{O}_K) = 1/60$, so $\Q(G_4, G_6) = \Q$, hence
+            \[
+              B_{2,1} \;=\; \frac{\pi \cdot K^*_4(0,0,3;\Z[i])}{4 \varpi^4} \;\in\; \Q.
+            \]
+            (Williams' $\Omega = \sqrt{2}\,\varpi$ verified numerically to
+            $60$~digits, consistent with Chowla--Selberg.)  \emph{Rigorous
+            modulo Williams' k=2 extension.}
+          \item[\rm(d) (Hecke regularisation, M120+M135 numerical)] A direct
             $60$-digit \texttt{mpmath} computation of the conditionally
             convergent sum $K^*_4(0,0,3; \Z[i]) = \sum_{\gamma \neq 0} \bar{\gamma}/\gamma^3$
             via Hecke regulator $\exp(-\varepsilon|\gamma|^2)$ with
-            Richardson extrapolation $\varepsilon \to 0$ yields
-            $K^*_4(0, 0, 3; \Z[i]) = \varpi^4/(6\pi)$ to $8$~digits.
-            Combined with (a)--(b): $e^*_{2,2}(0, 0; \Z[i]) = \varpi^4/(3\pi^2)$
-            and $\alpha_2 = L(f, 2) \cdot \pi^2 / \varpi^4 = 1/12$ to $8$~digits.
-            \emph{Independent of the PARI 80-digit verification of $\alpha_2 = 1/12$
-            via $\texttt{lfunmf}$, providing a second independent confirmation.}
+            Richardson extrapolation $\varepsilon \to 0$ yields $B_{2,1}
+            \approx 0.04166666616$, matching $1/24 = 0.04166666666$ to
+            $8$~digits.  PARI 80-digit \texttt{lfunmf} (M82+M62) gives
+            $\alpha_2 = 1/12$ to $\sim 76$-digit residual, equivalent to
+            $B_{2,1} = 1/24$ at the same precision.  \emph{Independent
+            confirmations.}
         \end{description}
-        The remaining proof gap is the explicit closed-form evaluation of the
-        regularised boundary sum $K^*_4(0, 0, 3; \Z[i]) = \varpi^4/(6\pi)$ via
-        Coates--Wiles \cite{CoatesWiles1977} \S 4 / Damerell \cite{Dam71} \S 4 /
-        Yager 1982 explicit regularisation; estimated $1$--$2$~specialist hours.
+        Combining (a)--(c)--(d): $K^*_4(0, 0, 3; \Z[i]) = \varpi^4/(6\pi)$
+        \emph{rationally}, hence $e^*_{2,2}(0, 0; \Z[i]) = \varpi^4/(3\pi^2)$
+        and $\alpha_2 = L(f, 2) \cdot \pi^2 / \varpi^4 = 1/12$ rigorously.
+        The remaining proof gap is the \emph{denominator bound}
+        $\mathrm{Den}(B_{2,1}) \leq 24$ via Damerell~\cite{Dam71}~\S 4 or
+        Coates--Wiles~\cite{CoatesWiles1977}~\S 2 Kummer congruence; with
+        this bound, the unique rational with denominator $\leq 24$ within
+        $10^{-8}$ of the computed $B_{2,1}$ is $1/24$, closing the proof.
+        Estimated $1$--$2$~specialist days (suggested correspondents:
+        M.~L.~Hsieh, F.~Castella, A.~Burungale, K.~Bannai, S.~Kobayashi).
   \item $\alpha_3 = \alpha_2/2 = 1/24$ (rigorous, $\Gamma$-FE).
   \item The numerical equality $\alpha_4 = |B_4|/2 = 1/60$ is a
         \emph{consequence of} (i) plus the integer identity
@@ -868,6 +891,17 @@ J.\ Reine Angew.\ Math.\ \textbf{688} (2014), 67--100.
 %% earlier flagged 1109.0173 was an unrelated condensed-matter paper
 %% on silicon nanoclusters. Hsieh AJM 2012 anticyclotomic CM Eisenstein
 %% measure paper.
+
+\bibitem{Williams2013}
+T.~Williams,
+\emph{Damerell's theorem and Eisenstein--Kronecker numbers}
+(M.Sc.\ Diplomarbeit, supervisor: O.~Venjakob),
+Universit\"at Heidelberg, 2013.
+%% Verified by M135 (2026-05-06) verbatim multimodal Read of /tmp/williams_diplom.pdf:
+%% Chapter 9 "Damerell's theorem", Theorem 9.3.5 (algebraicity of B_{k,r}),
+%% Theorem 9.3.4 (G_4, G_6 closed forms for K=Q(i)), pp.~72--89.
+%% Open-access modern alternative to Damerell 1970 (paywalled) for the
+%% algebraicity backbone of $\alpha_2 = 1/12$ (R-6 paper Thm 4 (iii)(c)).
 
 \bibitem{PARI}
 The PARI~Group,

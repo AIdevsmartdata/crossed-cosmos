@@ -97,10 +97,12 @@ Theorem M151.1: structural double zero at τ_Q (W=0, W'=0). Theorem M151.2: $m_\
 
 **Canonical (NOT ad-hoc)** : 5 unique-construction arguments (Hilbert poly + squaring + only 2 dim-1 CM newforms 88.3.b.a/b on LMFDB + η^{12} unique + Galois symmetry on both class reps).
 
-**ECI v9 SUGRA superpotential** :
-$$W(\tau_L, \tau_Q) = c_L \cdot \frac{j(\tau_L) - 1728}{\eta(\tau_L)^6} + c_Q \cdot \frac{H_{-88}(j(\tau_Q))^2 \cdot f_{88.3.b.a}(\tau_Q)}{\eta(\tau_Q)^{12}}$$
+**ECI v9 SUGRA superpotential (EFFECTIVE post-KK reduction, M178 framing correction)**:
+$$W_{\text{eff}}(\tau_L, \tau_Q) = c_L \cdot \frac{j(\tau_L) - 1728}{\eta(\tau_L)^6} + c_Q \cdot \frac{H_{-88}(j(\tau_Q))^2 \cdot f_{88.3.b.a}(\tau_Q)}{\eta(\tau_Q)^{12}}$$
 
 **Both moduli weight -3 holomorphic, Minkowski-stabilized at CM-anchored τ values.**
+
+**Critical framing (M178)**: This is **EFFECTIVE field-theory structure** after KK reduction, NOT microscopic flux superpotential. Per Kanno-Watari arXiv:2012.01111 eq (49), Borcea-Voisin Y = (X^(1) × X^(2))/Z_2 gives **MULTIPLICATIVE** microscopic period $\Omega_Y = \Omega_{X^{(1)}} \wedge \Omega_{X^{(2)}}$, hence $W_{\text{micro}} = W_1 \cdot W_2 + W_{\text{cross}}$. The additive $W_L + W_Q$ form arises only after Kaluza-Klein dimensional reduction.
 
 (M155 weight -6 W^Q,double = H_{-88}(j)²/η¹² preserved as alternate ; M151 is M134-natural.)
 - Reduced binary form (a=2, b=0, c=11) → τ_Q = i√(11/2)

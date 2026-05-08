@@ -252,7 +252,7 @@ C'est ce qu'on fait déjà avec multi-agent dispatch (M168/M170/M177).
 
 Modèles modernes intercalent reasoning step + tool call :
 ```
-THOUGHT: I need to verify arXiv:2104.08808.
+THOUGHT: I need to verify arXiv:1602.07508.
 ACTION: verify-arxiv.py 2104.08808
 OBSERVATION: VERIFIED, title="Bloch-Kato..."
 THOUGHT: Now I can cite it.
@@ -385,7 +385,7 @@ find ONE solid obstruction. You never sugar-coat.
 </context>
 
 <task>
-Verify arXiv:2104.08808 against API; if title matches "Bloch-Kato Tamagawa for ...",
+Verify arXiv:1602.07508 against API; if title matches "Bloch-Kato Tamagawa for ...",
 proceed with citation; otherwise flag DISCREPANCY.
 </task>
 

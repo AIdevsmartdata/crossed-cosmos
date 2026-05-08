@@ -1,4 +1,4 @@
-# Plan multi-LLM économies sans dégrader la qualité (2026-05-08)
+# Plan multi-LLM économies sans dégrader la qualité (2026-05-08 Phase 7 wave 10)
 
 **Auteur** : Kévin Remondière + Opus 4.7
 **Statut** : Phase 7 wave 10 setup, post-v6.0.53.120

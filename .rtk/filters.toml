@@ -1,0 +1,45 @@
+# Project-local RTK filters for crossed-cosmos
+# Goal: rtk MUST NOT truncate scientific output (sympy, mpmath, PARI, LaTeX)
+# while still compressing genuine noise (git status, ls, find).
+
+schema_version = 1
+
+# DISABLE rtk grep on math files — we need full match context for theorems
+[filters.grep_math]
+description = "Pass through grep on .tex/.py/.md science files (no truncation)"
+match_command = '^grep\b.*\.(tex|sty|bib|py|md|sage|gp|m|jl)\b'
+passthrough = true
+
+# DISABLE rtk find on /root/crossed-cosmos/notes/ — we need full file lists
+[filters.find_notes]
+description = "Pass through find inside notes/ — full file enumeration needed"
+match_command = '^find\b.*notes/'
+passthrough = true
+
+# DISABLE rtk read on .tex / .bib / SUMMARY.md — need verbatim
+[filters.read_science]
+description = "Pass through cat/head/tail on science source files"
+match_command = '^(cat|head|tail|less|more)\b.*\.(tex|sty|bib|sage|gp|jl)\b'
+passthrough = true
+
+# DISABLE rtk read on SUMMARY.md (M134, M177, etc. — verbatim theorems)
+[filters.read_summary]
+description = "Pass through cat on SUMMARY.md (verbatim theorem statements)"
+match_command = '^(cat|head|tail|less|more)\b.*SUMMARY\.md\b'
+passthrough = true
+
+# DISABLE rtk on python sympy/mpmath/PARI invocations
+[filters.python_math]
+description = "Pass through python -c with sympy/mpmath/sage to preserve exact numeric output"
+match_command = '^python3?\b.*-c\b.*(sympy|mpmath|sage|pari|gp_)\b'
+passthrough = true
+
+# Compress git outputs (safe — git is git)
+# (rtk default behavior already does this)
+
+# Compress arxiv API XML output (we only need title+authors+id)
+[filters.arxiv_api]
+description = "arXiv API XML often verbose — keep first 2KB"
+match_command = '^curl\b.*export\.arxiv\.org/api'
+strip_ansi = true
+max_lines = 80

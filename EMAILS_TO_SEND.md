@@ -15,7 +15,7 @@
 | 3 | Thomas Sotiriou (Nottingham) | Thomas.Sotiriou@nottingham.ac.uk | gr-qc endorseur | **READY W1** | ✅ Gmail draft |
 | 4 | Nima Lashkari (Purdue) | nlashkari@purdue.edu | hep-th endorseur | **READY W3** (stagger 2sem) | ✅ Gmail draft `r6651936878748037327` (M138) |
 | 5 | Matilde Marcolli (Caltech) | matilde@caltech.edu | math-ph endorseur | **READY** (M101 gate MET: P1+P2) | ✅ Gmail draft `r-3141832382031850011` (M138) |
-| 6 | Daniel Kriz (Milan) | daniel.kriz@unimi.it | math.NT collab | **DRAFT_GATED W5** (R-2 ready) | ✅ Gmail draft `r-5756948127962139710` (M138) |
+| 6 | Daniel Kriz (Milan) | daniel.kriz@unimi.it | math.NT collab | **DRAFT_GATED W5** (R-2 ready) | ✅ Gmail draft `r-4235587585088824083` (NEW v2 corrigé hallu #104) — **DELETE** old `r-5756948127962139710` (had dkriz@mit.edu + arXiv:2104.08808 fab) and `19dff1fd2e5a8770` (same content, M138-4 v1) |
 | 7 | Tiago Fonseca (Unicamp) | tfonseca@unicamp.br | math.NT specialist | **DRAFT IN GMAIL** (M125) | ✅ Gmail draft `r-989215865347347648` |
 | 8 | Francis Brown (Oxford) | francis.brown@maths.ox.ac.uk | math.NT senior | **READY** (M113 B1+B2 update) | ✅ Gmail draft `r-796492079938292922` (M138) |
 | 9 | Antonio Lei (uOttawa) | antonio.lei@uottawa.ca | math.NT IMC | **DRAFT IN GMAIL** (M125) | ✅ Gmail draft `r7932787692212096648` |

@@ -126,7 +126,9 @@ ANTI-HALLU PROTOCOL (NON-NEGOTIABLE):
 KEY REFERENCES (verified):
 - arXiv:2012.01111 Kanno-Watari (F-theory K3xK3)
 - arXiv:1602.07508 Büyükboduk-Lei (anticyclotomic IMC)
-- arXiv:2104.08808 Kriz (Bloch-Kato Tamagawa)
+- arXiv:1805.03605 Kriz (p-adic Maass-Shimura + Rankin-Selberg, candidate Bloch-Kato hook)
+- arXiv:2002.04767 Kriz (supersingular main conjectures, Sylvester+Goldfeld)
+- (note 2026-05-08: arXiv:2104.08808 was a propagated fabrication = cs.CL/NLP Jin et al. 2021 — REJECTED, hallu #104)
 - arXiv:1703.10521 Sagnier (NCG arithmetic site)
 - LMFDB: 4.5.b.a (UNIQUE among 8 wt-5 dim-1 CM Q(i))
 - LMFDB: 88.3.b.a (W^Q canonical M151.1)

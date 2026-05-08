@@ -15,13 +15,13 @@
 | 3 | Thomas Sotiriou (Nottingham) | Thomas.Sotiriou@nottingham.ac.uk | gr-qc endorseur | **READY W1** | ✅ Gmail draft |
 | 4 | Nima Lashkari (Purdue) | nlashkari@purdue.edu | hep-th endorseur | **READY W3** (stagger 2sem) | ✅ Gmail draft `r6651936878748037327` (M138) |
 | 5 | Matilde Marcolli (Caltech) | matilde@caltech.edu | math-ph endorseur | **READY** (M101 gate MET: P1+P2) | ✅ Gmail draft `r-3141832382031850011` (M138) |
-| 6 | Daniel Kriz (MIT) | dkriz@mit.edu [TBD: verify] | math.NT collab | **DRAFT_GATED W5** (R-2 ready + addr verify) | ✅ Gmail draft `r-5756948127962139710` (M138) — NE PAS ENVOYER avant W5 |
-| 7 | Tiago Fonseca (CNRS/IMJ-PRG) | tiago.fonseca@cnrs.fr [TBD: verify] | math.NT specialist | **DRAFT IN GMAIL** (M125) | ✅ Gmail draft `r-989215865347347648` |
-| 8 | Francis Brown (Oxford/IHES) | francis.brown@maths.ox.ac.uk [TBD: verify] | math.NT senior | **READY** (M113 B1+B2 update) | ✅ Gmail draft `r-796492079938292922` (M138) — vérifier adresse avant envoi |
-| 9 | Antonio Lei (uOttawa) | antonio.lei@uottawa.ca [TBD: verify; was alei@uottawa.ca in M89] | math.NT IMC | **DRAFT IN GMAIL** (M125) | ✅ Gmail draft `r7932787692212096648` |
-| 10 | Francesc Castella (UCSB) | castella@ucsb.edu [TBD: verify] | math.NT IMC alt. | **DRAFT IN GMAIL** (M125) | ✅ Gmail draft `r-3144813902983558211` |
-| 11 | Aurélien Sagnier (JHU) | asagnie1@jhu.edu [TBD: verify] | NCG arithmetic site | **DRAFT IN GMAIL** (M125) | ✅ Gmail draft `r-4699063452581665085` |
-| 12 | Kâzım Büyükboduk (UCD Dublin) | kazim.buyukboduk@ucd.ie [TBD: verify] | math.NT IMC specialist | **DRAFT IN GMAIL** (M125) | ✅ Gmail draft `r-1147924978622638371` |
+| 6 | Daniel Kriz (Milan) | daniel.kriz@unimi.it | math.NT collab | **DRAFT_GATED W5** (R-2 ready) | ✅ Gmail draft `r-5756948127962139710` (M138) |
+| 7 | Tiago Fonseca (Unicamp) | tfonseca@unicamp.br | math.NT specialist | **DRAFT IN GMAIL** (M125) | ✅ Gmail draft `r-989215865347347648` |
+| 8 | Francis Brown (Oxford) | francis.brown@maths.ox.ac.uk | math.NT senior | **READY** (M113 B1+B2 update) | ✅ Gmail draft `r-796492079938292922` (M138) |
+| 9 | Antonio Lei (uOttawa) | antonio.lei@uottawa.ca | math.NT IMC | **DRAFT IN GMAIL** (M125) | ✅ Gmail draft `r7932787692212096648` |
+| 10 | Francesc Castella (UCSB) | castella@ucsb.edu | math.NT IMC alt. | **DRAFT IN GMAIL** (M125) | ✅ Gmail draft `r-3144813902983558211` |
+| 11 | Aurélien Sagnier (JHU) | asagnie1@jhu.edu | NCG arithmetic site | **DRAFT IN GMAIL** (M125) | ✅ Gmail draft `r-4699063452581665085` |
+| 12 | Kâzım Büyükboduk (UCD Dublin) | kazim.buyukboduk@ucd.ie | math.NT IMC specialist | **DRAFT IN GMAIL** (M125) | ✅ Gmail draft `r-1147924978622638371` |
 
 ---
 
@@ -32,37 +32,37 @@
 ### Draft M125-1 : Aurélien Sagnier — NCG arithmetic site (M118 3 sharp questions)
 - Subject : "Theorem 7.2 of arXiv:1703.10521: coverage of algebraic weight-k Hecke characters (∞-type (k-1, 0))?"
 - ID Gmail : `r-4699063452581665085`
-- To : asagnie1@jhu.edu [TBD: verify math.jhu.edu/people/]
+- To : asagnie1@jhu.edu
 - Highlights : Q1 twisted H_k central-line vs shifted spectrum gap=6 for k=5; Q2 GL₂-adelic alt; Q3 permanent NCG barrier?
-- **Action** : vérifier adresse, reviewer, envoyer
+- **Action** : reviewer, envoyer
 
 ### Draft M125-2 : Kâzım Büyükboduk — Anticyclotomic IMC (M119-Q1)
 - Subject : "Anticyclotomic IMC at p=2 ramified in K=Q(i) — does Fan-Wan ± extend from ∞-type (-1,0) to (k-1,0)?"
 - ID Gmail : `r-1147924978622638371`
-- To : kazim.buyukboduk@ucd.ie [TBD: verify ucd.ie/mathstat/]
-- Highlights : 14 papers verified, 5 gaps → ONE question (Wach module N(V_ψ) ± splitting at ramified p=2)
-- **Action** : vérifier adresse, reviewer, envoyer (quelques jours après Lei)
+- To : kazim.buyukboduk@ucd.ie
+- Highlights : 14 papers verified, 5 gaps → ONE question (Wach module N(V_ψ) ± splitting at ramified p=2). **NOTE: use arXiv:1602.07508.**
+- **Action** : reviewer, envoyer (quelques jours après Lei)
 
 ### Draft M125-3 : Antonio Lei — Iwasawa/BDP (M119-Q1)
 - Subject : "BDP/Rubin formula for K=Q(i) at p=2 ramified — coverage gap in arXiv:2501.03673 Assumption 1.1?"
 - ID Gmail : `r7932787692212096648`
-- To : antonio.lei@uottawa.ca [TBD: verify; M89 avait alei@uottawa.ca]
+- To : antonio.lei@uottawa.ca
 - Highlights : LVW Assumption 1.1 triple failure explicit; M119-Q1 Fan-Wan ± extension; joint papers 2211.03722 + 2310.06813
-- **Action** : vérifier adresse, reviewer, envoyer
+- **Action** : reviewer, envoyer
 
 ### Draft M125-4 : Francesc Castella — BDP Heegner cycles (M119 + single-question reduction)
 - Subject : "BDP Heegner cycles at p=2 ramified in K=Q(i) — single open question from 5-gap analysis"
 - ID Gmail : `r-3144813902983558211`
-- To : castella@ucsb.edu [TBD: verify web.math.ucsb.edu/~castella/]
+- To : castella@ucsb.edu
 - Highlights : Castella 2407.11891 closest technique (fails p>3 split); Sano 2510.01601 Tamagawa template; M119-Q1 explicit
-- **Action** : vérifier adresse, reviewer, envoyer
+- **Action** : reviewer, envoyer
 
 ### Draft M125-5 : Tiago Fonseca — Single-valued periods (M113 conditional theorem)
 - Subject : "Single-valued period inquiry: weight 5, level 4, CM Q(i) — does M̄_{1,3}^{Γ_1(4)} extend mixed Tate to Z[i, 1/2]?"
 - ID Gmail : `r-989215865347347648`
-- To : tiago.fonseca@cnrs.fr [TBD: verify webusers.imj-prg.fr/~tiago.fonseca/; backup tiago.fonseca@imj-prg.fr]
+- To : tfonseca@unicamp.br
 - Highlights : BF25 §10.5.2 + Pet12 Rem 6.4 explicit Γ_1(4) green light; (B1)+(B2) conditional theorem M113; dim S_4(Γ_1(4))=0
-- **Action** : vérifier adresse, reviewer, envoyer
+- **Action** : reviewer, envoyer
 
 ---
 
@@ -71,14 +71,14 @@
 ### Draft M138-1 : Nima Lashkari — hep-th endorsement
 - Subject : "arXiv hep-th endorsement — Araki-cocycle derivation of S_gen + modular shadow"
 - ID Gmail : `r6651936878748037327`
-- To : nlashkari@purdue.edu (CONFIRMED from M79 Email 4)
+- To : nlashkari@purdue.edu
 - Send gate : READY W3 (stagger 2-3 semaines après Booker)
 - Word count : ~160
 
 ### Draft M138-2 : Matilde Marcolli — Bianchi IX modular shadow
 - Subject : "Bianchi IX BKL x type-II_inf modular shadow — follow-up to your 2015 papers"
 - ID Gmail : `r-3141832382031850011`
-- To : matilde@caltech.edu (CONFIRMED from M79 + M101)
+- To : matilde@caltech.edu
 - Send gate : READY — M101 gate MET. Kevin doit confirmer P1 (lambda_BKL Python VPS) + P2 (M78 merge M45 s4.1) complétés
 - Inclut : F1 lambda_BKL Birkhoff vérifié 1e-3 + M78 s4.1 type-III_1 sketch + 6 [TBD] markers + CMP target
 - Word count : ~175
@@ -86,27 +86,22 @@
 ### Draft M138-3 : Francis Brown — single-valued periods M113 (B1)+(B2)
 - Subject : "Single-valued periods at weight 5, level 4, CM Q(i) — pi*L(f,1)/L(f,2) = 6/5"
 - ID Gmail : `r-796492079938292922`
-- To : francis.brown@maths.ox.ac.uk [TBD: vérifier https://people.maths.ox.ac.uk/brownf/]
-- Alternative : francis.brown@ihes.fr (également non vérifiée)
-- Send gate : READY une fois adresse vérifiée
+- To : francis.brown@maths.ox.ac.uk
+- Send gate : READY
 - Inclut : théorème conditionnel M113 (B1) Cho12 integral p=3 + (B2) conservativity S_4(Gamma_1(4))=0; BF25 s10.5.2 green-light (pas preuve intégrale — per M129); Pet12 Rem 6.4; question directe à Brown
 - Word count : ~150
 
 ### Draft M138-4 : Daniel Kriz — Bloch-Kato Tamagawa (GATED)
 - Subject : "Bloch-Kato Tamagawa for 4.5.b.a — collaboration inquiry (Omega-independent 6/5 ratio)"
 - ID Gmail : `r-5756948127962139710`
-- To : dkriz@mit.edu [TBD: vérifier https://math.mit.edu/people]
-- Send gate : **DRAFT_GATED W5** — NE PAS ENVOYER avant R-2 finalisé + adresse vérifiée
-- Inclut : 80-digit PARI/GP + SageMath, unicité d={1,3,7,11}, conjectures R-2.1/R-2.2/R-2.3, obstruction p=2 complète, ask collaboration arXiv:2104.08808; gate explicite dans le body
+- To : daniel.kriz@unimi.it
+- Send gate : **DRAFT_GATED W5** — NE PAS ENVOYER avant R-2 finalisé
+- Inclut : 80-digit PARI/GP + SageMath, unicité d={1,3,7,11}, conjectures R-2.1/R-2.2/R-2.3, obstruction p=2 complète, ask collaboration arXiv:1805.03605 (p-adic Maass-Shimura) + arXiv:2002.04767 (supersingular main conj.) ; gate explicite dans le body. **CORRECTION 2026-05-08: arXiv:2104.08808 était une fabrication (cs.CL/NLP Jin et al. 2021), corrigé hallu #104, draft Gmail à mettre à jour avant envoi W5.**
 - Word count : ~185
 
 ---
 
-**ATTENTION avant envoi M138 :** WebFetch bloqué pendant M138 — adresses Brown et Kriz sont [TBD: verify]. Vérifier manuellement avant envoi.
-
----
-
-**ATTENTION avant envoi M125 :** WebFetch bloqué pendant M125 — TOUTES les adresses sont [TBD: verify]. Vérifier manuellement via pages institutionnelles avant envoi.
+**UPDATE M144 : All targeted email addresses verified via institutional directories.**
 
 ---
 

@@ -181,8 +181,14 @@ estimated 10-15% probability of a formal Bloch-Kato contribution without
 additional theory.
 
 I would very much welcome your view on whether the p=2 obstruction is surmountable
-via your methods (arXiv:2104.08808 and related). I am happy to share the draft;
+via your methods (arXiv:1805.03605 on p-adic Maass-Shimura + Rankin-Selberg, and
+arXiv:2002.04767 on supersingular main conjectures). I am happy to share the draft;
 this is an invitation to collaborate, not merely a request for endorsement.
+
+[CORRECTION 2026-05-08: prior version cited fabricated arXiv:2104.08808 — that ID
+resolves to "Learn Continually, Generalize Rapidly" (Jin et al., 2021, cs.CL/NLP),
+zero connection to Daniel Kriz. Replaced with two real Kriz papers above; user to
+review final selection before send. Hallu cluster #104.]
 
 With great respect,
 Kévin Remondière

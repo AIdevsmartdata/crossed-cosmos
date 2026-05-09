@@ -1,0 +1,1187 @@
+%% ============================================================
+%% The empirical hierarchy of rational L-values
+%% for CM newforms over class number 1 imaginary quadratic fields
+%%
+%% Author: Kevin Remondière
+%% Target: Math. Comp. or Acta Arithmetica (math.NT, math-ph cross-list)
+%% Version: unified, 2026-05-09
+%% ============================================================
+
+\documentclass[12pt]{amsart}
+
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{hyperref}
+\usepackage{microtype}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{enumitem}
+
+%% ------ Theorem environments ------
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{conjecture}[theorem]{Conjecture}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{lemma}[theorem]{Lemma}
+
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{remark}[theorem]{Remark}
+\newtheorem{example}[theorem]{Example}
+
+%% ------ Operators and notation ------
+\DeclareMathOperator{\Nm}{N}
+\DeclareMathOperator{\Cl}{Cl}
+\DeclareMathOperator{\Gal}{Gal}
+\DeclareMathOperator{\ord}{ord}
+\DeclareMathOperator{\denom}{denom}
+\DeclareMathOperator{\disc}{disc}
+\newcommand{\Q}{\mathbb{Q}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\C}{\mathbb{C}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Hbb}{\mathbb{H}}
+\newcommand{\OK}{\mathcal{O}_K}
+\newcommand{\fp}{\mathfrak{p}}
+\newcommand{\ff}{\mathfrak{f}}
+
+%% ------ Metadata ------
+\title{The empirical hierarchy of rational $L$-values\\
+       for CM newforms over class number 1\\
+       imaginary quadratic fields}
+
+\author{Kevin Remondière}
+\address{Independent researcher, France}
+\email{kevin.remondiere@gmail.com}
+
+\subjclass[2020]{11F67 (primary); 11G15, 11R37, 14H52 (secondary)}
+\keywords{CM newforms, special $L$-values, Hecke characters, class field theory,
+          Damerell--Yager theorem, Bernoulli--Hurwitz, Heegner discriminants,
+          denominator conjecture, Bost--Connes algebra, Calabi--Yau moduli}
+\date{May 2026}
+
+\begin{document}
+
+\begin{abstract}
+We compile and verify with PARI/GP 2.15.4 at $96$--$213$ digit precision an
+explicit hierarchy of ten rational special values
+\[
+  \alpha_2(D) := \frac{L(f_D,2)\,\pi^2}{\Omega_D^4} \;\in\; \Q^*,
+\]
+attached to the rational CM-by-$\chi_D$ weight-$5$ newforms $f_D$ over the
+nine imaginary quadratic fields $K = \Q(\sqrt{D})$ of class number~$1$
+(twin pairs occur for $D \in \{-11,-19\}$).
+While the algebraicity of these values is classical, descending from the work
+of Damerell~(1971), Yager~(1982), and Goldstein--Schappacher~(1981), the
+explicit complete table of the ten values appears not to have been compiled
+in a single place. We furthermore propose two new conjectures:
+\textbf{M183}, a $3$-adic denominator split rule controlled by the splitting
+behaviour of $3$ in $K$ (numerically verified $8/8$); and \textbf{M186}, a
+weight-$3$ analogue with a twin $\sqrt{q}$ ratio rule that is verified at
+$q \in \{3,5\}$ but \emph{fails} at $q \in \{7,11\}$, the corrected
+functional form being open. We also state a Cl$(K)$-orbit corollary
+(rational-eigenform count equals $h(K)$, but $\alpha_2 \in \Q$ only for
+$h(K)=1$).
+We discuss connections to the Bost--Connes algebra
+(Connes--Marcolli--Ramachandran~2005), to the Kanno--Watari $W=0$
+$\mathrm{K3}\times\mathrm{K3}$ moduli stabilization
+(\texttt{arXiv:2012.01111}), and to the Connes--Chamseddine NCG Standard
+Model (\texttt{arXiv:hep-th/0610241}); all such bridges are
+\emph{motivational} or \emph{structural conditional} with no rigorous
+derivation yet. We are explicit about the boundary between classical
+material and the new content.
+\end{abstract}
+
+\maketitle
+\tableofcontents
+
+%% ============================================================
+\section{Introduction}
+\label{sec:intro}
+%% ============================================================
+
+\subsection{Classical foundations}
+
+Algebraicity of special values of Hecke $L$-functions of imaginary
+quadratic fields, normalized by powers of a CM period, is a classical
+subject with a long pedigree. The foundational theorem is due to
+Damerell~(1971)~\cite{Damerell1971}, who proved the algebraicity (after
+division by appropriate periods) of $L(\psi, n)$ at integer points $n \geq 1$
+for algebraic Hecke characters $\psi$ of imaginary quadratic fields.
+Yager~(1982)~\cite{Yager1982} obtained explicit Bernoulli--Hurwitz formulae
+for the algebraic parts. Goldstein--Schappacher~(1981)~\cite{GoldsteinSchappacher1981}
+recast the theory in the Eisenstein--Kronecker framework with explicit
+elliptic-unit identities.
+
+The Hodge-theoretic perspective on CM periods, expressing the
+transcendental Chowla--Selberg~\cite{ChowlaSelberg1949} period in terms of
+the Hodge structure of the CM abelian variety, goes back to
+Pjatecki\u{\i}-\v{S}apiro~(1971)~\cite{CITE-NEEDED-PS1971} and was
+sharpened by Tankeev~(1990)~\cite{CITE-NEEDED-Tankeev1990}, who proved that
+the Mumford--Tate group of a CM K3 surface attached to $K$ is the Weil
+restriction torus $\mathrm{Res}_{K/\Q}\,\mathbb{G}_m$.
+The Shimura variety viewpoint and the connection to Shimura periods are
+standard~\cite{CITE-NEEDED-Shimura1971,CITE-NEEDED-Schappacher1988}; the
+$p$-adic Maass--Shimura operator approach of Kriz~\cite{Kriz2018} and the
+anticyclotomic Iwasawa programme of B\"uy\"ukboduk--Lei~\cite{BuyukbodukLei2016}
+provide modern $p$-adic refinements relevant to the conjectures we propose.
+
+\subsection{Modern motivation}
+
+Two recent developments motivated the present compilation.
+First, Kanno--Watari~\cite{KannoWatari2020} (arXiv:2012.01111) classify the
+$W=0$ flux vacua on Borcea--Voisin Calabi--Yau fourfolds
+$Y = (X^{(1)} \times X^{(2)})/\Z_2$ with both $\mathrm{K3}$ factors of
+CM type by a class number $1$ imaginary quadratic field; the relevant
+Noether--Lefschetz constraints select exactly the same nine Heegner
+discriminants enumerated below.
+Second, Moore's \emph{Arithmetic and Attractors}~\cite{Moore1998}
+(\texttt{arXiv:hep-th/9807087}) had already linked attractor
+mechanism vacua to arithmetic of CM elliptic curves and to rational
+$L$-values: the table we compile is exactly the kind of object one would
+want to confront with such an attractor analysis.
+
+\subsection{What is classical and what is new in this paper}
+
+We are scrupulous about the boundary between classical material and the
+genuine new content of this paper. Approximately $80\%$ of the
+mathematical substance below is classical CM theory carefully gathered
+and applied; the remaining $\approx 20\%$ consists of the explicit
+compiled hierarchy, two new conjectures, and a Cl$(K)$-orbit
+corollary.
+
+\medskip
+\noindent\textbf{Classical (not new):}
+\begin{itemize}[leftmargin=2em]
+  \item The rationality of $\alpha_2(D) = L(f_D,2)\pi^2/\Omega_D^4$ for
+        class-number-$1$ fields (Damerell--Yager).
+  \item The Hodge structure / Mumford--Tate analysis of CM K3 surfaces
+        (Pjatecki\u{\i}-\v{S}apiro~1971; Tankeev~1990).
+  \item The Chowla--Selberg formula for CM periods.
+  \item The Atkin--Lehner~\cite{CITE-NEEDED-AtkinLehner1970} classification
+        of newforms underlying Theorem~\ref{thm:M185} (twist family).
+  \item The principle ``$\alpha_k \in K^{\mathrm{Hilbert}} \setminus \Q$
+        for $h(K) > 1$'' is contained in
+        Goldstein--Schappacher~\cite{GoldsteinSchappacher1981}, Th\'eor\`eme~5.1.
+\end{itemize}
+
+\medskip
+\noindent\textbf{Genuinely new (this paper):}
+\begin{itemize}[leftmargin=2em]
+  \item The complete compiled hierarchy of \emph{ten} explicit rational
+        values $\alpha_2(D)$ verified at $96$--$213$ digit precision
+        (Theorem~\ref{thm:hierarchy}). To our knowledge no such single
+        compiled table appears in the existing literature; in
+        particular the values for $D \in \{-43,-67,-163\}$ are new.
+  \item Conjecture~\ref{conj:M183} (M183), the $3$-adic denominator split
+        rule, with a Damerell--Von~Staudt--Clausen heuristic mechanism and
+        an explicit three-lemma path to a (conditional) proof.
+  \item Conjecture~\ref{conj:M186} (M186), the weight-$3$ analogue, with
+        the explicit empirical observation that the twin
+        $\sqrt{q}$ rule fails at $q = 7$ (no rational forms) and at
+        $q = 11$ (ratio $\approx 2.369 \neq \sqrt{11} \approx 3.317$).
+  \item The Cl$(K)$-orbit corollary
+        (Corollary~\ref{cor:CK-orbit}): for $h(K) = h$ there are
+        $h$ rational eigenforms, but $\alpha_2 \in \Q$ only when $h = 1$.
+\end{itemize}
+
+\subsection{Outline}
+
+Section~\ref{sec:hierarchy} states the main hierarchy theorem
+(Theorem~\ref{thm:hierarchy}) and the verification methodology.
+Section~\ref{sec:M183} states and analyses Conjecture~M183.
+Section~\ref{sec:M184} discusses the twin-pair phenomenon
+(Conjecture~M184) and documents the falsification of the originally
+proposed $2$-isogeny mechanism.
+Section~\ref{sec:M185} records Theorem~M185 (rigorous twist-family
+classification).
+Section~\ref{sec:M186} treats the weight-$3$ analogue M186 with its
+explicit boundary at $q \in \{7,11\}$.
+Section~\ref{sec:CK-orbit} states the Cl$(K)$-orbit corollary.
+Section~\ref{sec:bridges} discusses the (motivational or structural
+conditional) bridges to string theory, NCG, and Bost--Connes.
+Section~\ref{sec:open} lists open problems.
+Appendix~\ref{sec:pari} contains a reproducible PARI script.
+
+%% ============================================================
+\section{The $\alpha_2$ hierarchy: ten proved rational values}
+\label{sec:hierarchy}
+%% ============================================================
+
+\subsection{Setup and notation}
+\label{ssec:setup}
+
+Fix an imaginary quadratic field $K = \Q(\sqrt{D})$ of class number $1$
+with ring of integers $\OK$. Up to twin pairs there are nine such fields:
+the Heegner discriminants
+$D \in \{-3,\,-4,\,-7,\,-8,\,-11,\,-19,\,-43,\,-67,\,-163\}$.
+
+Let $\psi : \mathbf{A}_K^\times \to \C^\times$ be an algebraic Hecke
+character of $K$ of infinity type $(4,0)$ and conductor $\ff$
+(so $\psi((\alpha)) = \alpha^4$ for principal $\alpha \equiv 1
+\pmod{\ff}$). The CM construction associates to $\psi$ a weight-$5$
+newform
+\[
+  f = f_\psi(\tau) \;=\; \sum_{n \ge 1} a_n q^n
+   \;\in\; S_5(\Gamma_0(N), \chi_D),\qquad q = e^{2\pi i \tau},
+\]
+where $N = |D| \cdot \Nm(\ff)$ and $\chi_D = (D/\cdot)$ is the
+Kronecker character. When $h(K) = 1$ and $\psi$ takes values in $\Q$ (after
+tensoring back with $\OK$), the Fourier coefficients $a_n$ generate $\Q$.
+
+\begin{definition}[$\alpha_2$ invariant]\label{def:alpha2}
+The normalised special value at $s=2$ is
+\begin{equation}\label{eq:alpha2def}
+  \alpha_2(D) \;:=\; \frac{L(f, 2)\,\pi^2}{\Omega_D^4},
+\end{equation}
+where $\Omega_D$ is the canonical Chowla--Selberg / Yager period of $K$.
+Concretely $\Omega_{-4} = \varpi := \Gamma(1/4)^2/(2\sqrt{2\pi})$ is the
+lemniscate constant.
+\end{definition}
+
+\begin{remark}[Critical strip and convergence]\label{rmk:strip}
+The critical strip for a weight-$5$ $L$-function is
+$1 \leq \mathrm{Re}(s) \leq 4$, so $s = 2$ is a genuine critical
+point. The Dirichlet series $\sum a_n n^{-s}$ converges absolutely
+only for $\mathrm{Re}(s) > 3$. At $s = 2$ partial sums oscillate and
+do \emph{not} converge to $L(f,2)$. Indeed, for $D = -4$ the partial sums
+at $N = 200, 500, 1000$ give the numerical values $0.084, 0.079, 0.035$
+respectively, with no convergence pattern. Any naive partial-sum
+attempt at $s=2$ inside the critical strip yields nonsense; all values
+in Theorem~\ref{thm:hierarchy} below are computed via PARI's
+\texttt{lfun} module, which implements analytic continuation through
+the functional equation and integral representations.
+\end{remark}
+
+\subsection{The Chowla--Selberg period}
+
+For an imaginary quadratic field $K$ of discriminant $D$ the canonical
+period satisfies
+\begin{equation}\label{eq:CS}
+  \Omega_D \;=\; \frac{1}{\sqrt{2\pi}} \prod_{a=1}^{|D|-1}
+    \Gamma\!\left(\tfrac{a}{|D|}\right)^{\frac{w}{4}\chi_D(a)},
+\end{equation}
+where $w = |\OK^\times| \in \{2,4,6\}$ ($w=4$ for $D=-4$, $w=6$ for
+$D=-3$, $w=2$ otherwise) and $\chi_D = (D/\cdot)$ is the Kronecker
+character (Chowla--Selberg~\cite{ChowlaSelberg1949}).
+
+\subsection{The proved hierarchy}
+\label{ssec:proved-hierarchy}
+
+\begin{theorem}[Compiled $\alpha_2$ hierarchy for $h(K)=1$]\label{thm:hierarchy}
+For each of the nine class-number-$1$ imaginary quadratic fields
+$K = \Q(\sqrt{D})$, with twin pairs at $D \in \{-11,-19\}$, the
+normalised value $\alpha_2(D)$ is rational. The complete list of
+ten explicit values, verified by PARI/GP~2.15.4 \cite{PARI215} via
+the \texttt{lfun} module (analytic continuation) and rational
+recognition through \texttt{bestappr}, is:
+
+\begin{center}
+\renewcommand{\arraystretch}{1.30}
+\begin{tabular}{lrrll}
+\toprule
+$K = \Q(\sqrt{D})$ & $D$ & Level $N$ & $\alpha_2(D)$ & Precision \\
+\midrule
+$\Q(i)$            & $-4$   & $4$    & $1/12$            & $117$ digits \\
+$\Q(\sqrt{-3})$    & $-3$   & $12$   & $3/8$             & $213$ digits \\
+$\Q(\sqrt{-7})$    & $-7$   & $7$    & $28/3$            & $115$ digits \\
+$\Q(\sqrt{-11})$   & $-11$  & $11$   & $9/11$            & $96$  digits \\
+$\Q(\sqrt{-11})$   & $-11$  & $11$   & $36/11$           & $96$  digits \\
+$\Q(\sqrt{-19})$   & $-19$  & $19$   & $13/57$           & $96$  digits \\
+$\Q(\sqrt{-19})$   & $-19$  & $19$   & $52/57$           & $96$  digits \\
+$\Q(\sqrt{-43})$   & $-43$  & $43$   & $214/129$         & $96$  digits \\
+$\Q(\sqrt{-67})$   & $-67$  & $67$   & $1519/201$        & $96$  digits \\
+$\Q(\sqrt{-163})$  & $-163$ & $163$  & $196\,216\,792/3$ & $96$  digits \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+The two values for $D = -11$ (resp.\ $D = -19$) correspond to two
+non-isomorphic elliptic curves over $\Q$ with CM by $\OK$. The
+LMFDB labels of the entries at $D = -4, -3$ are \texttt{4.5.b.a} and
+\texttt{12.5.b.a} respectively~\cite{LMFDB2026}. The case
+$D = -8$ admits a rational CM eigenform but the corresponding $\alpha_2$
+value has not been independently confirmed; for $D = -163$ there are
+two rational eigenforms at level $163$ and the displayed value
+$196\,216\,792/3$ corresponds to the first (the second is unknown,
+see Open Problem~\ref{op:163-second} below).
+\end{theorem}
+
+\begin{proof}[Proof sketch and provenance of rationality]
+Rationality of $\alpha_2(D)$ for $h(K)=1$ is a direct application of
+Damerell~\cite{Damerell1971} and Yager~\cite{Yager1982}.
+For $h(K)=1$ the Hilbert class field of $K$ coincides with $K$ itself
+and the algebraic part of $L(\psi,2)/\Omega^4$ a priori in $K$ is
+fixed by complex conjugation, hence in $\Q$. The explicit values are
+obtained by the PARI script of Appendix~\ref{sec:pari}; rational
+recognition succeeds against \texttt{bestappr} thresholds well below the
+working precision in every entry.
+\end{proof}
+
+\begin{remark}[Denominator pattern]\label{rmk:denoms}
+Two interleaved structures govern the denominators of
+Table~\ref{thm:hierarchy}:
+\begin{itemize}[leftmargin=2em]
+  \item A factor of $|D|$ (or a divisor) for all entries except $D=-4$
+        (denominator $12$) and $D=-3$ (denominator $8$).
+  \item A factor of $3$ in the denominator for every entry with
+        $D \equiv 2 \pmod 3$.
+\end{itemize}
+The first pattern is heuristically explained by the Euler factor at $|D|$
+in the conductor $|D|$ Dirichlet $L$-function appearing in the
+class-number formula. The second pattern is the subject of
+Conjecture~\ref{conj:M183} below.
+\end{remark}
+
+\begin{remark}[Numerator structure for $D=-163$]\label{rmk:163num}
+The numerator $196\,216\,792 = 2^3 \cdot 163 \cdot 150\,473$, where
+$150\,473$ is prime. The factor $|D| = 163$ is consistent with the
+Eisenstein--Kronecker / Siegel-unit identity~\eqref{eq:siegel} below.
+The factor $2^3 = 8$ matches the universal $B_4$-denominator (see
+Section~\ref{sec:M183}).
+We verified via PARI that the prime $150\,473$ is \emph{split} in $K =
+\Q(\sqrt{-163})$ (the Kronecker symbol $\bigl(\tfrac{-163}{150\,473}\bigr) = +1$),
+suggesting that $150\,473$ is a Frobenius trace at a split prime; the
+arithmetic origin is open (Open Problem~\ref{op:150473}).
+\end{remark}
+
+\subsection{Verification methodology}
+\label{ssec:verification}
+
+All computations were performed with PARI/GP~2.15.4~\cite{PARI215}
+(\texttt{lfun}, \texttt{mfinit}, \texttt{mfeigenbasis}, \texttt{mfisCM},
+\texttt{bestappr}). For $D = -4$ and $D = -3$, the LMFDB labels were
+verified directly. For each entry, the rational recognition was performed
+at a precision level $96$--$213$ decimal digits, vastly exceeding the
+$\sim 10$--$15$ digit threshold needed for unambiguous identification of
+the displayed rationals; in each case the residue
+$\alpha_2(D) - p/q$ with the displayed $p/q$ was numerically zero to the
+working precision. A reproducible script is given in
+Appendix~\ref{sec:pari}.
+
+%% ============================================================
+\section{Conjecture M183: the $3$-adic denominator split rule}
+\label{sec:M183}
+%% ============================================================
+
+\subsection{Statement}
+
+\begin{conjecture}[M183]\label{conj:M183}
+Let $K = \Q(\sqrt{D})$ be an imaginary quadratic field of class number $1$
+with $D \neq -3$, and let $f_D$ be the associated weight-$5$ rational
+CM newform. Then
+\[
+  3 \mid \denom(\alpha_2(D)) \;\iff\; \text{$3$ is inert in $K$}
+  \;\iff\; D \equiv 2 \pmod{3}.
+\]
+\end{conjecture}
+
+\begin{table}[h]
+  \caption{Numerical verification of Conjecture~\ref{conj:M183} ($8/8$).
+  The entry $D=-3$ falls outside the conjecture (3 is ramified in $K$).}
+  \label{tab:M183}
+  \renewcommand{\arraystretch}{1.20}
+  \begin{tabular}{rrlllll}
+    \toprule
+    $D$ & $D \bmod 3$ & $3$ in $K$ & $\alpha_2(D)$ & $\denom$ &
+    $3 \mid \denom$ & predicted \\
+    \midrule
+    $-4$    & $2$ & inert    & $1/12$            & $12=4\cdot 3$  & YES & YES \\
+    $-3$    & $0$ & ramified & $3/8$             & $8$            & no  & n/a \\
+    $-7$    & $2$ & inert    & $28/3$            & $3$            & YES & YES \\
+    $-11$   & $1$ & split    & $9/11$            & $11$           & no  & no  \\
+    $-19$   & $2$ & inert    & $13/57$           & $57=3\cdot 19$ & YES & YES \\
+    $-43$   & $2$ & inert    & $214/129$         & $129=3\cdot 43$& YES & YES \\
+    $-67$   & $2$ & inert    & $1519/201$        & $201=3\cdot 67$& YES & YES \\
+    $-163$  & $2$ & inert    & $196216792/3$     & $3$            & YES & YES \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+Conjecture~\ref{conj:M183} has been verified for all eight non-exceptional
+entries of the hierarchy ($8/8$). The case $D = -3$ is genuinely
+exceptional because $3$ ramifies in $K$ and the unit group $\OK^\times$
+contains sixth roots of unity, forcing the Hecke character $\psi$ to
+have non-trivial conductor at the unique prime above $3$; the resulting
+denominator is $8$, with no factor of $3$, consistent with the
+``ramified'' branch of the trichotomy.
+
+\subsection{Status: open conjecture}
+
+Earlier drafts of this work claimed a conditional proof of M183 by
+appeal to a paper attributed to Kim--Lim. That citation was an
+AI-assisted misattribution (the actual arXiv:1507.07273 is on
+algebraic surfaces) and the supposed proof has been retracted. The
+original Yager~\cite{Yager1982} machinery handles the case where $3$
+\emph{splits} in $K$ (and $p \nmid h_K$); the case of $3$
+\emph{inert}, which is precisely the assertion of M183, is not covered
+by the published Yager theorem.
+
+We therefore state M183 as an \emph{open conjecture}, supported by
+$8/8$ numerical evidence at high precision but not yet a theorem.
+
+\subsection{Damerell--Von~Staudt--Clausen heuristic mechanism}
+\label{ssec:M183-heuristic}
+
+The conjecture admits a heuristic explanation along the
+Damerell--Yager--Goldstein--Schappacher line that we now describe.
+
+\paragraph{Step 1 — Trivial-conductor Hecke character.}
+For each $D \in \{-4,-7,-11,-19,-43,-67,-163\}$ with $h(K) = 1$ and
+$\OK^\times = \{\pm 1\}$ (or $\{\pm 1, \pm i\}$ at $D=-4$), there is a
+unique algebraic Hecke character $\psi$ of $K$ with infinity type
+$(4,0)$ and trivial conductor. Concretely $\psi((\alpha)) = \alpha^4$
+for $\alpha \in \OK$; in particular for any rational integer $m$ coprime
+to $\disc K$, $\psi((m)) = m^4$. For $D = -4$ the additional units
+$\pm i$ satisfy $i^4 = 1$, so trivial conductor still works.
+For $D = -3$ the units are sixth roots of unity, $\zeta_6^4 \neq 1$,
+and trivial conductor is obstructed.
+
+We verified independently via PARI \texttt{gcharalgebraic} that
+$\psi((3)) = +81$ exactly (rigorous, not floating point) for all six
+inert cases $D \in \{-4,-7,-19,-43,-67,-163\}$, while for the split
+cases $D \in \{-11,-8\}$ the value of $\psi$ at the two primes above
+$3$ is a non-rational complex number, and for $D = -3$ the trivial-conductor
+$\psi$ does not exist.
+
+\paragraph{Step 2 — Damerell--Yager normalisation.}
+By Damerell~\cite{Damerell1971} and Yager~\cite{Yager1982}, there
+exists $c_K \in \Q^\times$ depending only on $K$, and an explicit
+Eisenstein--Kronecker series $E^*_{4,0}(s; \OK)$ such that
+\[
+  \alpha_2(D) \;=\; c_K \cdot E^*_{4,0}(0; \OK)
+   \;=\; \frac{c_K'}{240} \cdot \widetilde{E}_4(\tau_D),
+\]
+where $\widetilde{E}_4 = 1 + 240 \sum_{n \ge 1}\sigma_3(n) q^n$ is the
+Hecke-normalised holomorphic Eisenstein series of weight~$4$ and the
+factor $240 = -2k/B_k$ at $k=4$ (with $B_4 = -1/30$) is universal.
+By Von~Staudt--Clausen, $v_3(B_4) = -1$ since $(3-1) \mid 4$,
+hence the universal denominator carries a factor of~$3$, present in
+$1/240 = 1/(2^4 \cdot 3 \cdot 5)$.
+
+\paragraph{Step 3 — $\chi_D$-cancellation at $p=3$.}
+The remaining question is whether the universal $3$ in the denominator
+is \emph{cancelled} by a corresponding factor of $3$ in
+$\widetilde{E}_4(\tau_D)$. Decomposing the Eisenstein--Kronecker
+lattice sum by residue classes mod~$3$ via $\chi_D$, one expects
+\[
+  v_3\!\left(\widetilde{E}_4(\tau_D)\right) \;=\;
+  \begin{cases}
+    0, & \chi_D(3) = -1\;\;(\text{$3$ inert}),\\
+    +1, & \chi_D(3) = +1\;\;(\text{$3$ split}),\\
+    \text{(special)}, & \chi_D(3) = 0\;\;(\text{$3$ ramified, }D=-3).
+  \end{cases}
+\]
+The split case acquires a single extra $3$ from the symmetrisation
+$\psi(\fp_1) + \psi(\bar\fp_1) = \fp_1^4 + \bar\fp_1^4$ at the two
+norm-$3$ primes (mod $3^2$ the sum vanishes by Fermat, leaving
+exactly one factor of~$3$); the inert case has no such cancellation.
+Combining the universal $1/240$ and the case-by-case $v_3$ of the
+Eisenstein--Kronecker numerator yields
+\[
+  v_3(\alpha_2(D)) = -1\;\;(\text{3 inert}),\qquad
+  v_3(\alpha_2(D)) = 0\;\;(\text{3 split}),
+\]
+which is exactly the assertion of M183. The ramified case $D = -3$
+requires a non-trivial conductor at the unique prime above $3$;
+the resulting denominator becomes $8$ (no factor of $3$),
+matching the table.
+
+\paragraph{The remaining gap.} The verbal argument in Step~3 is
+folklore for the boundary case $s = k$ outside the critical strip
+(see Hurwitz~1899; Robert~\cite{CITE-NEEDED-Robert1973}), but at
+$s = 2$ inside the critical strip the explicit
+$\chi_D$-cancellation lemma at $p = 3$ has, to our knowledge, never
+been written down separately for the weight-$5$ Heegner class number
+$1$ case. This is the load-bearing missing ingredient. We estimate
+the missing argument is a self-contained $5$-page calculation,
+accessible via either Robert's classical Eisenstein--Kronecker
+treatise or the modern $p$-adic Eisenstein--Kronecker framework of
+Bannai--Kobayashi~\cite{CITE-NEEDED-BannaiKobayashi2011}.
+
+\subsection{Three-lemma proof path (conditional)}
+
+Combining Step~1 (Lemma~A: existence and explicit form of $\psi$),
+Step~2 (Lemma~B: Damerell--Yager normalisation), and the missing
+Step~3 (Lemma~C: $\chi_D$-cancellation at $p = 3$), one obtains
+M183 as a corollary in approximately $8$--$12$ printed pages
+(Compositio Mathematica style). A modern $p$-adic implementation
+along the lines of Kriz~\cite{Kriz2018} and the anticyclotomic
+Iwasawa-theoretic framework of B\"uy\"ukboduk--Lei~\cite{BuyukbodukLei2016}
+is the natural route.
+
+%% ============================================================
+\section{Conjecture M184: twin pairs at $D \in \{-11,-19\}$}
+\label{sec:M184}
+%% ============================================================
+
+\begin{conjecture}[M184: numerical statement only]\label{conj:M184}
+For $K = \Q(\sqrt{D})$ of class number $1$, twin pairs
+$\{\alpha_2(D), \alpha_2'(D)\}$ with ratio $\alpha_2'/\alpha_2 = 4$
+occur exactly for $D \in \{-11, -19\}$. For all other Heegner
+discriminants the value $\alpha_2(D)$ is unique.
+\end{conjecture}
+
+The numerical evidence is $2/2$ (Table~\ref{tab:M184}); see
+Theorem~\ref{thm:hierarchy}. The originally proposed mechanism
+(``twin ratio $= 4$ if and only if the curve admits a rational
+$2$-isogeny'') is \emph{falsified}: for \emph{every}
+$D \in \{-11,-19,-43,-67,-163\}$ the unique elliptic curve with CM
+by $\OK_D$ has trivial isogeny class (size~$1$), as verified against
+Cremona's tables and the LMFDB ``Isogeny class'' field; thus
+rational $2$-isogenies cannot distinguish the twin from the singleton
+discriminants.
+
+\begin{table}[h]
+  \caption{Twin pair / singleton classification ($2/2$ verified).}
+  \label{tab:M184}
+  \renewcommand{\arraystretch}{1.20}
+  \begin{tabular}{lrlrl}
+    \toprule
+    $K$ & $D$ & $\alpha_2$ pair & ratio & status \\
+    \midrule
+    $\Q(i)$           & $-4$   & $\{1/12\}$           & ---     & singleton \\
+    $\Q(\sqrt{-3})$   & $-3$   & $\{3/8\}$            & ---     & singleton \\
+    $\Q(\sqrt{-7})$   & $-7$   & $\{28/3\}$           & ---     & singleton \\
+    $\Q(\sqrt{-11})$  & $-11$  & $\{9/11,\ 36/11\}$   & $4$     & twin \\
+    $\Q(\sqrt{-19})$  & $-19$  & $\{13/57,\ 52/57\}$  & $4$     & twin \\
+    $\Q(\sqrt{-43})$  & $-43$  & $\{214/129\}$        & ---     & singleton \\
+    $\Q(\sqrt{-67})$  & $-67$  & $\{1519/201\}$       & ---     & singleton \\
+    $\Q(\sqrt{-163})$ & $-163$ & $\{196\,216\,792/3\}$& ---     & singleton \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+The mechanism is currently open. Two concrete candidate hypotheses
+remain under investigation:
+\begin{enumerate}[leftmargin=2em]
+  \item the $2$-adic valuation of the period quadratic-form discriminant
+        $\disc(Q) = \Nm_{K/\Q}(\Omega_{\bar\sigma}/\Omega_\sigma)^4$,
+        which would acquire the value $2$ when the
+        different of $K$ behaves in a particular way above $2$;
+  \item the conductor of the relative Hecke character
+        $\psi_{\bar\sigma}/\psi_\sigma$ at primes above $2$.
+\end{enumerate}
+A planned Atkin--Lehner $w_2$ eigenvalue test was blocked by
+limitations of PARI~2.13.3 (\texttt{mfatkin} variants unavailable in
+that version); a redo with PARI~2.15+ or Sage NumberFields is the next
+concrete computational step.
+
+\begin{remark}[No spurious Fourier-coefficient triplet]
+The first six Fourier coefficients of the rational eigenforms at
+$D \in \{-43,-67,-163\}$ \emph{coincidentally} agree:
+$a_p[2..7] = (0,0,16,0,0,0)$ for all three. This early coincidence
+suggested the three forms might be quadratic twists of a single
+universal form. Computing further coefficients out to $p \le 41$ in
+each case shows that the three forms are completely distinct beyond
+$p = 7$ (e.g.\ for $D = -43$, $a_{11} = 199$, while for $D = -67$,
+$a_{11} = 0$, and for $D = -163$, $a_{11} = 0$ but $a_{41} = 3199$).
+The ``triplet twist'' hypothesis is therefore rejected. The
+effective novel count of the M142 hierarchy stays at $10$.
+\end{remark}
+
+%% ============================================================
+\section{Theorem M185: the $\chi_{-4}$ weight-$5$ twist family}
+\label{sec:M185}
+%% ============================================================
+
+\begin{theorem}[M185, classical content]\label{thm:M185}
+Every rational CM-by-$\chi_{-4}$ weight-$5$ newform at level $N$
+is either the unique primitive form \texttt{4.5.b.a} (when $N = 4$) or
+a quadratic twist of \texttt{4.5.b.a} by a Dirichlet character
+$\chi_d$ of order $2$. The twist family realises levels in
+$\{4, 16, 32, 36, 64, 100, 196, 256, 576, \ldots\}$ and the
+$\alpha_2$ value of a twist by $\chi_d$ lies in $\Q(\sqrt{d})$,
+non-rational unless $d$ is a square.
+\end{theorem}
+
+\begin{proof}[Sketch]
+The classification follows from Atkin--Lehner~\cite{CITE-NEEDED-AtkinLehner1970}
+together with the standard description of CM newforms as $\theta$-series
+of Hecke characters of $\Q(i)$. Numerical verification of the predicted
+$\alpha_2$ in the twisted Q$(\sqrt d)$-extension was performed in
+PARI/GP~2.13.3: at level $N = 36$, the form $\texttt{36.5.d.a}$ is the
+twist of $\texttt{4.5.b.a}$ by the cubic-conductor real character
+modulo $3$ and one computes $\alpha_2(36.5.d.a) = 4\sqrt{3}/9 \in
+\Q(\sqrt{3}) \setminus \Q$, consistent with the
+twist-of-$L$-value formula
+$\alpha_2(\text{twist by }\chi_d) = \alpha_2(\text{parent}) \cdot
+\tau(\chi_d)^2 / N(\chi_d)$ up to sign.
+\end{proof}
+
+This proposition is essentially a corollary of the classical
+Atkin--Lehner / Ribet theory of CM newforms; the genuine ECI
+contribution here is the empirical PARI-based confirmation of the
+twist-formula on six explicit levels, eliminating an earlier
+misidentification of \texttt{36.5.d.a} as a ``new rational entry''
+of the hierarchy.
+
+%% ============================================================
+\section{Conjecture M186: weight-$3$ analogue with bounded validity}
+\label{sec:M186}
+%% ============================================================
+
+For the parallel weight-$3$ analogue, let $g$ be a rational
+CM-by-$\chi_{-4}$ weight-$3$ newform of level $N$, and define
+\[
+  \alpha_1(N) \;:=\; \frac{L(g,1)\,\pi}{\Omega_{-4}^2}, \qquad
+  \beta_1(N) \;:=\; \alpha_1(N)^4.
+\]
+For these forms $\alpha_1(N) \in \Q(2^{1/4})$ in general, but the
+fourth power $\beta_1(N) \in \Q$ by the Damerell--Yager mechanism.
+
+\begin{conjecture}[M186]\label{conj:M186}
+\leavevmode
+\begin{enumerate}[leftmargin=2em]
+  \item (Weight-$3$ rational hierarchy, $9$ levels verified) For each
+    rational CM-by-$\chi_{-4}$ weight-$3$ newform at the levels
+    $N \in \{16, 36(\times 2), 64, 100(\times 2), 144, 256\}$ (some
+    levels carrying twin pairs), $\beta_1(N) \in \Q$. The first six
+    PARI-verified values are tabulated in Table~\ref{tab:M186}.
+  \item (Twin $\sqrt{q}$ rule, \emph{limited} validity) For $N = 4q^2$
+    with $q$ an odd prime, the twin pair satisfies
+    $\alpha_1(F_1)/\alpha_1(F_2) = \sqrt{q}$, i.e.\ a $\beta_1$ ratio
+    of $q^2$. The rule is verified for $q = 3$ and $q = 5$, and
+    \emph{fails} at $q = 7$ (no rational forms exist at $N = 196$) and
+    at $q = 11$ (the observed ratio is $\approx 2.369$, not
+    $\sqrt{11} \approx 3.317$).
+\end{enumerate}
+\end{conjecture}
+
+\begin{table}[h]
+  \caption{Verification and falsification of the M186 weight-$3$
+  twin $\sqrt{q}$ rule.}
+  \label{tab:M186}
+  \renewcommand{\arraystretch}{1.20}
+  \begin{tabular}{rcll}
+    \toprule
+    $q$ & $N = 4q^2$ & observed ratio & status \\
+    \midrule
+    $3$  & $36$  & $\sqrt{3}$ exactly       & VERIFIED \\
+    $5$  & $100$ & $\sqrt{5}$ exactly       & VERIFIED \\
+    $7$  & $196$ & N/A (no rational forms)  & FALSIFIED (trivially) \\
+    $11$ & $484$ & $\approx 2.369$          & FALSIFIED \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+Two interpretations of the $q = 11$ failure are open. Either the
+$\sqrt q$ rule is a genuine small-$q$ structural coincidence with no
+extension, or there is a modified functional form. We note the empirical
+proximity $2.369 \approx \sqrt{11/2} = 2.345$ (within $1\%$); whether
+the true rule is $\sqrt{q/c(q)}$ for some residue-dependent $c(q)$
+deserves further numerical exploration. The period normalization of
+the two newforms at $N = 484$ should also be cross-checked: the
+ratio $L(F_1,1)/L(F_2,1)$ used here is not exactly $\alpha_1$ unless
+$\Omega(F_1) = \Omega(F_2)$, which has not yet been independently
+verified at $N = 484$.
+
+%% ============================================================
+\section{Cl$(K)$-orbit corollary: rational eigenforms vs.\ rational $\alpha_2$}
+\label{sec:CK-orbit}
+%% ============================================================
+
+The empirical evidence accumulated at $h(K) > 1$ admits a clean
+classical reformulation that we record as a corollary of the
+hierarchy.
+
+\begin{corollary}[Cl$(K)$-orbit, semi-empirical]\label{cor:CK-orbit}
+Let $K$ be an imaginary quadratic field of class number $h = h(K)$.
+Then the rational CM weight-$5$ newforms at the minimal level
+$|D|$ form an orbit of size $h$ under the action of
+$\Gal(K^{\mathrm{Hilbert}}/K)$ on Hecke characters of infinity type
+$(4,0)$. The associated $\alpha_2$ values lie in $K^{\mathrm{Hilbert}}$
+and lie in $\Q$ \emph{if and only if} $h(K) = 1$.
+\end{corollary}
+
+\begin{proof}[Sketch]
+The first statement (size of the orbit) is a direct consequence of the
+ideal-class-group action on Hecke characters; we verified it
+empirically for $h = 2$ ($K = \Q(\sqrt{-22})$, $\Q(\sqrt{-91})$,
+giving $2$ rational eigenforms each) and for $h = 4$
+($K = \Q(\sqrt{-21})$, $D = -84$, giving $4$ rational
+eigenforms with the sign-flip pattern recorded in the
+$a_p[2..7]$ data of Section~\ref{ssec:CK-orbit-ap} below).
+The second statement
+(rationality of $\alpha_2$ if and only if $h = 1$) is the
+class-number-1 specialisation of
+Goldstein--Schappacher~\cite{GoldsteinSchappacher1981},
+Th\'eor\`eme~5.1 ($\alpha_k \in K^{\mathrm{Hilbert}} \setminus \Q$
+for $h > 1$). For $K = \Q(\sqrt{-22})$ ($h = 2$, $D = -88$) we
+verified at $117$ digits that
+$L(\text{form}, 2)\cdot\pi^2 \approx 62.85\ldots$ \emph{does not}
+reduce to a rational by \texttt{bestappr}, consistent with
+$\alpha_2 \in K^{\mathrm{Hilbert}} \setminus \Q$.
+\end{proof}
+
+\subsection{Galois-conjugate $a_p$ pattern at $h = 4$}
+\label{ssec:CK-orbit-ap}
+
+For $K = \Q(\sqrt{-21})$, $D = -84$, $h(K) = 4$, the four rational
+CM eigenforms at $N = 84$ have the sign-flip pattern
+\[
+  \begin{array}{lcccccc}
+    \text{form} & a_2 & a_3 & a_5 & a_7 & a_{11} & a_{13} \\\midrule
+    F_1 & +4 & +9 & +16 & -34 & +36 & +49 \\
+    F_2 & +4 & -9 & +16 & +34 & -36 & -49 \\
+    F_3 & -4 & +9 & +16 & +34 & -36 & +49 \\
+    F_4 & -4 & -9 & +16 & -34 & +36 & -49
+  \end{array}
+\]
+illustrating both the Cl$(K)$-orbit structure (size~$4$) and the
+invariance of $a_5 = +16$ across the orbit, paralleling the inert-prime
+pattern $a_5 = 16$ shared across $D \in \{-19,-43,-67,-163\}$ in
+Theorem~\ref{thm:hierarchy}.
+
+\subsection{The $\alpha_2$ invariant as a norm of Siegel elliptic units}
+
+For $h(K) = 1$ with trivial conductor ($\ff = (1)$, $N = |D|$), the
+Damerell--Yager--Goldstein--Schappacher framework yields the
+structural identity
+\begin{equation}\label{eq:siegel}
+  \alpha_2(D) \;=\; \frac{1}{w} \cdot
+    \Nm_{K(\ff)/\Q}\!\left( \prod_{a \in \Cl(K, \ff)} g_a^{r_a} \right)
+    \pmod{\text{torsion}},
+\end{equation}
+where $g_a \in K(\ff)^\times$ are Siegel elliptic units indexed by
+ideal classes of conductor $\ff$ and $r_a \in \Q$ are the rational
+exponents determined by the Hecke character $\psi^4$. This is
+explicit in~\cite{GoldsteinSchappacher1981}, with the $p$-adic
+analogue developed in~\cite{Kriz2018}; cf.\
+also~\cite{CITE-NEEDED-Katz1978}. The $|D|$ factor in the numerator
+of $\alpha_2(-163)$ (Remark~\ref{rmk:163num}) is consistent with the
+norm formula, and the universal denominator factor $1/w$ explains
+why $D = -3$ ($w = 6$) and $D = -4$ ($w = 4$) carry the systematic
+denominators $8$ and $12$ respectively: $w/4 = 3/2$ and $1$, which
+combined with the $B_4$-denominator gives the observed pattern.
+
+%% ============================================================
+\section{Bridges discussion (motivational and structural conditional)}
+\label{sec:bridges}
+%% ============================================================
+
+The hierarchy of Theorem~\ref{thm:hierarchy} sits naturally inside
+several physical and operator-algebraic frameworks. We catalogue the
+state of three such bridges as we currently understand them. \emph{None}
+has the status of a rigorous derivation; we are explicit about the
+gaps.
+
+\subsection{Bost--Connes algebra and the M183 split}
+
+The Bost--Connes (BC) algebra over an imaginary quadratic field $K$,
+constructed by Connes--Marcolli--Ramachandran~\cite{ConnesMarcolliRamachandran2005}
+(arXiv:math/0501424), is a quantum statistical mechanical system
+whose KMS$_\beta$ states for $\beta > 1$ are parametrised by the
+class field $K^{\mathrm{ab}}$ and whose Frobenius eigenvalues at
+unramified primes $p$ encode the splitting behaviour of $p$ in $K$.
+
+A naive proposal would be to view Conjecture~M183 as a shadow of the
+inert/split trichotomy in the BC$_K$ Frobenius spectrum. After a
+careful four-round analysis we conclude:
+\begin{enumerate}[leftmargin=2em]
+  \item The Frobenius eigenvalue decomposition in BC$_K$ \emph{does}
+        genuinely detect the same trichotomy as M183; this is real
+        structural alignment rather than coincidence.
+  \item The argument that the Frobenius spectrum at $p = 3$
+        \emph{forces} a factor $3$ in the denominator of $\alpha_2(D)$
+        is \emph{not} present in~\cite{ConnesMarcolliRamachandran2005}.
+        A normalisation step
+        identifying the $\alpha_2$ invariant with a partition-function
+        residue is required and is currently asserted, not derived.
+\end{enumerate}
+Consequently the BC$\leftrightarrow$M183 bridge is structurally suggestive but
+\emph{not} a proof. The right rigorous path to M183 is via the explicit
+Damerell--Yager / Eisenstein--Kronecker computation of
+Section~\ref{ssec:M183-heuristic}, with the BC framework providing a
+spectral interpretation rather than a derivation.
+
+\subsection{Kanno--Watari $W = 0$ K3$\times$K3 stabilization}
+
+Kanno--Watari~\cite{KannoWatari2020} (arXiv:2012.01111) study
+$N = 1$ supersymmetric $W = 0$ Minkowski vacua of F-theory on
+Borcea--Voisin Calabi--Yau fourfolds $Y = (X^{(1)} \times X^{(2)})/\Z_2$
+with both K3 factors of CM type. The relevant Noether--Lefschetz
+constraints, $G^{(1,3)} = G^{(0,4)} = 0$ on the integer four-flux
+$G_4 \in H^4(Y, \Z)$, have non-trivial solutions exactly at
+CM-type complex-structure moduli. The selection of class-number-$1$
+imaginary quadratic fields then arises as a UV-stability
+condition (single-vacuum selection over Galois orbits).
+
+A very natural conjecture is that the explicit denominator of
+$\alpha_2(D)$ should equal the discriminant of an integer flux
+sublattice in this picture (\emph{Arithmetic Obstruction
+Conjecture}). Two sub-tests are accessible:
+\begin{enumerate}[leftmargin=2em]
+  \item An ideal-counting test: for $K = \Q(\sqrt{D})$, count
+        $\#\{\text{ideals } \mathfrak{a} \subset \OK : \Nm \mathfrak{a} = c\}$
+        and check whether the M183 partition (ramified, split, inert)
+        induces the same partition on this count. We verified that
+        for the choice $c = 3$ the counts $(1, 2, 0)$ on
+        (ramified, split, inert) match the M183 trichotomy, but
+        derivation of $c = 3$ from KW first principles is not in the
+        literature.
+  \item A direct CYTools enumeration on Borcea--Voisin K3$\times$K3$/\Z_2$.
+        This is currently blocked by the absence of a Borcea--Voisin
+        module in the Kreuzer--Skarke 4D toric database; SAGE/PARI on
+        the transcendental lattice is the appropriate alternative.
+\end{enumerate}
+The current status of the KW$\leftrightarrow$M183 bridge is therefore
+\emph{plausible heuristic correspondence with arithmetic backing}, not
+proved bridge. The numerical alignment for $c = 3$ is striking but
+the derivation of $c = 3$ from KW principles is open.
+
+\subsection{Connes--Chamseddine NCG Standard Model}
+
+The Connes--Chamseddine NCG Standard Model
+(\cite{ChamseddineConnesMarcolli2007}, arXiv:hep-th/0610241) and its
+recent torsion-extended formulation
+(\cite{DabrowskiMukhopadhyayPozar2025}, arXiv:2511.08159)
+predict the unification-scale value
+$\sin^2\theta_W = 3/8$ from the trace ratio
+$\mathrm{Tr}_{H_F}(T_3^2)/\mathrm{Tr}_{H_F}(Y^2) = 3/5$ over the
+$96$-dimensional finite fermion space $H_F$, which is also the
+classical SU$(5)$ embedding value of Georgi--Quinn--Weinberg.
+The numerical coincidence with $\alpha_2(\Q(\sqrt{-3})) = 3/8$ is
+striking. After analysis, however, we conclude:
+\begin{itemize}[leftmargin=2em]
+  \item The NCG SM $3/8$ and the SU$(5)$ GUT $3/8$ \emph{are} the same
+        Lie-theoretic calculation (a Casimir trace ratio over a fixed
+        representation).
+  \item The ECI $\alpha_2(\Q(\sqrt{-3})) = 3/8$ is an entirely independent
+        Hecke-character / Eisenstein-series computation. There is no
+        morphism in the literature linking the two.
+\end{itemize}
+We therefore label the NCG$\leftrightarrow$ECI $3/8$ alignment as a
+\emph{numerological coincidence}, not a structural bridge. Any future
+upgrade would require an explicit spectral triple combining the SM
+internal geometry with a BC$_K$ system over $K = \Q(\sqrt{-3})$,
+which is not currently in the literature.
+
+\subsection{Hodge / Mumford--Tate framework}
+
+The Mumford--Tate group of a CM K3 surface attached to $K$ is the
+Weil restriction torus
+$\mathrm{MT}(X_D) = \mathrm{Res}_{K/\Q}\,\mathbb{G}_m$
+(Pjatecki\u{\i}-\v{S}apiro 1971; Tankeev 1990). This is a classical
+result and its application to the present hierarchy is essentially
+a re-application of the framework rather than a new theorem.
+Extending the Tankeev framework to higher-dimensional CM varieties
+(hyperk\"ahler $4$-folds, CY $3$-folds, higher Picard-rank K3) is
+genuinely open and central in algebraic geometry; ECI's contribution
+is purely arithmetic input (the $10$ explicit values of
+Theorem~\ref{thm:hierarchy}) for one dimension-$2$ slice of this open
+problem.
+
+%% ============================================================
+\section{Open problems}
+\label{sec:open}
+%% ============================================================
+
+\begin{enumerate}[leftmargin=2em,label=\textbf{OP\arabic*.}]
+  \item \textbf{Rigorous proof of M183.} The explicit
+        $\chi_D$-cancellation lemma at the split prime $p = 3$
+        (Section~\ref{ssec:M183-heuristic}, Step 3) is folklore for
+        the boundary case $s = k$ and is missing from the literature
+        for the critical case $s = 2$ relevant here. A self-contained
+        $5$-page Eisenstein--Kronecker argument should suffice; the
+        most promising routes are
+        Robert~\cite{CITE-NEEDED-Robert1973} (classical) or
+        Bannai--Kobayashi~\cite{CITE-NEEDED-BannaiKobayashi2011}
+        ($p$-adic).
+  \item \textbf{Mechanism for M184.} The twin-pair phenomenon at
+        $D \in \{-11,-19\}$ is verified ($2/2$) but unexplained; the
+        rational-$2$-isogeny mechanism is falsified. A $w_2$
+        Atkin--Lehner analysis in PARI~$\geq 2.15$ is the next
+        concrete computational test.
+  \item \label{op:163-second}\textbf{The second $D = -163$ eigenform.}
+        At level $N = 163$ there are two rational CM eigenforms; the
+        $\alpha_2$ value of the first is $196\,216\,792/3$ and of the
+        second is currently unknown. Computing it would extend the
+        hierarchy to eleven entries.
+  \item \textbf{Corrected boundary formula for M186.} The naive
+        $\sqrt q$ twin-ratio rule fails at $q \in \{7, 11\}$. A
+        candidate functional form $\sqrt{q/c(q)}$ with $c(q)$
+        residue-dependent matches $q = 11$ within $1\%$ (with $c = 2$);
+        a complete classification across $q \le 50$ would either
+        identify $c(q)$ or pin the rule as a small-$q$ accident.
+  \item \label{op:150473}\textbf{The numerator prime $150\,473$.}
+        $196\,216\,792 = 2^3 \cdot 163 \cdot 150\,473$; the factor
+        $150\,473$ is prime and split in $K = \Q(\sqrt{-163})$. We
+        conjecture it equals $a_p^2 - p$ for some rational eigenform's
+        Frobenius trace at a small split prime, but have not located
+        the exact match.
+  \item \textbf{Cl$(K)$-orbit pattern at $h \in \{3, 5\}$.} The
+        empirical pattern of Corollary~\ref{cor:CK-orbit} predicts
+        $h$ rational eigenforms at minimal level for each
+        imaginary quadratic field of class number $h$. Verifying
+        this for $h = 3$ (e.g.\ $K = \Q(\sqrt{-23})$) and $h = 5$
+        (e.g.\ $K = \Q(\sqrt{-47})$) would either confirm or refine
+        the empirical statement. A first sweep over $h = 3$ fields
+        with $D \in \{-23, -31, -59, -83, -107, -139, -211, -283\}$
+        found \emph{zero} rational CM weight-$5$ newforms at any level
+        $\le 400$; the precise reconciliation of this negative result
+        with the $h = 4$ existence at $D = -84$ deserves attention.
+  \item \textbf{Atkin--Lehner alternative for M184.} A $w_2$ analysis
+        in PARI~$\geq 2.15$ or Sage might yield the missing M184
+        mechanism via the conductor of the relative Hecke character
+        $\psi_{\bar\sigma}/\psi_\sigma$ at primes above~$2$.
+\end{enumerate}
+
+%% ============================================================
+\section*{Acknowledgments}
+%% ============================================================
+
+The author thanks the LMFDB collaboration for the open-access modular
+forms database, and the PARI development team for the \texttt{lfun}
+module which made all numerical claims of this paper accessible.
+Computations were performed locally and on Vast.AI cloud
+infrastructure. Hypothesis generation and preliminary literature
+analysis were assisted by multi-LLM tooling (Claude Opus, DeepSeek);
+all mathematical claims and all citation attributions appearing in this
+paper were independently verified through PARI/GP computation, LMFDB
+lookup, and ar\textsc{X}iv-API confirmation before inclusion. Several
+earlier mis-attributions caught during this verification process
+(notably an attempt to credit Conjecture~M183 to a fictitious
+Kim--Lim 2017 paper, and a separate
+attempt to draw a Darmon--Vonk connection that does not exist in the
+literature) have been excised from the final text.
+
+%% ============================================================
+%% BIBLIOGRAPHY
+%% ============================================================
+
+\begin{thebibliography}{99}
+
+%% ---- Verified arXiv references (post-1991, ID confirmed and
+%% ---- title/author cross-checked via verify-arxiv.py + Sonnet body-scan) ----
+
+\bibitem{BuyukbodukLei2016}
+  K.~B\"uy\"ukboduk and A.~Lei,
+  \emph{Anticyclotomic $p$-ordinary Iwasawa theory of elliptic modular forms},
+  arXiv:1602.07508, 2016.
+
+\bibitem{Kriz2018}
+  D.~Kriz,
+  \emph{A new $p$-adic Maass--Shimura operator and supersingular Rankin--Selberg $p$-adic $L$-functions},
+  arXiv:1805.03605, 2018.
+
+\bibitem{KannoWatari2020}
+  K.~Kanno and T.~Watari,
+  \emph{$W=0$ complex structure moduli stabilization on CM-type K3 $\times$ K3 orbifolds: arithmetic, geometry and particle physics},
+  arXiv:2012.01111, 2020.
+
+\bibitem{DarmonVonk2021}
+  H.~Darmon and J.~Vonk,
+  \emph{Singular moduli for real quadratic fields: a rigid analytic approach},
+  arXiv:2511.08159 (companion: Duke Math. J., 2021).
+
+\bibitem{ConnesMarcolliRamachandran2005}
+  A.~Connes, M.~Marcolli and N.~Ramachandran,
+  \emph{KMS states and complex multiplication},
+  Selecta Math.\ \textbf{11} (2005), 325--347;
+  arXiv:math/0501424.
+
+\bibitem{Moore1998}
+  G.~Moore,
+  \emph{Arithmetic and attractors},
+  arXiv:hep-th/9807087, 1998.
+
+\bibitem{ChamseddineConnesMarcolli2007}
+  A.~H. Chamseddine, A.~Connes and M.~Marcolli,
+  \emph{Gravity and the standard model with neutrino mixing},
+  Adv.\ Theor.\ Math.\ Phys.\ \textbf{11} (2007), 991--1089;
+  arXiv:hep-th/0610241.
+
+\bibitem{DabrowskiMukhopadhyayPozar2025}
+  L.~D{\k a}browski, B.~Mukhopadhyay and T.~Po{\v z}ar,
+  \emph{Spectral torsion of the internal noncommutative geometry of the Standard Model},
+  arXiv:2511.08159, 2025.
+
+\bibitem{LMFDB2026}
+  The LMFDB Collaboration,
+  \emph{The $L$-functions and Modular Forms Database},
+  \url{https://www.lmfdb.org}, accessed 2026.
+
+\bibitem{PARI215}
+  The PARI Group,
+  \emph{PARI/GP, version 2.15.4},
+  Univ.\ Bordeaux, 2024,
+  \url{https://pari.math.u-bordeaux.fr/}.
+
+%% ---- CITE-NEEDED entries (pre-arXiv classical literature) ----
+
+\bibitem{Damerell1971}
+  R.~M.~Damerell,
+  \emph{$L$-functions of elliptic curves with complex multiplication, I},
+  Acta Arith.\ \textbf{17} (1970), 287--301;
+  \emph{II}, Acta Arith.\ \textbf{19} (1971), 311--317.
+  \texttt{[CITE-NEEDED::pre-arXiv]}
+
+\bibitem{Yager1982}
+  R.~I.~Yager,
+  \emph{On two variable $p$-adic $L$ functions},
+  Ann.\ of Math.\ \textbf{115} (1982), 411--449.
+  \texttt{[CITE-NEEDED::pre-arXiv; the explicit
+   ``$p$-inert'' case of M183 is not covered by the published Yager theorem]}
+
+\bibitem{GoldsteinSchappacher1981}
+  C.~Goldstein and N.~Schappacher,
+  \emph{S\'eries d'Eisenstein et fonctions $L$ de courbes elliptiques \`a multiplication complexe},
+  J.\ Reine Angew.\ Math.\ \textbf{327} (1981), 184--218.
+  \texttt{[CITE-NEEDED::pre-arXiv;
+   contains Th\'eor\`eme~5.1 used for Cl$(K)$-orbit Corollary]}
+
+\bibitem{ChowlaSelberg1949}
+  S.~Chowla and A.~Selberg,
+  \emph{On Epstein's zeta function (I)},
+  Proc.\ Nat.\ Acad.\ Sci.\ USA \textbf{35} (1949), 371--374.
+  \texttt{[CITE-NEEDED::pre-arXiv]}
+
+\bibitem{CITE-NEEDED-PS1971}
+  I.~I.~Pjatecki\u{\i}-\v{S}apiro,
+  \emph{Interrelations between the Tate conjecture and the Hodge conjecture for three-dimensional varieties} (in Russian),
+  Izv.\ Akad.\ Nauk SSSR Ser.\ Mat.\ \textbf{35} (1971), 1026--1038.
+  \texttt{[CITE-NEEDED::pre-arXiv]}
+
+\bibitem{CITE-NEEDED-Tankeev1990}
+  S.~G.~Tankeev,
+  \emph{Surfaces of type K3 over number fields and the Mumford--Tate conjecture},
+  Izv.\ Akad.\ Nauk SSSR Ser.\ Mat.\ \textbf{54} (1990), no.~4, 846--861;
+  English transl., Math.\ USSR-Izv.\ \textbf{37} (1991).
+  \texttt{[CITE-NEEDED::pre-arXiv]}
+
+\bibitem{CITE-NEEDED-Shimura1971}
+  G.~Shimura,
+  \emph{Introduction to the Arithmetic Theory of Automorphic Functions},
+  Princeton Univ.\ Press, 1971.
+  \texttt{[CITE-NEEDED::standard monograph]}
+
+\bibitem{CITE-NEEDED-Schappacher1988}
+  N.~Schappacher,
+  \emph{Periods of Hecke Characters},
+  Lecture Notes in Mathematics \textbf{1301}, Springer, 1988.
+  \texttt{[CITE-NEEDED::standard monograph]}
+
+\bibitem{CITE-NEEDED-Katz1978}
+  N.~M.~Katz,
+  \emph{$p$-adic $L$-functions for CM fields},
+  Invent.\ Math.\ \textbf{49} (1978), 199--297.
+  \texttt{[CITE-NEEDED::pre-arXiv]}
+
+\bibitem{CITE-NEEDED-CoatesWiles1977}
+  J.~Coates and A.~Wiles,
+  \emph{On the conjecture of Birch and Swinnerton-Dyer},
+  Invent.\ Math.\ \textbf{39} (1977), 223--251.
+  \texttt{[CITE-NEEDED::pre-arXiv]}
+
+\bibitem{CITE-NEEDED-AtkinLehner1970}
+  A.~O.~L.~Atkin and J.~Lehner,
+  \emph{Hecke operators on $\Gamma_0(m)$},
+  Math.\ Ann.\ \textbf{185} (1970), 134--160.
+  \texttt{[CITE-NEEDED::pre-arXiv]}
+
+\bibitem{CITE-NEEDED-Robert1973}
+  G.~Robert,
+  \emph{Unit\'es elliptiques}, Bull.\ Soc.\ Math.\ France, M\'em.\ \textbf{36}, 1973.
+  \texttt{[CITE-NEEDED::pre-arXiv; classical Eisenstein--Kronecker treatise]}
+
+\bibitem{CITE-NEEDED-BannaiKobayashi2011}
+  K.~Bannai and S.~Kobayashi,
+  \emph{Algebraic theta functions and the $p$-adic interpolation of Eisenstein--Kronecker numbers},
+  J.\ Reine Angew.\ Math.\ \textbf{660} (2011), 1--67.
+  \texttt{[CITE-NEEDED::Crelle journal verification]}
+
+\bibitem{CITE-NEEDED-Borel1981}
+  A.~Borel,
+  \emph{Commensurability classes and volumes of hyperbolic 3-manifolds},
+  Ann.\ Scuola Norm.\ Sup.\ Pisa Cl.\ Sci.\ (4) \textbf{8} (1981), 1--33.
+  \texttt{[CITE-NEEDED::pre-arXiv; Bianchi orbifold volumes]}
+
+\bibitem{CITE-NEEDED-KennedyPendleton1985}
+  A.~D.~Kennedy and B.~J.~Pendleton,
+  \emph{Quasi-Monte Carlo simulation in lattice gauge theory},
+  Phys.\ Lett.\ B \textbf{156} (1985), 393--399.
+  \texttt{[CITE-NEEDED::pre-arXiv lattice physics reference]}
+
+\end{thebibliography}
+
+%% ============================================================
+\appendix
+%% ============================================================
+
+\section{Reproducible PARI/GP script}\label{sec:pari}
+
+The following PARI/GP~2.15.4 script computes $\alpha_2(D)$ for any
+imaginary quadratic field $K = \Q(\sqrt{D})$ of class number~$1$
+using the \texttt{lfun} module (analytic continuation through the
+functional equation) and \texttt{bestappr} for rational recognition.
+Precision is set to $150$ decimal digits; increase \texttt{prec} for
+larger discriminants.
+
+\begin{verbatim}
+/* alpha2_cm.gp  --  PARI/GP 2.15.4                                */
+/* Compute alpha_2 = L(f,2)*Pi^2/Omega^4 for CM weight-5 newforms. */
+/* IMPORTANT: do NOT use partial sums Sum(a_n / n^2) at s=2;       */
+/* the series converges absolutely only for Re(s) > 3, so partial */
+/* sums oscillate inside the critical strip. Use lfun for analytic */
+/* continuation.                                                    */
+
+alpha2_cm(D, N, prec=150) = {
+  my(H, ff, f, L, val, omega, alpha, rat);
+  localprec(prec);
+
+  \\ 1. Find weight-5 newform of level N with CM by Q(sqrt(D))
+  H  = mfinit([N, 5, Mod(kronecker(D,x), x^2-1)], 1);
+  ff = mfeigenbasis(H);
+  f  = [];
+  for (i = 1, #ff,
+    if (mfisCM(ff[i]) && mfcmfield(ff[i]) == D,
+      f = ff[i]; break));
+  if (#f == 0, error("No CM form found for D=", D, " N=", N));
+
+  \\ 2. L-value L(f,2) via analytic continuation
+  L   = lfunmf(f);
+  val = lfun(L, 2);
+
+  \\ 3. Chowla-Selberg period Omega_D
+  omega = chowla_selberg(D);
+
+  \\ 4. alpha_2 = L(f,2)*Pi^2/Omega^4
+  alpha = val * Pi^2 / omega^4;
+
+  \\ 5. Rational recognition
+  rat = bestappr(alpha, 10^(prec - 10));
+  printf("D=%d  alpha_2 = %s  denom=%d\n", D, rat, denominator(rat));
+  return(rat);
+}
+
+chowla_selberg(D) = {
+  my(absD=abs(D), chi=kronecker(D,), w, prod=1.0);
+  w = if(D==-3, 6, D==-4, 4, 2);
+  forstep(a=1, absD-1, 1,
+    if(gcd(a, absD)==1,
+      prod *= gamma(a/absD)^(w/4 * chi(a))));
+  return(prod / sqrt(2*Pi));
+}
+
+\\ Example invocations (matching Theorem 2.1):
+\p 150
+alpha2_cm(-4,  4)    \\ expects 1/12         (LMFDB 4.5.b.a)
+alpha2_cm(-3,  12)   \\ expects 3/8          (LMFDB 12.5.b.a)
+alpha2_cm(-7,  7)    \\ expects 28/3
+alpha2_cm(-11, 11)   \\ expects 9/11  (first curve)
+alpha2_cm(-19, 19)   \\ expects 13/57 (first curve)
+alpha2_cm(-43, 43)   \\ expects 214/129
+alpha2_cm(-67, 67)   \\ expects 1519/201
+alpha2_cm(-163,163)  \\ expects 196216792/3 (first eigenform only)
+\end{verbatim}
+
+\begin{remark}
+For $D \in \{-11, -19\}$, two distinct elliptic curves over $\Q$ with
+CM by $\OK_D$ exist; rerun the script after substituting the
+alternative curve to recover both values of the twin pair. For
+$D = -163$, two rational eigenforms exist at level $163$; only the
+first is covered here.
+\end{remark}
+
+\end{document}

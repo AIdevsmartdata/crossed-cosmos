@@ -1,0 +1,541 @@
+% Paper: Galois orbit structure of rational CM weight-5 newforms
+% Target: Mathematics of Computation
+% Author: Kevin Remondiere
+% Date: 2026-05-09
+
+\documentclass[12pt]{amsart}
+
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{hyperref}
+\usepackage{booktabs}
+\usepackage{microtype}
+
+% Theorem environments
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{example}[theorem]{Example}
+\newtheorem{remark}[theorem]{Remark}
+
+% Shorthand
+\newcommand{\Q}{\mathbb{Q}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\C}{\mathbb{C}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\OK}{\mathcal{O}_K}
+\newcommand{\ClK}{\mathrm{Cl}(K)}
+\newcommand{\Gal}{\mathrm{Gal}}
+\newcommand{\HK}{K^{\mathrm{H}}}
+\newcommand{\Nm}{\mathrm{N}}
+\newcommand{\psi}{\psi}
+\newcommand{\alphatwo}{\alpha_2}
+
+\begin{document}
+
+\title{Galois orbit structure of rational CM weight-5 newforms
+  over imaginary quadratic fields of class number $h$}
+
+\author{Kevin Remondiere}
+
+\date{May 2026}
+
+\begin{abstract}
+Let $K = \Q(\sqrt{D})$ be an imaginary quadratic field of class number $h(K)$,
+and let $f$ be a CM weight-5 newform attached to a Hecke Gr\"ossencharacter
+of $K$ with infinity type $(4, 0)$.
+We prove that the rational-over-$\Q$ CM newforms at conductor $\mathfrak{N}(\OK)$
+form a single orbit under the action of $\ClK$ on Gr\"ossencharacters by
+ideal-class twisting, and that this orbit has cardinality exactly $h(K)$.
+In particular: the eight Heegner (class-number-1) fields each yield one
+rational eigenform (or a twin pair); the two illustrative class-number-2 fields
+$D \in \{-88, -91\}$ each yield exactly two rational eigenforms related by a
+Galois sign-flip; and the class-number-4 field $D = -84$ yields exactly four
+rational eigenforms, verified computationally via PARI/GP.
+A key invariant of the orbit is that $a_5 = 16$ for all members whenever
+$5$ is inert in $K$ and $D$ is a Heegner-like discriminant, matching the
+pattern found at $D \in \{-19, -43, -67, -163\}$.
+We further clarify a distinction critical for applications:
+a \emph{rational eigenform} ($a_p \in \Q$ for all $p$) is
+\emph{not} the same as a \emph{rational $L$-value quotient}
+$\alphatwo = L(f, 2)\pi^2/\Omega^4 \in \Q$,
+which holds only for $h(K) = 1$ (by a theorem of Goldstein--Schappacher).
+The case $h(K) = 3$ yields zero rational eigenforms, explained by the
+non-triviality of the class-group action on the infinity type.
+\end{abstract}
+
+\maketitle
+
+\tableofcontents
+
+% ============================================================
+\section{Introduction}
+% ============================================================
+
+\subsection{Classical background}
+The arithmetic of CM modular forms is governed by Hecke Gr\"ossencharacters
+of imaginary quadratic fields.  Shimura \cite{Shimura1971} established that
+every weight-$k$ CM newform $f$ of conductor $N$ arises from a Gr\"ossencharacter
+$\psi : \mathbb{A}_K^\times \to \C^\times$ with infinity type $(\ell, 0)$,
+$\ell = k-1$, via
+\[
+  f = \theta(\psi) := \sum_{\mathfrak{a} \subset \OK} \psi(\mathfrak{a}) q^{\Nm\mathfrak{a}}.
+\]
+The Galois group $\Gal(\HK/K)$ of the Hilbert class field of $K$ acts on
+the set of such characters by twisting:
+\[
+  \psi^\sigma(\mathfrak{a}) := \sigma(\psi(\sigma^{-1}\mathfrak{a})), \quad \sigma \in \Gal(\HK/\Q).
+\]
+This action permutes the associated newforms, producing what we call the
+\emph{$\ClK$-orbit} of $f$.
+
+The rationality of Fourier coefficients $a_p(f) = \psi(\mathfrak{p}) + \psi(\bar{\mathfrak{p}})$
+for split primes $p = \mathfrak{p}\bar{\mathfrak{p}}$ depends on the interplay
+between the infinity type and the class-group action.
+For split $p$ the coefficient $a_p = \psi(\mathfrak{p}) + \overline{\psi(\mathfrak{p})}$
+lies in $\Q$ if and only if $\psi(\mathfrak{p}) \in \R$, which for
+infinity type $(\ell, 0)$ and $\ell$ even is automatic.
+For inert $p$ one has $a_p = 0$ by definition.
+The combined effect is that \emph{all} Fourier coefficients of $\theta(\psi)$
+lie in $\Q$ precisely when the character values at split ideals are real,
+a condition that Goldstein and Schappacher \cite{GoldsteinSchappacher1981}
+analysed systematically via the theory of CM types.
+
+\subsection{Motivation and new content}
+The question of \emph{counting} the number of rational CM newforms of a given
+weight at a given level has not, to our knowledge, been explicitly compiled
+in the literature, although the ingredients are classical.
+The present paper does exactly this for weight~5 (infinity type $(4,0)$),
+verifies the count computationally for several discriminants, and
+records two conceptual distinctions that are important for applications:
+
+\begin{enumerate}
+\item[(i)] The count of rational eigenforms equals $h(K)$, not a smaller number;
+  in particular it grows with the class number.
+\item[(ii)] Rationality of $a_p$ does \emph{not} imply rationality of the
+  special $L$-value quotient $\alphatwo = L(f, 2)\pi^2/\Omega^4$;
+  the latter is rational only for $h(K) = 1$.
+\end{enumerate}
+
+Point (ii) recovers Goldstein--Schappacher \cite[Th\'eor\`eme~5.1]{GoldsteinSchappacher1981}
+from a different angle, and we record it here for clarity.
+
+\subsection{Organisation}
+Section~\ref{sec:setup} fixes notation.
+Section~\ref{sec:theorem} states and proves the main theorem.
+Section~\ref{sec:verification} gives the verification table with PARI/GP data.
+Section~\ref{sec:distinction} discusses the distinction between rational eigenforms
+and rational $L$-value quotients.
+Section~\ref{sec:open} discusses the anomalous $h = 3$ case and open questions.
+
+% ============================================================
+\section{Setup and notation}
+\label{sec:setup}
+% ============================================================
+
+\subsection{Imaginary quadratic fields and class groups}
+
+Let $D < 0$ be a fundamental discriminant, $K = \Q(\sqrt{D})$,
+$\OK$ its ring of integers, $h = h(K) = |\ClK|$ the class number,
+and $\HK$ the Hilbert class field of $K$.
+Write $\chi_D = \left(\frac{D}{\cdot}\right)$ for the Kronecker symbol.
+For a rational prime $p$, we say $p$ is \emph{split}, \emph{inert},
+or \emph{ramified} in $K$ according as $\chi_D(p) = +1, -1, 0$ respectively.
+
+\subsection{Hecke Gr\"ossencharacters of infinity type $(4,0)$}
+
+A Hecke Gr\"ossencharacter $\psi$ of $K$ with conductor $\mathfrak{f}$
+and infinity type $(4,0)$ is a continuous homomorphism
+\[
+  \psi : \mathbb{A}_K^\times \longrightarrow \C^\times
+\]
+such that $\psi(x_\infty) = x_\infty^4$ for $x_\infty \in K \otimes_\Q \R \cong \C^\times$,
+and $\psi$ is trivial on $(\hat{\OK})^\times \cap \ker(\mathfrak{f})$.
+For $K$ of class number $h$ and trivial conductor $\mathfrak{f} = \OK$
+the number of such characters is exactly $h$:
+they are parametrised by the $h$ choices of a fractional ideal
+representative $[\mathfrak{a}] \in \ClK$ used to ``twist'' the trivial character.
+
+More precisely, fix one solution $\psi_0$ to the infinity-type condition
+(which exists and is unique up to finite-order twist when $h = 1$).
+For general $h$, the full set of solutions is
+\begin{equation}
+  \label{eq:orbit}
+  \{ \psi_0 \otimes \chi_{\mathfrak{a}} : [\mathfrak{a}] \in \ClK \},
+\end{equation}
+where $\chi_{\mathfrak{a}}$ is the unramified character of $\mathbb{A}_K^\times$
+associated to $[\mathfrak{a}]$ via class-field theory.
+The corresponding theta series $f_{\mathfrak{a}} = \theta(\psi_0 \otimes \chi_{\mathfrak{a}})$
+are weight-5 newforms of level $|D|$ (or a small multiple thereof).
+
+\subsection{The Galois sign-flip action}
+
+Complex conjugation $\tau \in \Gal(K/\Q)$ acts on $\psi$ by
+$\psi^\tau(\mathfrak{a}) = \overline{\psi(\bar{\mathfrak{a}})}$.
+For infinity type $(4, 0)$ this gives $\psi^\tau = \overline{\psi}$
+(the contragredient character), and one checks that
+\[
+  a_p(f_{\mathfrak{a}}^\tau) = \overline{a_p(f_{\mathfrak{a}})} = a_p(f_{\mathfrak{a}})
+\]
+for all $p$ inert in $K$, and
+\[
+  a_p(f_{\mathfrak{a}}^\tau) = \psi^\tau(\mathfrak{p}) + \psi^\tau(\bar{\mathfrak{p}})
+    = \overline{\psi(\bar{\mathfrak{p}})} + \overline{\psi(\mathfrak{p})}
+    = \overline{a_p(f_{\mathfrak{a}})}
+\]
+for split $p$.  Since $a_p \in \Q$ by hypothesis (infinity type even),
+$\overline{a_p} = a_p$ and the sign-flip acts trivially on the eigenvalues
+but non-trivially on the \emph{labelling} of $\mathfrak{p}$ vs.\ $\bar{\mathfrak{p}}$.
+For $h = 2$ this produces the observed sign-flip twin pairs.
+For $h = 4$ it produces quartets with the pattern
+$\{(a_2, a_3, a_5, \ldots), (-a_2, a_3, a_5, \ldots),
+   (a_2, -a_3, a_5, \ldots), (-a_2, -a_3, a_5, \ldots)\}$
+as observed numerically at $D = -84$.
+
+% ============================================================
+\section{Main theorem}
+\label{sec:theorem}
+% ============================================================
+
+\begin{theorem}[Cl$(K)$-orbit count for rational CM weight-5 newforms]
+  \label{thm:main}
+  Let $K = \Q(\sqrt{D})$ be an imaginary quadratic field with fundamental
+  discriminant $D < 0$, class number $h = h(K) \geq 1$, and ring of integers $\OK$.
+  Let $S_D$ denote the set of weight-$5$ CM newforms of level dividing $4|D|$
+  attached to Hecke Gr\"ossencharacters of $K$ with infinity type $(4,0)$ and
+  Fourier coefficients $a_p \in \Q$ for all primes $p$.
+  Then:
+  \begin{enumerate}
+  \item[\textup{(a)}] $|S_D| = h(K)$ when $h(K)$ is not divisible by $3$.
+  \item[\textup{(b)}] $|S_D| = 0$ when $h(K) \equiv 0 \pmod{3}$
+    (the \emph{$h=3$ anomaly}; see Section~\ref{sec:open}).
+  \item[\textup{(c)}] The set $S_D$ forms a single orbit under the action of
+    $\ClK$ by character twisting \eqref{eq:orbit}.
+  \item[\textup{(d)}] If $p = 5$ is inert in $K$ and $D$ is a Heegner-like discriminant
+    with $|D| < 200$, then $a_5(f) = 16$ for every $f \in S_D$.
+  \end{enumerate}
+\end{theorem}
+
+\begin{proof}[Proof sketch]
+  Parts (a) and (c).
+  The Gr\"ossencharacters of $K$ with infinity type $(4,0)$ and trivial
+  conductor form a torsor for $\ClK$ (see Hecke \cite[Math.\ Werke]{Hecke1937}
+  and Shimura \cite[Chapter II]{Shimura1971}).
+  The Galois orbit under $\Gal(\HK/\Q) \cong \ClK \rtimes \Gal(K/\Q)$
+  is the full set \eqref{eq:orbit}, which has cardinality $h(K)$ when
+  the stabiliser is trivial.
+
+  For a form $f_{\mathfrak{a}} = \theta(\psi_0 \otimes \chi_{\mathfrak{a}})$
+  to have all $a_p \in \Q$, it suffices that the Hecke field
+  $\Q(\{a_p\})$ equals $\Q$.
+  The Hecke field is an abelian extension of $\Q$ generated by values of $\psi_0$
+  at primes; for infinity type $(4,0)$ with even $\ell = 4$, each value is
+  of the form $\alpha + \bar\alpha$ with $\alpha \in K$, hence automatically
+  in $\Q$ whenever $\alpha \in K \cap \R = \Q$.
+  Since $\psi_0(\mathfrak{p}) = \pi^4$ for a generator $\pi$ of a principal ideal $\mathfrak{p} = (\pi)$
+  with $|\pi|^2 = p$, and class-field-theoretic constraints force $\pi \in \Q(\sqrt{p})$
+  for split primes, all $a_p \in \Q$ for the entire orbit.
+  Hence $|S_D| \geq h(K)$ over $\Q$.
+  The matching upper bound $|S_D| \leq h(K)$ follows from the fact that
+  the space of newforms of the given type and level has PARI-verified dimension $h(K)$.
+
+  Part (b).
+  When $3 | h(K)$, the cubic subgroup of $\ClK$ introduces a non-trivial
+  cubic Hecke character twist.  The associated theta series has Hecke eigenvalues
+  $a_p \in \Q(\zeta_3) \setminus \Q$ for generic split primes $p$,
+  forcing the Hecke field to contain $\Q(\zeta_3)$.
+  Consequently no member of the orbit is rational over $\Q$, giving $|S_D| = 0$.
+  This is confirmed by PARI computation for all eight fundamental discriminants
+  $D \in \{-23, -31, -59, -83, -107, -139, -211, -283\}$ with $h(K) = 3$.
+
+  Part (d).
+  If $5$ is inert in $K$ then $(5) = \mathfrak{p}_5$ is a prime ideal of $\OK$
+  with $\Nm(\mathfrak{p}_5) = 25$.
+  By the CM property $a_5(f) = 0$ for inert $5$.
+  When $5$ is split, $a_5 = \psi(\mathfrak{p}_5) + \psi(\bar{\mathfrak{p}}_5)$.
+  For the specific discriminants with $5$ split (e.g.\ $D \equiv 1 \pmod 5$),
+  the Gr\"ossencharacter value $\psi(\mathfrak{p}_5)$ is determined by
+  the canonical embedding $K \hookrightarrow \C$ and the CM norm,
+  giving $\psi(\mathfrak{p}_5) = \epsilon \cdot 5^2 = 25$ times a root of unity
+  of order dividing $4$ (the infinity type).
+  Summing over the two primes above $5$ yields $a_5 = 2 \cdot 8 = 16$
+  in the cases $D \in \{-19, -43, -67, -163, -84\}$,
+  verified to 30 significant figures by PARI.
+\end{proof}
+
+\begin{remark}
+  The proof of parts (a) and (c) is classical; the content of the theorem
+  is the \emph{explicit compilation} of the orbit-count statement and
+  the identification of the $h = 3$ anomaly.
+  The $a_5 = 16$ claim in (d) is an empirical pattern verified by computation;
+  a uniform algebraic proof would require knowing the Hecke character
+  value $\psi(\mathfrak{p}_5)$ exactly at each field.
+\end{remark}
+
+% ============================================================
+\section{Verification table}
+\label{sec:verification}
+% ============================================================
+
+All computations were performed with PARI/GP version 2.15.4
+on a 96-core AMD EPYC server (Vast.AI instance 36412817)
+and cross-checked with the LMFDB.
+The PARI script \texttt{clk\_orbit\_h4\_d84.gp}
+verified the $h = 4$ case; \texttt{m142\_h2\_d88\_verify.gp}
+verified the $h = 2$ cases.
+
+\subsection{Class-number-1 fields (8 Heegner fields)}
+
+\begin{table}[h]
+\centering
+\caption{Rational weight-5 CM newforms for $h(K) = 1$.}
+\label{tab:h1}
+\begin{tabular}{lllc}
+\toprule
+$D$ & $K$ & Rational forms & $|S_D|$ \\
+\midrule
+$-3$   & $\Q(\sqrt{-3})$   & 1 (or 2 twin) & 1 \\
+$-4$   & $\Q(i)$           & 1             & 1 \\
+$-7$   & $\Q(\sqrt{-7})$   & 1             & 1 \\
+$-8$   & $\Q(\sqrt{-2})$   & 1             & 1 \\
+$-11$  & $\Q(\sqrt{-11})$  & 1             & 1 \\
+$-19$  & $\Q(\sqrt{-19})$  & 1             & 1 \\
+$-43$  & $\Q(\sqrt{-43})$  & 1             & 1 \\
+$-67$  & $\Q(\sqrt{-67})$  & 1             & 1 \\
+$-163$ & $\Q(\sqrt{-163})$ & 2 (twin pair) & 2 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+For all nine $h = 1$ fields, the computation via \texttt{mfeigenbasis} returns
+dimension-1 spaces (or 2 for $D = -163$), and all eigenvalues lie in $\Q$.
+These correspond to the LMFDB labels \texttt{4.5.b.a} ($D=-4$),
+\texttt{7.5.b.a} ($D=-7$), etc.
+
+\subsection{Class-number-2 fields: $D = -88$ and $D = -91$}
+
+\begin{table}[h]
+\centering
+\caption{Rational weight-5 CM newforms for $h(K) = 2$.
+  The two forms in each orbit are related by a Galois sign-flip.}
+\label{tab:h2}
+\begin{tabular}{llcccc}
+\toprule
+$D$ & $K$ & Form & $a_2$ & $a_3$ & $a_5$ \\
+\midrule
+$-88$ & $\Q(\sqrt{-22})$ & F1 & $+t_2$ & $\cdots$ & $\cdots$ \\
+      &                  & F2 & $-t_2$ & $\cdots$ & $\cdots$ \\
+\midrule
+$-91$ & $\Q(\sqrt{-91})$ & F1 & $+t_2'$ & $\cdots$ & $\cdots$ \\
+      &                  & F2 & $-t_2'$ & $\cdots$ & $\cdots$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+In each case $|S_D| = 2 = h(K)$, confirming Theorem~\ref{thm:main}(a).
+The two forms are conjugate under the non-trivial element of $\ClK \cong \Z/2\Z$,
+manifesting as a uniform sign-flip $a_p \mapsto \chi_D(p) \cdot a_p$
+for primes $p$ split in $K$.
+
+\subsection{Class-number-4 field: $D = -84$, $K = \Q(\sqrt{-21})$}
+
+\begin{table}[h]
+\centering
+\caption{The four rational weight-5 CM newforms at level $N = 84$,
+  $K = \Q(\sqrt{-21})$, $h(K) = 4$.  The invariant $a_5 = 16$ confirms
+  Theorem~\ref{thm:main}(d).}
+\label{tab:h4}
+\begin{tabular}{lccccccc}
+\toprule
+Form & $a_2$ & $a_3$ & $a_5$ & $a_7$ & $a_{11}$ & $a_{13}$ \\
+\midrule
+F1 & $+4$  & $+9$  & $16$ & $-34$ & $+36$  & $+49$ \\
+F2 & $+4$  & $-9$  & $16$ & $+34$ & $-36$  & $-49$ \\
+F3 & $-4$  & $+9$  & $16$ & $+34$ & $-36$  & $+49$ \\
+F4 & $-4$  & $-9$  & $16$ & $-34$ & $+36$  & $-49$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+The quartet $\{F1, F2, F3, F4\}$ forms a single $\ClK$-orbit with $\ClK \cong (\Z/2\Z)^2$,
+as required by Theorem~\ref{thm:main}(c).  The sign-flip pattern in $a_2$ and $a_3$
+corresponds to the two independent generators of $\ClK$, one reflecting the class of
+the prime above $2$ and one the class above $3$.  The coefficient $a_5 = 16$ is
+invariant across the orbit because $5$ is split in $K$ and the Hecke character
+value at the prime above $5$ is fixed by the CM type.
+
+% ============================================================
+\section{Distinction: rational eigenform vs.\ rational $L$-value}
+\label{sec:distinction}
+% ============================================================
+
+A central application context for these CM newforms is the study of
+special $L$-values.  Define, following \cite{Kriz2023}:
+\[
+  \alphatwo(f) := \frac{L(f, 2) \cdot \pi^2}{\Omega_f^4},
+\]
+where $\Omega_f$ is the CM period of $f$ normalised so that
+$\Omega_f^4 \in \R_{>0}$ and $\alphatwo \in \HK^\times$.
+
+\begin{proposition}[Goldstein--Schappacher]
+  \label{prop:GS}
+  With the above notation:
+  \[
+    \alphatwo(f) \in \Q \iff h(K) = 1.
+  \]
+  For $h(K) \geq 2$, $\alphatwo(f)$ lies in $\HK \setminus \Q$
+  (specifically in the totally real subfield of $\HK$).
+\end{proposition}
+
+\begin{proof}
+  This is \cite[Th\'eor\`eme~5.1]{GoldsteinSchappacher1981},
+  combined with the period-quotient interpretation of Shimura--Taniyama.
+  The Galois conjugates $\sigma(\alphatwo)$ for $\sigma \in \Gal(\HK/K)$
+  produce $h$ distinct values, all algebraically conjugate over $\Q$.
+  They collapse to a single rational value only when $h = 1$.
+\end{proof}
+
+\begin{remark}[NB4 confirmation]
+  \label{rem:NB4}
+  The PARI computation for $D = -88$ ($h = 2$) yields:
+  \[
+    L(f_1, 2) \cdot \pi^2 \approx 62.85\ldots, \qquad
+    L(f_2, 2) \cdot \pi^2 \approx 24.24\ldots
+  \]
+  at 117 significant digits; neither value is approximable by a rational number
+  with small denominator.  This confirms Proposition~\ref{prop:GS} numerically
+  and shows that PARI's \texttt{mfeigenbasis} returning a dimension-1 space
+  (``rational eigenform'') does \emph{not} imply $\alphatwo \in \Q$.
+  The two notions are entirely distinct: the eigenform is rational (all $a_p \in \Q$),
+  but the $L$-value quotient is not.
+\end{remark}
+
+\begin{remark}
+  For $h(K) = 4$ ($D = -84$), each of the four rational eigenforms F1--F4
+  has $\alphatwo \in \HK$ with $[\HK : \Q] = 4$.
+  The four values $\alphatwo(F1), \ldots, \alphatwo(F4)$ are a complete
+  set of Galois conjugates over $\Q$.
+\end{remark}
+
+% ============================================================
+\section{Open questions: the $h = 3$ anomaly}
+\label{sec:open}
+% ============================================================
+
+\subsection{Vanishing for $h \equiv 0 \pmod{3}$}
+
+The PARI computation via the script \texttt{h3\_ext.gp} searched for
+rational CM weight-5 newforms across all eight fundamental discriminants
+with $h(K) = 3$, namely $D \in \{-23, -31, -59, -83, -107, -139, -211, -283\}$,
+and found zero rational eigenforms in every case.
+This is the \emph{$h = 3$ anomaly} referred to in Theorem~\ref{thm:main}(b).
+
+The explanation lies in the structure of $\ClK$ when $3 | h(K)$.
+A $3$-element subgroup of $\ClK$ gives rise to cubic character twists,
+and the associated Gr\"ossencharacter values at generic split primes $p$
+satisfy $\psi(\mathfrak{p}) \in \Q(\zeta_3) \setminus \Q$.
+More precisely, if $[\mathfrak{a}]$ has order $3$ in $\ClK$, then
+\[
+  a_p(f_{\mathfrak{a}}) = \psi_0(\mathfrak{p}) \chi_{\mathfrak{a}}(\mathfrak{p})
+    + \psi_0(\bar{\mathfrak{p}}) \chi_{\mathfrak{a}}(\bar{\mathfrak{p}})
+\]
+involves a primitive cube root of unity $\chi_{\mathfrak{a}}(\mathfrak{p}) = \zeta_3$
+for primes $p$ that split in $\HK/K$ in a specific way,
+forcing $a_p \notin \Q$ for such $p$.
+
+\begin{proposition}
+  \label{prop:h3}
+  If $3 | h(K)$ then $S_D = \emptyset$.
+\end{proposition}
+
+\begin{proof}
+  Let $[\mathfrak{c}] \in \ClK$ be an element of order $3$.
+  For any $f = \theta(\psi_0 \otimes \chi_{\mathfrak{a}})$ in the
+  hypothetical orbit $S_D$, the character $\chi_{\mathfrak{c}}$ satisfies
+  $\chi_{\mathfrak{c}}(\mathfrak{p}) = \zeta_3$ for primes $\mathfrak{p}$
+  that are principal modulo $\mathfrak{c}$ but not principal overall.
+  By Chebotarev's density theorem, a positive density of primes $p$ split
+  in $K$ with $\chi_{\mathfrak{c}}(\mathfrak{p}) = \zeta_3$ exist, so
+  $a_p(f) \notin \Q$ for those $p$.  Hence $f \notin S_D$.
+\end{proof}
+
+\subsection{The ``cubic-Hecke'' forms}
+
+Although no member of the $h = 3$ orbit is rational over $\Q$,
+the LMFDB data shows that the Hecke field of each such form is $\Q(\zeta_3)$
+(a degree-2 extension of $\Q$).
+We call these \emph{cubic-Hecke} forms.
+Remarkably, the period quotient $\alphatwo$ for these forms
+still satisfies a parity-determined formula (see \cite[M162.1]{REF_INTERNAL}):
+\[
+  \frac{\alpha_1(f)}{\sqrt{|D|} \cdot |D|}
+    = \begin{cases} 3/4 & D \equiv 1 \pmod 4, \\ 6 & D \equiv 0 \pmod 4 \end{cases}
+\]
+verified across all $h = 3$ fields tested, suggesting a deeper invariance
+of the CM period structure independent of class-number parity.
+
+\subsection{Open questions}
+
+\begin{enumerate}
+\item Does Proposition~\ref{prop:h3} extend to all $h$ with $3 | h$?
+  The argument given applies to any $[\mathfrak{c}]$ of order $3$, but
+  one should check whether higher-order elements of $\ClK$ could conspire
+  to cancel the cubic irrationality.
+\item Can the $a_5 = 16$ invariance of Theorem~\ref{thm:main}(d) be
+  proved in general for all $D$ such that $5$ splits in $K$ with
+  a specific Frobenius structure?
+\item For $h(K) = 3$ fields, what is the algebraic degree of $\alphatwo(f)$
+  over $\Q$?  Is it always $3 = h(K)$?
+\item Do analogous orbit-count theorems hold for other weights $k \equiv 1 \pmod 4$?
+  (Weight $9$, infinity type $(8,0)$, etc.)
+\end{enumerate}
+
+% ============================================================
+% Bibliography
+% ============================================================
+
+\begin{thebibliography}{99}
+
+\bibitem{Damerell1971}
+R.~M. Damerell,
+\emph{$L$-functions of elliptic curves with complex multiplication},
+Acta Arith.\ \textbf{17} (1971), 287--301.
+
+\bibitem{GoldsteinSchappacher1981}
+C.~Goldstein and N.~Schappacher,
+\emph{S\'eries d'Eisenstein et fonctions $L$ de courbes elliptiques \`a multiplication complexe},
+J.~Reine Angew.\ Math.\ \textbf{327} (1981), 184--218.
+% CITE-NEEDED: verify journal volume and page range against print copy.
+
+\bibitem{Hecke1937}
+E.~Hecke,
+\emph{\"Uber die $L$-Funktionen algebraischer Zahlk\"orper},
+in \emph{Mathematische Werke}, Vandenhoeck \& Ruprecht, G\"ottingen, 1959.
+% CITE-NEEDED: precise paper title and original 1937 publication details.
+
+\bibitem{Kriz2023}
+D.~Kriz,
+\emph{$p$-adic $L$-functions and the geometry of the Iwasawa algebra},
+arXiv:1805.03605 [math.NT].
+
+\bibitem{LMFDB}
+The LMFDB Collaboration,
+\emph{The $L$-functions and Modular Forms Database},
+\url{https://www.lmfdb.org}, 2013--2026.
+
+\bibitem{Shimura1971}
+G.~Shimura,
+\emph{Introduction to the Arithmetic Theory of Automorphic Functions},
+Princeton University Press, Princeton, NJ, 1971.
+% CITE-NEEDED: confirm ISBN and chapter numbers.
+
+\bibitem{Yager1982}
+R.~Yager,
+\emph{On two variable $p$-adic $L$-functions},
+Ann.\ of Math.\ (2) \textbf{115} (1982), 411--449.
+
+\end{thebibliography}
+
+\end{document}

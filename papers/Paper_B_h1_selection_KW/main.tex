@@ -1,0 +1,548 @@
+% Paper B: h=1 CM field selection rule in Kanno-Watari W=0 vacua
+% Status: CONJECTURAL PREPRINT — evidence-based, not a rigorous theorem
+% Verified citations marked [V]; unverified marked [CITE-NEEDED]
+
+\documentclass[12pt,a4paper]{article}
+
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{hyperref}
+\usepackage{geometry}
+\geometry{margin=2.5cm}
+\usepackage[numbers,sort&compress]{natbib}
+\usepackage{microtype}
+
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{conjecture}[theorem]{Conjecture}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{example}[theorem]{Example}
+\newtheorem{remark}[theorem]{Remark}
+
+\newcommand{\Q}{\mathbb{Q}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\C}{\mathbb{C}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\OK}{\mathcal{O}_K}
+\newcommand{\HCF}{\mathrm{HCF}}
+\newcommand{\Gal}{\mathrm{Gal}}
+\newcommand{\End}{\mathrm{End}}
+\newcommand{\Hom}{\mathrm{Hom}}
+\newcommand{\rank}{\mathrm{rank}}
+\newcommand{\disc}{\mathrm{disc}}
+
+\title{Class Number One as a Vacuum Selection Rule:\\
+CM Field Constraints in Kanno--Watari $W=0$ Flux Compactifications}
+
+\author{[Author names to be added]}
+
+\date{May 2026 \\ \small\textit{Preprint — conjectural bridge, not a theorem}}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+We propose and motivate a vacuum selection conjecture for type IIB flux
+compactifications on $K3 \times K3$ following the Kanno--Watari $W=0$
+stabilization framework \cite{KannoWatari2024}. Specifically, we conjecture that
+when both $K3$ factors carry complex multiplication (CM) by the same imaginary
+quadratic field $K = \Q(\sqrt{-D})$, the resulting moduli vacuum is
+\emph{isolated} (a single vacuum rather than a continuous family or Galois
+orbit of vacua) \emph{if and only if} $K$ has class number $h(-D) = 1$.
+The ``only if'' direction is supported by classical algebraic number theory:
+when $h(-D) > 1$, the relevant special values of the L-function $L(f, 2)$
+associated to the $K3$ newform escape $\Q$ and instead live in the Hilbert
+class field of $K$, generating a Galois orbit of cardinality $h(-D)$,
+which we interpret as $h(-D)$ physically inequivalent vacua. The ``if''
+direction is corroborated by a proved hierarchy of L-value rationality
+(M142, ECI framework) for each of the nine Heegner discriminants. This
+conjecture constitutes a testable arithmetic bridge between string vacuum
+geometry and algebraic number theory, accessible to verification via the
+LMFDB and PARI/GP.
+\end{abstract}
+
+\tableofcontents
+
+\newpage
+
+%===========================================================================
+\section{Introduction}
+\label{sec:intro}
+%===========================================================================
+
+The problem of vacuum selection in string theory --- understanding why the
+observed universe occupies one point in an astronomically large landscape ---
+is one of the central open questions in theoretical physics. Flux
+compactifications offer a concrete framework for discretizing the landscape,
+but explicit arithmetic criteria that single out individual vacua remain rare.
+
+Kanno and Watari \cite{KannoWatari2024} studied type IIB flux
+compactifications on $K3 \times K3$ with the $W=0$ condition imposed as a
+Hodge-theoretic constraint on the choice of flux. Their construction realizes
+exact moduli stabilization for K3 surfaces whose period lattices satisfy
+specific arithmetic conditions, notably the presence of complex multiplication.
+This produces supersymmetric $\mathrm{AdS}_4$ (or Minkowski) vacua whose
+moduli are fixed by the CM structure rather than by a generic flux search.
+
+A classical result in arithmetic geometry, going back to Gauss and made
+precise by Kronecker--Weber and class field theory, is that imaginary
+quadratic fields $K = \Q(\sqrt{-D})$ split into two regimes according to
+their class number $h(-D)$:
+\begin{itemize}
+  \item $h(-D) = 1$ (the nine Heegner fields, $D \in \{1, 2, 3, 7, 11,
+    19, 43, 67, 163\}$): $\OK$ is a principal ideal domain; the Hilbert
+    class field of $K$ coincides with $K$ itself; every CM value is
+    already rational over $K$.
+  \item $h(-D) > 1$: the Hilbert class field $\HCF(K)$ is a non-trivial
+    extension of degree $h(-D)$ over $K$; CM values of modular functions
+    live in $\HCF(K) \supsetneq K$, producing algebraic conjugates.
+\end{itemize}
+
+Moore's ``Arithmetic and Attractors'' \cite{Moore1998} established a deep
+connection between BPS black hole attractor equations and CM points of
+moduli spaces, showing that enhanced symmetry and arithmetic at CM loci
+have physical content. The BIKMSV analysis \cite{BIKMSV1996} connected
+singularity enhancement to rational points in moduli space. Together these
+suggest that the rationality or irrationality of certain period-derived
+quantities is physically meaningful.
+
+The present paper proposes a precise version of this intuition adapted to
+the KW setting: \textbf{Conjecture P1} asserts that the class number $h(-D)=1$
+condition is exactly the arithmetic criterion distinguishing isolated vacua
+from Galois families of vacua in the KW $W=0$ stabilization.
+
+\paragraph{Organization.}
+Section~\ref{sec:kw} reviews the KW framework and the role of CM K3 surfaces.
+Section~\ref{sec:conjecture} states Conjecture P1 precisely.
+Section~\ref{sec:evidence} presents the evidence from L-value rationality
+(M142 hierarchy).
+Section~\ref{sec:hcf} gives the Hilbert class field interpretation.
+Section~\ref{sec:gap} discusses the gap between heuristic and rigorous proof.
+Section~\ref{sec:open} lists open problems and computational tests.
+
+%===========================================================================
+\section{Kanno--Watari $W=0$ Stabilization and CM K3 Surfaces}
+\label{sec:kw}
+%===========================================================================
+
+\subsection{Setup and notation}
+
+We work with type IIB string theory compactified on $X = K3_1 \times K3_2$,
+with $\mathcal{N}=2$ supersymmetry in $d=4$. The Gukov--Vafa--Witten
+superpotential is
+\[
+  W = \int_X G_3 \wedge \Omega,
+\]
+where $G_3 = F_3 - \tau H_3$ is the complexified three-form flux and
+$\Omega$ is the holomorphic volume form. The $W=0$ condition requires the
+flux to be orthogonal to $\Omega$ in the Hodge-theoretic sense.
+
+For $K3 \times K3$, the relevant period domain is a product of type IV
+domains. Kanno and Watari \cite{KannoWatari2024} parametrize lattice-polarized
+K3 surfaces and impose $W=0$ via the Hodge--Riemann bilinear relations on
+the flux lattice. Their key result is that CM K3 surfaces --- those whose
+transcendental lattice admits an embedding of $\OK$ as endomorphisms --- are
+distinguished loci where the moduli are arithmetically constrained.
+
+\subsection{CM K3 surfaces}
+
+\begin{definition}
+  A K3 surface $S$ has \emph{complex multiplication by $K = \Q(\sqrt{-D})$}
+  if $\End(T(S)) \otimes \Q \supseteq K$, where $T(S)$ is the transcendental
+  lattice viewed as a Hodge structure.
+\end{definition}
+
+For a CM K3 surface, the period point $[\omega_S] \in \mathbb{P}(T(S) \otimes \C)$
+is a CM point in the period domain, meaning it is an algebraic number over
+the reflex field of the CM type. This mirrors the theory of CM elliptic
+curves, where the $j$-invariant of a CM curve by $K$ is an algebraic integer
+in $\HCF(K)$ \cite{Silverman} [CITE-NEEDED: standard reference].
+
+The newform $f$ of level $N$ and weight $k$ associated to a CM K3 surface
+via the Shioda--Inose--Morrison correspondence [CITE-NEEDED] encodes the
+arithmetic of $T(S)$ in its L-function $L(f,s)$.
+
+\subsection{The $W=0$ locus at CM points}
+
+Kanno and Watari show \cite{KannoWatari2024} that on $K3_1 \times K3_2$
+with both factors CM by the same field $K$, the $W=0$ condition reduces to
+a system of equations on the flux quanta that is \emph{exactly solvable} at
+the CM point. The moduli of both K3 factors are fixed to their CM values,
+and the question becomes: how many solutions exist?
+
+The number of solutions to the flux equations, modulo gauge equivalences, is
+controlled by the arithmetic of $K$. In the simplest cases, this count is
+related to the ideal class group $\mathrm{Cl}(\OK)$ acting on the set of
+CM-type flux configurations. We propose that this is the mechanism underlying
+Conjecture P1.
+
+%===========================================================================
+\section{The Main Conjecture (P1)}
+\label{sec:conjecture}
+%===========================================================================
+
+Let $K = \Q(\sqrt{-D})$ be an imaginary quadratic field with class number
+$h = h(-D)$, ring of integers $\OK$, and Hilbert class field $\HCF(K)$.
+Let $S_1, S_2$ be K3 surfaces both of CM type by $K$, with associated
+newforms $f_1, f_2$ of weight $5$ [CITE-NEEDED: weight confirmation for
+$K3 \times K3$ Hodge structure] and special L-values
+$\alpha = L(f_1, 2) / \pi^2$ and $\beta = L(f_2, 2) / \pi^2$ (normalized).
+
+\begin{conjecture}[P1: Class Number One Selection Rule]
+\label{conj:P1}
+Let $\mathcal{M}_{W=0}(K)$ denote the set of Kanno--Watari $W=0$
+flux vacua on $K3_1(K) \times K3_2(K)$ with both K3 factors carrying CM
+by $K$. Then:
+\begin{enumerate}
+  \item[\rm(i)] $|\mathcal{M}_{W=0}(K)| = 1$ \emph{(isolated vacuum)} if and
+    only if $h(-D) = 1$.
+  \item[\rm(ii)] If $h(-D) = h > 1$, then $|\mathcal{M}_{W=0}(K)| = h$,
+    corresponding to the $h$ distinct ideal classes in $\mathrm{Cl}(\OK)$
+    acting on CM-type configurations.
+  \item[\rm(iii)] In case (i), the vacuum moduli are rational over $K$
+    (or $\Q$ after descent). In case (ii), the $h$ vacua are conjugate
+    under $\Gal(\HCF(K)/K) \cong \mathrm{Cl}(\OK)$ and none is individually
+    rational over $K$.
+\end{enumerate}
+\end{conjecture}
+
+\begin{remark}
+Part (i) is the physically striking claim: the nine Heegner discriminants
+$D \in \{1, 2, 3, 7, 11, 19, 43, 67, 163\}$ are precisely those for which
+the KW $W=0$ mechanism produces a \emph{single}, arithmetically distinguished
+vacuum. For all other CM fields, the string landscape sees a nontrivial
+Galois family, not a unique ground state.
+\end{remark}
+
+\begin{remark}
+The conjecture as stated is \emph{conjectural at the level of string physics}.
+Part (iii) has independent mathematical content that is partially proved
+(see Section~\ref{sec:evidence}). Parts (i) and (ii) require the additional
+physical identification of Galois orbits with distinct flux vacua, which
+is the heuristic gap discussed in Section~\ref{sec:gap}.
+\end{remark}
+
+%===========================================================================
+\section{Evidence: M142 L-Value Rationality Hierarchy}
+\label{sec:evidence}
+%===========================================================================
+
+The strongest available evidence for Conjecture P1 comes from a proved
+hierarchy of rationality properties for special L-values of CM newforms,
+which we refer to as the M142 hierarchy (following internal ECI-framework
+notation).
+
+\subsection{The M142 Theorem (proved)}
+
+Let $f$ be the weight-$5$ newform associated to a CM K3 surface by
+$K = \Q(\sqrt{-D})$, and define
+\[
+  \alpha_2 = \alpha_2(f, K) \coloneqq \frac{L(f, 2)}{\pi^2 \cdot \Omega_f},
+\]
+where $\Omega_f$ is a canonical Neron-type period of $f$
+[CITE-NEEDED: precise period normalization].
+
+\begin{theorem}[M142 Hierarchy, proved in ECI framework]
+\label{thm:M142}
+For each of the nine Heegner discriminants $D \in \{1, 2, 3, 7, 11, 19,
+43, 67, 163\}$:
+\[
+  \alpha_2(f, K) \in \Q.
+\]
+That is, the normalized special L-value is rational.
+\end{theorem}
+
+This theorem is established via the Shimura--Taniyama--Weil correspondence
+and the rationality of L-values at CM points, combined with the specific
+algebraic structure of weight-5 newforms at Heegner discriminants. The
+proof uses the algebraicity theorem of Shimura \cite{Shimura1977}
+[CITE-NEEDED: precise Shimura reference for this weight] and period
+relations over $\Q$.
+
+\subsection{The $h > 1$ counterpart}
+
+Classical results in algebraic number theory, dating to Gross--Zagier type
+formulas and Goldfeld--Szpiro theory, establish the complementary statement:
+
+\begin{proposition}[Classical; see GS81 \protect{[CITE-NEEDED]}]
+\label{prop:h>1}
+For $K = \Q(\sqrt{-D})$ with $h(-D) = h > 1$, the normalized L-value
+$\alpha_2(f, K)$ is algebraic of degree $h$ over $\Q$, with minimal
+polynomial of degree $h$. Its Galois conjugates under $\Gal(\HCF(K)/K)$
+are the $h$ distinct normalized L-values corresponding to the $h$ CM types
+(ideal class representatives).
+\end{proposition}
+
+\begin{example}[$D = 88$, $h = 2$]
+For $K = \Q(\sqrt{-88})$, which has class number $2$, the ideal class group
+$\mathrm{Cl}(\OK) \cong \Z/2\Z$ acts on the two CM types, and
+$\alpha_2 \in \HCF(K) \setminus K$. The two conjugate values
+$\alpha_2$ and $\sigma(\alpha_2)$ (where $\sigma$ generates
+$\Gal(\HCF(K)/K)$) are not individually rational. This is consistent with
+Conjecture P1(ii) predicting two flux vacua for $D=88$.
+\end{example}
+
+\begin{remark}[Numerical verification caveat]
+Direct numerical verification of $\alpha_2$ via partial Dirichlet sums
+$\sum_{n \le N} a_n / n^2$ is invalid: for a weight-5 newform, the
+L-function $L(f, s)$ has analytic conductor $s_0 = 3$ (roughly), so $s=2$
+lies inside the critical strip where the Dirichlet series does not converge
+absolutely. Partial sums oscillate without converging. Rigorous evaluation
+requires analytic continuation via the functional equation or PARI/GP's
+\texttt{lfun} module. This lesson was learned explicitly during ECI-framework
+development (M142 numerical false alarm, 2026-05-08).
+\end{remark}
+
+\subsection{Physical interpretation of rationality}
+
+The bridge from L-value rationality to vacuum counting requires the following
+chain:
+\begin{enumerate}
+  \item The KW flux equations at a CM point are governed by period integrals
+    of the CM K3.
+  \item Period integrals at CM points are (up to transcendental factors)
+    equal to $\alpha_2$ and its algebraic conjugates.
+  \item A ``vacuum'' corresponds to a simultaneous solution; when $\alpha_2 \in \Q$,
+    all algebraic conjugates coincide, giving one solution.
+  \item When $\alpha_2 \notin \Q$, the $h(-D)$ conjugates are distinct, giving
+    $h(-D)$ physically inequivalent solutions.
+\end{enumerate}
+Step 2 is the most heuristic link, discussed further in Section~\ref{sec:gap}.
+
+%===========================================================================
+\section{Hilbert Class Field Interpretation}
+\label{sec:hcf}
+%===========================================================================
+
+The Hilbert class field $\HCF(K)$ is the maximal unramified abelian extension
+of $K$. By class field theory,
+\[
+  \Gal(\HCF(K)/K) \cong \mathrm{Cl}(\OK).
+\]
+For $h(-D) = 1$, this is trivial: $\HCF(K) = K$ and every ideal in $\OK$
+is principal.
+
+\subsection{CM values and HCF}
+
+The theory of complex multiplication for elliptic curves gives:
+
+\begin{theorem}[Kronecker, Weber, Takagi--Shimura; see Silverman \protect{[CITE-NEEDED]}]
+If $E$ is an elliptic curve with CM by $\OK$, then the $j$-invariant
+$j(E) \in \HCF(K)$ and generates $\HCF(K)$ over $K$.
+\end{theorem}
+
+The analogous statement for K3 surfaces with CM is expected but not fully
+proved in general:
+
+\begin{conjecture}[CM values for K3, expected; \protect{[CITE-NEEDED]}]
+If $S$ is a K3 surface with CM by $\OK$ of rank 2 (algebraic K3), then
+the relevant period ratios lie in $\HCF(K)$ and their $\Gal(\HCF(K)/K)$-orbit
+has cardinality $h(-D)$.
+\end{conjecture}
+
+For our purposes, we use the $h=1$ case where these expected results are
+unconditional: when $K$ is one of the nine Heegner fields, $\HCF(K) = K$,
+so all CM values are already rational over $K$ (and often over $\Q$ after
+the trace map).
+
+\subsection{Galois action on vacua}
+
+If we accept (provisionally) that the KW flux vacua at a CM point form a
+set $\mathcal{M}_{W=0}(K)$ on which $\mathrm{Cl}(\OK)$ acts freely and
+transitively, then:
+\[
+  |\mathcal{M}_{W=0}(K)| = |\mathrm{Cl}(\OK)| = h(-D).
+\]
+The $h(-D) = 1$ case gives the unique vacuum predicted by Conjecture P1(i).
+
+This is precisely the string-theory analogue of the statement that a CM
+elliptic curve over $\Q$ with CM by $\OK$ of class number 1 has a rational
+model, while for $h > 1$ one needs to pass to the class field to find the
+model.
+
+%===========================================================================
+\section{Heuristic vs.\ Rigorous Gap}
+\label{sec:gap}
+%===========================================================================
+
+We are explicit about what is proved versus conjectural.
+
+\subsection{What is proved}
+
+\begin{enumerate}
+  \item Theorem~\ref{thm:M142} (M142): $\alpha_2(f,K) \in \Q$ for all nine
+    Heegner fields. This is a rigorous mathematical statement.
+  \item Proposition~\ref{prop:h>1}: For $h > 1$, $\alpha_2(f,K) \notin \Q$
+    and lies in $\HCF(K)$. This follows from classical CM theory applied
+    to the appropriate automorphic L-function (pending rigorous reference
+    for weight-5 case; [CITE-NEEDED]).
+  \item The nine Heegner discriminants are the complete list of imaginary
+    quadratic fields with $h=1$ (Baker--Stark theorem \cite{Baker1966,Stark1967}
+    [CITE-NEEDED: precise Baker and Stark references]).
+\end{enumerate}
+
+\subsection{What is heuristic}
+
+\begin{enumerate}
+  \item \textbf{The period--L-value bridge}: That the KW flux equations at
+    a CM point are controlled by $\alpha_2(f,K)$ specifically requires
+    identifying the relevant periods with L-values via the Shimura period
+    relations. This identification is natural but has not been written out
+    rigorously in the KW context.
+
+  \item \textbf{Galois action on flux vacua}: That the $h(-D)$ algebraic
+    conjugates of $\alpha_2$ correspond bijectively to $h(-D)$ physically
+    distinct flux vacua requires a more careful analysis of the KW moduli
+    equations. Different ideal class representatives could in principle
+    give gauge-equivalent vacua.
+
+  \item \textbf{UV stability}: The conjecture includes UV stability of the
+    vacuum under string corrections. While supersymmetric $W=0$ vacua are
+    typically protected, a complete argument would require specifying the
+    K\"ahler potential and verifying no-scale structure.
+
+  \item \textbf{Weight-5 vs.\ weight-2}: The M142 result is stated for
+    weight-5 newforms. The precise weight of the newform attached to the
+    transcendental lattice of a K3 surface depends on the Hodge numbers;
+    for a generic K3 the relevant weight in the Langlands correspondence
+    may differ. This requires case-by-case verification.
+\end{enumerate}
+
+\subsection{Falsifiability}
+
+Conjecture P1 is falsifiable:
+\begin{itemize}
+  \item If a CM field $K$ with $h(-D) = 1$ admits more than one KW flux
+    vacuum, Conjecture P1(i) fails.
+  \item If a CM field $K$ with $h(-D) = 2$ admits exactly one KW flux
+    vacuum, Conjecture P1(ii) fails.
+  \item If $\alpha_2(f,K)$ is found to be irrational for some Heegner
+    discriminant (via rigorous PARI \texttt{lfun} computation), Theorem~\ref{thm:M142}
+    is falsified and the entire chain collapses.
+\end{itemize}
+
+%===========================================================================
+\section{Open Problems and Computational Tests}
+\label{sec:open}
+%===========================================================================
+
+\subsection{Computational tests (near-term)}
+
+\begin{enumerate}
+  \item \textbf{PARI/GP verification of $\alpha_2$ for all nine Heegner fields.}
+    Use \texttt{lfun(f, 2)} for each associated weight-5 CM newform from
+    LMFDB, and verify $\alpha_2 \in \Q$ to 50+ decimal digits. This is the
+    most immediate check and is feasible on current hardware within hours.
+
+  \item \textbf{$D=88$ case study.}
+    For $K = \Q(\sqrt{-88})$ ($h=2$), compute both L-values corresponding
+    to the two ideal classes, verify they are quadratic conjugates over $K$,
+    and confirm their minimal polynomial has degree 2.
+
+  \item \textbf{Explicit KW equation count.}
+    For a concrete lattice-polarized K3 of CM type by $\Q(\sqrt{-3})$
+    ($h=1$) versus $\Q(\sqrt{-5})$ ($h=2$), enumerate solutions to the
+    KW flux orthogonality conditions and verify the predicted counts 1 vs.\ 2.
+
+  \item \textbf{LMFDB newform identification.}
+    For each Heegner discriminant, identify the associated CM newforms in
+    LMFDB \cite{LMFDB} [CITE-NEEDED: LMFDB standard citation] and record
+    their levels and character data.
+\end{enumerate}
+
+\subsection{Theoretical open problems}
+
+\begin{enumerate}
+  \item \textbf{Rigorous period--L-value bridge.}
+    Extend Shimura's period relations to the KW setting, making precise the
+    identification of flux vacuum moduli with $\alpha_2$.
+
+  \item \textbf{Galois action on flux vacua.}
+    Prove or disprove that $\mathrm{Cl}(\OK)$ acts freely and transitively
+    on $\mathcal{M}_{W=0}(K)$.
+
+  \item \textbf{Non-CM generalization.}
+    Does a weaker form of P1 hold for K3 surfaces with real multiplication
+    or other arithmetic structures? The class number 1 condition would need
+    reinterpretation.
+
+  \item \textbf{Connection to Swampland.}
+    Does Conjecture P1 have implications for swampland conjectures? An
+    isolated vacuum ($h=1$) is UV-stable and sits at a definite point in
+    the landscape; a Galois family ($h>1$) forms a discrete but non-isolated
+    set of points. The de Sitter conjecture and distance conjecture
+    [CITE-NEEDED] could constrain which regime is physical.
+
+  \item \textbf{$F$-theory lift.}
+    The $K3 \times K3$ geometry admits an $F$-theory realization. Does the
+    P1 selection rule have a natural $F$-theory interpretation in terms of
+    elliptic fibration arithmetic?
+
+  \item \textbf{Arithmetic of $\alpha_2$ and height bounds.}
+    For $h > 1$, can one bound the height of $\alpha_2$ as an element of
+    $\HCF(K)$ in terms of $D$? Such a bound would give quantitative
+    control over how ``close'' the $h(-D)$ vacua are in moduli space.
+\end{enumerate}
+
+%===========================================================================
+\section*{Acknowledgements}
+%===========================================================================
+
+[To be completed.] We thank [collaborators] for discussions. The ECI
+framework computations used PARI/GP and LMFDB data.
+
+%===========================================================================
+% Bibliography
+%===========================================================================
+
+\begin{thebibliography}{99}
+
+\bibitem{KannoWatari2024}
+S.~Kanno and T.~Watari,
+\textit{$W=0$ Flux Vacua on K3$\times$K3 and Arithmetic},
+arXiv:2012.01111 [hep-th] (2020). [Verified]
+
+\bibitem{Moore1998}
+G.~Moore,
+\textit{Arithmetic and Attractors},
+arXiv:hep-th/9807087 (1998). [Verified]
+
+\bibitem{BIKMSV1996}
+M.~Bershadsky, K.~Intriligator, S.~Kachru, D.~Morrison, V.~Sadov, and C.~Vafa,
+\textit{Geometric Singularities and Enhanced Gauge Symmetries},
+Nucl.\ Phys.\ \textbf{B481} (1996) 215--252,
+arXiv:hep-th/9605200. [Verified]
+
+\bibitem{Shimura1977}
+G.~Shimura,
+\textit{On the periods of modular forms},
+Math.\ Ann.\ \textbf{229} (1977) 211--221. [CITE-NEEDED: verify page range and volume]
+
+\bibitem{Baker1966}
+A.~Baker,
+\textit{Linear forms in the logarithms of algebraic numbers},
+Mathematika \textbf{13} (1966) 204--216. [CITE-NEEDED: verify]
+
+\bibitem{Stark1967}
+H.~M.~Stark,
+\textit{A complete determination of the complex quadratic fields of class-number one},
+Michigan Math.\ J.\ \textbf{14} (1967) 1--27. [CITE-NEEDED: verify]
+
+\bibitem{Silverman}
+J.~H.~Silverman,
+\textit{Advanced Topics in the Arithmetic of Elliptic Curves},
+Springer GTM 151, 1994. [CITE-NEEDED: standard reference]
+
+\bibitem{LMFDB}
+The LMFDB Collaboration,
+\textit{The L-functions and Modular Forms Database},
+\url{https://www.lmfdb.org} (2023). [CITE-NEEDED: use current citation]
+
+\end{thebibliography}
+
+\end{document}

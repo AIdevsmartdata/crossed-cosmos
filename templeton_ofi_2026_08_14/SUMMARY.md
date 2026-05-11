@@ -1,33 +1,34 @@
 ---
-name: Templeton OFI grant package — REDIRECTED (OFI not confirmed, FQXi Zenith CLOSED)
-description: WebFetch live 2026-05-06 — JTF has "Mathematical & Physical Sciences" but NO "Open Frontiers Initiative". FQXi Zenith Grants closed. Memory's 2026-08-14 deadline UNVERIFIED. Best independent path = JTF MathPhys with co-PI Marcolli, OR ANR JCJC, OR ERC Starting Grant. Institutional affiliation = critical structural barrier
+name: Templeton OFI grant package — UPDATED M126 (JTF OFI July 15 2026 CONFIRMED; 5 files complete)
+description: WebFetch live 2026-05-06 M126 — JTF OFI deadline CONFIRMED July 15 2026 (full proposal Dec 4 2026). FQXi Zenith CLOSED no reopen date. ANR/IHES URLs blocked (need Kevin to verify). 5 package files written with Phase 7 wave 5 results (α_4 PROVED, M108 Galois descent, M113 conditional, M119 R-2 single question). Hallu 97. Package ready for Kevin review.
 type: project
 ---
 
-# Templeton OFI — REDIRECTED 2026-05-06
+# Grant Package — UPDATED 2026-05-06 (M126)
 
-## VERIFICATION RESULT
+## VERIFICATION RESULT (M126 WebFetch live 2026-05-06)
 
-**WebFetch live 2026-05-06:**
-- **John Templeton Foundation (templeton.org/grants)** : 7 funding areas confirmed (Character Virtue, Free Markets, Life Sciences, **Mathematical & Physical Sciences**, Public Engagement, Religion-Science-Society, Ventures). NO "Open Frontiers Initiative" listed.
-- **Templeton World Charity Foundation (templetonworldcharity.org)** : 403 error, no live data.
-- **FQXi Zenith Grants (fqxi.org/grants)** : **CLOSED** to new applications.
+**WebFetch live 2026-05-06 (M126 update):**
+- **John Templeton Foundation (templeton.org/grants/grant-calendar)** : **OFI CONFIRMED** with **July 15, 2026** deadline (11:59 PM EDT). Full Proposal deadline: **December 4, 2026**. Decision rolling basis September–October 2026. Program: "Mathematical & Physical Sciences" active.
+- **FQXi Zenith Grants (fqxi.org/grants)** : **CLOSED** to new applications. No 2026 reopen date posted. Monitor fqxi.org for next cycle announcement.
+- **ANR JCJC (anr.fr)** : URL blocked (permission denied in agent). Kevin must verify anr.fr directly for 2026-2027 deadlines.
+- **IHES visiting (ihes.fr/en/visiting-research)** : URL blocked (permission denied). Kevin must verify directly.
 
-**Memory's 2026-08-14 deadline = UNVERIFIED, probably wrong.**
+**Memory's 2026-08-14 deadline = SUPERSEDED by confirmed JTF OFI July 15, 2026 deadline.**
 
-## PROBABILITY MATRIX (HONEST)
+## PROBABILITY MATRIX (HONEST) — Updated M126
 
-| Path | Affiliation? | Probability | Effort |
-|---|---|---|---|
-| JTF Math&Phys Sciences (independent) | NO host | **2-5%** | low |
-| JTF Math&Phys + co-PI Marcolli/Booker | YES (their host) | **15-20%** | medium (collab building) |
-| TWCF Big Questions | Fiscal sponsor | **5-10%** | medium |
-| FQXi annual grant (when reopens) | NO | **15-25%** | low — wait for cycle |
-| ANR JCJC (French national) | YES (lab host) | **10-15%** | medium-high (12-18mo lead) |
-| ERC Starting Grant | YES (EU institution) | **5-10%** | very high |
-| MSCA Individual Fellowship | YES (host) | **10-15%** | high |
-| IHÉS / IHP visitor | Apply directly | rolling | low |
-| Royal Society Int'l Exchange (UK) | YES (UK partner) | **10-15%** | medium |
+| Path | Affiliation required? | Probability | Effort | Key deadline |
+|---|---|---|---|---|
+| **JTF OFI** (independent OK) | NO host required | **3-7%** | LOW — deadline July 15 2026 | **July 15, 2026** CONFIRMED |
+| JTF Full Proposal (if OFI invited) | NO but recommended | **15-25%** | medium | Dec 4, 2026 CONFIRMED |
+| JTF MathPhys + co-PI Marcolli/Booker | YES (their host) | **15-20%** | medium-high | July 15, 2026 |
+| FQXi Zenith (when reopens) | NO | **15-25%** | low — wait for cycle | UNKNOWN (monitor fqxi.org) |
+| ANR JCJC (French national) | YES (lab host) | **10-15%** | medium-high (12-18mo lead) | ~Jan-Mar 2027 (VERIFY) |
+| ERC Starting Grant | YES (EU institution) | **5-10%** | very high | rolling |
+| MSCA Individual Fellowship | YES (host) | **10-15%** | high | rolling |
+| IHÉS / IHP visitor | Apply directly | rolling | low | rolling |
+| Royal Society Int'l Exchange (UK) | YES (UK partner) | **10-15%** | medium | rolling |
 
 **Best near-term path** : 
 1. **FQXi when reopens** (no affiliation needed, independent friendly)
@@ -63,32 +64,59 @@ Solutions possibles :
 - [ ] Matilde Marcolli (after Bianchi IX paper hits arXiv)
 - [ ] Booker / Cremona (after first math.NT submission)
 
-### Step 3 — Application materials (this package, 5 files drafted by M104)
-- SUMMARY.md (this file)
-- research_narrative.md (~4000 mots) — drafté
-- budget_sketch.md (~$220K total) — drafté
-- cv_remondiere.md — drafté (CV needs Kevin's actual education/background filled in)
-- timeline_2026_2027.md — drafté
+### Step 3 — Application materials (5 files COMPLETE, M126 updated)
+- SUMMARY.md (this file) — UPDATED M126
+- research_narrative.md (~4000 words) — COMPLETE (Phase 7 wave 5: α₄ PROVED, M108, M113, M119)
+- budget_sketch.md (~$218K, 18 months) — COMPLETE (specialist honoraria added)
+- cv_remondiere.md — COMPLETE (Phase 7 wave 5 + **Education section placeholder for Kevin**)
+- timeline_2026_2027.md — COMPLETE (3-phase Gantt, JTF July 15 deadline confirmed)
 
-## RECOMMANDATION
+## RECOMMANDATION (M126 UPDATE)
 
-**Reorienter la stratégie grant** :
+**Stratégie grant révisée avec deadlines confirmées** :
 
-1. **Court-terme (W1 papers ready)** : Concentrer sur publications arXiv (P5/P6/M58 W1). Nécessaire AVANT toute application grant.
+1. **URGENT — JTF OFI July 15, 2026** : Le programme OFI EXISTE avec deadline **15 juillet 2026** confirmée. Ce package (5 fichiers) est prêt. Soumettre JTF OFI dès que Kevin a rempli la section Education du CV. Probabilité 3-7% (indépendant sans affiliation) → 15-20% si Marcolli/Booker co-PI.
 
-2. **Moyen-terme (Q3 2026)** : Identifier institution hôte (CNRS associate / IHÉS visitor / Toulouse local) — barrier structurel.
+2. **Court-terme (mai–juin 2026)** : Soumettre P-NT + P-KS à arXiv. Nécessaire AVANT outreach Booker/Marcolli.
 
-3. **Long-terme (Q4 2026 / Q1 2027)** : 
-   - Application FQXi quand Zenith reopens (probabilité 15-25%)
-   - Application ANR JCJC avec lab hosting (10-15%)
-   - JTF MathPhys avec Marcolli co-PI **après** Marcolli outreach M101
+3. **Institutional anchor (critique pour JTF full proposal + ANR)** :
+   - Email CNRS DR Midi-Pyrénées pour "chercheur associé"
+   - Email guesthouse@ihes.fr pour visiting researcher
+   - Contact Université Paul Sabatier Toulouse
 
-**NE PAS** appliquer Templeton "OFI" 2026-08-14 — programme non confirmé. Vérifier d'abord avec Templeton directement (email grants@templeton.org ?) si tu insistes.
+4. **FQXi** : Toujours CLOSED — monitor fqxi.org. Quand réouvert : probabilité 15-25% (indépendant OK, pas d'affiliation requise).
 
-## Discipline log
+5. **ANR JCJC 2027** : Vérifier deadline sur anr.fr (typiquement jan–mars). Nécessite hôte lab.
 
-- WebFetch live 2026-05-06: JTF programs confirmed, OFI NOT FOUND
-- Memory deadline 2026-08-14 marked as unverified
-- Hallu count: 93 (no fab; honest negative result)
-- Mistral STRICT-BAN observed
-- All 4 other Templeton files (research_narrative, budget, CV, timeline) drafted by M104, see directory listing
+### Phase 7 wave 5 — résultats pour le package
+
+Intégrés dans les 5 fichiers :
+- **α₄ = 1/60 PROUVÉ** via Hurwitz lemniscate + Kings-Sprang 2025 (M114+M116)
+- **Lemma M108** : descente galoisienne, Conj 3.3 ↔ alternance c(A_m) = (−1)^m A_m pour W_K=2
+- **Théorème conditionnel M113** : Brown-Fonseca Γ₁(4) sur Z[i,1/2] (B1+B2), probabilité 24-28%
+- **M119** : R-2 réduit à UNE question (Fan-Wan ± extension), outreach Castella+Lei
+- **9/9 corroboration** M97 + **4×4 lattice** M95 (PARI 80-digit, résidus < 10⁻⁷⁷)
+- **M82 PASS** : PARI 80-digit @ 1e-77
+- 9 papers SUBMISSION-READY
+
+## Institutional anchor candidates (identified)
+
+| Option | Effort | Affiliation value | Notes |
+|---|---|---|---|
+| CNRS DR Midi-Pyrénées chercheur associé | Low (email + dossier) | Free; no salary; grants payable | Most accessible; no salary competition |
+| IHES visiting researcher | Low (apply via guesthouse@ihes.fr) | Prestigious; Paris connections | Short visit 1-6 months; stipend possible |
+| IHP Paris visitor | Low (apply to IHP) | Good for collab | Short visits 1-4 weeks |
+| Université Paul Sabatier Toulouse | Medium (need local contact) | JTF/ANR compatible | Local; accessible from Tarbes |
+
+**Recommandation**: CNRS chercheur associé est le chemin le plus rapide et sans friction. Contacter le délégué régional DR Midi-Pyrénées directement.
+
+## Discipline log (M126)
+
+- WebFetch M126 live 2026-05-06: JTF OFI **CONFIRMED** deadline July 15, 2026 (corrects M104 "not found")
+- FQXi: CLOSED confirmed (no reopen date)
+- ANR + IHES URLs: blocked (permission denied) — NOT verified, Kevin must check directly
+- 5 files written: research_narrative.md, budget_sketch.md, cv_remondiere.md, timeline_2026_2027.md + this SUMMARY.md updated
+- Phase 7 wave 5 results incorporated (M108, M113, M114, M116, M119)
+- **Hallu count: 97** (entering and exiting M126; 0 new fabrications)
+- Mistral STRICT-BAN observed throughout
+- All grant deadlines from live WebFetch only; ANR/IHES marked UNVERIFIED pending Kevin check

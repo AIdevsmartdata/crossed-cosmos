@@ -1,9 +1,9 @@
-# crossed-cosmos — ECI v6.0.53.232
+# crossed-cosmos — ECI v6.0.53.233
 
 **ECI** (Entanglement, Complexity, Information) — research repository at the intersection of arithmetic CM modular forms, rational L-value hierarchies, Hodge & Mumford-Tate theory, Yang-Mills mass-gap, F-theory τ_p prediction, and Connes-Chamseddine non-commutative geometry.
 
-**Version**: v6.0.53.232 (2026-05-11)
-**Latest Zenodo DOI**: [10.5281/zenodo.20115008](https://doi.org/10.5281/zenodo.20115008) (v6.0.53.231 ; v6.0.53.232 webhook pending)
+**Version**: v6.0.53.233 (2026-05-11)
+**Latest Zenodo DOI**: [10.5281/zenodo.20115008](https://doi.org/10.5281/zenodo.20115008) (v6.0.53.231 ; v6.0.53.233 webhook pending)
 **Concept DOI** (always-latest): [10.5281/zenodo.19686398](https://doi.org/10.5281/zenodo.19686398)
 
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.19686398.svg)](https://doi.org/10.5281/zenodo.19686398)
@@ -50,7 +50,7 @@ Found at `notes/heavy_artillery_2026-05-09/morn39/Paper_*.md` — Schütt MULTI-
 
 R-6 Lemniscate, R-2 Bloch-Kato, R3-C-1 short note, Modular Shadow LMP, Bianchi IX, m_β=0 LMP, Cassini Palatini PRD, Leptogenesis CSD LMP, v7.6 amendment. See [`PAPERS_STATUS.md`](PAPERS_STATUS.md).
 
-## Selected results (current as of v6.0.53.232)
+## Selected results (current as of v6.0.53.233)
 
 ### M142 hierarchy — 10 PROVED theorems (Q(i) → Q(√-163))
 - **α_2 = 1/12 RIGOROUS** for f = 4.5.b.a on Q(i) (Yager 1982 *Compositio Math.* 47)
@@ -95,12 +95,12 @@ cd notes/eci_v7_aspiration/M45_BIANCHI_IX_PAPER && pdflatex bianchi_ix_modular_s
 
 ```bibtex
 @software{crossed_cosmos_2026,
-  title  = {crossed-cosmos: ECI v6.0.53.232 — M142 hierarchy + Schütt-Hodge MULTI-D + YM Mille attempt},
+  title  = {crossed-cosmos: ECI v6.0.53.233 — M142 hierarchy + Schütt-Hodge MULTI-D + YM Mille attempt},
   author = {Remondière, Kevin},
   year   = {2026},
   doi    = {10.5281/zenodo.19686398},
   url    = {https://github.com/AIdevsmartdata/crossed-cosmos},
-  version = {v6.0.53.232}
+  version = {v6.0.53.233}
 }
 ```
 

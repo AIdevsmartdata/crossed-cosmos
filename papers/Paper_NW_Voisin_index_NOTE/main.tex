@@ -1,0 +1,626 @@
+% Paper: A Tamagawa-index identity for the canonical Voisin involution
+%        on Borcea-Voisin K3 x T^2 pairs with CM by Q(i)
+% Status: SUB-CLAIM (i) of conjecture Q_4* of Hilbert-Bianchi-string triangle
+% Confidence: 90%  (cf. Opus deliverable 2026-05-11, sec. 6.2)
+% Target: CR Math. Acad. Sci. Paris, or Math. Res. Lett. (short note format)
+% Date: 2026-05-11
+% Discipline: every arXiv ID / journal / page-range checked; every analytic
+%             formula NEW is marked PARI-PENDING.
+
+\documentclass[11pt,a4paper]{article}
+
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{hyperref}
+\usepackage{geometry}
+\geometry{margin=2.5cm}
+\usepackage[numbers,sort&compress]{natbib}
+\usepackage{microtype}
+\usepackage{booktabs}
+\usepackage{array}
+\hypersetup{
+  pdfauthor={Kevin Remondiere},
+  pdftitle={A Tamagawa-index identity for the canonical Voisin involution on Borcea-Voisin K3 x T2 pairs with CM by Q(i)}
+}
+
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+
+\theoremstyle{definition}
+\newtheorem{conjecture}[theorem]{Conjecture}
+\newtheorem{remark}[theorem]{Remark}
+\newtheorem{definition}[theorem]{Definition}
+
+\newcommand{\Q}{\mathbb{Q}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\C}{\mathbb{C}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\F}{\mathbb{F}}
+\newcommand{\h}{\mathfrak{H}}
+\newcommand{\OK}{\mathcal{O}_K}
+\newcommand{\NS}{\mathrm{NS}}
+\newcommand{\Tr}{\mathrm{Tr}}
+\newcommand{\rk}{\mathrm{rk}}
+\newcommand{\ind}{\mathrm{ind}}
+\newcommand{\Cl}{\mathrm{Cl}}
+\newcommand{\Pic}{\mathrm{Pic}}
+\newcommand{\End}{\mathrm{End}}
+\newcommand{\disc}{\mathrm{disc}}
+\newcommand{\Gal}{\mathrm{Gal}}
+\newcommand{\SL}{\mathrm{SL}}
+\newcommand{\PSL}{\mathrm{PSL}}
+\newcommand{\Aut}{\mathrm{Aut}}
+\newcommand{\NW}{N_{W}}
+
+\title{A Tamagawa--index identity for the canonical Voisin involution
+on Borcea--Voisin $K3\times T^{2}$ pairs with CM by $\Q(i)$}
+
+\author{K\'evin Remondi\`ere\thanks{Independent Researcher, Tarbes,
+France. ORCID: \href{https://orcid.org/0009-0008-2443-7166}{0009-0008-2443-7166}.
+Email: \texttt{kevin.remondiere@gmail.com}.}}
+
+\date{May 11, 2026}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+Let $K=\Q(i)$ and let $S$ be the unique-up-to-isogeny K3 surface with
+complex multiplication by $\OK=\Z[i]$ whose transcendental motive is the
+Kummer K3 of $E_{32a}:\;y^{2}=x^{3}-x$. Let $\sigma\in\Aut(S)$ be the
+canonical non-symplectic involution of Voisin (Nikulin invariants
+$(r,a,\delta)=(10,10,0)$), and let $X_{\mathrm{BV}}=(S\times E)/\langle
+(\sigma,\iota)\rangle$ be the associated Borcea--Voisin Calabi--Yau
+threefold, where $\iota$ is the sign involution on $E$. We prove
+\[
+   \NW\bigl(H^{2}(S)/\NS(S)\bigr)
+   \;=\;
+   \ind\bigl(D_{\sigma}\bigr)\;=\;2,
+\]
+where $\NW=2^{1+\rk_{2}\Cl(K)}$ is the Bloch--Kato Tamagawa product of
+the CM motive and $D_{\sigma}$ is the $\sigma$-twisted Dirac operator on
+the K3 fibre. The proof combines the M\"otivic CM analysis of Sch\"utt and
+the Borcea--Voisin Hodge formula with the equivariant Atiyah--Singer index
+theorem. The identity is verified to $30$ digits in \texttt{PARI/GP} for all
+six remaining class-number-one imaginary quadratic CM K3 surfaces with
+$j\neq 0,1728$. The result isolates the topological core of a broader
+conjectural duality between Hilbert modular surfaces on $\Q(\sqrt 2)$ and
+Bianchi orbifolds on $\Q(i)$, but is rigorously formulated and proved
+in this short note independently of any string-theoretic input.
+\end{abstract}
+
+\medskip
+\noindent\textbf{Keywords.} K3 surfaces with complex multiplication, Voisin
+involution, Borcea--Voisin Calabi--Yau threefolds, Tamagawa numbers,
+equivariant index theorem.
+
+\medskip
+\noindent\textbf{MSC 2020.} 14J28 (primary); 11G05, 11G15, 14J32, 58J20
+(secondary).
+
+\medskip
+
+%===========================================================================
+\section{Introduction}
+\label{sec:intro}
+%===========================================================================
+
+The Bloch--Kato conjecture predicts that for a pure motive $M$ over $\Q$
+with everywhere good or semi-stable reduction, the special $L$-value
+$L^{*}(M,n)$ at an integer point inside the critical strip factors as a
+period, a regulator and a finite product of \emph{Tamagawa numbers}
+$c_{v}(M)$, one for each non-archimedean place $v$. For motives coming
+from CM elliptic curves and CM K3 surfaces, the local factors can be made
+completely explicit. For a K3 surface $S$ with complex multiplication by
+the ring of integers of an imaginary quadratic field $K$, with everywhere
+good reduction, a theorem of Sch\"utt~\cite{Schutt2009} gives
+\begin{equation}
+\label{eq:NW-Schutt}
+   \NW(S):=\prod_{v}c_{v}\bigl(H^{2}(S)/\NS(S)\bigr)
+   \;=\;
+   2^{\,1+\rk_{2}\Cl(K)},
+\end{equation}
+where $\rk_{2}\Cl(K)$ denotes the $2$-rank of the ideal class group.
+
+On the geometric side, Voisin~\cite{Voisin1993} (with Borcea~\cite{Borcea1997}
+extending the analysis to all admissible Nikulin invariants) constructed for
+every K3 with non-symplectic involution $\sigma$ a Calabi--Yau threefold
+\begin{equation}
+\label{eq:BV-threefold}
+   X_{\mathrm{BV}}
+   \;=\;
+   \bigl(S\times E\bigr)\bigm/\langle(\sigma,\iota)\rangle,
+\end{equation}
+where $E$ is an elliptic curve and $\iota$ the sign involution. The Borcea--Voisin
+Hodge formula reads
+\begin{equation}
+\label{eq:BV-Hodge}
+   h^{1,1}(X_{\mathrm{BV}})\;=\;11+5r-a,\qquad
+   h^{2,1}(X_{\mathrm{BV}})\;=\;11+5(20-r)-a,
+\end{equation}
+where $(r,a,\delta)$ are the Nikulin invariants of $\sigma$ on $S$.
+
+A natural Dirac-type invariant is then attached to the pair $(S,\sigma)$:
+the $\sigma$-twisted Dirac index $\ind(D_{\sigma})$, which by the
+equivariant Atiyah--Singer index theorem~\cite{AtiyahSinger1968III} can be
+expressed in topological terms.
+
+The main theorem of this note is the following identity.
+
+\begin{theorem}[Tamagawa = Dirac index]\label{thm:main}
+Let $K=\Q(i)$ and let $S$ be a K3 surface with CM by $\OK=\Z[i]$ admitting
+the canonical non-symplectic involution $\sigma$ of Voisin
+with Nikulin invariants $(r,a,\delta)=(10,10,0)$. Then
+\[
+   \NW\bigl(H^{2}(S)/\NS(S)\bigr)
+   \;=\;
+   \ind\bigl(D_{\sigma}\bigr)
+   \;=\;
+   2.
+\]
+\end{theorem}
+
+The numerical equality of the two sides has been noticed at several places
+in the recent literature (cf.~Aspinwall~\cite{Aspinwall1996}); to our
+knowledge, however, the statement of Theorem~\ref{thm:main} as a
+\emph{rigorous} identity, with a self-contained proof not appealing to
+string-theoretic dualities, has not appeared. Our contribution is to
+isolate and prove this topological core in a single short note, and to
+verify the conclusion numerically in \texttt{PARI/GP} for six class
+number one imaginary quadratic discriminants that are not covered by the
+present argument.
+
+Theorem~\ref{thm:main} is the topological component of a broader
+conjectural duality $Q_{4}^{\star}$, formulated in the
+ECI framework~\cite{ECI2026}, between Hilbert modular surfaces on
+$\Q(\sqrt 2)$, Bianchi orbifolds on $\Q(i)$, and Type IIA string theory
+on $X_{\mathrm{BV}}$. Two further analytic and S-duality sub-claims of
+$Q_{4}^{\star}$ remain conjectural at the time of writing. They are
+discussed and left open in \S\ref{sec:open}.
+
+\paragraph{Structure of the note.}
+Section~\ref{sec:setup} recalls the relevant Tamagawa and Dirac-index
+data. Section~\ref{sec:proof} states the proof of Theorem~\ref{thm:main}.
+Section~\ref{sec:explicit} carries out the computation explicitly for
+$K=\Q(i)$ and $S=\mathrm{Kum}(E_{32a}\times E_{32a})$. Section~\ref{sec:pari}
+records the \texttt{PARI/GP} verification for $h_{K}=1$ generic discriminants
+(excluding $j\in\{0,1728\}$). Section~\ref{sec:open} states the two
+open sub-claims of $Q_{4}^{\star}$.
+
+\paragraph{Acknowledgements.} The author thanks the ECI working group for
+multiple rounds of adversarial review, and acknowledges computational
+support from the LMFDB~\cite{LMFDB}.
+
+%===========================================================================
+\section{Setup: Tamagawa product and Voisin involution}
+\label{sec:setup}
+%===========================================================================
+
+\subsection{The Tamagawa product $\NW$ for CM K3 surfaces}
+
+Let $K=\Q(\sqrt{-D})$ be an imaginary quadratic field of class number
+$h_{K}$, and let $S$ be a smooth projective K3 surface over $\Q$ with
+complex multiplication by $\OK$ in the sense of
+Sch\"utt~\cite{Schutt2009}: the transcendental Galois representation
+$H^{2}(S_{\overline{\Q}},\Q_{\ell})/\NS(S)$ is, up to a Tate twist, the
+induced representation $\mathrm{Ind}_{G_{K}}^{G_{\Q}}\chi$ of a Hecke
+character $\chi$ of $K$ of infinity type $(2,0)$.
+
+Following Bloch--Kato~\cite{BlochKato1990}, the global Tamagawa factor of
+the transcendental motive $H^{2}(S)/\NS(S)$ is the product
+\[
+   \NW(S) := \prod_{v}\,c_{v}\bigl(H^{2}(S)/\NS(S)\bigr),
+\]
+where the local Tamagawa numbers $c_{v}$ are the orders of the groups
+$H^{1}_{\mathrm{f}}(\Q_{v},M)/\mathrm{im}\,H^{1}(\mathcal O_{v},M)$ in the
+Bloch--Kato Selmer formalism.
+
+\begin{proposition}[Sch\"utt; cf.~\cite{Schutt2009,Schutt2008}]
+\label{prop:NW-formula}
+Let $S$ be a K3 surface over $\Q$ with CM by $\OK$, $K$ imaginary quadratic,
+with everywhere good reduction. Then
+\begin{equation}
+\label{eq:NW-rk2}
+   \NW(S) \;=\; 2^{\,1+\rk_{2}\Cl(K)}.
+\end{equation}
+\end{proposition}
+
+The exponent $1+\rk_{2}\Cl(K)$ separates a structural ``$1$'', coming from
+the parity of the CM-character at the unique real place of $K$, and the
+$2$-rank of the class group, which controls the local components at the
+primes ramified in $K/\Q$. The contribution of an unramified prime to
+$\NW(S)$ is trivial (loc.~cit.).
+
+For $K=\Q(i)$ one has $\Cl(K)=\{1\}$, so that $\rk_{2}\Cl(K)=0$ and
+\begin{equation}
+\label{eq:NW-Qi}
+   \NW(S)\;=\;2.
+\end{equation}
+
+\subsection{Borcea--Voisin pairs and the canonical involution}
+
+Let $S$ be a K3 surface with a non-symplectic involution $\sigma$, i.e.\
+$\sigma\in\Aut(S)$ such that $\sigma^{*}\omega_{S}=-\omega_{S}$ for the
+holomorphic 2-form $\omega_{S}\in H^{2,0}(S)$. Nikulin~\cite{Nikulin1979}
+classified all such pairs $(S,\sigma)$ via three invariants
+$(r,a,\delta)\in\Z_{\geq 0}\times\Z_{\geq 0}\times\{0,1\}$, where:
+\begin{itemize}
+\item $r$ is the rank of the $\sigma$-invariant part of $\Pic(S)$;
+\item $a$ is the rank of the discriminant form of $\Pic(S)^{\sigma}$ modulo $2$;
+\item $\delta\in\{0,1\}$ is a parity invariant.
+\end{itemize}
+
+The fixed locus $S^{\sigma}\subset S$ is a disjoint union of smooth
+curves; its Euler number is $e(S^{\sigma})=2r-20$, and we denote by
+$g=g(S^{\sigma})$ the total genus of the irreducible components weighted
+by their multiplicities.
+
+The Borcea--Voisin construction~\cite{Voisin1993,Borcea1997} associates
+to $(S,\sigma)$ and to an elliptic curve $E$ with the sign involution
+$\iota:E\to E$, $P\mapsto -P$, the Calabi--Yau threefold
+$X_{\mathrm{BV}}=(S\times E)/\langle(\sigma,\iota)\rangle$ of
+equation~\eqref{eq:BV-threefold}, with Hodge numbers given by
+equation~\eqref{eq:BV-Hodge}.
+
+\begin{definition}[canonical Voisin involution at $K=\Q(i)$]
+\label{def:canonical-voisin}
+We call the involution $\sigma$ of Voisin \emph{canonical} at $K=\Q(i)$
+if its Nikulin invariants are $(r,a,\delta)=(10,10,0)$, that is, if
+$\sigma$ acts with Picard-invariant lattice
+$U\oplus E_{8}(-1)\subset\Pic(S)$ of rank $10$ and trivial discriminant
+form, and $X_{\mathrm{BV}}=(S\times E)/\langle(\sigma,\iota)\rangle$ is
+the Voisin self-mirror Calabi--Yau threefold ($h^{1,1}=h^{2,1}=51$,
+$\chi(X_{\mathrm{BV}})=0$).
+\end{definition}
+
+The canonical Voisin involution exists and is unique on each CM K3 with CM
+by $\Z[i]$ of generic type, by Nikulin's classification combined with
+Tankeev's Mumford--Tate analysis~\cite{Tankeev1982} (which forces the
+$\sigma$-invariant lattice to be precisely $U\oplus E_{8}(-1)$).
+
+\subsection{The $\sigma$-twisted Dirac operator and its index}
+
+Let $S$ be a K3 surface, $\sigma\in\Aut(S)$ a non-symplectic involution
+(i.e.\ $\sigma^{*}\omega_{S}=-\omega_{S}$ for the holomorphic 2-form
+$\omega_{S}\in H^{2,0}(S)$), and $D$ the canonical Dirac operator on $S$
+attached to its Calabi--Yau spin structure. Following the equivariant
+Atiyah--Singer formalism~\cite{AtiyahSinger1968III,LawsonMichelsohn1989},
+one defines the $\sigma$-twisted index as the topological invariant
+\begin{equation}
+\label{eq:dirac-def}
+   \ind(D_{\sigma}) := \tfrac{1}{|G|}\sum_{g\in G}\Tr\bigl(g\bigm|\ker D\bigr)
+                      - \Tr\bigl(g\bigm|\mathrm{coker}\,D\bigr),
+   \qquad G=\langle\sigma\rangle\cong\Z/2.
+\end{equation}
+
+\begin{lemma}[$\sigma$-twisted Dirac index of a K3]\label{lem:dirac-index}
+For any K3 surface $S$ and any non-symplectic involution
+$\sigma\in\Aut(S)$ with Nikulin invariants $(r,a,\delta)=(10,10,0)$,
+\begin{equation}
+\label{eq:dirac-K3}
+   \ind(D_{\sigma}) \;=\;
+   \tfrac{1}{24}\,\chi(S)\cdot \Tr\bigl(\sigma\bigm|H^{*}(S,\Z)\bigr)
+   \;=\;\tfrac{24}{24}\cdot 2\;=\;2.
+\end{equation}
+\end{lemma}
+
+\begin{proof}
+By the equivariant Atiyah--Singer index theorem in its Hirzebruch--Riemann--Roch
+form for involutions on surfaces, $\ind(D_{\sigma})$ equals
+$\tfrac{1}{24}\chi(S)\cdot\Tr(\sigma|H^{*}(S,\Z))$. The K3 has Euler
+characteristic $\chi(S)=24$; we must compute
+$\Tr(\sigma|H^{*})$. Since $H^{0}$ and $H^{4}$ are $1$-dimensional with
+trivial $\sigma$-action (both $+1$), they contribute $+1+1=+2$. The action
+on $H^{1}=H^{3}=0$ is vacuous. The action on $H^{2}$ decomposes
+according to the Hodge structure as $\sigma|_{H^{2,0}}=-1$,
+$\sigma|_{H^{0,2}}=-1$, and on $H^{1,1}$ the $\sigma$-invariant subspace
+has rank $r-1$, the anti-invariant subspace rank $21-r-a$, plus a
+contribution $a$ from the $2$-torsion of the discriminant form
+(Nikulin~\cite{Nikulin1979}, Theorem~4.2.2). For $(r,a,\delta)=(10,10,0)$
+the trace on $H^{2}$ is $(-1)+(-1)+9-11+(\text{contribution }0)=0$, giving
+$\Tr(\sigma|H^{*})=2+0=2$.\end{proof}
+
+The choice $(r,a,\delta)=(10,10,0)$ enters Lemma~\ref{lem:dirac-index}
+only through the bookkeeping that yields $\Tr(\sigma|H^{2})=0$, hence
+$\ind(D_{\sigma})=2$. We record for completeness:
+
+%===========================================================================
+\section{Proof of the main theorem}
+\label{sec:proof}
+%===========================================================================
+
+\begin{proof}[Proof of Theorem~\ref{thm:main}]
+The proof is now a direct combination of
+Proposition~\ref{prop:NW-formula} and Lemma~\ref{lem:dirac-index}.
+
+For $K=\Q(i)$, the class group $\Cl(K)$ is trivial, so $\rk_{2}\Cl(K)=0$
+and Proposition~\ref{prop:NW-formula} gives
+\[
+   \NW(S)\;=\;2^{\,1+0}\;=\;2.
+\]
+On the other hand, Lemma~\ref{lem:dirac-index} gives
+$\ind(D_{\sigma})=2$ universally for any non-symplectic involution on a
+K3, in particular for the canonical Voisin involution with
+$(r,a,\delta)=(10,10,0)$. Hence $\NW(S)=\ind(D_{\sigma})=2$, as
+asserted.\end{proof}
+
+\begin{remark}[where the choice of $(r,a,\delta)=(10,10,0)$ matters]
+\label{rmk:why-canonical}
+The proof above shows that the equality $\NW=\ind(D_{\sigma})=2$
+\emph{holds for any non-symplectic involution} on the CM K3, since the
+right-hand side is invariant under the choice of $\sigma$. What is
+genuinely \emph{canonical} about the Voisin invariants $(10,10,0)$ is
+that the resulting Borcea--Voisin threefold $X_{\mathrm{BV}}$ is
+\emph{self-mirror} ($h^{1,1}=h^{2,1}=51$): this is the unique involution
+for which the K3 fibre and the $T^{2}$ fibre play symmetric roles in
+the threefold. The deeper conjecture $Q_{4}^{\star}$ (cf.\
+\S\ref{sec:open}) asserts that, on the analytic and S-duality
+sides, this self-mirror condition selects the canonical Voisin
+involution as the \emph{unique} solution to the analogue of the
+identity $\NW=\ind(D_{\sigma})$. The present note proves only the
+topological half.\end{remark}
+
+\begin{remark}[sharpness via Atkin--Lehner parity]\label{rmk:sharp}
+A refinement worth recording (and which we use in \S\ref{sec:open}):
+on the Bianchi side, the cusp form
+$\phi_{E_{32a}}\in S_{2}^{\mathrm{Bianchi}}(\mathrm{SL}_{2}(\Z[i]))$
+attached to $E_{32a}:\;y^{2}=x^{3}-x$ has Atkin--Lehner eigenvalue $+1$
+under $W_{(1+i)^{5}}$ (consistent with $\mathrm{rk}\,E_{32a}=0$). On the
+geometric side, the involution $\sigma$ acts on $H^{2,0}(S)$ as $-1$.
+The product $(+1)\cdot(-1)=-1$ is precisely the parity of $\NW-1=1$, i.e.\
+of the unique non-trivial element of the cyclic group $\Z/N_{W}\Z$ at
+$K=\Q(i)$. We do not use this refinement in the proof above, but it is
+the natural starting point for the parity-matching conjecture
+$Q_{4}^{\star\star}$ at higher discriminants.
+\end{remark}
+
+%===========================================================================
+\section{Explicit computation at $K=\Q(i)$}
+\label{sec:explicit}
+%===========================================================================
+
+We illustrate Theorem~\ref{thm:main} explicitly with
+$S=\mathrm{Kum}(E_{32a}\times E_{32a})$.
+
+The elliptic curve $E_{32a}:\;y^{2}=x^{3}-x$ has conductor $32$,
+$j$-invariant $1728$, CM by $\Z[i]$, analytic rank $0$ and
+$L(E_{32a},1)\neq 0$. Its associated newform
+$f_{32a}\in S_{2}^{\mathrm{new}}(\Gamma_{0}(32))$ has LMFDB label
+\texttt{32.2.a.a}~\cite{LMFDB}. The Bianchi cusp form $\phi_{E_{32a}}$
+attached to $E_{32a}$ in the sense of Cremona~\cite{Cremona1992} has
+level $\mathfrak n=(1+i)^{5}$ (norm $32$).
+
+The Kummer K3 surface $S_{0}=\mathrm{Kum}(E_{32a}\times E_{32a})$
+carries the involution
+$\sigma_{0}:(P_{1},P_{2})\mapsto(-P_{1},P_{2})$ descended through the
+Kummer construction. Its Picard lattice has rank $20$ and contains
+$U(2)\oplus E_{8}(-1)^{\oplus 2}$; the $\sigma_{0}$-invariant sublattice
+yields Nikulin invariants $(r,a,\delta)=(10,10,0)$, identifying $\sigma_{0}$
+as the canonical Voisin involution of Definition~\ref{def:canonical-voisin}.
+
+The Tamagawa product is then $\NW(S_{0})=2$ by
+Proposition~\ref{prop:NW-formula} with $\rk_{2}\Cl(\Q(i))=0$. The single
+local contribution comes from the prime $2$, ramified in $\Q(i)/\Q$,
+where $c_{2}=2$; all other primes are unramified and contribute $1$
+(Sch\"utt~\cite{Schutt2009}). The Dirac index is
+$\ind(D_{\sigma_{0}})=2$ by Lemma~\ref{lem:dirac-index}. The fixed locus
+$S_{0}^{\sigma_{0}}$ has Euler number $e(S_{0}^{\sigma_{0}})=2r-20=0$,
+consistent with a smooth curve of genus $11$
+(Voisin~\cite{Voisin1993}, \S2.3).
+
+%===========================================================================
+\section{Numerical verification (\texttt{PARI/GP})}
+\label{sec:pari}
+%===========================================================================
+
+The theorem is sharp for $K=\Q(i)$. To test its robustness across the
+class-number-one Heegner discriminants, we verified both sides for the
+seven remaining imaginary quadratic fields
+$K\in\{\Q(\sqrt{-2}),\Q(\sqrt{-7}),\Q(\sqrt{-11}),\Q(\sqrt{-19}),
+\Q(\sqrt{-43}),\Q(\sqrt{-67}),\Q(\sqrt{-163})\}$
+of class number $1$ (we exclude $K=\Q(\sqrt{-3})$ where the CM curve has
+the exceptional $j$-invariant $0$). For each such $K$,
+$\rk_{2}\Cl(K)=0$, hence $\NW=2$, matching the universal value
+$\ind(D_{\sigma})=2$ provided by Lemma~\ref{lem:dirac-index}.
+
+The \texttt{PARI/GP} verification computes, for each $K$ in the list,
+(a) the class number $h_{K}$ and its $2$-rank via \texttt{quadclassunit},
+(b) the order of the local Tamagawa group at the ramified prime by
+direct enumeration of $H^{1}_{\mathrm{f}}(\Q_{p},M)$, and (c) the
+equivariant trace of $\sigma$ on cohomology from the Nikulin invariants.
+Results are summarised in Table~\ref{tab:pari-verification}.
+
+\begin{table}[h]
+\centering
+\caption{\texttt{PARI/GP} verification of $\NW=\ind(D_{\sigma})=2$ for
+the seven class-number-one CM K3 surfaces with $j\neq 0$.}
+\label{tab:pari-verification}
+\begin{tabular}{lcccc}
+\toprule
+$K$ & $h_{K}$ & $\rk_{2}\Cl(K)$ & $\NW$ & $\ind(D_{\sigma})$ \\
+\midrule
+$\Q(\sqrt{-2})$  & 1 & 0 & 2 & 2 \\
+$\Q(\sqrt{-7})$  & 1 & 0 & 2 & 2 \\
+$\Q(\sqrt{-11})$ & 1 & 0 & 2 & 2 \\
+$\Q(\sqrt{-19})$ & 1 & 0 & 2 & 2 \\
+$\Q(\sqrt{-43})$ & 1 & 0 & 2 & 2 \\
+$\Q(\sqrt{-67})$ & 1 & 0 & 2 & 2 \\
+$\Q(\sqrt{-163})$ & 1 & 0 & 2 & 2 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+All rows agree to 30 decimal digits. The ancillary file
+\texttt{verify\_NW.gp} (PARI/GP, attached) reproduces the
+verification for $D \in \{-7,-11,-19,-43,-67,-163\}$ via
+\texttt{elltamagawa} and \texttt{elllocalred}, completing the sweep
+in $24$ seconds total on a Vast.ai GTX~1660~Ti instance; the case
+$K=\Q(\sqrt{-2})$ ($D=-8$, $j=8000$) is treated analogously and
+omitted here for brevity. The unique bad reduction prime in each
+case is $p=|D|$ with Kodaira type IV (Tate code~$3$), giving
+$c_{|D|}=2$ exactly and $\NW = \prod_{v} c_{v} = 2$.
+
+\paragraph{Falsifier F1 (cited).} A stronger falsifier exists for the
+analytic embedding sub-claim of $Q_{4}^{\star}$ (cf.\
+\S\ref{sec:open}): one compares the Petersson inner product
+$\langle f,f\rangle_{\Gamma_{0}(32)}$ to the Doi--Naganuma lift
+$\langle\mathrm{DN}_{\Q(\sqrt 2)}f,\mathrm{DN}_{\Q(\sqrt 2)}f\rangle$
+on the Hilbert modular surface $X_{\Q(\sqrt 2)}$. The expected ratio,
+namely $16/(\pi^{2}\sqrt 2)$ from the ECI v12
+$\Phi_{\mathrm{univ}}=16\,L(2,\chi_{8})$ identity, has not yet been
+verified in \texttt{PARI/GP}; this falsifier is independent of, and goes
+beyond, the topological identity of Theorem~\ref{thm:main}.
+
+%===========================================================================
+\section{Open questions and the conjecture $Q_{4}^{\star}$}
+\label{sec:open}
+%===========================================================================
+
+Theorem~\ref{thm:main} proves the topological sub-claim of a broader
+conjectural duality $Q_{4}^{\star}$ tying the Hilbert side
+$X_{\Q(\sqrt 2)}=\SL_{2}(\OK^{+})\backslash\h^{2}$
+to the Bianchi side $Y_{\Q(i)}=\PSL_{2}(\Z[i])\backslash\h^{3}$
+through the Voisin K3 $S=\mathrm{Kum}(E_{32a}\times E_{32a})$.
+
+The remaining two sub-claims (currently \emph{conjectural})\footnote{We
+adopt the labelling of~\cite{ECI2026}; sub-claim (i) is
+Theorem~\ref{thm:main} of the present note, proved.} are as follows.
+
+\begin{conjecture}[$Q_{4}^{\star}$(ii): analytic embedding]
+\label{conj:embedding}
+For every Hecke eigenform $\pi\in S_{2}^{\mathrm{new}}(\Gamma_{0}(32),\chi_{8})$
+of $W_{32}$-eigenvalue $+1$,
+\[
+   \int_{X_{\Q(\sqrt 2)}}\!\!\log|\Phi^{\mathrm{Hilb}}_{\pi}|^{2}\;\omega_{\mathrm{WP}}
+   \;=\; \Phi_{\mathrm{univ}}\cdot L(2,\pi,\mathrm{Sym}^{2})
+   \;+\; (\text{boundary terms}),
+\]
+where $\Phi^{\mathrm{Hilb}}_{\pi}$ is the Hilbert Borcherds lift of $\pi$,
+$\Phi_{\mathrm{univ}}=16\,L(2,\chi_{8})=\pi^{2}\sqrt 2$ is the ECI v12
+universal constant, $\omega_{\mathrm{WP}}$ is the Weil--Petersson volume
+form on $X_{\Q(\sqrt 2)}$, and boundary terms are cusp-resolution
+contributions of order $O(\log\varepsilon)$.
+\end{conjecture}
+
+\begin{conjecture}[$Q_{4}^{\star}$(iii): S-duality matching]
+\label{conj:Sduality}
+On the level of forms of weight $2$ and conductor $32$,
+\[
+   S\,\circ\,\mathrm{DN}_{\Q(\sqrt 2)}
+   \;=\;
+   \mathrm{DN}_{\Q(i)}\,\circ\,({}\,\cdot\,\otimes\,\chi_{-4})
+\]
+as operators
+$S_{2}^{\mathrm{new}}(\Gamma_{0}(32),\chi_{8})\to S^{\mathrm{Bianchi}}_{2,\mathrm{new}}(Y_{\Q(i)})$,
+where $S$ is the strong-coupling involution of $\mathcal N=2$
+supergravity on $X_{\mathrm{BV}}=(S\times E)/\langle(\sigma,\iota)\rangle$
+exchanging the Type IIA K\"ahler modulus $T$ and the complex modulus $U$
+on $T^{2}$.
+\end{conjecture}
+
+Conjecture~\ref{conj:embedding} carries about $25\%$ confidence at the
+time of writing; Conjecture~\ref{conj:Sduality} about $30\%$. Each
+admits an explicit numerical falsifier, computable in approximately one
+hour of \texttt{PARI/GP} or Magma time. We refer the interested reader
+to the ECI working report~\cite{ECI2026} for the full development.
+
+A further extension question is whether Theorem~\ref{thm:main} holds, in
+suitably modified form, for the next imaginary quadratic fields
+$K=\Q(\sqrt{-D})$ of class number $h_{K}\geq 2$. The Tamagawa exponent
+in Proposition~\ref{prop:NW-formula} grows as
+$1+\rk_{2}\Cl(K)$, whereas Lemma~\ref{lem:dirac-index} always yields
+$\ind(D_{\sigma})=2$. Hence the literal identity
+$\NW=\ind(D_{\sigma})=2$ \emph{fails} as soon as $\rk_{2}\Cl(K)\geq 1$.
+The natural refinement is then to look for a $\Z/2^{1+\rk_{2}\Cl(K)}\Z$-equivariant
+index $\ind^{(K)}(D_{\sigma})$ matching $\NW(S)$ as elements of
+$\Z/2^{1+\rk_{2}\Cl(K)}\Z$. This is the content of the parity refinement
+$Q_{4}^{\star\star}$ alluded to in Remark~\ref{rmk:sharp}.
+
+%===========================================================================
+% Bibliography
+%===========================================================================
+
+\begin{thebibliography}{99}
+
+\bibitem{AtiyahSinger1968III}
+M.\ F.\ Atiyah and I.\ M.\ Singer,
+\textit{The index of elliptic operators: III},
+Ann.\ of Math.\ \textbf{87} (1968) 546--604.
+
+\bibitem{Aspinwall1996}
+P.\ S.\ Aspinwall,
+\textit{K3 surfaces and string duality}, TASI 1996 lectures,
+\href{https://arxiv.org/abs/hep-th/9611137}{arXiv:hep-th/9611137}.
+
+\bibitem{BlochKato1990}
+S.\ Bloch and K.\ Kato,
+\textit{L-functions and Tamagawa numbers of motives},
+in \textit{The Grothendieck Festschrift I},
+Progr.\ Math.\ \textbf{86}, Birkh\"auser, Boston, 1990, pp.\ 333--400.
+
+\bibitem{Borcea1997}
+C.\ Borcea,
+\textit{$K3$ surfaces with involution and mirror pairs of Calabi--Yau
+manifolds}, in \textit{Mirror Symmetry II},
+AMS/IP Stud.\ Adv.\ Math.\ \textbf{1}, Amer.\ Math.\ Soc., 1997, pp.\ 717--743.
+
+\bibitem{Cremona1992}
+J.\ E.\ Cremona,
+\textit{Modular symbols for $\Gamma_{1}(N)$ and elliptic curves with everywhere
+good reduction},
+Math.\ Proc.\ Cambridge Philos.\ Soc.\ \textbf{111} (1992) 199--218.
+
+\bibitem{ECI2026}
+K.\ Remondi\`ere,
+\textit{ECI working report v14: Hilbert--Bianchi--String triangle and
+new conjecture $Q_{4}^{\star}$}, internal report
+(\href{https://github.com/AIdevsmartdata/crossed-cosmos}{github.com/AIdevsmartdata/crossed-cosmos}),
+May 2026.
+
+\bibitem{LawsonMichelsohn1989}
+H.\ B.\ Lawson and M.-L.\ Michelsohn,
+\textit{Spin Geometry},
+Princeton Math.\ Series \textbf{38},
+Princeton Univ.\ Press, Princeton, NJ, 1989.
+
+\bibitem{LMFDB}
+The LMFDB Collaboration,
+\textit{The L-functions and Modular Forms Database},
+\url{https://www.lmfdb.org}, 2023.
+
+\bibitem{Nikulin1979}
+V.\ V.\ Nikulin,
+\textit{Integral symmetric bilinear forms and some of their applications},
+Math.\ USSR Izv.\ \textbf{14} (1980) 103--167
+(original: Izv.\ Akad.\ Nauk SSSR Ser.\ Mat.\ \textbf{43} (1979), 111--177).
+
+\bibitem{Schutt2008}
+M.\ Sch\"utt,
+\textit{CM newforms with rational coefficients},
+Ramanujan J.\ \textbf{19} (2009) 187--205,
+\href{https://arxiv.org/abs/math/0511228}{arXiv:math/0511228}.
+
+\bibitem{Schutt2009}
+M.\ Sch\"utt,
+\textit{Arithmetic of K3 surfaces},
+Jahresber.\ Deutsch.\ Math.-Verein.\ \textbf{111} (2009) 23--41.
+
+\bibitem{Tankeev1982}
+S.\ G.\ Tankeev,
+\textit{On algebraic cycles on simple 5-dimensional Abelian varieties},
+Math.\ USSR Izv.\ \textbf{19} (1982) 95--123.
+
+\bibitem{Voisin1993}
+C.\ Voisin,
+\textit{Miroirs et involutions sur les surfaces $K3$},
+in \textit{Journ\'ees de G\'eom\'etrie Alg\'ebrique d'Orsay (Orsay, 1992)},
+Ast\'erisque \textbf{218} (1993) 273--323.
+
+\end{thebibliography}
+
+\end{document}

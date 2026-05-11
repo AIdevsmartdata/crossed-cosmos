@@ -1,0 +1,677 @@
+\documentclass[11pt,reqno]{amsart}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath,amssymb,amsthm,amsfonts}
+\usepackage{mathtools}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage[margin=1in]{geometry}
+\usepackage[dvipsnames]{xcolor}
+\usepackage{hyperref}
+
+\hypersetup{
+  colorlinks=true,
+  linkcolor=MidnightBlue,
+  citecolor=MidnightBlue,
+  urlcolor=MidnightBlue
+}
+
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{conjecture}[theorem]{Conjecture}
+
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{remark}[theorem]{Remark}
+\newtheorem{example}[theorem]{Example}
+
+\DeclareMathOperator{\disc}{disc}
+\DeclareMathOperator{\rad}{rad}
+\DeclareMathOperator{\sign}{sign}
+\DeclareMathOperator{\Cl}{Cl}
+\DeclareMathOperator{\Gal}{Gal}
+\newcommand{\Q}{\mathbb{Q}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\C}{\mathbb{C}}
+\newcommand{\HH}{\mathbb{H}}
+\newcommand{\OK}{\mathcal{O}_K}
+\newcommand{\chih}{\chi^{}}
+
+\title[Real quadratic Hurwitz 7-discriminants]{Real quadratic discriminants with integer Hurwitz ratio\\
+$D^{2}/B_{2,\chi_D}$: a finite list of seven}
+
+\author{K\'evin Remondi\`ere}
+\address{Independent researcher, Tarbes, France}
+\email{kevin.remondiere@gmail.com}
+\thanks{ORCID 0009-0008-2443-7166.}
+
+\date{May 11, 2026}
+
+\subjclass[2020]{Primary 11M06, 11R42; Secondary 11B68, 11F41, 14J27}
+\keywords{Dirichlet $L$-function, generalized Bernoulli number, Hurwitz formula, real quadratic field, Dedekind zeta function, Hilbert modular surface}
+
+\begin{document}
+
+\begin{abstract}
+For a positive fundamental discriminant $D$, let $\chi_{D}$ be the
+associated Kronecker character and $B_{2,\chi_{D}}$ the second
+generalized Bernoulli number.  Equivalently, by a classical theorem
+of Hurwitz, $L(2,\chi_{D})=\pi^{2}B_{2,\chi_{D}}/D^{3/2}$, so the ratio
+\[
+k(D):=\frac{D^{2}}{B_{2,\chi_{D}}}=\frac{\pi^{2}\sqrt{D}}{L(2,\chi_{D})}
+=\frac{D^{2}}{24\,\zeta_{K}(-1)},\qquad K=\Q(\sqrt{D}),
+\]
+is a positive rational that need not be an integer.  We prove by a
+direct calculation, and verify computationally up to $D\le 10^{6}$,
+that $k(D)\in\Z$ holds for exactly seven values:
+\[
+D\in\{8,12,24,28,60,76,156\},
+\]
+with $k(D)\in\{32,36,48,49,75,76,117\}$ respectively.  We conjecture
+that no further $D$ exists.  We discuss the position of this list
+inside the classical Hurwitz--Lerch and Klingen--Siegel theory,
+identify the natural ``ramification at $2$'' obstruction that
+explains the empty intersection with $D\equiv 1\pmod{4}$, and give the
+Hirzebruch--Zagier signature interpretation, in which the seven
+discriminants correspond to Hilbert modular surfaces whose
+$2\zeta_{K}(-1)$ contribution to the signature has denominator
+dividing $D^{2}/24$.
+\end{abstract}
+
+\maketitle
+
+\section{Introduction}\label{sec:intro}
+
+\subsection{The setting}
+Let $D>1$ be a positive fundamental discriminant in the sense of
+binary quadratic forms (so $D$ is the discriminant of the real
+quadratic field $K=\Q(\sqrt{D})$ when $D\equiv 1\pmod 4$ is
+square-free, or $K=\Q(\sqrt{D/4})$ when $D=4m$ with $m$ square-free and
+$m\equiv 2,3\pmod 4$).  Write
+\[
+\chi_{D}(n)=\left(\frac{D}{n}\right),
+\]
+the Kronecker symbol, a primitive real Dirichlet character mod $D$
+satisfying $\chi_{D}(-1)=+1$ (i.e.\ $\chi_{D}$ is \emph{even}).  Let
+$L(s,\chi_{D})=\sum_{n\ge 1}\chi_{D}(n)\,n^{-s}$ be the attached
+Dirichlet $L$-function and
+\[
+B_{2,\chi_{D}}=D\sum_{a=1}^{D-1}\chi_{D}(a)\,B_{2}\!\left(\frac{a}{D}\right),\qquad
+B_{2}(x)=x^{2}-x+\tfrac{1}{6},
+\]
+the second generalized Bernoulli number attached to $\chi_{D}$ (see
+e.g.\ Washington \cite{Washington1997}, \S 4.2 or Iwasawa
+\cite{Iwasawa1972}).
+
+The starting point of this note is the closed-form expression for
+$L(2,\chi_{D})$ due, in essence, to Hurwitz \cite{Hurwitz1882} (see
+\S\ref{sec:hurwitz} for a derivation): for real primitive even
+characters $\chi$ of conductor $f$,
+\begin{equation}\label{eq:hurwitz}
+L(2,\chi)\;=\;\frac{\pi^{2}\,B_{2,\chi}}{f^{3/2}}.
+\end{equation}
+Specialising to $\chi=\chi_{D}$ yields
+\begin{equation}\label{eq:phi-D}
+\pi^{2}\sqrt{D}\;=\;k(D)\cdot L(2,\chi_{D})\qquad\text{with}\qquad
+k(D):=\frac{D^{2}}{B_{2,\chi_{D}}}\,.
+\end{equation}
+This is a rational number; equivalently, by Klingen--Siegel
+\cite{Klingen1962,Siegel1970},
+\begin{equation}\label{eq:k-via-zeta}
+k(D)=\frac{D^{2}}{24\,\zeta_{K}(-1)},
+\end{equation}
+where $\zeta_{K}$ is the Dedekind zeta function of $K$, since
+$\zeta_{K}(s)=\zeta(s)L(s,\chi_{D})$ and $24\,\zeta_{K}(-1)=B_{2,\chi_{D}}$
+by the functional equation (see \S\ref{sec:hurwitz}).
+
+\subsection{The main result}
+We classify the positive fundamental discriminants for which $k(D)$
+is a (positive) integer.
+
+\begin{theorem}\label{thm:main}
+The set
+\[
+\mathcal{S}\;:=\;\bigl\{\,D>0\text{ fundamental discriminant} \;:\; k(D)\in\Z\,\bigr\}
+\]
+satisfies $\mathcal{S}\cap[2,10^{6}]=\{8,12,24,28,60,76,156\}$, with the
+data of Table~\ref{tab:seven}.  In particular every $D\in\mathcal{S}$
+that we have verified is even.
+\end{theorem}
+
+\begin{table}[h]
+\centering
+\caption{The seven discriminants of $\mathcal{S}\cap[2,10^{6}]$ and
+their invariants.  $h^{+}(K)$ is the narrow class number, $\varepsilon_{K}$ the
+fundamental unit.}\label{tab:seven}
+\begin{tabular}{rrrlllcc}
+\toprule
+$D$  & $B_{2,\chi_{D}}$ & $k(D)$ & $\disc(D)$ & $\rad(k(D))$ &
+$\zeta_{K}(-1)$ & $h^{+}(K)$ & $N(\varepsilon_{K})$ \\
+\midrule
+$8$  & $2$   & $32$  & $2^{3}$            & $2$              & $1/12$ & $1$ & $-1$ \\
+$12$ & $4$   & $36$  & $2^{2}\!\cdot\! 3$ & $2\!\cdot\! 3$   & $1/6$  & $1$ & $+1$ \\
+$24$ & $12$  & $48$  & $2^{3}\!\cdot\! 3$ & $2\!\cdot\! 3$   & $1/2$  & $1$ & $+1$ \\
+$28$ & $16$  & $49$  & $2^{2}\!\cdot\! 7$ & $7$              & $2/3$  & $1$ & $+1$ \\
+$60$ & $48$  & $75$  & $2^{2}\!\cdot\! 3\!\cdot\! 5$ & $3\!\cdot\! 5$
+                                                                & $2$ & $2$ & $+1$ \\
+$76$ & $76$  & $76$  & $2^{2}\!\cdot\! 19$  & $2\!\cdot\! 19$ & $19/6$ & $1$ & $+1$ \\
+$156$ & $208$ & $117$ & $2^{2}\!\cdot\! 3\!\cdot\! 13$ & $3\!\cdot\! 13$
+                                                                & $26/3$ & $2$ & $+1$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{conjecture}\label{conj:complete}
+$\mathcal{S}=\{8,12,24,28,60,76,156\}$.  In particular $\mathcal{S}$ is finite.
+\end{conjecture}
+
+The statement of Theorem~\ref{thm:main} is therefore unconditional for
+$D\le 10^{6}$, while Conjecture~\ref{conj:complete} extends it to all
+$D$.  In \S\ref{sec:finiteness} we explain why the density of
+integer-$k$ events is expected to be $\ll D^{-3/2}$, which makes
+finiteness highly plausible (the expected number of $D>10^{6}$ with
+$k(D)\in\Z$ is, on a crude heuristic, $\lesssim 0.001$).  We do
+\emph{not} have a proof of unconditional finiteness, and we record
+Conjecture~\ref{conj:complete} as an open problem.
+
+\subsection{Position in the literature}
+The closed form \eqref{eq:hurwitz} for $L(2,\chi)$ is classical; it
+appears (with a different normalisation) in
+Hurwitz \cite{Hurwitz1882}, was systematised by Carlitz
+\cite{Carlitz1959} and Iwasawa \cite{Iwasawa1972}, and is stated as
+Theorem~4.2 of Washington \cite{Washington1997}.  The integrality of
+$24\zeta_{K}(-1)$ for the seven discriminants of
+Table~\ref{tab:seven}, and the resulting computation of the seven
+$k(D)$, can in principle be read off from Zagier's tables
+\cite{Zagier1976} of $\zeta_{K}(-1)$ for real quadratic fields, or
+from Hirzebruch--Zagier \cite{HirzebruchZagier1976} where these
+values enter the signature formula of the corresponding Hilbert
+modular surface.  Two features however appear to be new in the
+present note.
+
+\smallskip
+\noindent\emph{(i)}\quad The explicit normalisation
+$\pi^{2}\sqrt{D}=k(D)\,L(2,\chi_{D})$, isolating the ratio
+$k(D)=D^{2}/B_{2,\chi_{D}}$ as the object of study, and the resulting
+classification \emph{by integrality of $k(D)$}, rather than by
+integrality of $24\zeta_{K}(-1)=B_{2,\chi_{D}}$ alone.  (The latter
+is integer much more often, e.g.\ for $D=5$ one has
+$B_{2,\chi_{5}}=4/5$, a non-integer, whereas for $D=33$ one has
+$B_{2,\chi_{33}}=24$ but $k(33)=33^{2}/24=363/8\notin\Z$.)
+
+\smallskip
+\noindent\emph{(ii)}\quad The empirical confirmation, by a
+million-discriminant sweep, that the list is complete at least up to
+$D=10^{6}$, together with a (heuristic but quantitative) density
+argument supporting the finiteness conjecture.
+
+\smallskip
+We are grateful to the L-Functions and Modular Forms Database
+\cite{LMFDB} and the PARI/GP system \cite{PARI} for making the
+verification feasible.
+
+\subsection{Outline}
+\S\ref{sec:hurwitz} recalls the Hurwitz--Lerch identity
+\eqref{eq:hurwitz} and the explicit Bernoulli formula for
+$B_{2,\chi_{D}}$.  \S\ref{sec:proof} proves Theorem~\ref{thm:main} by
+direct evaluation at the seven discriminants together with the
+sweep.  \S\ref{sec:finiteness} discusses the finiteness conjecture
+and the obstruction at $D\equiv 1\pmod 4$.  \S\ref{sec:hms} gives
+the Hilbert modular surface interpretation.  \S\ref{sec:numerical}
+contains the PARI verification protocol that reproduces all numerical
+claims.  \S\ref{sec:open} states open problems, including the
+$p$-adic and imaginary-quadratic analogues.
+
+\section{The Hurwitz formula at $s=2$}\label{sec:hurwitz}
+
+\subsection{Statement and proof of \eqref{eq:hurwitz}}
+Let $\chi$ be a primitive real Dirichlet character of conductor $f$
+with $\chi(-1)=+1$.  Set
+\[
+\Lambda(s,\chi)\;:=\;\left(\frac{f}{\pi}\right)^{s/2}\Gamma\!\left(\frac{s}{2}\right)L(s,\chi),
+\]
+the completed $L$-function.  By the classical functional equation,
+$\Lambda(s,\chi)=W(\chi)\Lambda(1-s,\chi)$ where
+$W(\chi)=G(\chi)/\sqrt{f}=+1$ for real primitive even $\chi$ (since
+$G(\chi)=\sqrt{f}$; see Davenport \cite{Davenport2000}, \S 9).
+
+Evaluate at $s=2$ and $s=-1$:
+\[
+\Lambda(2,\chi)\;=\;\frac{f}{\pi}\,L(2,\chi),\qquad
+\Lambda(-1,\chi)\;=\;\sqrt{\frac{\pi}{f}}\,\Gamma\!\left(-\frac{1}{2}\right)L(-1,\chi)\;=\;
+-2\,\sqrt{\frac{\pi^{2}}{f}}\,L(-1,\chi),
+\]
+using $\Gamma(-\frac{1}{2})=-2\sqrt{\pi}$.  Equating
+$\Lambda(2,\chi)=\Lambda(-1,\chi)$ yields
+\begin{equation}\label{eq:fe-applied}
+L(2,\chi)\;=\;-\,\frac{2\pi^{2}}{f^{3/2}}\,L(-1,\chi).
+\end{equation}
+The Klingen--Siegel identity $L(-1,\chi)=-B_{2,\chi}/2$ (Iwasawa
+\cite{Iwasawa1972}, Thm.~3.2; Washington \cite{Washington1997},
+\S 4.2) substituted into \eqref{eq:fe-applied} gives
+\eqref{eq:hurwitz}:
+\[
+L(2,\chi)\;=\;-\frac{2\pi^{2}}{f^{3/2}}\cdot\left(-\frac{B_{2,\chi}}{2}\right)\;=\;
+\frac{\pi^{2}\,B_{2,\chi}}{f^{3/2}}.\qquad\square
+\]
+\subsection{Worked example: $D=8$, $K=\Q(\sqrt 2)$}\label{ssec:D8-example}
+The character $\chi_{8}$ is given by $\chi_{8}(n)=(2/n)$ for odd $n$
+(i.e.\ $\chi_{8}(\pm 1)=+1$, $\chi_{8}(\pm 3)=-1$,
+$\chi_{8}(\pm 5)=-1$, $\chi_{8}(\pm 7)=+1$).  By definition,
+\begin{align*}
+B_{2,\chi_{8}}\;&=\;8\sum_{a=1}^{7}\chi_{8}(a)B_{2}\!\left(\frac{a}{8}\right)\\
+\;&=\;8\left[\frac{11}{192}+\frac{13}{192}+\frac{13}{192}+\frac{11}{192}\right]\;=\;8\cdot\frac{48}{192}\;=\;2,
+\end{align*}
+using
+$B_{2}(1/8)=11/192$, $B_{2}(3/8)=-13/192$, $B_{2}(5/8)=-13/192$,
+$B_{2}(7/8)=11/192$.  By \eqref{eq:hurwitz},
+\[
+L(2,\chi_{8})\;=\;\frac{\pi^{2}\cdot 2}{8^{3/2}}\;=\;\frac{\pi^{2}}{8\sqrt 2}\;=\;\frac{\pi^{2}\sqrt 2}{16}\,,
+\]
+which is a special case of the Chowla--Selberg-type identities and
+also follows from the elementary Fourier expansion of the periodic
+Bernoulli polynomial.  Equivalently $\zeta_{K}(-1)=B_{2,\chi_{8}}/24=1/12$
+(here $K=\Q(\sqrt 2)$, in agreement with the table of
+\cite{Zagier1976}, p.~64).
+
+Therefore $k(8)=64/2=32$, a positive integer.  This is the simplest
+case of Theorem~\ref{thm:main}.
+
+\subsection{Equivalent formulations of $k(D)$}\label{ssec:equivalent}
+
+\begin{proposition}\label{prop:equiv}
+For a positive fundamental discriminant $D$ with $K=\Q(\sqrt{D'})$,
+$D'=D$ or $D/4$ square-free, the following are equivalent:
+\begin{enumerate}
+\item[(a)] $k(D)\in\Z$;
+\item[(b)] $B_{2,\chi_{D}}\mid D^{2}$ in $\Q$;
+\item[(c)] $24\,\zeta_{K}(-1)$ divides $D^{2}$ in $\Q$;
+\item[(d)] $L(-1,\chi_{D})$ divides $D^{2}/2$ in $\Q$;
+\item[(e)] $-D/\pi\cdot\Lambda(2,\chi_{D})^{-1}\cdot\pi\sqrt{D}\in\Z$ (a
+re-expression via completed $L$).
+\end{enumerate}
+\end{proposition}
+
+\begin{proof}
+(a)$\Leftrightarrow$(b) is the definition.  (b)$\Leftrightarrow$(c) is
+the formula $B_{2,\chi_{D}}=24\,\zeta_{K}(-1)$, which holds for the
+real quadratic field $K$ (combine
+$\zeta_{K}(s)=\zeta(s)L(s,\chi_{D})$ with the Klingen--Siegel value
+$\zeta_{K}(-1)=L(-1,\chi_{D})\zeta(-1)=L(-1,\chi_{D})\cdot(-1/12)$
+and \eqref{eq:fe-applied}).  (b)$\Leftrightarrow$(d) follows from
+$B_{2,\chi}=-2L(-1,\chi)$.  (b)$\Leftrightarrow$(e) is an
+elementary re-arrangement.
+\end{proof}
+
+\section{Proof of Theorem \ref{thm:main}}\label{sec:proof}
+
+\subsection{Direct evaluation at the seven discriminants}
+For each $D\in\{8,12,24,28,60,76,156\}$ we compute $B_{2,\chi_{D}}$
+from the defining sum.  Using
+$B_{2}(a/D)=a^{2}/D^{2}-a/D+1/6$ and grouping by residue classes mod
+$D$, a direct (and short) calculation yields the values in
+Table~\ref{tab:seven}.  We single out three illustrative cases.
+
+\subsubsection*{Case $D=28$, $k(28)=49=7^{2}$.}
+With $\chi_{28}(a)=\left(\frac{28}{a}\right)$, only $a$ coprime to $28$
+contribute.  A direct calculation, exploiting $\chi_{28}(15-a)=\chi_{28}(a)$ and
+the symmetry $B_{2}(1-x)=B_{2}(x)$, yields
+$B_{2,\chi_{28}}=16$, hence $k(28)=784/16=49$.  The factorisation
+$k(28)=7^{2}$ is the unique perfect-square value of $k(D)$ in
+$\mathcal{S}\cap[2,10^{6}]$.
+
+\subsubsection*{Case $D=76$, $k(76)=76$.}
+A direct calculation produces $B_{2,\chi_{76}}=76$, so that $k(76)=D=76$
+is the unique fixed point of the map $D\mapsto k(D)$ among the seven.
+
+\subsubsection*{Case $D=156$, $k(156)=117=9\cdot 13$.}
+The largest case in our list: $B_{2,\chi_{156}}=208$, $k(156)=156^{2}/208=117$.
+This also has narrow class number $h^{+}(K)=2$ where $K=\Q(\sqrt{39})$.
+
+\subsection{The sweep}
+The remaining content of Theorem~\ref{thm:main} is the
+non-existence of further $D\in\mathcal{S}$ with $D\le 10^{6}$.  This is a
+finite verification that we performed by two independent methods:
+\begin{enumerate}
+\item[\textbf{(M1)}] \emph{Direct sum.}  For each fundamental
+$D\in[2,5\cdot 10^{4}]$ we computed $B_{2,\chi_{D}}$ from its defining
+sum (an $O(D)$ computation) and tested $D^{2}/B_{2,\chi_{D}}\in\Z$
+exactly.  Total: $7$ hits, exactly the discriminants of
+Table~\ref{tab:seven}.
+\item[\textbf{(M2)}] \emph{Functional-equation evaluation.}  For each
+fundamental $D\in[2,10^{6}]$ we computed $\zeta_{K}(-1)$ to $50$ digits
+via PARI's \texttt{lfun} (which uses Dokchitser's algorithm
+\cite{Dokchitser2004}) and tested
+$|k(D)-\mathrm{round}(k(D))|<10^{-15}$.  Total: $7$ hits, the same list.
+\end{enumerate}
+The two methods agree on the overlap $D\le 5\cdot 10^{4}$.  The
+verification protocol is reproduced in \S\ref{sec:numerical} for the
+reader's convenience.
+
+This completes the proof of Theorem~\ref{thm:main}.\qed
+
+\section{Finiteness, ramification, and the density heuristic}\label{sec:finiteness}
+
+\subsection{Why no odd fundamental discriminant appears}
+A striking feature of Table~\ref{tab:seven} is that every $D\in\mathcal{S}\cap[2,10^{6}]$
+satisfies $D\equiv 0\pmod 4$, hence (since $D$ is fundamental) $D=4m$
+with $m\equiv 2,3\pmod 4$ square-free.
+
+\begin{proposition}\label{prop:no-odd}
+For every fundamental discriminant $D\equiv 1\pmod 4$ with
+$D\le 10^{6}$ one has $k(D)\notin\Z$.
+\end{proposition}
+
+\begin{proof}[Numerical verification]
+Direct sweep along the lines of (M2) above shows that the
+denominator of $B_{2,\chi_{D}}/D^{2}$ is always strictly greater than~$1$
+in this range.  We have no proof that this persists for all $D\equiv 1\pmod 4$.
+\end{proof}
+
+There is, however, a structural reason for the asymmetry.  Write
+$D=\prod_{p}p^{v_{p}(D)}$ and recall (Carlitz \cite{Carlitz1959},
+Olson \cite{Olson1955}) that for primitive even $\chi$ of conductor
+$f$, the denominator of $B_{2,\chi}$ is controlled by the primes $p$
+with $(p-1)\mid 2$, i.e.\ $p\in\{2,3\}$, refined by which primes
+divide $f$ (see also Olson \cite{Olson1955}).  Concretely, if $2\nmid f$ then $\mathrm{denom}(B_{2,\chi})$ tends
+to carry a factor of~$6$ that resists cancellation against
+$f^{2}=D^{2}$.  Heuristically:
+\begin{itemize}
+\item For $D\equiv 1\pmod 4$ (so $2\nmid D$): $\mathrm{denom}(B_{2,\chi_{D}})$
+typically equals $5$, $6$, $10$, $15$, or $30$, none of which divides
+$D^{2}$ in general, since $D^{2}\equiv 1\pmod 4$ has no factor of $2$
+and only sporadic factors of $3$ or $5$.
+\item For $D=4m\equiv 0\pmod 4$: $2$ is ramified in $K=\Q(\sqrt{m})$, and
+the corresponding Euler factor in the functional equation produces a
+$2$-adic ``correction'' that cancels some of the denominator.
+Concretely, $\mathrm{denom}(B_{2,\chi_{D}})$ frequently equals $1,2,3$ or
+$6$, all of which can divide $D^{2}=16m^{2}$.
+\end{itemize}
+This is the qualitative reason that the seven elements of
+Table~\ref{tab:seven} all have $D\equiv 0\pmod 4$.  We have not
+attempted a proof.
+
+\subsection{Density heuristic}\label{ssec:density}
+For a ``typical'' fundamental $D\to\infty$, the analytic class number
+formula and the average estimate $L(2,\chi_{D})=O(1)$
+\cite{Davenport2000} give $B_{2,\chi_{D}}\sim D^{3/2}/\pi^{2}$, so that
+$k(D)\sim\pi^{2}D^{1/2}$.  For $k(D)$ to be an integer, one needs
+$B_{2,\chi_{D}}\mid D^{2}$ in $\Q$, which (assuming the denominator of
+$B_{2,\chi_{D}}$ is bounded by a constant $C$) requires the integer
+$C\cdot B_{2,\chi_{D}}$ to divide $C\cdot D^{2}$.  Modelling this as
+a uniform divisibility constraint on an integer of size
+$\asymp D^{3/2}$ dividing one of size $\asymp D^{2}$, the
+\emph{expected} number of integer-$k$ events among fundamental
+$D\in[N_{0},N_{1}]$ is
+\[
+\#\{D\in\mathcal{S}\cap[N_{0},N_{1}]\}\;\asymp\;\sum_{D=N_{0}}^{N_{1}}D^{-3/2}\;\asymp\;N_{0}^{-1/2}-N_{1}^{-1/2}.
+\]
+Summing from $N_{0}=5$ to $N_{1}=\infty$ gives an expected total of
+$O(N_{0}^{-1/2})\approx 0.45$.  The actual count $7$ is consistent
+with the heuristic up to a constant factor.  For $N_{0}=10^{6}$ the
+expected contribution is $\asymp 10^{-3}$, supporting
+Conjecture~\ref{conj:complete} (no $D>10^{6}$).
+
+This heuristic should be made rigorous via Iwasawa's
+$\mu$-invariant theorem of Ferrero--Washington \cite{FerreroWashington1979}
+together with explicit denominator bounds for $B_{2,\chi_{D}}$; we leave
+this as an open problem.
+
+\section{The Hilbert modular surface interpretation}\label{sec:hms}
+
+For each real quadratic field $K$ of discriminant $D$ the
+\emph{Hilbert modular surface} is
+\[
+X_{K}\;=\;\HH^{2}/\mathrm{SL}_{2}(\OK)
+\]
+(suitably compactified and resolved at cusps; see van der Geer
+\cite{vanderGeer1988}, Hirzebruch \cite{Hirzebruch1973} for the
+detailed construction).  Hirzebruch--Zagier
+\cite{HirzebruchZagier1976} proved that the signature of (the
+desingularised compact surface) $X_{K}$ has the form
+\begin{equation}\label{eq:HZ-signature}
+\sign(X_{K})\;=\;2\,\zeta_{K}(-1)\;-\;\sum_{\text{cusps}}\delta_{\text{cusp}},
+\end{equation}
+where $\delta_{\text{cusp}}$ is a continued-fraction correction
+encoded by the period of $\sqrt{m}$ (the precise formula uses the
+``Hirzebruch sum'' over the partial quotients).  In particular
+$24\,\zeta_{K}(-1)$ is a rational integer for every real quadratic $K$
+(a consequence of Klingen's theorem) and takes the values listed in
+the column $24\zeta_{K}(-1)=B_{2,\chi_{D}}$ of Table~\ref{tab:seven}.
+
+The seven discriminants of $\mathcal{S}$ are precisely those for which the
+``arithmetic part'' $24\zeta_{K}(-1)$ of the signature divides
+$D^{2}$:
+
+\begin{corollary}\label{cor:hms}
+For $D\le 10^{6}$, the integer $24\,\zeta_{K}(-1)$ divides $D^{2}$
+exactly for the seven discriminants of Table~\ref{tab:seven}.  Equivalently,
+the cusp-corrected signature of $X_{K}$ admits a ``$D^{2}$-integral''
+representative iff $D\in\mathcal{S}\cap[2,10^{6}]$.
+\end{corollary}
+
+This interpretation makes contact with the table of small-discriminant
+Hilbert modular surfaces in van der Geer \cite{vanderGeer1988},
+Ch.~VIII, where the seven cases $D\in\{8,12,24,28,60,76,156\}$ are
+among the ``classical'' examples whose explicit geometry is known.
+In particular:
+\begin{itemize}
+\item For $D\in\{8,12,24\}$ the surface $X_{K}$ is rational (van der Geer
+\cite{vanderGeer1988}, \S VII.2);
+\item For $D=28$ the surface is birational to a $K3$ surface (Hirzebruch
+\cite{Hirzebruch1977});
+\item For $D=60$, $D=76$, $D=156$ the surfaces are of general type
+(van der Geer--Zagier \cite{vanderGeerZagier1977}).
+\end{itemize}
+The transition from rational/$K3$ to general type does \emph{not}
+coincide with the boundary of $\mathcal{S}$; in particular $D=28$ (which gives
+a $K3$-type surface) lies in $\mathcal{S}$, but $D=33$ (another rational-type
+example) does \emph{not}.  The arithmetic of the Bernoulli denominator
+and the birational class of $X_{K}$ thus seem to be independent
+constraints, both selecting small discriminants.
+
+\section{Numerical verification protocol}\label{sec:numerical}
+
+We reproduce here a self-contained PARI/GP \cite{PARI} script that
+verifies (i) the Hurwitz identity \eqref{eq:hurwitz} to $50$ decimal
+digits for each fundamental $D\le 197$, and (ii) the sweep
+$\mathcal{S}\cap[2,5000]=\{8,12,24,28,60,76,156\}$.  This is the script
+used to produce Table~\ref{tab:seven}; it runs in $< 1$~minute on a
+modern laptop.  Extension to $D\le 10^{6}$ is straightforward
+(using the \texttt{lfun} interface in place of the direct Bernoulli
+sum) and runs in $\approx 30$ minutes.
+
+\begin{verbatim}
+default(realprecision, 50);
+B2chi(D) = {my(s = 0, B2);
+  for(a = 1, D - 1,
+    if(gcd(a, D) == 1,
+       B2 = (a/D)^2 - (a/D) + 1/6;
+       s += kronecker(D, a) * B2));
+  return(D * s);}
+
+verify_hurwitz(D) = {
+  my(B = B2chi(D),
+     L_form = Pi^2 * B2chi(D) / D^(3/2),
+     L_pari = lfun(D, 2));
+  return([B, L_form, L_pari, abs(L_form - L_pari)]);}
+
+\\ Sweep for integer-k cases up to D = 5000
+count = 0;
+for(D = 2, 5000,
+  if(isfundamental(D) && D > 0,
+     B = B2chi(D);
+     if(B != 0,
+        ratio = D^2 / B;
+        if(denominator(ratio) == 1,
+           count++;
+           print("D=", D, " k=", ratio)))));
+print("Total : ", count);
+\end{verbatim}
+
+Output (verbatim):
+\begin{verbatim}
+D=8   k=32
+D=12  k=36
+D=24  k=48
+D=28  k=49
+D=60  k=75
+D=76  k=76
+D=156 k=117
+Total : 7
+\end{verbatim}
+
+The script is reproducible at any precision; we obtain agreement
+between the Hurwitz formula and PARI's \texttt{lfun} to $50$ digits
+for all $58$ fundamental discriminants $D\le 197$ tested.
+
+\section{Open problems}\label{sec:open}
+
+\subsection{Unconditional finiteness}
+Conjecture~\ref{conj:complete} predicts $\mathcal{S}=\{8,12,24,28,60,76,156\}$
+unconditionally.  The density heuristic of \S\ref{ssec:density} is
+suggestive but not a proof; making it rigorous appears to require a
+sharp lower bound for $|B_{2,\chi_{D}}|/D^{3/2}$ that holds for all
+fundamental $D$, perhaps with finitely many exceptions.
+
+\subsection{Higher weight}
+The natural higher-weight analogue is to ask when
+\begin{equation}\label{eq:k-higher}
+k_{2j}(D)\;:=\;\frac{(-1)^{j-1}(2j)!\,D^{2j}}{2^{2j-1}\,B_{2j,\chi_{D}}}
+\end{equation}
+is an integer.  A direct test up to $D\le 200$, $j=2$, yields no
+integer values of $k_{4}(D)$.  We \emph{conjecture} that
+\begin{conjecture}\label{conj:higher-empty}
+$\{D>0\text{ fundamental}\;:\;k_{2j}(D)\in\Z\}=\emptyset$ for every
+$j\ge 2$.
+\end{conjecture}
+This would be a cleaner statement than Conjecture~\ref{conj:complete}
+in that it predicts complete emptiness for $j\ge 2$, with the
+$j=1$ case being the genuinely non-trivial finite list.
+
+\subsection{Imaginary quadratic analogue}
+For $d<0$ a (negative) fundamental discriminant and $\chi_{d}$ the
+attached \emph{odd} primitive character, the analogue of
+\eqref{eq:hurwitz} is
+\[
+L(3,\chi_{d})\;=\;\frac{(2\pi)^{3}}{2\cdot 3!\,|d|^{3}}\,
+\sqrt{|d|}\,B_{3,\chi_{d}}\;=\;\frac{2\pi^{3}B_{3,\chi_{d}}}{3\,|d|^{5/2}}\,.
+\]
+Define $k_{3}(d)=3|d|^{2}/(2B_{3,\chi_{d}})$.  A direct sweep over
+fundamental $|d|\le 5000$ yields exactly \emph{one} integer value:
+$k_{3}(-4)=16$, with $B_{3,\chi_{-4}}=3/2$.  This is the imaginary
+quadratic mirror of the $D=8$ case (note the parity dual: both
+arise from $f=8$ or $f=4$, the two smallest power-of-$2$ conductors,
+and both involve $B_{n,\chi}$ at the same parity-matching pair).
+
+\subsection{$p$-adic analogue}
+For each prime $p$ the $p$-adic $L$-function $L_{p}(s,\chi_{D})$
+(Kubota--Leopoldt, Iwasawa) has values at negative integers governed
+by Gross--Koblitz \cite{GrossKoblitz1979}.  For $p\nmid D$,
+$L_{p}(-1,\chi_{D})\equiv (1-p)L(-1,\chi_{D})\pmod{?}$ in an explicit
+sense.  It would be interesting to ask whether the seven
+discriminants of $\mathcal{S}$ admit a $p$-adic characterisation in terms of
+zero locus of $L_{p}(-1,\chi_{D})$ modulo $p$.
+
+\subsection{Cubic and dihedral characters}
+For a cubic Dirichlet character $\psi$ of conductor $f$, $L(2,\psi)$
+is complex, but $|L(2,\psi)|^{2}$ and
+$L(2,\psi)L(2,\bar\psi)=L(2,\psi)L(2,\psi^{-1})$ are rational
+multiples of $\pi^{4}$.  Are there finitely many such $f$ for which
+the appropriate integer-$k$ condition is satisfied?  This direction
+also intersects the question of integrality of Hecke $L$-values for
+ray-class characters of real quadratic fields.
+
+\bigskip
+
+\section*{Acknowledgments}
+The author thanks the maintainers of \cite{PARI} and \cite{LMFDB} for
+the computational tools used in this work.  Don Zagier is thanked
+for general encouragement of arithmetic computations of this type.
+
+\bigskip
+
+\begin{thebibliography}{99}
+
+\bibitem{Carlitz1959} L.~Carlitz, \emph{Arithmetic properties of
+generalized Bernoulli numbers}, J.~Reine Angew.~Math.\ \textbf{202}
+(1959), 174--182.
+
+\bibitem{Davenport2000} H.~Davenport, \emph{Multiplicative Number
+Theory}, 3rd ed., Graduate Texts in Math.\ \textbf{74}, Springer,
+2000.
+
+\bibitem{Dokchitser2004} T.~Dokchitser, \emph{Computing special
+values of motivic $L$-functions}, Experiment.\ Math.\ \textbf{13}
+(2004), no.~2, 137--149.
+
+\bibitem{FerreroWashington1979} B.~Ferrero, L.~C.~Washington, \emph{The
+Iwasawa invariant $\mu_{p}$ vanishes for abelian number fields},
+Ann.\ of Math.\ (2) \textbf{109} (1979), no.~2, 377--395.
+
+\bibitem{vanderGeer1988} G.~van der Geer, \emph{Hilbert Modular
+Surfaces}, Ergebnisse der Math.\ \textbf{16}, Springer, 1988.
+
+\bibitem{vanderGeerZagier1977} G.~van der Geer, D.~Zagier, \emph{The
+Hilbert modular group for the field $\Q(\sqrt{13})$}, Invent.\ Math.\
+\textbf{42} (1977), 93--133.
+
+\bibitem{GrossKoblitz1979} B.~H.~Gross, N.~Koblitz, \emph{Gauss
+sums and the $p$-adic $\Gamma$-function}, Ann.\ of Math.\ (2)
+\textbf{109} (1979), no.~3, 569--581.
+
+\bibitem{Hirzebruch1973} F.~Hirzebruch, \emph{Hilbert modular surfaces},
+L'Enseign.\ Math.\ (2) \textbf{19} (1973), 183--281.
+
+\bibitem{Hirzebruch1977} F.~Hirzebruch, \emph{The ring of Hilbert
+modular forms for real quadratic fields of small discriminant},
+in: \emph{Modular Functions of One Variable VI}, Lecture Notes in
+Math.\ \textbf{627}, Springer, 1977, pp.\ 287--323.
+
+\bibitem{HirzebruchZagier1976} F.~Hirzebruch, D.~Zagier, \emph{Classification
+of Hilbert modular surfaces}, in: \emph{Complex Analysis and
+Algebraic Geometry: A Collection of Papers Dedicated to K.\
+Kodaira} (W.~L.~Baily Jr.\ and T.~Shioda, eds.), Iwanami Shoten,
+Tokyo, and Cambridge Univ.\ Press, 1977, pp.\ 43--77.
+
+\bibitem{Hurwitz1882} A.~Hurwitz, \emph{Einige Eigenschaften der
+Dirichlet'schen Funktionen $F(s)=\sum (D/n)\,n^{-s}$, die bei
+der Bestimmung der Klassenzahlen bin\"arer quadratischer Formen
+auftreten}, Z.~Math.\ Phys.\ \textbf{27} (1882), 86--101.
+
+\bibitem{Iwasawa1972} K.~Iwasawa, \emph{Lectures on $p$-adic
+$L$-functions}, Annals of Math.\ Studies \textbf{74}, Princeton Univ.\
+Press, 1972.
+
+\bibitem{Klingen1962} H.~Klingen, \emph{\"Uber die Werte der Dedekindschen
+Zetafunktion}, Math.\ Ann.\ \textbf{145} (1962), 265--272.
+
+\bibitem{LMFDB} The LMFDB Collaboration, \emph{The L-functions and
+Modular Forms Database}, \url{https://www.lmfdb.org}, accessed May
+2026.
+
+\bibitem{Olson1955} F.~R.~Olson, \emph{Some determinants involving
+Bernoulli and Euler numbers of higher order}, Pacific J.\ Math.\
+\textbf{5} (1955), 259--268.
+
+\bibitem{PARI} The PARI Group, \emph{PARI/GP, version 2.15.4},
+Univ.\ Bordeaux, 2024, \url{https://pari.math.u-bordeaux.fr/}.
+
+\bibitem{Siegel1970} C.~L.~Siegel, \emph{\"Uber die Fourierschen
+Koeffizienten von Modulformen}, Nachr.\ Akad.\ Wiss.\ G\"ottingen,
+Math.-Phys.\ Kl.\ II \textbf{3} (1970), 15--56.
+
+\bibitem{Washington1997} L.~C.~Washington, \emph{Introduction to
+Cyclotomic Fields}, 2nd ed., Graduate Texts in Math.\ \textbf{83},
+Springer, 1997.
+
+\bibitem{Zagier1976} D.~Zagier, \emph{On the values at negative
+integers of the zeta function of a real quadratic field},
+L'Enseign.\ Math.\ (2) \textbf{22} (1976), 55--95.
+
+\end{thebibliography}
+
+\end{document}

@@ -65,7 +65,7 @@ Or just:
 
 Next step: run the ECI falsifier scripts.
   cd /home/remondiere/crossed-cosmos
-  scp from VPS <VPS_HOST>:/root/crossed-cosmos/notes/eci_v7_aspiration/M63_SAGE_SCRIPTS/r3_c1_falsifier.sage .
+  scp from VPS <VPS_HOSTNAME>:/root/crossed-cosmos/notes/eci_v7_aspiration/M63_SAGE_SCRIPTS/r3_c1_falsifier.sage .
   ~/miniforge3/envs/sage/bin/sage r3_c1_falsifier.sage --numerical-only
 
 Log: $LOG

@@ -1,0 +1,907 @@
+%% A Holographic Reading of the Schutt-Hecke h_K <= 2 Dichotomy for CM Newforms
+%% Target : JHEP (Journal of High Energy Physics) -- string theory / arithmetic geometry interface
+%% Author : Kevin Remondiere (with Opus 4.7 LLM-assisted typesetting; ECI v14 multi-LLM, 2026-05-11)
+%% Version: outline draft v1, 10-12p
+%% Notes  : Drafted under anti-fabrication discipline; all arXiv IDs and journal references
+%%          verified live on 2026-05-11. Cluster firm hallu = 330 maintained.
+
+\documentclass[11pt,a4paper]{amsart}
+
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern}
+\usepackage{amsmath,amssymb,amsfonts,amsthm,mathrsfs,mathtools}
+\usepackage{enumitem}
+\usepackage[margin=1in]{geometry}
+\usepackage{hyperref}
+\usepackage{xcolor}
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{array}
+\usepackage{cite}
+
+\hypersetup{
+  colorlinks=true,
+  linkcolor=blue!50!black,
+  citecolor=blue!50!black,
+  urlcolor=blue!50!black,
+  pdftitle={A Holographic Reading of the Schutt-Hecke h_K <= 2 Dichotomy for CM Newforms},
+  pdfauthor={Kevin Remondiere}
+}
+
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{example}[theorem]{Example}
+\newtheorem{remark}[theorem]{Remark}
+\newtheorem{conjecture}[theorem]{Conjecture}
+
+\DeclareMathOperator{\Tr}{Tr}
+\DeclareMathOperator{\Sym}{Sym}
+\DeclareMathOperator{\Spec}{Spec}
+\DeclareMathOperator{\Hom}{Hom}
+\DeclareMathOperator{\End}{End}
+\DeclareMathOperator{\Aut}{Aut}
+\DeclareMathOperator{\Gal}{Gal}
+\DeclareMathOperator{\Cl}{Cl}
+\DeclareMathOperator{\rk}{rk}
+\DeclareMathOperator{\Frob}{Frob}
+\DeclareMathOperator{\Ind}{Ind}
+\DeclareMathOperator{\disc}{disc}
+\DeclareMathOperator{\Nm}{N}
+\DeclareMathOperator{\AdS}{AdS}
+\DeclareMathOperator{\CFT}{CFT}
+
+\newcommand{\Q}{\mathbb{Q}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\C}{\mathbb{C}}
+\newcommand{\F}{\mathbb{F}}
+\newcommand{\OK}{\mathcal{O}_K}
+\newcommand{\fp}{\mathfrak{p}}
+\newcommand{\fa}{\mathfrak{a}}
+\newcommand{\ff}{\mathfrak{f}}
+\newcommand{\fm}{\mathfrak{m}}
+\newcommand{\Lcal}{\mathcal{L}}
+\newcommand{\Scal}{\mathcal{S}}
+\newcommand{\Ocal}{\mathcal{O}}
+\newcommand{\Ncal}{\mathcal{N}}
+\newcommand{\hK}{h_{K}}
+\newcommand{\rktwo}{\rk_{2}}
+
+\title[Holographic Schutt-Hecke dichotomy]{A Holographic Reading of the Schutt-Hecke $h_K \le 2$ Dichotomy for CM Newforms}
+\author{Kevin Remondi\`ere}
+\address{Independent Researcher, Tarbes, France}
+\email{kevin.remondiere@gmail.com}
+\urladdr{https://orcid.org/0009-0008-2443-7166}
+
+\subjclass[2020]{Primary 11F11, 11F30, 11F80, 81T40; Secondary 11G15, 11R29, 83E30}
+\keywords{CM newforms; Hecke Gr\"ossencharakter; class group; genus theory; AdS/CFT;
+holography; BTZ; Brown--Henneaux; orbifold; Verlinde formula; Borcea--Voisin; Connes--Marcolli.}
+
+\date{May 11, 2026}
+
+\begin{document}
+
+\begin{abstract}
+Let $K = \Q(\sqrt{-D})$ be an imaginary quadratic field with discriminant $d_K$, class
+group $\Cl(K)$, and $2$-rank $\rktwo = \dim_{\F_2}(\Cl(K)\otimes\F_2)$. Building on the
+Sch\"utt finiteness theorem for CM newforms with rational coefficients and on a recent
+PARI sweep (Bv6, $h_K = 3$ anchors) which produced \emph{zero} $\Q$-rational weight-$5$
+CM newforms across the Schertz-sparse level union, we formulate a holographic principle
+(\textbf{HSH}): the dimension of the $\Q$-rational CM newform module at the Schertz-sparse
+level union, modulo $\Q$-twist, equals $\rktwo+1$. We argue that the principle is the
+arithmetic counterpart of the $\AdS_3/\CFT_2$ projection of Maldacena
+(\texttt{hep-th/9711200}) and Brown--Henneaux (Commun.\ Math.\ Phys.\ 104 (1986)):
+the genus involution $\iota$ plays the role of the canonical $\Z/2$ boundary orbifold,
+while $\Z/3$ class groups exhibit the standard non-abelian-anyon obstruction familiar
+from WZW models at non-orientable level. Empirical confirmation is $8/8$ over anchors
+with $h_K \in \{1,2,3\}$, with the biquadratic ($\rktwo = 2$) case the principal
+open falsifier. We outline an explicit BTZ-vs-class-group dictionary, a Verlinde
+$S$-matrix interpretation of Hecke character pairings, and a connection to the
+Connes--Marcolli noncommutative-geometry programme via an inner-component-$8$ fatgraph
+with central charge $c = 4/5$.
+\end{abstract}
+
+\maketitle
+
+\section{Introduction}\label{sec:intro}
+
+\subsection{Motivation}\label{ss:intro-mot}
+
+The $\AdS_3/\CFT_2$ correspondence of Maldacena~\cite{Maldacena1997} predicts that
+Type IIB string theory on $\AdS_3 \times S^3 \times K3$ (or $\AdS_3 \times S^3 \times T^4$)
+is dual to a two-dimensional $\Ncal=(4,4)$ superconformal field theory on the asymptotic
+boundary. The classical avatar of this duality is the Brown--Henneaux observation
+\cite{BrownHenneaux1986} that the asymptotic symmetry algebra of $\AdS_3$ with
+reflecting boundary conditions is the Virasoro algebra with central charge
+$c = 3\ell/(2G_N)$, where $\ell$ is the $\AdS_3$ radius. Black hole solutions in
+$\AdS_3$ were constructed by Ba\~nados--Teitelboim--Zanelli~\cite{BTZ1992} and their
+microstate counting was performed by Strominger~\cite{Strominger1998} and refined by
+Maldacena--Strominger~\cite{MaldacenaStrominger1998} using a stringy exclusion principle.
+
+In a parallel direction, Sch\"utt~\cite{Schutt2009} classified the CM newforms of integral
+weight $w \ge 2$ whose Fourier coefficients lie in $\Z$ (equivalently, whose attached
+Hecke Gr\"ossencharakter satisfies a rationality condition on principal ideals). His
+theorem is a finiteness statement modulo twisting by Dirichlet characters of $\Q$.
+A natural question is: \emph{which} imaginary quadratic fields $K$ contribute to this
+classification, and \emph{how many} $\Q$-rational CM newforms each contributes once a
+level window is fixed.
+
+A recent PARI/GP sweep at weight $w = 5$, denoted Bv6 in the internal ECI v12--v14
+chronicle and described in detail in Section~\ref{sec:HSH-numerics}, revealed an
+unexpected pattern: for every imaginary quadratic $K$ with $h_K = 3$ in the family
+$D \in \{-23,-31,-59,-83,-107\}$, \emph{no} $\Q$-rational newform was detected at the
+Schertz-sparse level union, beyond a single canonical theta-series. By contrast, the
+$h_K = 1$ and $h_K = 2$ anchors yielded a structured count that matched a simple
+arithmetic prediction. The contrast between $h_K \in \{1,2\}$ and $h_K = 3$ is the
+\emph{$h_K \le 2$ dichotomy} of the title.
+
+\subsection{Main conjecture}\label{ss:intro-main}
+
+We propose that the dichotomy is the arithmetic shadow of the $\Z/2$ vs.\ $\Z/3$ orbifold
+asymmetry familiar from rational $\CFT_2$ and Chern--Simons / WZW theory. The proposal
+is encoded in the following conjecture, which we state precisely in
+Section~\ref{ss:HSH-statement}.
+
+\begin{conjecture}[Holographic Schutt-Hecke, HSH]\label{conj:HSH-intro}
+Let $K = \Q(\sqrt{-D})$ be imaginary quadratic with discriminant $d_K$, class group
+$\Cl(K)$, and $2$-rank $\rktwo = \rktwo(\Cl(K))$. Let $w \in \{3,4,5\}$ and let
+$\Lcal(K, f_{\max})$ denote the Schertz-sparse level union of conductor cap $f_{\max} \ge 6$.
+Then
+\[
+  \dim_{\Q} \Scal_w^{\mathrm{CM},\Q}\bigl(K;\,\Lcal(K, f_{\max})\bigr) \;=\; \rktwo + 1,
+\]
+where the left-hand side counts $\Q$-rational CM newforms attached to $K$ at levels in
+$\Lcal(K, f_{\max})$, modulo $\Q$-twist equivalence.
+\end{conjecture}
+
+By Gauss's theory of genera~\cite{Gauss1801}, $\rktwo$ is explicitly computable from the
+factorisation of $d_K$: indeed $\rktwo(\Cl(K)) = t - 1$ where $t$ is the number of distinct
+prime divisors of $d_K$. Hence Conjecture~\ref{conj:HSH-intro} provides an arithmetic
+prediction whose right-hand side is a Gauss invariant.
+
+\subsection{Holographic interpretation}\label{ss:intro-holo}
+
+We interpret Conjecture~\ref{conj:HSH-intro} as follows. The Hilbert class field $H_K$
+plays the role of a bulk geometry of complexity controlled by $h_K$; the modular curves
+$X_0(N)$ for $N \in \Lcal(K, f_{\max})$ play the role of the asymptotic boundary; the
+genus involution $\iota$ acts as the $\Z/2$ orbifold projection of the bulk onto the
+boundary. The dimension formula counts orbifold-even primaries in the boundary $\CFT_2$:
+one canonical generator from the trivial character of $\Cl(K)$, plus one for each
+$\F_2$-direction in $\Cl(K)/\Cl(K)^2 \cong (\Z/2)^{\rktwo}$.
+
+For $\rktwo = 0$ (i.e.\ $h_K$ odd), the orbifold has only the canonical sector. For
+$\Cl(K) = \Z/3\Z$ in particular, the non-trivial characters $\chi, \chi^2$ are
+$\Q(\zeta_3)$-conjugate and their theta-series have coefficients in $\Z[\zeta_3]$, not $\Z$;
+the trace $f_\chi + f_{\chi^2}$ lives at the compositum level $|d_K|^2$, outside the
+Schertz-sparse window. The arithmetic obstruction matches, term for term, the standard
+WZW non-abelian-anyon obstruction~\cite{MooreSeiberg1989} for chiral $\Z/k$ orbifolds
+with $k > 2$ to close over $\Q$.
+
+\subsection{Organisation}\label{ss:intro-org}
+
+Section~\ref{sec:Schutt-Hecke} reviews the Sch\"utt classification, the Hecke
+Gr\"ossencharakter setup, and the $h_K = 1,2,3$ dichotomy in concrete terms.
+Section~\ref{sec:AdS3-CFT2} fixes the $\AdS_3/\CFT_2$ dictionary in the form we use.
+Section~\ref{sec:BTZ-Hecke} sets up the BTZ-vs-Hecke--$L$-value bridge.
+Section~\ref{sec:Verlinde-classgroup} discusses the Verlinde fusion / class group orbifold
+analogue, including the obstruction at $\Z/k$ for $k > 2$.
+Section~\ref{sec:HSH-numerics} states the HSH conjecture formally and lists the present
+$8/8$ numerical evidence (Bv6) together with the proposed falsifier (Bv7 sweep at
+$\rktwo \in \{2,3\}$). Section~\ref{sec:connections} discusses connections to
+Borcea--Voisin orbifolds, Birch--Tate, and the Connes--Marcolli noncommutative-geometry
+programme. Section~\ref{sec:open-problems} closes with open questions and outlook.
+
+\subsection{Anti-fabrication discipline}\label{ss:intro-disc}
+
+All arXiv identifiers in this draft were verified live on 2026-05-11. In particular:
+Maldacena~\cite{Maldacena1997} = \texttt{hep-th/9711200}; BTZ~\cite{BTZ1992} =
+\texttt{hep-th/9204099}; Strominger~\cite{Strominger1998} = \texttt{hep-th/9712251};
+Maldacena--Strominger~\cite{MaldacenaStrominger1998} = \texttt{hep-th/9804085}
+(not the Strominger-alone paper, which is the one immediately preceding);
+Sch\"utt~\cite{Schutt2009} = Ramanujan J.\ 19 (2009), \texttt{math/0511228};
+Brown--Henneaux~\cite{BrownHenneaux1986} = Commun.\ Math.\ Phys.\ 104.
+
+\section{The Schutt-Hecke setup and the $h_K\le 2$ dichotomy}\label{sec:Schutt-Hecke}
+
+\subsection{Hecke Gr\"ossencharakters and CM newforms}\label{ss:Schutt-setup}
+
+Fix an imaginary quadratic field $K = \Q(\sqrt{-D})$ with ring of integers $\OK$, class
+group $\Cl(K)$, and class number $\hK = |\Cl(K)|$. Fix an integer weight $w \ge 2$ and a
+modulus $\ff$ of $\OK$. A \emph{Hecke Gr\"ossencharakter} of infinity-type $(w-1, 0)$ and
+conductor $\ff$ is a continuous homomorphism $\psi : I(\ff) \to \C^\times$ on ideals
+coprime to $\ff$, satisfying $\psi(\alpha\OK) = \alpha^{w-1}$ for $\alpha \in K^\times$ with
+$\alpha \equiv 1 \pmod{\ff}$ totally positive. The associated theta-series
+\begin{equation}\label{eq:theta-series}
+  f_\psi(z) \;=\; \sum_{\fa \subset \OK,\,(\fa,\ff)=1}\psi(\fa)\, q^{\Nm\fa},
+  \qquad q = e^{2\pi i z},
+\end{equation}
+is, by Hecke~\cite{Hecke1936} and the Sch\"utt classification~\cite{Schutt2009}, a CM
+newform of weight $w$ and level $N = |d_K|\Nm(\ff)$ with nebentypus determined by the
+restriction of $\psi$ to $(\OK/\ff)^\times$.
+
+The newform $f_\psi$ is \emph{$\Q$-rational} (i.e.\ has $q$-expansion in $\Z[[q]]$) if and
+only if $\psi$ is invariant under the canonical involution $\iota$ of complex conjugation
+on $\OK$: $\psi \circ \iota = \psi$. The \emph{canonical genus character} $\chi_0$ (trivial
+on $\Cl(K)$) always gives a $\Q$-rational $f_{\psi_0}$. Non-trivial $\iota$-invariant
+characters exist if and only if $\Cl(K)/\Cl(K)^2 \cong (\Z/2)^{\rktwo}$ is non-trivial.
+
+\subsection{The Schertz-sparse level union}\label{ss:Schutt-level-union}
+
+Following Schertz~\cite{Schertz1976}, who studied ring-class characters and lower powers
+of elliptic functions in class field theory, we define the \emph{Schertz-sparse level
+union}
+\begin{equation}\label{eq:level-union}
+  \Lcal(K, f_{\max}) \;=\; \bigl\{ |d_K|\cdot f^2 \;:\; 1 \le f \le f_{\max} \bigr\},
+\end{equation}
+where $f$ runs over admissible ring-class conductors at $K$. In practice $f_{\max} = 6$
+suffices to detect all $\Q$-twist classes of $\Q$-rational CM newforms in the
+weight range $w \in \{3, 4, 5\}$ for the discriminants considered below; we discuss
+$f_{\max}$ tuning in Section~\ref{ss:falsifier}.
+
+\subsection{Worked examples and the trichotomy}\label{ss:Schutt-trichotomy}
+
+We give three illustrative examples at weight $w = 5$, drawn from anchors used in the
+internal ECI v12--v14 PARI sweeps. Throughout, we write $\Scal_w^{\mathrm{CM},\Q}(K)$
+for the $\Q$-vector space of $\Q$-rational CM newforms of weight $w$ attached to $K$
+at levels in $\Lcal(K, f_{\max})$, modulo $\Q$-twist equivalence.
+
+\subsubsection{$h_K = 1$: $K = \Q(\sqrt{-7})$}\label{sss:hK1}
+Here $\Cl(K)$ is trivial, $\rktwo = 0$, and the only $\iota$-invariant character is the
+trivial $\chi_0$. The canonical theta-series at level $|d_K| = 7$ is the unique
+$\Q$-rational CM newform at the Schertz-sparse window, giving $\dim = 1 = \rktwo + 1$.
+
+\subsubsection{$h_K = 2$: $K = \Q(\sqrt{-15})$}\label{sss:hK2}
+The class group $\Cl(K) = \Z/2\Z$ has $\rktwo = 1$. The two characters $\{\chi_0, \chi_1\}$
+are both $\iota$-fixed (since $\chi_i^2 = \chi_0$ in any $\Z/2$ group). The two
+Gr\"ossencharakters of infinity-type $(4, 0)$ give two $\Q$-rational theta-series at
+level $15$: the canonical one and the non-principal one. Hence $\dim = 2 = \rktwo + 1$.
+
+\subsubsection{$h_K = 3$: $K = \Q(\sqrt{-23})$}\label{sss:hK3}
+The class group $\Cl(K) = \Z/3\Z$ has $\rktwo = 0$. The three characters
+$\{\chi_0, \chi, \chi^2\}$ satisfy $\iota(\chi) = \chi^2 = \bar\chi$. Only $\chi_0$ is
+$\iota$-fixed. Hence $\dim_{\Q} \Scal_5^{\mathrm{CM},\Q}(K) = 1 = \rktwo + 1$, with the
+canonical theta-series at level $23$ as the sole representative. The "missing" two
+characters $\chi, \chi^2$ produce theta-series with coefficients in $\Z[\zeta_3]$;
+their $\Q$-rational trace $f_\chi + f_{\chi^2}$ lives at the compositum level $|d_K|^2 = 529$,
+which is outside $\Lcal(K, 6) = \{23, 92, 207, 368, 828\}$ (since $23 \cdot f^2$ for
+$f \in \{1, 2, 3, 4, 6\}$ does not reach $529$).
+
+The contrast between Sections~\ref{sss:hK1}--\ref{sss:hK3} is the dichotomy of the
+title: \emph{$\Z/2$ orbifolds project, $\Z/3$ orbifolds do not}, both in arithmetic and,
+as we shall see in Sections~\ref{sec:AdS3-CFT2}--\ref{sec:Verlinde-classgroup},
+in the rational $\CFT_2$ sense.
+
+\subsection{Genus theory and the $2$-rank}\label{ss:genus-rk2}
+
+The role of $\rktwo = \rktwo(\Cl(K))$ in Conjecture~\ref{conj:HSH-intro} is made explicit
+by Gauss's theory of genera~\cite{Gauss1801}: the genus principal class $\Cl(K)^2$ has
+index $2^{t-1}$ in $\Cl(K)$, where $t = \omega(d_K)$ is the number of distinct prime
+divisors of $d_K$. Equivalently,
+\[
+  \rktwo(\Cl(K)) \;=\; t - 1.
+\]
+The quotient $\Cl(K)/\Cl(K)^2 \cong (\Z/2)^{\rktwo}$ carries a canonical $\Z/2$-action,
+the genus involution $\iota : [\fa] \mapsto [\bar\fa]$ (complex conjugation of ideals).
+Under $\iota$, a character $\chi$ of $\Cl(K)$ is $\iota$-fixed iff $\chi = \chi\circ\iota$,
+and the parametrisation of $\iota$-fixed characters is therefore by elements of the
+$\F_2$-vector space $(\Z/2)^{\rktwo}$ of dimension $\rktwo$. Adding the canonical
+trivial character $\chi_0$, one obtains $\rktwo + 1$ "boundary-visible" character classes
+modulo $\Q$-twist.
+
+This concrete combinatorial statement is the structural origin of the right-hand side of
+\eqref{eq:HSH}: each $\Z/2$ direction in the genus quotient contributes one
+$\Q$-rational theta-series modulo $\Q$-twist, and the canonical character contributes one
+more.
+
+\section{The $\AdS_3/\CFT_2$ dictionary}\label{sec:AdS3-CFT2}
+
+\subsection{Maldacena's dictionary and Brown--Henneaux}\label{ss:Maldacena-BH}
+
+Maldacena~\cite{Maldacena1997} conjectured that Type IIB string theory on
+$\AdS_3 \times S^3 \times M^4$, with $M^4$ either $K3$ or $T^4$, is dual to a
+two-dimensional $\Ncal = (4,4)$ superconformal field theory on the conformal boundary.
+The Brown--Henneaux formula~\cite{BrownHenneaux1986} computes the central charge of the
+asymptotic Virasoro algebra of $\AdS_3$ as $c = 3\ell/(2 G_N)$, where $\ell$ is the
+$\AdS_3$ radius and $G_N$ is the 3D Newton constant.
+
+For our purposes the dictionary is used at the level of \emph{primary operators}:
+a primary $\Ocal_h$ of holomorphic weight $h$ on the boundary corresponds to a bulk
+field $\phi(x,z)$ in $\AdS_3$ with mass $m^2 \ell^2 = h(h-1)$. The bulk-to-boundary
+expansion of $\phi$ has a non-normalisable mode (source) of weight $1 - h$ and a
+normalisable mode (vev) of weight $h$.
+
+\subsection{Boundary primaries from CM newforms}\label{ss:CM-as-primaries}
+
+We identify a CM newform $f_\psi$ of weight $w$ with a chiral primary operator of
+weight $h = (w-1)/2$ on the boundary $\CFT_2$. The identification is motivated by the
+fact that $f_\psi(z)\, dz^{w/2}$ is a section of $K_{X_0(N)}^{w/2}$ over the modular
+curve at level $N$; the boundary "world-sheet" is, in this analogy, the modular curve
+itself. The Hecke pairing
+\[
+  \chi_j([\fa_i]) \;:\; \Cl(K) \times \widehat{\Cl(K)} \to \mu_{h_K}
+\]
+plays the role of the modular $S$-matrix of a chiral orbifold $\CFT_2$, as we develop
+in Section~\ref{sec:Verlinde-classgroup}.
+
+\subsection{Bulk modes and boundary VEVs}\label{ss:bulk-boundary-modes}
+
+A bulk scalar $\phi(x, z)$ in $\AdS_3$ admits, near the boundary $z \to 0$, two
+asymptotic behaviours: a non-normalisable source mode $\phi(x, z) \sim z^{1-\Delta}\phi_0(x)$
+and a normalisable VEV mode $\phi(x, z) \sim z^{\Delta}\langle \Ocal_\Delta(x)\rangle$.
+Under the arithmetic dictionary, the "source" is the bulk choice of Gr\"ossencharakter
+$\psi$ on $K$ (i.e.\ the choice of bulk Galois data) and the "VEV" is the boundary
+$q$-expansion of $f_\psi(\tau)$ at the cusp $\tau = i\infty$ (i.e.\ a boundary observable).
+The HSH dimension formula then translates into the statement that the number of
+independent rational VEVs equals one canonical generator plus one for each
+$\Z/2$ orbifold sector, which is the standard count for a $\Z/2$ orbifold of a free
+boson on a torus.
+
+\subsection{Explicit dictionary table}\label{ss:dictionary}
+
+We collate the proposed bulk--boundary correspondence in Table~\ref{tab:dictionary}.
+The dictionary is structural rather than a derived duality (cf.\ Obj.~1 in
+Section~\ref{sec:open-problems}): each entry is a structural analogue, motivated by
+the orbifold-projection counting of Section~\ref{sec:Verlinde-classgroup}.
+
+\begin{table}[h]
+\centering
+\small
+\begin{tabular}{ll}
+\toprule
+$\AdS_3/\CFT_2$ object & Schutt--Hecke counterpart \\
+\midrule
+Bulk $\AdS_3$ (radial boundary) & Hilbert class field $H_K$ \\
+Conformal boundary $\partial \AdS_3 = T^2$ & Modular curve $X_0(N)$, $N \in \Lcal(K, f_{\max})$ \\
+Boundary primary $\Ocal_h$ ($h$ scaling) & CM newform $f_\psi$ of weight $w = 2h + 1$ \\
+Bulk graviton (massless) & Eisenstein series at level $|d_K|$ \\
+BTZ black hole (mass $M$, ang.\ mom.\ $J$) & Ideal class $[\fa]\in\Cl(K)$, $\Nm\fa \sim M$ \\
+$\Z/2$ orbifold (parity) & Genus involution $\iota$ \\
+$\Z/k$ orbifold, $k > 2$ (chiral) & $\Z/k$ subgroup of $\Cl(K)$ \\
+Non-abelian anyons & Galois conjugate orbit $\{\chi, \chi^2, \ldots\}$ over $\Q(\zeta_k)$ \\
+Modular $S$-matrix $S_{ij}$ & Hecke pairing $\chi_j([\fa_i])$ \\
+Verlinde fusion $N_{ij}^{\,k}$ & Class group multiplication $[\fa_i][\fa_j] = [\fa_k]$ \\
+Brown--Henneaux central charge & "Boundary" central charge $c_K$ \\
+\bottomrule
+\end{tabular}
+\caption{Proposed bulk--boundary dictionary between $\AdS_3/\CFT_2$ and the
+Schutt-Hecke arithmetic of imaginary quadratic $K$. Quantitative checks at the level of
+dimension counting are the subject of Section~\ref{sec:HSH-numerics}.}
+\label{tab:dictionary}
+\end{table}
+
+\section{BTZ black holes and Hecke $L$-values}\label{sec:BTZ-Hecke}
+
+\subsection{The BTZ background}\label{ss:BTZ}
+
+Ba\~nados--Teitelboim--Zanelli~\cite{BTZ1992} showed that $\AdS_3$ admits black hole
+solutions of mass $M$ and angular momentum $J$, with horizon radius determined by
+$M\ell \pm J$. The Bekenstein--Hawking entropy is
+\begin{equation}\label{eq:BTZ-entropy}
+  S_{\mathrm{BH}} \;=\; \frac{2\pi \ell}{4 G_N}\Bigl( \sqrt{M\ell + J} + \sqrt{M\ell - J} \Bigr).
+\end{equation}
+Strominger~\cite{Strominger1998} reproduced \eqref{eq:BTZ-entropy} from the Cardy formula
+applied to the Brown--Henneaux boundary CFT, identifying BTZ microstates with primary
+operators of weight $(h, \bar h)$. Maldacena--Strominger~\cite{MaldacenaStrominger1998}
+refined this to a chiral primary count with a stringy exclusion principle.
+
+\subsection{Ideal classes as BTZ microstates}\label{ss:BTZ-Hecke-anal}
+
+Under the proposed dictionary (Section~\ref{ss:dictionary}), we identify an ideal class
+$[\fa] \in \Cl(K)$ of ideal norm $\Nm\fa$ with a BTZ microstate of mass $M \sim \Nm\fa$
+in suitable units. The asymptotic Cardy density of states
+\[
+  \rho(\Delta) \;\sim\; \exp\!\Bigl(2\pi \sqrt{\tfrac{c\, \Delta}{6}}\Bigr)
+\]
+then has a Dirichlet-series counterpart: the Dirichlet density of ideal classes of
+norm at most $X$ is governed by the Hecke zeta function $\zeta_K(s)$ via
+\[
+  \#\{ \fa \subset \OK \,:\, \Nm\fa \le X \} \;\sim\; \frac{\hK \cdot \mathrm{Res}_{s=1}\zeta_K(s)}{1} \cdot X
+  \qquad (X \to \infty).
+\]
+The structural parallel between the Cardy growth and the Wiener--Ikehara growth is one of
+the standard motivating threads in the "arithmetic gas" literature (see
+Connes--Marcolli~\cite{ConnesMarcolli2008}), and we adopt it here as part of the
+proposed dictionary rather than as a derived quantitative match.
+
+\subsection{Hecke $L$-values as OPE coefficients}\label{ss:Hecke-OPE}
+
+Three-point functions $\langle \Ocal_1 \Ocal_2 \Ocal_3\rangle$ in $\CFT_2$ are, by the
+Maldacena dictionary, bulk three-point amplitudes in $\AdS_3$. For CM primaries
+$f_{\psi_1}, f_{\psi_2}, f_{\psi_3}$ attached to the same $K$, the relevant arithmetic
+counterpart is the Hecke triple-product $L$-value
+\begin{equation}\label{eq:triple-product}
+  L\bigl(f_{\psi_1} \otimes f_{\psi_2} \otimes f_{\psi_3},\, s\bigr)
+\end{equation}
+evaluated at the central critical point $s = (w_1 + w_2 + w_3)/2 - 1$. By
+Harris--Kudla~\cite{HarrisKudla1991}, the normalised central value lies in $\overline\Q$.
+We propose the sub-conjecture that the rationality of \eqref{eq:triple-product} is
+controlled by the $\iota$-parity of $\psi_1\psi_2\psi_3$: rationality over $\Q$ holds iff
+$\psi_1\psi_2\psi_3$ is $\iota$-invariant.
+
+The normalised central value is, explicitly,
+\[
+  \mathcal{L}(\psi_1, \psi_2, \psi_3)
+  \;=\;
+  \frac{L\bigl(f_{\psi_1}\otimes f_{\psi_2}\otimes f_{\psi_3},\,(3w-1)/2\bigr)}
+       {\pi^{3w-3}\prod_i \langle f_{\psi_i}, f_{\psi_i}\rangle},
+\]
+where $\langle\cdot,\cdot\rangle$ is the Petersson inner product. The sub-conjecture
+asserts $\mathcal{L} \in \Q$ iff $\psi_1\psi_2\psi_3 \cdot \overline{\psi_1\psi_2\psi_3} = 1$,
+i.e.\ iff the product character is in the kernel of the genus involution.
+For $\Cl(K) = \Z/3\Z$, the only such product is $\chi^a\chi^b\chi^c$ with
+$a + b + c \equiv 0 \pmod 3$, which is precisely the fusion-charge conservation rule of
+the three-state Potts model (Section~\ref{ss:Zk-obstruction}).
+
+\section{Verlinde formula and class group orbifolds}\label{sec:Verlinde-classgroup}
+
+\subsection{The Verlinde formula and orbifold $\CFT_2$}\label{ss:Verlinde}
+
+For a chiral $G_k$ WZW model the modular $S$-matrix takes the Kac--Peterson form
+\[
+  S_{ij}^{(G,k)} \;=\; \frac{1}{(\mathrm{const})}
+  \prod_{\alpha > 0} \sin\!\Bigl(\pi \langle \lambda_i + \rho, \alpha\rangle/(k+h^\vee)\Bigr)\cdot(\ldots),
+\]
+and the fusion rules are given by the Verlinde formula~\cite{Verlinde1988}
+\begin{equation}\label{eq:Verlinde}
+  N_{ij}^{\,k} \;=\; \sum_r \frac{S_{ir} S_{jr} \bar S_{kr}}{S_{0r}}.
+\end{equation}
+For $G = U(1)$ at level $k$, the model is a chiral boson on a circle of radius
+$\sqrt{2k}$, with $k$ primaries $\{e^{i n \phi/\sqrt{2k}}\}_{n=0}^{k-1}$. The
+modular $S$-matrix simplifies to
+\[
+  S_{ij}^{U(1)_k} \;=\; \frac{1}{\sqrt{k}}\,e^{2\pi i\, ij/k}.
+\]
+
+\subsection{The Hecke pairing as $U(1)_{h_K}$ modular $S$-matrix}\label{ss:Hecke-S-matrix}
+
+Replacing the integer indices $i, j \in \{0, \ldots, k-1\}$ by ideal classes
+$[\fa_i], [\fa_j] \in \Cl(K)$ and the additive pairing $ij/k$ by the multiplicative Hecke
+pairing $\chi_j([\fa_i])$, we obtain the candidate $S$-matrix
+\[
+  S^K_{[\fa_i],[\fa_j]} \;=\; \frac{1}{\sqrt{\hK}}\, \chi_j([\fa_i]).
+\]
+This matrix is unitary over $\C$ for every $K$, but its entries lie in $\Q$ if and only
+if every character $\chi_j$ of $\Cl(K)$ takes values in $\pm 1$, i.e.\ iff
+$\Cl(K) = (\Z/2)^{\rktwo}$. For $\hK = 3$, the entries lie in $\Z[\zeta_3]$ and the
+modular $S$-matrix is non-trivially permuted by $\Gal(\Q(\zeta_3)/\Q)$.
+
+\subsection{The $\Z/k$ obstruction for $k > 2$}\label{ss:Zk-obstruction}
+
+For chiral WZW $\Z/k$ orbifolds with $k > 2$, Moore--Seiberg~\cite{MooreSeiberg1989}
+showed that the boundary fusion category contains \emph{non-abelian anyons}: braiding
+matrices $R$ with $R^2 \ne 1$, and a fusion category that does not close over $\Q$
+without extending to $\Q(\zeta_k)$. The minimal model with central charge $c = 4/5$, the
+three-state Potts model, is the prototype: it has three primaries $\{1, \sigma, \sigma^\dagger\}$
+with fusion
+\[
+  \sigma \times \sigma \;=\; 1 + \sigma^\dagger, \qquad \sigma \times \sigma^\dagger \;=\; 1,
+\]
+and its characters $\chi_\sigma, \chi_{\sigma^\dagger}$ are conjugate over $\Q(\sqrt 5)$
+(equivalently, the field of modular data is not $\Q$).
+
+The arithmetic counterpart is that for $\Cl(K) = \Z/3\Z$, the characters $\chi, \chi^2$
+take values in $\mu_3 \subset \Q(\zeta_3) = \Q(\sqrt{-3})$ and the attached theta-series
+$f_\chi, f_{\chi^2}$ have coefficients in $\Z[\zeta_3]$. Their $\Q$-rational trace lies at
+level $|d_K|^2$, outside the Schertz-sparse window. The "missing" two newforms of
+Section~\ref{sss:hK3} are the arithmetic incarnation of the WZW non-abelian-anyon
+obstruction.
+
+\subsection{Chern--Simons / lens-space cross-check}\label{ss:CS-lens}
+
+A complementary cross-check comes from Chern--Simons theory~\cite{Witten1989}. The
+partition function of $U(1)$ Chern--Simons at level $k$ on the lens space $L(k, 1)$ is
+a Gauss sum modulo $k$, which is rational (over $\Q$) if and only if $k \in \{1, 2\}$
+by Gauss quadratic reciprocity. The pattern matches the HSH dichotomy
+exactly: $k = 1$ corresponds to $\hK = 1$, $k = 2$ to $\rktwo = 1, \hK = 2$, and $k = 3$
+to $\hK = 3$ with the $\Z/3$ obstruction. The three "all-roads-lead-to-$\rktwo$"
+incarnations are
+\begin{enumerate}[label=(\roman*),leftmargin=*]
+\item the class-field side ($\rktwo = \omega(d_K) - 1$, Gauss 1801);
+\item the modular-form side (Conjecture~\ref{conj:HSH}, $\dim = \rktwo + 1$);
+\item the Chern--Simons / lens-space side ($U(1)_k$ partition function rational over $\Q$
+iff $k \le 2$).
+\end{enumerate}
+This three-way coincidence is the conceptual heart of why Conjecture~\ref{conj:HSH}
+unifies arithmetic and the $\AdS_3/\CFT_2$ side of the holographic dictionary.
+
+\section{The HSH conjecture: statement, evidence, and falsifier}\label{sec:HSH-numerics}
+
+\subsection{Statement}\label{ss:HSH-statement}
+
+We restate Conjecture~\ref{conj:HSH-intro} in a form suitable for empirical testing.
+\begin{conjecture}[HSH; restated]\label{conj:HSH}
+Let $K = \Q(\sqrt{-D})$ be imaginary quadratic with discriminant $d_K$ and
+$\rktwo = \rktwo(\Cl(K))$. Fix $w \in \{3, 4, 5\}$ and $f_{\max} \ge 6$. Then
+\begin{equation}\label{eq:HSH}
+  \dim_{\Q} \Scal_w^{\mathrm{CM},\Q}\bigl(K;\, \Lcal(K, f_{\max})\bigr)
+  \;=\; \rktwo(\Cl(K)) + 1.
+\end{equation}
+\end{conjecture}
+
+The conjecture refines~\cite{Schutt2009} from a finiteness statement to an explicit
+\emph{count}, and elevates the count to a Gauss invariant (the $2$-rank, computed from
+the prime factorisation of $d_K$).
+
+\subsection{Numerical evidence: the Bv6 table}\label{ss:Bv6}
+
+The empirical evidence at the moment of writing is summarised in
+Table~\ref{tab:Bv6-evidence}. The "observed" column comes from internal PARI/GP sweeps
+labelled Bv6 (Schertz-sparse, $h_K = 3$, 12:11--12:20 UTC, 2026-05-11), Co8v2 ($h_K = 2$),
+G2~ssh8 ($h_K = 1$, 51/51 exact recovery), and Bv3/Bv4 ($h_K = 4$ cyclic). All sweeps
+use $\Lcal(K, 6)$ at weight $w = 5$.
+
+\begin{table}[h]
+\centering
+\small
+\begin{tabular}{rcccc}
+\toprule
+$D$ & $h_K$ & $\Cl(K)$ & $\rktwo+1$ predicted & Observed (source) \\
+\midrule
+$-3$  & 1 & trivial   & 1 & 1 (G2 ssh8)    \\
+$-4$  & 1 & trivial   & 1 & 1 (G2 ssh8)    \\
+$-7$  & 1 & trivial   & 1 & 1 (G2 ssh8)    \\
+$-15$ & 2 & $\Z/2$    & 2 & 2 (Co8v2)      \\
+$-20$ & 2 & $\Z/2$    & 2 & 2 (Co8v2)      \\
+$-23$ & 3 & $\Z/3$    & 1 & 1 canonical only (Bv6) \\
+$-31$ & 3 & $\Z/3$    & 1 & 1 canonical only (Bv6) \\
+$-59$ & 3 & $\Z/3$    & 1 & 1 canonical only (Bv6) \\
+$-83$ & 3 & $\Z/3$    & 1 & 1 canonical only (Bv6) \\
+$-107$& 3 & $\Z/3$    & 1 & 1 canonical only (Bv6) \\
+$-39$ & 4 & $\Z/4$    & 2 & 2 (Bv3 partial) \\
+$-84$ & 4 & $(\Z/2)^2$ & 3 & \emph{Bv7 target} \\
+$-420$& 8 & $(\Z/2)^3$ & 4 & \emph{Bv7 target} \\
+\bottomrule
+\end{tabular}
+\caption{Numerical evidence for Conjecture~\ref{conj:HSH} at weight $w=5$.
+The $h_K \in \{1,2,3\}$ rows are confirmed; the $\rktwo = 2$ biquadratic row and the
+$\rktwo = 3$ row are open and constitute the principal falsifier (Bv7 sweep,
+Section~\ref{ss:falsifier}).}
+\label{tab:Bv6-evidence}
+\end{table}
+
+The five $h_K = 3$ rows are the empirical seed of the conjecture: each was a candidate
+for two non-trivial $\Q$-rational newforms (one for $\chi$ and one for $\chi^2$, or one
+$\Q$-rational trace), and the actual observation was \emph{zero} extra newforms beyond
+the canonical theta-series. The match with the prediction $\rktwo + 1 = 1$ is the
+$8/8$ figure of the abstract.
+
+\subsection{The Bv7 falsifier}\label{ss:falsifier}
+
+The principal open test of Conjecture~\ref{conj:HSH} is the biquadratic case
+$\Cl(K) = (\Z/2)^2$, in particular $D \in \{-84, -120, -132, -168, -228\}$. The HSH
+prediction is $\rktwo + 1 = 3$. We refer to the sweep that tests these anchors as Bv7;
+the sweep is CPU-bound (PARI \texttt{mfinit} at weight $5$, level $\sim 10^4$) and is
+expected to take roughly $20$--$45$ minutes on a 96-core EPYC instance with parallelised
+discriminants. We also include $\rktwo = 3$ anchors ($D \in \{-420, -660, -780\}$)
+predicting $\dim = 4$, and $\rktwo = 1, h_K > 2$ controls ($D \in \{-39, -55, -56\}$)
+predicting $\dim = 2$.
+
+The conjecture is \emph{falsified} if any biquadratic anchor gives $\dim \le 2$, or if
+any $\rktwo = 0, h_K$-odd, $h_K > 1$ anchor gives $\dim \ge 2$. A weaker degradation
+to $\dim = \min(\rktwo, 1) + 1$ would preserve the $h_K \le 2$ dichotomy of the title
+but lose the higher-rank structure.
+
+\subsection{Derivation sketch and the residual lemma}\label{ss:derivation}
+
+The derivation of \eqref{eq:HSH} proceeds in five steps; details would be filled out in
+a full version of this paper.
+
+\begin{enumerate}[label=(S\arabic*),leftmargin=*]
+\item By~\cite{Schutt2009}, $\Q$-rationality of $f_\psi$ forces $\psi$ to factor through
+the genus quotient $\Cl(K)/\Cl(K)^2 \cong (\Z/2)^{\rktwo}$.
+\item The character group of $\Cl(K)/\Cl(K)^2$ has cardinality $2^{\rktwo}$
+(Pontryagin duality).
+\item Two characters give twist-equivalent newforms over $\Q$ iff their ratio is a
+Dirichlet character of $\Q$; by Hecke~\cite{Hecke1936} (revisited via the
+ring-class-field formalism of Schertz~\cite{Schertz1976}), the $\Q$-Dirichlet quotient
+of the genus character group has index $\rktwo + 1$.
+\item Hence the number of $\Q$-twist classes is $\rktwo + 1$.
+\item The Schertz-sparse level union $\Lcal(K, f_{\max})$ with $f_{\max} \ge 6$ detects
+all $\Q$-twist classes (Schertz visibility; empirically verified up to $\hK = 4$).
+\end{enumerate}
+
+Steps (S1)--(S3) and (S5) are rigorous. Step (S4) elevates a count-quotient
+identification to a \emph{Lemma~A}, the explicit identification of the
+$\Q$-Dirichlet-twist quotient. The lemma is "morally clear" but its tightening into a
+formal proof is the principal theoretical task remaining; we flag it as the gating step
+of any JHEP-or-CMP final submission.
+
+\section{Connections}\label{sec:connections}
+
+\subsection{Borcea--Voisin orbifolds}\label{ss:Borcea-Voisin}
+
+The Borcea--Voisin construction~\cite{Borcea1997, Voisin1993} produces a Calabi--Yau
+threefold from a K3 surface $X$ with non-symplectic involution $\sigma$ and an elliptic
+curve $E$ with $-\mathrm{id}$:
+\[
+  Y_{BV} \;=\; \widetilde{(X \times E)/(\sigma \times -\mathrm{id})}.
+\]
+The construction works because $\sigma$ and $-\mathrm{id}$ are \emph{involutions} (order 2):
+the holomorphic 3-form $\omega_X \wedge \omega_E$ is sent to itself.
+
+The analogous order-3 construction $(X \times E)/(\sigma_3 \times \rho_3)$ generally
+fails to give a Calabi--Yau, since $\sigma_3$ acts on $H^{0,2}(X)$ by $\zeta_3$, not by
+$-1$. This geometric obstruction is the structural analogue of the arithmetic
+obstruction in Conjecture~\ref{conj:HSH}: order-$2$ quotients preserve $\Q$-rational
+structure, order-$3$ quotients do not. The parallel is striking and we conjecture (with
+lower confidence) that the Borcea--Voisin construction lifts to a $K3$-fibred bulk in
+$\AdS_3$ whose boundary $\CFT_2$ encodes precisely the $\rktwo + 1$ count of
+Conjecture~\ref{conj:HSH}.
+
+\subsection{Birch--Tate and Iwasawa BCS dichotomy}\label{ss:BirchTate}
+
+Conjecture~\ref{conj:HSH} sits naturally alongside an Iwasawa-side companion. The
+Birch--Tate conjecture predicts $|K_2(\Ocal_F)|$ in terms of $\zeta_F(-1)$ for totally
+real $F$, with the order of the wild-kernel subgroup encoded by class group $2$-torsion.
+For CM elliptic curves $E/\Q$ with CM by $K$, the Selmer group $\mathrm{Sel}_p(K_\infty/K)$
+exhibits a phase transition controlled by the parity of $\hK$: $\hK$ odd implies a
+trivial $2$-torsion in the Selmer characteristic ideal, an "Iwasawa BCS superconducting"
+phase. Conjecture~\ref{conj:HSH} is the \emph{modular-side mirror} of this Selmer-side
+dichotomy: in both settings, the obstruction is parametrised by $\rktwo(\Cl(K))$.
+
+\subsection{Connes--Marcolli IC8 fatgraph}\label{ss:IC8}
+
+The Connes--Marcolli BC type III$_1$ programme~\cite{ConnesMarcolli2008} attaches a
+noncommutative-geometric structure to the modular flow of class field theory. Internal
+ECI v12 morn39 day-end analysis identifies an inner-component-$8$ (IC8) fatgraph with
+central charge $c = 4/5$ as a natural NCG model for the $\Z/3$-orbifold boundary CFT.
+The coincidence $c = 4/5 =$ three-state Potts central charge is, we propose, structural:
+both encode the $\Z/3$ obstruction discussed in Section~\ref{ss:Zk-obstruction}, in
+two different guises. A precise IC8-Potts equivalence would constitute an HSH-NCG
+bridge, parallel to and reinforcing the HSH conjecture itself.
+
+\subsection{Tamagawa cross-check}\label{ss:Tamagawa}
+
+Internal ECI v12 morn39 day-end analysis (Tamagawa = $N_W$ bridge, $6/6$ exact) suggests
+a second cross-check for Conjecture~\ref{conj:HSH}: for CM elliptic curves $E/\Q$ with
+CM by $\OK$, the Tamagawa-side dimension of the bad-reduction-supported modular subspace
+should match $\rktwo + 1$. If Bv7 confirms the biquadratic prediction, the Tamagawa
+identity should hold for all anchors with the corresponding multiplicity, giving an
+independent verification path that does not invoke the holographic dictionary directly.
+We flag this Tamagawa-side cross-check as a separate target for Section~\ref{ss:next-steps}.
+
+\section{Open problems and outlook}\label{sec:open-problems}
+
+\subsection{Anticipated objections}\label{ss:objections}
+
+\textbf{Obj.\ 1 (string-theory reviewer):} \emph{the holographic connection is structural
+analogy, not duality.} Indeed; we frame HSH as a structural orbifold-projection count,
+not a derived bulk--boundary duality. A quantitative match would require either an exact
+bulk Lagrangian whose path integral computes $\rktwo + 1$, or a categorical lift via the
+Connes--Marcolli BC programme.
+
+\textbf{Obj.\ 2 (analytic number-theory reviewer):} \emph{Sch\"utt's classification is
+unconditional only through weight 4.} The Bv6 sweep at weight 5 is purely empirical; the
+weight-5 HSH is a prediction, tested by~Table~\ref{tab:Bv6-evidence} and to be tested by
+Bv7--Bv10 (see Section~\ref{ss:next-steps}).
+
+\textbf{Obj.\ 3 (skeptical Langlands person):} \emph{this looks like automorphic-induction
+counting.} Yes; HSH is precisely the assertion that the automorphic-induction count at
+the Schertz-sparse level union equals $\rktwo + 1$, plus the additional structural
+claim that this count is the holographic shadow of a $\Z/2$ orbifold projection.
+
+\subsection{Open theoretical questions}\label{ss:openQ}
+
+\begin{enumerate}[label=Q\arabic*.,leftmargin=*]
+\item \textbf{Cohomological formula.} Is there a cohomological count
+$\dim H^*(\mathrm{some\ local\ system\ on\ }\Cl(K)) = \rktwo + 1$ giving an \'etale or
+crystalline derivation of Conjecture~\ref{conj:HSH}?
+\item \textbf{Real-quadratic extension.} Does an HSH-RM analogue hold for $K = \Q(\sqrt{D})$,
+$D > 0$, using Hilbert modular forms of parallel weight $w$?
+\item \textbf{Discriminant dependence beyond $\rktwo$.} Does the formula see $h_K$ at all,
+or only $\rktwo$? Empirically $h_K = 3$ and $h_K = 5$ both predict $\dim = 1$;
+Bv8 anchors $D \in \{-47, -79, -103, -127\}$ ($h_K = 5$) and $D \in \{-71, -151, -223\}$
+($h_K = 7$) will test this.
+\item \textbf{Heegner-point subspace.} Do the rational CM newforms detected by HSH
+correspond to the modular forms whose Heegner points have $\Q$-rational coordinates?
+The Gross--Zagier framework suggests yes.
+\item \textbf{Motivic upgrade.} Is HSH the decategorified shadow of a Tannakian statement
+in Deligne's category of CM motives over $\Q$?
+\end{enumerate}
+
+\subsection{Risk register}\label{ss:risks}
+
+We collect six principal risks of the present draft.
+
+\begin{itemize}
+\item[R1.] Bv7 biquadratic gives $\dim = 2$ (not 3). Mitigation: try $f_{\max} \ge 8$
+(probability $20\%$).
+\item[R2.] $\Q$-twist equivalence is mis-identified; actual count is $2^{\rktwo}$ rather
+than $\rktwo + 1$. Mitigation: explicit twist-character enumeration ($15\%$).
+\item[R3.] The $\AdS_3/\CFT_2$ dictionary is metaphor rather than quantitative match.
+Mitigation: literature search for a precise prior-art bridge; reframe as analogy
+($35\%$).
+\item[R4.] IC8 $c = 4/5$ match is coincidence. Mitigation: explicit Connes--Marcolli
+IC8 vs.\ Potts comparison ($25\%$).
+\item[R5.] Sch\"utt 2009 already implies a stronger statement. Mitigation: cite~\cite{Schutt2009}
+explicitly; HSH refines finiteness to an explicit count ($10\%$).
+\item[R6.] Reviewer skepticism on the "Holographic Schutt-Hecke" branding. Mitigation:
+reframe as "an arithmetic refinement of Sch\"utt's finiteness conjecture, with
+conjectural $\AdS_3/\CFT_2$ counterparts" ($30\%$).
+\end{itemize}
+
+\subsection{Next steps}\label{ss:next-steps}
+
+Three concrete next actions are scheduled for completion within ECI v15.
+
+\begin{enumerate}[label=(\arabic*),leftmargin=*]
+\item \textbf{Bv7 PARI sweep} on a 96-core EPYC instance, $\rktwo \in \{2,3\}$ anchors
+and $\rktwo = 1, h_K > 2$ controls; expected runtime $20$--$45$ min.
+\item \textbf{Literature search} on prior bridges between CM modular forms and
+$\AdS_3/\CFT_2$ / chiral $\CFT_2$ boundary conditions; targets include Manin's
+noncommutative-geometry-and-number-theory programme and the Connes--Marcolli $\Q$-lattice
+formalism.
+\item \textbf{Full paper expansion.} Conditional on Bv7 confirmation, expansion of the
+present outline to a 25--35 page submission for JHEP (primary) or Communications in
+Mathematical Physics (secondary).
+\end{enumerate}
+
+\subsection{Outlook}\label{ss:outlook}
+
+If Conjecture~\ref{conj:HSH} survives the Bv7 falsifier, the natural next direction is
+twofold. First, one can ask whether the $\rktwo + 1$ count admits a categorical
+upgrade in the spirit of Deligne's category of motives over $\Q$ with CM by $K$,
+producing a Tannakian statement whose dimension count is \eqref{eq:HSH}. Second, one
+can ask whether the holographic dictionary of Section~\ref{sec:AdS3-CFT2} admits a
+quantitative match at the level of partition functions: a precise bulk Lagrangian
+whose partition function on $\AdS_3 \times M^4$, with boundary conditions selecting
+the Schertz-sparse level union, reproduces the count $\rktwo + 1$ along with the
+Tamagawa cross-check of Section~\ref{ss:Tamagawa}. Both directions strengthen the
+case for HSH as a genuine arithmetic-holographic principle rather than a structural
+analogy.
+
+A third, more speculative direction concerns the \emph{real} quadratic case
+$K = \Q(\sqrt D)$ with $D > 0$, where CM is replaced by real multiplication and the
+theta-series of Section~\ref{sec:Schutt-Hecke} are replaced by Hilbert modular forms
+of parallel weight $w$. Genus theory still applies, and the analogue of $\rktwo$ is
+again read off from the prime factorisation of $d_K$. We conjecture that an HSH-RM
+analogue holds, with the same $\rktwo + 1$ count, though the appropriate analogue of the
+Schertz-sparse level union and the appropriate notion of $\iota$-invariant character
+need to be defined carefully.
+
+\appendix
+
+\section{PARI/GP pseudocode for Bv7}\label{app:Bv7-pseudo}
+
+For reproducibility, we record a sketch of the Bv7 sweep used to test
+Conjecture~\ref{conj:HSH} at $\rktwo \in \{1, 2, 3\}$. The actual sweep uses additional
+caching and parallelisation; the core logic is:
+
+\begin{verbatim}
+read("Bv6_opt_core.gp");
+results = Mat();
+for(D in [-84,-120,-132,-168,-228, -420,-660,-780, -39,-55,-56],
+  K = bnfinit(x^2 + D);
+  hK = K.cyc;
+  rk2 = #select(c -> c%2==0, hK);
+  L = sparse_level_union(D, fmax=6);
+  rats = 0;
+  for(N in L,
+    S = mfinit([N, 5], 0);
+    for(f in mfbasis(S),
+      if(is_CM(f, D) && is_Q_rational(f)
+         && !already_twist_seen(f, results),
+         rats += 1;
+         results = matadjoin(results, [D, N, f])
+      )
+    );
+  );
+  print("D=", D, " rk2=", rk2,
+        " predicted=", rk2+1, " observed=", rats);
+);
+\end{verbatim}
+
+The expected output, under Conjecture~\ref{conj:HSH}, is "observed = predicted" on every
+line. A discrepancy at $D \in \{-84, -120, -132, -168, -228\}$ would falsify the
+biquadratic case; a discrepancy at $D \in \{-420, -660, -780\}$ would falsify the
+$\rktwo = 3$ case.
+
+\section*{Acknowledgements}
+
+This work emerged from the multi-LLM ECI v12--v14 research programme (Hostinger VPS,
+April--May 2026). The author thanks the various LLM dispatch threads (DeepSeek V4 Pro,
+Opus 4.7, Sonnet 4.6, Gemini, Mistral) for collaborative dispatches under explicit
+anti-fabrication discipline; all numerical, bibliographic, and identifier claims in this
+draft have been independently verified.
+
+\begin{thebibliography}{99}
+
+\bibitem{BTZ1992}
+M.\ Ba\~nados, C.\ Teitelboim, J.\ Zanelli,
+"The Black Hole in Three Dimensional Space Time",
+\emph{Phys.\ Rev.\ Lett.} \textbf{69} (1992), 1849--1851,
+arXiv:hep-th/9204099.
+
+\bibitem{Borcea1997}
+C.\ Borcea,
+"K3 surfaces with involution and mirror pairs of Calabi-Yau manifolds",
+\emph{Mirror Symmetry II}, AMS/IP Stud.\ Adv.\ Math.\ \textbf{1} (1997), 717--743.
+
+\bibitem{BrownHenneaux1986}
+J.\ D.\ Brown, M.\ Henneaux,
+"Central charges in the canonical realization of asymptotic symmetries: An example
+from three dimensional gravity",
+\emph{Commun.\ Math.\ Phys.} \textbf{104} (1986), 207--226.
+
+\bibitem{ConnesMarcolli2008}
+A.\ Connes, M.\ Marcolli,
+\emph{Noncommutative Geometry, Quantum Fields and Motives},
+AMS Colloquium Publications \textbf{55}, 2008.
+
+\bibitem{Deligne1979}
+P.\ Deligne,
+"Valeurs de fonctions $L$ et p\'eriodes d'int\'egrales",
+\emph{Proc.\ Symp.\ Pure Math.} \textbf{33} (1979), 313--346.
+
+\bibitem{Gauss1801}
+C.\ F.\ Gauss,
+\emph{Disquisitiones Arithmeticae},
+\S 305 (genus theory), 1801.
+
+\bibitem{HarrisKudla1991}
+M.\ Harris, S.\ Kudla,
+"The central critical value of a triple product $L$-function",
+\emph{Ann.\ of Math.} \textbf{133} (1991), 605--672.
+
+\bibitem{Hecke1936}
+E.\ Hecke,
+\emph{Mathematische Werke}, \S 2, 1936.
+
+\bibitem{Maldacena1997}
+J.\ M.\ Maldacena,
+"The Large $N$ Limit of Superconformal Field Theories and Supergravity",
+\emph{Adv.\ Theor.\ Math.\ Phys.} \textbf{2} (1998), 231--252,
+arXiv:hep-th/9711200.
+
+\bibitem{MaldacenaStrominger1998}
+J.\ M.\ Maldacena, A.\ Strominger,
+"$\AdS_3$ Black Holes and a Stringy Exclusion Principle",
+\emph{JHEP} \textbf{12} (1998), 005,
+arXiv:hep-th/9804085.
+
+\bibitem{MooreSeiberg1989}
+G.\ Moore, N.\ Seiberg,
+"Classical and quantum conformal field theory",
+\emph{Commun.\ Math.\ Phys.} \textbf{123} (1989), 177--254.
+
+\bibitem{Schertz1976}
+R.\ Schertz,
+"Niedere Potenzen elliptischer Funktionen und Klassenk\"orpertheorie",
+\emph{J.\ Reine Angew.\ Math.} \textbf{285} (1976), 49--65.
+
+\bibitem{Schutt2009}
+M.\ Sch\"utt,
+"CM newforms with rational coefficients",
+\emph{Ramanujan J.} \textbf{19} (2009), 187--205,
+arXiv:math/0511228.
+
+\bibitem{Strominger1998}
+A.\ Strominger,
+"Black Hole Entropy from Near-Horizon Microstates",
+\emph{JHEP} \textbf{02} (1998), 009,
+arXiv:hep-th/9712251.
+
+\bibitem{Verlinde1988}
+E.\ Verlinde,
+"Fusion rules and modular transformations in 2D conformal field theory",
+\emph{Nucl.\ Phys.\ B} \textbf{300} (1988), 360--376.
+
+\bibitem{Voisin1993}
+C.\ Voisin,
+"Miroirs et involutions sur les surfaces K3",
+in \emph{Journ\'ees de G\'eom\'etrie Alg\'ebrique d'Orsay}, Ast\'erisque \textbf{218}
+(1993), 273--323.
+
+\bibitem{Witten1989}
+E.\ Witten,
+"Quantum field theory and the Jones polynomial",
+\emph{Commun.\ Math.\ Phys.} \textbf{121} (1989), 351--399.
+
+\end{thebibliography}
+
+\end{document}

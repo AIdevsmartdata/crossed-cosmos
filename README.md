@@ -16,12 +16,12 @@ This is a **research programme**, not a finished theory. Current state (2026-05-
 
 - **10 PROVED rational L-value theorems** in the M142 hierarchy for h_K = 1 imaginary quadratic fields
 - **Schütt-Hodge MULTI-WEIGHT MULTI-D theorem** (Hecke 1937 Grossencharakter + Newton identity, weights W ∈ {3,5,7,...,29})
-- **F(N) Theorem C.6** RESCUED with c=0.52 (4/4 SU(N) glueball lattice masses within 0.4σ)
+- **F(N) Theorem C.6** Tier A arithmetic core (Deligne-Ramanujan + Hecke 1937 + Schütt 2010) PROVED-CONDITIONAL on (H1) ; Tier B bridge factor 4-anchor SU(2-5) systematics-limited PASS at c=0.80 (paper §6.4) or c=0.52 (PUSH-2 RESCUE); **8-anchor AT 2021 single-c FAIL ≥5σ ; operative phenomenological extrapolator = M43_7 quartic 3.072·(1 + 1.615/N² − 2.764/N⁴), χ²=5.0 on 8 dof** (audit 2026-05-11 `notes/.../morn43_ds_top_subjects_2026-05-11/outputs/M43_7_AT2020_FN_reverse_proper.md` + `Paper_Theorem_C6_JNumberTheory_v2_polished.md` §6.5)
 - **m_YM(D=-67) = 1.706 GeV** matches PDG 2024 0⁺⁺ glueball **1.700 ± 0.050 GeV** at <0.1σ (Lucini-Teper 2010 J.HEP 01:079)
 - **E08 Maxwell U(1)** Phys. Rev. D paper (82-85% submission-ready, c_Pic=20 PROVED 3 indep derivations)
 - **Mumford-Tate torus formal Theorem 5.1** (Pohlmann 1968 + Deligne 1979)
 - **AN2 Theorem 8.2** PROVED-EMPIRICAL 24/24 + 5/5 (canonical anchor)
-- **ECI v14 spec** : 4 PROVED Master Principles + 6 conditional + 4 hybrid TOE options
+- **ECI v14 spec** : 4 PROVED Master Principles + 6 conditional + 4 hybrid TOE options ; **MP6′ CORRECTED 2026-05-11** = Tier A arithmetic core unchanged + Tier B bridge demoted (25-30 % honest novelty was claimed 65-75 %)
 
 Honest TOE coverage : **25-35% v13 alone / 40-50% v14 hybride / 55-65% generous max** (3 Opus retros aligned).
 
@@ -66,7 +66,7 @@ R-6 Lemniscate, R-2 Bloch-Kato, R3-C-1 short note, Modular Shadow LMP, Bianchi I
 - ECI category : **glueball mass scale**, NOT Λ_QCD scale (D2 DEEP WAVE 2 catch)
 
 ### Bridges & ECI v14 hybrid
-- **F(N) Theorem C.6 c=0.52** (4/4 SU(N) glueball lattice within 0.4σ)
+- **F(N) Theorem C.6** Tier A arithmetic + Tier B M43_7 quartic phenomenological extrapolator (8-anchor AT 2021 χ²=5.0 ; single-c 4-anchor systematics-limited PASS) — see `Paper_Theorem_C6_JNumberTheory_v2_polished.md` §6.5
 - **E08 Maxwell U(1) c_Pic=20** PROVED 3 independent derivations
 - **CC-NCG K3×F_SM** : a_4 = 64π²/15 Ricci-flat (Yau theorem)
 - **Mumford-Tate torus** : MT(H¹(E_K)) = Res_{K/Q} G_m, Hodge classes algebraic via Pohlmann 1968

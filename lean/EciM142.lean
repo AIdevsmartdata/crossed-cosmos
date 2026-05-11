@@ -193,3 +193,101 @@ axiom Lf_functional_equation (s : ℂ) :
 
 end
 
+/-!
+  ## Crossed Cosmos supplementary statements
+
+  This section collects additional conjectures that fit into the
+  hierarchy of rational invariants associated with CM newforms of
+  weight k ≥ 3 with CM by the field ℚ(i).  The statements are
+  labelled M183–M186; they are all currently `sorry`‑stubbed and
+  serve as a research roadmap.
+
+  All definitions make use exclusively of the real mathlib4 APIs
+  `WeierstrassCurve`, `ModularForm`, `LSeries`, `DirichletCharacter`,
+  and `Subgroup SL(2, ℤ)`.  When a predefined API is absent, a
+  non‑computable `axiom` is introduced locally.
+-/
+
+noncomputable section Supplementary
+
+open Complex Real
+
+-- ---------- axioms for the extended family ----------
+
+/-- The invariant α₂ associated to the quadratic twist of the base
+    newform 4.5.b.a by the fundamental discriminant `D` (ℤ‑parameter). -/
+axiom alpha2_of_twist : ℤ → ℂ
+
+/-- `alpha2_of_twist 1` coincides with the invariant α₂ computed for
+    the untwisted base form. -/
+axiom alpha2_base_agrees : alpha2_of_twist 1 = alpha_2
+
+/-- For every discriminant `D` the value `alpha2_of_twist D` is
+    actually a rational number.  The rational incarnation is provided
+    by the function `alpha2_twist_rat`. -/
+axiom alpha2_twist_rat : ℤ → ℚ
+
+/-- Coercion to ℂ agrees with `alpha2_of_twist`. -/
+axiom alpha2_twist_rat_eq (D : ℤ) : (alpha2_twist_rat D : ℂ) = alpha2_of_twist D
+
+/-- An involutive ℚ‑algebra automorphism τ of ℂ that comes from the
+    Atkin–Lehner involution for the CM newform. -/
+axiom tau : ℂ ≃ₐ[ℚ] ℂ
+
+/-- Quadratic twist of a modular form.  Given a Dirichlet character χ
+    of conductor dividing `M` and a base form of level 4, the result is
+    a modular form for the composite level `M`. -/
+axiom quadraticTwist (M : ℕ) (χ : DirichletCharacter ℤ M)
+  (f : ModularForm (CongruenceSubgroup.Gamma0 4) 5) :
+  ModularForm (CongruenceSubgroup.Gamma0 M) 5
+
+/-- A newform `f` of weight 5 and level `N` has CM by χ_{−4} if the
+    predicate `has_cm_by_chi_neg4 f` holds.  This predicate is an axiom
+    standing for the complete set of complex‑multiplication conditions. -/
+axiom has_cm_by_chi_neg4 {N : ℕ} (f : ModularForm (CongruenceSubgroup.Gamma0 N) 5) : Prop
+
+/-- The weight‑3 analogue of the CM newform (axiom placeholder).
+    The exact level is not fixed here; a typical candidate would be 6. -/
+axiom weight3_form : ModularForm (CongruenceSubgroup.Gamma0 6) 3
+
+/-- The α‑invariant in weight 3, defined analogously to `alpha_2` for
+    the weight‑5 case. -/
+axiom alpha_1 : ℂ
+
+/-- `alpha_1` is a rational number. -/
+axiom alpha_1_rational : (alpha_1 : ℂ) ∈ Set.range (algebraMap ℚ ℂ)
+
+/-- β₁ := α₁⁴ — the element that is conjectured to lie in the
+    ℚ‑rational hierarchy of algebraic L‑values. -/
+noncomputable def beta_1 : ℂ := alpha_1 ^ 4
+
+-- ---------- stubs for the supplementary conjectures ----------
+
+/-- **M183** (3‑adic denominator split rule for α₂(D)).
+    The denominator (in lowest terms) of the rational number
+    `alpha2_twist_rat D` contains a factor 3 if and only if the
+    discriminant `D` satisfies `D ≡ 2 (mod 3)`. -/
+theorem M183 (D : ℤ) : (3 : ℕ) ∣ Rat.den (alpha2_twist_rat D) ↔ D % 3 = (2 : ℤ) := by
+  sorry
+
+/-- **M184** (twin‑pair c⁴ ratio).
+    There exists an integer `c` with `c⁴ ∈ {1,4}` such that applying the
+    involutive automorphism τ to α₂ multiplies it by c⁴. -/
+theorem M184 : ∃ (c : ℤ), (c^4 = 1 ∨ c^4 = 4) ∧ (tau alpha_2 = (c : ℂ)^4 * alpha_2) := by
+  sorry
+
+/-- **M185** (twist family).  Every rational weight‑5 newform with
+    CM by χ_{−4} and of level `N` is a quadratic twist (by a character
+    of conductor dividing `N`) of the base form 4.5.b.a. -/
+theorem M185 (N : ℕ) (f : ModularForm (CongruenceSubgroup.Gamma0 N) 5)
+    (hCM : has_cm_by_chi_neg4 f) :
+    ∃ (χ : DirichletCharacter ℤ N), f = quadraticTwist N χ newform_4_5_b_a := by
+  sorry
+
+/-- **M186** (weight‑3 β₁ belongs to the ℚ‑rational hierarchy).
+    β₁ = α₁⁴ is a rational number.  This is the weight‑3 analogue of
+    the statement that α₂ = 1/12. -/
+theorem M186 : beta_1 ∈ Set.range (algebraMap ℚ ℂ) := by
+  sorry
+
+end Supplementary

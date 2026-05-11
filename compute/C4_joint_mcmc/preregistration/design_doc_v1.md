@@ -10,7 +10,7 @@
 
 `compute/C4_joint_mcmc/` was scaffolded in v6.0.42 (commit 22:07 2026-05-03) with a `README.md` only — all scripts (`make_yamls.py`, `compute_evidence.py`, `plot_corner.py`) are TODO stubs. This document locks the **priors, datasets, sampler config, and decision thresholds** before any Vast.ai Profile L booking, so the production run is pre-registered and not p-hackable.
 
-Cobaya 3.6.2, cosmopower_jax 0.5.5, hi_class_public, AxiCLASS in `~/.venv-mcmc-bench` on the local PC (Tailscale <GAMER_IP>). PolyChord installed 2026-05-04 09:30 via `cobaya-install polychord --packages-path compute/C4_joint_mcmc/packages/`. KiDS-1000 S8 wrapper `cobaya_nmc/eci_kids_s8.py` operational and tested.
+Cobaya 3.6.2, cosmopower_jax 0.5.5, hi_class_public, AxiCLASS in `~/.venv-mcmc-bench` on the local PC (Tailscale <PC_TAILSCALE_IP>). PolyChord installed 2026-05-04 09:30 via `cobaya-install polychord --packages-path compute/C4_joint_mcmc/packages/`. KiDS-1000 S8 wrapper `cobaya_nmc/eci_kids_s8.py` operational and tested.
 
 **Pre-run blocker remaining:** AxiCLASS EDE module (M9) — needs sanity test with `nlive=20, num_repeats=5` on Profile S ($4) before Profile L commitment.
 

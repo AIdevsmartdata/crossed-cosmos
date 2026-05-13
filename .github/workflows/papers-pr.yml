@@ -1,0 +1,173 @@
+name: Papers PR auto
+
+# Automatically opens a PR when a paper in papers/ is ready for peer review.
+# Triggered manually (workflow_dispatch) OR on push that adds a new paper containing
+# pre_submission_checklist.md (the "ready" signal file).
+
+on:
+  workflow_dispatch:
+    inputs:
+      paper_dir:
+        description: "Paper directory name under papers/ (e.g. Paper_Hurwitz_7disc_JNT)"
+        required: true
+        default: ""
+      title:
+        description: "Suggested PR title (optional; defaults to paper name)"
+        required: false
+        default: ""
+      base_branch:
+        description: "Target branch (master)"
+        required: true
+        default: master
+  push:
+    paths:
+      - 'papers/**/pre_submission_checklist.md'
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  paper-ready:
+    runs-on: ubuntu-latest
+    outputs:
+      papers: ${{ steps.find-papers.outputs.papers }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Find ready papers
+        id: find-papers
+        env:
+          PAPER_DIR: ${{ inputs.paper_dir || '' }}
+        run: |
+          PAPERS=()
+          if [ -n "$PAPER_DIR" ]; then
+            if [ -f "papers/$PAPER_DIR/pre_submission_checklist.md" ] && [ -f "papers/$PAPER_DIR/main.pdf" ]; then
+              PAPERS+=("$PAPER_DIR")
+            else
+              echo "::error::Paper '$PAPER_DIR' not found or missing required files"
+              echo "papers=[]" >> "$GITHUB_OUTPUT"
+              exit 1
+            fi
+          else
+            for d in papers/*/; do
+              dname=$(basename "$d")
+              if [ -f "papers/$dname/pre_submission_checklist.md" ] && [ -f "papers/$dname/main.pdf" ]; then
+                PAPERS+=("$dname")
+              fi
+            done
+          fi
+          JSON=$(printf '%s\n' "${PAPERS[@]}" | jq -R . | jq -s .)
+          echo "papers=$JSON" >> "$GITHUB_OUTPUT"
+          echo "Found ${#PAPERS[@]} ready paper(s): ${PAPERS[*]}"
+
+  create-prs:
+    needs: paper-ready
+    if: fromJson(needs.paper-ready.outputs.papers)[0] != null
+    strategy:
+      matrix:
+        paper: ${{ fromJson(needs.paper-ready.outputs.papers) }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Configure git
+        run: |
+          git config user.name "ECI Bot"
+          git config user.email "bot@eci-project.dev"
+
+      - name: Get paper metadata
+        id: meta
+        env:
+          PAPER: ${{ matrix.paper }}
+        run: |
+          PAPER_DIR="papers/$PAPER"
+          TITLE=""
+          if [ -f "$PAPER_DIR/main.tex" ]; then
+            TITLE=$(grep -m1 '\\title{' "$PAPER_DIR/main.tex" | sed 's/.*\\title{//;s/}.*//' || echo "")
+          fi
+          if [ -z "$TITLE" ]; then
+            TITLE="$PAPER"
+          fi
+          AUTHORS=""
+          if [ -f "$PAPER_DIR/main.tex" ]; then
+            AUTHORS=$(grep -m1 '\\author{' "$PAPER_DIR/main.tex" | sed 's/.*\\author{//;s/}.*//' || echo "ECI Research")
+          fi
+          if [ -z "$AUTHORS" ]; then
+            AUTHORS="ECI Research"
+          fi
+          echo "title=$TITLE" >> "$GITHUB_OUTPUT"
+          echo "authors=$AUTHORS" >> "$GITHUB_OUTPUT"
+
+      - name: Create PR
+        id: pr
+        env:
+          PAPER: ${{ matrix.paper }}
+          TITLE: ${{ steps.meta.outputs.title }}
+          AUTHORS: ${{ steps.meta.outputs.authors }}
+          BASE_BRANCH: ${{ inputs.base_branch || 'master' }}
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          BRANCH="papers/$PAPER/ready"
+          git checkout -B "$BRANCH"
+          if ! git diff --quiet -- "papers/$PAPER/"; then
+            git add "papers/$PAPER/"
+            git commit -m "paper($PAPER): ready for review"
+          fi
+          git push origin "$BRANCH" --force
+
+          REPO="${{ github.repository }}"
+          EXISTING=$(gh pr list --repo "$REPO" \
+            --head "$BRANCH" --base "$BASE_BRANCH" \
+            --json number --jq '.[0].number // empty')
+
+          PR_BODY=$(cat <<-EOB
+          ## Paper: $PAPER
+          **Title:** $TITLE
+          **Authors:** $AUTHORS
+          **Status:** Ready for peer review
+          ### Required files
+          - [x] pre_submission_checklist.md
+          - [x] main.pdf
+          - [x] main.tex
+          ### Verification
+          This paper was automatically detected as ready by the ECI papers CI.
+          Review checklist and verification outputs in the paper directory before merging.
+          EOB
+          )
+
+          if [ -n "$EXISTING" ]; then
+            echo "PR #$EXISTING already exists, updating body"
+            gh pr edit "$EXISTING" \
+              --title "[Paper] $TITLE" \
+              --body "$PR_BODY" \
+              --repo "$REPO"
+            echo "pr_number=$EXISTING" >> "$GITHUB_OUTPUT"
+          else
+            gh pr create \
+              --repo "$REPO" \
+              --base "$BASE_BRANCH" \
+              --head "$BRANCH" \
+              --title "[Paper] $TITLE" \
+              --body "$PR_BODY"
+            PR_NUM=$(gh pr view --repo "$REPO" --head "$BRANCH" --json number --jq '.number')
+            echo "pr_number=$PR_NUM" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Add PR comment with submission checklist
+        env:
+          PR_NUM: ${{ steps.pr.outputs.pr_number }}
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+        run: |
+          CHECKLIST="## Paper Submission Checklist
+          - [ ] Title matches journal formatting
+          - [ ] Abstract <= 200 words
+          - [ ] All references in bib format
+          - [ ] MathSciNet search done
+          - [ ] Verify scripts pass
+          - [ ] Cover letter attached
+          - [ ] Endorser confirmed (if JNT)"
+          gh pr comment "$PR_NUM" --repo "$REPO" --body "$CHECKLIST"

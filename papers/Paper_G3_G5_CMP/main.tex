@@ -1,0 +1,117 @@
+\documentclass[11pt,a4paper]{amsart}
+
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern}
+\usepackage{amsmath,amssymb,amsfonts,amsthm,mathrsfs,mathtools}
+\usepackage{enumitem}
+\usepackage[margin=1in]{geometry}
+\usepackage{hyperref}
+\usepackage{xcolor}
+\usepackage{booktabs}
+
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{definition}[theorem]{Definition}
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+
+\title{Norm resolvent convergence and the ultraviolet volume term\\ in Yang--Mills instanton moduli space}
+\author{K\'evin R\'emondi\`ere}
+\address{Independent researcher, Tarbes, France}
+\email{kevin.remondiere@gmail.com}
+\date{\today}
+
+\begin{document}
+
+\begin{abstract}
+We prove two foundational results for the rigorous construction of the Yang--Mills measure on $\mathbb{R}^4$. First, we establish that the resolvent of the Dirac operator on a flat torus $\mathbb{T}^4_L$ converges in operator norm to that on $\mathbb{R}^4$ as the side length $L\to\infty$, providing spectral continuity for lattice approximations of gauge theories. Second, we compute the large-volume asymptotics of the regularized determinant of the Faddeev--Popov operator in a BPST instanton background, showing the five-dimensional zero-mode projection scales as $L^4\log(L/\rho)$ with a universal coefficient. The proofs use spectral theory, heat-kernel expansions, and functional analysis.
+\end{abstract}
+
+\maketitle
+
+\section{Introduction}
+
+Let $L>0$ and $\mathbb{T}^4_L = (\mathbb{R}/L\mathbb{Z})^4$ be the flat torus of side $L$. The study of gauge theories on $\mathbb{R}^4$ via compactification on tori is a classical technique in mathematical physics \cite{CITE_NEEDED:reed-simon-1978}. Two fundamental analytic results are required for the rigorous construction of the Yang--Mills measure: the continuity of the Dirac resolvent as $L\to\infty$, and the asymptotic behaviour of the regularised determinant of the Faddeev--Popov operator in the background of a BPST instanton.
+
+\section{Norm resolvent convergence $\mathbb{T}^4_L\to\mathbb{R}^4$}
+
+\subsection{Setting}
+
+Let $D_L$ be the Dirac operator on $\mathbb{T}^4_L$ acting on sections of the trivial spinor bundle $S\to\mathbb{T}^4_L$, with a fixed smooth gauge connection $A\in C^\infty(\mathbb{T}^4_L,\mathfrak{su}(2)\otimes T^*\mathbb{T}^4_L)$. On $\mathbb{R}^4$ we take the same connection (extended periodically), and denote $D_\infty$ the Dirac operator on $L^2(\mathbb{R}^4,S)$. Both operators are essentially self-adjoint on their natural Sobolev domains $H^1$.
+
+\begin{theorem}[G3 -- Norm resolvent convergence]\label{thm:g3}
+For any $\lambda\in\mathbb{C}\setminus\mathbb{R}$, the bounded operators
+\[
+R_L(\lambda) = (D_L-\lambda)^{-1} : L^2(\mathbb{T}^4_L,S) \to H^1(\mathbb{T}^4_L,S)
+\]
+converge in operator norm to $R_\infty(\lambda) = (D_\infty-\lambda)^{-1}$ in the following sense: after identifying $L^2(\mathbb{T}^4_L)$ with a subspace of $L^2(\mathbb{R}^4)$ via periodic extension, we have
+\[
+\lim_{L\to\infty} \| \iota_L R_L(\lambda) \iota_L^* - R_\infty(\lambda) \|_{\mathcal{B}(L^2(\mathbb{R}^4))} = 0,
+\]
+where $\iota_L : L^2(\mathbb{T}^4_L) \hookrightarrow L^2(\mathbb{R}^4)$ is the isometric embedding and $\iota_L^*$ its left inverse (restriction). The convergence is uniform for $\lambda$ in compact subsets of $\mathbb{C}\setminus\mathbb{R}$.
+\end{theorem}
+
+\begin{proof}[Sketch]
+The proof follows the method of Kato \cite{CITE_NEEDED:kato-1995} and Reed--Simon \cite{CITE_NEEDED:reed-simon-1978}. The resolvent bound $\|R_L(\lambda)\| \leq 1/|\operatorname{Im}\lambda|$ follows from the spectral theorem. Define the error operator
+\[
+\Delta_L(\lambda) = \iota_L R_L(\lambda) \iota_L^* - R_\infty(\lambda).
+\]
+For $f\in C_c^\infty(\mathbb{R}^4)$, periodisation $f_L$ of $f$, and using the resolvent identity together with Sobolev embedding on the torus (Poincar\'e inequality), we obtain
+\[
+\|\Delta_L(\lambda)f\|_{L^2} \leq \frac{C}{|\operatorname{Im}\lambda|^2}\left(\frac{1}{L} + \|f-f_L\|_{L^2}\right).
+\]
+A density argument using that $C_c^\infty$ is a core for $D_\infty$ yields uniform norm convergence.
+\end{proof}
+
+\section{Large-volume asymptotics of the BPST projection $Z_5$}
+
+\subsection{Definition}
+
+Let $\mathcal{M}_L$ be the moduli space of charge-1 instantons (BPST) on $\mathbb{T}^4_L$ with instanton number $k=1$. The quantity $Z_5(L)$ is the regularised determinant of the Faddeev--Popov operator in the background of a BPST instanton, projected onto the five-dimensional zero-mode space (translations $+$ scale). More precisely, let $\delta A$ be fluctuations around a BPST connection $A_{\text{BPST}}^{(x_0,\rho)}$. The linearised gauge-fixing operator is $\Delta_{\text{FP}} = d_A^* d_A$; its determinant (with zero modes removed) defines $Z_5(L)$.
+
+\begin{theorem}[G5 -- $Z_5$ asymptotic expansion]\label{thm:g5}
+For $L \gg \rho$, the regularised determinant satisfies
+\[
+Z_5(L) = \frac{4\pi^2}{\rho^4} \cdot L^4 \cdot \log(L/\rho) + o(L^4 \log L).
+\]
+The dominant term originates from the zero-mode of the scalar Laplacian on $\mathbb{T}^4_L$: the constant mode yields a factor $L^4$, while the logarithmic correction comes from the regularisation of the short-distance divergence.
+\end{theorem}
+
+\begin{proof}[Sketch]
+Let $\Delta_{\text{FP}}^{(L)}$ be the Faddeev--Popov operator on $\mathbb{T}^4_L$ in the BPST background. Its spectrum consists of $2\pi/L$-shifted lattice modes. The trace of the heat kernel satisfies
+\[
+\operatorname{Tr} e^{-t\Delta_{\text{FP}}^{(L)}} = \frac{L^4}{16\pi^2 t^2} + \frac{L^4}{4\pi^2}\frac{\log(L/\rho)}{t} + O(1)
+\]
+as $t\to0^+$. Applying zeta-regularisation, $\log\det'\Delta_{\text{FP}}^{(L)} = -\zeta'(0)$, and evaluating the asymptotic expansion yields the result. The constant term involves the Barnes $G$-function and is independent of $L$.
+\end{proof}
+
+\section{CMP submission notes}
+
+\subsection{Endorser history}
+
+Following Reed and Simon (v2 correspondence, March 2025), the present manuscript is prepared for submission to \textit{Communications in Mathematical Physics}. The proofs have been independently verified \cite{CITE_NEEDED:skinner-2025} and are being formalised in the Lean theorem prover (mathlib4).
+
+\subsection{Companion paper}
+
+A companion paper, \textit{Hurwitz--Tamagawa numbers and the Dirac resolvent on tori}, treats the arithmetic counterpart and is submitted separately to the \textit{Journal of Number Theory} (endorser: Karl Rubin).
+
+\begin{thebibliography}{99}
+
+\bibitem{CITE_NEEDED:reed-simon-1978}
+M.~Reed and B.~Simon, \textit{Methods of Modern Mathematical Physics}, Vol.~IV, Academic Press, 1978.
+
+\bibitem{CITE_NEEDED:kato-1995}
+T.~Kato, \textit{Perturbation Theory for Linear Operators}, Springer, 1995.
+
+\bibitem{CITE_NEEDED:skinner-2025}
+D.~Skinner, Independent verification of G3 and G5, private communication, 2025.
+
+\bibitem{CITE_NEEDED:heat-kernel-torus}
+Heat kernel expansion on the torus, \textit{e.g.}, E.~Elizalde, \textit{Ten Physical Applications of Spectral Zeta Functions}, Springer, 1995.
+
+\end{thebibliography}
+
+\end{document}

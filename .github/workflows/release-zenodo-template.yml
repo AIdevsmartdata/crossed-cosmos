@@ -1,0 +1,156 @@
+name: Release Zenodo template
+
+# Auto-generates a GitHub release (which triggers the Zenodo webhook + PDF upload)
+# based on changes detected in papers/ and output/. Run this when a paper batch
+# is ready for publication to Zenodo.
+#
+# Usage:
+#   1. Run workflow_dispatch with a semver bump type or explicit version tag
+#   2. The workflow scans papers/ for changed/new papers since last tag
+#   3. Creates a GitHub release with auto-generated notes
+#   4. The existing zenodo-upload-pdf workflow then pushes assets to Zenodo
+#
+# Versioning scheme:
+#   v<major>.<minor>.<patch>.<build>[-<label>]
+#   Current: v6.0.53.x  (auto-inferred from latest tag)
+
+on:
+  workflow_dispatch:
+    inputs:
+      version_bump:
+        description: "Version bump: patch | minor | major | explicit-tag"
+        type: choice
+        required: true
+        default: patch
+        options:
+          - patch
+          - minor
+          - major
+          - explicit-tag
+      explicit_tag:
+        description: "If version_bump=explicit-tag, the full tag (e.g. v7.0.0.1)"
+        required: false
+        default: ""
+      auto_publish:
+        description: "Publish release immediately (vs. draft)"
+        type: boolean
+        default: false
+
+permissions:
+  contents: write
+
+jobs:
+  generate-release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          fetch-tags: true
+
+      - name: Determine version
+        id: version
+        env:
+          BUMP: ${{ inputs.version_bump }}
+          EXPLICIT: ${{ inputs.explicit_tag }}
+        run: |
+          LATEST=$(git tag --list 'v*' --sort=-version:refname | head -1)
+
+          if [ "$BUMP" = "explicit-tag" ]; then
+            if [ -z "$EXPLICIT" ]; then
+              echo "::error::explicit-tag requires explicit_tag input"
+              exit 1
+            fi
+            TAG="$EXPLICIT"
+          else
+            # Parse v6.0.53.233 → components
+            TAG="${LATEST:-v6.0.53.0}"
+            CLEAN="${TAG#v}"
+            IFS='.' read -r MAJ MIN PATCH BUILD <<< "$CLEAN"
+            case "$BUMP" in
+              major)  MAJ=$((MAJ+1)); MIN=0; PATCH=0; BUILD=0 ;;
+              minor)  MIN=$((MIN+1)); PATCH=0; BUILD=0 ;;
+              patch)  BUILD=$((BUILD+1)) ;;
+              *)      echo "::error::unknown bump type $BUMP"; exit 1 ;;
+            esac
+            TAG="v${MAJ}.${MIN}.${PATCH}.${BUILD}"
+          fi
+
+          echo "tag=$TAG" >> $GITHUB_OUTPUT
+          echo "Previous tag: $LATEST → New tag: $TAG"
+
+      - name: Generate release notes
+        id: notes
+        env:
+          PREV_TAG: ${{ steps.version.outputs.tag }}
+        run: |
+          LATEST=$(git tag --list 'v*' --sort=-version:refname | head -1)
+
+          # Collect changed papers since last release
+          echo "## 📄 Changed papers" > /tmp/release_body.md
+          if [ -n "$LATEST" ]; then
+            git diff --name-only "$LATEST" HEAD -- 'papers/' | grep -oP 'papers/\K[^/]+' | sort -u | while read -r p; do
+              echo "- **$p** —" >> /tmp/release_body.md
+            done
+          else
+            ls -d papers/*/ | sed 's|papers/||;s|/||' | while read -r p; do echo "- **$p** (initial)" >> /tmp/release_body.md; done
+          fi
+
+          # Summary stats
+          TOTAL_PAPERS=$(ls -d papers/*/ 2>/dev/null | wc -l)
+          echo "" >> /tmp/release_body.md
+          echo "### 📊 Stats" >> /tmp/release_body.md
+          echo "- **Total papers:** $TOTAL_PAPERS" >> /tmp/release_body.md
+          echo "- **Release tag:** ${{ steps.version.outputs.tag }}" >> /tmp/release_body.md
+          echo "- **Previous tag:** ${LATEST:-none}" >> /tmp/release_body.md
+
+          # Zenodo reminder
+          echo "" >> /tmp/release_body.md
+          echo "---" >> /tmp/release_body.md
+          echo "_🔗 Zenodo concept DOI: [10.5281/zenodo.19686398](https://zenodo.org/doi/10.5281/zenodo.19686398)_" >> /tmp/release_body.md
+          echo "_📝 Run 'Zenodo apply metadata' workflow after release._" >> /tmp/release_body.md
+
+          cat /tmp/release_body.md
+          echo "body<<EOF" >> $GITHUB_OUTPUT
+          cat /tmp/release_body.md >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+
+      - name: Build release name
+        id: name
+        env:
+          TAG: ${{ steps.version.outputs.tag }}
+        run: |
+          # Generate a descriptive name from papers changed
+          CHANGED=$(git diff --name-only "$(git tag --list 'v*' --sort=-version:refname | head -1)" HEAD -- 'papers/' 2>/dev/null | grep -oP 'papers/\K[^/]+' | sort -u | head -3)
+          if [ -n "$CHANGED" ]; then
+            DESC=$(echo "$CHANGED" | tr '\n' ' ' | sed 's/ /, /g')
+            NAME="$TAG — $DESC"
+          else
+            DATE=$(date +%Y-%m-%d)
+            NAME="$TAG — Automated release $DATE"
+          fi
+          echo "name=$NAME" >> $GITHUB_OUTPUT
+
+      - name: Create GitHub Release
+        env:
+          TAG: ${{ steps.version.outputs.tag }}
+          NAME: ${{ steps.name.outputs.name }}
+          BODY: ${{ steps.notes.outputs.body }}
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          # Create the release
+          PRERELEASE=${{ inputs.auto_publish == false && '--prerelease' || '' }}
+
+          gh release create "$TAG" \
+            --title "$NAME" \
+            --notes "$BODY" \
+            --repo ${{ github.repository }} \
+            $PRERELEASE \
+            ${{ inputs.auto_publish == true && '--latest' || '' }}
+
+          echo "✅ Release $TAG created: $NAME"
+          echo ""
+          echo "Next steps:"
+          echo "  1. Upload PDFs (done automatically by zenodo-upload-pdf.yml)"
+          echo "  2. Run 'Zenodo apply metadata' workflow to sync metadata"
+          echo "  3. If release is draft, publish manually when ready"

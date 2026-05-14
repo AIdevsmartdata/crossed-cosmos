@@ -1,0 +1,37 @@
+# Build the standalone glueball_correlator binary against an installed Chroma.
+#
+# Usage on Vast (where Chroma is in $HOME/install/chroma):
+#   make -f Makefile.glueball
+#
+# This links against libchroma + libqdp + libqmp + libxml2.
+
+CHROMA  ?= $(HOME)/install/chroma
+QDPXX   ?= $(HOME)/install/qdpxx
+QMP     ?= $(HOME)/install/qmp
+
+CXX     := mpicxx
+CHROMA_CONF := $(CHROMA)/bin/chroma-config
+
+# Use chroma-config when available, else fall back to manual include/lib paths.
+HAS_CHROMA_CONFIG := $(shell test -x $(CHROMA_CONF) && echo yes)
+
+ifeq ($(HAS_CHROMA_CONFIG),yes)
+  CXXFLAGS := -std=c++14 -O2 -g $(shell $(CHROMA_CONF) --cxxflags)
+  LIBS     := $(shell $(CHROMA_CONF) --libs)
+else
+  CXXFLAGS := -std=c++14 -O2 -g \
+              -I$(CHROMA)/include -I$(QDPXX)/include -I$(QMP)/include \
+              -I/usr/include/libxml2
+  LIBS     := -L$(CHROMA)/lib -lchroma \
+              -L$(QDPXX)/lib  -lqdp \
+              -L$(QMP)/lib    -lqmp \
+              -lxml2
+endif
+
+all: glueball_correlator
+
+glueball_correlator: glueball_correlator.cc
+	$(CXX) $(CXXFLAGS) -o $@ $< $(LIBS)
+
+clean:
+	rm -f glueball_correlator

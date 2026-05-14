@@ -17,7 +17,7 @@ HAS_CHROMA_CONFIG := $(shell test -x $(CHROMA_CONF) && echo yes)
 
 ifeq ($(HAS_CHROMA_CONFIG),yes)
   CXXFLAGS := -std=c++14 -O2 -g $(shell $(CHROMA_CONF) --cxxflags)
-  LIBS     := $(shell $(CHROMA_CONF) --libs)
+  LIBS     := $(shell $(CHROMA_CONF) --ldflags) $(shell $(CHROMA_CONF) --libs)
 else
   CXXFLAGS := -std=c++14 -O2 -g \
               -I$(CHROMA)/include -I$(QDPXX)/include -I$(QMP)/include \

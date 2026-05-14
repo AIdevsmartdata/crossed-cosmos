@@ -51,8 +51,8 @@ int main(int argc, char *argv[])
   read(xml_in, "/glueball/APE_alpha", APE_alpha);
   int APE_iter;
   read(xml_in, "/glueball/APE_iter", APE_iter);
-  std::string cfg_file;
-  read(xml_in, "/glueball/Cfg/cfg_file", cfg_file);
+  Cfg_t cfg;
+  read(xml_in, "/glueball/Cfg", cfg);
 
   Layout::setLattSize(nrow);
   Layout::create();
@@ -62,15 +62,15 @@ int main(int argc, char *argv[])
   write(xml_out, "t_dir", t_dir);
   write(xml_out, "APE_alpha", APE_alpha);
   write(xml_out, "APE_iter", APE_iter);
-  write(xml_out, "cfg_file", cfg_file);
+  write(xml_out, "cfg_file", cfg.cfg_file);
 
   // -----------------------------------------------------------------------
-  // 2. Read gauge config (SZINQIO == SCIDAC LIME)
+  // 2. Read gauge config (dispatches on cfg_type, supports SZINQIO LIME etc.)
   // -----------------------------------------------------------------------
   multi1d<LatticeColorMatrix> u(Nd);
-  XMLReader gauge_xml;
-  QDPIO::cout << "glueball: reading config " << cfg_file << std::endl;
-  readSzinQio(gauge_xml, u, cfg_file);
+  XMLReader gauge_file_xml, gauge_xml;
+  QDPIO::cout << "glueball: reading config " << cfg.cfg_file << std::endl;
+  gaugeStartup(gauge_file_xml, gauge_xml, u, cfg);
   QDPIO::cout << "glueball: config read OK" << std::endl;
 
   // Plaquette sanity check on raw links

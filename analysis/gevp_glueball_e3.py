@@ -141,13 +141,32 @@ def build_corr_matrix(corrs, t_src=0):
                 # But our correlator already has this structure if it was computed
                 # as a point correlator. The output format has 16 values for Lt=16.
                 if len(ci) == Lt and len(cj) == Lt:
-                    # Fold: unless we have explicit forward/backward, fold around T/2
-                    C_all[k, :, i, j] = ci  # These are the timeslice correlators
-                    C_all[k, :, j, i] = cj
+                    # Two-point correlator: C_ij(t) = <O_i(t) O_j(0)>
+                    # Average over all time sources t0 using translation invariance
+                    C_ij_t = np.zeros(Lt)
+                    for t in range(Lt):
+                        total = 0.0
+                        for t0 in range(Lt):
+                            total += ci[(t0 + t) % Lt] * cj[t0]
+                        C_ij_t[t] = total / Lt
+                    C_all[k, :, i, j] = C_ij_t
+                    C_all[k, :, j, i] = C_ij_t  # symmetric
 
     # Average over configs
     C_avg = np.mean(C_all, axis=0)
     C_err = np.std(C_all, axis=0) / np.sqrt(n_configs)
+
+    # Vacuum subtraction for connected correlator
+    # <O_i(t) O_j(0)>_connected = <O_i(t) O_j(0)> - <O_i> <O_j>
+    mean_O = np.zeros((n_ops, Lt))
+    for i in range(n_ops):
+        mean_O[i] = np.mean([corr[i] for corr in corrs if i in corr], axis=0)
+    for i in range(n_ops):
+        for j in range(n_ops):
+            vac_sub = np.outer(mean_O[i], mean_O[j])[range(Lt), range(Lt)]
+            # Actually <O_i(t)><O_j(0)> averaged over sources:
+            vac_prod = np.mean(mean_O[i]) * np.mean(mean_O[j])  # scalar
+            C_avg[:, i, j] -= vac_prod
 
     return C_avg, C_err
 

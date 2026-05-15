@@ -1,0 +1,30 @@
+# Build the multi-smearing glueball_correlator_v2 binary.
+
+CHROMA  ?= $(HOME)/install/chroma
+QDPXX   ?= $(HOME)/install/qdpxx
+QMP     ?= $(HOME)/install/qmp
+
+CXX     := mpicxx
+CHROMA_CONF := $(CHROMA)/bin/chroma-config
+HAS_CHROMA_CONFIG := $(shell test -x $(CHROMA_CONF) && echo yes)
+
+ifeq ($(HAS_CHROMA_CONFIG),yes)
+  CXXFLAGS := -std=c++14 -O2 -g $(shell $(CHROMA_CONF) --cxxflags)
+  LIBS     := $(shell $(CHROMA_CONF) --ldflags) $(shell $(CHROMA_CONF) --libs)
+else
+  CXXFLAGS := -std=c++14 -O2 -g \
+              -I$(CHROMA)/include -I$(QDPXX)/include -I$(QMP)/include \
+              -I/usr/include/libxml2
+  LIBS     := -L$(CHROMA)/lib -lchroma \
+              -L$(QDPXX)/lib  -lqdp \
+              -L$(QMP)/lib    -lqmp \
+              -lxml2
+endif
+
+all: glueball_correlator_v2
+
+glueball_correlator_v2: glueball_correlator_v2.cc
+	$(CXX) $(CXXFLAGS) -o $@ $< $(LIBS)
+
+clean:
+	rm -f glueball_correlator_v2

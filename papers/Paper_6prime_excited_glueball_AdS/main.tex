@@ -1,0 +1,285 @@
+\documentclass[reprint,prd,amsmath,amssymb,nofootinbib,superscriptaddress]{revtex4-2}
+
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage{xcolor}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{bm}
+\usepackage{booktabs}
+\usepackage{siunitx}
+
+\hypersetup{colorlinks=true, linkcolor=blue, citecolor=blue, urlcolor=blue}
+
+% --- Custom commands
+\newcommand{\jbz}[2]{j_{#1,#2}}      % Bessel zero
+\newcommand{\rsqsig}{\sqrt{\sigma}}    % root sigma
+\newcommand{\Glueball}[1]{#1}
+\newcommand{\Note}[1]{{\color{red}\textbf{[Note: #1]}}}
+
+\begin{document}
+
+\title{On a numerical coincidence between excited \texorpdfstring{$\mathrm{SU}(N)$}{SU(N)} glueball mass ratios at large \texorpdfstring{$N$}{N} and AdS hard-wall Bessel-zero ratios}
+
+\author{K. Remondi\`ere}
+\email{kevin.remondiere@gmail.com}
+\affiliation{Independent researcher}
+
+\author{Crossed Cosmos collaboration}
+\affiliation{ECI/YM research programme}
+
+\date{\today}
+
+\begin{abstract}
+We perform a $1/N^2$ cross-extrapolation of the SU($N$) Yang-Mills glueball spectrum data of Athenodorou and Teper (JHEP \textbf{12} (2021) 082) for the assigned $J^{PC}$ channels, comparing the resulting large-$N$ ratios to AdS/QCD hard-wall Bessel-zero predictions. We identify two numerically intriguing coincidences at $N \to \infty$: $m(0^{-+}_{ex_1})/m(0^{++}_{gs}) = 2.288(24)$ matches $\jbz{0}{2}/\jbz{0}{1} = 2.295$ at $0.32\sigma$, and $m(2^{++}_{ex_1})/m(0^{++}_{gs}) = 2.118(13)$ matches $\jbz{2}{1}/\jbz{0}{1} = 2.136$ at $1.34\sigma$. We document the matches' poor cross-$N$ stability (4--12$\sigma$ off at low $N$), the absence of a self-consistent AdS/QCD prediction in the standard hard-wall or soft-wall frameworks, the falsification of the pattern in other excited channels ($0^{++}_{ex_1}$, $2^{-+}_{ex_1}$), and the impact of multi-hypothesis correction (Fisher $p \approx 0.41$ for the joint match, effective $p \gtrsim 1$ after Bonferroni). We list falsifiable predictions for the second-excited 0$^{-+}$ and 2$^{++}$ channels and Sp($2N$) cross-checks. We caveat throughout that the matches do not constitute a discovery but flag them as targets for future high-precision lattice spectroscopy.
+\end{abstract}
+
+\maketitle
+
+\section{Introduction}
+\label{sec:intro}
+
+Lattice QCD calculations have achieved precise determinations of the SU($N$) Yang-Mills glueball spectrum across a wide range of $N$~\cite{LuciniTeper2010, MorningstarPeardon1999, AthenodorouTeper2021}. The most extensive recent dataset is the Athenodorou-Teper 2021 study~\cite{AthenodorouTeper2021} (henceforth AT 2021), which provides continuum-extrapolated masses of $J^{PC}$ glueballs in units of the string tension $\sqrt{\sigma}$ for $N \in \{2, 3, 4, 5, 6, 8, 10, 12\}$, with the large-$N$ extrapolation derived using canonical 't~Hooft $1/N^2$ corrections.
+
+The AdS/QCD correspondence~\cite{Witten1998, PolchinskiStrassler2000} provides a phenomenological framework predicting hadron spectra from the bulk geometry of a five-dimensional Anti-de~Sitter space. In the hard-wall variant~\cite{ErlichKatzSonStephanov2005, BoschiFilhoBraga2002, DaRoldPomarol2005, deTeramondBrodsky2005}, the spectrum of glueballs and mesons is given by zeros of Bessel functions $J_\nu$. The order $\nu$ depends on the conformal dimension and quantum numbers of the dual boundary operator. Specifically:
+\begin{itemize}
+  \item For the $\rho$ meson tower (dimension-3 vector operator $\mathrm{Tr}(F_{\mu\nu})$): $m_n^\rho = \jbz{0}{n}/z_{\max}$ with zeros of $J_0$ (Erlich-Katz-Son-Stephanov 2005~\cite{ErlichKatzSonStephanov2005}, eq.~(2.10)).
+  \item For the $0^{++}$ scalar glueball (dimension-4 scalar operator $\mathrm{Tr}(F^2)$): $m_n^{0^{++}} = \jbz{2}{n}/z_{\max}$ with zeros of $J_2$ (Boschi-Filho-Braga 2003~\cite{BoschiFilhoBraga2002}).
+\end{itemize}
+The two towers share the same IR scale $z_{\max}$ in the hard-wall framework (a feature consistent with phenomenological fits)~\cite{ErlichKatzSonStephanov2005, BoschiFilhoBraga2002}.
+
+In a recent cross-$N$ audit of the AT 2021 dataset \cite{HybridFramework2026}, two intriguing numerical coincidences were identified at the SU($N \to \infty$) limit:
+\begin{align}
+  \frac{m(0^{-+}_{ex_1})}{m(0^{++}_{gs})}\Big|_{N \to \infty} &\approx \frac{\jbz{0}{2}}{\jbz{0}{1}} = 2.295,
+  \label{eq:H1prime}\\
+  \frac{m(2^{++}_{ex_1})}{m(0^{++}_{gs})}\Big|_{N \to \infty} &\approx \frac{\jbz{2}{1}}{\jbz{0}{1}} = 2.136.
+  \label{eq:H2prime}
+\end{align}
+These two ratios appear to relate the first excited $C=+$ glueballs in the $J^{PC} = 0^{-+}$ and $2^{++}$ channels to specific ratios of Bessel-function zeros that would correspond, in hard-wall AdS/QCD, to first and second zeros of $J_0$, and to the first zero of $J_2$ versus the first zero of $J_0$, respectively.
+
+In this paper we provide an independent verification of these matches, document their poor cross-$N$ stability and theoretical context, identify falsifications of broader claims, and list falsifiable predictions for future lattice work. We caveat throughout that the observed matches do not derive from a self-consistent AdS/QCD framework, and we apply multi-hypothesis statistical correction to report transparently their significance.
+
+\section{Cross-$N$ extrapolation method}
+\label{sec:method}
+
+Following the canonical 't~Hooft large-$N$ expansion for $\mathrm{SU}(N)$ Yang-Mills observables, the ratio $r(N) = m_X(N)/m_{0^{++}_{gs}}(N)$ for any glueball channel $X$ admits a $1/N^2$ expansion:
+\begin{equation}
+  r(N) = c_0 + \frac{c_1}{N^2} + O(1/N^4).
+\end{equation}
+We fit AT 2021 Tables~34 and~35 data over $N \in \{2,3,4,5,6,8,10,12\}$ using a weighted least-squares procedure, with errors propagated from the published statistical uncertainties on each mass measurement and combined assuming uncorrelated errors. The fit produces best-estimate $c_0$ (asymptotic large-$N$ ratio) and $c_1$ (leading $1/N^2$ correction).
+
+We cross-check by comparing $c_0$ to the published large-$N$ extrapolation in AT 2021 Table~38 (where applicable). In all channels considered, $c_0$ agrees with the Table~38 value within $1.3\sigma$ statistical consistency.
+
+\section{Results}
+\label{sec:results}
+
+\subsection{The two key matches}
+
+Independent re-fits with our reproducible code \cite{Code2026} yield:
+\begin{align}
+  \frac{m(0^{-+}_{ex_1})}{m(0^{++}_{gs})}\Big|_{c_0} &= 2.288(24), \quad c_1 = -0.75(21), \nonumber\\
+  &\quad \chi^2/\mathrm{dof} = 1.48, \\
+  \frac{m(2^{++}_{ex_1})}{m(0^{++}_{gs})}\Big|_{c_0} &= 2.118(13), \quad c_1 = -0.90(10), \nonumber\\
+  &\quad \chi^2/\mathrm{dof} = 0.79.
+\end{align}
+
+The discrepancies versus the AdS hard-wall Bessel ratios are:
+\begin{align}
+  z(0^{-+}_{ex_1}) &= \frac{2.288 - 2.295}{0.024} = -0.32\,\sigma, \\
+  z(2^{++}_{ex_1}) &= \frac{2.118 - 2.136}{0.013} = -1.34\,\sigma.
+\end{align}
+
+Both are statistically consistent with the AdS hard-wall Bessel targets at less than $1.5\sigma$.
+
+\subsection{Cross-$N$ stability analysis}
+
+Crucially, the matches are not stable across $N$. Table~\ref{tab:crossN} shows the cross-$N$ stability of the same ratios.
+
+\begin{table}[ht]
+  \caption{Cross-$N$ stability of the two key ratios. The match with Bessel-zero ratios is poor at low $N$ and emerges only at $N \geq 5$.}
+  \label{tab:crossN}
+  \begin{tabular}{c|cc|cc}
+    \hline
+    $N$ & $r(0^{-+}_{ex_1}/0^{++}_{gs})$ & dev$(\jbz{0}{2}/\jbz{0}{1})$ & $r(2^{++}_{ex_1}/0^{++}_{gs})$ & dev$(\jbz{2}{1}/\jbz{0}{1})$ \\
+    \hline
+    2 & 2.116(42) & $-4.3\sigma$ & 1.910(20) & $-11.5\sigma$ \\
+    3 & 2.141(40) & $-3.8\sigma$ & 1.994(17) & $-8.3\sigma$ \\
+    4 & 2.241(38) & $-1.4\sigma$ & 2.047(21) & $-4.3\sigma$ \\
+    5 & 2.338(42) & $+1.0\sigma$ & 2.094(25) & $-1.7\sigma$ \\
+    6 & 2.302(48) & $+0.1\sigma$ & 2.108(31) & $-0.9\sigma$ \\
+    8 & 2.226(80) & $-0.9\sigma$ & 2.130(34) & $-0.2\sigma$ \\
+    10 & 2.266(53) & $-0.6\sigma$ & 2.118(38) & $-0.5\sigma$ \\
+    12 & 2.202(65) & $-1.4\sigma$ & 2.129(29) & $-0.2\sigma$ \\
+    \hline
+    $\infty$ (Table~38) & 2.295(25) & $-0.0\sigma$ & 2.143(15) & $+0.5\sigma$ \\
+    \hline
+  \end{tabular}
+\end{table}
+
+At $N=2$, the $0^{-+}_{ex_1}/0^{++}_{gs}$ ratio is $-4.3\sigma$ from $\jbz{0}{2}/\jbz{0}{1}$, and the $2^{++}_{ex_1}/0^{++}_{gs}$ ratio is $-11.5\sigma$ off. The pattern of agreement emerges only around $N \geq 5$, suggesting that, if structural, the underlying mechanism is intrinsically a large-$N$ feature.
+
+\subsection{Falsification of broader claims}
+
+We tested whether any general pattern "first excited state of channel $X$ matches Bessel-zero ratio $\jbz{\nu_X}{1}/\jbz{0}{1}$" holds. The results are:
+
+\begin{itemize}
+  \item $0^{++}_{ex_1}/0^{++}_{gs}$ at $N \to \infty$ = $1.903(18)$ \emph{vs.} $\jbz{0}{2}/\jbz{0}{1} = 2.295$: $z = -21\sigma$, FALSIFIED.
+  \item $2^{-+}_{ex_1}/0^{++}_{gs}$ at $N \to \infty$ = $2.583(21)$ \emph{vs.} $\jbz{2}{1}/\jbz{0}{1} = 2.136$: $z = +21\sigma$, FALSIFIED.
+  \item $3^{++}_{gs}/0^{++}_{gs}$ at $N \to \infty$ = $2.364(21)$ \emph{vs.} $\jbz{3}{1}/\jbz{0}{1} = 2.653$: $z = -14\sigma$, FALSIFIED.
+\end{itemize}
+
+The two matches in eqs.~(\ref{eq:H1prime},\ref{eq:H2prime}) appear to be \emph{isolated coincidences} in the $0^{-+}_{ex_1}$ and $2^{++}_{ex_1}$ channels, not part of a generalizable pattern.
+
+\subsection{Multi-hypothesis statistical correction}
+
+We tested $\sim 7$ excited-state ratios against $\sim 6$ plausible Bessel-zero ratios, for an effective $\sim 24$ trials. The Fisher-combined $p$-value for the joint $z = -0.32\sigma$ and $z = -1.34\sigma$ observations is
+\begin{equation}
+  p_{\rm Fisher} = 0.41.
+\end{equation}
+After Bonferroni correction by a factor $\sim 12$ (half the trial count, accounting for the joint nature), the effective $p$-value is $p_{\rm eff} \gtrsim 1$. The matches are not statistically significant against the null hypothesis of chance coincidence in a multi-trial setting.
+
+\section{Theoretical context}
+\label{sec:theory}
+
+\subsection{Standard AdS/QCD hard-wall does not predict the matches}
+
+In the canonical AdS/QCD hard-wall framework~\cite{BoschiFilhoBraga2002, ErlichKatzSonStephanov2005}:
+\begin{itemize}
+  \item The $0^{++}$ glueball spectrum is $m_n^{0^{++}} = \jbz{2}{n}/z_{\max}$ (zeros of $J_2$).
+  \item The $\rho$ meson spectrum is $m_n^{\rho} = \jbz{0}{n}/z_{\max}$ (zeros of $J_0$).
+\end{itemize}
+The observed ratio $0^{-+}_{ex_1}/0^{++}_{gs} = \jbz{0}{2}/\jbz{0}{1}$ thus relates the lattice glueball quantities to a ratio of consecutive zeros of $J_0$, which (in the standard framework) describes the $\rho$ meson tower internally. There is no canonical hard-wall AdS/QCD reason for the lattice $0^{-+}_{ex_1}/0^{++}_{gs}$ glueball ratio to equal the $\rho$-meson-internal ratio.
+
+Similarly, the observed $2^{++}_{ex_1}/0^{++}_{gs} = \jbz{2}{1}/\jbz{0}{1}$ would (in standard hard-wall) correspond to the lattice ratio of the first excited $2^{++}$ glueball to the ground $0^{++}$ glueball equaling the ratio of the first $J_2$ zero to the first $J_0$ zero. This crosses the meson and glueball towers, again without a derived basis.
+
+Soft-wall variants~\cite{KarchKatzSonStephanov2006, ColangeloDeFazioJugeauNicotri2007} of AdS/QCD predict $m_n^2 \propto n + J/2$ with universal slope, which globally fail the AT 2021 large-$N$ data ($\chi^2/\mathrm{dof} \approx 305$ in joint J^{PC} fit~\cite{HybridFramework2026}).
+
+We conclude that no standard AdS/QCD framework derives the observed matches.
+
+\subsection{Speculative interpretation: phantom ground state}
+
+One could speculate that the lattice $0^{++}_{gs}$ at $m/\sqrt{\sigma} \approx 3.07$ is not the canonical AdS/QCD ground state of any single-trace bulk wavefunction, but rather a "phantom" mode: a multi-glueball threshold, a two-gluon $S$-wave bound state, or a Nambu-Goldstone-like mode of an unrealized broken symmetry. Under this picture, the lattice "first excited state" in $0^{-+}$ and $2^{++}$ channels would be the true holographic ground state of the respective bulk wavefunction tower.
+
+This picture has no derivation in the literature, makes no prediction for which channels are "phantom" (the falsification in $0^{++}_{ex_1}$ and $2^{-+}_{ex_1}$ does not fit), and is speculative. We list it for completeness only.
+
+\section{Falsifiable predictions}
+\label{sec:predictions}
+
+If the two matches are structurally meaningful (rather than coincidences), the following further predictions follow:
+
+\begin{enumerate}
+  \item Second-excited $0^{-+}$: $r(0^{-+}_{ex_2}/0^{++}_{gs}) \approx \jbz{0}{3}/\jbz{0}{1} = 3.598$, i.e.\ $m(0^{-+}_{ex_2})/\sqrt{\sigma} \approx 11.05$ at $N \to \infty$.
+  \item Second-excited $2^{++}$: $r(2^{++}_{ex_2}/0^{++}_{gs}) \approx \jbz{2}{2}/\jbz{0}{1} = 3.500$, i.e.\ $m(2^{++}_{ex_2})/\sqrt{\sigma} \approx 10.75$ at $N \to \infty$.
+  \item Sp($2N$) cross-check: under the planar-limit equivalence between $\mathrm{SU}(N)$ and $\mathrm{Sp}(2N)$ gauge theories, the same pattern should hold in the Sp($2N$) lattice spectroscopy. Bennett et al.~\cite{Bennett2020} provide ground and first-excited $0^{++}$ glueball masses in Sp(2$N$) for $N=1,\ldots,4$ with large-$N$ extrapolation. The corresponding Sp($2N$) ratio $m(0^{++}_{ex_1})/m(0^{++}_{gs})$ can be directly compared to the SU($N$) value 1.903(18). To test the $0^{-+}_{ex_1}$ and $2^{++}_{ex_1}$ predictions specifically, additional Sp($2N$) excited-state spectroscopy in those channels would be required. A confirmation at the SU/Sp planar limit would falsify the "$\mathrm{SU}(N)$ accidental coincidence" alternative.
+\end{enumerate}
+
+Current AT 2021 data are too sparse on $ex_2$ excited states to test predictions (1) and (2) at $N \to \infty$.
+
+\section{Conclusions}
+\label{sec:conclusions}
+
+We have independently verified that two specific numerical coincidences hold at the SU($N \to \infty$) limit of the AT 2021 glueball spectrum data, with statistical significance of $0.32\sigma$ and $1.34\sigma$ in the $0^{-+}_{ex_1}/0^{++}_{gs}$ and $2^{++}_{ex_1}/0^{++}_{gs}$ channels respectively, against AdS hard-wall Bessel-zero ratios $\jbz{0}{2}/\jbz{0}{1}$ and $\jbz{2}{1}/\jbz{0}{1}$.
+
+We have also documented:
+\begin{itemize}
+  \item Poor cross-$N$ stability: the matches are $4-12\sigma$ off at low $N$ and emerge only at $N \geq 5$.
+  \item Absence of a self-consistent AdS/QCD framework predicting the matches.
+  \item Falsification of any general "EX1 ↔ ground-Bessel" pattern in other excited channels.
+  \item Multi-hypothesis correction reducing Fisher $p \approx 0.41$ to effective $p \gtrsim 1$.
+\end{itemize}
+
+The matches do not constitute a discovery but they are intriguing and warrant inclusion in any future cross-$N$ analysis of the SU($N$) glueball spectrum. We list specific falsifiable predictions for the $0^{-+}_{ex_2}$, $2^{++}_{ex_2}$, and Sp($2N$) lattice data, which could either elevate the present observation to a structural feature or definitively reject it as a coincidence.
+
+\section*{Acknowledgments}
+
+The cross-$N$ extrapolation reproducible code is available at \cite{Code2026}.
+
+\begin{thebibliography}{99}
+
+\bibitem{Witten1998}
+  E.~Witten,
+  ``Anti-de Sitter Space, Thermal Phase Transition, and Confinement in Gauge Theories,''
+  Adv.~Theor.~Math.~Phys.\ \textbf{2} (1998) 505;
+  \href{https://arxiv.org/abs/hep-th/9803131}{arXiv:hep-th/9803131}.
+
+\bibitem{PolchinskiStrassler2000}
+  J.~Polchinski and M.~J.~Strassler,
+  ``The String Dual of a Confining Four-Dimensional Gauge Theory,''
+  \href{https://arxiv.org/abs/hep-th/0003136}{arXiv:hep-th/0003136} (2000).
+
+\bibitem{ErlichKatzSonStephanov2005}
+  J.~Erlich, E.~Katz, D.~T.~Son and M.~A.~Stephanov,
+  ``QCD and a Holographic Model of Hadrons,''
+  Phys.~Rev.~Lett.\ \textbf{95}, 261602 (2005);
+  \href{https://arxiv.org/abs/hep-ph/0501128}{arXiv:hep-ph/0501128}.
+
+\bibitem{BoschiFilhoBraga2002}
+  H.~Boschi-Filho and N.~R.~F.~Braga,
+  ``QCD/String holographic mapping and glueball mass spectrum,''
+  Eur.\ Phys.\ J.\ C \textbf{32} (2003) 529;
+  \href{https://arxiv.org/abs/hep-th/0209080}{arXiv:hep-th/0209080}.
+
+\bibitem{DaRoldPomarol2005}
+  L.~Da Rold and A.~Pomarol,
+  ``Chiral symmetry breaking from five dimensional spaces,''
+  Nucl.\ Phys.\ B \textbf{721}, 79 (2005);
+  \href{https://arxiv.org/abs/hep-ph/0501218}{arXiv:hep-ph/0501218}.
+
+\bibitem{deTeramondBrodsky2005}
+  G.~F.~de Teramond and S.~J.~Brodsky,
+  ``Hadronic Spectrum of a Holographic Dual of QCD,''
+  Phys.\ Rev.\ Lett.\ \textbf{94}, 201601 (2005);
+  \href{https://arxiv.org/abs/hep-th/0501022}{arXiv:hep-th/0501022}.
+
+\bibitem{KarchKatzSonStephanov2006}
+  A.~Karch, E.~Katz, D.~T.~Son and M.~A.~Stephanov,
+  ``Linear Confinement and AdS/QCD,''
+  Phys.\ Rev.\ D \textbf{74}, 015005 (2006);
+  \href{https://arxiv.org/abs/hep-ph/0602229}{arXiv:hep-ph/0602229}.
+
+\bibitem{ColangeloDeFazioJugeauNicotri2007}
+  P.~Colangelo, F.~De Fazio, F.~Jugeau and S.~Nicotri,
+  ``On the light glueball spectrum in a holographic description of QCD,''
+  Phys.\ Lett.\ B \textbf{652}, 73 (2007);
+  \href{https://arxiv.org/abs/hep-ph/0703316}{arXiv:hep-ph/0703316}.
+
+\bibitem{MorningstarPeardon1999}
+  C.~J.~Morningstar and M.~J.~Peardon,
+  ``The glueball spectrum from an anisotropic lattice study,''
+  Phys.\ Rev.\ D \textbf{60}, 034509 (1999).
+
+\bibitem{LuciniTeper2010}
+  B.~Lucini, A.~Rago and E.~Rinaldi,
+  ``Glueball masses in the large $N$ limit,''
+  JHEP \textbf{08}, 119 (2010).
+
+\bibitem{AthenodorouTeper2021}
+  A.~Athenodorou and M.~Teper,
+  ``SU($N$) gauge theories in 3+1 dimensions: glueball spectrum, string tensions and topology,''
+  JHEP \textbf{12} (2021) 082;
+  \href{https://arxiv.org/abs/2106.00364}{arXiv:2106.00364}.
+
+\bibitem{Bennett2020}
+  E.~Bennett, J.~Holligan, D.~K.~Hong, J.~W.~Lee, C.-J.~D.~Lin, B.~Lucini, M.~Piai and D.~Vadacchino,
+  ``Glueballs and Strings in Sp($2N$) Yang-Mills theories,''
+  Phys.\ Rev.\ D \textbf{103}, 054509 (2021);
+  \href{https://arxiv.org/abs/2010.15781}{arXiv:2010.15781}.
+
+\bibitem{Shanahan2025}
+  R.~Abbott, D.~C.~Hackett, D.~A.~Pefkou, F.~Romero-L\'opez, and P.~E.~Shanahan,
+  ``Lattice evidence that scalar glueballs are small,''
+  Phys.\ Rev.\ Lett.\ \textbf{136}, 041901 (2026);
+  \href{https://arxiv.org/abs/2508.21821}{arXiv:2508.21821}.
+
+\bibitem{HybridFramework2026}
+  Opus 4.7 max-effort hybrid framework deep-dive (internal report),
+  \texttt{HYBRID\_FRAMEWORK\_2026-05-15.md}, May 15, 2026.
+
+\bibitem{Code2026}
+  Reproducible Python scripts for cross-$N$ fits and falsifiable predictions:
+  \texttt{paper\_6prime\_cross\_N\_fits.py} and \texttt{paper\_6prime\_bessel\_predictions.py},
+  May 2026.
+
+\end{thebibliography}
+
+\end{document}

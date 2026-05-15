@@ -53,8 +53,8 @@
 \newtheorem{remark}[theorem]{Remark}
 \newtheorem{example}[theorem]{Example}
 
-\title{A motivic-weight extension of the heterotic-CM-K3 mass-gap formula:\\
-the spin-$2$ glueball ratio at $SU(2)$ and the canonical weight-$5$ CM newform $f_{-67}^{(5)}$}
+\title{A motivic-weight anchor at $SU(2)/D=-67$:\\
+a single-discriminant correspondence and its finite-$N$ limitations}
 \author{Kévin Remondière}
 \address{Independent Researcher, Tarbes, France}
 \email{kevin.remondiere@gmail.com}
@@ -65,38 +65,31 @@ the spin-$2$ glueball ratio at $SU(2)$ and the canonical weight-$5$ CM newform $
 \maketitle
 
 \begin{abstract}
-The ECI v15 closed-form mass-gap conjecture for pure $SU(N)$ Yang--Mills theory
-on the heterotic-CM-$\mathrm{K3}$ family,
-$m_{\mathrm{YM}}(D, SU(N))^{2} = \pi^{4}\,\lambda_{\min}(\mathrm{K3}_{D})^{2}\,\mathcal{F}(N)^{2}/|D|$
-(\cite{ThmC6FN}, with $\mathcal{F}(N) = (1+c/N^{2})/(1+c/9)$, $c = 0.80(5)$),
-matches the lattice continuum $0^{++}$ glueball at $D = -67$ at the
-$0.5\sigma$ level for $SU(3)$ but is silent for higher-spin states.
-We report an empirical pattern in the recent Athenodorou--Teper 2021 continuum
-spectrum (\texttt{arXiv:2106.00364}, Table~34) for $SU(2)$ pure gauge:
+The Athenodorou--Teper 2021 continuum spectrum of pure $SU(2)$ Yang--Mills
+(\texttt{arXiv:2106.00364}, Table~34) yields
 $(m_{2^{++}}/m_{0^{++}})^{2} = 2.001 \pm 0.017$,
-matching the value $2 = 4/2$ to within $0.04\%$.
-The numerator $4$ is the motivic weight of the canonical weight-$5$ CM newform
-$f_{D}^{(5)} = \theta_{\psi_{E}^{4}} \in S_{5}^{\mathrm{new}}(\Gamma_{0}(|D|), \chi_{D})$
-attached to $K = \mathbb{Q}(\sqrt{D})$ at $D = -67$
-(LMFDB label \texttt{67.5.b.a}, \cite{HodgeFourfolds}); the denominator $2$ is the
-motivic weight of the weight-$3$ CM newform $f_{D}^{(3)} = \theta_{\psi_{E}^{2}}$
-(LMFDB label \texttt{67.3.b.a}). We formulate the
-\emph{motivic-weight Conjecture E-1}:
-\[
-m_{X^{J^{PC}}}^{2}(D, SU(N)) \;\propto\; \frac{w_{\mathrm{mot}}(X) - 0}{2} \cdot
-\frac{\pi^{4}}{|D|} \cdot \mathcal{F}_{X}(N)^{2}
-\]
-linking glueball state $X$ to the motivic weight of an associated CM newform of $\Gamma_{0}(|D|)$,
-and verify the rational Hecke eigenvalues at the four smallest split primes
-$p \in \{17, 19, 23, 29\}$ via PARI/GP \texttt{mfeigenbasis} together with the
-Newton identity $a_{p}(w=5) = a_{p}(w=3)^{2} - 2 p^{2}$.
-We isolate the falsifiability of Conjecture E-1: a single high-precision lattice
-measurement of $(m_{2^{++}}/m_{0^{++}})^{2}$ at $SU(2)$ outside the interval $[1.99, 2.01]$
-refutes it. We also present a tentative additive decomposition Conjecture E-3
-of the full $SU(3)$ continuum $J^{PC}$ spectrum and discuss its consequences
-for the $0^{-+}$ pseudoscalar, the glueball mass-radius
-(Shanahan~\cite{Shanahan2026} $= 0.263 \pm 0.031~\mathrm{fm}$), and the
-topological susceptibility.
+a $0.07\%$ match to the integer $2 = 4/2$.
+We observe that this ratio equals the ratio of motivic weights
+$w_{\mathrm{mot}}(f_{-67}^{(5)})/w_{\mathrm{mot}}(f_{-67}^{(3)}) = 4/2$
+of two canonical CM newforms attached to $K = \mathbb{Q}(\sqrt{-67})$ at discriminant
+$D = -67$ (LMFDB labels \texttt{67.5.b.a} and \texttt{67.3.b.a}),
+and formulate this as Conjecture~E-1.
+We verify the arithmetic foundation via PARI/GP \texttt{mfeigenbasis} at the
+four smallest split primes $\{17, 19, 23, 29\}$ and confirm the Newton identity
+$a_{p}(w=5) = a_{p}(w=3)^{2} - 2p^{2}$ in each case.
+
+However, a cross-$N$ audit of AT~2021 data for $N \in \{2,3,4,5,6,8,10,12\}$
+(Opus aa0b, 2026-05-15) reveals that the large-$N$ limit of the ratio is
+$c_{0} = 1.489 \pm 0.007$, discrepant from $\sqrt{2} = 1.4142$ by $11.2\sigma$.
+The $SU(2)$ match is thus a finite-$N$ coincidence: the $1/N^{2}$ subleading
+correction $c_{1}/N^{2} \approx -0.08$ at $N=2$ pulls the ratio down to
+accidentally coincide with $\sqrt{2}$.
+Conjecture~E-1 in its present form therefore cannot be a universal cross-$N$
+law; we retain it as a single-discriminant empirical observation at $SU(2)/D=-67$,
+tier T\_PLAUSIBLE, and propose targeted lattice tests.
+An excited-state reframe (Paper~6', in preparation) addresses the large-$N$
+regime.
+Target venue: \emph{Journal of Number Theory} short note.
 \end{abstract}
 
 \section{Introduction}
@@ -155,27 +148,40 @@ CM newforms attached to $K = \mathbb{Q}(\sqrt{-67})$:
       eigenvalue at split primes drives $m(0^{++})$ via~\eqref{eq:ECI-formula};
 \item the weight-$5$ newform $f_{-67}^{(5)} \in S_{5}^{\mathrm{new}}(67, \chi_{-67})$
       with motivic weight $w_{\mathrm{mot}}^{(5)} = 4$, constructed explicitly in
-      Hodge_fourfolds~\cite[\S2.2]{HodgeFourfolds} as
+      Hodge\_fourfolds~\cite[\S2.2]{HodgeFourfolds} as
       $f_{D}^{(5)} = \theta_{\psi_{E}^{4}}$, the theta-series of the fourth
       power of the canonical infinity-type $(1, 0)$ Grössencharakter $\psi_{E}$
       of $K$.
 \end{itemize}
 We make this precise as~\textbf{Conjecture E-1} in~\S\ref{sec:conjE1} below.
 
-\subsection*{Scope and disclaimers.}
+\subsection*{Scope, disclaimers, and cross-$N$ limitation.}
 The empirical observation of~\S\ref{sec:E1-empirical} and the conjectural
 extension of~\S\ref{sec:conjE1} are not a derivation of the glueball spectrum
 from arithmetic. The mechanism conjecturally relating the motivic weight of a
 CM newform on $\Gamma_{0}(|D|)$ to the squared mass of a specific $J^{PC}$
 glueball state on the heterotic-CM-$\mathrm{K3}$ family is at the
 \emph{T\_PLAUSIBLE} tier in the language of the ECI rigour hierarchy: it is
-structurally suggestive, it is supported by an empirical $0.04\%$ match at a
+structurally suggestive, it is supported by an empirical $0.07\%$ match at a
 single anchor, and it admits explicit falsifiability tests. We do not claim it
 follows from the conditional Theorem~C.6 of~\cite{ThmC6FN}, nor from any
 published rigorous result.
 
+\textbf{Critical cross-$N$ limitation.} A post-draft cross-$N$ audit (Opus aa0b,
+2026-05-15) of the Athenodorou--Teper 2021 data for $N \in \{2, 3, 4, 5, 6,
+8, 10, 12\}$ reveals that the $1/N^{2}$ fit $r(N) = c_{0} + c_{1}/N^{2}$ to
+$(m_{2^{++}}/m_{0^{++}})$ gives $c_{0} = 1.489 \pm 0.007$ and $c_{1} = -0.32$,
+so that the large-$N$ limit is $1.489 \neq \sqrt{2} = 1.4142$ at $11.2\sigma$.
+The $\chi^{2}/\mathrm{dof}$ for the $\sqrt{2}$ hypothesis is $129.1/8 = 16.1$,
+solidly rejecting the motivic identification as a \emph{universal} law.
+The $SU(2)$ match is a finite-$N$ accident: the $c_{1}/N^{2} \approx -0.08$
+correction at $N=2$ brings the ratio down to coincide with $\sqrt{2}$.
+Conjecture~E-1 must be understood as a single-anchor, finite-$N$ observation,
+not a large-$N$ universal prediction. Full cross-$N$ data and the $1/N^{2}$
+fits are presented in~\S\ref{sec:cross-N}.
+
 \subsection*{Outline.}
-Section~\ref{sec:background} reviews ECI v15, the Hodge_fourfolds construction
+Section~\ref{sec:background} reviews ECI v15, the Hodge\_fourfolds construction
 of $f_{D}^{(5)}$, and the Athenodorou--Teper 2021 lattice spectrum.
 Section~\ref{sec:conjE1} states Conjecture E-1 and explores its consequences.
 Section~\ref{sec:PARI} reports a complete PARI/GP \texttt{mfeigenbasis}
@@ -184,12 +190,13 @@ $f_{-67}^{(5)}$ at the four smallest split primes $\{17, 19, 23, 29\}$, and
 verifies the Newton identity $a_{p}(w=5) = a_{p}(w=3)^{2} - 2p^{2}$.
 Section~\ref{sec:lattice} compares Conjecture E-1 to the
 Athenodorou--Teper 2021 continuum spectrum at $N \in \{2, 3, 4, 5, 6, 8, 12\}$
-and isolates the $N$-dependence pattern of the implied weight-dependent
-Casimir factor $\mathcal{F}_{w}(N) = (1 + c_{w}/N^{2})/(1 + c_{w}/9)$.
+and isolates the $N$-dependence pattern.
+\textbf{Section~\ref{sec:cross-N}} presents the full cross-$N$ $1/N^{2}$ fit
+and the large-$N$ falsification of the universal $\sqrt{2}$ identification.
 Section~\ref{sec:E3} states a tentative additive decomposition Conjecture E-3
 for the full $J^{PC}$ spectrum at $SU(3)$.
 Section~\ref{sec:falsif} sets out the explicit lattice test that would refute
-Conjecture E-1. Section~\ref{sec:open} lists open problems.
+Conjecture E-1 even in its restricted $SU(2)$ form. Section~\ref{sec:open} lists open problems.
 
 \section{Background}\label{sec:background}
 
@@ -229,9 +236,9 @@ $\sqrt{\sigma} = 0.5081~\mathrm{GeV}$ comes from \cite{MorningstarPeardon1999}.
 The lattice value is $m(0^{++}, SU(3)) = 1.700 \pm 0.050~\mathrm{GeV}$~\cite{PDG2024},
 giving a $0.5\sigma$ match.
 
-\subsection{The Hodge_fourfolds weight-$5$ CM newform}\label{sec:weight5}
+\subsection{The Hodge\_fourfolds weight-$5$ CM newform}\label{sec:weight5}
 
-The companion paper Hodge_fourfolds~\cite{HodgeFourfolds} constructs, for each of
+The companion paper Hodge\_fourfolds~\cite{HodgeFourfolds} constructs, for each of
 the six Heegner discriminants $D \in \{-7, -11, -19, -43, -67, -163\}$ with
 $h_{K} = 1$, the canonical weight-$5$ CM newform via a fourth-power of the
 infinity-type $(1, 0)$ Grössencharakter $\psi_{E}$ of $K$:
@@ -569,6 +576,57 @@ second parameter $d$ in the higher-order $1/N^{4}$ expansion of $\mathcal{F}$:
 \end{equation}
 but this introduces a third free parameter, weakening the predictive content.
 
+\section{Cross-$N$ tension and the large-$N$ falsification of the $\sqrt{2}$ identification}\label{sec:cross-N}
+
+A post-draft cross-$N$ analysis (Opus aa0b, 2026-05-15; reproducible code at
+\texttt{/tmp/jpc\_master\_analysis.py}) extracts the $1/N^{2}$ fits
+$r(N) = c_{0} + c_{1}/N^{2}$ to the ratio
+$r(N) := m_{2^{++}}(N)/m_{0^{++}}(N)$ using AT~2021 data for
+$N \in \{2, 3, 4, 5, 6, 8, 10, 12\}$:
+
+\begin{center}
+\begin{tabular}{ccc}
+\toprule
+$N$ & $r(2^{++}/0^{++})$ & Deviation from $\sqrt{2} = 1.4142$ \\
+\midrule
+$2$ & $1.4147(100)$ & $+0.02\%$ --- the Phase~E ``core match'' \\
+$3$ & $1.4373(97)$ & $+1.63\%$ \\
+$4$ & $1.4497(129)$ & $+2.50\%$ \\
+$5$ & $1.4861(157)$ & $+5.06\%$ \\
+$6$ & $1.5081(169)$ & $+6.62\%$ \\
+$8$ & $1.5037(140)$ & $+6.32\%$ \\
+$10$ & $1.4810(188)$ & $+4.71\%$ \\
+$12$ & $1.4745(171)$ & $+4.26\%$ \\
+$\infty$ & $\mathbf{1.489 \pm 0.007}$ & $+5.29\%$, $11.2\sigma$ off $\sqrt{2}$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+The best-fit parameters are $c_{0} = 1.489(7)$ and $c_{1} = -0.32(5)$, with
+$\chi^{2}/\mathrm{dof} = 9.90/6 = 1.65$ (good fit). The $\chi^{2}$ for the
+$\sqrt{2}$ hypothesis is $129.1/8 = 16.1$, representing a decisive $11.2\sigma$
+rejection at large $N$.
+
+\paragraph{Interpretation.}
+The SU(2) ``match'' arises because the $1/N^{2}$ correction at $N=2$ is
+$c_{1}/4 \approx -0.08$, reducing $r(2)$ from the large-$N$ value $1.489$ to
+$1.489 - 0.08 = 1.41$, which coincides with $\sqrt{2}$ to within the AT~2021
+statistical error. This is a finite-$N$ coincidence, not a structural prediction.
+
+\paragraph{Implication for Conjecture~E-1.}
+The motivic-weight identification $m_{2^{++}}^{2}/m_{0^{++}}^{2} = 4/2 = 2$
+(equivalently $m_{2^{++}}/m_{0^{++}} = \sqrt{2}$) is falsified as a
+\emph{universal} or \emph{large-$N$} law. Conjecture~E-1 is retained only as
+a single-discriminant, single-$N$ empirical observation at $(D, N) = (-67, 2)$,
+at the T\_PLAUSIBLE tier. Extension to other $(D, N)$ requires a mechanism that
+explains the observed $N$-drift; the Casimir factor $\mathcal{F}_{2^{++}}(N)$
+alone does not account for it (Section~\ref{sec:lattice}).
+
+An excited-state reframe is sketched in the companion Paper~6' (in preparation):
+the large-$N$ data suggest that the lattice-level \emph{excited} $2^{++}$ state
+(rather than the ground state) may match the AdS hard-wall Bessel prediction
+$j_{2,1}/j_{0,1} = 2.136$ at $2.1\sigma$ \cite{Brower2000}.
+
 \section{Additive decomposition Conjecture E-3}\label{sec:E3}
 
 The empirical $SU(3)$ $J^{PC}$ spectrum of \cite[Table 34]{AthenodorouTeper2021},
@@ -716,7 +774,7 @@ heterotic-CM-K3 spectral structure. Three candidate routes:
       the scalar to higher-spin sectors. The Hodge decomposition of $H^{2}(\mathrm{K3})$
       into transcendental and algebraic parts may be the natural index for $J^{PC}$
       assignment.
-\item \emph{Kuga--Sato fourfold lift route}: the Hodge_fourfolds construction
+\item \emph{Kuga--Sato fourfold lift route}: the Hodge\_fourfolds construction
       \cite[\S2.3]{HodgeFourfolds} embeds $\rho_{f_{-67}^{(5)}}$ in $H^{4}((E_{-67})^{4})$ as
       the extreme $\{\pi^{4}, \bar\pi^{4}\}$ eigenvalue sub-representation of $\Sym^{4}(H^{1}(E_{-67}))$.
       The five-dimensional $\Sym^{4}(H^{1}(E_{-67}))$ admits a natural physical
@@ -730,39 +788,41 @@ heterotic-CM-K3 spectral structure. Three candidate routes:
 
 \section{Conclusion}\label{sec:conclusion}
 
-We have isolated a sharp numerical pattern in the Athenodorou--Teper 2021
-continuum lattice spectrum of pure $SU(2)$ Yang--Mills theory:
-$(m_{2^{++}}/m_{0^{++}})^{2} = 2.001 \pm 0.017$, matching the integer $2$
-to within $0.08\sigma$. We have shown that the natural arithmetic interpretation
-of this integer is the ratio of motivic weights $w_{\mathrm{mot}}(f_{-67}^{(5)}) / w_{\mathrm{mot}}(f_{-67}^{(3)}) = 4/2$
-of two canonical CM newforms attached to $K = \Q(\sqrt{-67})$.
+We have isolated a numerical pattern in the Athenodorou--Teper 2021 continuum
+lattice spectrum of pure $SU(2)$ Yang--Mills theory:
+$(m_{2^{++}}/m_{0^{++}})^{2} = 2.001 \pm 0.017$ at $SU(2)$, matching the
+integer $2 = 4/2$ to within $0.08\sigma$.
+We have proposed the natural arithmetic interpretation of this integer as the
+ratio of motivic weights $w_{\mathrm{mot}}(f_{-67}^{(5)}) / w_{\mathrm{mot}}(f_{-67}^{(3)}) = 4/2$
+of two canonical CM newforms attached to $K = \Q(\sqrt{-67})$, and formulated
+this as Conjecture~E-1.
+The arithmetic foundation (rational Hecke eigenvalues at $\{17, 19, 23, 29\}$,
+Newton identity~\eqref{eq:newton}) is verified by PARI/GP.
 
-We have formulated this as Conjecture E-1, extending the ECI v15 mass-gap
-framework from the single $0^{++}$ scalar to the $2^{++}$ tensor at the same
-discriminant anchor. We have verified the arithmetic foundation of
-Conjecture E-1 via PARI/GP \texttt{mfeigenbasis} at the four smallest split
-primes $\{17, 19, 23, 29\}$ and confirmed the Newton identity~\eqref{eq:newton}
-in each case. We have computed the implied weight-dependent Casimir
-coefficient $c_{2^{++}} = 0.72(4)$, distinct from the $0^{++}$ value
-$c_{0^{++}} = 0.80(5)$, and conjectured the monotonicity $c_{X}$ decreases as
-the spin of $X$ increases.
+\textbf{Cross-$N$ limitation (added post-draft, 2026-05-15).}
+A cross-$N$ audit (Section~\ref{sec:cross-N}) establishes that the large-$N$
+extrapolation of $(m_{2^{++}}/m_{0^{++}})$ is $c_{0} = 1.489 \pm 0.007$,
+discrepant from $\sqrt{2}$ at $11.2\sigma$.
+The $SU(2)$ match is a finite-$N$ coincidence.
+\textbf{Conjecture~E-1 as a universal cross-$N$ law is falsified.}
+It is retained as a single-discriminant, single-$N$ empirical observation at
+$(D, N) = (-67, 2)$, tier T\_PLAUSIBLE, not as a structural prediction.
 
-We have also formulated a tentative additive decomposition Conjecture E-3
-of the full $SU(3)$ $J^{PC}$ spectrum that fits six independently measured
-states at the $\sim 0.5\%$ level using only three free parameters.
+The Phase~E motivic anchor remains valid as an empirical $SU(2)$-specific
+observation. Cross-$N$ universality requires either a new theoretical mechanism
+or a fundamentally different observable. The companion Paper~6' (in preparation)
+explores the excited-state AdS hard-wall reframe, where two large-$N$ Bessel
+matches survive at $<2\sigma$: $0^{-+}_{\mathrm{ex1}}/0^{++}_{\mathrm{gs}}
+\approx j_{0,2}/j_{0,1}$ ($0.32\sigma$) and $2^{++}_{\mathrm{ex1}}/0^{++}_{\mathrm{gs}}
+\approx j_{2,1}/j_{0,1}$ ($1.34\sigma$) \cite{Brower2000}.
 
-The principal falsifiability test is a measurement of
-$(m_{2^{++}}/m_{0^{++}})^{2}$ at $SU(2)$ with precision $\lesssim 0.5\%$;
-a value outside $[1.99, 2.01]$ refutes Conjecture E-1 in its present form. This
-test is feasible with existing lattice technology (multi-operator variational
-basis plus standard GEVP on $\sim 5 \times 10^{4}$ configurations) and falls
-naturally within the next iteration of Athenodorou--Teper's ongoing programme.
+A tentative additive decomposition Conjecture~E-3 fits the $SU(3)$ $J^{PC}$
+spectrum at the $\sim 0.5\%$ level using three empirical parameters; it is at
+the T\_SPECULATIVE tier and requires independent confirmation.
 
-We do not claim a derivation: Conjecture E-1 sits at the T\_PLAUSIBLE tier,
-supported empirically but not yet from first principles. The open problem is the
-derivation of the motivic-weight rule from the heterotic-CM-K3 spectral structure.
-Three candidate routes (spectral triple, Kuga--Sato fourfold lift, AdS/CFT analogue)
-are identified.
+The present paper is targeted at the \emph{Journal of Number Theory} as a
+short note documenting the arithmetic observation and its finite-$N$ limitations,
+with explicit falsifiability conditions.
 
 \section*{Acknowledgments}
 

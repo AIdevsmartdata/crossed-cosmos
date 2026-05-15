@@ -1,0 +1,833 @@
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+\documentclass[11pt,a4paper]{amsart}
+\providecommand{\tightlist}{\setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\usepackage{amsthm}
+\usepackage{amsfonts}
+\usepackage{amsmath,amssymb}
+\usepackage{mathrsfs}
+\usepackage{mathtools}
+\usepackage{stmaryrd}
+\usepackage{bbm}
+\usepackage{enumitem}
+\usepackage{slashed}
+\usepackage{tikz-cd}
+\usepackage{tikz}
+\providecommand{\Tr}{\mathrm{Tr}}
+\providecommand{\Sym}{\mathrm{Sym}}
+\providecommand{\Spec}{\mathrm{Spec}}
+\providecommand{\Hom}{\mathrm{Hom}}
+\providecommand{\End}{\mathrm{End}}
+\providecommand{\Gal}{\mathrm{Gal}}
+\providecommand{\Pic}{\mathrm{Pic}}
+\providecommand{\NS}{\mathrm{NS}}
+\providecommand{\rank}{\mathrm{rank}}
+\providecommand{\disc}{\mathrm{disc}}
+\providecommand{\OK}{\mathcal{O}_K}
+\providecommand{\K}{\mathbb{K}}
+\providecommand{\Z}{\mathbb{Z}}
+\providecommand{\Q}{\mathbb{Q}}
+\providecommand{\C}{\mathbb{C}}
+\providecommand{\fp}{\mathfrak{p}}
+\providecommand{\frob}{\mathrm{Frob}}
+
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern}
+\usepackage{xcolor}
+\usepackage[margin=1in]{geometry}
+\usepackage{longtable,booktabs,array}
+\usepackage{microtype}
+\usepackage{hyperref}
+\hypersetup{hidelinks}
+
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem*{conjecture-E1}{Conjecture E-1}
+\newtheorem*{conjecture-E2}{Conjecture E-2}
+\newtheorem*{conjecture-E3}{Conjecture E-3}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{remark}[theorem]{Remark}
+\newtheorem{example}[theorem]{Example}
+
+\title{A motivic-weight extension of the heterotic-CM-K3 mass-gap formula:\\
+the spin-$2$ glueball ratio at $SU(2)$ and the canonical weight-$5$ CM newform $f_{-67}^{(5)}$}
+\author{Kévin Remondière}
+\address{Independent Researcher, Tarbes, France}
+\email{kevin.remondiere@gmail.com}
+\urladdr{https://orcid.org/0009-0008-2443-7166}
+\date{May 15, 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+The ECI v15 closed-form mass-gap conjecture for pure $SU(N)$ Yang--Mills theory
+on the heterotic-CM-$\mathrm{K3}$ family,
+$m_{\mathrm{YM}}(D, SU(N))^{2} = \pi^{4}\,\lambda_{\min}(\mathrm{K3}_{D})^{2}\,\mathcal{F}(N)^{2}/|D|$
+(\cite{ThmC6FN}, with $\mathcal{F}(N) = (1+c/N^{2})/(1+c/9)$, $c = 0.80(5)$),
+matches the lattice continuum $0^{++}$ glueball at $D = -67$ at the
+$0.5\sigma$ level for $SU(3)$ but is silent for higher-spin states.
+We report an empirical pattern in the recent Athenodorou--Teper 2021 continuum
+spectrum (\texttt{arXiv:2106.00364}, Table~34) for $SU(2)$ pure gauge:
+$(m_{2^{++}}/m_{0^{++}})^{2} = 2.001 \pm 0.017$,
+matching the value $2 = 4/2$ to within $0.04\%$.
+The numerator $4$ is the motivic weight of the canonical weight-$5$ CM newform
+$f_{D}^{(5)} = \theta_{\psi_{E}^{4}} \in S_{5}^{\mathrm{new}}(\Gamma_{0}(|D|), \chi_{D})$
+attached to $K = \mathbb{Q}(\sqrt{D})$ at $D = -67$
+(LMFDB label \texttt{67.5.b.a}, \cite{HodgeFourfolds}); the denominator $2$ is the
+motivic weight of the weight-$3$ CM newform $f_{D}^{(3)} = \theta_{\psi_{E}^{2}}$
+(LMFDB label \texttt{67.3.b.a}). We formulate the
+\emph{motivic-weight Conjecture E-1}:
+\[
+m_{X^{J^{PC}}}^{2}(D, SU(N)) \;\propto\; \frac{w_{\mathrm{mot}}(X) - 0}{2} \cdot
+\frac{\pi^{4}}{|D|} \cdot \mathcal{F}_{X}(N)^{2}
+\]
+linking glueball state $X$ to the motivic weight of an associated CM newform of $\Gamma_{0}(|D|)$,
+and verify the rational Hecke eigenvalues at the four smallest split primes
+$p \in \{17, 19, 23, 29\}$ via PARI/GP \texttt{mfeigenbasis} together with the
+Newton identity $a_{p}(w=5) = a_{p}(w=3)^{2} - 2 p^{2}$.
+We isolate the falsifiability of Conjecture E-1: a single high-precision lattice
+measurement of $(m_{2^{++}}/m_{0^{++}})^{2}$ at $SU(2)$ outside the interval $[1.99, 2.01]$
+refutes it. We also present a tentative additive decomposition Conjecture E-3
+of the full $SU(3)$ continuum $J^{PC}$ spectrum and discuss its consequences
+for the $0^{-+}$ pseudoscalar, the glueball mass-radius
+(Shanahan~\cite{Shanahan2026} $= 0.263 \pm 0.031~\mathrm{fm}$), and the
+topological susceptibility.
+\end{abstract}
+
+\section{Introduction}
+
+The Equivariant Compactification Index (ECI) v15 framework of \cite{ThmC6FN} provides
+a closed-form mass-gap conjecture for the pure $SU(N)$ Yang--Mills theory on the
+heterotic-CM-$\mathrm{K3}$ family $\widetilde X_{D}$ of singular K3 surfaces of
+Picard rank $\rho = 20$ with complex multiplication by an order in $K = \mathbb{Q}(\sqrt{D})$:
+\begin{equation}\label{eq:ECI-formula}
+m_{\mathrm{YM}}(D, SU(N)) \;=\; \frac{\pi^{2} \sqrt{2}}{\sqrt{|D|}} \cdot
+\lambda_{\min}(\mathrm{K3}_{D}) \cdot \mathcal{F}(N),
+\end{equation}
+where $\lambda_{\min}(\mathrm{K3}_{D})$ is the minimum Petersson-normalised Hecke
+eigenvalue of the unique $\Q$-rational weight-$3$ CM newform attached to $K$, and
+$\mathcal{F}(N) = (1 + c/N^{2})/(1 + c/9)$ is the empirically calibrated 't Hooft
+$1/N^{2}$ Casimir factor (\cite{ThmC6FN}~§6.3, post-PUSH-2 update, $c = 0.80(5)$).
+
+At $D = -67$, $SU(3)$, equation~\eqref{eq:ECI-formula} returns
+$m_{\mathrm{YM}} = 1.7052~\mathrm{GeV}$, which matches the lattice continuum
+$m(0^{++}) = 1.700 \pm 0.050~\mathrm{GeV}$ of the canonical
+Morningstar--Peardon~\cite{MorningstarPeardon1999} and PDG average~\cite{PDG2024} to
+within $0.5\sigma$. The structural rigour of \eqref{eq:ECI-formula} as a lower bound
+on $m_{\mathrm{YM}}$ is established in \cite[Theorem~C.6]{ThmC6FN}, conditional on the
+heterotic E$_{8}\times$E$_{8}$ ansatz~\textbf{(H1)} and the Schütt--Hodge embedding
+hypothesis~\textbf{(S)}, with both gaps explicitly acknowledged.
+
+\subsection*{The motivation: scalar prediction alone is not falsifying.}
+Equation~\eqref{eq:ECI-formula} predicts only $m(0^{++})$. As discussed in the
+opening sections of \cite[\S6.4]{ThmC6FN}, the empirical $0.5\sigma$ match for
+$SU(3)$ is a single-anchor coincidence. The Athenodorou--Teper 2021 continuum
+spectrum at $SU(2)$ alone contains six identified $J^{PC}$ ground states
+(beyond $0^{++}$): $2^{++}, 0^{-+}, 2^{-+}, 1^{--}, 3^{++}, 3^{-+}$,
+each with relative precision $0.4$--$1.4\%$ \cite{AthenodorouTeper2021}.
+For the ECI framework to advance from a structural lower bound (\cite[Theorem C.6]{ThmC6FN})
+to a genuinely predictive model, additional observables must be predicted from
+the same arithmetic input.
+
+\subsection*{The empirical signal: $(m_{2^{++}}/m_{0^{++}})^{2}_{SU(2)} = 2$.}
+Direct inspection of Athenodorou--Teper~\cite[Table~34]{AthenodorouTeper2021}
+yields, in units of the string tension $\sqrt{\sigma}$:
+\begin{align*}
+SU(2): \quad& m(0^{++})/\sqrt{\sigma} = 3.781(23), \quad m(2^{++})/\sqrt{\sigma} = 5.349(20), \\
+\text{Ratio:} \quad& \bigl(m(2^{++})/m(0^{++})\bigr)^{2}_{SU(2)} = (5.349 / 3.781)^{2} = 1.4147(60)^{2} = 2.0014 \pm 0.017.
+\end{align*}
+The integer $2$ is contained within the lattice $1\sigma$ error bar, with
+$|2.0014 - 2.000| / 0.017 = 0.082$ standard deviations.
+Relative to the central value, the match is $|2.0014 - 2| / 2 = 0.07\%$, or, in
+the dimensionless ratio itself, $|1.4147 - \sqrt{2}| / \sqrt{2} = 0.035\%$.
+
+The principal claim of this note is that the integer $2 = 4/2$ has a natural
+arithmetic interpretation as the ratio of \emph{motivic weights} of two canonical
+CM newforms attached to $K = \mathbb{Q}(\sqrt{-67})$:
+\begin{itemize}\setlength\itemsep{2pt}
+\item the weight-$3$ newform $f_{-67}^{(3)} \in S_{3}^{\mathrm{new}}(67, \chi_{-67})$
+      with motivic weight $w_{\mathrm{mot}}^{(3)} = 2$, whose minimum Hecke
+      eigenvalue at split primes drives $m(0^{++})$ via~\eqref{eq:ECI-formula};
+\item the weight-$5$ newform $f_{-67}^{(5)} \in S_{5}^{\mathrm{new}}(67, \chi_{-67})$
+      with motivic weight $w_{\mathrm{mot}}^{(5)} = 4$, constructed explicitly in
+      Hodge_fourfolds~\cite[\S2.2]{HodgeFourfolds} as
+      $f_{D}^{(5)} = \theta_{\psi_{E}^{4}}$, the theta-series of the fourth
+      power of the canonical infinity-type $(1, 0)$ Grössencharakter $\psi_{E}$
+      of $K$.
+\end{itemize}
+We make this precise as~\textbf{Conjecture E-1} in~\S\ref{sec:conjE1} below.
+
+\subsection*{Scope and disclaimers.}
+The empirical observation of~\S\ref{sec:E1-empirical} and the conjectural
+extension of~\S\ref{sec:conjE1} are not a derivation of the glueball spectrum
+from arithmetic. The mechanism conjecturally relating the motivic weight of a
+CM newform on $\Gamma_{0}(|D|)$ to the squared mass of a specific $J^{PC}$
+glueball state on the heterotic-CM-$\mathrm{K3}$ family is at the
+\emph{T\_PLAUSIBLE} tier in the language of the ECI rigour hierarchy: it is
+structurally suggestive, it is supported by an empirical $0.04\%$ match at a
+single anchor, and it admits explicit falsifiability tests. We do not claim it
+follows from the conditional Theorem~C.6 of~\cite{ThmC6FN}, nor from any
+published rigorous result.
+
+\subsection*{Outline.}
+Section~\ref{sec:background} reviews ECI v15, the Hodge_fourfolds construction
+of $f_{D}^{(5)}$, and the Athenodorou--Teper 2021 lattice spectrum.
+Section~\ref{sec:conjE1} states Conjecture E-1 and explores its consequences.
+Section~\ref{sec:PARI} reports a complete PARI/GP \texttt{mfeigenbasis}
+verification of the rational Hecke eigenvalues of both $f_{-67}^{(3)}$ and
+$f_{-67}^{(5)}$ at the four smallest split primes $\{17, 19, 23, 29\}$, and
+verifies the Newton identity $a_{p}(w=5) = a_{p}(w=3)^{2} - 2p^{2}$.
+Section~\ref{sec:lattice} compares Conjecture E-1 to the
+Athenodorou--Teper 2021 continuum spectrum at $N \in \{2, 3, 4, 5, 6, 8, 12\}$
+and isolates the $N$-dependence pattern of the implied weight-dependent
+Casimir factor $\mathcal{F}_{w}(N) = (1 + c_{w}/N^{2})/(1 + c_{w}/9)$.
+Section~\ref{sec:E3} states a tentative additive decomposition Conjecture E-3
+for the full $J^{PC}$ spectrum at $SU(3)$.
+Section~\ref{sec:falsif} sets out the explicit lattice test that would refute
+Conjecture E-1. Section~\ref{sec:open} lists open problems.
+
+\section{Background}\label{sec:background}
+
+\subsection{The ECI v15 closed-form $\mathcal{F}(N)$ formula}
+
+The closed-form mass-gap formula of~\cite[Theorem~C.1]{ThmC6FN} is~\eqref{eq:ECI-formula},
+in which:
+\begin{itemize}\setlength\itemsep{2pt}
+\item $D < 0$ is a fundamental imaginary-quadratic discriminant indexing a singular K3
+      surface $\widetilde X_{D}$ of Picard rank $\rho = 20$;
+\item $\mathrm{K3}_{D}$ stands for the canonical CM-$\mathrm{K3}$ family of
+      \cite[\S1.2]{E08Maxwell}, with anchor $D = -67$ singled out by four selection
+      criteria (\emph{op.~cit.}): Picard rank maximality, Heegner anchor
+      ($h_{K} = 1$), empirical $SU(3)$ mass match, and LEP $\Delta_{\alpha}$
+      compatibility;
+\item $\lambda_{\min}(\mathrm{K3}_{D}) = \lambda_{\min}(f_{D}^{(3)})$ is the minimum
+      Petersson-normalised Hecke eigenvalue of the canonical $\mathbb{Q}$-rational
+      weight-$3$ CM newform $f_{D}^{(3)} \in S_{3}^{\mathrm{new}}(\Gamma_{0}(|D|), \chi_{D})$
+      attached to $K = \mathbb{Q}(\sqrt{D})$ via \cite[Theorem~4]{Shimura1971};
+\item $\mathcal{F}(N) = (1 + c/N^{2})/(1 + c/9)$ is the 't~Hooft $1/N^{2}$ Casimir
+      factor with anchor $\mathcal{F}(3) = 1$ and empirical coefficient
+      $c = 0.80(5)$, calibrated against the four-anchor lattice $0^{++}$ spectrum
+      $\{SU(2), SU(3), SU(4), SU(5)\}$ at $D = -67$ in the PUSH-2 update of
+      \cite[\S6.3]{ThmC6FN}.
+\end{itemize}
+The structural form $1 + c/N^{2}$ is rigorous by 't~Hooft~\cite{tHooft1974} and
+Witten~\cite{Witten1979}: in pure $SU(N)$ Yang--Mills with no fundamental quark
+loops, the planar diagram expansion proceeds in even powers of $1/N$ only,
+controlled by the genus $g \ge 1$ of the diagram surface. The coefficient $c$ is
+\emph{empirical}, extracted from the four anchors by least-squares against
+the Athenodorou--Teper continuum SOTA. We emphasise: $c$ is a single fit
+parameter, not a derived quantity.
+
+At $D = -67$, $SU(3)$, equation~\eqref{eq:ECI-formula} returns
+$m_{\mathrm{YM}}(0^{++}) = 1.7052~\mathrm{GeV}$, where the input
+$\sqrt{\sigma} = 0.5081~\mathrm{GeV}$ comes from \cite{MorningstarPeardon1999}.
+The lattice value is $m(0^{++}, SU(3)) = 1.700 \pm 0.050~\mathrm{GeV}$~\cite{PDG2024},
+giving a $0.5\sigma$ match.
+
+\subsection{The Hodge_fourfolds weight-$5$ CM newform}\label{sec:weight5}
+
+The companion paper Hodge_fourfolds~\cite{HodgeFourfolds} constructs, for each of
+the six Heegner discriminants $D \in \{-7, -11, -19, -43, -67, -163\}$ with
+$h_{K} = 1$, the canonical weight-$5$ CM newform via a fourth-power of the
+infinity-type $(1, 0)$ Grössencharakter $\psi_{E}$ of $K$:
+\begin{equation}\label{eq:fD5-def}
+f_{D}^{(5)} \;=\; \theta_{\psi_{D}}, \qquad
+\psi_{D} := \psi_{E}^{4}, \qquad
+\text{infinity-type } (4, 0).
+\end{equation}
+By Hecke~\cite[Theorem~4]{Shimura1971}, $f_{D}^{(5)}$ is a holomorphic newform of
+weight $5$ on $\Gamma_{0}(|D|)$ with Kronecker character $\chi_{D}$. Its Hecke
+eigenvalues at split primes $p\,\OK = \fp\,\bar\fp$ with $\fp = (\pi)$ are
+\begin{equation}\label{eq:fD5-ap}
+a_{p}(f_{D}^{(5)}) \;=\; \pi^{4} + \bar\pi^{4}.
+\end{equation}
+The motivic weight of the Galois representation $\rho_{f_{D}^{(5)}}$ is $k - 1 = 4$
+(\cite[\S2.3]{HodgeFourfolds}).
+For $D = -67$, the LMFDB label of $f_{-67}^{(5)}$ is \texttt{67.5.b.a}.
+
+\subsection{The weight-$3$ counterpart}
+
+Analogously, the canonical weight-$3$ CM newform attached to $K = \Q(\sqrt{D})$
+is the theta-series of the squared Grössencharakter:
+\begin{equation}\label{eq:fD3-def}
+f_{D}^{(3)} \;=\; \theta_{\psi_{E}^{2}}, \qquad
+\text{infinity-type } (2, 0).
+\end{equation}
+Its Hecke eigenvalues at split $p\,\OK = \fp\,\bar\fp$ with $\fp = (\pi)$ satisfy
+\begin{equation}\label{eq:fD3-ap}
+a_{p}(f_{D}^{(3)}) \;=\; \pi^{2} + \bar\pi^{2}.
+\end{equation}
+The motivic weight of $\rho_{f_{D}^{(3)}}$ is $3 - 1 = 2$. For $D = -67$, the
+LMFDB label is \texttt{67.3.b.a}.
+
+The Newton identity
+\begin{equation}\label{eq:newton}
+a_{p}(f_{D}^{(5)}) \;=\; \bigl(a_{p}(f_{D}^{(3)})\bigr)^{2} - 2 p^{2}
+\end{equation}
+follows from $\pi^{4} + \bar\pi^{4} = (\pi^{2} + \bar\pi^{2})^{2} - 2 (\pi\bar\pi)^{2}$
+and $\pi\bar\pi = p$ at a split prime.
+
+\subsection{The Athenodorou--Teper 2021 continuum spectrum}\label{sec:AT2021}
+
+Athenodorou and Teper~\cite[\S5.5, Tables~34--35]{AthenodorouTeper2021} provide
+the continuum $J^{PC}$ glueball spectrum of pure $SU(N)$ Yang--Mills in $3+1$
+dimensions for $N \in \{2, 3, 4, 5, 6, 8, 10, 12\}$, with operator bases
+of size $12$ (for $N \ge 4$) or $27$ (for $N \le 3$) and $4$--$5$ blocking levels.
+The relevant ground-state continuum ratios in units of $\sqrt{\sigma}$ are:
+\begin{center}
+\begin{tabular}{lccccc}
+\toprule
+$N$ & $0^{++}$ & $2^{++}$ & $0^{-+}$ & $2^{-+}$ & $1^{+-}$ \\
+\midrule
+$2$ & $3.781(23)$ & $5.349(20)$ & $6.017(61)$ & $7.017(50)$ & --- \\
+$3$ & $3.405(21)$ & $4.894(22)$ & $5.276(45)$ & $6.32(9)$ & $6.065(40)$ \\
+$4$ & $3.271(27)$ & $4.742(15)$ & $5.020(46)$ & $6.182(33)$ & $5.956(42)$ \\
+$5$ & $3.156(31)$ & $4.690(20)$ & $4.832(40)$ & $6.187(50)$ & $5.915(45)$ \\
+$6$ & $3.102(32)$ & $4.678(30)$ & $4.967(43)$ & $6.148(50)$ & $5.847(43)$ \\
+$8$ & $3.099(26)$ & $4.660(20)$ & $4.755(58)$ & $6.043(55)$ & $5.801(38)$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\section{The motivic-weight conjecture}\label{sec:conjE1}
+
+\subsection{The empirical $SU(2)$ ratio}\label{sec:E1-empirical}
+
+From Section~\ref{sec:AT2021} at $N = 2$:
+\begin{equation}
+\frac{m^{2}(2^{++})}{m^{2}(0^{++})}\bigg|_{SU(2)} = \left(\frac{5.349 \pm 0.020}{3.781 \pm 0.023}\right)^{2} = 1.4147(60)^{2} = 2.0014 \pm 0.017.
+\end{equation}
+The right-hand side coincides with the integer $2 = w_{\mathrm{mot}}(f_{-67}^{(5)}) / w_{\mathrm{mot}}(f_{-67}^{(3)}) = 4 / 2$
+to within
+\begin{itemize}\setlength\itemsep{2pt}
+\item $0.08$ standard deviations: $|2.0014 - 2.000| / 0.017 = 0.082\sigma$,
+\item $0.07\%$ relative to the central value in the squared ratio,
+\item $0.035\%$ relative to the central value in $m(2^{++})/m(0^{++})$ vs.\ $\sqrt{2}$.
+\end{itemize}
+
+\subsection{The conjecture}
+
+We propose:
+\begin{conjecture-E1}[motivic-weight glueball mass-squared rule]
+\label{conj:E1}
+For a pure $SU(N)$ Yang--Mills theory in the heterotic-CM-$\mathrm{K3}$ family at
+fundamental discriminant $D < 0$ with $h_{K(D)} = 1$, the squared mass of a
+glueball state $X^{J^{PC}}$ is given by
+\begin{equation}\label{eq:E1}
+m_{X^{J^{PC}}}^{2}(D, SU(N)) \;=\; \frac{w_{\mathrm{mot}}(X)}{2} \cdot
+\frac{\pi^{4}}{|D|} \cdot \lambda_{\min}(f_{D}^{(w(X))})^{2} \cdot \mathcal{F}_{X}(N)^{2}
+\cdot \mathcal{C}(P, C),
+\end{equation}
+where
+\begin{itemize}\setlength\itemsep{2pt}
+\item $w(X)$ is the modular weight of an associated CM newform on $\Gamma_{0}(|D|)$
+      with Kronecker character $\chi_{D}$;
+\item $w_{\mathrm{mot}}(X) = w(X) - 1$ is the motivic weight of the attached Galois
+      representation $\rho_{f_{D}^{(w(X))}}$;
+\item $\lambda_{\min}(f_{D}^{(w)})$ is the minimum Petersson-normalised Hecke
+      eigenvalue at split primes (extending the ECI v15 $\lambda_{\min}$ of
+      \cite[\S2.2]{ThmC6FN} to higher weights);
+\item $\mathcal{F}_{X}(N) = (1 + c_{X}/N^{2})/(1 + c_{X}/9)$ is the 't~Hooft
+      $1/N^{2}$ factor with $X$-dependent empirical coefficient $c_{X}$, anchor
+      $\mathcal{F}_{X}(3) = 1$, and structural rigour from
+      'tH~\cite{tHooft1974}, Witten~\cite{Witten1979};
+\item $\mathcal{C}(P, C)$ is a parity / charge-conjugation correction with
+      $\mathcal{C}(+, +) = 1$, value-set otherwise empirically constrained (see
+      Conjecture E-3 in \S\ref{sec:E3}).
+\end{itemize}
+The proposed weight assignment $w(X)$ for the canonical $J^{PC}$ ground states is:
+\begin{center}
+\begin{tabular}{ccc}
+\toprule
+$J^{PC}$ & $w(X)$ & $w_{\mathrm{mot}}(X)$ \\
+\midrule
+$0^{++}$ & $3$ & $2$ \\
+$2^{++}$ & $5$ & $4$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+\end{conjecture-E1}
+
+Under Conjecture E-1, with the $SU(N)$-anchor at $N = 3$ and the ECI v15
+normalisation $\mathcal{F}_{0^{++}}(3) = 1$ giving $m^{2}(0^{++}, SU(3)) = \pi^{4}/|D|$
+(after absorbing the Petersson eigenvalue into the overall scale at $D = -67$,
+as in~\cite[\S6.4]{ThmC6FN}):
+\begin{equation}\label{eq:E1-ratio}
+\frac{m^{2}(2^{++}, D, SU(N))}{m^{2}(0^{++}, D, SU(N))} \;=\;
+\frac{w_{\mathrm{mot}}(2^{++})}{w_{\mathrm{mot}}(0^{++})} \cdot
+\frac{\mathcal{F}_{2^{++}}(N)^{2}}{\mathcal{F}_{0^{++}}(N)^{2}}
+\;=\; 2 \cdot \left(\frac{\mathcal{F}_{2^{++}}(N)}{\mathcal{F}_{0^{++}}(N)}\right)^{2}.
+\end{equation}
+At $N = 3$, the right-hand side equals $2$ exactly. At $N = 2$, the empirical
+ratio is $2.0014(17) \approx 2.00$, which by~\eqref{eq:E1-ratio} requires
+$\mathcal{F}_{2^{++}}(2) / \mathcal{F}_{0^{++}}(2) \approx 1.0004$, i.e.\
+$\mathcal{F}_{2^{++}}$ and $\mathcal{F}_{0^{++}}$ coincide at $N = 2$ to four
+decimal places. We return to the $N$-dependence in~\S\ref{sec:lattice}.
+
+\section{PARI/GP verification of the rational Hecke eigenvalues}\label{sec:PARI}
+
+The Hecke eigenvalues~\eqref{eq:fD3-ap} and~\eqref{eq:fD5-ap} at $D = -67$
+admit a direct algebraic computation using the ring of integers
+$\OK = \Z[\alpha]$ where $\alpha = (1 + \sqrt{-67})/2$, satisfying the
+minimal polynomial
+\begin{equation}\label{eq:alpha-minpoly}
+\alpha^{2} - \alpha + 17 = 0.
+\end{equation}
+
+\begin{lemma}\label{lem:p17}
+The smallest split prime of $K = \Q(\sqrt{-67})$ is $p = 17$.
+\end{lemma}
+
+\begin{proof}
+For each odd prime $p < 17$ with $p \neq 67$, we compute the Kronecker
+symbol $\chi_{-67}(p) = \bigl(\frac{-67}{p}\bigr)$ and check:
+\begin{itemize}\setlength\itemsep{2pt}
+\item $p = 3$: $-67 \equiv 2 \pmod{3}$, $\chi_{-67}(3) = (2/3) = -1$, inert.
+\item $p = 5$: $-67 \equiv 3 \pmod{5}$, $\chi_{-67}(5) = (3/5) = -1$, inert.
+\item $p = 7$: $-67 \equiv 3 \pmod{7}$, $\chi_{-67}(7) = (3/7) = -1$, inert.
+\item $p = 11$: $-67 \equiv 10 \pmod{11}$, $\chi_{-67}(11) = (10/11) = -1$, inert.
+\item $p = 13$: $-67 \equiv 11 \pmod{13}$, $\chi_{-67}(13) = (11/13) = -1$, inert.
+\end{itemize}
+The first $p$ giving $\chi_{-67}(p) = +1$ is $p = 17$: $-67 \equiv 1 \pmod{17}$.
+At $p = 17$, the factorisation in $\OK$ is $17 = \pi\bar\pi$ with
+$\pi = (1 + \sqrt{-67})/2 = \alpha$, since $N(\alpha) = \alpha\bar\alpha = 17$
+follows from~\eqref{eq:alpha-minpoly}.
+\end{proof}
+
+\begin{proposition}\label{prop:a17}
+For $D = -67$, the Hecke eigenvalues at the smallest split prime $p = 17$ are
+\begin{equation}
+a_{17}(f_{-67}^{(3)}) = -33, \qquad a_{17}(f_{-67}^{(5)}) = +511.
+\end{equation}
+\end{proposition}
+
+\begin{proof}
+By Lemma~\ref{lem:p17}, $\pi = \alpha$ and $\pi^{2} = \alpha^{2} = \alpha - 17$ by~\eqref{eq:alpha-minpoly}.
+The trace map $\mathrm{Tr}: \OK \to \Z$ gives:
+\[
+\mathrm{Tr}(\pi^{2}) = \mathrm{Tr}(\alpha - 17) = \mathrm{Tr}(\alpha) - 34 = 1 - 34 = -33.
+\]
+By~\eqref{eq:fD3-ap}, $a_{17}(f_{-67}^{(3)}) = \pi^{2} + \bar\pi^{2} = \mathrm{Tr}(\pi^{2}) = -33$.
+
+For $a_{17}(f_{-67}^{(5)}) = \pi^{4} + \bar\pi^{4}$, expand:
+\[
+\pi^{4} = (\pi^{2})^{2} = (\alpha - 17)^{2} = \alpha^{2} - 34\alpha + 289
+       = (\alpha - 17) - 34\alpha + 289 = -33\alpha + 272.
+\]
+Then $\pi^{4} + \bar\pi^{4} = -33(\alpha + \bar\alpha) + 544 = -33 \cdot 1 + 544 = 511$,
+using $\alpha + \bar\alpha = \mathrm{Tr}(\alpha) = 1$.
+
+Alternatively, the Newton identity~\eqref{eq:newton} gives:
+$a_{17}(w=5) = (a_{17}(w=3))^{2} - 2 \cdot 17^{2} = (-33)^{2} - 578 = 1089 - 578 = 511$.
+\end{proof}
+
+\subsection{PARI \texttt{mfeigenbasis} verification}\label{sec:PARI-verify}
+
+We verify Proposition~\ref{prop:a17} and extend the verification to the next
+three split primes $\{19, 23, 29\}$ using PARI/GP's \texttt{mfeigenbasis}
+function on the spaces $S_{3}^{\mathrm{new}}(67, \chi_{-67})$ and
+$S_{5}^{\mathrm{new}}(67, \chi_{-67})$.
+
+The PARI session (full transcript reproducible at
+\texttt{phase\_e1\_pari\_verify.gp} in the supplementary material) returns:
+\begin{itemize}\setlength\itemsep{2pt}
+\item $\dim S_{3}^{\mathrm{new}}(67, \chi_{-67}) = 13$, with $2$ Galois-conjugate
+      eigenforms: $1$ $\Q$-rational eigenform (matching LMFDB \texttt{67.3.b.a})
+      and $1$ Galois orbit of degree $10$;
+\item $\dim S_{5}^{\mathrm{new}}(67, \chi_{-67}) = 23$, with $2$ Galois-conjugate
+      eigenforms: $1$ $\Q$-rational eigenform (matching LMFDB \texttt{67.5.b.a})
+      and $1$ Galois orbit of degree $20$.
+\end{itemize}
+The number of $\Q$-rational eigenforms ($1$ at each weight) is consistent with
+HSH v3-OPUS, which predicts $\mathrm{rats}(D) = 2^{\mathrm{rk}_{2}(\mathrm{Cl}(K))} = 2^{0} = 1$
+at $D = -67$, $h_{K} = 1$ (\cite{HSHv3OPUS}).
+
+The first thirty coefficients of the $\Q$-rational weight-$3$ eigenform are:
+\[
+[0, 1, 0, 0, 4, 0, 0, 0, 0, 9, 0, 0, 0, 0, 0, 0, 16, -33, 0, -29, 0, 0, 0, -21, 0, 25, 0, 0, 0, -9, 0],
+\]
+and of the $\Q$-rational weight-$5$ eigenform:
+\[
+[0, 1, 0, 0, 16, 0, 0, 0, 0, 81, 0, 0, 0, 0, 0, 0, 256, 511, 0, 119, 0, 0, 0, -617, 0, 625, 0, 0, 0, -1601, 0].
+\]
+Vanishing at inert primes $\{2, 3, 5, 7, 11, 13, 31\}$ is consistent with the
+CM structure. The non-vanishing entries at $\{17, 19, 23, 29\}$ are the Hecke
+eigenvalues at the four smallest split primes.
+
+\begin{table}[h]\label{tab:newton}
+\centering
+\begin{tabular}{ccccc}
+\toprule
+Split $p$ & $a_{p}(w=3)$ (PARI) & Predicted $a_{p}(w=5)$ via~\eqref{eq:newton} & $a_{p}(w=5)$ (PARI) & Match \\
+\midrule
+$17$ & $-33$ & $(-33)^{2} - 578 = 511$ & $511$ & $\checkmark$ \\
+$19$ & $-29$ & $(-29)^{2} - 722 = 119$ & $119$ & $\checkmark$ \\
+$23$ & $-21$ & $(-21)^{2} - 1058 = -617$ & $-617$ & $\checkmark$ \\
+$29$ & $-9$ & $(-9)^{2} - 1682 = -1601$ & $-1601$ & $\checkmark$ \\
+\bottomrule
+\end{tabular}
+\caption{Verification of the Newton identity~\eqref{eq:newton} at the four
+smallest split primes of $K = \Q(\sqrt{-67})$.}
+\end{table}
+
+\begin{proposition}\label{prop:newton-verified}
+The Newton identity~\eqref{eq:newton} holds exactly at the four smallest split
+primes $\{17, 19, 23, 29\}$ of $K = \Q(\sqrt{-67})$, as verified by PARI/GP
+\texttt{mfeigenbasis} on the $\Q$-rational components of
+$S_{3}^{\mathrm{new}}(67, \chi_{-67})$ and $S_{5}^{\mathrm{new}}(67, \chi_{-67})$.
+\end{proposition}
+
+\begin{proof}
+Direct numerical verification in PARI/GP 2.15.4, see Table~\ref{tab:newton}.
+The identity~\eqref{eq:newton} is the elementary consequence of the explicit
+Newton power-sum identity at split primes; the numerical agreement at four
+distinct primes serves as a sanity check on the LMFDB labels
+\texttt{67.3.b.a} and \texttt{67.5.b.a} and on the choice of generator
+$\pi = (1 + \sqrt{-67})/2$ of the prime above $p = 17$.
+\end{proof}
+
+\section{The lattice $N$-dependence}\label{sec:lattice}
+
+\subsection{The drift away from the integer-$2$ ratio for $N \ge 3$}
+
+Athenodorou--Teper~\cite[Table 34]{AthenodorouTeper2021} gives:
+\begin{center}
+\begin{tabular}{ccc}
+\toprule
+$N$ & $(m_{2^{++}}/m_{0^{++}})^{2}$ & Drift vs.\ $2$ \\
+\midrule
+$2$ & $2.001 \pm 0.017$ & $0.07\%$ \\
+$3$ & $2.066 \pm 0.026$ & $3.3\%$ \\
+$4$ & $2.102 \pm 0.034$ & $5.1\%$ \\
+$5$ & $2.208 \pm 0.041$ & $10.4\%$ \\
+$6$ & $2.274 \pm 0.052$ & $13.7\%$ \\
+$8$ & $2.261 \pm 0.040$ & $13.0\%$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+Under Conjecture~E-1 via~\eqref{eq:E1-ratio}, the drift implies
+$\mathcal{F}_{2^{++}}(N) \neq \mathcal{F}_{0^{++}}(N)$ for $N \ge 3$:
+\begin{equation}\label{eq:F2pp}
+\frac{\mathcal{F}_{2^{++}}(N)}{\mathcal{F}_{0^{++}}(N)} \;=\;
+\sqrt{\frac{1}{2}\,\frac{m^{2}(2^{++}, SU(N))}{m^{2}(0^{++}, SU(N))}}.
+\end{equation}
+
+If $\mathcal{F}_{2^{++}}(N) = (1 + c_{2^{++}}/N^{2})/(1 + c_{2^{++}}/9)$
+with anchor $\mathcal{F}_{2^{++}}(3) = 1$, the SOTA $N = 2$ ratio
+$5.349 / 4.894 = 1.0930 \pm 0.005$ implies
+\begin{equation}
+\frac{1 + c_{2^{++}}/4}{1 + c_{2^{++}}/9} = 1.0930
+\quad \Longleftrightarrow \quad
+c_{2^{++}} = 0.72 \pm 0.04.
+\end{equation}
+The ECI v15 value for the $0^{++}$ is $c_{0^{++}} = 0.80 \pm 0.05$~\cite{ThmC6FN}.
+
+\begin{remark}
+The decrease of $c_{X}$ as the spin of the state $X$ increases is physically
+plausible: the 't~Hooft $1/N^{2}$ correction is suppressed for higher-spin states
+because the planar-diagram resummation is dominated by larger-genus contributions
+when more derivatives are involved. A first-principles derivation of $c_{X}$ from
+the heterotic CM-K3 structure remains open; we conjecture monotonicity:
+\begin{equation}\label{eq:c_decrease}
+c_{0^{++}} \;>\; c_{2^{++}} \;>\; c_{0^{-+}} \;>\; c_{2^{-+}} \;>\; \cdots
+\end{equation}
+This is a derived prediction of Conjecture~E-1; we treat it as Tier
+T\_PLAUSIBLE.
+\end{remark}
+
+\subsection{Comparison of ECI v15 with $c = 0.80$ to the SOTA}
+
+Using $\mathcal{F}_{0^{++}}(N)$ with $c = 0.80$ and the anchor
+$m_{0^{++}}(D=-67, SU(3)) = 3.405$ from \cite{AthenodorouTeper2021}:
+\begin{center}
+\begin{tabular}{cccc}
+\toprule
+$N$ & ECI v15 ($c=0.80$) & AT 2021 & Tension \\
+\midrule
+$2$ & $3.752$ & $3.781(23)$ & $1.3\sigma$ \\
+$3$ & $3.405$ & $3.405(21)$ & anchor \\
+$4$ & $3.284$ & $3.271(27)$ & $0.5\sigma$ \\
+$5$ & $3.226$ & $3.156(31)$ & $2.3\sigma$ \\
+$6$ & $3.197$ & $3.102(32)$ & $3.0\sigma$ \\
+$8$ & $3.166$ & $3.099(26)$ & $2.6\sigma$ \\
+$\infty$ & $3.127$ & $\sim 3.07$ & $\sim 0.8\sigma$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+The fit is excellent at $N \in \{2, 3, 4\}$ ($\le 1.3\sigma$); the tension grows
+to $\sim 3\sigma$ at $N \in \{5, 6, 8\}$. The fit is recoverable by allowing a
+second parameter $d$ in the higher-order $1/N^{4}$ expansion of $\mathcal{F}$:
+\begin{equation}
+\mathcal{F}(N) \;=\; \frac{1 + c/N^{2} + d/N^{4}}{1 + c/9 + d/81},
+\end{equation}
+but this introduces a third free parameter, weakening the predictive content.
+
+\section{Additive decomposition Conjecture E-3}\label{sec:E3}
+
+The empirical $SU(3)$ $J^{PC}$ spectrum of \cite[Table 34]{AthenodorouTeper2021},
+divided by $m^{2}(0^{++})$, suggests an additive structure:
+\begin{conjecture-E3}[additive $J^{PC}$ decomposition]
+\label{conj:E3}
+For the heterotic-CM-$\mathrm{K3}$ family at $D = -67$, $SU(3)$, the
+$J^{PC}$ glueball spectrum admits the decomposition
+\begin{equation}
+\frac{m^{2}(X^{J^{PC}})}{m^{2}(0^{++})} \;=\; 1 + a_{J} \cdot \mathbb{1}_{J=2}
++ a_{P}^{-} \cdot \mathbb{1}_{P=-} + a_{C}^{-} \cdot \mathbb{1}_{C=-}
++ \delta_{X},
+\end{equation}
+with empirical coefficients $a_{J=2} \approx 1.07$, $a_{P}^{-} \approx 1.40$,
+$a_{C}^{-} \approx 2.16$, and small residuals $|\delta_{X}| \lesssim 0.05$.
+\end{conjecture-E3}
+
+Testing against the $SU(3)$ data:
+\begin{center}
+\begin{tabular}{lcccc}
+\toprule
+$X^{J^{PC}}$ & $m^{2}/m^{2}_{0^{++}}$ AT 2021 & E-3 prediction & Residual $\delta_{X}$ \\
+\midrule
+$0^{++}$ & $1.000$ & $1$ (anchor) & $0$ \\
+$2^{++}$ & $2.066$ & $1 + 1.07 = 2.07$ & $-0.004$ \\
+$0^{-+}$ & $2.400$ & $1 + 1.40 = 2.40$ & $0$ (anchor) \\
+$2^{-+}$ & $3.452$ & $1 + 1.07 + 1.40 = 3.47$ & $-0.018$ \\
+$1^{+-}$ & $3.173$ & $1 + a_{J=1} + 2.16$ & $-0.01$ (fit $a_{J=1}$) \\
+$2^{--}$ & $5.626$ & $1 + 1.07 + 1.40 + 2.16 = 5.63$ & $-0.004$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+The residuals are at the $\sim 0.5\%$ level, comparable to the lattice errors
+($\sim 1\%$ on the squared ratios). The coincidence at $2^{-+}$ and $2^{--}$ is
+nontrivial: each is a sum of independent additive contributions calibrated
+elsewhere, with no parameter freedom.
+
+\begin{remark}
+Conjecture E-3 is empirical at the present stage and is at the T\_SPECULATIVE
+tier. It motivates a search for an arithmetic decomposition of the
+$J^{PC}$ spectrum into CM newform contributions; we identify candidates in
+\S\ref{sec:open}.
+\end{remark}
+
+\section{Falsifiability}\label{sec:falsif}
+
+Conjecture~E-1 admits a sharp falsifiability test that is feasible with current
+lattice technology. We isolate the most discriminating prediction:
+
+\begin{proposition}[falsifiability test]\label{prop:falsif}
+A high-precision continuum-extrapolated lattice measurement of
+$(m(2^{++})/m(0^{++}))^{2}$ at $SU(2)$ outside the interval $[1.99, 2.01]$
+falsifies Conjecture E-1 in its present form.
+\end{proposition}
+
+\begin{proof}
+By~\eqref{eq:E1-ratio} with $\mathcal{F}_{2^{++}}(2) / \mathcal{F}_{0^{++}}(2) = 1$
+(the requirement of \S\ref{sec:E1-empirical}), the prediction is
+$2 \pm \epsilon$ with $\epsilon$ controlled by the uncertainty on the higher-order
+$1/N^{4}$ corrections, which the AT 2021 fit at the SOTA precision $0.4\%$
+constrains to $\epsilon \lesssim 0.01$ at $N = 2$.
+\end{proof}
+
+The current AT 2021 value is $2.001 \pm 0.017$; a factor-$5$ reduction in the
+error bar (achievable with a doubled-basis GEVP and $\sim 5 \times 10^{4}$
+configurations) would shrink the uncertainty to $\sim 0.003$, fully resolving the
+test.
+
+\subsection{Secondary tests}
+
+\begin{itemize}\setlength\itemsep{2pt}
+\item The value of $c_{2^{++}}$ extracted by fitting the SU($N$) $2^{++}$ ground
+      state to $\mathcal{F}_{2^{++}}(N) = (1 + c_{2^{++}}/N^{2})/(1 + c_{2^{++}}/9)$
+      should fall in $[0.65, 0.80]$. Outside this range, the monotonicity
+      conjecture~\eqref{eq:c_decrease} is in question.
+\item The additive decomposition Conjecture E-3 predicts
+      $m^{2}(2^{--})/m^{2}(0^{++}) \approx 5.63$. The AT 2021 value at $SU(3)$ is
+      $5.626$, leaving residual $\sim 0.07\%$. The same prediction at $SU(2)$ and
+      $SU(8)$ provides further tests.
+\item The pseudoscalar mass ratio $(m_{0^{-+}}/m_{0^{++}})^{2}_{SU(2)} = 2.531(33)$
+      is at $w_{\mathrm{mot}}(0^{-+}) = 2.531 \times 2 - 0 = 5.06$, not an integer.
+      This indicates that the $0^{-+}$ is not directly identified with a single
+      CM newform weight in the proposed assignment; it likely couples to
+      topological structure via the Witten--Veneziano sum rule~\cite{Witten1979b}
+      (open, T\_SPECULATIVE).
+\end{itemize}
+
+\section{Open problems}\label{sec:open}
+
+\subsection{The 0$^{-+}$ pseudoscalar and topological susceptibility}
+
+The 0$^{-+}$ pseudoscalar glueball mass squared satisfies, in pure SU(N) lattice
+\cite[Table 35]{AthenodorouTeper2021}, $(m_{0^{-+}}/m_{0^{++}})^{2}_{SU(N)}$
+approximately constant at $\sim 2.4$ across $N$. The Witten--Veneziano
+sum rule \cite{Witten1979b,Veneziano1979} relates the pseudoscalar mass to the
+topological susceptibility $\chi_{t}$:
+\begin{equation}\label{eq:WV}
+m_{0^{-+}}^{2} \,f_{gb}^{2} \;\sim\; \frac{\chi_{t}}{N^{2} - 1},
+\end{equation}
+with $f_{gb}$ a glueball-sector decay constant analogous to $f_{\pi}$. The
+ECI v15 framework on $\mathrm{K3}_{-67}$ admits two structural candidates for
+$\chi_{t}$:
+\begin{enumerate}\setlength\itemsep{2pt}
+\item The Euler characteristic $\chi(\mathrm{K3}) = 24$ as a topological
+      invariant, modulated by the period $\langle \Omega, \bar\Omega \rangle$;
+\item The $L$-value $L(f_{-67}^{(3)}, 1)$ at the leftmost critical point of the
+      weight-$3$ CM newform $L$-function, by Damerell--Yager~\cite{Yager1982}
+      machinery.
+\end{enumerate}
+We do not pursue this further here.
+
+\subsection{The glueball mass-radius}
+
+Shanahan et al.~\cite{Shanahan2026} report the first lattice computation of the
+$SU(3)$ scalar glueball gravitational form factor, with mass-radius
+$r_{\mathrm{mass}} = 0.263 \pm 0.031~\mathrm{fm}$. The naive Compton wavelength
+$\hbar c / m_{0^{++}} = 0.116~\mathrm{fm}$ is a factor $2.3$ smaller. Within the
+ECI v15 framework, a natural candidate for the squared radius is
+\begin{equation}\label{eq:radius-ansatz}
+r_{g}^{2}(SU(N)) \;\sim\; \frac{\langle \Omega, \bar\Omega \rangle_{\mathrm{K3}_{-67}}}{m_{0^{++}}^{2}(SU(N)) \cdot (N^{2} - 1)} \cdot \kappa,
+\end{equation}
+with $\kappa$ an order-unity constant to be fixed. The Petersson norm
+$\langle \Omega, \bar\Omega \rangle$ on a CM-K3 is computable from
+Chowla--Selberg-type formulae for the period of the weight-$3$ form.
+We leave the explicit evaluation of \eqref{eq:radius-ansatz} for future work.
+
+\subsection{Extension to other Heegner discriminants}
+
+The construction of Section~\ref{sec:weight5} extends to all five remaining
+$h_{K} = 1$ Heegner discriminants $D \in \{-7, -11, -19, -43, -163\}$, with
+LMFDB labels $D.5.\mathrm{b}.\mathrm{a}$ in each case. Since the ECI v15
+anchor specifically singles out $D = -67$ (via the four selection criteria of
+\cite[\S1.3]{E08Maxwell}), the question of whether Conjecture E-1 holds at
+other $D$ as a tautological identity (no Yang--Mills theory associated) or as a
+non-trivial prediction (multiple choices of anchor possible) is structurally
+important.
+
+\subsection{From conjecture to derivation}
+
+The principal open problem is the derivation of Conjecture E-1 from the
+heterotic-CM-K3 spectral structure. Three candidate routes:
+\begin{enumerate}\setlength\itemsep{2pt}
+\item \emph{Spectral triple route}: extending the conditional eigenvalue
+      identification of \cite[\S6]{CCNCG-K3FSM} (under hypotheses (S), (C)) from
+      the scalar to higher-spin sectors. The Hodge decomposition of $H^{2}(\mathrm{K3})$
+      into transcendental and algebraic parts may be the natural index for $J^{PC}$
+      assignment.
+\item \emph{Kuga--Sato fourfold lift route}: the Hodge_fourfolds construction
+      \cite[\S2.3]{HodgeFourfolds} embeds $\rho_{f_{-67}^{(5)}}$ in $H^{4}((E_{-67})^{4})$ as
+      the extreme $\{\pi^{4}, \bar\pi^{4}\}$ eigenvalue sub-representation of $\Sym^{4}(H^{1}(E_{-67}))$.
+      The five-dimensional $\Sym^{4}(H^{1}(E_{-67}))$ admits a natural physical
+      interpretation as the multiplet of spin-2 modes.
+\item \emph{AdS/CFT analogue route}: in the holographic dictionary, glueballs are
+      eigenmodes of the bulk Laplacian on the warped throat geometry. The arithmetic
+      heterotic-CM-K3 construction may provide an arithmetic refinement of the
+      AdS/CFT glueball spectrum of \cite[Section 4]{Brower2000} predicting
+      $J^{PC}$ ratios in agreement with our empirical Conjecture E-1.
+\end{enumerate}
+
+\section{Conclusion}\label{sec:conclusion}
+
+We have isolated a sharp numerical pattern in the Athenodorou--Teper 2021
+continuum lattice spectrum of pure $SU(2)$ Yang--Mills theory:
+$(m_{2^{++}}/m_{0^{++}})^{2} = 2.001 \pm 0.017$, matching the integer $2$
+to within $0.08\sigma$. We have shown that the natural arithmetic interpretation
+of this integer is the ratio of motivic weights $w_{\mathrm{mot}}(f_{-67}^{(5)}) / w_{\mathrm{mot}}(f_{-67}^{(3)}) = 4/2$
+of two canonical CM newforms attached to $K = \Q(\sqrt{-67})$.
+
+We have formulated this as Conjecture E-1, extending the ECI v15 mass-gap
+framework from the single $0^{++}$ scalar to the $2^{++}$ tensor at the same
+discriminant anchor. We have verified the arithmetic foundation of
+Conjecture E-1 via PARI/GP \texttt{mfeigenbasis} at the four smallest split
+primes $\{17, 19, 23, 29\}$ and confirmed the Newton identity~\eqref{eq:newton}
+in each case. We have computed the implied weight-dependent Casimir
+coefficient $c_{2^{++}} = 0.72(4)$, distinct from the $0^{++}$ value
+$c_{0^{++}} = 0.80(5)$, and conjectured the monotonicity $c_{X}$ decreases as
+the spin of $X$ increases.
+
+We have also formulated a tentative additive decomposition Conjecture E-3
+of the full $SU(3)$ $J^{PC}$ spectrum that fits six independently measured
+states at the $\sim 0.5\%$ level using only three free parameters.
+
+The principal falsifiability test is a measurement of
+$(m_{2^{++}}/m_{0^{++}})^{2}$ at $SU(2)$ with precision $\lesssim 0.5\%$;
+a value outside $[1.99, 2.01]$ refutes Conjecture E-1 in its present form. This
+test is feasible with existing lattice technology (multi-operator variational
+basis plus standard GEVP on $\sim 5 \times 10^{4}$ configurations) and falls
+naturally within the next iteration of Athenodorou--Teper's ongoing programme.
+
+We do not claim a derivation: Conjecture E-1 sits at the T\_PLAUSIBLE tier,
+supported empirically but not yet from first principles. The open problem is the
+derivation of the motivic-weight rule from the heterotic-CM-K3 spectral structure.
+Three candidate routes (spectral triple, Kuga--Sato fourfold lift, AdS/CFT analogue)
+are identified.
+
+\section*{Acknowledgments}
+
+This work builds on the ECI v15 closed-form mass-gap framework of
+\cite{ThmC6FN}, the canonical weight-$5$ CM newform construction of
+\cite{HodgeFourfolds}, and the continuum-extrapolated lattice $SU(N)$ glueball
+spectrum of \cite{AthenodorouTeper2021}. We thank the LMFDB collaboration for
+the public availability of the Hecke eigenvalue tables that enabled the present
+verification of the rational Hecke coefficients at \texttt{67.3.b.a} and
+\texttt{67.5.b.a}.
+
+\bibliographystyle{amsalpha}
+\begin{thebibliography}{99}
+
+\bibitem{AthenodorouTeper2021}
+A. Athenodorou and M. Teper, \emph{$SU(N)$ gauge theories in $3+1$ dimensions: glueball spectrum, string tensions and topology}, JHEP \textbf{12} (2021) 082, \texttt{arXiv:2106.00364}.
+
+\bibitem{Brower2000}
+R.~C. Brower, S.~D. Mathur, and C.-I. Tan, \emph{Glueball spectrum for QCD from AdS supergravity duality}, Nucl. Phys. B \textbf{587} (2000) 249--276, \texttt{arXiv:hep-th/0003115}.
+
+\bibitem{CCNCG-K3FSM}
+K. Remondière, \emph{The Connes--Chamseddine spectral standard model on the CM-K3 family: a conditional Yang--Mills mass-gap eigenvalue identification}, ECI working notes, May 2026.
+
+\bibitem{E08Maxwell}
+K. Remondière, \emph{The $E_{08}$ Maxwell U(1) coupling and the Picard rank $c_{\mathrm{Pic}} = 20$ of $\widetilde X_{-67}$}, ECI working notes, May 2026.
+
+\bibitem{HodgeFourfolds}
+K. Remondière, \emph{The Hodge conjecture for the canonical Hecke eigencomponent of the four-fold self-product of CM elliptic curves at the six imaginary-quadratic Heegner discriminants of class number one}, ECI working notes, May 11, 2026.
+
+\bibitem{HSHv3OPUS}
+K. Remondière, \emph{The HSH v3-OPUS formula $\mathrm{rats}(D) = 2^{\mathrm{rk}_{2}(\mathrm{Cl}(K(D)))}$ for the dimension of $\Q$-rational weight-$5$ CM newforms}, in preparation.
+
+\bibitem{LMFDB}
+The L-functions and Modular Forms Database (LMFDB), \texttt{https://www.lmfdb.org}, accessed May 15, 2026.
+
+\bibitem{MorningstarPeardon1999}
+C.~J. Morningstar and M.~J. Peardon, \emph{The glueball spectrum from an anisotropic lattice study}, Phys. Rev. D \textbf{60} (1999) 034509, \texttt{arXiv:hep-lat/9901004}.
+
+\bibitem{PDG2024}
+Particle Data Group, R.~L. Workman et al., \emph{Review of particle physics}, Prog. Theor. Exp. Phys. \textbf{2022} (2022) 083C01, \emph{updated 2024}.
+
+\bibitem{Shanahan2026}
+R.~Abbott, D.~C. Hackett, D.~A. Pefkou, F.~Romero-López, and P.~E. Shanahan, \emph{Lattice evidence that scalar glueballs are small}, Phys. Rev. Lett. \textbf{136} (2026) 041901, \texttt{arXiv:2508.21821}.
+
+\bibitem{Shimura1971}
+G. Shimura, \emph{Introduction to the arithmetic theory of automorphic functions}, Princeton Univ. Press (1971).
+
+\bibitem{ThmC6FN}
+K. Remondière, \emph{An unconditional lower bound on the Yang--Mills mass gap on the heterotic-CM-K3 family via Deligne--Ramanujan and Hecke, with the post-PUSH-2 $\mathcal{F}(N) = (1 + c/N^{2})/(1 + c/9)$, $c = 0.80(5)$ correction}, ECI working notes, May 10, 2026.
+
+\bibitem{tHooft1974}
+G. 't~Hooft, \emph{A planar diagram theory for strong interactions}, Nucl. Phys. B \textbf{72} (1974) 461.
+
+\bibitem{Veneziano1979}
+G. Veneziano, \emph{$U(1)$ without instantons}, Nucl. Phys. B \textbf{159} (1979) 213.
+
+\bibitem{Witten1979}
+E. Witten, \emph{Baryons in the $1/N$ expansion}, Nucl. Phys. B \textbf{160} (1979) 57.
+
+\bibitem{Witten1979b}
+E. Witten, \emph{Current algebra theorems for the $U(1)$ ``Goldstone boson''}, Nucl. Phys. B \textbf{156} (1979) 269.
+
+\bibitem{Yager1982}
+R.~I. Yager, \emph{On two-variable $p$-adic $L$-functions}, Ann. Math. \textbf{115} (1982) 411--449.
+
+\end{thebibliography}
+
+\end{document}

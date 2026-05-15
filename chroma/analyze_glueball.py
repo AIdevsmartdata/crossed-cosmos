@@ -217,7 +217,7 @@ def analyze_beta(beta):
         if s is not None and np.isfinite(s) and s > 0:
             sig_list.append(s)
 
-    if len(w0_list) == 0:
+    if len(w0_list) == 0 and len(sig_list) == 0:
         print("  (no usable measurements)")
         return None
 

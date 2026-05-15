@@ -156,17 +156,14 @@ def build_corr_matrix(corrs, t_src=0):
     C_avg = np.mean(C_all, axis=0)
     C_err = np.std(C_all, axis=0) / np.sqrt(n_configs)
 
-    # Vacuum subtraction for connected correlator
-    # <O_i(t) O_j(0)>_connected = <O_i(t) O_j(0)> - <O_i> <O_j>
+    # VS fix: global mean subtraction
     mean_O = np.zeros((n_ops, Lt))
     for i in range(n_ops):
         mean_O[i] = np.mean([corr[i] for corr in corrs if i in corr], axis=0)
+    mean_O_global = np.mean(mean_O, axis=1)
     for i in range(n_ops):
         for j in range(n_ops):
-            vac_sub = np.outer(mean_O[i], mean_O[j])[range(Lt), range(Lt)]
-            # Actually <O_i(t)><O_j(0)> averaged over sources:
-            vac_prod = np.mean(mean_O[i]) * np.mean(mean_O[j])  # scalar
-            C_avg[:, i, j] -= vac_prod
+            C_avg[:, i, j] -= mean_O_global[i] * mean_O_global[j]
 
     return C_avg, C_err
 

@@ -49,7 +49,7 @@ work with Strombergsson on low-lying zeros as context for the spectral setting.
 Thank you for your time and consideration.
 Kévin Remondière
 kevin.remondiere@gmail.com
-ORCID: 0009-0003-1417-0768
+ORCID: 0009-0008-2443-7166
 
 ---
 
@@ -80,7 +80,7 @@ established.
 With respect and gratitude,
 Kévin Remondière
 kevin.remondiere@gmail.com
-ORCID: 0009-0003-1417-0768
+ORCID: 0009-0008-2443-7166
 
 ---
 
@@ -108,7 +108,7 @@ I am happy to share the draft for your review.
 With respect and gratitude,
 Kévin Remondière
 kevin.remondiere@gmail.com
-ORCID: 0009-0003-1417-0768
+ORCID: 0009-0008-2443-7166
 
 ---
 
@@ -138,7 +138,7 @@ I am happy to share the draft.
 With respect and gratitude,
 Kévin Remondière
 kevin.remondiere@gmail.com
-ORCID: 0009-0003-1417-0768
+ORCID: 0009-0008-2443-7166
 
 ---
 
@@ -180,7 +180,7 @@ stands scrutiny.
 With respect and gratitude,
 Kévin Remondière
 kevin.remondiere@gmail.com
-ORCID: 0009-0003-1417-0768
+ORCID: 0009-0008-2443-7166
 
 ---
 
@@ -227,7 +227,7 @@ cluster #104.]
 With great respect,
 Kévin Remondière
 kevin.remondiere@gmail.com
-ORCID: 0009-0003-1417-0768
+ORCID: 0009-0008-2443-7166
 
 ---
 

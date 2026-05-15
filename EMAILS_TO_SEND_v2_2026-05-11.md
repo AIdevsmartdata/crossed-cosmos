@@ -1,6 +1,6 @@
 # EMAILS À ENVOYER — Consolidation (v2 update 2026-05-11)
 
-**Auteur** : Kévin Remondière (kevin.remondiere@gmail.com, ORCID 0009-0003-1417-0768, Tarbes, France, github AIdevsmartdata)
+**Auteur** : Kévin Remondière (kevin.remondiere@gmail.com, ORCID 0009-0008-2443-7166, Tarbes, France, github AIdevsmartdata)
 **Date originale** : 2026-05-06 (Phase 7 wave 2, M125 + M138)
 **Date update** : 2026-05-11 (post-morn40/41 + V2/V4/V11/V12/V13 PARI verification + 12 PDFs cleaned + Zenodo v6.0.53.233)
 **Total** : 20 emails identifiés (drafts + v2 updates)
@@ -151,7 +151,7 @@
 
 ### Findings cleanup (FORME)
 
-- 12 PDFs cleaned 2026-05-11 (LLM pollution stripped, "Kévin Remondière" auteur partout, ORCID 0009-0003-1417-0768 + Tarbes + email)
+- 12 PDFs cleaned 2026-05-11 (LLM pollution stripped, "Kévin Remondière" auteur partout, ORCID 0009-0008-2443-7166 + Tarbes + email)
 - Zenodo v6.0.53.233 published (DOI 10.5281/zenodo.20118356)
 - GH release: https://github.com/AIdevsmartdata/crossed-cosmos/releases/tag/v6.0.53.233
 
@@ -195,7 +195,7 @@ Avant envoi, vérifie :
 5. **Honnêteté** : "numerically verified" pas "proven" (sauf preuves)
 6. **Demande claire** : "I would be very grateful for an arXiv [cat] endorsement" (endorseurs) ou "Any pointer would be very helpful" (consultations)
 7. **Repository** : github.com/AIdevsmartdata/crossed-cosmos + Zenodo DOI 10.5281/zenodo.20118356 (latest v6.0.53.233) ou 10.5281/zenodo.19686398 (concept)
-8. **Sign-off** : "With respect and gratitude, / Kévin Remondière / kevin.remondiere@gmail.com / ORCID: 0009-0003-1417-0768"
+8. **Sign-off** : "With respect and gratitude, / Kévin Remondière / kevin.remondiere@gmail.com / ORCID: 0009-0008-2443-7166"
 
 ---
 

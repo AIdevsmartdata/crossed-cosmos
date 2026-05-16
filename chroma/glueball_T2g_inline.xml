@@ -1,0 +1,231 @@
+<?xml version="1.0"?>
+<chroma>
+<!-- ============================================================
+  glueball_T2g_inline.xml — Ξ Vast v3
+  Chroma STOCK inline config for SU(2) pure gauge glueball measurement
+  
+  Workflow:
+    1. Generate SU(2) configs via heatbath (PG_MONTE_CARLO)
+    2. Apply APE smearing (3-5 levels) via STOUT_GAUGE_STATE
+    3. Measure FUZZED_WILSON_LOOP → glueball correlators
+    4. Extract T₂⁺/E⁺ channels via post-processing (Python GEVP)
+  
+  Lattice: 16⁴×32, β=2.50 (SU(2) Wilson action)
+  Post-processing extracts: 0⁺⁺(A₁⁺), 2⁺⁺(E⁺⊕T₂⁺), 1⁺⁻(T₁⁺)
+  ============================================================ -->
+
+<annotation>
+  Ξ Vast Production v3 — Chroma STOCK glueball pipeline
+  SU(2) pure gauge, β=2.50, 16⁴×32
+  FUZZED_WILSON_LOOP → GEVP post-processing for T₂⁺/E⁺ extraction
+  Budget: €18.81 → ~72-115 GPU-hours on RTX 3090
+</annotation>
+
+<!-- ============================================================
+  PARAMETERS: Lattice geometry
+  ============================================================ -->
+<Param>
+  <nrow>16 16 16 32</nrow>
+
+  <!-- ============================================================
+    INLINE MEASUREMENTS
+    ============================================================ -->
+  <InlineMeasurements>
+
+    <!-- ==========================================================
+      MEASUREMENT 1: Pure Gauge Monte Carlo (Heatbath)
+      Generate SU(2) configurations with Wilson action at β=2.50
+      ========================================================== -->
+    <elem>
+      <Name>PURE_GAUGE_MC</Name>
+      <Frequency>1</Frequency>
+      <Param>
+        <version>1</version>
+        <GaugeAction>
+          <Name>WILSON_GAUGEACT</Name>
+          <beta>2.50</beta>
+        </GaugeAction>
+        <MonteCarlo>
+          <Name>HEATBATH</Name>
+          <n_over>5</n_over>
+          <n_heatbath>1</n_heatbath>
+          <n_or>4</n_or>
+        </MonteCarlo>
+        <n_warm>100</n_warm>
+        <n_production>5000</n_production>
+        <n_save>50</n_save>
+        <save_prefix>conf_su2_b250</save_prefix>
+        <reprod>RNG_SAHM</reprod>
+      </Param>
+      <NamedObject>
+        <gauge_id>default_gauge_field</gauge_id>
+      </NamedObject>
+    </elem>
+
+    <!-- ==========================================================
+      MEASUREMENT 2: Plaquette (gauge action check)
+      ========================================================== -->
+    <elem>
+      <Name>MESPLQ</Name>
+      <Frequency>1</Frequency>
+      <Param>
+        <version>2</version>
+      </Param>
+      <NamedObject>
+        <gauge_id>default_gauge_field</gauge_id>
+      </NamedObject>
+    </elem>
+
+    <!-- ==========================================================
+      MEASUREMENT 3: Polyakov Loop
+      ========================================================== -->
+    <elem>
+      <Name>POLAKOV_LOOP</Name>
+      <Frequency>1</Frequency>
+      <Param>
+        <version>1</version>
+        <j_decay>3</j_decay>
+      </Param>
+      <NamedObject>
+        <gauge_id>default_gauge_field</gauge_id>
+      </NamedObject>
+    </elem>
+
+    <!-- ==========================================================
+      MEASUREMENT 4-8: FUZZED WILSON LOOPS at 5 APE smearing levels
+      Each level produces 0⁺⁺, 2⁺⁺, 1⁺⁻ correlators
+      Multiple levels → GEVP correlation matrix for T₂⁺/E⁺ extraction
+      
+      FUZZED_WILSON_LOOP parameters:
+        tmax     — max time separation (set to Nt/2 = 16)
+        j_decay  — time direction index (3)
+        n_smear  — number of APE smearing iterations
+        sm_fact  — APE smearing parameter α (0 < α < 1)
+        BlkMax   — max blocking iterations
+        BlkAccu  — blocking accuracy
+      ========================================================== -->
+
+    <!-- Level 1: n_smear=2, light smearing (small spatial extent) -->
+    <elem>
+      <Name>FUZZED_WILSON_LOOP</Name>
+      <Frequency>1</Frequency>
+      <Param>
+        <tmax>16</tmax>
+        <j_decay>3</j_decay>
+        <n_smear>2</n_smear>
+        <sm_fact>0.4</sm_fact>
+        <BlkMax>20</BlkMax>
+        <BlkAccu>1.0e-5</BlkAccu>
+      </Param>
+      <NamedObject>
+        <gauge_id>default_gauge_field</gauge_id>
+      </NamedObject>
+    </elem>
+
+    <!-- Level 2: n_smear=4 -->
+    <elem>
+      <Name>FUZZED_WILSON_LOOP</Name>
+      <Frequency>1</Frequency>
+      <Param>
+        <tmax>16</tmax>
+        <j_decay>3</j_decay>
+        <n_smear>4</n_smear>
+        <sm_fact>0.4</sm_fact>
+        <BlkMax>20</BlkMax>
+        <BlkAccu>1.0e-5</BlkAccu>
+      </Param>
+      <NamedObject>
+        <gauge_id>default_gauge_field</gauge_id>
+      </NamedObject>
+    </elem>
+
+    <!-- Level 3: n_smear=8 -->
+    <elem>
+      <Name>FUZZED_WILSON_LOOP</Name>
+      <Frequency>1</Frequency>
+      <Param>
+        <tmax>16</tmax>
+        <j_decay>3</j_decay>
+        <n_smear>8</n_smear>
+        <sm_fact>0.4</sm_fact>
+        <BlkMax>20</BlkMax>
+        <BlkAccu>1.0e-5</BlkAccu>
+      </Param>
+      <NamedObject>
+        <gauge_id>default_gauge_field</gauge_id>
+      </NamedObject>
+    </elem>
+
+    <!-- Level 4: n_smear=12, medium smearing -->
+    <elem>
+      <Name>FUZZED_WILSON_LOOP</Name>
+      <Frequency>1</Frequency>
+      <Param>
+        <tmax>16</tmax>
+        <j_decay>3</j_decay>
+        <n_smear>12</n_smear>
+        <sm_fact>0.4</sm_fact>
+        <BlkMax>20</BlkMax>
+        <BlkAccu>1.0e-5</BlkAccu>
+      </Param>
+      <NamedObject>
+        <gauge_id>default_gauge_field</gauge_id>
+      </NamedObject>
+    </elem>
+
+    <!-- Level 5: n_smear=16, heavy smearing (large spatial extent) -->
+    <elem>
+      <Name>FUZZED_WILSON_LOOP</Name>
+      <Frequency>1</Frequency>
+      <Param>
+        <tmax>16</tmax>
+        <j_decay>3</j_decay>
+        <n_smear>16</n_smear>
+        <sm_fact>0.4</sm_fact>
+        <BlkMax>20</BlkMax>
+        <BlkAccu>1.0e-5</BlkAccu>
+      </Param>
+      <NamedObject>
+        <gauge_id>default_gauge_field</gauge_id>
+      </NamedObject>
+    </elem>
+
+    <!-- ==========================================================
+      MEASUREMENT 9: ACTION_DENSITY (topology check)
+      ========================================================== -->
+    <elem>
+      <Name>QACTDEN</Name>
+      <Frequency>10</Frequency>
+      <Param>
+        <version>1</version>
+      </Param>
+      <NamedObject>
+        <gauge_id>default_gauge_field</gauge_id>
+      </NamedObject>
+    </elem>
+
+  </InlineMeasurements>
+</Param>
+
+<!-- ============================================================
+  RANDOM NUMBER GENERATOR
+  ============================================================ -->
+<RNG>
+  <Seed>
+    <elem>12345</elem>
+    <elem>67890</elem>
+    <elem>11111</elem>
+    <elem>22222</elem>
+  </Seed>
+</RNG>
+
+<!-- ============================================================
+  INITIAL CONFIGURATION
+  Start from unit (cold) configuration for SU(2)
+  ============================================================ -->
+<Cfg>
+  <cfg_type>UNIT</cfg_type>
+  <cfg_file>dummy</cfg_file>
+</Cfg>
+
+</chroma>

@@ -6,7 +6,7 @@ an imaginary quadratic field: a theorem (Gauss 1801) and a conjecture
 **Author** : Kevin Remondière (Independent researcher, Tarbes, France)
 **ORCID** : 0009-0008-2443-7166
 **Email** : kevin.remondiere [at] gmail.com
-**Length** : 7 pp, 1 table, ancillary PARI/GP script
+**Length** : 8 pp, 1 table, ancillary PARI/GP script
 **Date** : 16 May 2026
 
 ---
@@ -30,7 +30,7 @@ I am pleased to submit for your consideration the manuscript
 > **"The number of Q-rational weight-5 CM newforms attached to an imaginary
 > quadratic field: a theorem (Gauss 1801) and a conjecture (Rubin 1991)"**
 
-for publication in the *Journal of Number Theory* as a short note (7 pp,
+for publication in the *Journal of Number Theory* as a short note (8 pp,
 amsart class, JNT-acceptable; an `elsarticle.cls` conversion can be supplied
 on editorial request).
 
@@ -59,15 +59,19 @@ spanning `rk₂ ∈ {0, 2, 3, 4}`, including the first known fundamental
 discriminant of pure 2-rank 4, `D = −5460 = −4·3·5·7·13`, where
 `r(−5460) = 16` is confirmed by two independent PARI/GP methods
 (`mfeigenbasis` and direct theta enumeration). An extension sweep over
-`D ∈ [−2000, −1000]` produced 81 further Gauss-Cox–predicted anchors
-which all confirm the theorem. The ancillary script
+`D ∈ [−10000, −1000]` produced **452** further Gauss-Cox–predicted
+anchors which all confirm the theorem. The ancillary script
 `D5460_theta_direct.gp` reproduces the rank-4 anchor in under a minute.
 
-**Manuscript.** 7 pages, 1 table, 6 references (Cox 1989, Gauss 1801,
-Miyake 2006, Rubin 1991, Shimura 1971, PARI 2024). **No arXiv
-identifiers are cited.** No conflict of interest; original submission,
-not under review elsewhere. An endorsement request has been sent to
-Prof. Don Zagier (MPIM Bonn) for the arXiv math.NT primary 11F11.
+**Manuscript.** 8 pages, 1 table, 8 references (Cox 1989, Gauss 1801,
+Miyake 2006, Rubin 1991, Shimura 1971, PARI 2024, Smith 2017
+[arXiv:1702.02325], Smith 2025 [arXiv:2503.17619]). The §5 paragraph
+on Cohen–Lenstra–Gerth compatibility cites the two Smith arXiv references
+with explicit hyperlinks; the proof itself (§§1–4) uses only the
+classical (non-arXiv) references. No conflict of interest; original
+submission, not under review elsewhere. An endorsement request has
+been sent to Prof. Don Zagier (MPIM Bonn) for the arXiv math.NT
+primary 11F11.
 
 **Suggested reviewers** (declared without solicitation): Don Zagier
 (MPIM Bonn); Henri Cohen (Bordeaux); Karl Rubin (UC Irvine);
@@ -89,7 +93,7 @@ Kévin Remondière
 | Primary subject classification (MSC 2020) | 11F11 |
 | Secondary | 11R29, 11F30, 11G15 |
 | Keywords | Q-rational newforms; complex multiplication; weight 5; class group; 2-torsion; genus theory; imaginary quadratic field; Hecke characters |
-| Files attached | `main.pdf` (7 pp); `D5460_theta_direct.gp` (PARI/GP, ancillary) |
+| Files attached | `main.pdf` (8 pp); `D5460_theta_direct.gp` (PARI/GP, ancillary) |
 | Ancillary scripts | PARI/GP `mfeigenbasis` driver + direct theta-series enumerator |
 | Word count (body) | ~2 400 |
 

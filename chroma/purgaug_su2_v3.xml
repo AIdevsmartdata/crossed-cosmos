@@ -1,0 +1,70 @@
+<?xml version="1.0"?>
+<!--
+  purgaug_su2_v3.xml — SU(2) Wilson heatbath gauge generation TEMPLATE
+  Used by run_batch_v3.sh which substitutes __BETA__, __NWARMUP__, __NPROD__,
+  __NUPDATES__, __SAVE_INTERVAL__, __SAVE_PREFIX__, __NROW__, __SEED1__.
+
+  Reference: tests/purgaug/purgaug.ini.xml in JeffersonLab/chroma master.
+  Action: standard Wilson gauge action (SU(2) plaquette).
+  Note: NO AnisoParam block (isotropic 16^4 lattice, no anisotropy).
+-->
+<purgaug>
+
+  <Cfg>
+    <cfg_type>WEAK_FIELD</cfg_type>
+    <cfg_file>dummy</cfg_file>
+  </Cfg>
+
+  <MCControl>
+    <RNG>
+      <Seed>
+        <elem>__SEED1__</elem>
+        <elem>0</elem>
+        <elem>0</elem>
+        <elem>0</elem>
+      </Seed>
+    </RNG>
+
+    <StartUpdateNum>0</StartUpdateNum>
+    <NWarmUpUpdates>__NWARMUP__</NWarmUpUpdates>
+    <NProductionUpdates>__NPROD__</NProductionUpdates>
+    <NUpdatesThisRun>__NUPDATES__</NUpdatesThisRun>
+    <SaveInterval>__SAVE_INTERVAL__</SaveInterval>
+    <SavePrefix>__SAVE_PREFIX__</SavePrefix>
+    <SaveVolfmt>SINGLEFILE</SaveVolfmt>
+  </MCControl>
+
+  <InlineMeasurements>
+    <!-- Polyakov loop is cheap, useful for confinement check -->
+    <elem>
+      <Name>POLYAKOV_LOOP</Name>
+      <Frequency>10</Frequency>
+      <Param><version>2</version></Param>
+      <NamedObject><gauge_id>default_gauge_field</gauge_id></NamedObject>
+    </elem>
+    <!-- Plaquette is a cheap thermalization indicator -->
+    <elem>
+      <Name>PLAQUETTE</Name>
+      <Frequency>10</Frequency>
+      <Param><version>2</version></Param>
+      <NamedObject><gauge_id>default_gauge_field</gauge_id></NamedObject>
+    </elem>
+  </InlineMeasurements>
+
+  <HBItr>
+    <GaugeAction>
+      <Name>WILSON_GAUGEACT</Name>
+      <beta>__BETA__</beta>
+      <GaugeState>
+        <Name>SIMPLE_GAUGE_STATE</Name>
+        <GaugeBC><Name>PERIODIC_GAUGEBC</Name></GaugeBC>
+      </GaugeState>
+    </GaugeAction>
+    <HBParams>
+      <nOver>3</nOver>
+      <NmaxHB>1</NmaxHB>
+    </HBParams>
+    <nrow>__NROW__</nrow>
+  </HBItr>
+
+</purgaug>

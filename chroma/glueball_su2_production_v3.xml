@@ -1,0 +1,142 @@
+<?xml version="1.0"?>
+<!--
+  glueball_su2_production_v3.xml — STOCK CHROMA measurement TEMPLATE
+  Used by run_batch_v3.sh which substitutes __CFG_FILE__, __NROW__, __GLUE_OP_FILE__.
+
+  References:
+    - tests/chroma/glue/wilslp/wilslp.ini.xml (WILSLP example)
+    - lib/meas/inline/glue/inline_glueball_ops.cc (GLUEBALL_OPS Params struct)
+
+  Two inline measurements per config:
+    1. WILSLP (kind=7) — plaq + rectangle Wilson loops, used to extract sigma a^2
+                        from the static-quark potential (Creutz ratios).
+    2. GLUEBALL_OPS    — 3x3=9 elemental operators B_i(x) * shift(B_j(x), disp)
+                        at zero momentum, written to a QDP DB binary file.
+                        Time slices accumulated for correlator analysis.
+                        APE smearing applied to gauge links before B-field calc.
+
+  For T2g/Eg irrep projection: post-process the 9 elemental ops with linear
+  combinations encoding the irrep characters (see analyze_gevp_v3.py).
+    - A1g (0++) : diag part (B_x B_x + B_y B_y + B_z B_z)
+    - Eg  (2++) : Tr-less diagonal (2 components)
+    - T2g (2++) : off-diag symmetrized (3 components)
+-->
+<chroma>
+
+  <Param>
+    <InlineMeasurements>
+
+      <!-- ============================================================ -->
+      <!-- WILSLP (kind=7 = plaq + rectangles + truncated)              -->
+      <!-- ============================================================ -->
+      <elem>
+        <Name>WILSLP</Name>
+        <Frequency>1</Frequency>
+        <Param>
+          <version>3</version>
+          <kind>7</kind>
+          <j_decay>3</j_decay>
+          <t_dir>3</t_dir>
+          <GaugeState>
+            <Name>SIMPLE_GAUGE_STATE</Name>
+            <GaugeBC><Name>PERIODIC_GAUGEBC</Name></GaugeBC>
+          </GaugeState>
+        </Param>
+        <NamedObject><gauge_id>default_gauge_field</gauge_id></NamedObject>
+      </elem>
+
+      <!-- ============================================================ -->
+      <!-- GLUEBALL_OPS — B_i x B_j with APE smearing                   -->
+      <!-- Three APE levels are encoded as 3 separate GLUEBALL_OPS elem -->
+      <!-- (output goes to different glue_op_file each).                -->
+      <!-- ============================================================ -->
+
+      <!-- APE level 0: no smearing (raw B-fields) -->
+      <elem>
+        <Name>GLUEBALL_OPS</Name>
+        <Frequency>1</Frequency>
+        <Param>
+          <version>1</version>
+          <mom2_max>0</mom2_max>
+          <displacement_length>1</displacement_length>
+          <displacement_list>
+            <elem>0</elem>
+            <elem>1</elem>
+            <elem>2</elem>
+          </displacement_list>
+          <decay_dir>3</decay_dir>
+          <LinkSmearing>
+            <LinkSmearingType>NONE</LinkSmearingType>
+          </LinkSmearing>
+        </Param>
+        <NamedObject>
+          <gauge_id>default_gauge_field</gauge_id>
+          <glue_op_file>__GLUE_OP_FILE__.ape0.qdpdb</glue_op_file>
+        </NamedObject>
+      </elem>
+
+      <!-- APE level 1: alpha=0.5, 10 iterations -->
+      <elem>
+        <Name>GLUEBALL_OPS</Name>
+        <Frequency>1</Frequency>
+        <Param>
+          <version>1</version>
+          <mom2_max>0</mom2_max>
+          <displacement_length>1</displacement_length>
+          <displacement_list>
+            <elem>0</elem>
+            <elem>1</elem>
+            <elem>2</elem>
+          </displacement_list>
+          <decay_dir>3</decay_dir>
+          <LinkSmearing>
+            <LinkSmearingType>APE_SMEAR</LinkSmearingType>
+            <link_smear_fact>0.5</link_smear_fact>
+            <link_smear_num>10</link_smear_num>
+            <no_smear_dir>3</no_smear_dir>
+          </LinkSmearing>
+        </Param>
+        <NamedObject>
+          <gauge_id>default_gauge_field</gauge_id>
+          <glue_op_file>__GLUE_OP_FILE__.ape10.qdpdb</glue_op_file>
+        </NamedObject>
+      </elem>
+
+      <!-- APE level 2: alpha=0.5, 25 iterations (deeper smear) -->
+      <elem>
+        <Name>GLUEBALL_OPS</Name>
+        <Frequency>1</Frequency>
+        <Param>
+          <version>1</version>
+          <mom2_max>0</mom2_max>
+          <displacement_length>1</displacement_length>
+          <displacement_list>
+            <elem>0</elem>
+            <elem>1</elem>
+            <elem>2</elem>
+          </displacement_list>
+          <decay_dir>3</decay_dir>
+          <LinkSmearing>
+            <LinkSmearingType>APE_SMEAR</LinkSmearingType>
+            <link_smear_fact>0.5</link_smear_fact>
+            <link_smear_num>25</link_smear_num>
+            <no_smear_dir>3</no_smear_dir>
+          </LinkSmearing>
+        </Param>
+        <NamedObject>
+          <gauge_id>default_gauge_field</gauge_id>
+          <glue_op_file>__GLUE_OP_FILE__.ape25.qdpdb</glue_op_file>
+        </NamedObject>
+      </elem>
+
+    </InlineMeasurements>
+
+    <nrow>__NROW__</nrow>
+  </Param>
+
+  <Cfg>
+    <cfg_type>SZINQIO</cfg_type>
+    <cfg_file>__CFG_FILE__</cfg_file>
+  </Cfg>
+
+</chroma>

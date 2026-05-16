@@ -1,0 +1,183 @@
+<?xml version="1.0"?>
+<!--
+  glueball_su3_production_v3.xml — STOCK CHROMA SU(3) measurement + TOPOLOGY + WILSON FLOW
+  ============================================================================
+  SU(3) variant of glueball_su2_production_v3_enhanced.xml.
+
+  Measures on every config:
+    1. WILSLP (kind=7) — Wilson loops for string tension σa²
+    2. QTOP — topological charge via cooling (every 20 cooling steps)
+    3. GLUEBALL_OPS × 4 APE levels — B_i×B_j elemental operators for GEVP
+       (extended SU(3) APE basis: 0/10/25/50 — SU(3) has more UV noise than
+       SU(2) and benefits from a deeper smear level)
+  ============================================================================
+  Placeholders substituted by run_batch_v3_su3.sh:
+    __CFG_FILE__, __NROW__, __GLUE_OP_FILE__
+
+  Differences vs SU(2):
+   - APE smearing alpha kept at 0.5 (standard) but iterations 0/10/25/50
+     (added 50 iterations level to reduce UV noise on the 2++ channel).
+   - Cooling steps 30 instead of 20 (SU(3) instantons cool more slowly).
+   - Identical WILSLP block (string tension extraction is irrep-trivial).
+   - decay_dir=3 (t direction), j_decay=3 same as SU(2).
+-->
+<chroma>
+
+  <Param>
+    <InlineMeasurements>
+
+      <!-- ═══════════════════════════════════════════════════════════════ -->
+      <!-- WILSLP : Wilson loops (plaq + rectangle) → σa², Creutz ratios -->
+      <!-- ═══════════════════════════════════════════════════════════════ -->
+      <elem>
+        <Name>WILSLP</Name>
+        <Frequency>1</Frequency>
+        <Param>
+          <version>3</version>
+          <kind>7</kind>
+          <j_decay>3</j_decay>
+          <t_dir>3</t_dir>
+          <GaugeState>
+            <Name>SIMPLE_GAUGE_STATE</Name>
+            <GaugeBC><Name>PERIODIC_GAUGEBC</Name></GaugeBC>
+          </GaugeState>
+        </Param>
+        <NamedObject><gauge_id>default_gauge_field</gauge_id></NamedObject>
+      </elem>
+
+      <!-- ═══════════════════════════════════════════════════════════════ -->
+      <!-- QTOP : Topological charge via cooling                            -->
+      <!-- 30 cooling steps for SU(3) (vs 20 SU(2) - SU(3) instantons      -->
+      <!-- have stronger UV noise content)                                  -->
+      <!-- ═══════════════════════════════════════════════════════════════ -->
+      <elem>
+        <Name>QTOP</Name>
+        <Frequency>1</Frequency>
+        <Param>
+          <version>1</version>
+          <GaugeState>
+            <Name>SIMPLE_GAUGE_STATE</Name>
+            <GaugeBC><Name>PERIODIC_GAUGEBC</Name></GaugeBC>
+          </GaugeState>
+          <GaugeSmearing>
+            <GaugeSmearingType>COOL_GAUGE_SMEAR</GaugeSmearingType>
+            <cooling_steps>30</cooling_steps>
+            <orthog>3</orthog>
+          </GaugeSmearing>
+          <QMeasurements>
+            <elem>
+              <Name>Q_GAUGE_SIMPLE</Name>
+            </elem>
+          </QMeasurements>
+          <write_qprop>true</write_qprop>
+          <qprop_file>__GLUE_OP_FILE__.qtop.xml</qprop_file>
+        </Param>
+        <NamedObject><gauge_id>default_gauge_field</gauge_id></NamedObject>
+      </elem>
+
+      <!-- ═══════════════════════════════════════════════════════════════ -->
+      <!-- GLUEBALL_OPS level 0 — no smearing (raw B-fields)               -->
+      <!-- ═══════════════════════════════════════════════════════════════ -->
+      <elem>
+        <Name>GLUEBALL_OPS</Name>
+        <Frequency>1</Frequency>
+        <Param>
+          <version>1</version>
+          <mom2_max>0</mom2_max>
+          <displacement_length>1</displacement_length>
+          <displacement_list>
+            <elem>0</elem>
+            <elem>1</elem>
+            <elem>2</elem>
+          </displacement_list>
+          <decay_dir>3</decay_dir>
+          <LinkSmearing>
+            <LinkSmearingType>NONE</LinkSmearingType>
+          </LinkSmearing>
+        </Param>
+        <NamedObject>
+          <gauge_id>default_gauge_field</gauge_id>
+          <glue_op_file>__GLUE_OP_FILE__.ape0.qdpdb</glue_op_file>
+        </NamedObject>
+      </elem>
+
+      <!-- APE level 1: 10 iterations -->
+      <elem>
+        <Name>GLUEBALL_OPS</Name>
+        <Frequency>1</Frequency>
+        <Param>
+          <version>1</version>
+          <mom2_max>0</mom2_max>
+          <displacement_length>1</displacement_length>
+          <displacement_list><elem>0</elem><elem>1</elem><elem>2</elem></displacement_list>
+          <decay_dir>3</decay_dir>
+          <LinkSmearing>
+            <LinkSmearingType>APE_SMEAR</LinkSmearingType>
+            <link_smear_fact>0.5</link_smear_fact>
+            <link_smear_num>10</link_smear_num>
+            <no_smear_dir>3</no_smear_dir>
+          </LinkSmearing>
+        </Param>
+        <NamedObject>
+          <gauge_id>default_gauge_field</gauge_id>
+          <glue_op_file>__GLUE_OP_FILE__.ape10.qdpdb</glue_op_file>
+        </NamedObject>
+      </elem>
+
+      <!-- APE level 2: 25 iterations -->
+      <elem>
+        <Name>GLUEBALL_OPS</Name>
+        <Frequency>1</Frequency>
+        <Param>
+          <version>1</version>
+          <mom2_max>0</mom2_max>
+          <displacement_length>1</displacement_length>
+          <displacement_list><elem>0</elem><elem>1</elem><elem>2</elem></displacement_list>
+          <decay_dir>3</decay_dir>
+          <LinkSmearing>
+            <LinkSmearingType>APE_SMEAR</LinkSmearingType>
+            <link_smear_fact>0.5</link_smear_fact>
+            <link_smear_num>25</link_smear_num>
+            <no_smear_dir>3</no_smear_dir>
+          </LinkSmearing>
+        </Param>
+        <NamedObject>
+          <gauge_id>default_gauge_field</gauge_id>
+          <glue_op_file>__GLUE_OP_FILE__.ape25.qdpdb</glue_op_file>
+        </NamedObject>
+      </elem>
+
+      <!-- APE level 3: 50 iterations (deep smear, new for SU(3)) -->
+      <elem>
+        <Name>GLUEBALL_OPS</Name>
+        <Frequency>1</Frequency>
+        <Param>
+          <version>1</version>
+          <mom2_max>0</mom2_max>
+          <displacement_length>1</displacement_length>
+          <displacement_list><elem>0</elem><elem>1</elem><elem>2</elem></displacement_list>
+          <decay_dir>3</decay_dir>
+          <LinkSmearing>
+            <LinkSmearingType>APE_SMEAR</LinkSmearingType>
+            <link_smear_fact>0.5</link_smear_fact>
+            <link_smear_num>50</link_smear_num>
+            <no_smear_dir>3</no_smear_dir>
+          </LinkSmearing>
+        </Param>
+        <NamedObject>
+          <gauge_id>default_gauge_field</gauge_id>
+          <glue_op_file>__GLUE_OP_FILE__.ape50.qdpdb</glue_op_file>
+        </NamedObject>
+      </elem>
+
+    </InlineMeasurements>
+
+    <nrow>__NROW__</nrow>
+  </Param>
+
+  <Cfg>
+    <cfg_type>SZINQIO</cfg_type>
+    <cfg_file>__CFG_FILE__</cfg_file>
+  </Cfg>
+
+</chroma>

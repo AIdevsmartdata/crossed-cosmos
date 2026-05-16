@@ -87,3 +87,17 @@ W40 worker-internal additional catches (T1+T2+T3 cumul, worker-internal = broade
 - `2026-05-16 | deploy v3 QMP "optional for parscalar" claim | SSH execution Instance #36879858 | BUILD_DEP | deploy_gevp_t2g_vast_v3.sh:152 — Opus deploy v3 annotait QMP comme étape facultative "REQUIRED by qdpxx configure even for parscalar" ajouté après coup dans v3 (commentaire ligne 152). Réalité : qdpxx configure échoue sans QMP présent, même en mode single-rank parscalar. QMP doit être installé en premier avec --with-qmp-comms-type=SINGLE. Corrigé dans v4.`
 - `2026-05-16 | deploy v3 qdpxx tarball "wget includes all deps" claim | SSH execution Instance #36879858 + #36884254 | BUILD_DEP | qdpxx-qdp1-46-0/other_libs/qio empty — Le tarball wget de qdpxx (tag qdp1-46-0) n'inclut PAS le sous-module QIO (other_libs/qio/ vide). Deux tentatives d'exécution SSH ont échoué à cause de ce sous-répertoire vide. Fix canonique : git clone --recursive https://github.com/usqcd-software/qdpxx.git OU installer QIO en externe d'abord (méthode adoptée dans v4). Corrigé dans v4.`
 - `2026-05-16 | G audit "19/19 issues fixed" miss runtime deps | SSH execution Instance #36884254 failure | AUDIT_MISS | G_deploy_v2_audit_2026-05-16.md §3a-3b — L'agent G (Opus code audit) a validé 19/19 issues corrigées dans deploy_gevp_t2g_vast_v3.sh mais n'a PAS détecté les deux dépendances runtime manquantes (QMP requis / QIO sous-module vide). L'audit était purement statique (lecture de code). La vérification SSH réelle sur instance Vast a révélé les deux blocages. Méta-leçon : code audit statique ≠ smoke test d'exécution. Discipline future : run build smoke sur instance bon marché AVANT déploiement production.`
+
+## 2026-05-16 evening — 3 fabs Pattern A52 DS wave Constructive YM 4D scan (cluster 391→394)
+
+DS Pro wave 20 workers "/tmp/waves/waveA_20260516_174458/" on Constructive YM 4D status.
+Topic verdict converged 18/20 OPEN net (correct, matches W40 T3 audit).
+verify-arxiv post-hoc caught 3 confidently-mis-attributed real arXiv IDs (Pattern A52):
+
+- **arXiv:2203.15783** cited as "Chatterjee 2022 Ann. of Math. 198 YM measure on ℝ⁴ closing fixed-a gap" by worker 010 ; actual = "A Systematic Review on Interactive Virtual Reality Laboratory" (Rahman et al. 2022, CS Education). **Dangerous fab — claimed gap closed.**
+- **arXiv:2207.12351** cited as "Hairer-Steele 2022 stochastic quantization YM 4D regularity structures" by worker 002 ; actual = "Theta functions, fourth moments of eigenforms, and the sup-norm problem II" (Khayutin-Nelson-Steiner 2022, number theory).
+- **arXiv:2402.17766** cited as "Cao-Chatterjee 2024 Wilson loop functional equation" by worker 002 ; actual = "ShapeLLM: Universal 3D Object Understanding for Embodied Interaction" (Qi-Dong-Zhang 2024, ML).
+
+Cluster firm 391 → **394**. Pattern A52 reaffirmed : even with explicit prompt "Avoid fab IDs Pattern A52", DS V4 Pro workers continue to confidently mis-attribute real arXiv IDs to wrong topics. verify-arxiv mandatory post-hoc.
+
+Real verified IDs for constructive YM 4D (6 of 9): 2006.04987, 2106.13568, 2201.03487, 2204.12737, 2401.10507, 2509.04688.

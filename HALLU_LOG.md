@@ -101,3 +101,19 @@ verify-arxiv post-hoc caught 3 confidently-mis-attributed real arXiv IDs (Patter
 Cluster firm 391 → **394**. Pattern A52 reaffirmed : even with explicit prompt "Avoid fab IDs Pattern A52", DS V4 Pro workers continue to confidently mis-attribute real arXiv IDs to wrong topics. verify-arxiv mandatory post-hoc.
 
 Real verified IDs for constructive YM 4D (6 of 9): 2006.04987, 2106.13568, 2201.03487, 2204.12737, 2401.10507, 2509.04688.
+
+## 2026-05-16 evening — Opus 4 catches 2 fabs in my own brief BEFORE propagation
+
+While drafting brief for Opus 4 (Geom Langlands + Cat bridges), I cited 2 arXiv IDs as Costello-Gwilliam factorization homology references:
+
+- **arXiv:1502.00715** as "Costello-Gwilliam factorization homology" → ACTUAL = Kasuya-Kawasaki-Yanagida *"IceCube potential for detecting Q-ball dark matter in gauge mediation"* hep-ph. NO RELATION to CG.
+- **arXiv:2204.05301** as "Costello-Gwilliam factorization homology" → ACTUAL = Costello-Paquette *"On the associativity of one-loop corrections to the celestial OPE"* JHEP 10 (2022) 193. Pertinent to B2/B6 but NOT a Costello-Gwilliam Vol 2 factorization algebras paper.
+
+**Correct Costello-Gwilliam references** :
+- Books: NMM 31 (Vol I 2017) + NMM 41 (Vol II 2021), Cambridge University Press — NO arXiv.
+- AMS SURV/170 (Costello solo, 2011) — NO arXiv.
+- Only legit arXiv for CG factorization algebras: **arXiv:2310.06137** (Costello survey 2023, 25pp).
+
+Opus 4 caught both in §17.2 of `notes/OPUS_BRIDGES_4_geom_langlands_cat_2026-05-16.md` BEFORE embedding in bridges. Cluster delta 0 (no propagation), cluster firm remains 394.
+
+LESSON: I propagated A52-style fabs INTO MY OWN BRIEF when prompting Opus 4. The brief itself needs verify-arxiv discipline. Going forward, always run /root/bin/verify-arxiv.py on arXiv IDs before including them in agent briefs.

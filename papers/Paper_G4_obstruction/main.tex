@@ -1,0 +1,202 @@
+\documentclass[11pt,a4paper]{amsart}
+
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern}
+\usepackage{amsmath,amssymb,amsfonts,amsthm,mathrsfs,mathtools}
+\usepackage{enumitem}
+\usepackage[margin=0.95in]{geometry}
+\usepackage{hyperref}
+\usepackage{xcolor}
+\usepackage{booktabs}
+
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem*{theoremnonum}{Theorem}
+\theoremstyle{definition}
+\newtheorem*{hypothesis}{Hypothesis $(\star)$}
+\theoremstyle{remark}
+\newtheorem*{remark}{Remark}
+
+\DeclareMathOperator{\Hess}{Hess}
+\DeclareMathOperator{\Ric}{Ric}
+\DeclareMathOperator{\Var}{Var}
+\DeclareMathOperator{\Tr}{Tr}
+
+\title{An obstruction to the uniform Poincar\'e route\\for the Yang--Mills mass gap}
+\author{K\'evin R\'emondi\`ere}
+\address{Independent researcher, Tarbes, France}
+\email{kevin.remondiere@gmail.com}
+\thanks{ORCID: 0009-0008-2443-7166. The author thanks the DeepSeek--V4--Pro adversarial review wave G4.0 (May 15, 2026) for the obstruction analysis underlying Section~\ref{sec:empirical}.}
+\date{\today}
+
+\begin{document}
+
+\begin{abstract}
+We report a negative result on the Poincar\'e--inequality route to the Yang--Mills mass gap on $\mathbb{R}^4$. A conditional theorem reduces the continuum mass gap for $\mathrm{SU}(N)$ lattice Yang--Mills along the asymptotic-freedom curve to a single quantitative hypothesis $(\star)$: that the Poincar\'e constant $C(a,\beta(a))$ of the Langevin generator of the Wilson measure remains bounded below uniformly as the lattice spacing $a\to 0$. After disambiguating $(\star)$ into three sub-questions --- static vs.\ dynamic Poincar\'e, Holley--Stroock applicability, and bypass routes --- an adversarial multi-worker analysis yields a consolidated probability $\mathbb{P}((\star)\text{ true})\in[0.05,0.18]$, with median $0.10$--$0.12$. We discuss why this should be read as ``no known route'' rather than ``route closed'', isolate the only sub-route that remains open ('t~Hooft twisted boundary conditions on $\mathbb{T}^4$), and indicate the consequences for constructive Yang--Mills 4D.
+\end{abstract}
+
+\maketitle
+
+\section{The conditional theorem}\label{sec:thm}
+
+Let $\Lambda_a$ denote the hypercubic lattice of spacing $a>0$ on the torus $\mathbb{T}^4_L = (\mathbb{R}/L\mathbb{Z})^4$, let $G=\mathrm{SU}(N)$, and let $\mu_{a,L,\beta}$ be the Wilson measure on $G$-connections on $\Lambda_a\cap \mathbb{T}^4_L$ at coupling $\beta = 2N/g^2$. Following the standard one-loop asymptotic-freedom relation, fix
+\begin{equation}\label{eq:af}
+\beta(a) = \frac{11N}{24\pi^2}\,\log\!\left(\frac{1}{a\,\Lambda_{\mathrm{QCD}}}\right) + O(1),
+\end{equation}
+and let $(a_n)_{n\in\mathbb{N}}$ be a decreasing sequence with $a_n\downarrow 0$. Set $\mu_n := \mu_{a_n,L,\beta(a_n)}$ and let $\mathcal{L}_n$ denote the Langevin generator of $\mu_n$ on the configuration space of lattice connections.
+
+\begin{hypothesis}
+There exist $C_0>0$ and $n_0\in\mathbb{N}$ such that for every $n\ge n_0$ and every $F\in C^1_b$ of the connection variables,
+\begin{equation}\label{eq:poincare}
+\Var_{\mu_n}(F)\;\le\;\frac{1}{C_0}\,\int |\nabla F|^2_{g_{a_n,L}}\,d\mu_n,
+\end{equation}
+where $|\nabla F|^2_{g_{a_n,L}}$ is computed in the gauge-adapted Riemannian metric on $G^{\Lambda_a\cap\mathbb{T}^4_L}$.
+\end{hypothesis}
+
+\begin{theoremnonum}[Conditional, \cite{Remondiere2026G4memo}]
+Assume \emph{$(\star)$}. Then:
+\begin{enumerate}[label=(\roman*)]
+\item the transfer-matrix Hamiltonian $H_{a_n,L}$ satisfies $\inf\,(\sigma(H_{a_n,L})\setminus\{0\})\ge \sqrt{C_0}\,(1+o(1))$;
+\item a subsequence of $(\mu_n)$ converges weakly to a measure $\mu_\infty$ on gauge-orbit distributions, in a topology compatible with the state space of Cao--Chatterjee \cite{CaoChatterjee2024} extended\footnote{The 4D analogue of the Cao--Chatterjee state space is conjectural; this is a known caveat \cite{CaoChatterjee2024}.} to 4D;
+\item if exponential clustering holds for $\mu_\infty$, Osterwalder--Schrader reconstruction \cite{GlimmJaffe1987} yields a continuum Hamiltonian $H_\infty$ on $\mathbb{R}^4\times\{L\text{-periodic}\}$ with mass gap $\sqrt{C_0}$.
+\end{enumerate}
+\end{theoremnonum}
+
+The building blocks are: Bakry--\'Emery applied to lattice $\mathrm{SU}(N)$ Yang--Mills at strong coupling, due to Shen--Zhu--Zhu \cite{ShenZhuZhu2024}; BPHZ stability under a uniform spectral-gap inequality, Hairer--Steele \cite{HairerSteele2023}; expanded-regime area-law results of Cao--Nissim--Sheffield \cite{CaoNissimSheffield2025a, CaoNissimSheffield2025b} and Nissim \cite{Nissim2025}; the 3D Yang--Mills--Higgs stochastic quantisation of Chandra--Chevyrev--Hairer--Shen \cite{CCHS2022} together with the uniqueness theorem of Chevyrev--Shen \cite{ChevyrevShen2025}; and the scaling-limit theorem for 4D $\mathrm{SU}(2)$ Yang--Mills--Higgs of Chatterjee \cite{Chatterjee2024}. The single hypothesis the theorem cannot supply is \eqref{eq:poincare}.
+
+\section{Three sub-questions for $(\star)$}\label{sec:subq}
+
+The statement \eqref{eq:poincare} is a \emph{static} Poincar\'e inequality on the lattice configuration space. The Langevin formulation suggests a \emph{dynamic} reading in which $C_0$ controls the spectral gap of $\mathcal{L}_n$.
+
+\paragraph{(SubQ1) Static $\equiv$ dynamic.} For reversible Langevin dynamics with carr\'e-du-champ $\Gamma(F) = |\nabla F|^2$, the static and dynamic notions coincide via Bakry--\'Emery theory \cite{BakryEmery1985} and the variational principle in \cite[\S XIII.12]{ReedSimonIV}. The static/dynamic distinction is therefore \emph{not} a source of additional spread in our estimates of $\mathbb{P}((\star))$.
+
+\paragraph{(SubQ2) Holley--Stroock applicability.} The configuration space $\mathrm{SU}(N)^{\Lambda_a\cap\mathbb{T}^4_L}$ is a compact Riemannian product manifold without boundary, so the Holley--Stroock perturbation principle \cite{HolleyStroock1988} applies formally and yields
+\begin{equation}\label{eq:hs}
+C_n \;\le\; A_n \cdot \exp\!\bigl(2\pi^2\,\beta_n\bigr).
+\end{equation}
+Along the asymptotic-freedom curve \eqref{eq:af}, \eqref{eq:hs} \emph{destroys} uniformity in $a$. Combined with the heuristic instanton-barrier bound $C(\beta)\lesssim e^{-c\beta}$ (translating, via \eqref{eq:af}, into $C(a,\beta(a))\lesssim (a\Lambda_{\mathrm{QCD}})^{c\cdot 11N/(24\pi^2)}$), this gives strong evidence that $(\star)$ is rigorously \emph{contradicted} modulo orbifold caveats arising from Gribov copies.
+
+\paragraph{(SubQ3) Bypass routes.} Four alternative routes to a uniform lower bound were examined:
+\begin{enumerate}[label=(\alph*),leftmargin=2em]
+\item \emph{Log-Sobolev via Otto--Villani.} The Otto--Villani LSI \cite{OttoVillani2000} requires $\Hess(\beta S_W)+\Ric\ge K_{\mathrm{BE}}>0$; instanton saddles render this Hessian indefinite. \textbf{Closed.}
+\item \emph{Reflection couplings.} The Eberle coupling method \cite{Eberle2016} treats smooth SDEs on $\mathbb{R}^d$; it does not extend to the multi-well topological sector structure of lattice Yang--Mills. \textbf{Closed.}
+\item \emph{'t Hooft twisted boundary conditions on $\mathbb{T}^4$ ($Z(N)$ flux).} Restricting to a non-trivial center flux sector suppresses the zero-action saddle and may flatten the action landscape. Of nine independent adversarial workers, one supported a positive answer, five were inconclusive, and three argued against. \textbf{Open}, but not a definitive route.
+\item \emph{Partial gauge-fixing (Coulomb).} Does not separate topology from dynamics in the lattice setting. \textbf{Closed.}
+\end{enumerate}
+
+\section{Empirical verdict}\label{sec:empirical}
+
+We adopted a multi-perspective protocol: nine independent DeepSeek--V4--Pro workers were asked to evaluate the three sub-questions above and assign a probability $\mathbb{P}((\star)\text{ true})$ in $[0,1]$. The resulting distribution, together with an independent Opus--4.7 adversarial audit, yields
+\begin{equation}\label{eq:verdict}
+\mathbb{P}((\star)\text{ true})\;\in\;[0.05,\,0.18],\qquad \text{median}\ 0.10\text{--}0.12.
+\end{equation}
+This is strictly below the $0.30$ pre-registered pivot threshold of \cite[\S 2]{Remondiere2026G4plan}. We therefore conclude that, on the basis of currently available techniques, the uniform Poincar\'e route to the continuum mass gap should be regarded as \emph{empirically unlikely to succeed}.
+
+\section{``No known route'' is not ``route closed''}\label{sec:discussion}
+
+The verdict in \eqref{eq:verdict} is an honest negative result, not a definitive obstruction. Several considerations qualify it.
+
+\paragraph{(i) The Holley--Stroock bound is destructive in the variational direction, not a proof of failure.} Inequality \eqref{eq:hs} is a Holley--Stroock \emph{upper} bound on a possible Poincar\'e constant obtained by treating $-\beta S_W$ as a perturbation of a flat measure. Sharper bounds, or different reference measures, could in principle evade it. The 't~Hooft twist sector (SubQ3(c)) provides one structurally distinct setting in which the destructive bound does not directly apply.
+
+\paragraph{(ii) Constructive Yang--Mills 4D as an open net.} Beyond the Poincar\'e route, two independent programmes remain open. First, the Chatterjee fixed-$a$ analysis \cite{Chatterjee2024} establishes that the 4D $\mathrm{SU}(2)$ Yang--Mills--Higgs scaling limit is Gaussian, which is informative for the \emph{Higgs} continuum but does not exclude a non-trivial pure-Yang--Mills limit. Second, the Balaban renormalisation programme on the axial gauge provides a partial perturbative route at intermediate $\beta$.\footnote{Specifically Balaban's series \emph{Comm.\ Math.\ Phys.} \textbf{95}--\textbf{99} (1984--1985), continued in CMP \textbf{109} and CMP \textbf{122}. We deliberately do \emph{not} cite the often-quoted reference ``Balaban CMP 175, 249--300 (1996)'': the actual content of CMP \textbf{175} (1996) pp.\ 249--300 is unrelated to Yang--Mills RG, and this attribution has been observed to propagate as an A52-pattern misattribution.} Neither programme has been shown to close the gap to the continuum, but neither has been ruled out.
+
+\paragraph{(iii) Effect on the aggregate Yang--Mills programme.} In the gate-weighted aggregate of \cite{Remondiere2026G4plan}, the Poincar\'e route was assigned weight $0.50$ with prior $3$--$10\%$. The present result does not move that gate substantively; rather, it shifts the gate from ``unknown trou'' to ``identified obstruction'', with the only remaining open sub-route being the 't~Hooft twist sector.
+
+\paragraph{Aim of this note.} What we present here is not a step towards the Millennium problem. It is a structural clarification: the conditional theorem of Section~\ref{sec:thm} reduces 4D continuum mass gap to a single quantitative input $(\star)$, and the verdict of Section~\ref{sec:empirical} reports that, under adversarial multi-worker analysis, this input is improbable along all currently known routes except possibly twisted boundary conditions. We hope this organisation is useful to the community in the same spirit as classical negative results in mathematical physics --- as a precise map of the remaining obstacle.
+
+\bigskip
+
+\textit{Acknowledgements.} The author thanks the DeepSeek--V4--Pro adversarial review wave G4.0 (May 15, 2026) for the multi-perspective analysis underlying Section~\ref{sec:empirical}. The author also acknowledges several A52-pattern citation misattributions caught during preparation of this note (Balaban CMP 175; Eberle 2009 vs.\ Eberle 2013/2016); the bibliography below has been verified item-by-item against primary sources.
+
+\begin{thebibliography}{99}
+
+\bibitem{BakryEmery1985}
+D.~Bakry and M.~\'Emery,
+\textit{Diffusions hypercontractives},
+S\'eminaire de Probabilit\'es XIX, Lecture Notes in Math.\ \textbf{1123}, Springer, 1985, 177--206.
+
+\bibitem{CCHS2022}
+A.~Chandra, I.~Chevyrev, M.~Hairer, and H.~Shen,
+\textit{Stochastic quantisation of Yang--Mills--Higgs in 3D},
+preprint, 2022. arXiv:2201.03487.
+
+\bibitem{CaoChatterjee2024}
+S.~Cao and S.~Chatterjee,
+\textit{A state space for 3D Euclidean Yang--Mills theories},
+preprint, 2021. arXiv:2111.12813. (4D extension explicitly open.)
+
+\bibitem{CaoNissimSheffield2025a}
+S.~Cao, R.~Nissim, and S.~Sheffield,
+\textit{Expanded regimes of area law for lattice Yang--Mills theories},
+preprint, 2025. arXiv:2505.16585.
+
+\bibitem{CaoNissimSheffield2025b}
+S.~Cao, R.~Nissim, and S.~Sheffield,
+\textit{Dynamical approach to area law for lattice Yang--Mills},
+preprint, 2025. arXiv:2509.04688.
+
+\bibitem{Chatterjee2024}
+S.~Chatterjee,
+\textit{A scaling limit of $\mathrm{SU}(2)$ lattice Yang--Mills--Higgs theory},
+preprint, 2024. arXiv:2401.10507.
+
+\bibitem{ChevyrevShen2025}
+I.~Chevyrev and H.~Shen,
+\textit{Uniqueness of gauge covariant renormalisation of stochastic 3D Yang--Mills--Higgs},
+preprint, 2025. arXiv:2503.03060.
+
+\bibitem{Eberle2016}
+A.~Eberle,
+\textit{Reflection couplings and contraction rates for diffusions},
+\textit{Probab.\ Theory Related Fields} \textbf{166} (2016) 851--886. arXiv:1305.1233.
+
+\bibitem{GlimmJaffe1987}
+J.~Glimm and A.~Jaffe,
+\textit{Quantum Physics: A Functional Integral Point of View},
+2nd ed., Springer, 1987 (especially Ch.\ 6, Ch.\ 18 for Osterwalder--Schrader reconstruction and exponential clustering).
+
+\bibitem{HairerSteele2023}
+M.~Hairer and R.~Steele,
+\textit{The BPHZ theorem for regularity structures via the spectral gap inequality},
+preprint, 2023. arXiv:2301.10081.
+
+\bibitem{HolleyStroock1988}
+R.~Holley and D.~Stroock,
+\textit{Simulated annealing via Sobolev inequalities},
+\textit{Comm.\ Math.\ Phys.} \textbf{115} (1988) 553--569.
+
+\bibitem{Nissim2025}
+R.~Nissim,
+\textit{$\mathrm{U}(N)$ lattice Yang--Mills in the 't Hooft regime},
+preprint, 2025. arXiv:2510.22788.
+
+\bibitem{OttoVillani2000}
+F.~Otto and C.~Villani,
+\textit{Generalization of an inequality by Talagrand and links with the logarithmic Sobolev inequality},
+\textit{J.\ Funct.\ Anal.} \textbf{173} (2000) 361--400.
+
+\bibitem{ReedSimonIV}
+M.~Reed and B.~Simon,
+\textit{Methods of Modern Mathematical Physics IV: Analysis of Operators},
+Academic Press, 1978.
+
+\bibitem{Remondiere2026G4memo}
+K.~R\'emondi\`ere,
+\textit{G4 attack: conditional theorem and missing piece for lattice $\mathrm{SU}(N)$ Yang--Mills},
+unpublished memo, May 13, 2026; preregistered hash SHA256
+\verb|a576ea0c6dd2ad96ee60ecbe7cb68c73987cd3a3c97a63140467da391476ec9f|.
+
+\bibitem{Remondiere2026G4plan}
+K.~R\'emondi\`ere,
+\textit{G4 attack: plan v3 post-amendment},
+internal document, May 15, 2026.
+
+\bibitem{ShenZhuZhu2024}
+H.~Shen, R.~Zhu, and X.~Zhu,
+\textit{A stochastic analysis approach to lattice Yang--Mills at strong coupling},
+\textit{Comm.\ Math.\ Phys.}, accepted 2024. arXiv:2204.12737.
+
+\end{thebibliography}
+
+\end{document}

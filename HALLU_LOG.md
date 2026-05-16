@@ -117,3 +117,26 @@ While drafting brief for Opus 4 (Geom Langlands + Cat bridges), I cited 2 arXiv 
 Opus 4 caught both in §17.2 of `notes/OPUS_BRIDGES_4_geom_langlands_cat_2026-05-16.md` BEFORE embedding in bridges. Cluster delta 0 (no propagation), cluster firm remains 394.
 
 LESSON: I propagated A52-style fabs INTO MY OWN BRIEF when prompting Opus 4. The brief itself needs verify-arxiv discipline. Going forward, always run /root/bin/verify-arxiv.py on arXiv IDs before including them in agent briefs.
+
+## 2026-05-16 evening — 5 fabs A52 in MY 4++ glueball brief, cluster firm 394 → 399
+
+While drafting brief for Opus "4++ glueball SU(2) literature search" agent, I cited 5 arXiv IDs as "Athenodorou-Teper post-2021" and "Lucini-Teper-Wenger" candidates:
+
+- **arXiv:2206.06536** cited as "Athenodorou-Teper post-2021" → ACTUAL = cs.LG paper (machine learning unrelated)
+- **arXiv:2203.06105** cited as "Athenodorou-Teper post-2021" → ACTUAL = eess.SY (engineering systems unrelated)
+- **arXiv:2306.16356** cited as "Athenodorou-Teper post-2021" → ACTUAL = math.GR (group theory unrelated)
+- **arXiv:2407.06000** cited as "Athenodorou-Teper post-2021" → ACTUAL = cs.CV (computer vision unrelated)
+- **arXiv:0712.4181** cited as "Lucini-Teper-Wenger" → ACTUAL = astro-ph (astrophysics)
+
+The agent's verify-arxiv-first discipline caught all 5 in §0 of the memo BEFORE embedding in literature search results. Cluster firm 394 → **399** (5 fab IDs propagated in my brief). 0 of these fabs reached corpus citations.
+
+Bonus finding (not fab): arXiv:1609.03873 = real Athenodorou-Teper 2016, identifies 4++ in SU(2) but in 2+1D (irrelevant to ECI v15 3+1D physics). 
+
+CRITICAL LESSON: I must verify-arxiv EVERY ID in agent briefs BEFORE Agent tool call. The verification gate I added in feedback_verify_arxiv_own_briefs needs to be MORE AGGRESSIVE — these IDs were plausible-sounding but unrelated. 4 of the 5 were in arXiv NEW number ranges (22XX.XXXXX, 23XX.XXXXX, 24XX.XXXXX) where AT papers DO exist but specific IDs are random.
+
+This is the SECOND TIME this session that my brief contained fabs caught by the agent (first was Opus 4 Geom Langlands with 2 Costello-Gwilliam fabs). Pattern is consistent: when I propose "plausible" arXiv IDs in newer year ranges without verification, fabs slip in.
+
+Mitigation strategy v2:
+1. NEVER cite arXiv ID in brief without batch /root/bin/verify-arxiv.py check
+2. If unsure, use journal/year citation form WITHOUT arXiv ID
+3. If proposing "candidate refs to search", prefix EXPLICITLY with "to verify via search, not pre-confirmed"

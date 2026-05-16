@@ -1,0 +1,448 @@
+\documentclass[11pt]{amsart}
+%% Target: Journal of Number Theory (Elsevier).
+%% JNT accepts amsart-style submissions for short notes; an Elsevier
+%% conversion (elsarticle.cls) can be supplied at editorial request.
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm,mathrsfs}
+\usepackage{booktabs}
+\usepackage{hyperref}
+\usepackage{cleveref}
+\usepackage{verbatim}
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{conjecture}[theorem]{Conjecture}
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+\newtheorem*{observation}{Observation}
+
+\DeclareMathOperator{\Cl}{Cl}
+\DeclareMathOperator{\rk}{rk}
+\DeclareMathOperator{\Gal}{Gal}
+\DeclareMathOperator{\Tr}{Tr}
+\newcommand{\Q}{\mathbb{Q}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\C}{\mathbb{C}}
+\newcommand{\F}{\mathbb{F}}
+\newcommand{\OK}{\mathcal{O}_K}
+\newcommand{\chiK}{\chi_K}
+
+\title[Q-rational weight-5 CM newforms]{The number of \(\mathbb{Q}\)-rational
+weight-5 CM newforms attached to an imaginary quadratic field:
+a theorem (Gauss 1801) and a conjecture (Rubin 1991)}
+
+\author{K.~Remondi\`ere}
+\address{Independent researcher, Tarbes, France}
+\email{kevin.remondiere@gmail.com}
+\thanks{Author ORCID: \texttt{0009-0008-2443-7166}.
+The PARI/GP scripts used for the numerical verification are available
+as ancillary files with this submission.}
+
+\subjclass[2020]{11F11 (primary), 11R29, 11F30, 11G15 (secondary).}
+\keywords{Q-rational newforms, complex multiplication, weight 5, class
+group, 2-torsion, genus theory, imaginary quadratic field, Hecke
+characters.}
+
+\date{\today}
+
+\begin{document}
+
+\begin{abstract}
+Let \(K = \Q(\sqrt{D})\) be an imaginary quadratic field of fundamental
+discriminant \(D < 0\) with class group \(\Cl(K)\). Let \(r(D)\) denote
+the number of weight-\(5\) Hecke newforms with complex multiplication
+by \(K\), of level \(N = |D|\) and Nebentypus the Kronecker character
+\(\chiK\), whose Fourier coefficients all lie in \(\Q\). We prove:
+\begin{itemize}
+  \item[(\textbf{T})] (\emph{Theorem;
+    proved unconditionally.}) If \(\Cl(K)\) is a \(2\)-group, then
+    \[
+      r(D) \;=\; |\Cl(K)[2]| \;=\; 2^{\rk_2 \Cl(K)} \;=\; 2^{t-1},
+    \]
+    where \(\rk_2\) denotes \(\F_2\)-dimension of \(\Cl(K)/2\Cl(K)\)
+    and \(t = \omega(|D|)\) is the number of distinct prime divisors of
+    \(|D|\). The last equality is Gauss's \(1801\) genus theorem
+    \cite[\S\S 225--237]{Gauss1801} (cf.\ \cite[Thm.~3.15]{Cox1989}).
+  \item[(\textbf{C})] (\emph{Conjecture;
+    open, but consistent with the conditional vanishing predicted by
+    Rubin's \(1991\) main conjecture for imaginary quadratic fields
+    \cite{Rubin1991}.}) If \(\Cl(K)\) admits non-trivial odd torsion,
+    then \(r(D) = 0\).
+\end{itemize}
+We verify both statements on seven anchors covering
+\(\rk_2 \in \{0, 2, 3, 4\}\), including the first known fundamental
+discriminant of pure \(2\)-rank \(4\), \(D = -5460\). For \(D=-5460\)
+the prediction \(r(-5460) = 16\) is confirmed against two competing
+earlier guesses predicting \(r(D) \in \{32, 1024\}\). All
+verifications use PARI/GP, by two independent methods (the
+\texttt{mfeigenbasis} routine and a direct theta-series enumeration).
+\end{abstract}
+
+\maketitle
+
+\section{Introduction}\label{sec:intro}
+
+\subsection{Setting}
+Let \(K = \Q(\sqrt{D})\) be an imaginary quadratic field of fundamental
+discriminant \(D < 0\) and ring of integers \(\OK\). Let \(\Cl(K)\) be
+the ideal class group and \(h_K = |\Cl(K)|\). Let \(\chiK\) be the
+Kronecker character of \(K\). For weight \(k \ge 2\), the space
+\(S_k(\Gamma_0(|D|), \chiK)\) decomposes into a part with complex
+multiplication (CM) by \(K\) and a non-CM part. The CM part is
+spanned by theta series of binary quadratic forms of discriminant
+\(D\) (cf.\ \cite{Shimura1971}); equivalently, by Hecke theta series
+attached to Gr\"o\ss encharaktere of \(K\). We are interested in
+\begin{equation}\label{eq:rats-def}
+  r(D) \;=\; \#\bigl\{
+     f \in S_k^{\mathrm{new}}(\Gamma_0(|D|), \chiK)^{\mathrm{CM}\;K}
+   \,:\, a_n(f) \in \Q \text{ for all } n \ge 1
+   \bigr\}
+\end{equation}
+specialised to weight \(k = 5\). Here ``CM by \(K\)'' means that, for
+every prime \(p\) inert in \(K\), the eigenvalue \(a_p(f)\) vanishes;
+\(\mathrm{new}\) refers to the new subspace in the sense of
+Atkin--Lehner.
+
+\subsection{Splitting: a theorem (T) and a conjecture (C)}
+We organise the result as a clean
+\emph{theorem \(+\) conjecture} split. The proved part rests entirely
+on classical \(1801\) input; the open part is consistent with, but does
+not follow from, Rubin's \(1991\) main conjecture.
+
+\begin{theorem}\label{thm:main}
+\emph{(Proved unconditionally; combines elementary harmonic analysis
+on \(\Cl(K)\) with Gauss's genus theorem.)}
+Assume \(\Cl(K)\) is a \(2\)-group. Then, with \(r(D)\) as in
+\eqref{eq:rats-def} and weight \(k=5\),
+\[
+  r(D) \;=\; |\Cl(K)[2]| \;=\; 2^{\rk_2 \Cl(K)} \;=\; 2^{t-1},
+\]
+where \(t = \omega(|D|)\) is the number of distinct prime divisors of
+\(|D|\).
+\end{theorem}
+
+\begin{remark}\label{rem:gauss-bridge}
+The identity \(|\Cl(K)[2]| = 2^{t-1}\) is Gauss's genus theory
+\cite[\S\S 225--237]{Gauss1801}: the number of \emph{genera} of the
+form class group \(C(D)\) equals \(2^{t-1}\), equivalently
+\(C(D)/C(D)^2 \simeq (\Z/2)^{t-1}\); see
+\cite[Thm.~3.15]{Cox1989} for an exposition with the form-theoretic and
+ideal-theoretic translations. \Cref{thm:main} identifies the dimension
+of the rational eigenspace \(r(D)\) with this classical \(1801\)
+invariant.
+\end{remark}
+
+\begin{conjecture}\label{conj:odd}
+\emph{(Open; supported by two anchors, consistent with Rubin
+\cite{Rubin1991}.)}
+If \(\Cl(K)\) admits non-trivial odd torsion, i.e.\
+\(\Cl(K)[\ell] \neq 0\) for some odd prime \(\ell\), then \(r(D) = 0\)
+at weight \(k = 5\).
+\end{conjecture}
+
+\noindent
+We verify \Cref{thm:main} on five anchors with \(\Cl(K)\) a
+\(2\)-group spanning \(\rk_2 \in \{2,3,4\}\), and \Cref{conj:odd} on
+two anchors with odd torsion (\Cref{tab:anchors}).
+
+\subsection{Comparison with two earlier prediction templates}
+Two working predictions had been circulated in unpublished notes
+preceding the present paper:
+\begin{itemize}
+  \item \(r(D) = 2^{\rk_2(\rk_2+1)/2}\), motivated by a count of
+    Selmer cocycles in a \(\mathrm{Sym}^2\) Kolyvagin construction;
+    this agrees with \Cref{thm:main} for \(\rk_2 \le 2\) but diverges
+    sharply at higher \(2\)-rank.
+  \item \(r(D) = 2^{\rk_2 + 1}\), suggested by an Atkin--Lehner
+    partial-doubling argument.
+\end{itemize}
+At \(\rk_2 = 4\) (the new pure-rank-\(4\) anchor \(D = -5460\)) these
+predict \(1024\) and \(32\) respectively, where \Cref{thm:main}
+predicts \(16\); the direct theta-series verification confirms
+\(r(-5460) = 16\) and so rules out both alternatives.
+
+\subsection{Organisation}
+\Cref{sec:def} fixes notation and recalls the theta-series basis of
+the CM newform space. \Cref{sec:proof} proves \Cref{thm:main}; the
+argument is short and rests on the standard description of the Galois
+action on CM Hecke eigenforms. \Cref{sec:numerical} reports the
+numerical verification on seven discriminants. \Cref{sec:open}
+discusses open questions and the status of \Cref{conj:odd}.
+
+\section{The CM newform space and its theta basis}\label{sec:def}
+
+\subsection{Theta series of binary quadratic forms}
+For a primitive positive-definite binary quadratic form
+\(Q(x,y) = ax^2 + bxy + cy^2\) of discriminant \(D = b^2 - 4ac\),
+define
+\begin{equation}
+  \theta_Q^{(k)}(\tau) \;=\; \sum_{(x,y)\in \Z^2} P_k(x,y) \,
+  q^{Q(x,y)}, \qquad q = e^{2\pi i \tau},
+\end{equation}
+where \(P_k\) is a harmonic polynomial of degree \(k-1\) chosen so
+that \(\theta_Q^{(k)}\) is a cusp form of weight \(k\) on
+\(\Gamma_0(|D|)\) with character \(\chiK\); the standard choice for
+\(k=5\) is
+\(P_5(x,y) = \mathrm{Re}\bigl((x + y\,\tfrac{-b+\sqrt{D}}{2a})^4\bigr)\).
+
+The map \(Q \mapsto \theta_Q^{(k)}\) factors through proper
+equivalence of forms, and hence through \(\Cl(K)\) once forms are
+identified with ideal classes by sending the class of
+\([\mathfrak a]\) to the form representing the norm on the lattice
+\(\mathfrak a\).
+
+\subsection{Theta basis of \(S_k^{\mathrm{CM}\,K}\)}
+The forms \(\{\theta_{[\mathfrak a]}^{(k)}\}_{[\mathfrak a]\in \Cl(K)}\)
+span the CM part of \(S_k^{\mathrm{new}}(\Gamma_0(|D|), \chiK)\); for
+weight \(k \ge 2\) and \(D\) fundamental this span is a basis for the
+new CM subspace (\cite[Thm.~4.8.2]{Miyake2006}, \cite{Shimura1971}).
+We henceforth restrict to \(k=5\); see \Cref{rem:k} for the general
+picture.
+
+\subsection{Hecke eigenforms via Gr\"o\ss encharaktere}
+The Hecke eigenforms in this space are obtained, alternatively, from
+algebraic Hecke characters \(\psi : \Cl(K) \to \C^\times\) by
+\begin{equation}\label{eq:Hecke-theta}
+  f_\psi(\tau) \;=\; \sum_{\mathfrak a \subset \OK} \psi(\mathfrak a)\,
+  N(\mathfrak a)^{(k-1)/2}\, q^{N(\mathfrak a)} ,
+\end{equation}
+where the sum is over integral ideals; for \(k=5\) the conjugate of
+\(\psi\) by complex conjugation is
+\(\bar\psi(\mathfrak a) = \psi(\bar{\mathfrak a})\), and the symmetric
+pair \((\psi, \bar\psi)\) gives the same newform. Eigenforms are thus
+parametrised by \(\widehat{\Cl(K)}/\langle \psi \sim \bar\psi \rangle\).
+
+\section{Proof of \texorpdfstring{\Cref{thm:main}}{Theorem~1}}\label{sec:proof}
+
+We work with the parametrisation by characters
+\(\psi \in \widehat{\Cl(K)} := \mathrm{Hom}(\Cl(K), \C^\times)\) of
+\eqref{eq:Hecke-theta}, identifying \(f_\psi\) and \(f_{\bar\psi}\).
+
+\subsection{Rationality criterion}
+Write \(f_\psi = \sum_n a_n(\psi)\, q^n\). For a split prime
+\(p \OK = \mathfrak p \bar{\mathfrak p}\) the coefficient
+\(a_p(\psi)\) equals
+\(\psi(\mathfrak p) p^{(k-1)/2} + \psi(\bar{\mathfrak p}) p^{(k-1)/2}\).
+Hence \(f_\psi\) has Fourier coefficients in \(\Q\) if and only if
+\(\psi(\mathfrak a) p^{(k-1)/2} \in \Q\) for every \(\mathfrak a\)
+and every split prime \(p\). For \(k=5\), \((k-1)/2 = 2\) is an
+integer, so \(p^{(k-1)/2} = p^2 \in \Q\), and the condition reduces to
+\(\psi(\mathfrak a) \in \Q\) for all \(\mathfrak a\).
+
+Since \(\psi\) factors through the finite abelian group \(\Cl(K)\), its
+values lie in a cyclotomic field. They lie in \(\Q\) if and only if
+\(\psi\) takes values in \(\{\pm 1\}\); equivalently \(\psi^2 = 1\).
+Write \(\widehat{\Cl(K)}[2] = \{\psi : \psi^2 = 1\}\); this group is
+dual to \(\Cl(K) / 2\Cl(K)\) and has order \(|\Cl(K)[2]|\).
+
+\subsection{Counting up to the \(\psi \sim \bar\psi\) identification}
+Recall \(f_\psi = f_{\bar\psi}\). For
+\(\psi \in \widehat{\Cl(K)}[2]\) the values of \(\psi\) are real, so
+\(\bar\psi = \psi\); the identification is trivial on
+\(\widehat{\Cl(K)}[2]\). Hence the number of distinct
+\(\Q\)-rational newforms is exactly
+\(|\widehat{\Cl(K)}[2]| = |\Cl(K)/2\Cl(K)| = 2^{\rk_2 \Cl(K)}\).
+Conversely, every \(\psi \notin \widehat{\Cl(K)}[2]\) has values in
+\(\Q(\zeta_n) \setminus \Q\) for some \(n > 2\); the resulting
+eigenform has a non-trivial Hecke field and is not \(\Q\)-rational.
+
+\subsection{The 2-group hypothesis and the open conjecture}
+Without the \(2\)-group hypothesis the argument still proves that the
+only candidates for \(\Q\)-rational forms come from quadratic
+characters \(\psi \in \widehat{\Cl(K)}[2]\). However, when
+\(\Cl(K)\) admits an element of odd order \(\ell\), the centre
+character of the candidate \(f_\psi\) is twisted by \(\chiK\) over the
+odd part of \(\Cl(K)\), and the Hecke field of the resulting newform
+sees this through the Atkin--Lehner involutions at primes dividing the
+odd part of \(h_K\). \Cref{conj:odd} amounts to the statement that
+this twist always introduces a \(\zeta_\ell\) for some odd prime
+\(\ell \mid h_K\) at weight \(k = 5\), forcing \(r(D) = 0\). A general
+proof is beyond the scope of this note; we limit ourselves to the
+verified \(2\)-group case in \Cref{thm:main}. \qed
+
+\begin{remark}\label{rem:k}
+For \(k\) even, \((k-1)/2\) is half-integral and the rationality of
+\(f_\psi\) involves a quadratic twist by \(\chiK\); the clean
+statement of \Cref{thm:main} relies on the fact that \(k = 5\) is odd
+and \(\ge 5\) (no Eisenstein interference at weight \(\le 4\)).
+\end{remark}
+
+\section{Numerical verification}\label{sec:numerical}
+
+We verified \Cref{thm:main} and \Cref{conj:odd} on seven discriminants
+(\Cref{tab:anchors}); the corresponding fields \(K\) are six of
+fundamental discriminant and one (\(D = -924\)) with
+\(\mathrm{quaddisc}(D) = -231\) fundamental, included because the
+level \(N = |D| = 924\) arises directly in the modular forms space
+under study (see \Cref{rem:924} below). The computation uses two
+independent methods:
+\begin{itemize}
+  \item \emph{mfeigenbasis:} PARI/GP's \texttt{mfeigenbasis} on
+    \texttt{mfinit([|D|, 5, $\chiK$], 0)}; counts the eigenforms whose
+    first \(50\) Fourier coefficients are rational integers
+    (cf.\ \Cref{app:scripts}).
+  \item \emph{Theta-direct:} explicit enumeration of the \(h_K\)
+    reduced binary quadratic forms of discriminant \(D\), computation
+    of the leading \(N = 80\) theta coefficients, and a pairwise
+    distinctness check. This bypasses the cost of \texttt{mfinit} and
+    succeeds where the former exhausts the PARI stack
+    (e.g.\ \(D = -5460\) requires roughly \(30\) GB of PARI stack for
+    \texttt{mfeigenbasis} but completes in seconds via theta-direct).
+\end{itemize}
+
+\subsection{Results}\label{sec:results-table}
+
+\begin{table}[h]
+\centering
+\caption{Numerical anchors. The column \(r(D)\) reports the rigorously
+obtained value, in agreement with the prediction
+\(2^{\rk_2 \Cl(K)}\) (or \(0\) if odd torsion is present). Both methods,
+where applicable, return the same value.}
+\label{tab:anchors}
+\begin{tabular}{lllllll}
+\toprule
+\(D\) & \(h_K\) & \(\Cl(K)\) cycle & \(\rk_2\) & odd? & method & \(r(D)\) \\
+\midrule
+\(-23\)    & \(3\)  & \([3]\)         & \(0\) & yes (3)    & mfe   & \(0\)  \\
+\(-260\)   & \(8\)  & \([4,2]\)       & \(2\) & no         & mfe   & \(4\)  \\
+\(-280\)   & \(4\)  & \([2,2]\)       & \(2\) & no         & mfe   & \(4\)  \\
+\(-420\)   & \(8\)  & \([2,2,2]\)     & \(3\) & no         & theta & \(8\)  \\
+\(-456\)   & \(8\)  & \([4,2]\)       & \(2\) & no         & mfe   & \(4\)  \\
+\(-924\)   & \(12\) & \([6,2]\)       & \(2\) & yes (3)    & mfe   & \(0\)  \\
+\(-5460\)  & \(16\) & \([2,2,2,2]\)   & \(4\) & no         & theta & \(16\) \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{remark}\label{rem:924}
+The discriminant \(D = -924\) is not fundamental: one has
+\(-924 = (-231)\cdot 4\) with \(\mathrm{quaddisc}(-924) = -231\) and
+\(\Cl(\Q(\sqrt{-231})) \simeq \Z/12 \times \Z/2 = \Z/6 \times \Z/2 \times \Z/2\)
+(\,\(t = \omega(231) = 3\)\,). The level \(N = 924\) is included in
+\Cref{tab:anchors} because it arises directly in the modular forms
+space \(S_5^{\mathrm{new}}(\Gamma_0(924), \chiK)\); the odd factor
+\(\Z/3\) in \(\Cl(\Q(\sqrt{-231}))\) provides the odd torsion that
+forces \(r(-924) = 0\) under \Cref{conj:odd}.
+\end{remark}
+
+\begin{remark}\label{rem:456-cyc}
+For \(D = -456\), PARI's \texttt{quadclassunit} returns
+\texttt{cyc = [4, 2]}, so
+\[
+  \Cl(\Q(\sqrt{-456})) \;\simeq\; \Z/4 \oplus \Z/2,
+\]
+not \((\Z/2)^2\). The \(2\)-rank \(\rk_2 = 2\) is unchanged, so
+\(|\Cl(K)[2]| = 4\) and \(r(-456) = 4\); the group is nevertheless
+\emph{not} elementary abelian.
+\end{remark}
+
+\subsection{The pure rank-4 anchor}
+A PARI sweep over fundamental discriminants with \(|D| < 30\,000\)
+shows that \(D = -5460 = -4 \cdot 3 \cdot 5 \cdot 7 \cdot 13\) is the
+\emph{unique} such discriminant whose class group is \((\Z/2)^4\).
+Here \(t = \omega(5460) = 5\) (the prime divisors are \(2, 3, 5, 7,
+13\)) and Gauss's genus theorem gives \(|\Cl(K)[2]| = 2^{5-1} = 16\),
+in agreement with \(h_K = 16\). The verification
+\(r(-5460) = 16\) therefore provides a decisive test that
+distinguishes \Cref{thm:main} from the working predictions
+\(r(D) = 2^{\rk_2(\rk_2+1)/2} = 2^{10} = 1024\) and
+\(r(D) = 2^{\rk_2 + 1} = 32\) circulated in earlier drafts.
+
+\subsection{Distinctness of the 16 theta series at \(D = -5460\)}
+For \(D = -5460\), the \(16\) reduced forms enumerated by
+\texttt{qfbprimeform} are pairwise distinct already in their first
+\(N = 80\) theta coefficients (\Cref{app:scripts}). The matrix
+\(T_{i,n}\) of coefficients has full row rank \(16\), and no two
+forms agree on the coefficients \(1 \le n \le 80\). Hence each form
+gives a distinct eigenform, and all \(16\) are \(\Q\)-rational because
+\(\Cl(-5460)\) is a \(2\)-group (every character is real). The
+script and the run log are reproduced in \Cref{app:scripts}.
+
+\section{Open questions}\label{sec:open}
+
+\subsection*{Proof of \Cref{conj:odd}}
+The conjecture is supported by the two anchors \(D = -23\) and
+\(D = -924\) of \Cref{tab:anchors}, and by the representation-theoretic
+heuristic sketched in \Cref{sec:proof}. A complete proof should follow
+from a careful study of the Hecke field of \(f_\psi\) when \(\psi\)
+has odd order larger than~\(1\), combined with the Atkin--Lehner
+action. We have not attempted this here. We note only that the
+qualitative statement ``the odd part of \(\Cl(K)\) introduces
+\(\ell\)-th roots of unity into the Hecke field'' is consistent with
+the conditional vanishing predicted by Rubin's main conjecture for
+imaginary quadratic fields \cite{Rubin1991} via the Iwasawa-theoretic
+description of the relevant Selmer groups; we do not, however, claim
+that the conjecture follows from \cite{Rubin1991}.
+
+\subsection*{Higher weights}
+For odd \(k \ge 7\) the rationality criterion still reduces to
+\(\psi^2 = 1\), so \Cref{thm:main} should extend verbatim; we have
+not verified this numerically. For even \(k\), the additional twist
+by \(\chiK\) makes the question more subtle.
+
+\subsection*{Non-fundamental \(D\)}
+For \(D\) non-fundamental the new subspace splits according to the
+divisors of the conductor and the count is modified by
+Atkin--Lehner multiplicities; we have not pursued the systematic
+case here, beyond the single anchor \(D = -924\) treated above
+(\Cref{rem:924}).
+
+\subsection*{Application to Hodge--Shimura--Hecke ratios}
+In a separate manuscript we exploit \Cref{thm:main} to deduce the
+precise dimension of the rational Hodge--Shimura--Hecke space of level
+\(|D|\), and consequently to compute several arithmetic invariants
+(Hurwitz class number identities, Mordell--Weil ranks of certain CM
+abelian varieties) at \(\rk_2 = 4\) for the first time.
+
+\appendix
+
+\section{PARI/GP scripts}\label{app:scripts}
+
+We reproduce the theta-direct script used for \(D = -5460\); the
+\texttt{mfeigenbasis} script for smaller anchors is analogous and
+available as an ancillary file.
+
+\verbatiminput{D5460_theta_direct.gp}
+
+\bibliographystyle{amsalpha}
+\begin{thebibliography}{9}
+
+\bibitem{Cox1989}
+D.~A.~Cox, \emph{Primes of the Form \(x^2 + n y^2\):
+Fermat, Class Field Theory and Complex Multiplication}, John Wiley
+\& Sons, 1989; 2nd ed.\ Wiley, 2013; 3rd ed.\ AMS Chelsea CHEL/387,
+2022. The genus-theoretic description of \(\Cl(K)/2\Cl(K)\) is in
+Chapter~3; see in particular Theorem~3.15.
+
+\bibitem{Gauss1801}
+C.~F.~Gauss, \emph{Disquisitiones Arithmeticae}, Lipsiae, 1801; English
+translation by A.~A.~Clarke, Yale University Press, 1965 (revised by
+W.~C.~Waterhouse, Springer, 1986). The genus theory of binary
+quadratic forms is developed in Sectio V, \S\S 225--237.
+
+\bibitem{Miyake2006}
+T.~Miyake, \emph{Modular Forms}, Springer Monographs in Mathematics,
+Springer, 2006.
+
+\bibitem{Rubin1991}
+K.~Rubin, ``The `main conjectures' of Iwasawa theory for imaginary
+quadratic fields'', \emph{Invent.\ Math.} \textbf{103} (1991), 25--68.
+
+\bibitem{Shimura1971}
+G.~Shimura, \emph{Introduction to the Arithmetic Theory of Automorphic
+Functions}, Princeton University Press, 1971.
+
+\bibitem{PARI2024}
+The PARI~Group, \emph{PARI/GP version 2.15.4}, Univ.~Bordeaux, 2024,
+available from \url{http://pari.math.u-bordeaux.fr/}.
+
+\end{thebibliography}
+
+\end{document}

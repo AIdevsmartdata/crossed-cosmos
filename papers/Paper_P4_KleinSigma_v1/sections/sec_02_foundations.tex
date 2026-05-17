@@ -1,0 +1,464 @@
+%==================================================================
+% Paper P4 -- Section 2 -- Foundations (detailed, 5-7 pp)
+%==================================================================
+\section{Foundations}\label{sec:foundations}
+
+This section reviews, in self-contained form and in the conventions
+required by \Cref{thm:T1}, the chain of classical algebraicity and
+integrality results on which the
+Galois-Norm-Multiplicative-Invariant theorem rests:
+\[
+\text{Sch\"utt} \longrightarrow \text{Shimura} \longrightarrow
+\text{Damerell} \longrightarrow \text{Hida} \longrightarrow
+\text{Deligne} \longrightarrow \text{Kings-Sprang}.
+\]
+A reader familiar with this material may skim and proceed to
+\Cref{sec:T1-proof}, after noting our specific conventions for
+the period $\Omega_K$ in~\eqref{eq:chowla-selberg-2}, the
+Tate-twist stratum~\eqref{eq:stratum-2}, and the canonical Hecke
+character $\psi_K$ in~\Cref{ss:psi-K}.
+
+\subsection{Sch\"utt's classification of $\Q$-rational CM newforms}
+\label{ss:schutt}
+
+Let $K = \Q(\sqrt{D})$ be imaginary quadratic with class group
+$\Cl(K)$ a finite abelian $2$-group of $2$-rank $r$ (so $h_K =
+2^r$). Sch\"utt's
+classification~\cite{Schutt2008}, building on
+Hecke~\cite{Hecke1937}, proves:
+
+\begin{theorem}[Sch\"utt 2008; classical input]\label{thm:schutt}
+The space $S_w(\Gamma_0(|D|), \chiK)^{\mathrm{CM},\Q\text{-rat}}$
+of weight-$w$ CM newforms of level $|D|$ and Nebentypus $\chiK$
+having $\Q$-rational Fourier coefficients satisfies
+\begin{equation}\label{eq:schutt-dim-2}
+\dim_\Q S_w(\Gamma_0(|D|), \chiK)^{\mathrm{CM},\Q\text{-rat}}
+\;=\; |\Cl(K)[2]| \cdot \mathbf{1}_{\exp \Cl(K)\,\mid\, w-1}.
+\end{equation}
+The constructive identification realises the $\Q$-rational
+eigenforms as theta series $\theta_\psi$ for algebraic Hecke
+characters $\psi$ of $K$ of infinity type $(w-1, 0)$ whose
+restriction to the class group is a \emph{genus character} (i.e.\
+$\psi^2 = 1$ on $\Cl(K)$). The space of such genus characters has
+dimension $|\Cl(K)[2]|$ by Pontryagin duality.
+\end{theorem}
+
+By Gauss's 1801 genus theorem~\cite{Gauss1801}~\cite[Thm.~3.15]{Cox1989},
+\begin{equation}\label{eq:gauss-genus}
+|\Cl(K)[2]| \;=\; 2^{t-1}, \qquad
+t = \omega(|D|) = \#\{\text{prime divisors of }|D|\}.
+\end{equation}
+Throughout the remainder of the paper we work with $w \in \{3, 5\}$
+and assume $\Cl(K) \cong (\Z/2)^r$, so both weight spaces have the
+same dimension $h_K = 2^r$. For $r = 0$ (the nine $h_K = 1$
+Heegner discriminants
+$D \in \{-3, -4, -7, -8, -11, -19, -43, -67, -163\}$), the dimension
+is~$1$, the cross-ratio theorem is vacuous, and the architecture
+of~\Cref{thm:T1} must use the period normalisation directly, as
+in~\Cref{thm:T2}. For $r = 1$ ($h_K = 2$), there are exactly two
+normalised $\Q$-rational eigenforms in each weight, exchanged by
+$\Gal(\HK/K) = \Cl(K) = \Z/2$.
+
+\subsection{Canonical Hecke character and Galois orbits}
+\label{ss:psi-K}
+
+\begin{definition}[Canonical CM Hecke character]\label{def:psiK}
+For $K = \Q(\sqrt{D})$ imaginary quadratic, fix an embedding $K
+\hookrightarrow \C$ and choose a fundamental unit normalisation.
+Define the canonical algebraic Hecke character $\psi_K \colon
+\mathbb{A}_K^\times/K^\times \to \C^\times$ of infinity type
+$(1, 0)$ by
+\begin{equation}
+\psi_K(\fr{a}) \;:=\; \alpha
+\qquad \text{whenever } \fr{a} = (\alpha)\text{ is principal,
+$\alpha \in K$, $\operatorname{Im}(\alpha) > 0$,}
+\end{equation}
+and extend uniquely to all integral ideals via class field theory
+and ramification control at primes dividing $|D|$.
+\end{definition}
+
+For each integer $n \geq 1$, the $n$-th power $\psi_K^n$ is an
+algebraic Hecke character of infinity type $(n, 0)$. For $h_K \geq
+2$, the Galois action of $\sigma \in \Cl(K) \cong \Gal(\HK/K)$
+gives the conjugate character
+\begin{equation}
+\psi_K^{\sigma}(\fr{a}) \;:=\; \psi_K(\sigma^{-1} \fr{a}),
+\end{equation}
+producing $h_K$ distinct Galois conjugates
+$\psi_K^{(1)}, \dots, \psi_K^{(h_K)}$. The associated theta
+series are
+\begin{equation}\label{eq:theta-series}
+f_w^{(j)}(\tau) \;:=\; \theta_{(\psi_K^{(j)})^{w-1}}(\tau)
+\;=\; \sum_{\fr{a} \subset \OK} (\psi_K^{(j)}(\fr{a}))^{w-1} \cdot q^{\Nm(\fr{a})},
+\qquad q := e^{2\pi i \tau},
+\end{equation}
+and by~\Cref{thm:schutt}, the $\Q$-rational ones (in our
+$\Cl(K) = (\Z/2)^r$ setting) are exactly the $h_K$ Galois
+conjugates $\{f_w^{(j)}\}$.
+
+\subsection{Shimura algebraicity}\label{ss:shimura}
+
+For a $\Q$-rational CM newform $f_w \in S_w(\Gamma_0(|D|), \chiK)$
+attached to a Hecke character $\psi$ of $K$ of infinity type
+$(w-1, 0)$, Shimura's algebraicity
+theorem~\cite{Shimura1976} states:
+
+\begin{theorem}[Shimura 1976]\label{thm:shimura}
+For every critical integer $s \in \{1, 2, \dots, w-1\}$,
+\begin{equation}\label{eq:shimura-2}
+\frac{L(f_w, s) \cdot \Gamma(s)}{(2\pi i)^s \cdot \Omega_K^{w-1}}
+\;\in\; \overline{\Q}.
+\end{equation}
+For $h_K = 1$, the algebraic part on the left lies in $\Q$
+(Damerell~\cite{Damerell1971}). For $h_K \geq 2$, the algebraic
+part lies in $\HK$
+(Hida~\cite{Hida1981}; see~\Cref{ss:hida}).
+\end{theorem}
+
+\begin{remark}\label{rem:central-vs-critical}
+Note that ``critical'' in Shimura's sense means $s \in
+\{1, \dots, w-1\} \cap \Z$. The stratum
+condition~\eqref{eq:stratum-2} below picks out the
+\emph{Tate-balanced} pairs $(s_1, s_2)$ in the joint critical
+strip for weights $w_1 = 5$, $w_2 = 3$, but is distinct from the
+notion of ``central twist'' $s = w/2$, which is not an integer
+for odd $w$. For odd $w \in \{3, 5\}$, the central twist lies on
+the symmetry line of the functional equation but is not itself a
+Shimura-critical point.
+\end{remark}
+
+\subsection{Damerell's explicit period and Chowla-Selberg formula}
+\label{ss:damerell}
+
+For $K$ imaginary quadratic of class number $h_K = 1$, the
+Damerell period~\cite{Damerell1971} appearing in
+\eqref{eq:shimura-2} admits the explicit Chowla-Selberg
+description~\cite{ChowlaSelberg1949}
+\begin{equation}\label{eq:chowla-selberg-2}
+\Omega_K \;=\; \sqrt{\pi} \cdot |D|^{-1/4} \cdot
+\prod_{a=1}^{|D|-1} \Gamma\!\bigl(\tfrac{a}{|D|}\bigr)^{\chiK(a)/(2h_K)}.
+\end{equation}
+For $h_K \geq 2$, the period $\Omega_K$ in~\eqref{eq:shimura-2}
+must be replaced by an $\HK$-valued period that depends on the
+specific CM elliptic curve in the relevant Galois orbit; see
+\cite[\S 8]{Hida1981}.
+
+\begin{example}[Numerical verification at the seven non-vanishing
+Heegner anchors]\label{ex:omega-K-numerics}
+Direct PARI/GP evaluation of~\eqref{eq:chowla-selberg-2} at $80$-digit
+precision (\texttt{realprecision = 80}) for the seven non-vanishing
+Heegner discriminants gives (abbreviated to $14$~digits):
+\[
+\begin{array}{|r|l|l|}
+\hline
+D & \Omega_K & \Omega_K \cdot |D|^{1/4} \\
+\hline
+-7   & 3.61689501212884 & 5.88275 \\
+-8   & 3.56230079222662 & 5.99005 \\
+-11  & 3.39582468290106 & 6.18476 \\
+-19  & 2.96316633590618 & 6.18816 \\
+-43  & 2.04392119260363 & 5.23218 \\
+-67  & 1.49116290156061 & 4.27027 \\
+-163 & 0.56119333550365 & 2.00428 \\
+\hline
+\end{array}
+\]
+The quantity $\Omega_K \cdot |D|^{1/4}$ is bounded in
+$[2.0, 6.2]$ across the seven anchors, consistent with the
+Stirling-type asymptotic $\Omega_K = O(|D|^{-1/4})$ predicted
+by~\eqref{eq:chowla-selberg-2}.
+\end{example}
+
+\subsection{Hida's Hilbert-class-field rationality at $h_K \geq 2$}
+\label{ss:hida}
+
+For $h_K \geq 2$, Hida~\cite{Hida1981} proves the natural
+$\HK$-equivariant extension of Shimura's algebraicity:
+
+\begin{theorem}[Hida 1981]\label{thm:hida}
+For $f_w$ a $\Q$-rational CM newform attached to a Galois orbit
+of Hecke characters $\{\psi_K^{(j)}\}_{j=1}^{h_K}$ on $K$ of
+infinity type $(w-1, 0)$, the algebraic part
+\[
+A_w^{(j)}(s) \;:=\; \frac{L(f_w^{(j)}, s) \cdot \Gamma(s)}{(2\pi i)^s \cdot \Omega_K^{w-1}}
+\]
+lies in $\HK$ for every critical $s$, and the Galois action of
+$\sigma \in \Gal(\HK/K) \cong \Cl(K)$ on $A_w^{(j)}(s)$ is by
+permutation of the Galois orbit:
+\begin{equation}\label{eq:hida-galois-action}
+\sigma\bigl(A_w^{(j)}(s)\bigr) \;=\; A_w^{(\sigma \cdot j)}(s).
+\end{equation}
+\end{theorem}
+
+\begin{corollary}[$K$-rationality of the multiplicative norm]
+\label{cor:K-rational-norm}
+The norm
+$\Nm_{\HK/K}\bigl(A_w^{(1)}(s)\bigr) := \prod_{\sigma \in \Cl(K)}
+A_w^{(\sigma \cdot 1)}(s)
+\in K$. Since $f_w^{(j)}$ has real (in fact integral)
+Fourier coefficients ($\Q$-rationality), complex conjugation acts
+trivially on $A_w^{(j)}(s)$ for real critical $s$, hence
+$\Nm_{\HK/K}\bigl(A_w^{(1)}(s)\bigr) \in K \cap \R = \Q$ (as $K
+= \Q(\sqrt{D})$ with $D < 0$).
+\end{corollary}
+
+\Cref{cor:K-rational-norm} is the technical engine behind
+Step~3 (Galois descent) and Step~4 (reality) of the proof
+of~\Cref{thm:T1} in~\Cref{ss:proof-sketch} below.
+
+\subsection{Deligne's Tate-twist exponent calculus}
+\label{ss:deligne-tate}
+
+Deligne's 1979 conjecture~\cite{Deligne1979}, classical in our
+setting since the motives involved are $1$-dimensional Hecke
+characters, attaches to each motive $M$ over $\Q$ critical at $s$
+a canonical period $c^\pm(M)$ encoding the Hodge-de~Rham
+comparison. The Tate-twist functor $M \mapsto M(j)$ satisfies the
+multiplicative relation
+\begin{equation}\label{eq:tate-twist}
+c^\pm(M(j)) \;=\; (2\pi i)^j \cdot c^\pm(M),
+\qquad \Q(j_1) \otimes \Q(j_2) \;=\; \Q(j_1 + j_2).
+\end{equation}
+For our two CM motives $M_i := M(f_{w_i})$ of Hodge weight
+$w_i - 1$ (Hodge type $(w_i - 1, 0) \oplus (0, w_i - 1)$), a
+product of $L$-values $L(M_1, s_1) \cdot L(M_2, s_2)$ has period
+factor $(2\pi i)^{s_1 + s_2}$ times $\Omega_K^{(w_1 - 1) + (w_2 - 1)}$.
+In a cross-ratio of the form
+\begin{equation}\label{eq:cross-ratio-form}
+\frac{L(M_1^{(1)}, s_1) \cdot L(M_2^{(2)}, s_2)}
+     {L(M_1^{(2)}, s_1) \cdot L(M_2^{(1)}, s_2)},
+\end{equation}
+both Tate-twist exponents and both Damerell period exponents
+\emph{cancel exactly}, provided one chooses two pairs of equal
+$s_1 + s_2$ and equal $(w_1 - 1) + (w_2 - 1)$. For weights
+$\{w_1, w_2\} = \{3, 5\}$, the Hodge weight condition forces
+$(w_1 - 1) + (w_2 - 1) = 6$, automatic; the Tate condition forces
+the \emph{stratum condition}
+\begin{equation}\label{eq:stratum-2}
+s_1 + s_2 \;=\; \frac{w_1 + w_2}{2} \;=\; 4.
+\end{equation}
+This is the structural origin of the stratum
+condition~\eqref{eq:stratum} in~\Cref{thm:T1}: without it, the
+Tate-twist factors do not balance and the ratio is no longer
+period-clean.
+
+\subsection{Kings-Sprang integrality}\label{ss:kings-sprang}
+
+The very recent theorem of Kings and Sprang~\cite{KingsSprang2025}
+(\cite{KingsSprangArxiv}), building on Bannai-Kobayashi's
+Eisenstein-Kronecker theta classes on the Poincar\'e
+bundle~\cite{BannaiKobayashi2010}, sharpens
+Damerell-Shimura algebraicity to \emph{integrality}:
+
+\begin{theorem}[Kings-Sprang 2025]\label{thm:kings-sprang}
+Let $\psi$ be an algebraic Hecke character of $K$ of infinity
+type $(w, 0)$ with $w \geq 1$, and let $s_0$ be a critical
+integer for $L(\psi, s)$. Then
+\begin{equation}\label{eq:kings-sprang}
+\frac{L(\psi, s_0) \cdot \Gamma(s_0)}{(2\pi i)^{s_0} \cdot \Omega_K^{w}}
+\;\in\; \mathcal{O}_{\HK},
+\end{equation}
+modulo torsion factors controlled by the explicit Tate twist. The
+denominator of the integral relation is bounded by the
+Eisenstein-Kronecker denominator, supported only at ramification
+primes of $K$ and at small primes appearing in the conductor of
+$\psi$.
+\end{theorem}
+
+\Cref{thm:kings-sprang} is the quantitative version of
+\eqref{eq:shimura-2} that yields the denominator bound
+$|D|^{2d}$ in~\Cref{thm:T1}. Indeed, applying
+\Cref{thm:kings-sprang} to each of the $d$ factors of $L(f_{w_1}^{(j)},
+s_1)$ and $d$ factors of $L(f_{w_2}^{(j)}, s_2)$ in the polynomial
+$P$ of bidegree $(d, d)$, the resulting rational evaluation has
+denominator dividing
+$\Nm_{K/\Q}(\disc \OK)^d = |D|^{2d}$, up to the explicitly
+bounded local Eisenstein-Kronecker correction.
+
+\subsection{Newton-Dickson cross-weight chain}
+\label{ss:newton-dickson}
+
+The Hecke recursion~\cite{Hecke1937}~\cite{Schutt2008}
+interpolating weight-$3$, weight-$5$, weight-$7$, \ldots\
+eigenforms in a Hida family~\cite{Hida1986} reads, for split
+primes $p$ of $K$:
+
+\begin{proposition}[Newton-Dickson chain]\label{prop:newton-dickson}
+For $f_{2m+1} = \theta_{\psi_K^{2m}}$ the weight-$(2m+1)$ CM
+newform attached to the $2m$-th power of the canonical Hecke
+character of \Cref{def:psiK}, and $p$ a rational prime split in
+$K$,
+\begin{equation}\label{eq:newton-dickson}
+a_p(f_{2m+1}) \;=\; D_m\bigl(a_p(f_3), p\bigr),
+\end{equation}
+where $D_m$ is the $m$-th modified Dickson polynomial defined by
+\[
+D_1(x, p) = x, \quad D_2(x, p) = x^2 - 2p^2,
+\quad D_m(x, p) = x \cdot D_{m-1}(x, p) - p^2 D_{m-2}(x, p)
+\quad (m \geq 3).
+\]
+\end{proposition}
+
+\begin{remark}[Numerical verification]
+At $D = -67$ (a $h_K = 1$ Heegner anchor), four split primes
+$p \in \{17, 19, 23, 29\}$ give:
+\[
+\begin{array}{|r|r|r|r|}
+\hline
+p & a_p(f_3) & a_p(f_5) & a_p(f_7) \\
+\hline
+17 & -33 & 511 & -7\,326 \\
+19 & -29 & 119 & 7\,018 \\
+23 & -21 & -617 & 24\,066 \\
+29 & -9 & -1\,601 & 21\,978 \\
+\hline
+\end{array}
+\]
+Each row satisfies $a_p(f_5) = a_p(f_3)^2 - 2p^2$ and
+$a_p(f_7) = a_p(f_3)^3 - 3 p^2 \cdot a_p(f_3)$ exactly, confirming
+$D_2, D_3$ at $4 + 4 = 8$ data points. Cumulative verification
+across six Heegner discriminants $D \in \{-7, -11, -19, -43, -67,
+-163\}$, weights $w \in \{3, 5, 7\}$, and all split primes
+$p \leq 30$ gives $81/81$ exact matches at $80$-digit PARI
+precision.
+\end{remark}
+
+\subsection{Bridge B$'$: functional-equation identity}
+\label{ss:bridge-Bprime}
+
+A useful sanity check, verified independently at $96$-digit PARI
+precision across all seven non-vanishing Heegner anchors plus
+$D = -8$, is the cross-weight functional-equation identity
+
+\begin{proposition}[Bridge B$'$, FE identity]\label{prop:bridge-Bprime}
+For every $\Q$-rational weight-$3$ CM newform $f_3$ and the
+corresponding weight-$5$ newform $f_5$ attached to the same
+$K = \Q(\sqrt{D})$ (so $f_5 = \theta_{\psi_K^4}$, $f_3 = \theta_{\psi_K^2}$),
+\begin{equation}\label{eq:bridge-Bprime}
+\frac{L(f_5, 3)}{L(f_3, 1)} \;=\; \frac{2\pi^2}{|D|} \cdot
+\frac{L(f_5, 2)}{L(f_3, 2)}.
+\end{equation}
+\end{proposition}
+
+\begin{proof}[Sketch]
+Apply the Hecke completed functional equation
+$\Lambda(f_w, s) = \varepsilon \cdot \Lambda(f_w, w - s)$,
+with $\Lambda(f_w, s) := |D|^{s/2} \cdot (2\pi)^{-s} \cdot
+\Gamma(s) \cdot L(f_w, s)$, separately to $f_3$ at $s_3 = 1
+\leftrightarrow 2$ and to $f_5$ at $s_5 = 3 \leftrightarrow 2$,
+and take the ratio. The $|D|$ and $(2\pi)$ powers combine to
+give $2\pi^2/|D|$.
+\end{proof}
+
+\Cref{prop:bridge-Bprime} is the key bridge used in the
+unconditional lower-bound proof of~\Cref{thm:T2}; it transports
+the Euler-product bound at $s = 3$ (where convergence is
+manifest, $3 > w/2 + 1/2 = 2$) to a bound at $s = 1$
+(within the critical strip).
+
+\subsection{Synopsis: the period diagram}\label{ss:diagram}
+
+We collect the six ingredients into a single commutative diagram
+describing the period quotient that underlies~\Cref{thm:T1}.
+
+\begin{equation}\label{diag:period-2}
+\begin{tikzcd}[row sep=large, column sep=large]
+L(f_w^{(j)}, s)
+\arrow[r, "{\;\Gamma(s)/((2\pi i)^s \Omega_K^{w-1})\;}"]
+\arrow[d, "{\text{Kings-Sprang}}"']
+& A_w^{(j)}(s) \in \HK
+\arrow[d, "{\text{Hida}}"] \\
+\mathcal{O}_{\HK}
+\arrow[r, "{\Nm_{\HK/K}}"']
+& \HK^{\Cl(K)} = K \\
+\end{tikzcd}
+\end{equation}
+
+\medskip
+\noindent\emph{Reading.} The top row is Shimura algebraicity:
+each $L$-value, after dividing by the universal
+$(2\pi i)^s \Omega_K^{w-1}$ factor, lands in an algebraic
+number, refined by Hida to live in $\HK$ for $h_K \geq 2$. The
+left vertical arrow is Kings-Sprang: the algebraic part is in
+fact an algebraic integer of $\HK$ (up to bounded denominator).
+The bottom row is Galois descent: the multiplicative norm of an
+$\HK$-element down to $K$ lands in the Galois-invariants
+$\HK^{\Cl(K)} = K$. For Galois-equivariant polynomials in
+$h_K$ such elements, the norm is replaced by an arbitrary
+$\Cl(K)$-symmetric polynomial, with the same conclusion.
+
+The right-hand column ends in $\HK$ for individual values;
+Galois descent collapses to $K$ via the diagonal
+$\Cl(K)$-action, and reality plus the imaginary-quadratic
+hypothesis collapses $K$ further to $\Q$. This is the abstract
+shape of the argument made precise in~\Cref{ss:proof-sketch}.
+
+\subsection{Tate-Deligne motives of Hecke characters}
+\label{ss:motives}
+
+For later reference (and for the statement of \Cref{thm:T3-intro}
+on the partial functor), we recall the motivic upgrade of the
+analytic objects above. By Tate-Deligne 1965 (classical;
+Bourbaki S\'eminaire 306), for every algebraic Hecke character
+$\psi \colon \mathbb{A}_K^\times/K^\times \to \C^\times$ of
+infinity type $(a, b)$ with $a + b \geq 0$, there exists a
+$1$-dimensional rational motive $M(\psi) \in \DM_\Q$ of weight
+$a + b$ whose $L$-function is $L(\psi, s)$ and whose realisations
+are:
+\begin{itemize}
+\item \emph{$\ell$-adic.} The $1$-dimensional $\ell$-adic Galois
+representation $\Gal(\overline{K}/K) \to \overline{\Q_\ell}^\times$
+attached to $\psi$, extended by induction to
+$\Gal(\overline{\Q}/\Q) \to \mathrm{GL}_2(\overline{\Q_\ell})$.
+\item \emph{Hodge.} The $1$-dimensional Hodge structure of weight
+$a + b$ with Hodge filtration concentrated in $(a, b)$.
+\item \emph{de Rham.} A $1$-dimensional $\Q$-vector space with
+the standard comparison isomorphism to Hodge.
+\end{itemize}
+The Tannakian formalism gives $M(\psi) \otimes M(\psi') = M(\psi
+\cdot \psi')$. For our setting $\psi = \psi_K^n$, the motive
+$M(\psi_K^n)$ is the Scholl~\cite{Scholl1990} motive attached
+to the CM theta series $\theta_{\psi_K^n}$ of weight $n + 1$:
+\begin{equation}\label{eq:scholl-CM}
+M(\psi_K^n) \;\cong\; M(\theta_{\psi_K^n}) \;\in\; \DM_\Q,
+\qquad n \geq 1.
+\end{equation}
+This motive carries a Deligne polarisation $c^+(M(\psi_K^n))
+\in \C^\times / \Q^\times$, identified with $\Omega_K^n$ under
+the conventions of \Cref{ss:damerell}. The Tate twist
+$M(\psi_K^n)(j)$ has polarisation $(2\pi i)^j \cdot \Omega_K^n$,
+reflecting~\eqref{eq:tate-twist}.
+
+We package the foundations into the following statement, which
+underlies both the cross-ratio theorem of~\Cref{sec:T1-proof} and
+the partial functor of~\Cref{sec:T3}:
+
+\begin{proposition}[Period-clean cross-ratio criterion]
+\label{prop:period-clean}
+Let $\psi_1, \psi_2$ be algebraic Hecke characters of $K$ of
+infinity types $(w_1 - 1, 0)$, $(w_2 - 1, 0)$, and let
+$s_1, s_2$ be critical integers for $L(\psi_i, s)$ satisfying
+the stratum condition $s_1 + s_2 = (w_1 + w_2)/2$. For each
+$\sigma \in \Cl(K)$, the multiplicative cross-ratio
+\[
+\frac{L(\psi_1^{(1)}, s_1) \cdot L(\psi_2^{(2)}, s_2)}
+     {L(\psi_1^{(2)}, s_1) \cdot L(\psi_2^{(1)}, s_2)}
+\;=\;
+\frac{A_1^{(1)}(s_1) \cdot A_2^{(2)}(s_2)}
+     {A_1^{(2)}(s_1) \cdot A_2^{(1)}(s_2)}
+\;\in\;\HK,
+\]
+with the $(2\pi i)^{s_1 + s_2} \cdot \Omega_K^{(w_1 - 1) + (w_2 - 1)}$
+period factor cancelling in numerator and denominator.
+\end{proposition}
+
+\Cref{prop:period-clean} is the central simplification that makes
+the proof of \Cref{thm:T1} possible in elementary steps; in the
+absence of the stratum condition, no such period-clean cross-ratio
+exists, and the conclusion of \Cref{thm:T1} fails (as we verify
+empirically in~\Cref{ss:no-closed-form}).
+
+\medskip
+\noindent
+With the foundations in place we proceed to the proof
+of~\Cref{thm:T1} (\Cref{sec:T1-proof}).

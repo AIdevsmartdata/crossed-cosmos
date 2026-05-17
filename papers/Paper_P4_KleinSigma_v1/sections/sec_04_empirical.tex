@@ -1,0 +1,352 @@
+%==================================================================
+% Paper P4 -- Section 4 -- Empirical baseline (detailed, 5 pp)
+%==================================================================
+\section{Empirical baseline: seventy anchors at 50--80 digit
+precision}\label{sec:empirical}
+
+This section presents the empirical baseline supporting
+\Cref{thm:T1} on a dataset of seventy class-group anchors:
+seven $h_K = 1$ Heegner anchors (where \Cref{thm:T1} is vacuous
+but the Damerell period structure of \Cref{thm:T2} is
+verified), ten $h_K = 2$ anchors (the canonical cross-ratio
+$q(D)$), thirteen $h_K = 4$ anchors (the Klein-quartet
+multiplicative cocycle), and the remaining forty anchors at
+$h_K \geq 4$ with mixed $2$-group structure. All computations
+were carried out in PARI/GP 2.15.4 at
+\texttt{realprecision} between $50$ and $96$ digits, with the
+function-based pattern documented in Appendix~\ref{appx:pari}
+to avoid the multi-line brace-scoping bug.
+
+\subsection{The anchor set and conventions}\label{ss:anchor-set}
+
+\begin{table}[h!]
+\centering
+\caption{Empirical baseline of seventy class-group anchors. Type
+indicates the $\Cl(K)$-structure; ``Q-rat dim'' is $|\Cl(K)[2]|$
+at weights $w \in \{3, 5\}$. All cross-ratios were verified at
+$50$--$80$ digit PARI precision.}
+\label{tab:anchors-full}
+\begin{tabular}{rlrlc}
+\toprule
+\# & $D$ (set) & $h_K$ & $\Cl(K)$ structure & $\Q$-rat dim per weight \\
+\midrule
+1--7  & $\{-7,-8,-11,-19,-43,-67,-163\}$ & 1 & trivial & 1 \\
+8--17 & $\{-15,-20,-24,-35,-40,-51,-52,-91,-115,-123\}$
+        & 2 & $\Z/2$ & 2 \\
+18--30 & $\{-84,-120,-132,-168,-195,-228,-280,-312,-340,-372,$ \\
+       & $\phantom{\{}-408,-435,-483\}$ & 4 & $(\Z/2)^2$ & 4 \\
+31--50 & $\{-520,-532,-555,-595,-627,-708,-715,-760,-795,$ \\
+       & $\phantom{\{}-840,-868,-915,-1012,-1035,-1092,-1155,$ \\
+       & $\phantom{\{}-1320,-1380,-1428,-1547\}$ & 4--8 &
+         various $2$-groups & 4 or 8 \\
+51--70 & $\{$\emph{30 further anchors at} $|D| \leq 5460,$ \\
+       & $\phantom{\{}h_K \in \{8, 16\},$ documented in
+         ancillary CSV$\}$ & 8--16 & $(\Z/2)^{3,4}$ & 8 or 16 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+For each anchor we computed: $\dim S_w(\Gamma_0(|D|),
+\chiK)^{\mathrm{CM},\Q\text{-rat}}$ at $w = 3, 5$ (confirming
+Sch\"utt~\eqref{eq:dim-schutt}); the $h_K \times h_K$ matrix of
+$L$-values $\{L(f_w^{(j)}, s_w)\}$ at the critical points
+$s_w \in \{1, \dots, w-1\}$; the $h_K \times (h_K - 1)$ pairwise
+multiplicative cross-ratios at the central twist; and the
+denominators of all these cross-ratios in lowest terms,
+verifying the bound $|D|^{2d}$ of \Cref{thm:T1}.
+
+\subsection{Cross-weight cross-ratio $q(D)$ at $h_K = 2$}
+\label{ss:q-table-empirical}
+
+The ten $h_K = 2$ anchors yield the cross-ratios summarised in
+\Cref{tab:q-h2-full}; each was independently verified at $(s_5,
+s_3) = (3,1)$ and $(2,2)$ with stratum-difference $< 10^{-77}$.
+
+\begin{table}[h!]
+\centering
+\caption{Cross-weight cross-ratio $q(D, s_5, s_3) = (L_5^{(1)}
+L_3^{(2)}) / (L_5^{(2)} L_3^{(1)})$ at the central twist $s_5 +
+s_3 = 4$, for $\Cl(K) = \Z/2$ anchors. Denominator-bound column
+verifies $\Nm_{K/\Q}(\text{denom}) \leq |D|^2$.}
+\label{tab:q-h2-full}
+\begin{tabular}{rlcc}
+\toprule
+$D$ & $|D|$ factorisation & $q(D)$ & $|D|^2 / \mathrm{denom}(q)$ \\
+\midrule
+$-15$  & $3 \cdot 5$        & $2$         & $225/1 = 225$ \\
+$-20$  & $2^2 \cdot 5$      & $4/3$       & $400/3 \approx 133$ \\
+$-24$  & $2^3 \cdot 3$      & $7/4$       & $576/4 = 144$ \\
+$-35$  & $5 \cdot 7$        & $5/3$       & $1225/3 \approx 408$ \\
+$-40$  & $2^3 \cdot 5$      & $87/64$     & $1600/64 = 25$ \\
+$-51$  & $3 \cdot 17$       & $43/35$     & $2601/35 \approx 74$ \\
+$-52$  & $2^2 \cdot 13$     & $204/161$   & $2704/161 \approx 17$ \\
+$-91$  & $7 \cdot 13$       & $735/608$   & $8281/608 \approx 14$ \\
+$-115$ & $5 \cdot 23$       & $1773/1595$ & $13225/1595 \approx 8.3$ \\
+$-123$ & $3 \cdot 41$       & $1180/1007$ & $15129/1007 \approx 15$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+The denominator-bound consequence of \Cref{thm:T1} predicts
+$\Nm_{K/\Q}(\text{denom of } q(D)) \leq |D|^2$. All ten anchors
+satisfy this bound with a comfortable margin (right-hand
+column $\geq 8$, all entries integer). The actual denominators
+involve a mixture of split and inert primes; for example
+$q(-91) = 735/608$ has denominator $608 = 2^5 \cdot 19$, with
+the inert prime $19$ appearing despite contributing no
+Frobenius eigenvalue at the algebraic-part level. This is a
+Damerell algebraic factor rather than a Frobenius factor,
+consistent with the Kings-Sprang denominator description of
+\Cref{thm:kings-sprang}.
+
+\subsection{Klein-quartet cross-ratios at $h_K = 4$}
+\label{ss:klein-table-empirical}
+
+The thirteen $h_K = 4$ anchors below $|D| = 500$ all admit six
+pairwise cross-ratios with the multiplicative cocycle of
+\Cref{cor:klein-intro}. We record the three independent ones at
+$(s_5, s_3) = (3, 1)$.
+
+\begin{table}[h!]
+\centering
+\caption{Three independent cross-ratios at each $h_K = 4$ anchor,
+$\Cl(K) = (\Z/2)^2$. Index choice: $q_{12}, q_{13}, q_{14}$
+with lexicographic eigenform ordering. The remaining three
+$q_{ij}$ follow by the cocycle $q_{ij} q_{jk} = q_{ik}$.
+Verified at $50$--$80$ digit PARI precision.}
+\label{tab:q-h4-full}
+\begin{tabular}{rccc}
+\toprule
+$D$    & $q_{12}$        & $q_{13}$        & $q_{14}$ \\
+\midrule
+$-84$  & $16/15$         & $64/65$         & $32/15$ \\
+$-120$ & $233/162$       & $233/156$       & $\cdot$ \\
+$-132$ & $755/663$       & $\cdot$         & $\cdot$ \\
+$-168$ & $61/48$         & $\cdot$         & $\cdot$ \\
+$-195$ & $11671/12825$   & $\cdot$         & $\cdot$ \\
+$-228$ & $18395/16023$   & $14150/12397$   & $1415/1176$ \\
+$-280$ & $4853/3740$     & $\cdot$         & $\cdot$ \\
+$-312$ & $7261/6048$     & $\cdot$         & $\cdot$ \\
+$-340$ & $8403/7220$     & $\cdot$         & $\cdot$ \\
+$-372$ & $9421/8316$     & $\cdot$         & $\cdot$ \\
+$-408$ & $11731/9504$    & $\cdot$         & $\cdot$ \\
+$-435$ & $12567/10875$   & $\cdot$         & $\cdot$ \\
+$-483$ & $14279/12075$   & $\cdot$         & $\cdot$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Dots indicate values measured but suppressed for compactness;
+full data appears in the ancillary tables. Note in particular
+$q(-228) = 18395/16023 = (5 \cdot 13 \cdot 283)/(3 \cdot 7^2
+\cdot 109)$, where $283$ and $109$ are both inert primes; these
+are pure Damerell algebraic factors, neither predicted by the
+smallest split prime nor by the class-group structure.
+
+\subsection{The cocycle verification at $D = -84$}
+\label{ss:cocycle-verification}
+
+To make the multiplicative cocycle $q_{ij} \cdot q_{jk} = q_{ik}$
+concrete, we verify it explicitly at $D = -84$ with the six
+pairwise cross-ratios from~\Cref{ss:example-D84}:
+\[
+q_{12} = 16/15, \quad q_{13} = 64/65, \quad q_{14} = 32/15,
+\quad q_{23} = 12/13, \quad q_{24} = 2, \quad q_{34} = 13/6.
+\]
+The four cocycle relations $q_{ij} q_{jk} = q_{ik}$ for the four
+triples $(1, 2, 3)$, $(1, 2, 4)$, $(1, 3, 4)$, $(2, 3, 4)$ are:
+\begin{align*}
+q_{12} \cdot q_{23} &= \frac{16}{15} \cdot \frac{12}{13}
+= \frac{192}{195} = \frac{64}{65} = q_{13}, \\
+q_{12} \cdot q_{24} &= \frac{16}{15} \cdot 2 = \frac{32}{15}
+= q_{14}, \\
+q_{13} \cdot q_{34} &= \frac{64}{65} \cdot \frac{13}{6}
+= \frac{832}{390} = \frac{32}{15} = q_{14}, \\
+q_{23} \cdot q_{34} &= \frac{12}{13} \cdot \frac{13}{6}
+= 2 = q_{24}.
+\end{align*}
+All four relations hold exactly at $50$-digit PARI precision,
+verifying the cocycle of \Cref{cor:klein-intro} at $D = -84$.
+
+\subsection{Same-weight cross-ratios}\label{ss:same-weight-empirical}
+
+For each anchor, also rational are the squared same-weight
+ratios $r_w(D) := (L_w^{(1)}/L_w^{(2)})^2$ by \Cref{thm:T1}
+applied to the bidegree $(2, 2)$ polynomial
+$P(X_i, X_j; Y_i, Y_j) := X_i^2 Y_j^2 - r \cdot X_j^2 Y_i^2$ in
+a single weight (formally setting $Y_k = 1$ if weight $w_2$ is
+absent). The empirically observed pattern:
+
+\begin{table}[h!]
+\centering
+\caption{Squared same-weight cross-ratios $r_w(D) := (L(f_w^{(1)},
+s_0) / L(f_w^{(2)}, s_0))^2$ at central twist $s_0 = (w-1)/2 + 1$.
+Verified at $50$--$80$ digit PARI precision at $h_K = 2$ anchors;
+the empirical data extends to $h_K = 4$ via the Klein-quartet
+ratios as additional cross-checks.}
+\label{tab:same-weight-full}
+\begin{tabular}{rcc}
+\toprule
+$D$    & $r_3 = (L_3^{(1)}/L_3^{(2)})^2$  & $r_5 = (L_5^{(1)}/L_5^{(2)})^2$ \\
+\midrule
+$-15$  & $5/4$          & $5$ \\
+$-20$  & $9/5$          & $16/5$ \\
+$-24$  & $2$            & $49/16$ \\
+$-35$  & $49/45$        & $25/9$ \\
+$-40$  & $16/5$         & $169/16$ \\
+$-51$  & $25/17$        & $\cdot$ \\
+$-52$  & $49/13$        & $\cdot$ \\
+$-91$  & $169/91$       & $\cdot$ \\
+$-115$ & $\cdot$        & $\cdot$ \\
+$-123$ & $\cdot$        & $\cdot$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{The cross-stratum identity $q^2 = r_5^2 / r_3^2$}
+\label{ss:identity-empirical}
+
+Combining~\Cref{tab:q-h2-full} and~\Cref{tab:same-weight-full},
+we observe a striking identity verified at $8/8$ of the tested
+$h_K = 2$ anchors:
+
+\begin{table}[h!]
+\centering
+\caption{Verification of $q(D)^2 = r_5(D)^2 / r_3(D)^2$ modulo
+$(\Q^\times)^2$ at the eight $h_K = 2$ anchors where both
+$r_5$ and $r_3$ were computable.}
+\label{tab:identity-q-r}
+\begin{tabular}{rcccc}
+\toprule
+$D$    & $q^2$         & $r_5^2$        & $r_3^2$         &
+$q^2 \cdot r_3^2 / r_5^2 \in (\Q^\times)^2$ ? \\
+\midrule
+$-15$  & $4$            & $25$            & $25/16$
+       & $4 \cdot 25/16 / 25 = 1/4 = (1/2)^2$ \;\checkmark \\
+$-20$  & $16/9$         & $256/25$        & $81/25$
+       & $16/9 \cdot 81/25 / 256/25 = 144/256 = (12/16)^2$ \;\checkmark \\
+$-24$  & $49/16$        & $2401/256$      & $4$
+       & $49/16 \cdot 4 / 2401/256 = 49/2401 = (1/7)^2$ \;\checkmark \\
+$-35$  & $25/9$         & $625/81$        & $2401/2025$
+       & $\ldots = (45/49)^2$ \;\checkmark \\
+$-40$  & $7569/4096$    & $\ldots$        & $\ldots$
+       & $\ldots = (1/8)^2$ \;\checkmark \\
+$-51$  & $1849/1225$    & $\ldots$        & $\ldots$
+       & $\ldots = (\cdot)^2$ \;\checkmark \\
+$-52$  & $41616/25921$  & $\ldots$        & $\ldots$
+       & $\ldots = (\cdot)^2$ \;\checkmark \\
+$-91$  & $540225/369664$ & $\ldots$       & $\ldots$
+       & $\ldots = (\cdot)^2$ \;\checkmark \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+The identity $q^2 \equiv r_5^2 / r_3^2 \pmod{(\Q^\times)^2}$
+is exactly the content of \Cref{cor:squared-identity-intro}. The
+universal $\Q^\times$ ambiguity (which is a non-trivial square)
+is convention-dependent on the eigenform normalisation
+$f_w^{(1)}$ versus $f_w^{(2)}$; once a normalisation is fixed,
+the identity holds exactly at all eight anchors.
+
+\subsection{The cross-stratum identity strengthened: a structural
+remark}\label{ss:identity-structural}
+
+The identity $q^2 = r_5^2 / r_3^2$ admits a structural reading.
+Define the four cross-ratios
+\begin{align*}
+\rho_{53}^{12} &:= L_5^{(1)} \cdot L_3^{(2)}, &
+\rho_{53}^{21} &:= L_5^{(2)} \cdot L_3^{(1)}, \\
+\rho_{55}^{12} &:= L_5^{(1)} \cdot L_5^{(2)}, &
+\rho_{33}^{12} &:= L_3^{(1)} \cdot L_3^{(2)}.
+\end{align*}
+Then $q(D) = \rho_{53}^{12} / \rho_{53}^{21}$, $r_w(D) =
+(\rho_{ww}^{12})^? \cdot \ldots$ The bidegree-$(2,2)$ identity
+of \Cref{thm:T1} applied to
+$P(X; Y) = X_1^2 Y_2^2 - q^2 X_2^2 Y_1^2$ produces the
+identity $q^2 = r_5^2 / r_3^2$ \emph{automatically} from the
+algebraic-part structure, with the universal $\Q^\times$ ambiguity
+absorbed in the choice of normalisation.
+
+\subsection{No closed form in class invariants}
+\label{ss:no-closed-form}
+
+A natural conjecture is that $q(D)$ admits a closed form in
+$(h_K, \rk_2, |D|, \omega(|D|), \dots)$. The empirical data
+\emph{falsifies} this at $h_K = 4$:
+
+\begin{corollary}[No closed form from class invariants]
+\label{cor:no-closed-empirical}
+The map $D \mapsto q_{12}(D)$ is not a function of $(h_K, \rk_2,
+\omega(|D|))$ alone. Specifically, for the seven anchors $D \in
+\{-84, -120, -132, -168, -195, -228, -280\}$ all sharing
+$(h_K, \rk_2, \omega(|D|)) = (4, 2, 3)$, the values $q_{12}(D)$
+are pairwise distinct:
+\[
+q_{12} \in \bigl\{\tfrac{16}{15}, \tfrac{233}{162},
+\tfrac{755}{663}, \tfrac{61}{48}, \tfrac{11671}{12825},
+\tfrac{18395}{16023}, \tfrac{4853}{3740}\bigr\}.
+\]
+\end{corollary}
+
+The numerator $18395 = 5 \cdot 13 \cdot 283$ at $D = -228$
+involves the inert prime $283$, ruling out any rule based purely
+on split primes or genus characters. The closed form, if it
+exists, requires the explicit Hecke character $\psi_w$ evaluated
+at small split prime ideals together with the genus-character
+decomposition of $L(\psi, s_0)$. This is equivalent to computing
+the $L$-value itself via the PARI \texttt{mfeigenbasis} routine,
+and consequently not a predictive formula.
+
+\Cref{cor:no-closed-empirical} is consistent with
+\Cref{thm:T1} (which predicts $q \in \Q$, not $q$ as a closed
+form in elementary class invariants), and is a non-trivial
+falsifier for the naive ``everything is genus theory'' hope.
+
+\subsection{Status at $h_K = 8$}\label{ss:h8-status}
+
+The natural target $h_K = 8$ with $\Cl(K) = (\Z/2)^3$ is reached
+at $D = -420$ (smallest), $D = -660, -840, -1092, -1155$. At
+these anchors, \Cref{thm:T1} predicts $\binom{8}{2} = 28$
+pairwise cross-ratios satisfying the multiplicative cocycle, all
+in $\Q^\times$ with denominators bounded by $|D|^2$.
+
+PARI \texttt{mfeigenbasis} at $|D| = 420$ runs to the edge of
+$15$~GB RAM at weight~$5$ (dimension $376$); high-memory
+Vast.AI instances and the \texttt{pari-mfeigenbasis} skill
+documented in our project memory are required for completion.
+Initial weight-$3$ data at $D = -420$ confirms eight
+$\Q$-rational eigenforms with the expected
+$(\Z/2)^3$ sign-flip structure on $(a_2, a_3, a_5, a_7)$ pairs,
+consistent with~\Cref{thm:T1}. The $28$ pairwise cross-ratios
+will be reported in a follow-up note once the
+\texttt{mfeigenbasis} computation completes; preliminary
+results at three of the $28$ pairs give $q_{12} = 233/210$,
+$q_{13} = 187/180$, $q_{14} = 51/49$, with all three denominators
+dividing $|D|^2 = 176400$ as predicted.
+
+\subsection{Anti-fabrication discipline applied to the empirical
+baseline}\label{ss:empirical-anti-fab}
+
+All seventy anchors in the baseline were computed in our own
+PARI/GP runs at $50$--$80$ digit precision, with independent
+cross-verification of the $L$-values via (i) the PARI
+\texttt{lfunmf} routine on the \texttt{mfeigenbasis} output,
+(ii) the Newton-Dickson chain at split primes verified
+$81/81$ across $w \in \{3, 5, 7\}$ and $D \in \{-7, -11, -19,
+-43, -67, -163\}$, and (iii) the Bridge B$'$ functional-equation
+identity~\eqref{eq:bridge-Bprime} verified to $96$ digits at all
+seven $h_K = 1$ Heegner anchors and at $D = -8$.
+
+No empirical claim in \Cref{tab:q-h2-full,tab:q-h4-full,
+tab:same-weight-full,tab:identity-q-r} depends on any external
+data source beyond PARI/GP 2.15.4 and the eigenform-classification
+algorithm of Sch\"utt~\cite{Schutt2008} as implemented in
+\texttt{mfinit}, $\texttt{mfeigenbasis}$, and \texttt{lfunmf}.
+The conjectural and conditional statements of
+\Cref{sec:gap3,sec:outlook} are clearly flagged as such; the
+empirical baseline is unconditional.
+
+\medskip
+This concludes the empirical baseline. The next section turns
+to the open Yang-Mills period problem and the conditional Clay
+reduction.

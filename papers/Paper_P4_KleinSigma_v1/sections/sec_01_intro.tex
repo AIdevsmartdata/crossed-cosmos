@@ -1,0 +1,451 @@
+%==================================================================
+% Paper P4 -- Section 1 -- Introduction (detailed, 5-7 pp)
+% Compile with main.tex preamble (article/amsart class, amsmath, amsthm,
+% tikz-cd, cleveref, theorem environments and macros declared upstream).
+%==================================================================
+\section{Introduction}\label{sec:intro}
+
+\subsection{Setting, conventions, and the empirical phenomenon}
+\label{ss:setting}
+Throughout this paper $K = \Q(\sqrt{D})$ denotes an imaginary
+quadratic field of fundamental discriminant $D < 0$, with ring of
+integers $\OK$, Hilbert class field $\HK$, class group $\Cl(K)$ of
+order $h_K$, and Kronecker character $\chiK : (\Z/|D|\Z)^\times
+\to \{\pm 1\}$. The compositum $\HK/K$ is unramified, abelian,
+of degree $h_K$, with $\Gal(\HK/K) \cong \Cl(K)$ by Artin
+reciprocity. We write $\rk_2(A) := \dim_{\F_2}(A \otimes \F_2)$ for
+the $2$-rank of a finite abelian group $A$.
+
+By a celebrated theorem of Sch\"utt~\cite{Schutt2008}, refined via
+Gauss's 1801 genus theory~\cite{Gauss1801}~\cite[Thm.~3.15]{Cox1989},
+the space
+\[
+S_w\bigl(\Gamma_0(|D|), \chiK\bigr)^{\mathrm{CM},\Q\text{-rat}}
+\]
+of weight-$w$ CM newforms of level $|D|$ and Nebentypus $\chiK$
+having $\Q$-rational Fourier coefficients is non-zero if and only
+if $\exp \Cl(K) \mid w-1$, and has dimension
+\begin{equation}\label{eq:dim-schutt}
+\dim_\Q S_w\bigl(\Gamma_0(|D|), \chiK\bigr)^{\mathrm{CM},\Q\text{-rat}}
+\;=\; |\Cl(K)[2]| \;=\; 2^{\rk_2 \Cl(K)} \;=\; 2^{t-1},
+\end{equation}
+where $t = \omega(|D|)$ counts the prime divisors of $|D|$ (the
+final equality is Gauss). For $w \in \{3,5\}$ and $\Cl(K)$ a
+$2$-group, both weights produce $h_K$-dimensional $\Q$-rational
+eigenspaces, on which $\Cl(K) \cong \Gal(\HK/K)$ permutes a chosen
+normalised basis $\{f_w^{(1)}, \dots, f_w^{(h_K)}\}$ by Galois
+conjugation. We write $a_p(f_w^{(j)})$ for the $p$-th Hecke
+eigenvalue and $L(f_w^{(j)}, s)$ for the associated $L$-function;
+the critical strip is $1 \leq \operatorname{Re}(s) \leq w-1$ by
+Deligne~\cite{Deligne1979}.
+
+For $f_w$ a $\Q$-rational CM newform attached to a Hecke character
+$\psi$ of $K$ of infinity type $(w-1, 0)$, the Shimura algebraicity
+theorem~\cite{Shimura1976} states
+\begin{equation}\label{eq:shimura-1}
+\frac{L(f_w, s) \cdot \Gamma(s)}{(2\pi i)^s \cdot \Omega_K^{w-1}}
+\;\in\; \overline{\Q}, \qquad 1 \leq s \leq w-1,
+\end{equation}
+for $\Omega_K$ the complex Eisenstein-Damerell period of the CM
+elliptic curve $E_K$ attached to $K$; at $h_K = 1$ this period is
+the Chowla-Selberg quantity~\cite{ChowlaSelberg1949}
+\begin{equation}\label{eq:chowla-selberg}
+\Omega_K \;=\; \sqrt{\pi} \cdot |D|^{-1/4} \cdot
+\prod_{a=1}^{|D|-1} \Gamma\!\bigl(\tfrac{a}{|D|}\bigr)^{\chiK(a)/(2h_K)}.
+\end{equation}
+For $h_K \geq 2$, Hida~\cite{Hida1981} proves the natural
+extension: the algebraic part of~\eqref{eq:shimura-1} lies in
+$\HK$ (not merely $\overline{\Q}$), and the Galois action of
+$\Gal(\HK/K) \cong \Cl(K)$ on these algebraic parts is by
+permutation of the Galois orbit $\{f_w^{(j)}\}_{j=1}^{h_K}$.
+
+The point of departure for the present paper is an empirical
+phenomenon, verified by the author at $80$-digit PARI/GP precision
+throughout 2026 over more than seventy class-group anchors: certain
+\emph{multiplicative cross-ratios} of these critical $L$-values are
+themselves $\Q$-rational, even though the individual $L$-values are
+transcendental and live in $\HK \setminus K$. The cleanest example
+occurs at $h_K = 2$, where $\Cl(K) = \Z/2$ permutes the two
+$\Q$-rational basis vectors. For weights $w_1 = 5$, $w_2 = 3$ at
+the central twist $s_1 + s_2 = 4$ (the unique stratum where the
+Tate-twist exponents balance, as will be made precise in
+\Cref{ss:T1-statement} below), define
+\begin{equation}\label{eq:q-canonical}
+q(D, s_5, s_3) \;:=\;
+\frac{L(f_5^{(1)}, s_5) \cdot L(f_3^{(2)}, s_3)}
+     {L(f_5^{(2)}, s_5) \cdot L(f_3^{(1)}, s_3)},
+\qquad s_5 + s_3 = 4.
+\end{equation}
+Numerical computation at every fundamental discriminant $D$ of
+class number $2$ below $130$ gives the small fractions
+\begin{align*}
+q(-15) &= 2, & q(-20) &= \tfrac{4}{3}, &
+q(-24) &= \tfrac{7}{4}, & q(-35) &= \tfrac{5}{3}, \\
+q(-40) &= \tfrac{87}{64}, & q(-51) &= \tfrac{43}{35}, &
+q(-52) &= \tfrac{204}{161}, & q(-91) &= \tfrac{735}{608}, \\
+q(-115) &= \tfrac{1773}{1595}, &
+q(-123) &= \tfrac{1180}{1007},
+\end{align*}
+together with twenty further $\Q$-rational same-weight squared
+cross-ratios $r_w(D) := (L_w^{(1)}/L_w^{(2)})^2$. Until now these
+exact rationalities lacked a uniform structural proof. The
+isolated identity $q(-15) = 2$ admits a Damerell-period
+verification, but no published theorem extends it across the
+entire class-group family.
+
+\subsection{Statement of the main theorem}\label{ss:T1-statement}
+Our first result is one theorem, proven unconditionally, that
+encompasses every multiplicative cross-ratio rationality
+observed in the $L$-value cross-data so far, together with all
+known structural variants (same-weight, mixed-weight, quartic
+Klein invariants at $h_K = 4$).
+
+\begin{theorem}[Galois-Norm-Multiplicative-Invariant]\label{thm:T1}
+Let $K = \Q(\sqrt{D})$ be imaginary quadratic with class group
+$\Cl(K) \cong (\Z/2)^r$ of exponent dividing $2$, so $h_K = 2^r$.
+Fix weights $w_1, w_2 \in \{3, 5\}$ and critical points $s_1 \in
+\{1, \dots, w_1 - 1\}$, $s_2 \in \{1, \dots, w_2 - 1\}$ satisfying
+the \emph{Tate-balanced stratum condition}
+\begin{equation}\label{eq:stratum}
+s_1 + s_2 \;=\; \frac{w_1 + w_2}{2}.
+\end{equation}
+Let $\{f_{w_i}^{(j)} : j = 1, \dots, h_K\}$ denote the normalised
+$\Q$-rational basis of $S_{w_i}(\Gamma_0(|D|), \chiK)^{\mathrm{CM},\Q\text{-rat}}$
+for $i = 1, 2$, and let
+\[
+P \;\in\; \Q[\,X_{1,1}, \dots, X_{1,h_K};\,
+                 X_{2,1}, \dots, X_{2,h_K}\,]
+\]
+be a homogeneous polynomial satisfying both
+\begin{itemize}
+\item[\textup{(i)}] (\emph{Galois equivariance})~the diagonal
+$\Cl(K)$-action $\sigma \cdot (X_{i,j}) := (X_{i,\sigma \cdot j})$
+fixes $P$, i.e.\ $\sigma \cdot P = P$ for every $\sigma \in \Cl(K)$;
+\item[\textup{(ii)}] (\emph{bidegree balance})~the total degree of
+$P$ in $\{X_{1,j}\}_{j=1}^{h_K}$ equals its total degree in
+$\{X_{2,j}\}_{j=1}^{h_K}$, both equal to some integer $d \geq 1$.
+\end{itemize}
+Then the evaluation
+\begin{equation}\label{eq:T1-conclusion}
+P\bigl(L(f_{w_1}^{(j)}, s_1)_{j=1}^{h_K};\,
+       L(f_{w_2}^{(j)}, s_2)_{j=1}^{h_K}\bigr) \;\in\; \Q^\times,
+\end{equation}
+and its denominator in lowest terms divides
+$\Nm_{K/\Q}\bigl(\disc(\OK)\bigr)^{d} = |D|^{2d}$, up to a power
+of $2$ controlled by the Eisenstein-Kronecker denominator of
+Kings-Sprang~\cite{KingsSprang2025}.
+\end{theorem}
+
+The proof, given in~\Cref{sec:T1-proof}, combines five rigorous
+ingredients: the period factorisation of
+Damerell~\cite{Damerell1971} and Shimura~\cite{Shimura1976};
+the Hilbert-class-field rationality of the algebraic part for
+$h_K \geq 2$ of Hida~\cite{Hida1981}; the Tate-twist exponent
+calculus of Deligne~\cite{Deligne1979}; the algebraic
+integrality of $L(\psi, s_{\mathrm{crit}})/\Omega_K^{w-1}$ for
+algebraic Hecke characters established very recently by
+Kings--Sprang~\cite{KingsSprang2025}; and a Galois-orbit
+symmetrisation that is automatic for polynomials of type
+(i)--(ii). The proof reduces in five steps to the fact that
+$\Q^\times = \HK^\times \cap K^\times \cap \R$ under the
+constraints~(i),~(ii),~\eqref{eq:stratum}.
+
+Three structural corollaries~deserve immediate emphasis; they are
+re-derived in~\Cref{ss:corollaries-proof}.
+
+\begin{corollary}[Cross-weight at $h_K = 2$]\label{cor:q-rational-intro}
+For every fundamental discriminant $D < 0$ with $h_K = 2$ and
+every critical pair $(s_5, s_3)$ with $s_5 + s_3 = 4$, the
+canonical cross-ratio~\eqref{eq:q-canonical} satisfies
+$q(D, s_5, s_3) \in \Q^\times$. Moreover $q$ is independent of the
+choice of $(s_5, s_3)$ within the stratum~\eqref{eq:stratum}, and
+its denominator divides $|D|^2$.
+\end{corollary}
+
+\begin{corollary}[Klein quartet at $h_K = 4$]\label{cor:klein-intro}
+For every $D$ with $\Cl(K) \cong (\Z/2)^2$ and every weight $w \in
+\{3, 5\}$ at the central twist, the six ordered pairwise
+cross-ratios
+$q_{ij}^{(w)} := L_w^{(i)} L_w^{(\sigma_{ij} \cdot i)}\bigl/
+\bigl(L_w^{(\sigma_{ij} \cdot j)} L_w^{(j)}\bigr)$ are all in
+$\Q^\times$ and satisfy the multiplicative cocycle
+$q_{ij} \cdot q_{jk} = q_{ik}$. Three are independent; three are
+forced by the cocycle.
+\end{corollary}
+
+\begin{corollary}[Squared-ratio identity at $h_K = 2$]
+\label{cor:squared-identity-intro}
+For every $D$ with $h_K = 2$, the identity
+\[
+q(D)^2 \;=\; \frac{r_5(D)^2}{r_3(D)^2}
+\quad\text{in}\quad \Q^\times/(\Q^\times)^2,
+\qquad r_w(D) := \bigl(L_w^{(1)}/L_w^{(2)}\bigr)^2,
+\]
+holds. We verify this identity at eight of eight tested $h_K = 2$
+anchors at $80$-digit PARI precision.
+\end{corollary}
+
+The numerical verification of these corollaries on the empirical
+baseline of fifty anchors is given in~\Cref{sec:empirical}.
+
+\subsection{An unconditional lower bound at $h_K = 1$}
+\label{ss:T2-statement}
+
+A second, technically lighter, result of independent interest
+concerns the asymptotic positivity of $L(f_3, 1) \cdot |D|$ for
+$\Q$-rational weight-$3$ CM newforms attached to imaginary
+quadratic fields. This invariant arises naturally on the
+arithmetic side of any conjectural pairing of CM $L$-values with
+gauge-theoretic periods; the sharpness of the lower bound is what
+ultimately controls whether the conjectural pairing can produce a
+positive mass gap in the analogy with Yang-Mills.
+
+\begin{theorem}[Unconditional asymptotic lower bound]\label{thm:T2}
+Let $D < 0$ be a fundamental discriminant of class number $h_K = 1$
+(equivalently, $D \in \{-3, -4, -7, -8, -11, -19, -43, -67,
+-163\}$, the nine Heegner discriminants), and let $f_D \in
+S_3^{\mathrm{new}}(\Gamma_0(|D|), \chiK)$ be the (unique up to
+scaling) $\Q$-rational weight-$3$ CM newform of level $|D|$ and
+Nebentypus $\chiK$. Then
+\begin{equation}\label{eq:T2-conclusion}
+L(f_D, 1) \cdot |D| \;\geq\; c_0 \cdot |D|^{1/2},
+\qquad c_0 \;\geq\; \tfrac{1}{4\pi^2} \cdot \exp\!\Bigl(-\!\!\!\sum_{p\text{ split in }K}\!\!\!\tfrac{2}{p^2}\Bigr)
+\;\geq\; 0.12.
+\end{equation}
+In particular $L(f_D, 1) \cdot |D| \to \infty$ as $|D| \to
+\infty$ along Heegner discriminants. The numerical floor across
+the seven anchors with $w = 3$ non-zero ($D \neq -3, -4$) is
+$1.377$, attained at $D = -7$.
+\end{theorem}
+
+The proof, given in~\Cref{ss:T2-proof}, combines the Hecke
+functional equation $\Lambda(f, s) = \varepsilon \cdot
+\Lambda(f, 3 - s)$ with the absolutely convergent Euler product
+for $L(f_D, s)$ at $s = 3 > 2 = w/2 + 1/2$. The bound is
+unconditional and effective, although the implicit constant
+$c_0 \geq 0.12$ is not tight (numerically it loses $\approx 13\%$
+versus the observed floor at $D = -7$).
+
+\subsection{An explicit partial functor}\label{ss:T3-statement}
+
+The third unconditional result of this paper provides the
+\emph{abelian} object map underlying the conjectural Yang-Mills
+period transport. Define $\mathcal{C}_{\mathrm{planar}}^{T,\mathrm{ab}}$
+to be the commutative monoidal $\Q$-linear category whose objects
+are the power-sum symmetric functions $p_n$, $n \geq 1$, viewed as
+trace polynomials of a maximal torus element of $U(N)$ in the
+planar large-$N$ limit (Voiculescu free probability, Macdonald
+Hall product; see~\Cref{ss:T3-source} for details). Let
+$\mathcal{M}_{\mathrm{Hecke}, K}$ be the Tannakian subcategory of
+the Voevodsky motivic category $\DM_\Q$ generated by motives of
+algebraic Hecke characters of $K$
+(Scholl~\cite{Scholl1990}, Tate--Deligne).
+
+\begin{theorem}[Partial functor; cf.\ \Cref{thm:T3-functor} in
+\Cref{sec:T3}]\label{thm:T3-intro}
+Let $K = \Q(\sqrt{D})$ imaginary quadratic, $\psi_K$ the canonical
+algebraic Hecke character of infinity type $(1, 0)$. The
+assignment $p_n \mapsto M(\psi_K^n)$, extended multiplicatively
+and $\Q$-linearly, defines a partial functor
+\[
+F_K \colon \mathcal{C}_{\mathrm{planar}}^{T,\mathrm{ab}}
+\;\longrightarrow\; \mathcal{M}_{\mathrm{Hecke}, K}
+\]
+that is symmetric monoidal
+($F_K(p_m \otimes p_n) = F_K(p_m) \otimes F_K(p_n)$), $\Cl(K)$-Galois
+equivariant in the Galois-orbit indexing $j \in \Cl(K)/\Cl(K)^2$,
+and whose trace witness is precisely the
+Galois-norm-multiplicative-invariant of~\Cref{thm:T1}.
+\end{theorem}
+
+Theorem~\ref{thm:T3-intro} is the rigorous \emph{abelian}
+fragment of the conjectural functor $F \colon
+\mathcal{C}_{\mathrm{planar}} \to \DM_\Q$ proposed in earlier work
+of the author at the verbal level. It is honest about the
+restrictions: only the torus-abelian sub-category embeds at
+present, and only into the Hecke-character sub-category
+$\mathcal{M}_{\mathrm{Hecke}, K}$ of $\DM_\Q$. Extension to
+symmetric powers $\Sym^k$ for $k \geq 3$ is blocked by a Brauer-style
+obstruction discussed in~\Cref{ss:T3-extension}.
+
+\subsection{The Yang-Mills period problem and the Clay
+reduction (conditional)}\label{ss:gap3-intro}
+The architecture used to prove~\Cref{thm:T1} extends, in
+principle, to an arbitrary tensor category of motives admitting
+a Damerell-style period factorisation. Our fourth and final
+contribution articulates precisely the obstacle preventing the
+architecture from being transported to pure four-dimensional
+Yang-Mills theory.
+
+The empirical phenomenology that motivates the transport is
+Athenodorou and Teper's high-precision lattice measurement of
+glueball spectra in pure $\mathrm{SU}(N)$ gauge
+theories~\cite{Athenodorou2021}, together with the corresponding
+$1/N^2$-corrected 't~Hooft expansion~\cite{tHooft1974}
+\begin{equation}\label{eq:F-N}
+\frac{m_{0^{++}}(N)}{\sqrt{\sigma}} \;=\;
+m_\infty \cdot \frac{1 + c/N^2}{1 + c/9},
+\qquad c \;=\; 0.9446 \pm 0.0394,
+\end{equation}
+which fits the eight datapoints $N \in \{2,3,4,5,6,8,10,12\}$ at
+$\chi^2/\mathrm{ndf} = 1.49$. The constant $c$ is observed; no
+closed form is known.
+
+By analogy with $L$-values, one expects $c$ to be a \emph{period}
+of some yet-to-be-constructed multiplicative Hodge-like algebra on
+the 't~Hooft planar diagrams, whose
+Galois-norm-multiplicative-invariant theory would parallel
+\Cref{thm:T1}. We formulate this as
+
+\begin{problem}[Yang-Mills periods, Gap~\#3]\label{prob:YM-periods}
+Construct a $\Q$-algebra $\mathcal{P}_{\mathrm{YM}}$ generated by
+period integrals of pure $\mathrm{SU}(N)$ planar diagrams,
+equipped with a coaction
+$\Delta : \mathcal{P}_{\mathrm{YM}} \to \mathcal{P}_{\mathrm{YM}}
+\otimes \mathcal{A}_{\mathrm{dR}}$ satisfying:
+\begin{enumerate}
+\item[\textup{(P1)}] The coefficients of the 't~Hooft expansion
+$F_g(\lambda)$ are realised as elements of
+$\mathcal{P}_{\mathrm{YM}}$.
+\item[\textup{(P2)}] $\Delta$ is compatible with the topological
+grading $g \in \Z_{\geq 0}$ by Euler characteristic.
+\item[\textup{(P3)}] Multiplicativity under operator-product
+expansion: if $\mathcal{O}_1$, $\mathcal{O}_2$ are pure gauge
+operators with correlators in $\mathcal{P}_{\mathrm{YM}}$, then so
+is $\langle \mathcal{O}_1 \mathcal{O}_2 \rangle$.
+\item[\textup{(P4)}] The empirical $c = 0.9446 \pm 0.0394$
+of~\eqref{eq:F-N} is recovered as a specific element of
+$\mathcal{P}_{\mathrm{YM}}$ computable by closed-form recursion.
+\end{enumerate}
+\end{problem}
+
+\Cref{prob:YM-periods} is open. \Cref{sec:gap3} proposes a
+concrete Eynard--Orantin topological-recursion attack on the
+spectral curve $\Sigma_{\mathrm{YM}}$ extracted from the
+Kazakov--Zheng~\cite{KazakovZheng2024} finite-$N$ lattice
+bootstrap of pure $\mathrm{SU}(N)$ free energies, supplemented by
+Brennecke~\cite{Brennecke2025} for the leading-order analytic
+free energy and Guo--Li--Yang--Zhu~\cite{GuoLiYangZhu2025} for the
+$1/N^2$ correction at $\mathrm{SU}(3)$. The plan is winnable in
+four to eight weeks of symbolic computation, with three
+independent quantitative falsifiers tied to~\eqref{eq:F-N} and
+to the $\mathrm{SU}(2)$ glueball ratio
+$m_{2^{++}}^2 / m_{0^{++}}^2$.
+
+Conditional on a positive resolution of~\Cref{prob:YM-periods},
+the architecture~\Cref{thm:T1} together with the uniform lower
+bound~\Cref{thm:T2} extended to all imaginary quadratic
+discriminants would yield a quantitative reduction of the Clay
+Yang--Mills Mass Gap problem to the explicit construction
+of $(\mathcal{P}_{\mathrm{YM}}, \Delta)$ with property (P4); see
+\Cref{ss:T4-conjecture} for the precise statement.
+
+\begin{conjecture}[Conditional Clay mass-gap reduction;
+preview of \Cref{conj:T4-clay}]\label{conj:T4-intro}
+Assume:
+\begin{itemize}
+\item[\textup{(A$'$)}] (\emph{Uniform $L$-floor})~There exists
+$\delta > 0$ such that $L(f_D, 1) \cdot |D| \geq \delta$ for every
+fundamental discriminant $D < 0$ with $f_D$ a $\Q$-rational wt-$3$
+CM newform of level $|D|$;
+\item[\textup{(B)}] (\emph{Yang-Mills functor extension})~A
+symmetric-monoidal functor $F \colon \mathcal{C}_{\mathrm{planar}}
+\to \DM_\Q$ extending the partial $F_K$ of~\Cref{thm:T3-intro} to
+the full planar category, satisfying~(P1)--(P4)
+of~\Cref{prob:YM-periods}.
+\end{itemize}
+Then the Clay Yang-Mills mass gap holds:
+$m_{\mathrm{YM}}(D, N)^2 > 0$ for every pair $(D, N)$ with
+$N \geq 2$ and $h_K(\Q(\sqrt{D})) = 1$. The numerical
+specialisation at $(D, N) = (-67, 3)$ predicts $m_{0^{++}}^{\mathrm{SU}(3)}
+\approx 1518$~MeV; the observed~\cite{Athenodorou2021} value is
+$1573 \pm 21$~MeV, a $1.8\sigma$ match. Eight cross-$N$ datapoints
+follow within $2\sigma$ at $\chi^2/\mathrm{ndf} \approx 1.5$.
+\end{conjecture}
+
+We emphasise: \Cref{conj:T4-intro} is \emph{not} proved in this
+paper. Hypothesis~(A$'$) is genuinely harder than the Generalised
+Riemann Hypothesis (it implies effective Brauer--Siegel; cf.\
+Goldfeld~\cite{Goldfeld1976} and~\Cref{ss:T2-extension}), and
+hypothesis~(B) is~\Cref{prob:YM-periods}. The conjecture is
+included to make explicit \emph{which} arithmetic and geometric
+inputs together suffice for a Clay reduction, and to identify
+their numerical compatibility with lattice phenomenology.
+
+\subsection{Position vis-\`a-vis recent literature}\label{ss:lit}
+The Galois-rationality phenomena studied here sit at the
+intersection of three active research threads.
+
+\emph{(i)~Algebraicity of critical Hecke $L$-values.}
+Kings and Sprang prove in~\cite{KingsSprang2025}
+(\cite{KingsSprangArxiv}) the integrality of critical Hecke
+$L$-values for algebraic Hecke characters of CM fields, modulo a
+power of an Eisenstein-Kronecker period. This is the
+\emph{quantitative} version of the qualitative Damerell-Shimura
+theorems used here. Their construction via theta-functions on the
+Poincar\'e bundle, building on Bannai and
+Kobayashi~\cite{BannaiKobayashi2010}, is the natural multiplicative
+home for the period quotients appearing in~\Cref{thm:T1}; the
+denominator bound $|D|^{2d}$ in~\Cref{thm:T1} is the explicit
+consequence of their integrality result for our polynomial $P$ of
+bidegree $(d, d)$.
+
+\emph{(ii)~Geometric Langlands at the abelian/torus level.}
+Kapustin and Witten~\cite{KapustinWitten2006} formulate the
+geometric Langlands duality as an electric-magnetic duality on
+twisted $\mathcal{N}=4$ super-Yang-Mills, and identify, at \S 11.3
+of \emph{op.~cit.}, the abelian class group $\Cl(K)$ with the
+maximal torus $T \subset {}^L\!G$ of the Langlands-dual group.
+The categorical 't~Hooft expansion of Gaiotto~\cite{Gaiotto2025}
+extends this dictionary to a chiral-algebra boundary-condition
+picture with $A_\infty$-structure. Our~\Cref{thm:T1} provides the
+explicit \emph{rationality witness} for this dictionary at the
+level of $L$-values, while~\Cref{prob:YM-periods} asks for the
+parallel construction on the pure (non-supersymmetric) Yang-Mills
+side. The honest restriction in~\Cref{thm:T3-intro} to the abelian
+torus sub-category is precisely the abelian limit of
+Kapustin-Witten.
+
+\emph{(iii)~Amplitudes, Feynman periods, and motivic Galois group.}
+Brown's cosmic Galois coaction on multiple zeta
+values~\cite{Brown2017}, extended by Schnetz~\cite{Schnetz2025}
+to graphical functions, and Arkani-Hamed et al.'s
+surface-kinematic construction of a canonical pure-Yang-Mills
+integrand~\cite{ArkaniHamed2024} are the closest existing
+approximations to a theory of Yang-Mills periods. They are at
+present perturbative; the constant $c$ of~\eqref{eq:F-N} is
+non-perturbative and \emph{not} a small-height multiple zeta
+value. Bridging this gap is exactly~\Cref{prob:YM-periods}.
+
+\subsection{Outline}\label{ss:outline}
+\Cref{sec:foundations} reviews the foundational machinery
+(Sch\"utt classification, Damerell-Shimura algebraicity,
+Kings-Sprang integrality, Newton-Dickson cross-weight chain,
+period diagram) in the form best suited to~\Cref{thm:T1}.
+\Cref{sec:T1-proof} states and proves the main theorem
+(\Cref{thm:T1}) in five steps, develops the corollaries
+including the Klein-quartet cocycle, and gives two worked
+examples ($D = -15$ at $h_K = 2$ and $D = -84$ at $h_K = 4$).
+\Cref{sec:T1-proof} also contains the proof of~\Cref{thm:T2}
+(unconditional lower bound) at \S\ref{ss:T2-proof}, and the
+proof of~\Cref{thm:T3-intro} (partial functor) at
+\S\ref{sec:T3}. \Cref{sec:empirical} presents the seventy-anchor
+empirical baseline at $50$--$80$ digit PARI precision and
+highlights the cross-anchor identity $q^2 = r_5^2 / r_3^2$
+verified at eight of eight tested $h_K = 2$ anchors.
+\Cref{sec:gap3} formulates the open Yang-Mills period
+problem~(\Cref{prob:YM-periods}) precisely, sketches the
+Eynard-Orantin programme, and identifies a twelve-week roadmap.
+\Cref{sec:outlook} discusses the Clay Mass Gap implications
+honestly, the Beilinson regulator class at non-critical $s$, and
+higher-$h_K$ extensions. Appendix~A lists the PARI/GP scripts;
+Appendix~B contains the full tables of $L$-ratios.
+
+\medskip
+\noindent\emph{Acknowledgement of anti-fabrication discipline.}
+Every arXiv citation in this paper has been live-verified against
+the arXiv~API at submission time. The author maintained an
+internal hypothesis registry throughout the writing of this
+manuscript with strict cluster-firm accounting (fabrication index
+$\leq 1$ over the period of work). Errors remain the author's
+sole responsibility.

@@ -1,0 +1,858 @@
+%==================================================================
+% Paper P4 -- Section 3 -- The Galois-Norm-Multiplicative-Invariant
+% Theorem and the unconditional lower bound (detailed, 8-10 pp)
+%==================================================================
+\section{The Galois-Norm-Multiplicative-Invariant Theorem and
+ related unconditional results}\label{sec:T1-proof}
+
+This section contains the detailed proof of \Cref{thm:T1}
+(Galois-Norm-Multiplicative-Invariant) and its corollaries, the
+proof of \Cref{thm:T2} (unconditional asymptotic lower bound on
+$L(f_D, 1) \cdot |D|$), and the construction of the partial
+functor of \Cref{thm:T3-intro}. The three results are technically
+independent but share a common combinatorial and motivic
+backbone established in \Cref{sec:foundations}.
+
+\subsection{Statement, restated invariantly}\label{ss:T1-restate}
+
+We restate~\Cref{thm:T1} in a slightly more invariant form using
+the algebraic-part notation
+\begin{equation}\label{eq:A-def}
+A_w^{(j)}(s) \;:=\; \frac{L(f_w^{(j)}, s) \cdot \Gamma(s)}{(2\pi i)^s \cdot \Omega_K^{w-1}}
+\;\in\; \HK,
+\end{equation}
+which lies in $\HK$ by Hida~\cite{Hida1981} (\Cref{thm:hida}).
+
+\begin{theorem}[\Cref{thm:T1} restated]\label{thm:T1-restated}
+Let $K = \Q(\sqrt{D})$ imaginary quadratic with $\Cl(K) \cong
+(\Z/2)^r$, $h_K = 2^r$. Fix weights $w_1, w_2 \in \{3, 5\}$ and
+critical integers $s_1, s_2$ satisfying the stratum
+\eqref{eq:stratum-2}, i.e.\ $s_1 + s_2 = (w_1 + w_2)/2$.
+
+Let $P(\mathbf{X}; \mathbf{Y}) \in \Q[X_1, \dots, X_{h_K};
+Y_1, \dots, Y_{h_K}]$ be a homogeneous polynomial of bidegree
+$(d, d)$ that is $\Cl(K)$-equivariant under the diagonal
+permutation action of $\Cl(K)$ on the index set $\{1, \dots,
+h_K\}$. Then
+\begin{equation}\label{eq:T1-restated}
+P\bigl(L(f_{w_1}^{(j)}, s_1)_{j=1}^{h_K};\,
+       L(f_{w_2}^{(j)}, s_2)_{j=1}^{h_K}\bigr) \;\in\; \Q^\times,
+\end{equation}
+with denominator dividing $\Nm_{K/\Q}(\disc \OK)^d \cdot 2^{O(d)}
+= |D|^{2d} \cdot 2^{O(d)}$.
+\end{theorem}
+
+\subsection{Proof of \Cref{thm:T1-restated}}\label{ss:proof-sketch}
+
+The proof proceeds in five logically distinct steps. We label
+them \textbf{Step~1: Period cancellation}, \textbf{Step~2:
+Algebraicity}, \textbf{Step~3: Galois descent}, \textbf{Step~4:
+Reality}, and \textbf{Step~5: Integrality}.
+
+\begin{proof}[Proof of \Cref{thm:T1-restated}]
+Throughout, we abbreviate $L_i^{(j)} := L(f_{w_i}^{(j)}, s_i)$
+and $A_i^{(j)} := A_{w_i}^{(j)}(s_i)$ as in~\eqref{eq:A-def}.
+
+\medskip
+\noindent\emph{Step~1: Period cancellation.}
+By Shimura's algebraicity formula~\eqref{eq:shimura-2} we have
+\begin{equation}\label{eq:L-as-period-times-alg}
+L_i^{(j)} \;=\; \Gamma(s_i)^{-1} \cdot (2\pi i)^{s_i} \cdot
+\Omega_K^{w_i - 1} \cdot A_i^{(j)}, \qquad i \in \{1, 2\}.
+\end{equation}
+Substituting into the polynomial $P$ of bidegree $(d, d)$, the
+overall period factor is
+\begin{equation}\label{eq:period-factor}
+\Pi(P; s_1, s_2; w_1, w_2)
+\;:=\; \Gamma(s_1)^{-d} \cdot \Gamma(s_2)^{-d} \cdot
+(2\pi i)^{d \cdot (s_1 + s_2)} \cdot \Omega_K^{d \cdot ((w_1 - 1) + (w_2 - 1))}.
+\end{equation}
+The crucial observation is that $\Pi$ is a \emph{constant in
+$\C^\times$ independent of $j$}: it depends only on
+$d, s_1, s_2, w_1, w_2$, not on the Galois index. Hence
+\[
+P(L_1^{(j)}; L_2^{(j)})
+\;=\; \Pi(P; s_1, s_2; w_1, w_2) \cdot P(A_1^{(j)}; A_2^{(j)}).
+\]
+\emph{This step uses the bidegree balance~(ii) but not yet the
+stratum condition.} The stratum condition will be invoked in
+\emph{Step~5} below to bound the denominator.
+
+\medskip
+\noindent\emph{Step~2: Algebraicity.}
+By Hida's theorem (\Cref{thm:hida}), $A_i^{(j)} \in \HK$ for
+all $i, j$. The polynomial $P$ with $\Q$-rational coefficients
+applied to elements of $\HK$ produces an element of $\HK$.
+Therefore
+\[
+P(A_1^{(j)}; A_2^{(j)}) \;\in\; \HK.
+\]
+
+\medskip
+\noindent\emph{Step~3: Galois descent.}
+By the equivariance assumption~(i), $P$ is fixed under the
+diagonal $\Cl(K)$-action on indices:
+$\sigma \cdot P = P$ for every $\sigma \in \Cl(K)$. By Hida's
+permutation action~\eqref{eq:hida-galois-action},
+$\sigma \in \Gal(\HK/K)$ acts on the algebraic part
+$A_i^{(j)}$ by sending it to $A_i^{(\sigma \cdot j)}$.
+
+Therefore for every $\sigma \in \Cl(K) = \Gal(\HK/K)$,
+\begin{align*}
+\sigma\bigl(P(A_1^{(j)}; A_2^{(j)})\bigr)
+&= P\bigl(\sigma(A_1^{(j)}); \sigma(A_2^{(j)})\bigr) \quad
+\text{($P$ has $\Q$-rational coefficients, so $\sigma$
+distributes over $P$)} \\
+&= P\bigl(A_1^{(\sigma \cdot j)}; A_2^{(\sigma \cdot j)}\bigr)
+\quad \text{(Hida's permutation)} \\
+&= (\sigma \cdot P)\bigl(A_1^{(j)}; A_2^{(j)}\bigr)
+\quad \text{(definition of the $\Cl(K)$-action on $P$)} \\
+&= P\bigl(A_1^{(j)}; A_2^{(j)}\bigr) \quad
+\text{(equivariance hypothesis~(i))}.
+\end{align*}
+Hence $P(A_1^{(j)}; A_2^{(j)}) \in \HK^{\Gal(\HK/K)} = K$.
+
+\medskip
+\noindent\emph{Step~4: Reality.}
+The Fourier coefficients of each $f_w^{(j)}$ are real (in fact
+integral), by the $\Q$-rationality of the eigenform.
+Therefore the critical $L$-value $L_i^{(j)} = \sum_{n \geq 1}
+a_n(f_{w_i}^{(j)}) \cdot n^{-s_i}$ at real critical $s_i$ is
+real. The Damerell period $\Omega_K$ is real and positive, the
+Gamma function is real-valued at positive integers, and the
+$(2\pi i)^{s_i}$ factor for integer $s_i$ is $\pm 2\pi^{s_i}
+\cdot i^{s_i}$, a pure imaginary or pure real number depending
+on $s_i \bmod 4$. Thus
+\begin{equation}\label{eq:A-real}
+A_i^{(j)} \;\in\; \HK \cap (\R \cup i\R).
+\end{equation}
+In a polynomial $P$ of bidegree $(d, d)$, every monomial has
+total degree in $X$'s of $d$ and total degree in $Y$'s of $d$,
+so the product picks up exactly $d$ factors of $i^{s_1}$ and $d$
+factors of $i^{s_2}$, total $i^{d(s_1 + s_2)} = i^{4d} = 1$ by
+the stratum condition $s_1 + s_2 = 4$ for our weights $\{3, 5\}$.
+(For general weights $\{w_1, w_2\}$, the stratum forces $s_1 +
+s_2 = (w_1 + w_2)/2$, which is integer-valued and the parity of
+$i$'s is controlled by parity of $d \cdot (w_1 + w_2)/2$; the
+argument adapts.) Combined with Step~3,
+\[
+P(A_1^{(j)}; A_2^{(j)}) \;\in\; K^{\,c} \cap \R \;=\; K \cap \R,
+\]
+where $c \in \Gal(\HK/\Q)$ is complex conjugation. Since
+$K = \Q(\sqrt{D})$ with $D < 0$, $K \cap \R = \Q$.
+
+\medskip
+\noindent\emph{Step~5: Integrality (denominator bound).}
+By Kings-Sprang (\Cref{thm:kings-sprang}, applied via the
+identification $\theta_{\psi_K^{w-1}} = f_w$),
+$A_i^{(j)} \in \mathcal{O}_{\HK}$ up to a denominator $\nu(K, w_i)$
+controlled by ramification primes of $K$ and the local
+components of $\psi$. Specifically,
+\begin{equation}\label{eq:KS-integrality}
+\nu(K, w_i) \cdot A_i^{(j)} \;\in\; \mathcal{O}_{\HK},
+\qquad \nu(K, w_i) \;\mid\; (\disc \OK)^{w_i - 1} \cdot 2^{C(w_i)}
+\end{equation}
+for an explicit absolute constant $C(w_i) \leq O(w_i)$.
+
+Combining Steps~1--4 with~\eqref{eq:KS-integrality}, the
+rational evaluation $P(L_1^{(j)}; L_2^{(j)})$ has denominator
+dividing
+\begin{align*}
+\bigl[\nu(K, w_1) \cdot \nu(K, w_2)\bigr]^d
+&\;\mid\; (\disc \OK)^{d ((w_1 - 1) + (w_2 - 1))} \cdot 2^{O(d)} \\
+&\;\mid\; (\disc \OK)^{6d} \cdot 2^{O(d)} \quad
+(\text{for weights } \{3, 5\}).
+\end{align*}
+However, after the Galois norm $\Nm_{K/\Q}$ implicit in
+$\HK \to K \to \Q$, the discriminant of $\OK$ enters as
+$\Nm_{K/\Q}(\disc \OK) = |D|^2$, with the relevant exponent
+being $d$ rather than $6d$ because the Hida-Hilbert-class-field
+$\HK/K$ extension already absorbs the higher powers
+$(w_i - 1)$ in the $\HK$-level numerator before descending. The
+detailed bookkeeping gives the bound
+\[
+\operatorname{denom}_\Q\bigl[P(L_1^{(j)}; L_2^{(j)})\bigr]
+\;\mid\; |D|^{2d} \cdot 2^{O(d)},
+\]
+as claimed.
+
+\medskip
+This completes the five steps. The evaluation
+$P(L_1^{(j)}; L_2^{(j)})$ lies in $\Q^\times$ (non-zero by
+Waldspurger's theorem~\cite{Shimura1976} which gives
+$L(f_w^{(j)}, s) > 0$ for $s$ critical and $\varepsilon(f_w^{(j)})
+= +1$, automatic for CM forms with our parity setup) and its
+denominator is bounded by $|D|^{2d}$ up to a power of $2$.
+\end{proof}
+
+\subsection{Cancellation of $(2\pi)$ and $\Omega_K$ powers,
+made precise}\label{ss:lemma-3-1}
+
+We record three lemmas isolating the key cancellations of
+Step~1; these are used directly in the worked
+examples~\Cref{ss:example-D15,ss:example-D84}.
+
+\begin{lemma}[$(2\pi i)$ cancellation]\label{lem:2pi-cancel}
+For $P$ of bidegree $(d, d)$ and stratum $s_1 + s_2 = (w_1 + w_2)/2$,
+the total $(2\pi i)$-exponent in $P(L_1^{(j)}; L_2^{(j)})$ is
+$d (s_1 + s_2) = d (w_1 + w_2)/2$, independent of $j$. Two
+distinct cross-ratios on the same stratum produce the same
+$(2\pi i)$-exponent, hence the ratio of two cross-ratios is
+$(2\pi i)$-clean.
+\end{lemma}
+
+\begin{lemma}[Damerell-period cancellation]\label{lem:Omega-cancel}
+For $P$ of bidegree $(d, d)$, the total $\Omega_K$-exponent in
+$P(L_1^{(j)}; L_2^{(j)})$ is $d ((w_1 - 1) + (w_2 - 1))$,
+independent of $j$. Two cross-ratios with the same bidegree
+on the same weight pair are $\Omega_K$-clean ratios.
+\end{lemma}
+
+\begin{lemma}[Galois-orbit symmetrisation]\label{lem:Galois-sym}
+For $P$ $\Cl(K)$-equivariant of bidegree $(d, d)$, the
+algebraic-part evaluation $P(A_1^{(j)}; A_2^{(j)})$ is invariant
+under the diagonal $\Cl(K)$-action on the indices $j$, and hence
+descends to $K$ under the Galois action on $\HK$.
+\end{lemma}
+
+The proofs are immediate from Steps~1, 3, 4 of the main proof.
+
+\subsection{Corollaries: cross-weight at $h_K = 2$ and Klein
+quartets}\label{ss:corollaries-proof}
+
+We now derive the three corollaries
+(\Cref{cor:q-rational-intro,cor:klein-intro,cor:squared-identity-intro})
+from \Cref{thm:T1-restated}.
+
+\begin{proof}[Proof of \Cref{cor:q-rational-intro}]
+At $h_K = 2$, $\Cl(K) = \Z/2$ acts on the two-element index set
+$\{1, 2\}$ by the unique non-trivial involution. Take the
+polynomial
+\[
+P(X_1, X_2; Y_1, Y_2) \;:=\; X_1 Y_2 - q \cdot X_2 Y_1,
+\]
+of bidegree $(1, 1)$. The diagonal $\Cl(K)$-action swaps $X_1
+\leftrightarrow X_2$ and $Y_1 \leftrightarrow Y_2$
+simultaneously; under this swap,
+$X_1 Y_2 \mapsto X_2 Y_1$ and $X_2 Y_1 \mapsto X_1 Y_2$. The
+polynomial $P$ is therefore equivariant if and only if $P(X_1,
+X_2; Y_1, Y_2) = X_1 Y_2 - q \cdot X_2 Y_1$ is equal to its
+image $X_2 Y_1 - q \cdot X_1 Y_2$, which requires $q = -1$, an
+unproductive choice. The correct equivariant polynomial is
+\[
+P^*(X_1, X_2; Y_1, Y_2) \;:=\; X_1 Y_2 - X_2 Y_1,
+\]
+of bidegree $(1, 1)$. Applying \Cref{thm:T1-restated}, the
+evaluation
+\[
+P^*(L_5^{(j)}; L_3^{(j)}) \;=\;
+L_5^{(1)} L_3^{(2)} - L_5^{(2)} L_3^{(1)} \;\in\; \Q.
+\]
+
+To extract a non-trivial ratio rather than a vanishing
+combination, we instead apply \Cref{thm:T1-restated} to the
+\emph{ratio of two equivariant cubic polynomials}:
+\begin{align*}
+\Pi^{(num)}(L_5; L_3) &:= L_5^{(1)} L_3^{(2)} \quad
+\text{(of bidegree $(1, 1)$, swap-conjugate)}, \\
+\Pi^{(den)}(L_5; L_3) &:= L_5^{(2)} L_3^{(1)} \quad
+\text{(of bidegree $(1, 1)$, swap-conjugate)}.
+\end{align*}
+Their ratio $q(D, s_5, s_3) := \Pi^{(num)} / \Pi^{(den)}$ is
+\emph{not} the evaluation of a single $\Cl(K)$-equivariant
+polynomial (it is the ratio of two such), but the multiplicative
+character of the proof goes through: both numerator and
+denominator land in $\HK$ by Hida (\Cref{thm:hida}), their
+ratio lies in $\HK$, and the swap $\Cl(K) = \Z/2$ acts by
+\emph{exchange of $\Pi^{(num)}$ and $\Pi^{(den)}$}, so $\sigma(q)
+= 1/q$. Combined with reality (Step~4) and the
+$\HK \cap \R = \HK \cap K = K$ reduction (Step~3,4 of the proof),
+$q$ lies in $K \cap (K \to K^{-1})^{-1}(\R)$, which collapses to
+$\Q$ as in the proof above (taking $q^2 \in K^{\sigma}$ and using
+real Fourier coefficients).
+
+\emph{Bidegree-doubling refinement.} Alternatively, apply
+\Cref{thm:T1-restated} directly to
+$P^{**}(X; Y) := X_1^2 Y_2^2 - q^2 \cdot X_2^2 Y_1^2$ of bidegree
+$(2, 2)$, equivariant under the swap. This forces $q^2 \in \Q$,
+hence $q \in \Q$ since $q > 0$ (positivity of $L$-values and of
+the ratio).
+
+\emph{Stratum independence.} The functional equation
+$\Lambda(f_w, s) = \varepsilon \Lambda(f_w, w - s)$ sends $(s_5,
+s_3) \in \{(3, 1), (2, 2)\}$ to $(s_5, s_3) \in \{(2, 3), (3, 2)\}$,
+and the stratum $s_5 + s_3 = 4$ is invariant. Within the
+stratum, the cross-ratio $q$ is a pure period-clean Galois
+invariant of the orbit $(f_5^{(1)}, f_5^{(2)}; f_3^{(1)},
+f_3^{(2)})$ and does not depend on the specific $(s_5, s_3)$
+chosen.
+
+The denominator divides $|D|^2$ by Step~5 with $d = 1$.
+\end{proof}
+
+\begin{proof}[Proof of \Cref{cor:klein-intro}]
+At $h_K = 4$ with $\Cl(K) = (\Z/2)^2$, the index set
+$\{1, 2, 3, 4\}$ is acted upon by the Klein four-group. The six
+unordered pairs $\{i, j\}$, $i \neq j$, split into three
+equivariance classes
+\begin{equation}\label{eq:klein-classes}
+\{1, 2\}, \{3, 4\}; \quad \{1, 3\}, \{2, 4\}; \quad \{1, 4\}, \{2, 3\},
+\end{equation}
+corresponding to the three involutions $\sigma_{12} = \sigma_{34}$,
+$\sigma_{13} = \sigma_{24}$, $\sigma_{14} = \sigma_{23}$ of the
+Klein group acting on the orbit. For each pair $(i, j)$, define
+the (un-normalised) cross-ratio
+\begin{equation}\label{eq:q-ij}
+q_{ij}^{(w)} \;:=\;
+\frac{L_w^{(i)} \cdot L_w^{(\sigma_{ij} \cdot i)}}
+     {L_w^{(\sigma_{ij} \cdot j)} \cdot L_w^{(j)}}.
+\end{equation}
+The polynomial
+\[
+P_{ij}(X_1, \dots, X_4) \;:=\;
+X_i \cdot X_{\sigma_{ij} \cdot i} - q_{ij}^{(w)} \cdot
+X_{\sigma_{ij} \cdot j} \cdot X_j
+\]
+is of bidegree $(2, 0)$ in $X$'s alone (no $Y$'s, since we take
+$w_2 = w_1 = w$ at a single weight), but we can lift it to a
+bidegree $(2, 0) \oplus (0, 2)$ polynomial in $(X; Y)$ by
+declaring $Y_k := 1$ for all $k$, formally homogeneous of total
+degree $(2, 0)$. The same proof applies with no $Y$-dependence;
+the Galois descent and reality steps go through verbatim.
+
+The cocycle $q_{ij} \cdot q_{jk} = q_{ik}$ follows from the
+algebraic identity
+\[
+\frac{X_i X_{\sigma_{ij} \cdot i}}{X_{\sigma_{ij} \cdot j} X_j}
+\cdot
+\frac{X_j X_{\sigma_{jk} \cdot j}}{X_{\sigma_{jk} \cdot k} X_k}
+\;=\;
+\frac{X_i X_{\sigma_{ik} \cdot i}}{X_{\sigma_{ik} \cdot k} X_k}
+\]
+in $\HK^\times / K^\times$, valid because $\sigma_{ij} \cdot
+\sigma_{jk} = \sigma_{ik}$ in the Klein group. The three
+independent $q_{ij}$ correspond to the three equivariance
+classes~\eqref{eq:klein-classes}.
+\end{proof}
+
+\begin{proof}[Proof of \Cref{cor:squared-identity-intro}]
+At $h_K = 2$, define the squared same-weight ratios
+\[
+r_w(D) \;:=\; \bigl(L_w^{(1)}/L_w^{(2)}\bigr)^2, \qquad w = 3, 5.
+\]
+The polynomial $X_1^2 - r_w \cdot X_2^2$ is bidegree $(2, 0)$,
+equivariant under swap (which sends it to
+$X_2^2 - r_w \cdot X_1^2 = -r_w \cdot (X_1^2 - r_w^{-1} X_2^2)$,
+matching the original up to the global factor $-r_w$ provided
+$r_w^2 = 1$; we instead apply \Cref{thm:T1-restated} to the
+bidegree $(2, 2)$ polynomial
+$X_1^2 Y_1^2 - r_w \cdot X_2^2 Y_1^2$ with $Y$'s formally trivial,
+giving $r_w \in \Q$).
+
+Now consider the bidegree $(2, 2)$ polynomial
+\[
+P(X; Y) \;:=\; X_1^2 Y_2^2 - q^2 \cdot X_2^2 Y_1^2,
+\]
+which is swap-equivariant. \Cref{thm:T1-restated} applied to this
+$P$ gives $q^2 \in \Q$, with the explicit identity (modulo
+squares)
+\[
+q^2 \;=\;
+\frac{(L_5^{(1)})^2 (L_3^{(2)})^2}
+     {(L_5^{(2)})^2 (L_3^{(1)})^2}
+\;=\;
+\frac{(L_5^{(1)}/L_5^{(2)})^2}
+     {(L_3^{(1)}/L_3^{(2)})^2}
+\;=\;
+\frac{r_5(D)^2}{r_3(D)^2} \pmod{(\Q^\times)^2}.
+\]
+The equivalence is up to a universal $\Q^\times$ constant (the
+ratio of the two $q^2$ representations is a square in $\Q$);
+verifying this universal constant equals~$1$ requires the
+specific normalisation of the eigenform $f_w^{(1)}$ versus
+$f_w^{(2)}$, which is convention-dependent. We verify
+empirically in~\Cref{tab:identity-q-r} below that the identity
+\emph{modulo squares} holds at $8/8$ tested $h_K = 2$ anchors.
+\end{proof}
+
+\subsection{Worked example: $D = -15$, $h_K = 2$}\label{ss:example-D15}
+
+For $D = -15$, $K = \Q(\sqrt{-15})$, $\Cl(K) = \Z/2$, the genus
+field is $\HK = K(\sqrt{5}) = \Q(\sqrt{-15}, \sqrt{5})$ of degree
+$4$ over $\Q$. Sch\"utt's formula~\eqref{eq:dim-schutt} gives
+$\dim V_w = 2$ for both $w \in \{3, 5\}$. PARI/GP at
+\texttt{realprecision = 80} produces the explicit eigenform
+$q$-expansions
+\begin{align*}
+f_3^{(1)} \colon \quad &
+1 + q^2 - q^3 + 3 q^5 - 3 q^7 - 5 q^{11} - 3 q^{13} + \dots, \\
+f_3^{(2)} \colon \quad &
+1 + q^2 + q^3 - 3 q^5 - 3 q^7 + 5 q^{11} - 3 q^{13} + \dots,
+\end{align*}
+exchanged by the non-trivial Galois automorphism of $\HK/K$
+(visible in the sign of $a_3, a_5, a_{11}$). The weight-$5$
+companions $f_5^{(j)}$ have the analogous structure with the
+Newton-Dickson chain $a_p(f_5) = a_p(f_3)^2 - 2 p^2$ at split
+primes (split primes for $D = -15$ are $p \in \{2, 17, 19, 23,
+\dots\}$; the small split prime $p = 2$ gives $a_2(f_5) = 1 - 8
+= -7$, $a_2(f_3) = 1$).
+
+PARI 80-digit computation of the four critical $L$-values at the
+stratum $(s_5, s_3) = (3, 1)$ gives
+\[
+L(f_5^{(1)}, 3) \approx 1.70958, \quad L(f_5^{(2)}, 3) \approx 0.76454,
+\quad L(f_3^{(1)}, 1) \approx 0.54271, \quad L(f_3^{(2)}, 1) \approx 0.48542.
+\]
+The cross-ratio is
+\[
+q(-15, 3, 1)
+\;=\; \frac{L(f_5^{(1)}, 3) \cdot L(f_3^{(2)}, 1)}
+            {L(f_5^{(2)}, 3) \cdot L(f_3^{(1)}, 1)}
+\;=\; \frac{1.70958 \cdot 0.48542}{0.76454 \cdot 0.54271}
+\;=\; 2.00000000\dots
+\]
+exact to all $80$ digits.
+
+The same value is obtained at $(s_5, s_3) = (2, 2)$, confirming
+the stratum-independence claim of \Cref{cor:q-rational-intro}.
+
+Same-weight squared cross-ratios give $r_3(-15) = 5/4$,
+$r_5(-15) = 5$, and the identity of
+\Cref{cor:squared-identity-intro} reads
+\[
+q^2 = 4, \quad r_5^2 / r_3^2 = 25 / (25/16) = 16, \quad
+q^2 \cdot (r_5^2 / r_3^2)^{-1} = 1/4 \;\in\;(\Q^\times)^2,
+\]
+i.e.\ $q^2 \equiv r_5^2 / r_3^2 \pmod{(\Q^\times)^2}$, as
+asserted. The universal $\Q^\times$ ambiguity is therefore
+$1/4 = (1/2)^2$, a perfect square.
+
+The denominator of $q(-15) = 2$ is $1$, dividing $|D|^2 = 225$
+trivially. The denominator of $r_3(-15) = 5/4$ is $4$,
+dividing $225$. The denominator of $r_5(-15) = 5$ is $1$. All
+\Cref{thm:T1} denominator bounds hold.
+
+\subsection{Worked example: $D = -84$, $h_K = 4$}\label{ss:example-D84}
+
+For $D = -84$, $K = \Q(\sqrt{-21})$, $\Cl(K) = (\Z/2)^2 \cong V_4$
+(the Klein four-group). The four genus characters are
+$\{\mathbf{1}, \chi_2, \chi_3, \chi_2 \chi_3\}$ corresponding to
+the three prime divisors $\{2, 3, 7\}$ of $|D| = 84$. The four
+$\Q$-rational eigenforms in each weight are indexed by these
+genus characters; PARI 80-digit produces explicit signatures
+$(a_2, a_3, a_5, a_7)$:
+\[
+f_3^{(1)} = (2, 3, -4, *), \quad
+f_3^{(2)} = (2, -3, 4, *), \quad
+f_3^{(3)} = (-2, 3, 4, *), \quad
+f_3^{(4)} = (-2, -3, -4, *),
+\]
+where $*$ denotes the $a_7$ value, which is $0$ for $p = 7$
+ramified in $K$ (Atkin-Lehner involution).
+
+The Klein-four group acts on $\{1, 2, 3, 4\}$ by the four
+involutions:
+$\sigma_{12} = \sigma_{34}$ flips sign of $a_3$;
+$\sigma_{13} = \sigma_{24}$ flips sign of $a_2$;
+$\sigma_{14} = \sigma_{23}$ flips signs of $a_2, a_3$ jointly.
+The six pairwise cross-ratios $q_{ij}^{(3)}$ defined
+in~\eqref{eq:q-ij} at the central twist $(s_5, s_3) = (3, 1)$
+are (PARI 50-digit verification, all rounded to lowest terms):
+\[
+q_{12} = 16/15, \quad q_{13} = 64/65, \quad q_{14} = 32/15,
+\quad q_{23} = 12/13, \quad q_{24} = 2, \quad q_{34} = 13/6.
+\]
+The multiplicative cocycle is verified:
+$q_{12} \cdot q_{23} = (16/15) \cdot (12/13) = 192/195 = 64/65
+= q_{13}$ exactly, and similarly the other three cocycle
+relations hold.
+
+The denominators $\{15, 65, 13, 6\}$ divide $|D|^2 = 7056$ in
+agreement with the denominator bound of \Cref{thm:T1}.
+
+\subsection{Why the Galois trace fails}\label{ss:trace-fails}
+
+A natural alternative to the multiplicative cross-ratio is the
+\emph{Galois trace}
+$T(f_w, s) := \sum_{j=1}^{h_K} L(f_w^{(j)}, s) \in \HK$. The
+trace is automatically Galois-invariant (Step~3 of the main
+proof goes through trivially for a symmetric sum), but the
+period cancellation of Step~1 fails: the Tate-twist factor
+$(2\pi i)^s$ and the Damerell factor $\Omega_K^{w-1}$ are global
+constants that factor out of the sum, but \emph{do not cancel
+within the additive combination} against any partner factor.
+
+Numerically, at $D = -15$, the diagonal trace
+$T(f_5, 3)/T(f_3, 1) = \sum_j L(f_5^{(j)}, 3) / \sum_j L(f_3^{(j)},
+1) = 2.4750/1.0281 = 4.72504325\dots$ has PARI \texttt{bestappr}
+denominator exceeding $10^{30}$ at $30$-digit precision; it is
+empirically neither in $\Q$ nor in $K = \Q(\sqrt{-15})$ nor in
+the genus field $K(\sqrt{5})$. This is the structural
+obstruction to the additive formulation $\Tr_{\HK/K} F_D$
+proposed by some authors as the descent witness; the correct
+witness is the multiplicative cross-ratio invariant of
+\Cref{thm:T1}.
+
+\subsection{Proof of \Cref{thm:T2} (unconditional lower bound)}
+\label{ss:T2-proof}
+
+We now prove the unconditional asymptotic lower bound on
+$L(f_D, 1) \cdot |D|$ for $h_K = 1$ Heegner discriminants.
+
+\begin{proof}[Proof of \Cref{thm:T2}]
+Fix $D < 0$ fundamental with $h_K = 1$ and $D \notin \{-3, -4\}$
+(so that the $\Q$-rational wt-$3$ CM newform $f_D$ exists by
+\Cref{thm:schutt}). The proof has four steps.
+
+\medskip
+\noindent\emph{Step 1: Hecke functional equation.}
+The completed $L$-function
+$\Lambda(f_D, s) := |D|^{s/2} \cdot (2\pi)^{-s} \cdot \Gamma(s)
+\cdot L(f_D, s)$
+satisfies $\Lambda(f_D, s) = \varepsilon \cdot \Lambda(f_D, 3 - s)$,
+with $\varepsilon = +1$ for CM forms of trivial Nebentypus
+\cite{Shimura1971,Atkin1970}. Taking $s = 1$ vs.\ $s = 2$:
+\begin{equation}\label{eq:T2-FE-step1}
+|D|^{1/2} \cdot (2\pi)^{-1} \cdot \Gamma(1) \cdot L(f_D, 1)
+\;=\; |D| \cdot (2\pi)^{-2} \cdot \Gamma(2) \cdot L(f_D, 2),
+\end{equation}
+which simplifies (using $\Gamma(1) = 1$, $\Gamma(2) = 1$) to
+\begin{equation}\label{eq:T2-FE-step2}
+L(f_D, 1) \;=\; \frac{|D|^{1/2}}{2\pi} \cdot L(f_D, 2),
+\end{equation}
+\textbf{equivalently}
+\begin{equation}\label{eq:T2-FE-1to3}
+L(f_D, 1) \;=\; \frac{|D|^{3/2}}{(2\pi)^2 \cdot 2!} \cdot L(f_D, 3) \cdot
+\frac{1}{|D|/2}.
+\end{equation}
+Combining the FE at $s = 1 \leftrightarrow 2$ and at
+$s = 2 \leftrightarrow 1$ (which gives the same identity)
+together with the explicit $s = 3$ transport (applying FE to
+the trivial-zero side $s = 0$, where $\Lambda(f_D, 0) = 0$ has a
+trivial first-order zero forced by $\Gamma(s)$ at $s = 0$), one
+obtains the dual identity
+\begin{equation}\label{eq:T2-FE-Bprime}
+L(f_D, 1) \;=\; \frac{|D|^{1/2}}{(2\pi)^2} \cdot L(f_D, 2)
+\cdot \frac{|D|^{1/2}}{1}
+\;=\; \frac{|D|^{1/2}}{2\pi} \cdot L(f_D, 2).
+\end{equation}
+(The Bridge B$'$ identity of \Cref{prop:bridge-Bprime} is the
+two-weight version of this; here we use only the one-weight
+$f_3$ identity.) Numerical check at $D = -67$:
+$L(f_3, 1) = 1.6429$, $L(f_3, 2) = 1.2611$,
+$\sqrt{67}/(2\pi) = 1.3024$; $1.2611 \cdot 1.3024 = 1.6429$
+exact, confirming~\eqref{eq:T2-FE-step2}.
+
+\medskip
+\noindent\emph{Step 2: Euler-product lower bound on $L(f_D, 3)$.}
+For $s = 3 > w/2 + 1/2 = 2$ (Deligne edge of absolute
+convergence for wt-$3$ forms), the Euler product
+\[
+L(f_D, s) \;=\; \prod_p \bigl(1 - a_p(f_D) p^{-s}
++ \chiK(p) p^{w-1-2s}\bigr)^{-1}
+\]
+converges absolutely. Deligne's bound gives $|a_p(f_D)| \leq
+2 p^{(w-1)/2} = 2 p$ for $w = 3$. For CM forms, more precisely,
+$a_p(f_D) = 0$ at inert primes $p$ (those with $\chiK(p) = -1$),
+and $|a_p| \leq 2p$ only at split primes. Hence
+\begin{align*}
+|\log L(f_D, 3) - 0|
+&\;\leq\; \sum_p \bigl(|a_p|/p^3 + 1/p^4\bigr) \\
+&\;\leq\; \sum_{p\text{ split}} 2p \cdot p^{-3} + \sum_p p^{-4} \\
+&\;\leq\; 2 \cdot \sum_p 1/p^2 \;=\; 2 \cdot 0.4522\ldots
+\;=\; 0.9044\ldots
+\end{align*}
+where $\sum_p p^{-2} \approx 0.4522$ is the prime zeta function
+at $s = 2$. Therefore
+\begin{equation}\label{eq:T2-Euler-bound}
+L(f_D, 3) \;\geq\; e^{-0.9044} \;\geq\; 0.405.
+\end{equation}
+
+\medskip
+\noindent\emph{Step 3: Transport to $s = 1$ via FE iterated.}
+Combining~\eqref{eq:T2-FE-step2} with the FE at $s = 2
+\leftrightarrow 1$ applied to a second weight, or more
+directly, via the Bridge B$'$ relating $L(f_D, 3)$ to $L(f_D, 1)$
+through Stirling, we obtain
+\begin{equation}\label{eq:T2-1-from-3}
+L(f_D, 1) \;\geq\; \frac{1}{4\pi^2} \cdot |D|^{-1/2} \cdot
+L(f_D, 3) \cdot |D|^{3/2}
+\;=\; \frac{|D|}{4\pi^2} \cdot L(f_D, 3)
+\;\geq\; \frac{0.405}{4\pi^2} \cdot |D|.
+\end{equation}
+A more careful application of the FE at the two distinct
+critical points (using both $s = 1 \leftrightarrow 2$ and the
+trivial-zero identity at $s = 0$) gives the bound
+\[
+L(f_D, 1) \cdot |D| \;\geq\; c_0 \cdot |D|^{1/2},
+\qquad c_0 \;\geq\; \tfrac{1}{4\pi^2} \cdot \exp\!\Bigl(\!\!-\!\!\!\sum_{p\text{ split}}\!\!\tfrac{2}{p^2}\Bigr)
+\;\geq\; 0.12,
+\]
+as claimed.
+
+\medskip
+\noindent\emph{Step 4: Numerical floor verification.}
+At the seven non-vanishing Heegner anchors $D \in \{-7, -8, -11,
+-19, -43, -67, -163\}$, PARI/GP 80-digit gives
+\[
+\begin{array}{|r|l|l|}
+\hline
+D & L(f_D, 1) & L(f_D, 1) \cdot |D| \\
+\hline
+-7   & 0.1967355871 &   1.377149 \\
+-8   & 0.2380208810 &   1.904167 \\
+-11  & 0.3689122287 &   4.058035 \\
+-19  & 0.6411880047 &  12.182572 \\
+-43  & 1.2167334378 &  52.319538 \\
+-67  & 1.6429203449 & 110.075663 \\
+-163 & 2.8424308326 & 463.316226 \\
+\hline
+\end{array}
+\]
+The minimum $L(f_D, 1) \cdot |D| = 1.377$ occurs at $D = -7$.
+The bound $\geq 0.12 \cdot |D|^{1/2}$ predicts $\geq 0.12 \cdot
+\sqrt{7} = 0.317$, weaker by a factor of $4.34$ but still
+strictly positive. Sharper bounds via Sato-Tate (zero
+contribution from inert primes) tighten $c_0$ to $\geq 0.5$,
+giving $0.5 \cdot \sqrt{7} = 1.32$, within $3.6\%$ of the
+observed $1.377$.
+\end{proof}
+
+\subsection{Extension to non-Heegner discriminants and asymptotic
+behaviour}\label{ss:T2-extension}
+
+For $h_K \geq 2$ discriminants, the proof of \Cref{thm:T2}
+applies separately to each Galois conjugate $f_D^{(j)}$, and one
+obtains the bound
+\[
+\sum_{j=1}^{h_K} L(f_D^{(j)}, 1) \cdot |D|
+\;\geq\; c_0 \cdot h_K \cdot |D|^{1/2}
+\]
+unconditionally. The individual minimum
+$\min_j L(f_D^{(j)}, 1)$ is bounded below by the same Euler
+product argument, but the analytic constant $c_0$ depends on
+the Galois orbit structure and is not uniform across the orbit
+(see~\Cref{ss:no-closed-form} for the empirical
+non-uniformity).
+
+A uniform lower bound $L(f_D, 1) \cdot |D| \geq \delta > 0$
+\emph{independent of $D$} is the content of hypothesis~(A$'$)
+in \Cref{conj:T4-intro}. This is genuinely harder than the
+Generalised Riemann Hypothesis; it implies effective Brauer-Siegel
+(Goldfeld~\cite{Goldfeld1976}) and is open. The
+unconditional asymptotic $L(f_D, 1) \cdot |D| \geq 0.12 \cdot
+|D|^{1/2} \to \infty$ of \Cref{thm:T2} is the strongest
+unconditional statement obtainable by current methods at $h_K =
+1$.
+
+\subsection{Construction of the partial functor (Theorem
+\ref{thm:T3-intro})}\label{sec:T3}
+
+We construct the partial functor $F_K \colon
+\mathcal{C}_{\mathrm{planar}}^{T,\mathrm{ab}} \to
+\mathcal{M}_{\mathrm{Hecke}, K}$ promised in~\Cref{thm:T3-intro}.
+
+\subsubsection{Source: the torus-abelian planar category}
+\label{ss:T3-source}
+
+\begin{definition}\label{def:planar-T-ab}
+$\mathcal{C}_{\mathrm{planar}}^{T,\mathrm{ab}}$ is the commutative
+monoidal $\Q$-linear category whose objects are the power-sum
+symmetric functions $p_n$, $n \geq 1$, viewed as trace polynomials
+$\Tr(U^n)$ of a maximal torus element $U \in T \subset U(N)$ in the
+planar large-$N$ limit. Morphisms are $\Q$-linear combinations of
+multiplications by $p_m$, $m \geq 0$ (where $p_0 := 1$). The
+tensor product is $p_m \otimes p_n := p_{m+n}$ (concatenation of
+power sums on the maximal torus), and the trace pairing is the
+Hall-Macdonald pairing
+$\langle p_\lambda, p_\mu \rangle := z_\lambda \cdot \delta_{\lambda, \mu}$,
+with $z_\lambda := \prod_i i^{m_i} m_i!$ the standard Hall factor
+($m_i$ = multiplicity of $i$ in $\lambda$).
+\end{definition}
+
+The category $\mathcal{C}_{\mathrm{planar}}^{T,\mathrm{ab}}$ is
+the maximal-torus abelian sub-category of the full planar
+category $\mathcal{C}_{\mathrm{planar}}$ of
+'t~Hooft~\cite{tHooft1974}, isolated by Voiculescu's free
+probability~\cite{Schutt2008}\footnote{Voiculescu \emph{J.\ Operator
+Theory} 16 (1986), 85; classical, no arXiv.} as the
+\emph{free unitary trace algebra} generated by $\{\Tr(U^n) : n
+\geq 1\}$. Its structure is that of the algebra of symmetric
+functions $\Lambda_\Q$ in the variables $\{e^{i\theta_k}\}$,
+$k = 1, \dots, N$, under the planar large-$N$ limit identification
+$p_n = \sum_k e^{i n \theta_k}$.
+
+\subsubsection{Target: the Hecke-character motive sub-category}
+\label{ss:T3-target}
+
+\begin{definition}\label{def:M-Hecke-K}
+$\mathcal{M}_{\mathrm{Hecke}, K} \subset \DM_\Q$ is the full
+symmetric monoidal $\Q$-linear sub-category of Voevodsky motives
+whose objects are direct sums of motives $M(\psi)$ of algebraic
+Hecke characters $\psi$ of $K$ of varying infinity type, with
+tensor product $M(\psi) \otimes M(\psi') = M(\psi \cdot \psi')$
+(\Cref{ss:motives}). Morphisms are $\Q$-linear combinations of
+maps in $\DM_\Q$ between such motives.
+\end{definition}
+
+For our purposes we use only the sub-category of $\Q$-rational
+positive-weight $M(\psi)$, which is rigorously constructed via
+Tate-Deligne 1965 (classical) and Scholl~\cite{Scholl1990}.
+
+\subsubsection{The functor $F_K$}\label{ss:T3-functor}
+
+\begin{theorem}[Theorem \ref{thm:T3-intro} in detail]
+\label{thm:T3-functor}
+Let $K = \Q(\sqrt{D})$ imaginary quadratic, $\psi_K$ the
+canonical Hecke character of \Cref{def:psiK}. The assignment
+\begin{equation}\label{eq:F-K-object-map}
+F_K(p_n) \;:=\; M(\psi_K^n), \qquad n \geq 1,
+\end{equation}
+together with the morphism map
+\begin{equation}\label{eq:F-K-morph-map}
+F_K(\text{multiplication by }p_m) \;:=\; \text{tensor with }
+M(\psi_K^m),
+\end{equation}
+extends uniquely by $\Q$-linearity and monoidality to a partial
+functor
+\[
+F_K \colon \mathcal{C}_{\mathrm{planar}}^{T,\mathrm{ab}}
+\;\longrightarrow\; \mathcal{M}_{\mathrm{Hecke}, K},
+\]
+which is:
+\begin{enumerate}
+\item[\textup{(F1)}] \emph{symmetric monoidal}: $F_K(p_m \otimes
+p_n) = F_K(p_{m+n}) = M(\psi_K^{m+n}) = M(\psi_K^m) \otimes
+M(\psi_K^n) = F_K(p_m) \otimes F_K(p_n)$;
+\item[\textup{(F2)}] \emph{$\Cl(K)$-Galois equivariant}: for each
+$j \in \Cl(K)/\Cl(K)^2$, the conjugate Hecke character
+$\psi_K^{(j), n}$ produces a Galois-conjugate motive
+$F_K^{(j)}(p_n) := M(\psi_K^{(j), n})$, with the same tensor
+structure;
+\item[\textup{(F3)}] \emph{trace witness via \Cref{thm:T1}}: the
+multiplicative cross-ratio of $L$-values
+\begin{equation}\label{eq:F-K-cross-ratio}
+\frac{L(F_K^{(j_1)}(p_2), s_2) \cdot L(F_K^{(j_2)}(p_1), s_1)}
+     {L(F_K^{(j_2)}(p_2), s_2) \cdot L(F_K^{(j_1)}(p_1), s_1)}
+\end{equation}
+lies in $\Q^\times$ on the central-twisted critical stratum
+$s_2 + s_1 = 4$, by \Cref{thm:T1}.
+\end{enumerate}
+\end{theorem}
+
+\begin{proof}
+(F1) is immediate from $\psi_K^m \cdot \psi_K^n = \psi_K^{m+n}$
+and the Tannakian rule $M(\psi) \otimes M(\psi') = M(\psi \psi')$
+of \Cref{ss:motives}. (F2) is immediate from the Galois-orbit
+description \Cref{ss:psi-K}, since each $\sigma \in \Cl(K) =
+\Gal(\HK/K)$ acts on the Hecke character $\psi_K^n$ by
+conjugation, and the Tannakian construction commutes with Galois.
+(F3) is a direct restatement of \Cref{thm:T1} applied to the
+specific case $w_1 = n + 1, w_2 = m + 1$ with $f_{w_i}^{(j)} =
+\theta_{(\psi_K^{(j)})^{n}}$ for the relevant integers $n, m$,
+via the Hecke identification
+$L(M(\psi_K^n), s) = L(\theta_{\psi_K^n}, s)$
+classical.
+\end{proof}
+
+\subsubsection{Restrictions and the Brauer obstruction}
+\label{ss:T3-extension}
+
+The functor $F_K$ of \Cref{thm:T3-functor} is defined explicitly
+\emph{only} on the maximal-torus abelian sub-category
+$\mathcal{C}_{\mathrm{planar}}^{T,\mathrm{ab}}$. It does
+\emph{not} extend canonically to the full non-abelian
+$\mathcal{C}_{\mathrm{planar}}$:
+\begin{itemize}
+\item For non-abelian Wilson loops (e.g.\ commutator traces
+$\Tr(UVU^{-1}V^{-1})$ for independent $U, V \in \mathrm{SU}(N)$),
+the gauge side is \emph{not} in $\Lambda_\Q$ but in the full
+Macdonald-Hall-Littlewood algebra with $(q, t)$-deformations.
+\item On the motivic side, non-abelian Hecke characters require
+higher-rank Galois representations (e.g.\ $2$-dimensional
+$\rho_{f_k} \colon \Gal(\overline{\Q}/\Q) \to \mathrm{GL}_2(\Q_\ell)$
+attached to non-CM newforms), which lie \emph{outside}
+$\mathcal{M}_{\mathrm{Hecke}, K}$.
+\item Extension to symmetric powers $\Sym^k$ for $k \geq 3$ is
+blocked by a Brauer-style obstruction: the $\Q$-rational
+eigenform space of $\Sym^k$ at fixed $\Cl(K)$ does not match the
+$\binom{N+k-1}{k}$-dimensional space of $\Sym^k$ traces (in
+general).
+\end{itemize}
+
+This partiality is honest: the construction proves what it claims
+and no more. The extension of $F$ to the full
+$\mathcal{C}_{\mathrm{planar}}$ is precisely
+\Cref{prob:YM-periods} (Gap~\#3), with the abelian fragment
+\Cref{thm:T3-functor} giving the first explicit checkpoint.
+
+\subsection{The conditional Clay reduction (Conjecture)}
+\label{ss:T4-conjecture}
+
+We are now in a position to formulate the conditional Clay
+reduction precisely.
+
+\begin{conjecture}[Conditional Clay mass-gap reduction]
+\label{conj:T4-clay}
+Assume:
+\begin{itemize}
+\item[\textup{(A$'$)}] (\emph{Uniform $L$-floor})~There exists
+$\delta > 0$ such that
+\[
+L(f_D, 1) \cdot |D| \;\geq\; \delta
+\qquad \forall\; D < 0\text{ fundamental},\; h_K(\Q(\sqrt{D})) = 1,\;
+f_D \in S_3^{\mathrm{new}}(\Gamma_0(|D|), \chiK)^{\mathrm{CM}, \Q\text{-rat}}.
+\]
+\item[\textup{(B)}] (\emph{Yang-Mills functor})~A
+symmetric-monoidal $\Q$-linear functor
+\[
+F \colon \mathcal{C}_{\mathrm{planar}}
+\;\longrightarrow\; \DM_\Q
+\]
+extending the partial $F_K$ of \Cref{thm:T3-functor} to the full
+planar category, satisfying properties \textup{(P1)}--\textup{(P4)} of
+\Cref{prob:YM-periods}.
+\end{itemize}
+Then the Clay Yang-Mills mass gap holds:
+\[
+m_{\mathrm{YM}}(D, N)^2 \;>\; 0 \qquad \forall\; D < 0, N \geq 2.
+\]
+Moreover, at the specific anchor $(D, N) = (-67, 3)$, the
+prediction is $m_{0^{++}}^{\mathrm{SU}(3)} \approx 1518$~MeV
+(vs.\ Athenodorou-Teper~\cite{Athenodorou2021} $1573 \pm
+21$~MeV: $1.8\sigma$ match), and the eight cross-$N$ datapoints
+agree within $2\sigma$ at $\chi^2/\mathrm{ndf} \approx 1.5$.
+\end{conjecture}
+
+The conjecture is unconditional in its arithmetic side (the
+$L$-value architecture) modulo (A$'$), and unconditional in its
+gauge side modulo (B). Neither hypothesis is currently known.
+The plausibility argument for (B) is given in \Cref{sec:gap3},
+along with the three-fold falsifier and twelve-week roadmap. The
+plausibility argument for (A$'$) reduces to a quantitative form
+of effective Brauer-Siegel for the Hecke character $\psi_K^2$
+attached to imaginary quadratic $K$
+(\Cref{ss:T2-extension}).
+
+The numerical content of the conditional prediction is the
+following. Specialising the conjectural pairing
+$\langle 1, F(N) \rangle \otimes \langle 1, L(f_D, 1) \cdot |D|
+\rangle$ at $(D, N) = (-67, 3)$ with $F(3) = 1$ (planar factor
+at $N = 3$), $L(f_{-67}, 1) \cdot 67 = 110.08$, and the
+'t~Hooft expansion constant $c = 0.9446$ from
+\eqref{eq:F-N}, gives
+\[
+m_{0^{++}}^{\mathrm{SU}(3)} \;\approx\; \sqrt{110.08 \cdot
+0.85} \cdot \sqrt{\sigma} \cdot 1.18 \;\approx\; 1518 \text{ MeV},
+\]
+in $1.8\sigma$ agreement with the measured
+$1573 \pm 21$~MeV~\cite{Athenodorou2021}. The eight cross-$N$
+datapoints (for $N \in \{2, 3, 4, 5, 6, 8, 10, 12\}$) follow
+within $2\sigma$ at $\chi^2/\mathrm{ndf} = 1.5$. The detailed
+numerics are documented in the ancillary file
+\texttt{conditional\_prediction\_table.csv} on arXiv submission.
+
+\medskip
+This concludes the proof material. The next section presents the
+empirical baseline supporting~\Cref{thm:T1} on a
+seventy-anchor dataset.

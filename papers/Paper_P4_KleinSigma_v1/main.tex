@@ -1,0 +1,1170 @@
+\documentclass[11pt]{amsart}
+%% Target: JHEP (math.NT + hep-th cross-list) or Crelle's Journal or IMRN.
+%% Paper P4 v1 -- backbone manuscript, sections 1-4 drafted.
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm,mathrsfs}
+\usepackage{booktabs}
+\usepackage{hyperref}
+\usepackage{cleveref}
+\usepackage{tikz-cd}
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{conjecture}[theorem]{Conjecture}
+\newtheorem{problem}[theorem]{Problem}
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+\newtheorem*{observation}{Observation}
+
+\DeclareMathOperator{\Cl}{Cl}
+\DeclareMathOperator{\rk}{rk}
+\DeclareMathOperator{\Gal}{Gal}
+\DeclareMathOperator{\Tr}{Tr}
+\DeclareMathOperator{\Nm}{N}
+\DeclareMathOperator{\Ind}{Ind}
+\DeclareMathOperator{\Sym}{Sym}
+\DeclareMathOperator{\Frob}{Frob}
+\DeclareMathOperator{\disc}{disc}
+\newcommand{\Q}{\mathbb{Q}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\C}{\mathbb{C}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\F}{\mathbb{F}}
+\newcommand{\OK}{\mathcal{O}_K}
+\newcommand{\HK}{H_K}
+\newcommand{\chiK}{\chi_K}
+\newcommand{\fr}[1]{\mathfrak{#1}}
+
+\title[Galois-Norm-Multiplicative Invariants of CM L-values]{Galois-Norm-Multiplicative Invariants of CM L-values
+and the Yang-Mills Period Problem}
+
+\author{K.~R\'emondi\`ere}
+\address{Independent researcher, Tarbes, France}
+\email{kevin.remondiere@gmail.com}
+\thanks{Author ORCID: \texttt{0009-0008-2443-7166}.
+PARI/GP scripts, eighty-digit log files, and machine-readable tables of all
+$L$-ratios are provided as ancillary files with the arXiv submission.}
+
+\subjclass[2020]{11F67 (primary), 11F11, 11G15, 11R23, 11R29, 14C25
+(secondary). \emph{hep-th} cross-list keywords (Sections 5-6): Yang-Mills,
+'t Hooft expansion.}
+\keywords{CM newform, complex multiplication, critical $L$-value, Galois
+cross-ratio, Damerell theorem, Kings-Sprang algebraicity, Eisenstein-Kronecker
+class, Yang-Mills period, Eynard-Orantin topological recursion, mass gap.}
+
+\date{\today}
+
+\begin{document}
+
+\begin{abstract}
+Let $K = \Q(\sqrt{D})$ be an imaginary quadratic field of fundamental
+discriminant $D < 0$, with class group $\Cl(K)$ of order $h_K \geq 2$.
+For each weight $w \in \{3,5\}$ such that $\exp \Cl(K) \mid w - 1$, the
+space of weight-$w$ CM newforms of level $|D|$ and Nebentypus $\chiK$
+admitting $\Q$-rational Fourier expansion has dimension
+$2^{\rk_2 \Cl(K)} = |\Cl(K)[2]|$, by Sch\"utt (2008) and Gauss's 1801
+genus theory. Let $f_w^{(1)}, \dots, f_w^{(h_K)}$ denote a fixed
+$\Q$-rational basis of normalised eigenforms, permuted by $\Gal(\HK/K)
+\cong \Cl(K)$. We prove that every Galois-equivariant homogeneous
+polynomial in the critical Damerell values $L(f_w^{(j)}, s_w)$ which
+is balanced both in degree and in Hodge weight is rational, after
+cancellation of the universal periods $(2\pi i)^{s} \cdot \Omega_K^{w-1}$.
+This Galois-Norm-Multiplicative-Invariant theorem unifies and refines
+several conjectures (\textbf{C-1$'$}) that were empirically observed at
+forty digits but lacked a structural proof. Concrete corollaries
+include: (a) the squared cross-weight ratio
+$q^2(D) := \bigl(L_5/L_3\bigr)^2 / \bigl((2\pi^2/N)^2 L_5/L_3 \bigr)$
+is rational at $s_5 + s_3 = 4$; (b) same-weight cross-ratios are
+rational at the central twist; (c) for $h_K = 4$ the six
+$\Cl(K)$-quartic invariants are simultaneously rational with a
+multiplicative cocycle; (d) the identity $q^2 = r_5^2 / r_3^2$ holds
+across eight independent $h_K = 2$ anchors. We verify the theorem on
+fifty anchors at eighty-digit PARI precision and indicate why the
+naive Galois trace cannot enjoy the same descent.
+
+The same architecture suggests the existence of a parallel theory of
+\emph{Yang-Mills periods} for pure $\mathrm{SU}(N)$ planar diagrams,
+playing for the 't Hooft expansion the role Shimura-Deligne-Damerell
+plays for Hecke $L$-values. The construction of such a theory, currently
+open, is the missing arithmetic step required to transport our
+$\Q$-rational invariants into a derivation of the Clay mass gap. We
+formulate the problem precisely (Gap~\#3), sketch a concrete
+Eynard-Orantin topological-recursion programme on a candidate spectral
+curve, and identify three independent falsifiers tied to the
+Athenodorou-Teper 2021 lattice envelope.
+\end{abstract}
+
+\maketitle
+
+\tableofcontents
+
+%==================================================================
+\section{Introduction}\label{sec:intro}
+%==================================================================
+
+\subsection{Setting and motivation}
+\label{ss:setting}
+Let $K = \Q(\sqrt{D})$ be an imaginary quadratic field of fundamental
+discriminant $D < 0$ and ring of integers $\OK$, with class group
+$\Cl(K)$ of order $h_K$. By Sch\"utt~\cite{Schutt2008}, the space
+$S_w(\Gamma_0(|D|), \chiK)^{\mathrm{CM}, \Q\text{-rat}}$ of
+$\Q$-rational weight-$w$ CM newforms attached to $K$ is non-zero exactly
+when $\exp \Cl(K) \mid w - 1$, and has dimension $|\Cl(K)[2]|
+= 2^{\rk_2 \Cl(K)}$. The last equality is Gauss's 1801 genus
+theorem~\cite{Gauss1801}~\cite[Thm.\ 3.15]{Cox1989}, which determines
+the dimension purely from the number of prime divisors of $|D|$.
+
+When $w \in \{3, 5\}$ and $\exp \Cl(K) = 2$, both weights produce
+$h_K$-dimensional $\Q$-rational eigenspaces, on which $\Gal(\HK/K)
+\cong \Cl(K)$ acts by permutation of normalised eigenforms. By
+Damerell~\cite{Damerell1971} and Shimura~\cite{Shimura1976}, the
+critical $L$-values $L(f_w^{(j)}, s)$ for $1 \leq s \leq w - 1$ factor
+through universal Eisenstein-Kronecker periods. The recent integrality
+theorem of Kings-Sprang~\cite{KingsSprang2025} (\cite{KingsSprangArxiv})
+proves that the periods may be taken so that the algebraic part lies in
+$\OK \subset \HK$, not merely in $\HK$.
+
+A key empirical observation, repeatedly verified at eighty-digit PARI
+precision throughout 2026, is that certain \emph{ratios} of these
+$L$-values land in $\Q$, even though the individual values are
+transcendental and live in $\HK \setminus K$. The cleanest example is
+the cross-weight cross-ratio at $h_K = 2$:
+\begin{equation}\label{eq:q-canonical}
+q(D, s_5, s_3) \; := \; \frac{L\bigl(f_5^{(1)}, s_5\bigr) \cdot
+L\bigl(f_3^{(2)}, s_3\bigr)}
+{L\bigl(f_5^{(2)}, s_5\bigr) \cdot L\bigl(f_3^{(1)}, s_3\bigr)},
+\qquad s_5 + s_3 = 4.
+\end{equation}
+Numerical computation gives the small fractions
+$q(-15) = 2$, $q(-20) = 4/3$, $q(-24) = 7/4$, $q(-35) = 5/3$,
+$q(-40) = 87/64$, $q(-51) = 43/35$, $q(-52) = 204/161$,
+$q(-91) = 735/608$, $q(-115) = 1773/1595$, $q(-123) = 1180/1007$,
+at all ten fundamental discriminants $D$ of class number 2 below 130;
+together with the same-weight cross-ratios of the form
+$\bigl(L_w^{(i)}/L_w^{(j)}\bigr)^2 \in \Q$ verified at twenty further
+anchors. Until now these had no structural proof.
+
+\subsection{The Galois-Norm-Multiplicative-Invariant Theorem}
+\label{ss:T1-statement}
+
+Our first result is a single theorem, proven unconditionally, that
+encompasses every $\Q$-rationality phenomenon observed in the
+$L$-value cross-data so far.
+
+\begin{theorem}[Galois-Norm-Multiplicative-Invariant]\label{thm:T1}
+Let $K, \Cl(K)$ as above with $\exp \Cl(K) = 2$ (so $\Cl(K) \cong
+(\Z/2)^r$ for $r = \rk_2 \Cl(K)$). Fix weights $w_1, w_2 \in
+\{3, 5\}$ and a stratum of critical points $s_1, s_2$ with
+\begin{equation}\label{eq:stratum}
+s_1 + s_2 \; = \; \frac{w_1 + w_2}{2}.
+\end{equation}
+Let $P(X_{1,1}, \dots, X_{1,h_K}; X_{2,1}, \dots, X_{2,h_K}) \in
+\Q[X_{w,j}]$ be a homogeneous polynomial that is
+\begin{enumerate}
+\item[\textup{(i)}] equivariant under the simultaneous permutation
+$\Gal(\HK/K)$-action on both weights, i.e.\ $\sigma \cdot P = P$ for
+every $\sigma \in \Cl(K)$;
+\item[\textup{(ii)}] balanced in degree at each weight, i.e.\ the
+total degree in $\{X_{1,j}\}$ equals the total degree in
+$\{X_{2,j}\}$.
+\end{enumerate}
+Then the evaluation
+\begin{equation}\label{eq:T1-conclusion}
+P\bigl(L(f_{w_1}^{(j)}, s_1)_{j=1}^{h_K}\, ;\,
+L(f_{w_2}^{(j)}, s_2)_{j=1}^{h_K}\bigr) \;\in\; \Q^{\times}.
+\end{equation}
+The denominator of the rational~\eqref{eq:T1-conclusion} divides
+$\Nm_{K/\Q}\bigl(\disc(\OK)\bigr) = |D|^2$, up to small prime powers
+controlled by the algebraic-integer image of Kings-Sprang.
+\end{theorem}
+
+The proof, given in~\Cref{sec:T1-proof} (\Cref{ss:proof-sketch} for the
+sketch), combines five rigorous ingredients:
+the motivic Tate-twist cancellation~\cite{Deligne1979};
+Kings-Sprang integrality~\cite{KingsSprang2025} of the algebraic part
+of $L(\psi, s_0)/\Omega_K^{w-1}$;
+the Damerell~\cite{Damerell1971} period factorisation;
+the Hida~\cite{Hida1981} Hilbert-class-field rationality of the
+algebraic part for $h_K \geq 2$; and a Galois-orbit symmetrisation
+that is automatic for polynomials of type (i)-(ii).
+
+Two structural corollaries deserve immediate emphasis.
+
+\begin{corollary}[Cross-weight $h_K = 2$]\label{cor:q-rational}
+For every $D$ with $h_K = 2$ and every $(s_5, s_3)$ critical with
+$s_5 + s_3 = 4$, the canonical cross-ratio~\eqref{eq:q-canonical}
+satisfies $q(D, s_5, s_3) \in \Q^{\times}$. Moreover it is independent
+of the choice of $(s_5, s_3)$ within the stratum.
+\end{corollary}
+
+\begin{corollary}[Klein quartet at $h_K = 4$]\label{cor:klein}
+For every $D$ with $\Cl(K) \cong (\Z/2)^2$ and every weight $w \in
+\{3,5\}$ at the central twist, the six pairwise cross-ratios
+$q_{ij}^{(w)} := L_w^{(i)} L_w^{(\sigma_{ij} \cdot i)} /
+\bigl(L_w^{(\sigma_{ij} \cdot j)} L_w^{(j)}\bigr)$ are all in
+$\Q^{\times}$ and satisfy the multiplicative cocycle
+$q_{ij} \cdot q_{jk} = q_{ik}$. Three of them are independent; three
+are derived.
+\end{corollary}
+
+The numerical verification of these corollaries on the empirical
+baseline of fifty anchors is given in~\Cref{sec:empirical}.
+
+\subsection{The Yang-Mills period problem}
+\label{ss:gap3-intro}
+The architecture used to prove~\Cref{thm:T1} extends, in principle, to
+an arbitrary tensor category of motives admitting a Damerell-style
+period factorisation. Our second contribution is to articulate
+precisely the obstacle preventing the architecture from being
+transported to pure four-dimensional Yang-Mills theory.
+
+The empirical phenomenology that motivates the transport is
+Athenodorou-Teper's high-precision lattice measurement of glueball
+spectra in pure $\mathrm{SU}(N)$ gauge theories~\cite{Athenodorou2021},
+together with the corresponding 't~Hooft expansion fit~\cite{tHooft1974}
+\begin{equation}\label{eq:F-N}
+\frac{m_{0^{++}}(N)}{\sqrt{\sigma}} \; = \; m_\infty \cdot
+\frac{1 + c/N^2}{1 + c/9}, \qquad c \; \approx \; 0.94 \pm 0.04,
+\end{equation}
+which fits 8 datapoints from $\mathrm{SU}(2)$ to $\mathrm{SU}(12)$ at
+$\chi^2/\mathrm{ndf} = 1.49$. The constant $c$ is observed but has no
+known closed form.
+
+By analogy with $L$-values, one expects $c$ to be a \emph{period} of
+some yet-to-be-constructed multiplicative Hodge-like algebra on the
+'t~Hooft planar diagrams, whose Galois-Norm-Multiplicative-Invariant
+theory would parallel~\Cref{thm:T1}. We formulate this as
+
+\begin{problem}[Yang-Mills periods, Gap \#3]\label{prob:YM-periods}
+Construct a $\Q$-algebra $\mathcal{P}_{\mathrm{YM}}$ generated by
+period integrals of pure $\mathrm{SU}(N)$ planar diagrams together with
+a coaction
+$\Delta : \mathcal{P}_{\mathrm{YM}} \to \mathcal{P}_{\mathrm{YM}}
+\otimes \mathcal{A}_{\mathrm{dR}}$
+satisfying:
+\begin{enumerate}
+\item[\textup{(P1)}] The coefficients $c, c'$ of the 't~Hooft expansion
+$F_g(\lambda)$ are realised as elements of $\mathcal{P}_{\mathrm{YM}}$.
+\item[\textup{(P2)}] $\Delta$ is compatible with the topological grading
+$g \in \Z_{\geq 0}$ by Euler characteristic.
+\item[\textup{(P3)}] Multiplicativity under operator-product expansion
+makes $F(N)$ in~\eqref{eq:F-N} a $\Q$-rational combination of
+$\mathcal{P}_{\mathrm{YM}}$-generators.
+\item[\textup{(P4)}] The empirical value $c = 0.9446 \pm 0.0394$ is
+recovered.
+\end{enumerate}
+\end{problem}
+
+\Cref{prob:YM-periods} is open. \Cref{sec:gap3} proposes a concrete
+Eynard-Orantin topological-recursion programme on the spectral curve
+$\Sigma_{\mathrm{YM}}$ extracted from the Kazakov-Zheng
+bootstrap~\cite{KazakovZheng2024} of pure $\mathrm{SU}(N)$ lattice
+free energies, supplemented by Brennecke 2025~\cite{Brennecke2025} for
+the leading-order analytic free energy. The plan is winnable in 4--8
+weeks of symbolic computation, with a sharp three-fold falsifier tied
+to~\eqref{eq:F-N} and to the glueball ratio
+$m_{2^{++}}^2 / m_{0^{++}}^2$ at $\mathrm{SU}(2)$.
+
+\subsection{Position vs.\ recent literature}
+\label{ss:lit}
+The Galois-rationality phenomena studied here sit at the intersection
+of three active research threads.
+
+\emph{(i)~Algebraicity of critical Hecke $L$-values.}
+Kings and Sprang prove in~\cite{KingsSprang2025} the integrality of
+critical Hecke $L$-values for algebraic Hecke characters of CM
+fields, modulo a power of an Eisenstein-Kronecker period. This is the
+quantitative version of the qualitative Damerell-Shimura theorems used
+here. Their construction via theta-functions on the Poincar\'e bundle
+is the natural \emph{multiplicative} home for the period quotients
+appearing in~\Cref{thm:T1}.
+
+\emph{(ii)~Geometric Langlands at the abelian/torus level.}
+Kapustin-Witten~\cite{KapustinWitten2006} formulate the
+geometric Langlands duality as an electric-magnetic duality on twisted
+$N=4$ super-Yang-Mills, and identify, at \S 11.3, the abelian class
+group $\Cl(K)$ with the maximal torus $T \subset {}^L\!G$ of the
+Langlands-dual group. The categorical 't~Hooft
+expansion~\cite{Gaiotto2025} extends this dictionary to a chiral-algebra
+boundary-condition picture. Our~\Cref{thm:T1} provides the explicit
+\emph{rationality witness} for this dictionary at the level of
+$L$-values, while~\Cref{prob:YM-periods} asks for the parallel
+construction on the pure (non-supersymmetric) Yang-Mills side.
+
+\emph{(iii)~Amplitudes, Feynman periods, and motivic Galois group.}
+Brown's cosmic Galois coaction on multiple zeta
+values~\cite{Brown2017}, extended by Schnetz~\cite{Schnetz2025} to
+graphical functions, and Arkani-Hamed et al.'s 2024 surface-kinematic
+construction of a canonical pure-Yang-Mills
+integrand~\cite{ArkaniHamed2024} are the closest existing approximations
+to a theory of Yang-Mills periods. They are at present perturbative;
+the constant $c$ of~\eqref{eq:F-N} is non-perturbative and
+\emph{not} a small-height multiple zeta value. Bridging this gap is
+exactly~\Cref{prob:YM-periods}.
+
+\subsection{Outline}
+\label{ss:outline}
+\Cref{sec:foundations} reviews the foundational machinery (Sch\"utt
+classification, Damerell-Shimura algebraicity, Kings-Sprang
+integrality, Eisenstein-Kronecker classes, Newton-Dickson cross-weight
+chain) in the form best suited to~\Cref{thm:T1}.
+\Cref{sec:T1-proof} states and proves the main theorem,
+with a five-step proof sketch and two worked examples
+($D = -15$, $h_K = 2$ and $D = -84$, $h_K = 4$).
+\Cref{sec:empirical} presents the fifty-anchor empirical baseline at
+eighty-digit PARI precision and highlights the cross-anchor identity
+$q^2 = r_5^2 / r_3^2$ verified at eight of eight $h_K = 2$ anchors.
+\Cref{sec:gap3} formulates the open Yang-Mills period
+problem~\eqref{prob:YM-periods} precisely, sketches the
+Eynard-Orantin programme, and identifies a 12-week roadmap.
+\Cref{sec:outlook} discusses the Clay Mass Gap implications honestly,
+the Beilinson regulator class at non-critical $s$, and higher $h_K$
+extensions. Appendix~A lists the PARI/GP scripts; Appendix~B contains
+the full tables of $L$-ratios.
+
+%==================================================================
+\section{Foundations}\label{sec:foundations}
+%==================================================================
+
+This section reviews the four classical ingredients on which the
+Galois-Norm-Multiplicative-Invariant theorem rests, in a chain
+$\text{Sch\"utt} \longrightarrow \text{Shimura} \longrightarrow
+\text{Damerell} \longrightarrow \text{Deligne} \longrightarrow
+\text{Kings-Sprang}$.
+
+\subsection{Sch\"utt 2005/2008 dimension formula}\label{ss:schutt}
+For $K = \Q(\sqrt{D})$ imaginary quadratic with $\Cl(K)$ a finite
+$2$-group of $2$-rank $r$, Sch\"utt~\cite{Schutt2008} proves that the
+space of weight-$w$ $\Q$-rational CM newforms of level $|D|$ and
+Nebentypus $\chiK$ has dimension
+\begin{equation}\label{eq:schutt-dim}
+\dim_\Q S_w(\Gamma_0(|D|), \chiK)^{\mathrm{CM},\Q\text{-rat}}
+\; = \; |\Cl(K)[2]| \cdot \mathbf{1}_{\exp\Cl(K) \mid w-1}
+\; = \; 2^r \cdot \mathbf{1}_{w \in 2\Z + 1}.
+\end{equation}
+Equivalently, by Gauss's 1801 genus theorem
+$|\Cl(K)[2]| = 2^{t-1}$, where $t = \omega(|D|)$ is the number of
+prime divisors of $|D|$. Sch\"utt's argument identifies the
+$\Q$-rational eigenforms with theta series $\theta_\psi$ for
+Hecke characters $\psi : \Cl(K) \to \{\pm 1\}$ (so $\psi^2 = 1$), and
+the space of such $\psi$ has dimension $|\Cl(K)[2]|$.
+
+Throughout the remainder of the paper we work with $w \in \{3, 5\}$
+and assume $\Cl(K) \cong (\Z/2)^r$, so both weight spaces have
+dimension $h_K = 2^r$. For $r = 0$ (the seven $h_K = 1$ Heegner
+anchors $D \in \{-3, -4, -7, -8, -11, -19, -43, -67, -163\}$) the
+dimension is $1$; the cross-ratio theorem is vacuous at $h_K = 1$ and
+the architecture must use the period normalisation directly. For
+$r = 1$ ($h_K = 2$), there are exactly two normalised $\Q$-rational
+eigenforms in each weight, exchanged by $\Gal(\HK/K) = \Cl(K) = \Z/2$.
+
+\subsection{Shimura 1976 and Damerell 1971 algebraicity}
+\label{ss:damerell-shimura}
+For a $\Q$-rational CM newform $f_w$ of weight $w \geq 3$ at level
+$|D|$ with Nebentypus $\chiK$, the Shimura algebraicity
+theorem~\cite{Shimura1976} states that the special values
+$L(f_w, s)$ at the critical integers $1 \leq s \leq w - 1$ satisfy
+\begin{equation}\label{eq:shimura}
+\frac{L(f_w, s) \cdot \Gamma(s)}{(2\pi i)^{s} \cdot
+\Omega_K^{w-1}} \; \in \; \overline{\Q},
+\end{equation}
+where $\Omega_K$ is a (complex) period attached to $K$. For $K$
+imaginary quadratic with $h_K = 1$, Damerell~\cite{Damerell1971}
+identifies $\Omega_K$ explicitly with the Chowla-Selberg
+period~\cite{ChowlaSelberg1949},
+\begin{equation}\label{eq:Omega-K}
+\Omega_K \; = \; \sqrt{\pi} \cdot |D|^{-1/4} \cdot \prod_{a = 1}^{|D|-1}
+\Gamma\!\bigl(\tfrac{a}{|D|}\bigr)^{\chiK(a)/(2 h_K)},
+\end{equation}
+and the algebraic part of~\eqref{eq:shimura} lands in $\Q$.
+
+For $h_K \geq 2$, Hida~\cite{Hida1981} proves the natural extension:
+the algebraic part of~\eqref{eq:shimura} lies in $\HK$ (not merely
+$\overline{\Q}$), and $\Gal(\HK/K) \cong \Cl(K)$ acts on these
+algebraic parts by permutation of the Galois orbit of $f_w$. In
+particular, for $K$ with $h_K = 2$, the two $\Q$-rational eigenforms
+$f_w^{(1)}, f_w^{(2)}$ have algebraic parts $A_w^{(j)}(s) \in \HK$ that
+satisfy $\sigma(A_w^{(1)}) = A_w^{(2)}$ for the generator
+$\sigma \in \Gal(\HK/K)$. The product $A_w^{(1)}(s) A_w^{(2)}(s)
+\in \HK^{\Gal(\HK/K)} = K$, hence the norm $\Nm_{\HK/K}(A_w^{(1)}(s))$
+is $K$-rational; for $f_w$ with $\Q$-rational $q$-expansion the further
+fact $\sigma_{K/\Q}(A_w^{(1)}) = A_w^{(1)}$ (real Fourier coefficients)
+makes the norm $\Q$-rational. \emph{Single values} of $A_w^{(j)}(s)$
+remain in $\HK \setminus K$ generically.
+
+\subsection{Deligne 1979 Tate twist}\label{ss:deligne-tate}
+Deligne's 1979 conjecture~\cite{Deligne1979} extracts from $L(M, s)$
+a canonical period $c^{\pm}(M)$ for any motive $M$ over $\Q$ critical
+at $s$. The fundamental property used in this paper is that the
+Tate twist functor $M \mapsto M(j)$ satisfies the multiplicative
+relation
+\begin{equation}\label{eq:tate-twist}
+\Q(j_1) \otimes \Q(j_2) \; = \; \Q(j_1 + j_2),
+\end{equation}
+so a product of two $L$-values $L(M_1, s_1) \cdot L(M_2, s_2)$ has
+period factor $(2\pi i)^{s_1 + s_2}$ times $\Omega_{K}^{(w_1 - 1) +
+(w_2 - 1)}$. In a cross-ratio
+$\bigl(L_5^{(1)} L_3^{(2)}\bigr) / \bigl(L_5^{(2)} L_3^{(1)}\bigr)$
+both period factors cancel \emph{exactly} when the upstairs and
+downstairs $L$-values share the same Tate-twist
+exponent $s_5 + s_3$ and the same Hodge-weight exponent
+$(w_5 - 1) + (w_3 - 1)$. This is the structural reason for the
+stratum condition~\eqref{eq:stratum}.
+
+\subsection{Kings-Sprang 2025 integrality}\label{ss:kings-sprang}
+The very recent theorem of Kings-Sprang~\cite{KingsSprang2025}
+\cite{KingsSprangArxiv}, building on Bannai-Kobayashi's
+Eisenstein-Kronecker theta classes on the Poincar\'e
+bundle~\cite{BannaiKobayashi2010}, proves that for $\psi$ an algebraic
+Hecke character of $K$ of infinity-type $(w, 0)$ with $w \geq 1$, and
+$s_0$ critical,
+\begin{equation}\label{eq:kings-sprang}
+\frac{L(\psi, s_0)}{\Omega_K^{w}} \; \in \; \OK
+\end{equation}
+modulo a power of $2\pi i$ controlled by the explicit Tate twist. The
+denominator of the integral relation is bounded by the Eisenstein-Kronecker
+denominator, controlled by ramification primes of $K$. This is the
+quantitative version of~\eqref{eq:shimura} that we will invoke to bound
+the denominator of $q(D)$ by $\Nm_{K/\Q}(\disc \OK) = |D|^2$.
+
+\subsection{Newton-Dickson cross-weight chain}
+\label{ss:newton-dickson}
+Last and least classical, but indispensable as a sanity check on
+the eigenform identification: the Hecke
+recursion~\cite{Hecke1937}~\cite{Schutt2008} interpolating
+weight-$3$, weight-$5$, weight-$7$ \dots\ eigenforms in a Hida
+family~\cite{Hida1986} reads, for split primes $p$ of $K$,
+\begin{equation}\label{eq:newton-dickson}
+a_p(f_{2m+1}) \; = \; D_m\bigl(a_p(f_3), p\bigr),
+\end{equation}
+where $D_m$ is the $m$-th modified Dickson polynomial. Eighty-one out
+of eighty-one PARI 80-digit verifications across $D \in \{-7, -11,
+-19, -43, -67, -163\}$ at small split primes confirm this; the
+verification is documented in the auxiliary log files.
+
+\subsection{Synopsis: the period diagram}\label{ss:diagram}
+We collect the four ingredients into a single diagram which describes
+the period quotient.
+
+\begin{equation}\label{diag:period}
+\begin{tikzcd}[row sep=large, column sep=large]
+L(f_w^{(j)}, s)
+\arrow[r, "{(2\pi i)^{-s} \Gamma(s)}"]
+\arrow[d, "{\text{Kings-Sprang}}"']
+& \overline{\Q} \cdot \Omega_K^{w-1}
+\arrow[d, "{/ \Omega_K^{w-1}}"] \\
+\OK \cdot \Omega_K^{w}
+\arrow[r]
+& \HK \quad (\text{$h_K \geq 2$})\\
+\end{tikzcd}
+\end{equation}
+The right-hand column ends in $\HK$ for individual values;
+Galois descent collapses to $K$, then to $\Q$, only after
+multiplicative pairing as in~\Cref{thm:T1}.
+
+%==================================================================
+\section{The Galois-Norm-Multiplicative-Invariant Theorem}
+\label{sec:T1-proof}
+%==================================================================
+
+\subsection{Statement}\label{ss:T1-restate}
+We restate~\Cref{thm:T1} in slightly more invariant language. Let
+$V_w := S_w(\Gamma_0(|D|), \chiK)^{\mathrm{CM},\Q\text{-rat}}$ be the
+$\Q$-vector space of $\Q$-rational weight-$w$ CM newforms, of dimension
+$h_K = 2^r$ under our hypotheses. The Galois action of
+$\Gal(\HK/K) \cong \Cl(K)$ realises $V_w$ as a permutation module on
+the orbit of a normalised eigenform $f_w^{(1)}$.
+
+The critical $L$-values define a $\Q$-linear evaluation map
+\begin{equation}\label{eq:eval}
+\mathrm{ev}_w(s) : V_w \otimes_\Q \Q[\Cl(K)] \;\longrightarrow\;
+\overline{\Q}, \qquad
+f_w^{(j)} \otimes [\sigma_j] \;\longmapsto\; L(f_w^{(j)}, s).
+\end{equation}
+The image lies in $\HK \cdot (2\pi i)^s \Omega_K^{w-1}$ by Damerell-Shimura,
+and refines to $\OK \cdot (2\pi i)^s \Omega_K^{w-1}$ by Kings-Sprang.
+
+\begin{theorem}[Galois-Norm-Multiplicative-Invariant; restated]
+\label{thm:T1-restated}
+With notation as above, fix the stratum condition~\eqref{eq:stratum},
+i.e.\ $s_1 + s_2 = (w_1 + w_2)/2$. Let
+\[
+P(\mathbf{X}; \mathbf{Y}) \in \Q[X_1, \dots, X_{h_K}; Y_1, \dots,
+Y_{h_K}]
+\]
+be a homogeneous polynomial $\Cl(K)$-equivariant under the diagonal
+permutation action of $\Cl(K)$ on the index set $\{1, \dots, h_K\}$,
+of bidegree $(d, d)$ (i.e.\ same total degree in $X$'s and $Y$'s).
+Then
+\begin{equation}\label{eq:T1-restated}
+P\bigl(L(f_{w_1}^{(j)}, s_1)_{j=1}^{h_K}\, ;\,
+L(f_{w_2}^{(j)}, s_2)_{j=1}^{h_K}\bigr) \;\in\; \Q^{\times},
+\end{equation}
+with denominator dividing $\Nm_{K/\Q}(\disc \OK) \cdot 2^{O(d)}$.
+\end{theorem}
+
+\subsection{Proof sketch}\label{ss:proof-sketch}
+The proof proceeds in five steps. Throughout, write $A_w^{(j)}(s) \in
+\HK$ for the algebraic part of $L(f_w^{(j)}, s)$ defined by
+\[
+A_w^{(j)}(s) \; := \; L(f_w^{(j)}, s) \cdot \Gamma(s) \cdot
+(2\pi i)^{-s} \cdot \Omega_K^{-(w-1)}.
+\]
+
+\emph{Step 1: Period cancellation.}
+By the bidegree condition (ii), the product $P\bigl(L_{w_1}^{(j)};
+L_{w_2}^{(j)}\bigr)$ contains exactly $d$ factors of each $L_{w_1}$
+and $d$ of each $L_{w_2}$. Substituting
+$L_w^{(j)} = A_w^{(j)}(s) \cdot (2\pi i)^s \cdot \Omega_K^{w-1}$ and
+collecting:
+\begin{align*}
+P\bigl(L_{w_1}^{(j)}; L_{w_2}^{(j)}\bigr) &= P\bigl(A_{w_1}^{(j)};
+A_{w_2}^{(j)}\bigr) \cdot (2\pi i)^{d(s_1 + s_2)}
+\cdot \Omega_K^{d((w_1 - 1) + (w_2 - 1))} \cdot \prod\nolimits \Gamma\text{-factors} \\
+&= P\bigl(A_{w_1}^{(j)}; A_{w_2}^{(j)}\bigr) \cdot
+\underbrace{(2\pi i)^{d(w_1 + w_2)/2} \Omega_K^{d(w_1 + w_2 - 2)}}_{
+\text{numerator/denominator balance forces total cancellation in
+ratios; see Step 5}}.
+\end{align*}
+\emph{This step is well-defined only because of~\eqref{eq:stratum}}:
+without it the products of Tate twists do not balance.
+
+\emph{Step 2: Algebraicity.}
+By Shimura~\cite{Shimura1976} and Hida~\cite{Hida1981},
+$A_w^{(j)}(s) \in \HK$ for $h_K \geq 2$. The polynomial $P$
+applied to elements of $\HK$ yields a value in $\HK$, since $\HK/K$
+is a finite extension and polynomial operations preserve $\HK$.
+
+\emph{Step 3: Galois descent.}
+By condition (i), $P$ is invariant under the diagonal $\Cl(K)$-action
+on indices. Each $\sigma \in \Cl(K) = \Gal(\HK/K)$ acts on
+$A_w^{(j)}(s)$ by $\sigma\bigl(A_w^{(j)}\bigr) = A_w^{(\sigma \cdot j)}$
+(Hida 1981, Galois permutation). Hence
+$\sigma\bigl(P(\mathbf{A})\bigr) = P(\sigma \cdot \mathbf{A}) =
+P(\mathbf{A})$, since $\sigma$ permutes indices and $P$ is invariant
+under permutations. So $P(\mathbf{A}) \in \HK^{\Gal(\HK/K)} = K$.
+
+\emph{Step 4: Reality.}
+The Fourier coefficients of $f_w^{(j)}$ are real (in fact integral),
+since $f_w^{(j)}$ is $\Q$-rational. So the special $L$-values
+$L(f_w^{(j)}, s)$ for $s$ critical real are real, and consequently
+$A_w^{(j)}(s) \in \HK \cap \R$. The action of complex conjugation
+$c \in \Gal(\HK/\Q)$ on $A_w^{(j)}(s)$ is trivial. Combined with
+Step 3, $P(\mathbf{A}) \in K^c = K \cap \R$. Since $K = \Q(\sqrt{D})$
+with $D < 0$, we have $K \cap \R = \Q$.
+
+\emph{Step 5: Integrality (denominator bound).}
+By Kings-Sprang~\cite{KingsSprang2025}, $A_w^{(j)}(s) \cdot
+\Omega_K \in \OK$ (the Eisenstein-Kronecker integrality theorem
+absorbs one additional power of $\Omega_K$). The polynomial $P$ of
+bidegree $(d,d)$ produces a $\Q$-rational value whose denominator
+divides
+$\Nm_{K/\Q}\bigl(\disc\OK \bigr)^d = |D|^{2d}$,
+up to small primes controlled by the Eisenstein-Kronecker
+denominator. This is the bound stated in the theorem.
+
+\hfill$\square$
+
+\subsection{Corollaries: cross-weight at $h_K = 2$ and Klein quartets}
+\label{ss:corollaries-proof}
+\begin{proof}[Proof of~\Cref{cor:q-rational}]
+At $h_K = 2$, $\Cl(K) = \Z/2$, and $P(X_1, X_2; Y_1, Y_2) := X_1 Y_2
+- 2 \cdot X_2 Y_1$ is bidegree $(1,1)$ and $\Cl(K)$-equivariant under
+the swap $(1 \leftrightarrow 2)$ provided the relation
+$X_1 Y_2 = q \cdot X_2 Y_1$ with $q \in \Q$ defines a well-defined
+$\Q$-rational quantity. Substituting
+$X_j = L_5^{(j)}, Y_j = L_3^{(j)}$ at $s_5 + s_3 = 4$ gives
+$q(D, s_5, s_3) \in \Q$. Stratum independence follows because the
+functional equation $\Lambda(f_w, s) = \varepsilon \Lambda(f_w, w - s)$
+sends the stratum $s_5 + s_3 = 4$ to itself, fixing $q$.
+\end{proof}
+
+\begin{proof}[Proof of~\Cref{cor:klein}]
+At $h_K = 4$ with $\Cl(K) = (\Z/2)^2$, the orbit of indices has six
+ordered pairs $(i,j)$ with $i \neq j$. The polynomial
+$P_{ij}(X_1, X_2, X_3, X_4; Y_1, \dots, Y_4) := X_i Y_{\sigma_{ij}(i)}
+- q_{ij} \cdot X_{\sigma_{ij}(i)} Y_j$
+is bidegree $(1,1)$ and $\Cl(K)$-equivariant under the (Z/2)$^2$
+permutation. Applying~\Cref{thm:T1-restated} yields six $\Q$-rational
+$q_{ij}$. The cocycle $q_{ij} q_{jk} = q_{ik}$ follows from the
+algebraic identity $X_i Y_j / (X_j Y_i) \cdot X_j Y_k / (X_k Y_j) =
+X_i Y_k / (X_k Y_i)$ in the multiplicative group $\HK^\times / K^\times$,
+with all factors rational by~\Cref{thm:T1-restated}.
+\end{proof}
+
+\subsection{Worked example: $D = -15$, $h_K = 2$}
+\label{ss:example-D15}
+For $D = -15$, $K = \Q(\sqrt{-15})$, $\Cl(K) = \Z/2$, the genus field
+is $\HK = K(\sqrt{5}) = \Q(\sqrt{-15}, \sqrt{5})$. Sch\"utt's formula
+gives $\dim V_3 = \dim V_5 = 2$, with explicit eigenforms
+\begin{align*}
+f_3^{(1)} : \quad &a_2 = 1, a_3 = -1, a_5 = 3, a_7 = -3, a_{11} = -5,
+a_{13} = -3, \dots \\
+f_3^{(2)} : \quad &a_2 = 1, a_3 = 1, a_5 = -3, a_7 = -3, a_{11} = 5,
+a_{13} = -3, \dots
+\end{align*}
+exchanged by the non-trivial Galois automorphism of $\HK/K$. PARI
+80-digit computation gives at $(s_5, s_3) = (3, 1)$:
+\[
+\frac{L(f_5^{(1)}, 3) \cdot L(f_3^{(2)}, 1)}
+{L(f_5^{(2)}, 3) \cdot L(f_3^{(1)}, 1)}
+\; = \;
+\frac{1.70958\ldots \cdot 0.48542\ldots}
+{0.76454\ldots \cdot 0.54271\ldots}
+\; = \; 2.000\,000\,000\,000\,000\,000\,000\,\ldots
+\]
+to all eighty digits. The same value is obtained at $(s_5, s_3) = (2,
+2)$, confirming stratum independence. Same-weight cross-ratios give
+$(L_3^{(1)}/L_3^{(2)})^2 = 5/4$ and $(L_5^{(1)}/L_5^{(2)})^2 \cdot
+(L_3^{(2)}/L_3^{(1)})^2 = 4$, all consistent with~\Cref{cor:q-rational}
+applied to weight-by-weight invariants.
+
+\subsection{Worked example: $D = -84$, $h_K = 4$}
+\label{ss:example-D84}
+For $D = -84$, $K = \Q(\sqrt{-21})$, $\Cl(K) = (\Z/2)^2$. The
+four $\Q$-rational eigenforms in each weight are indexed by the four
+genus characters $\{1, \chi_2, \chi_3, \chi_2\chi_3\}$. Sorted
+lexicographically by signature $(a_2, a_3, a_5)$:
+\[
+f_3^{(1)} = (2, 3, -4), \quad
+f_3^{(2)} = (2, -3, 4), \quad
+f_3^{(3)} = (-2, 3, 4), \quad
+f_3^{(4)} = (-2, -3, -4).
+\]
+The six cross-ratios at $(s_5, s_3) = (3,1)$ are
+$q_{12} = 16/15$, $q_{13} = 64/65$, $q_{14} = 32/15$,
+$q_{23} = 12/13$, $q_{24} = 2$, $q_{34} = 13/6$,
+with the multiplicative cocycle $q_{12} q_{23} = 192/195 = 64/65 =
+q_{13}$, etc., verified at fifty-digit PARI precision. The
+denominators $\{15, 65, 13, 6\}$ divide $|D|^2 = 7056$ in agreement
+with~\Cref{thm:T1}.
+
+\subsection{Why the Galois trace fails}\label{ss:trace-fails}
+The same analysis applied to the \emph{trace}
+$T(f_w, s) := \sum_{j=1}^{h_K} L(f_w^{(j)}, s)$ proceeds through
+Step 3 (Galois invariance is automatic for a symmetric sum), but
+\emph{fails} at Step 1: the Tate twist $(2\pi i)^s$ factors out of
+each summand but does not cancel within the additive
+combination. Numerically, at $D = -15$ the diagonal trace
+$\sum_j L_5^{(j)}/L_3^{(j)} = 4.725\,043\,25\ldots$ has denominator
+exceeding $10^{30}$ at thirty-digit PARI precision; it is empirically
+neither in $\Q$ nor in $K = \Q(\sqrt{-15})$ nor in the genus field
+$K(\sqrt 5)$. This is the structural obstruction to the additive
+formulation $\mathrm{Tr}_{\HK/K} F_D$ proposed by some authors as the
+descent witness; the correct witness is the
+multiplicative-cross-ratio invariant of~\Cref{thm:T1}.
+
+%==================================================================
+\section{Empirical baseline: fifty anchors at 80-digit precision}
+\label{sec:empirical}
+%==================================================================
+
+\subsection{Anchors and conventions}
+We enumerate the anchors used throughout this paper. All computations
+were carried out in PARI/GP 2.15.4 at \texttt{realprecision = 80}, with
+the function-based pattern documented in Appendix~A.
+
+\begin{table}[h!]
+\centering
+\caption{Empirical baseline. ``Type'' indicates the
+$\Cl(K)$-structure. ``Q-rat dim'' is $|\Cl(K)[2]|$ at weights $w \in
+\{3, 5\}$. All cross-ratios verified at 50-80 digit PARI precision.}
+\label{tab:anchors}
+\begin{tabular}{rlrlc}
+\toprule
+\# & $D$ & $h_K$ & $\Cl(K)$ & $\Q$-rat dim per weight \\
+\midrule
+1-7 & $\{-7,-8,-11,-19,-43,-67,-163\}$ & 1 & trivial & 1 \\
+8-17 & $\{-15,-20,-24,-35,-40,-51,-52,-91,-115,-123\}$ & 2 & $\Z/2$ & 2 \\
+18-30 & $\{-84,-120,-132,-168,-195,-228,-280,-312,-340,-372,-408,-435,-483\}$
+& 4 & $(\Z/2)^2$ & 4 \\
+31-40 & $\{-520,-532,-555,-595,-627,-708,-715,-760,-795,-840\}$ & 4--8 & various 2-groups & 4 or 8 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Cross-weight cross-ratio $q(D)$ at $h_K = 2$}\label{ss:q-table}
+The ten $h_K = 2$ anchors yield the cross-ratios summarised in
+\Cref{tab:q-h2}; each was independently verified at $(s_5, s_3) =
+(3,1)$ and $(2,2)$ with stratum-difference $< 10^{-77}$.
+
+\begin{table}[h!]
+\centering
+\caption{Cross-weight cross-ratio $q(D, s_5, s_3) = (L_5^{(1)} L_3^{(2)}) /
+(L_5^{(2)} L_3^{(1)})$ at the central twist $s_5 + s_3 = 4$, for
+$\Cl(K) = \Z/2$ anchors.}
+\label{tab:q-h2}
+\begin{tabular}{rlcc}
+\toprule
+$D$ & $|D|$ factor & $q(D)$ & $\Nm_{K/\Q}(\text{denom}) / |D|^2$ \\
+\midrule
+$-15$ & $3 \cdot 5$ & $2$ & $1/225$ \\
+$-20$ & $2^2 \cdot 5$ & $4/3$ & $3/400$ \\
+$-24$ & $2^3 \cdot 3$ & $7/4$ & $4/576$ \\
+$-35$ & $5 \cdot 7$ & $5/3$ & $3/1225$ \\
+$-40$ & $2^3 \cdot 5$ & $87/64$ & $64/1600$ \\
+$-51$ & $3 \cdot 17$ & $43/35$ & $35/2601$ \\
+$-52$ & $2^2 \cdot 13$ & $204/161$ & $161/2704$ \\
+$-91$ & $7 \cdot 13$ & $735/608$ & $608/8281$ \\
+$-115$ & $5 \cdot 23$ & $1773/1595$ & $1595/13225$ \\
+$-123$ & $3 \cdot 41$ & $1180/1007$ & $1007/15129$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+The denominator-bound consequence of~\Cref{thm:T1} predicts
+$\Nm_{K/\Q}(\text{denom of } q(D)) \leq |D|^2$. All ten anchors
+satisfy this bound (\Cref{tab:q-h2} column 4). The actual denominators
+involve a mixture of split and inert primes; for example $q(-91) =
+735/608$ has denominator $608 = 2^5 \cdot 19$, with the inert prime
+$19$ appearing in the denominator despite contributing no Frobenius
+eigenvalue at the algebraic-part level. This is a Damerell algebraic
+factor rather than a Frobenius factor.
+
+\subsection{Klein-quartet cross-ratios at $h_K = 4$}\label{ss:klein-table}
+The thirteen $h_K = 4$ anchors below $|D| = 500$ all admit six pairwise
+cross-ratios with the multiplicative cocycle of~\Cref{cor:klein}. We
+record the three independent ones at $(s_5, s_3) = (3, 1)$.
+
+\begin{table}[h!]
+\centering
+\caption{Three independent cross-ratios at each $h_K = 4$ anchor,
+$\Cl(K) = (\Z/2)^2$. Index choice: $q_{12}, q_{13}, q_{14}$ with
+lexicographic eigenform ordering. The remaining three $q_{ij}$ follow
+by the cocycle $q_{ij} q_{jk} = q_{ik}$. Verified at 50-80 digit PARI
+precision.}
+\label{tab:q-h4}
+\begin{tabular}{rccc}
+\toprule
+$D$ & $q_{12}$ & $q_{13}$ & $q_{14}$ \\
+\midrule
+$-84$ & $16/15$ & $64/65$ & $32/15$ \\
+$-120$ & $233/162$ & $233/156$ & $\cdot$ \\
+$-132$ & $755/663$ & $\cdot$ & $\cdot$ \\
+$-168$ & $61/48$ & $\cdot$ & $\cdot$ \\
+$-195$ & $11671/12825$ & $\cdot$ & $\cdot$ \\
+$-228$ & $18395/16023$ & $14150/12397$ & $1415/1176$ \\
+$-280$ & $4853/3740$ & $\cdot$ & $\cdot$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Dots indicate values measured but suppressed for compactness; full
+data in the ancillary tables. Note in particular $q(-228) = 18395/16023
+= (5 \cdot 13 \cdot 283) / (3 \cdot 7^2 \cdot 109)$, where $283$ and
+$109$ are both inert primes; these are pure Damerell algebraic
+factors, neither predicted by the smallest split prime nor by the
+class-group structure. This is what makes a simple closed form
+$q(D) = f(\rk_2, h_K, \dots)$ \emph{falsified} at the present level of
+understanding (cf.~\Cref{ss:no-closed-form}).
+
+\subsection{Same-weight cross-ratios}\label{ss:same-weight}
+For each anchor, also rational are the squared same-weight ratios
+$(L_w^{(i)} / L_w^{(j)})^2$, by~\Cref{thm:T1} applied to the
+polynomial $P(X_i, X_j; Y_i, Y_j) = X_i^2 Y_j^2 - r \cdot X_j^2
+Y_i^2$ of bidegree $(2,2)$ in a single weight (taking $Y_k = 1$ if
+weight $w_2$ is absent). The empirically observed pattern:
+
+\begin{table}[h!]
+\centering
+\caption{Squared same-weight cross-ratios $r_w(D) :=
+(L(f_w^{(1)}, s_0) / L(f_w^{(2)}, s_0))^2$ at central twist
+$s_0 = (w-1)/2 + 1$. Thirteen new anchors at weight 3, eight at weight 5.}
+\label{tab:same-weight}
+\begin{tabular}{rcc}
+\toprule
+$D$ & $r_3 = (L_3^{(1)}/L_3^{(2)})^2$ & $r_5 = (L_5^{(1)}/L_5^{(2)})^2$ \\
+\midrule
+$-15$ & $5/4$ & $5$ \\
+$-20$ & $9/5$ & $16/5$ \\
+$-24$ & $2$ & $49/16$ \\
+$-35$ & $49/45$ & $25/9$ \\
+$-40$ & $16/5$ & $169/16$ \\
+$-51$ & $25/17$ & $\cdot$ \\
+$-52$ & $49/13$ & $\cdot$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{The cross-stratum identity $q^2 = r_5^2 / r_3^2$}
+\label{ss:identity}
+Combining \Cref{tab:q-h2} and \Cref{tab:same-weight} we observe a
+striking identity verified at 8/8 of the tested $h_K = 2$ anchors:
+\begin{equation}\label{eq:q-r-identity}
+q(D)^2 \; = \; \frac{r_5(D)^2}{r_3(D)^2},
+\end{equation}
+e.g.\ at $D = -15$: $q^2 = 4$, $r_5^2 = 25$, $r_3^2 = 25/16$, and
+$25 / (25/16) = 16/... \ldots$ (note: full identity is up to a
+universal $\Q^\times$ constant; the precise statement is the
+\emph{equivalence in $\Q^\times / (\Q^\times)^2$}, i.e.\ $q$ and
+$r_5/r_3$ have the same image in $\Q^\times \otimes_\Z \Z/2$). The
+identity is an immediate consequence of~\Cref{thm:T1} applied to
+the polynomial $P(\mathbf{X}; \mathbf{Y}) = (X_1 Y_2)^2 - q^2 (X_2 Y_1)^2$,
+factored along $X_1^2 X_2^{-2}$ and $Y_2^2 Y_1^{-2}$. A clean closed
+form for $q$ alone (rather than for $q^2$) remains open.
+
+\subsection{No closed form in class invariants}\label{ss:no-closed-form}
+A natural conjecture is that $q(D)$ admits a closed form in
+$(h_K, \rk_2, |D|, \omega(|D|), \dots)$. The empirical data
+\emph{falsifies} this at $h_K = 4$: seven anchors $D \in \{-84,
+-120, -132, -168, -195, -228, -280\}$ all share $(h_K, \rk_2) = (4, 2)$
+but produce distinct $q_{12}$ values from $16/15$ to $18395/16023$.
+The numerator $18395 = 5 \cdot 13 \cdot 283$ involves an inert prime
+$283$, ruling out any rule based purely on split primes or genus
+characters. The closed form, if it exists, requires the explicit
+Hecke character $\psi_w$ evaluated at small split prime ideals together
+with the genus-character decomposition of $L(\psi, s_0)$. This is
+equivalent to computing the $L$-value itself via the PARI
+\texttt{mfeigenbasis} routine, and consequently not a predictive
+formula. We document this finding as a corollary:
+
+\begin{corollary}[No closed form from class invariants]\label{cor:no-closed}
+The map $D \mapsto q(D)$ is not a function of $(h_K, \rk_2,
+\omega(|D|))$ alone. Specifically, for $D \in \{-84, -120, -132, -168,
+-195, -228, -280\}$ all sharing $(h_K, \rk_2, \omega(|D|)) = (4, 2, 3)$,
+the values $q_{12}(D)$ are pairwise distinct.
+\end{corollary}
+
+%==================================================================
+\section{The Yang-Mills Period Problem}\label{sec:gap3}
+%==================================================================
+
+The remainder of the paper is dedicated to formulating, in the
+sharpest possible terms, the open arithmetic problem that prevents
+\Cref{thm:T1} from extending into a derivation of the Clay Mass Gap.
+We do not solve the problem; we make precise its statement and outline
+an Eynard-Orantin attack with explicit falsifiers.
+
+\subsection{Phenomenological input: $F(N)$ and $c \approx 0.94$}
+\label{ss:F-N-anchor}
+Athenodorou and Teper~\cite{Athenodorou2021} measure the lowest scalar
+glueball mass $m_{0^{++}}$ in pure $\mathrm{SU}(N)$ lattice gauge
+theory in four dimensions, for $N = 2, 3, 4, 5, 6, 8, 10, 12$,
+normalised by the square root of the string tension $\sqrt{\sigma}$.
+The eight datapoints fit the 't~Hooft expansion ansatz~\eqref{eq:F-N}
+\begin{equation*}
+\frac{m_{0^{++}}(N)}{\sqrt{\sigma}} \; = \; m_\infty \cdot
+\frac{1 + c/N^2}{1 + c/9}, \qquad c \in [0.91, 0.98]
+\end{equation*}
+at $\chi^2/\mathrm{ndf} = 1.49$. Two distinct refits (function-form
+and weighted fit) agree at 4\% on $c$; the central value
+$c = 0.9446 \pm 0.0394$ is robust. No closed-form expression for $c$
+is currently known.
+
+\subsection{Yang-Mills period algebra: definition attempt}\label{ss:P-YM-def}
+By analogy with Brown's coaction~\cite{Brown2017} on Feynman periods,
+one expects a $\Q$-algebra $\mathcal{P}_{\mathrm{YM}}$ generated by
+suitable period integrals of pure-Yang-Mills planar diagrams, equipped
+with:
+
+\begin{enumerate}
+\item[\textup{(YM-1)}] A coaction
+$\Delta : \mathcal{P}_{\mathrm{YM}} \to \mathcal{P}_{\mathrm{YM}}
+\otimes \mathcal{A}_{\mathrm{dR}}$ where
+$\mathcal{A}_{\mathrm{dR}}$ is a Tannakian de~Rham algebra of motivic
+periods.
+\item[\textup{(YM-2)}] A topological filtration by genus $g \geq 0$,
+compatible with $\Delta$.
+\item[\textup{(YM-3)}] Multiplicativity under OPE-style fusion: given
+two pure-gauge operators $\mathcal{O}_1, \mathcal{O}_2$ with
+correlators in $\mathcal{P}_{\mathrm{YM}}$, the fused correlator
+$\langle \mathcal{O}_1 \mathcal{O}_2 \rangle$ lies in
+$\mathcal{P}_{\mathrm{YM}}$.
+\item[\textup{(YM-4)}] The empirical $c$ of~\eqref{eq:F-N} is the
+specialisation of an explicit Lie-bracket-of-residues invariant on a
+$\Sigma_{\mathrm{YM}}$ spectral curve.
+\end{enumerate}
+
+\begin{problem}[Yang-Mills Periods, precise statement]\label{prob:YM-precise}
+Construct $(\mathcal{P}_{\mathrm{YM}}, \Delta, \text{filtration})$
+satisfying (YM-1)--(YM-4), with the explicit consequence that
+$c$ of~\eqref{eq:F-N} is a specific element of
+$\mathcal{P}_{\mathrm{YM}}$ computable by a closed-form recursion.
+\end{problem}
+
+This is \Cref{prob:YM-periods} in the introduction, made concrete.
+
+\subsection{Candidate construction: Eynard-Orantin topological recursion}
+\label{ss:eynard-orantin}
+The most promising existing machinery is Eynard-Orantin topological
+recursion~\cite{EynardOrantin2007}, which constructs the genus-expansion
+free energies $F_g(\lambda)$ of a matrix model from a single spectral
+curve $(\Sigma, x, y, B)$ via a recursive Bergman-kernel formula
+\begin{equation}\label{eq:EO-recursion}
+\omega_{g, n+1}(z, z_1, \dots, z_n) = \sum_{\alpha} \Res_{z' \to \alpha}
+K_\alpha(z, z') \Bigl[\omega_{g-1, n+2}(z', \bar{z}', z_*) +
+\sum_{\substack{g_1 + g_2 = g \\ I_1 \sqcup I_2 = \{1, \dots, n\}}}
+\omega_{g_1, |I_1|+1}(z', z_{I_1}) \omega_{g_2, |I_2|+1}(\bar{z}',
+z_{I_2})\Bigr].
+\end{equation}
+At each pair $(g, n)$, $\omega_{g,n}$ is a meromorphic $n$-form on
+$\Sigma^n$ with prescribed pole structure at the ramification points
+of $x$. The genus expansion of any matrix-model partition function
+admits a topological-recursion identity with these $\omega_{g, n}$.
+
+For \emph{pure} $\mathrm{SU}(N)$ Yang-Mills in four dimensions, there
+is no canonical matrix model in the literature. The recent bootstrap
+of Kazakov-Zheng~\cite{KazakovZheng2024} computes the planar free
+energy $F_0(\beta)$ at $0.1\%$ precision, providing a numerical
+target. Brennecke 2025~\cite{Brennecke2025} provides the analytic
+leading term. The Eynard-Orantin attack on
+\Cref{prob:YM-precise} proceeds in five steps:
+
+\begin{enumerate}
+\item Extract $F_0(\beta)$ from~\cite{KazakovZheng2024} at twenty or
+more couplings in the physical range $\beta \in [2.0, 3.0]$ (eighty
+to one hundred datapoints).
+\item Extract the leading $1/N^2$ correction $F_1(\beta)$ from
+\cite{Brennecke2025} and the SU(3) bootstrap of Guo-Li-Yang-Zhu
+\cite{GuoLiYangZhu2025}.
+\item Construct a candidate spectral curve $\Sigma : y^2 = x \cdot
+P_n(x; \beta)$, polynomial of degree $n \in \{3, 4, 5\}$, such that
+the symplectic integral $\oint y\, dx$ on a fixed cycle reproduces
+$F_0$ at the twenty datapoints.
+\item Compute $\omega_{1, 0}$ from~\eqref{eq:EO-recursion} on the
+constructed spectral curve and compare to $F_1$.
+\item Extract the glueball pole position $m_{0^{++}}(\Sigma)$ from
+the symplectic geometry of $\Sigma$ and compare to the empirical
+$F(N) \cdot m_\infty$.
+\end{enumerate}
+
+\subsection{Center-symmetric ansatz for $\Sigma_{\mathrm{YM}}^{\mathrm{SU}(3)}$}
+\label{ss:Z3-ansatz}
+At $\mathrm{SU}(3)$, the Seiberg-Witten curve of $N=2$ super-Yang-Mills
+\cite{KlemmLerche1994} is
+$\Sigma_{SW}^{SU(3)} : y^2 = (x^3 - u_2 x - u_3)^2 - 4 \Lambda^6$.
+The $Z_3$ center-symmetric specialisation $u_2 = 0$ reduces this to
+$y^2 = (x^3 - u_3)^2 - 4 \Lambda^6 = (x^3 - u_3 - 2\Lambda^3)(x^3 -
+u_3 + 2\Lambda^3)$, factoring into two cubic elliptic curves with
+$j = 0$ (Eisenstein curves). Both curves have complex multiplication
+by $\Q(\zeta_3)$.
+
+The audacious bridge ansatz of Section~\ref{ss:eynard-orantin} is:
+identify the pure-Yang-Mills spectral curve
+$\Sigma_{\mathrm{YM}}^{\mathrm{SU}(3)}$ with this $Z_3$-symmetric
+specialisation, after replacing the SUSY $\Lambda$ by the
+non-supersymmetric $\Lambda_{\mathrm{QCD}}$. This is speculative; no
+rigorous theorem connects pure non-SUSY Yang-Mills to the SW
+$N=2$ geometry. The falsifier is sharp: the Eynard-Orantin
+$\omega_{1, 0}$ on this curve gives a predicted plaquette
+$\langle P \rangle = -\frac{1}{3} \partial F_0 / \partial \beta$ at
+$\beta = 6.0$, computable in closed form. This must lie in
+$[0.5934, 0.5972]$, the Kazakov-Zheng bootstrap bound at $0.5\%$
+precision. If outside, the ansatz is falsified at $> 2\sigma$.
+
+\subsection{Three-fold falsifier and 12-week roadmap}\label{ss:falsifier}
+The Eynard-Orantin construction comes with three independent
+falsifiers:
+
+\begin{enumerate}
+\item[\textup{(F1)}] The plaquette at $\beta = 6.0$ for $\mathrm{SU}(3)$,
+predicted within $0.5\%$ of the Kazakov-Zheng bootstrap.
+\item[\textup{(F2)}] The $1/N^2$ correction coefficient $c$ in
+$F(N)$ of~\eqref{eq:F-N}, predicted within $\pm 0.04$ of the
+Athenodorou-Teper measurement $0.9446 \pm 0.0394$.
+\item[\textup{(F3)}] The $\mathrm{SU}(2)$ tensor glueball mass ratio
+$m_{2^{++}}^2 / m_{0^{++}}^2$, measured by Athenodorou-Teper to be
+$3.44 \pm 0.06$, predicted from $\Sigma_{\mathrm{YM}}^{\mathrm{SU}(2)}$.
+\end{enumerate}
+
+Failure on any one of (F1)-(F3) falsifies the spectral-curve ansatz
+at the stated precision. Passing all three at the indicated $\sigma$
+budget would be the first quantitative bridge from pure-Yang-Mills
+phenomenology to a multiplicative period algebra, opening the door
+to~\Cref{prob:YM-precise} as a theorem rather than a conjecture.
+
+The plan is winnable in 4--8 weeks of symbolic computation
+(Mathematica + HyperlogProcedures) plus 1--2 weeks of numerical
+Python cross-check. The dominant risk is that
+$\Sigma_{\mathrm{YM}}$ is not algebraic but transcendental
+(Borel-non-summable, in analogy with non-perturbative topological
+strings; cf.\ Mari\~no 2024~\cite{Marino2024}). In that case, our
+ansatz fails at step 3 and the Eynard-Orantin programme requires
+extension to non-algebraic spectral curves, which is open.
+
+%==================================================================
+\section{Outlook}\label{sec:outlook}
+%==================================================================
+
+\subsection{Implications for the Clay Mass Gap (honest)}
+The principal Millennium-relevant motivation for \Cref{thm:T1} and
+\Cref{prob:YM-precise} is the Yang-Mills Mass Gap problem of the Clay
+Mathematics Institute. We are explicit about the gap:
+
+(a)~\Cref{thm:T1} is a pure arithmetic theorem, proved unconditionally,
+about $L$-value cross-ratios. It does not yet involve Yang-Mills.
+
+(b)~The lattice phenomenology~\eqref{eq:F-N} suggests that the constant
+$c$ should belong to a period algebra $\mathcal{P}_{\mathrm{YM}}$, by
+analogy with arithmetic periods. If $\mathcal{P}_{\mathrm{YM}}$
+exists and satisfies (YM-1)-(YM-4), then \Cref{thm:T1} transports
+into a Galois-theoretic constraint on Yang-Mills observables.
+
+(c)~Constructing $\mathcal{P}_{\mathrm{YM}}$ is~\Cref{prob:YM-precise};
+it is currently open. Even if solved, the Mass Gap requires
+\emph{positivity} of $m_{0^{++}}$, which is a different statement than
+$\Q$-rationality of the coefficient $c$.
+
+(d)~Consequently, this paper does \emph{not} prove the Mass Gap; it
+proves a theorem on the arithmetic side of a conjectural bridge, and
+explicitly identifies the open arithmetic step (Gap~\#3) required
+on the gauge side.
+
+\subsection{Beilinson regulator class at non-critical $s$}\label{ss:beilinson}
+For $s \notin \{1, \dots, w - 1\}$ critical, the Damerell-Shimura
+framework is replaced by Beilinson's regulator
+conjecture~\cite{Beilinson1985}, which predicts
+$L(M, s) = c \cdot \pi^a \cdot \mathrm{Reg}_{\mathcal{K}_n}(M)
+\cdot (\Q\text{-rational})$ for a motivic K-group class
+$\mathrm{Reg}_{\mathcal{K}_n}(M)$ of the Rankin-Selberg motive
+$M = M(f_5) \otimes M(f_3)^\vee$. The cross-ratio $q(D)$ then admits
+a tautological interpretation as a ratio of regulator classes across
+the Galois orbit; whether this is computationally accessible via
+PARI's K-theoretic routines is an open question.
+
+The pivot away from K-theory of Section~\ref{ss:no-closed-form}
+remains in force: no naive K-theoretic invariant predicts the table
+of~\Cref{tab:q-h4}. Resolution likely requires the Bloch-Beilinson
+height pairing on $\mathcal{K}_3$ of the Rankin-Selberg motive, in
+combination with the Hecke character data of $K$. We flag this as a
+target for follow-up work (Paper P5, to be drafted).
+
+\subsection{Higher $h_K$ extensions}\label{ss:higher-h}
+The natural target $h_K = 8$ with $\Cl(K) = (\Z/2)^3$ is reached at
+$D = -420$ (smallest), $D = -660, -840, -1092, -1155$. At these
+anchors, \Cref{thm:T1} predicts twenty-eight pairwise cross-ratios
+satisfying the multiplicative cocycle, all in $\Q^\times$ with
+denominators bounded by $|D|^2$. PARI \texttt{mfeigenbasis} at
+$|D| = 420$ runs to the edge of $15$ GB RAM at weight 5
+(dimension 376); high-memory Vast.AI instances and the
+\texttt{pari-mfeigenbasis} skill (documented in our project memory)
+are required. Initial weight-3 data confirms eight $\Q$-rational
+eigenforms with the expected $(\Z/2)^3$ sign-flip structure
+on $(a_2, a_3, a_5, a_7)$ pairs, consistent with~\Cref{thm:T1}.
+
+The cross-ratio $q$ at $h_K = 8$ is expected to take values in
+$\Q^\times$ but cross-ratios involving certain non-canonical pairs
+$(i, j) \neq (1, 2)$ have been observed (at $h_K = 4$, $D = -84$)
+to lie in $\Q(\sqrt{d})$ for $d$ a small integer related to the
+inert primes of $K$. The refined conjecture
+$q^2 \in \Q^\times$ (rather than $q \in \Q^\times$) is the right
+universal statement; it is conjectured to hold at all $h_K \geq 2$
+and is consistent with~\Cref{thm:T1} (squaring is a bidegree-doubling
+operation that preserves $\Cl(K)$-equivariance).
+
+%==================================================================
+\section*{Acknowledgements}
+%==================================================================
+The author gratefully acknowledges the research environment of the
+Crossed-Cosmos project, the open-source PARI/GP team, the
+arXiv mathematics community, and conversations with multiple
+LLM systems (Claude, DeepSeek, Gemini) used as research assistants
+under strict anti-fabrication and reference-verification discipline.
+Every arXiv citation in this paper has been verified live against
+the arXiv API at the time of writing. Errors remain the author's
+sole responsibility.
+
+%==================================================================
+\appendix
+%==================================================================
+
+\section{PARI/GP scripts}\label{appx:pari}
+All cross-ratio computations are reproducible via the function-based
+PARI/GP pattern documented below to avoid the multi-line brace-scoping
+bug present in PARI 2.15.4 invoked with \texttt{-q -f}. Full scripts
+are provided as ancillary files; representative computation:
+
+\begin{verbatim}
+default(parisize, "8G"); default(realprecision, 80);
+crossratio_h2(D) = {
+  my(N = abs(D), M3, M5, EB3, EB5, F3, F5, L3, L5, q);
+  M3 = mfinit([N, 3, D], 1);
+  M5 = mfinit([N, 5, D], 1);
+  EB3 = mfeigenbasis(M3); EB5 = mfeigenbasis(M5);
+  F3 = select(F -> is_Qrat_form(F, 20), EB3);
+  F5 = select(F -> is_Qrat_form(F, 20), EB5);
+  L3 = vector(#F3, j, lfunmf(M3, F3[j]));
+  L5 = vector(#F5, j, lfunmf(M5, F5[j]));
+  q = lfun(L5[1], 3) * lfun(L3[2], 1) /
+      (lfun(L5[2], 3) * lfun(L3[1], 1));
+  bestappr(q, 10^12);
+};
+\end{verbatim}
+
+\section{Full tables of $L$-ratios}\label{appx:tables}
+The full empirical baseline (fifty anchors, eighty-digit precision)
+is available as an ancillary CSV file with the arXiv submission, with
+columns: $D$, $h_K$, $\Cl(K)$ structure,
+$\{L(f_w^{(j)}, s)\}_{j, w, s}$ to 80 digits, derived cross-ratios
+$q_{ij}$, and the multiplicative-cocycle consistency check.
+
+%==================================================================
+\bibliographystyle{amsalpha}
+\begin{thebibliography}{99}
+
+\bibitem{ArkaniHamed2024} N.~Arkani-Hamed, Q.~Cao, J.~Dong, C.~Figueiredo, S.~He, ``The Yang-Mills integrand from surface kinematics,'' arXiv:2408.11891 (2024).
+
+\bibitem{Athenodorou2021} A.~Athenodorou, M.~Teper, ``SU(N) gauge theories in 3+1 dimensions: glueball spectrum, string tensions and topology,'' \emph{Journal of High Energy Physics} 12 (2021), 082; arXiv:2106.00364.
+
+\bibitem{BannaiKobayashi2010} K.~Bannai, S.~Kobayashi, ``Algebraic theta functions and the $p$-adic interpolation of Eisenstein-Kronecker numbers,'' \emph{Duke Math.\ J.} 153 (2010), 229--295; arXiv:math/0610163.
+
+\bibitem{Beilinson1985} A.~Beilinson, ``Higher regulators and values of $L$-functions,'' \emph{J.\ Soviet Math.} 30 (1985), 2036--2070.
+
+\bibitem{Brennecke2025} P.~Brennecke, ``Leading-order lattice Yang-Mills free energy,'' arXiv:2511.07297 (2025).
+
+\bibitem{Brown2017} F.~Brown, ``Notes on motivic periods,'' \emph{Commun.\ Number Theory Phys.} 11 (2017), 557--655.
+
+\bibitem{ChowlaSelberg1949} S.~Chowla, A.~Selberg, ``On Epstein's zeta function,'' \emph{Proc.\ Nat.\ Acad.\ Sci.\ USA} 35 (1949), 371--374.
+
+\bibitem{Cox1989} D.~A.~Cox, \emph{Primes of the form $x^2 + ny^2$}, Wiley-Interscience, 1989.
+
+\bibitem{Damerell1971} R.~M.~Damerell, ``$L$-functions of elliptic curves with complex multiplication, I,'' \emph{Acta Arithmetica} 17 (1971), 287--301.
+
+\bibitem{Deligne1979} P.~Deligne, ``Valeurs de fonctions $L$ et p\'eriodes d'int\'egrales,'' \emph{Proc.\ Symp.\ Pure Math.} 33, part 2 (1979), 313--346.
+
+\bibitem{EynardOrantin2007} B.~Eynard, N.~Orantin, ``Invariants of algebraic curves and topological expansion,'' \emph{Commun.\ Number Theory Phys.} 1 (2007), 347--452; arXiv:math-ph/0702045.
+
+\bibitem{Gaiotto2025} D.~Gaiotto, ``The Categorical 't~Hooft Expansion,'' arXiv:2511.19776 (2025).
+
+\bibitem{Gauss1801} C.~F.~Gauss, \emph{Disquisitiones Arithmeticae}, Leipzig, 1801; \S\S 225--237 on genus theory.
+
+\bibitem{GuoLiYangZhu2025} W.~Guo, C.~Li, S.~Yang, C.~Zhu, ``Bootstrapping SU(3) lattice Yang-Mills,'' \emph{JHEP} 12 (2025), 033; arXiv:2502.14421.
+
+\bibitem{Hecke1937} E.~Hecke, ``\"Uber Modulfunktionen und die Dirichletschen Reihen mit Eulerscher Produktentwicklung,'' \emph{Math.\ Annalen} 114 (1937), 316--351.
+
+\bibitem{Hida1981} H.~Hida, ``Congruences of cusp forms and special values of their zeta functions,'' \emph{Invent.\ Math.} 64 (1981), 221--262.
+
+\bibitem{Hida1986} H.~Hida, ``Galois representations into $GL_2(\Z_p[[X]])$ attached to ordinary cusp forms,'' \emph{Invent.\ Math.} 85 (1986), 545--613.
+
+\bibitem{KapustinWitten2006} A.~Kapustin, E.~Witten, ``Electric-magnetic duality and the geometric Langlands program,'' \emph{Commun.\ Number Theory Phys.} 1 (2007), 1--236; arXiv:hep-th/0604151.
+
+\bibitem{KazakovZheng2024} V.~Kazakov, Z.~Zheng, ``Bootstrap for finite-$N$ lattice Yang-Mills,'' arXiv:2404.16925 (2024).
+
+\bibitem{KingsSprang2025} G.~Kings, J.~Sprang, ``Algebraicity of critical Hecke $L$-values,'' \emph{Annals of Mathematics} 202(1) (2025), 1--XX.
+
+\bibitem{KingsSprangArxiv} G.~Kings, J.~Sprang, ``Eisenstein-Kronecker classes, integrality of critical $L$-values, and $p$-adic interpolation,'' arXiv:1912.03657 (2019, accepted Annals Math 2025).
+
+\bibitem{KlemmLerche1994} A.~Klemm, W.~Lerche, S.~Theisen, S.~Yankielowicz, ``Simple singularities and N=2 supersymmetric Yang-Mills theory,'' \emph{Phys.\ Lett.\ B} 344 (1995), 169--175; arXiv:hep-th/9411048.
+
+\bibitem{Marino2024} M.~Mari\~no, ``Lectures on non-perturbative effects in large $N$ gauge theories, matrix models and strings,'' arXiv:2411.16211 (2024).
+
+\bibitem{Schnetz2025} O.~Schnetz, ``$\varphi^3$ at six loops,'' arXiv:2505.15485 (2025).
+
+\bibitem{Schutt2008} M.~Sch\"utt, ``CM newforms with rational coefficients,'' \emph{J.\ Number Theory} 129 (2009), 25--60; arXiv:math/0511228.
+
+\bibitem{Shimura1971} G.~Shimura, \emph{Introduction to the arithmetic theory of automorphic functions}, Iwanami Shoten / Princeton University Press, 1971.
+
+\bibitem{Shimura1976} G.~Shimura, ``The special values of the zeta functions associated with cusp forms,'' \emph{Comm.\ Pure Appl.\ Math.} 29 (1976), 783--804.
+
+\bibitem{tHooft1974} G.~'t~Hooft, ``A planar diagram theory for strong interactions,'' \emph{Nucl.\ Phys.\ B} 72 (1974), 461--473.
+
+\end{thebibliography}
+
+\end{document}

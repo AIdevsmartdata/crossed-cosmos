@@ -3,7 +3,7 @@
 **Manuscript** : "The number of Q-rational weight-5 CM newforms attached to
 an imaginary quadratic field: a theorem (Gauss 1801) and a conjecture
 (Rubin 1991)"
-**Author** : Kevin Remondière (Independent researcher, Tarbes, France)
+**Author** : Kévin Rémondière (Independent researcher, Oloron-Sainte-Marie, France)
 **ORCID** : 0009-0008-2443-7166
 **Email** : kevin.remondiere [at] gmail.com
 **Length** : 8 pp, 1 table, ancillary PARI/GP script
@@ -13,7 +13,7 @@ an imaginary quadratic field: a theorem (Gauss 1801) and a conjecture
 
 Kévin Remondière
 Independent researcher
-Tarbes, France
+Oloron-Sainte-Marie, France
 ORCID: 0009-0008-2443-7166
 kevin.remondiere [at] gmail.com
 

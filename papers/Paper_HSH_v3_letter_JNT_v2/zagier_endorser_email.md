@@ -66,7 +66,7 @@ minute on a laptop. I am happy to revise in any direction.
 Sincerely,
 Kevin Remondiere
 Independent researcher
-Tarbes, France
+Oloron-Sainte-Marie, France
 ORCID: 0009-0008-2443-7166
 kevin.remondiere [at] gmail.com
 

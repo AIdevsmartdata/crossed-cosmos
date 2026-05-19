@@ -69,7 +69,7 @@ Retained: Cox 1989, Gauss 1801, Miyake 2006, Rubin 1991, Shimura 1971, PARI 2024
 
 ### 9. Author / submission metadata
 
-- Affiliation: "Independent researcher, Tarbes, France" (v1 had only "Independent researcher")
+- Affiliation: "Independent researcher, Oloron-Sainte-Marie, France" (v1 had only "Independent researcher")
 - `\thanks{}` adds ORCID 0009-0008-2443-7166 and a note about ancillary PARI files.
 - `\subjclass[2020]` and `\keywords{}` added (JNT-required).
 - `\title[Q-rational weight-5 CM newforms]{...}` (short running title added)

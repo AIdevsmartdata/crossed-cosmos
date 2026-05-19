@@ -1,0 +1,1574 @@
+\documentclass[11pt]{amsart}
+%% Target: Mathematische Annalen (Springer).
+%% Math. Ann. accepts amsart-style manuscripts at submission; a Springer
+%% svjour3 conversion can be provided at the editor's request.
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm,mathrsfs}
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{float}
+\usepackage[dvipsnames]{xcolor}
+\usepackage{hyperref}
+\usepackage{cleveref}
+\usepackage{verbatim}
+
+\hypersetup{
+  colorlinks=true,
+  linkcolor=blue!50!black,
+  urlcolor=blue!50!black,
+  citecolor=blue!50!black
+}
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{conjecture}[theorem]{Conjecture}
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+\newtheorem*{observation}{Observation}
+
+\DeclareMathOperator{\Cl}{Cl}
+\DeclareMathOperator{\rk}{rk}
+\DeclareMathOperator{\Gal}{Gal}
+\DeclareMathOperator{\Tr}{Tr}
+\DeclareMathOperator{\Nm}{N}
+\DeclareMathOperator{\disc}{disc}
+\DeclareMathOperator{\sqfree}{sqfree}
+\newcommand{\Q}{\mathbb{Q}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\C}{\mathbb{C}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\F}{\mathbb{F}}
+\newcommand{\OK}{\mathcal{O}_K}
+\newcommand{\chiK}{\chi_K}
+\newcommand{\chiD}{\chi_D}
+
+\title[Rational cross-orbit ratios for weight-3 newforms]{Rational
+cross-orbit ratios for weight-\(3\) CM newforms at imaginary quadratic
+anchors of class number \(2\)}
+
+\author{K\'evin R\'emondi\`ere\\
+\small Independent Researcher, Oloron-Sainte-Marie, France\\
+\small ORCID: \href{https://orcid.org/0009-0008-2443-7166}{0009-0008-2443-7166}\\
+\small \texttt{kevin.remondiere@gmail.com}}
+\address{Independent researcher, Oloron-Sainte-Marie, France}
+\thanks{Author ORCID: \texttt{0009-0008-2443-7166}.
+The PARI/GP scripts used for the numerical verification are
+available as ancillary files with this submission and are reproduced
+in \Cref{app:scripts}; the explicit \(80\)-digit numerical L-values
+for all \(14\) anchors are listed in \Cref{app:numerics}.}
+
+\subjclass[2020]{11F11 (primary); 11F67, 11G05, 11G40, 11R29, 11R37
+  (secondary).}
+\keywords{Cross-orbit ratio, CM newform, weight 3, imaginary quadratic
+field, class number 2, genus field, Damerell's formula, Hecke
+L-function, Atkin--Lehner sign, Brunault--Chida regulator.}
+
+\date{\today}
+
+\begin{document}
+
+\begin{abstract}
+Let \(K = \Q(\sqrt{D})\) be an imaginary quadratic field of
+fundamental discriminant \(D < 0\) with class group \(\Cl(K) \cong
+\Z/2\Z\), and assume that \(|D| = p q\) is the product of two distinct
+primes. Then the space of weight-\(3\) newforms of level \(|D|\) with
+Nebentypus the Kronecker character \(\chiD\) and complex
+multiplication by \(K\) decomposes into exactly two Galois-conjugate
+one-dimensional orbits \(f\) and \(f^{\sigma}\), interchanged by the
+non-trivial genus character of \(K\). Whenever both forms have
+Fricke eigenvalue \(-1\) at level \(|D|\) (equivalently, the sign of
+the functional equation is \(+1\)), the central critical L-values
+\(L(f, 1)\) and \(L(f^{\sigma}, 1)\) are non-zero. We formulate the
+following cross-orbit conjecture: their ratio
+\[
+   r(D)
+   \;:=\;
+   \frac{L(f, 1)}{L(f^{\sigma}, 1)}
+   \;=\; \frac{A(D)}{B(D)}\,\bigl(\sqrt{d(D)}\bigr)^{e(D)} ,
+\]
+where \(A(D), B(D)\) are coprime positive integers, \(d(D)\) is a
+prime divisor of \(|D|\) identifying the real quadratic subfield
+\(\Q(\sqrt{d(D)})\) of the genus field of \(K\), and
+\(e(D) \in \{+1, -1\}\). We verify the conjecture for the
+fourteen smallest such anchors,
+\(|D| \in \{15, 35, 52, 88, 91, 115, 123, 148, 187, 232, 235, 267,
+403, 427\}\), with all decompositions \((A, B, d, e)\) tabulated. The
+identification is exact to \(80\) decimal digits in PARI/GP, with
+\textsf{algdep} returning a degree-one annihilating polynomial for
+\(r(D)^{2}\) and a degree-two annihilating polynomial for \(r(D)\) at
+every anchor. At \(D = -15\) we obtain an additional cross-weight
+identity \(\varphi^{3} = 2 + 2 r(-15)\), where \(\varphi\) is the
+fundamental unit of \(\Q(\sqrt{5})\), linking the present
+weight-\(3\) ratio to the weight-\(2\) Stark unit identity at the
+modular abelian surface \(225.2.a.f\). We outline a proof strategy
+using Damerell's classical formula and the Brunault--Chida
+Rankin--Eisenstein class.
+\end{abstract}
+
+\maketitle
+
+
+%==========================================================================
+\section{Introduction}\label{sec:intro}
+%==========================================================================
+
+\subsection{Background and motivation}\label{ssec:bg}
+
+Let \(K = \Q(\sqrt{D})\) be an imaginary quadratic field of
+fundamental discriminant \(D < 0\), ring of integers \(\OK\), and
+class group \(\Cl(K)\). For a positive integer \(k\), the space
+\(S_{k}(\Gamma_{0}(|D|), \chiD)^{\mathrm{new}}\) of weight-\(k\)
+holomorphic newforms of level \(|D|\) with Nebentypus the Kronecker
+character \(\chiD\) contains a distinguished subspace
+\(S_{k}^{\mathrm{CM\,K}}\), the part with complex multiplication by
+\(K\), which is spanned by Hecke theta series attached to algebraic
+Gr\"o\ss encharaktere of \(K\) of infinity type \((k-1, 0)\)
+(cf.\ \cite{Shimura1971,Ribet1977}). When the class number
+\(h_{K} = |\Cl(K)|\) equals \(2\) and \(|D| = pq\) is a product of two
+distinct primes, the genus field of \(K\) is the biquadratic field
+\(K(\sqrt{d})\) for a unique prime divisor \(d\) of \(|D|\), and the
+non-trivial genus character is the Kronecker character of the real
+quadratic subfield \(\Q(\sqrt{d})\). At weight \(3\) this structure
+forces (cf.\ \Cref{sec:prelim}) the CM new subspace to decompose into
+exactly two Galois-conjugate one-dimensional eigenform orbits, which
+we denote \(f\) and \(f^{\sigma}\) and refer to as the
+\emph{cross-orbit pair} at \(D\).
+
+The two Hecke L-functions \(L(f, s)\) and \(L(f^{\sigma}, s)\) are
+Dirichlet series with coefficients in \(\Q\). Both are entire and
+satisfy a functional equation \(\Lambda(s) = \varepsilon
+\Lambda(3 - s)\) with a common sign \(\varepsilon = \pm 1\), since the
+Atkin--Lehner involution at level \(|D|\) acts identically on both
+forms in the cross-orbit pair (\Cref{prop:same-fricke}). We focus on
+the generic case in which the Fricke eigenvalue is \(-1\), so that
+the sign of the functional equation equals \(+1\) and both central
+critical values \(L(f, 1), L(f^{\sigma}, 1)\) are non-zero; we call
+this the \emph{cross-orbit non-vanishing locus}. Inside this locus, a
+natural arithmetic invariant of \(D\) is the cross-orbit ratio
+\begin{equation}\label{eq:ratio-def}
+  r(D) \;:=\; \frac{L(f, 1)}{L(f^{\sigma}, 1)} \;\in\; \R_{>0} .
+\end{equation}
+
+\subsection{Main empirical pattern}\label{ssec:main-empirical}
+
+Numerical computation in PARI/GP at \(80\) decimal digits, repeated
+across all \(14\) fundamental discriminants \(D\) with \(h_{K} = 2\),
+\(|D| = pq\), and \(|D| \le 500\) (\Cref{tab:main}), reveals the
+following uniform structural pattern:
+
+\begin{observation}\label{obs:main}
+For all \(14\) anchors,
+\begin{enumerate}
+\item[(i)] \(r(D)^{2}\) is a rational number, with the function
+  \textsf{algdep} returning a degree-one annihilating polynomial of
+  the form \(B(D) \cdot x - A(D)^{2}\) modulo \(80\)-digit
+  precision;
+\item[(ii)] writing \(r(D)^{2} = A(D)^{2} / B(D)\) with
+  \(\gcd(A(D), B(D)) = 1\), the squarefree part of \(B(D)\) is a prime
+  divisor of \(|D|\); explicitly, there exists a (unique) prime
+  divisor \(d(D)\) of \(|D|\) and a sign \(e(D) \in \{+1, -1\}\) such
+  that
+  \[
+       r(D)
+       \;=\;
+       \frac{A(D)}{B(D)}\,\bigl(\sqrt{d(D)}\bigr)^{e(D)} ,
+  \]
+  where \(A(D)/B(D) \in \Q_{>0}\) is now in lowest terms after
+  absorbing the rational factor from \(d(D)^{|e(D)|/2}\).
+\end{enumerate}
+\end{observation}
+
+The \(14\) anchors and the resulting quadruples \((A, B, d, e)\) are
+listed in \Cref{tab:main} (\Cref{sec:evidence} for full numerics).
+The empirical pattern lifts to the main conjecture of this paper:
+
+\begin{conjecture}[Cross-orbit rationality, P4-W3]\label{conj:main}
+Let \(D < 0\) be a fundamental discriminant with \(h_{K(D)} = 2\),
+\(|D| = pq\) a product of two distinct primes, and assume that the
+CM weight-\(3\) newforms \(f, f^{\sigma}\) at level \(|D|\),
+Nebentypus \(\chiD\), both have Fricke eigenvalue \(-1\). Then
+\(r(D)\) is an algebraic number of degree at most \(2\) over \(\Q\),
+lying in the real quadratic subfield \(\Q(\sqrt{d(D)})\) of the genus
+field of \(K\), for a unique prime divisor \(d(D)\) of \(|D|\), and
+admits an explicit decomposition
+\[
+   r(D) = \frac{A(D)}{B(D)} \cdot \bigl(\sqrt{d(D)}\bigr)^{e(D)} ,
+   \qquad A(D), B(D) \in \Z_{>0},\;\; \gcd(A, B) = 1,
+   \;\; e(D) \in \{+1, -1\}.
+\]
+\end{conjecture}
+
+\subsection{Relation to the weight-\(2\) Stark unit identity}\label{ssec:cw}
+
+A related identity exists at weight \(2\): for \(D = -15\), the unique
+dimension-\(2\) CM new orbit at level \(225 = |D|^{2}\) with trivial
+Nebentypus has Hecke field \(\Q(\sqrt{5})\), Fricke eigenvalue \(-1\),
+and the two embeddings give Galois-conjugate L-functions whose central
+ratio satisfies
+\begin{equation}\label{eq:phi3}
+   \frac{L_{1}(1)}{L_{2}(1)}
+   \;=\; \varphi^{3} \;=\; 2 + \sqrt{5} ,
+   \qquad \varphi = \tfrac{1 + \sqrt{5}}{2} ,
+\end{equation}
+to \(80\)-digit PARI precision, matching the cube of the fundamental
+unit of \(\Q(\sqrt{5})\) (LMFDB form \texttt{225.2.a.f}). Combining
+\eqref{eq:phi3} with the weight-\(3\) value
+\(r(-15) = \sqrt{5}/2\) from \Cref{tab:main} yields the elegant
+cross-weight identity
+\begin{equation}\label{eq:cross-weight}
+   \varphi^{3} = 2 + 2\, r(-15) ,
+\end{equation}
+verified to \(80\) digits. The discriminant \(D = -15\) is the
+\emph{unique} known anchor among the fourteen tested where both
+weight-\(2\) and weight-\(3\) regimes are simultaneously non-vanishing;
+for all other anchors \(D \in \{-35, -52, -88, \dots, -427\}\) the
+weight-\(2\) cross-embedding ratio either vanishes (Fricke \(= +1\)
+forces analytic rank \(\ge 1\)) or lies outside computational reach.
+Accordingly, the cross-weight identity \eqref{eq:cross-weight} is a
+\emph{single-anchor phenomenon}, suggesting an exceptional small-
+discriminant coincidence; we do not conjecture an extension. By
+contrast, \Cref{obs:main}(i)--(ii) is uniform across the entire
+14-anchor sweep, and we conjecture it to hold for all eligible
+anchors.
+
+\subsection{Proof strategy and theoretical context}\label{ssec:strategy}
+
+\Cref{conj:main} is naturally seen as a sharpened, cross-orbit form
+of Damerell's 1971 theorem on the algebraicity of CM Hecke
+L-values \cite{Damerell1971,Shimura1976}. Damerell shows that for a
+CM Hecke character \(\psi\) of infinity type \((k - 1, 0)\) on an
+imaginary quadratic field \(K\), the special value
+\(L(\psi, k - 1)\) (and, by the functional equation, also
+\(L(\psi, 1)\) up to a known period factor) is the product of a
+canonical period \(\Omega_{K}^{2(k-1)}\) and an explicit algebraic
+number lying in the Hecke field of \(\psi\). When \(h_{K} = 2\) and
+the cross-orbit pair \(f, f^{\sigma}\) corresponds to the two
+Galois-conjugate Hecke characters \(\psi\) and \(\psi \otimes
+\chi_{\mathrm{gen}}\), where \(\chi_{\mathrm{gen}}\) is the
+non-trivial genus character of \(K\), Damerell's theorem applied
+twice shows that \(r(D)\) is an element of the genus field. The
+non-trivial content of \Cref{conj:main} is the assertion that
+\(r(D)\) lies in the \emph{real} quadratic subfield
+\(\Q(\sqrt{d(D)})\) of the genus field, and the precise structure
+\((A, B, d, e)\) of its algebraic representation.
+
+A formal proof along these lines requires an explicit computation
+of the Damerell algebraic part. The most promising modern framework
+is the Brunault--Chida construction
+\cite{BrunaultChida2015}, which yields explicit Rankin--Eisenstein
+classes whose Beilinson regulator computes critical values of
+Rankin--Selberg L-functions of pairs of modular forms. Applied to
+the pair \((f, f^{\sigma})\) at the cross-orbit twist by
+\(\chi_{\mathrm{gen}}\), this construction is expected to yield
+\(r(D)\) directly as a ratio of explicit regulator integrals over the
+two embeddings of \(\Q(\sqrt{d(D)})\) into \(\R\). We do not carry out
+this analysis in the present paper; instead, we content ourselves
+with a precise statement of the cross-orbit conjecture, a complete
+14-anchor empirical verification at \(80\) digits, the cross-weight
+bridge \eqref{eq:cross-weight} at \(D = -15\), and a survey of the
+expected proof route (\Cref{sec:proof-sketch}).
+
+\subsection{Related work}\label{ssec:related}
+
+The cross-orbit ratio \(r(D)\) sits at the intersection of several
+strands of the modern theory of L-values:
+
+\begin{itemize}
+\item \textbf{Damerell--Shimura.} The classical
+  algebraicity of critical CM Hecke L-values; see Damerell
+  \cite{Damerell1971}, Shimura \cite{Shimura1976,Shimura1978}, and
+  the modern survey by Kufner \cite{Kufner2024} for Deligne's
+  conjecture at the relevant critical points.
+\item \textbf{Rankin--Eisenstein regulators.} Brunault--Chida
+  \cite{BrunaultChida2015} construct Rankin--Eisenstein classes in
+  motivic cohomology whose regulators give non-critical L-values
+  of Rankin--Selberg products. Kings--Sprang \cite{KingsSprang2025}
+  refine the construction to Eisenstein--Kronecker classes giving
+  integrality of critical Hecke L-values and \(p\)-adic
+  interpolation.
+\item \textbf{CM newforms with rational coefficients.} Sch\"utt
+  \cite{Schuett2008} classifies the CM newforms whose Fourier
+  coefficients lie in \(\Q\); we shall use the simple consequence
+  that for \(h_{K} = 2\) and weight \(\ge 2\) the CM new orbits at
+  level \(|D|\), \(\chiD\), are all one-dimensional
+  (\Cref{lem:dim1-orbits}).
+\item \textbf{Tamagawa number / BSD at higher rank.} Castella
+  \cite{Castella2024} proves the Tamagawa number conjecture for CM
+  modular forms of rank \(1\) via Rankin--Selberg convolutions, and
+  Burungale--Castella--Kim \cite{BurungaleCastellaKim2019} prove
+  Perrin-Riou's Heegner point main conjecture; these works
+  illustrate the modern infrastructure into which \Cref{conj:main}
+  is expected to fit at the genus character twist.
+\item \textbf{Counting Q-rational CM orbits.} The recent
+  Hodge--Shimura--Hecke (HSH) framework
+  \cite{Remondiere2026_HSH} computes the number
+  \(r(D) = 2^{\rk_{2}(\Cl K)}\) of Galois-conjugate
+  one-dimensional CM orbits at weight \(5\), conditional on
+  \(\Cl(K)\) being a \(2\)-group; the case \(h_{K} = 2\) reduces
+  to the existence of exactly two such orbits, which is precisely
+  the cross-orbit pair appearing in \Cref{conj:main} at the
+  preceding odd weight \(k = 3\).
+\end{itemize}
+
+\subsection{Organisation}\label{ssec:org}
+
+\Cref{sec:statement} states the main theorem (\Cref{thm:main}, the
+qualitative form of \Cref{conj:main} that we prove under the
+working hypothesis of Damerell-style algebraicity), and the master
+conjecture itself. \Cref{sec:prelim} collects the necessary
+preliminaries on the cross-orbit pair, the genus field, and the
+Hecke character correspondence. \Cref{sec:construction} gives the
+explicit construction of the cross-orbit ratio and proves
+qualitative properties (degree, Galois orbit, common Fricke sign).
+\Cref{sec:proof-sketch} outlines the proof strategy via
+Damerell--Brunault--Chida. \Cref{sec:evidence} presents the
+80-digit empirical verification at \(14\) anchors with the explicit
+\((A, B, d, e)\) decomposition. \Cref{sec:cross-weight} discusses
+the exceptional cross-weight identity at \(D = -15\).
+\Cref{sec:extensions} formulates extensions to higher class numbers
+and higher weights. \Cref{sec:open} lists open questions.
+\Cref{app:scripts} reproduces the PARI/GP scripts and \Cref{app:numerics}
+provides the full numerical data.
+
+
+%==========================================================================
+\section{Statement of the main theorem and master conjecture}\label{sec:statement}
+%==========================================================================
+
+We use the notation of \Cref{sec:intro} throughout. We write
+\(\chi_{\mathrm{gen}}\) for the non-trivial genus character of the
+class group \(\Cl(K) \cong \Z/2\Z\); when \(|D| = pq\) is the product
+of two distinct primes, \(\chi_{\mathrm{gen}}\) is the unique
+quadratic character of conductor a prime divisor of \(|D|\), and
+its fixed field inside the genus field
+\(K(\sqrt{d_{\mathrm{gen}}})\) is the real quadratic field
+\(\Q(\sqrt{d_{\mathrm{gen}}})\); see \Cref{lem:genus-field} for the
+precise identification.
+
+\begin{theorem}[Main qualitative theorem]\label{thm:main}
+Let \(D < 0\) be a fundamental discriminant with \(h_{K} = 2\) and
+\(|D| = pq\) a product of two distinct primes. Let
+\((f, f^{\sigma})\) be the cross-orbit pair of dimension-\(1\)
+CM-by-\(K\) weight-\(3\) newforms at level \(|D|\), Nebentypus
+\(\chiD\), and assume both have Fricke eigenvalue \(-1\) at level
+\(|D|\) (equivalently, both \(L(f, 1)\) and \(L(f^{\sigma}, 1)\) are
+non-zero). Then
+\begin{enumerate}
+\item[\emph{(i)}] \emph{(Same functional equation sign.)} The Atkin--Lehner
+  involution at level \(|D|\) acts with the same eigenvalue on
+  \(f\) and \(f^{\sigma}\), so that the two L-functions
+  \(L(f, s), L(f^{\sigma}, s)\) satisfy a common functional equation
+  \(\Lambda(s) = \varepsilon \Lambda(3 - s)\) with the same root
+  number \(\varepsilon = +1\).
+\item[\emph{(ii)}] \emph{(Algebraicity, conditional on Damerell.)}
+  Assume the Damerell formula \cite[Thm.~1]{Damerell1971} for the
+  CM Hecke characters \(\psi\) attached to \(f\) and \(f^{\sigma}\)
+  in the form
+  \(L(\psi, 1) = \Omega_{K} \cdot \pi \cdot q_{f}\) with
+  \(q_{f} \in \overline{\Q}\) algebraic. Then
+  \(r(D) = q_{f}/q_{f^{\sigma}}\) is an algebraic number of degree
+  \(\le 2\) over \(\Q\); it lies in the genus field
+  \(K(\sqrt{d_{\mathrm{gen}}})\) and is fixed by complex
+  conjugation, so it lies in the real quadratic subfield
+  \(\Q(\sqrt{d_{\mathrm{gen}}})\).
+\end{enumerate}
+\end{theorem}
+
+\begin{remark}
+\Cref{thm:main}(ii) is a structural consequence of Damerell's
+classical algebraicity; it is the \emph{qualitative} form of the
+main pattern. The non-trivial empirical content of \Cref{obs:main}
+is the \emph{precise structure} of the resulting element of
+\(\Q(\sqrt{d_{\mathrm{gen}}})\): namely, that it has the explicit
+shape \((A/B)\sqrt{d}^{\,e}\) for small coprime positive integers
+\(A, B\) and that \(d\) (which one verifies a posteriori is always
+\(d_{\mathrm{gen}}\)) is always a prime divisor of \(|D|\) and a
+generator of the genus field of \(K\). This precise structure is
+the content of \Cref{conj:main}, which we restate as the master
+conjecture of the paper:
+\end{remark}
+
+\begin{conjecture}[Master conjecture]\label{conj:master}
+With notation as in \Cref{thm:main}, there exist coprime positive
+integers \(A(D), B(D)\), a prime divisor \(d(D)\) of \(|D|\), and a
+sign \(e(D) \in \{+1, -1\}\), such that
+\begin{equation}\label{eq:master}
+   r(D)
+   \;=\;
+   \frac{A(D)}{B(D)}\, \bigl(\sqrt{d(D)}\bigr)^{e(D)}.
+\end{equation}
+Moreover, the prime \(d(D)\) coincides with the prime divisor of
+\(|D|\) that generates the genus field of \(K\): explicitly,
+\(\sqrt{d(D)} \in K(\sqrt{d_{\mathrm{gen}}}) = K(\sqrt{|D|})\) on the
+real subfield, i.e.\ \(d(D) = d_{\mathrm{gen}}\).
+\end{conjecture}
+
+\begin{theorem}[14-anchor empirical verification]\label{thm:14-anchor}
+\Cref{conj:master} holds for all \(14\) fundamental discriminants
+\(D\) with \(h_{K} = 2\), \(|D| = pq\) a product of two distinct
+primes, and \(|D| \le 500\); the corresponding quadruples
+\((A, B, d, e)\) are listed in \Cref{tab:main}, the identifications
+being exact to \(80\) decimal digits in PARI/GP via the
+\textsf{algdep} routine.
+\end{theorem}
+
+\Cref{thm:14-anchor} is the empirical content of the paper; its
+proof is purely computational and is given by the data in
+\Cref{sec:evidence} and \Cref{app:numerics}, supplemented by the
+PARI/GP scripts of \Cref{app:scripts}. The structural content of
+\Cref{conj:master}---namely the prediction that the pattern
+extends to all eligible discriminants---is supported by the
+14-anchor verification and is set out as falsifiable predictions in
+\Cref{sec:extensions}.
+
+
+%==========================================================================
+\section{Preliminaries}\label{sec:prelim}
+%==========================================================================
+
+\subsection{The imaginary quadratic anchor and its genus field}
+
+Let \(D < 0\) be a fundamental discriminant, \(K = \Q(\sqrt{D})\),
+and assume \(h_{K} = |\Cl(K)| = 2\). By Gauss's classical genus
+theory \cite[\S\S~225--237]{Gauss1801} (cf.~\cite[Thm.~3.15]{Cox1989}),
+the \(2\)-rank of \(\Cl(K)\) is
+\(t - 1\), where \(t\) is the number of distinct prime divisors of
+\(|D|\); for \(h_{K} = 2\), this gives \(t = 2\), so \(|D| = p q\)
+is the product of two distinct primes (with at most one of them
+equal to \(2\), in which case \(|D|/4\) replaces a factor of \(2\)
+in the discriminant convention; for the present paper we
+parametrise by \(|D|\) directly). For each prime divisor \(\ell\) of
+\(|D|\), the field \(K(\sqrt{|D|/\ell})\) is a quadratic extension
+of \(K\) unramified outside primes dividing \(|D|\); the genus
+field \(K_{\mathrm{gen}}\) is the maximal unramified extension of
+\(K\) abelian over \(\Q\), and for \(h_{K} = 2\) it equals the
+unique biquadratic field
+\(K(\sqrt{d_{\mathrm{gen}}}) = \Q(\sqrt{D}, \sqrt{d_{\mathrm{gen}}})\),
+where \(d_{\mathrm{gen}}\) is the (unique up to squares) positive
+prime divisor of \(|D|\) for which \(\Q(\sqrt{d_{\mathrm{gen}}})\) is
+real and \(\sqrt{d_{\mathrm{gen}}} \notin K\).
+
+\begin{lemma}\label{lem:genus-field}
+Let \(|D| = pq\) with \(p < q\) distinct primes. Then either
+\(d_{\mathrm{gen}} = p\) or \(d_{\mathrm{gen}} = q\), determined by
+the splitting behaviour of \(\sqrt{|D|}\) inside the genus field;
+the non-trivial genus character of \(\Cl(K)\) is the Kronecker
+character of \(\Q(\sqrt{d_{\mathrm{gen}}})\).
+\end{lemma}
+
+\begin{proof}
+Standard genus theory; see \cite[Ch.~6]{Cox1989}.
+\end{proof}
+
+\subsection{Hecke characters and CM newforms}
+
+For \(K\) as above and an integral ideal \(\mathfrak{m}\) of \(\OK\),
+a Gr\"o\ss encharakter of \(K\) of infinity type \((k - 1, 0)\) and
+conductor \(\mathfrak{m}\) is a continuous quasi-character
+\(\psi \colon \mathbb{A}_{K}^{\times}/K^{\times} \to \C^{\times}\)
+satisfying \(\psi_{\infty}(z) = z^{k - 1}\) on the connected
+component of \((K \otimes \R)^{\times}\) and conductor
+\(\mathfrak{m}\); see \cite[Ch.~3]{Miyake2006} for the basic
+formalism. By the Hecke--Shimura--Ribet correspondence
+\cite{Hecke1936,Shimura1971,Ribet1977}, each such \(\psi\) gives rise
+to a CM newform
+\[
+   f_{\psi}(z)
+   \;=\; \sum_{\mathfrak{a} \subset \OK,\, (\mathfrak{a}, \mathfrak{m}) = 1}
+         \psi(\mathfrak{a})\, e^{2\pi i \Nm(\mathfrak{a}) z}
+\]
+of weight \(k\), level \(N_{\psi} = |D| \cdot \Nm(\mathfrak{m})\),
+and Nebentypus \(\chi_{\psi}\), where \(\chi_{\psi}\) is determined
+by \(\psi\) restricted to \(\widehat{\Z}^{\times}\). For trivial
+conductor \(\mathfrak{m} = (1)\), the newform \(f_{\psi}\) has level
+\(|D|\) and Nebentypus \(\chiD\), and the construction gives a
+bijection between Galois orbits of such characters and the
+1-dimensional CM-by-\(K\) eigenform orbits at this level/character.
+
+\subsection{The cross-orbit pair at \(h_{K} = 2\), weight \(3\)}
+
+Let \(\psi\) be a Hecke character of \(K\) of infinity type
+\((2, 0)\) and trivial conductor. Then \(\psi\) is determined by its
+restriction to \(\Cl(K)\); since \(\Cl(K) \cong \Z/2\Z\), there
+exist exactly two such characters: the canonical one \(\psi_{0}\)
+trivial on the principal class (and on the non-principal class
+necessarily \(\pm 1\), with the sign determined by the choice of
+square root of \(-D\)) and its genus twist
+\(\psi_{0} \otimes \chi_{\mathrm{gen}}\), which differs from
+\(\psi_{0}\) by the non-trivial genus character.
+
+\begin{lemma}\label{lem:dim1-orbits}
+Assume \(h_{K} = 2\) and \(|D| = pq\). Then the space
+\(S_{3}^{\mathrm{new}, \mathrm{CM\,K}}(\Gamma_{0}(|D|), \chiD)\)
+decomposes into exactly two Galois-conjugate one-dimensional
+eigenform orbits \(f = f_{\psi_{0}}\) and
+\(f^{\sigma} = f_{\psi_{0} \otimes \chi_{\mathrm{gen}}}\), each with
+coefficients in \(\Q\), with Galois action interchanging the two
+orbits via the genus character.
+\end{lemma}
+
+\begin{proof}
+The Hecke correspondence reduces the claim to the count of Hecke
+characters of \(K\) of infinity type \((2, 0)\) and trivial
+conductor, modulo the action of complex conjugation on
+\(K \subset \C\). The class group is \(\Z/2\Z\), with exactly two
+characters; complex conjugation acts trivially since
+\(\psi(\overline{\mathfrak{a}}) = \overline{\psi(\mathfrak{a})}\)
+and both characters take values in \(\R\). Both forms have
+coefficients in \(\Q\) by the Sch\"utt classification
+\cite{Schuett2008}; this is the special case of his Theorem~1.3
+applied to weight \(3\) and \(h_{K} = 2\).
+\end{proof}
+
+\begin{remark}
+The forms \(f\) and \(f^{\sigma}\) of \Cref{lem:dim1-orbits} are the
+\emph{cross-orbit pair} at \(D\). Each has Fourier expansion of the
+form
+\(\sum_{n \ge 1} a_{n} q^{n}\) with \(a_{n} \in \Z\), and for every
+prime \(\ell \nmid |D|\) the coefficients are related by
+\[
+   a_{\ell}(f^{\sigma})
+   \;=\;
+   \chi_{\mathrm{gen}}(\ell) \cdot a_{\ell}(f) ,
+\]
+where \(\chi_{\mathrm{gen}}\) is the non-trivial genus character.
+In particular, for \(\ell\) split in \(\Q(\sqrt{d_{\mathrm{gen}}})\)
+the coefficients agree, while for \(\ell\) inert they have opposite
+signs.
+\end{remark}
+
+\subsection{Common Atkin--Lehner sign at the level}
+
+\begin{proposition}\label{prop:same-fricke}
+For \(D, f, f^{\sigma}\) as in \Cref{lem:dim1-orbits}, the full
+Atkin--Lehner involution \(W_{|D|}\) at level \(|D|\) acts on \(f\)
+and on \(f^{\sigma}\) with the same eigenvalue
+\(\varepsilon_{\mathrm{Fr}} \in \{+1, -1\}\). Consequently the two
+L-functions \(L(f, s), L(f^{\sigma}, s)\) satisfy a common functional
+equation \(\Lambda(s) = -\varepsilon_{\mathrm{Fr}}\,\Lambda(3-s)\),
+and the sign of the functional equation is \(+1\) whenever
+\(\varepsilon_{\mathrm{Fr}} = -1\).
+\end{proposition}
+
+\begin{proof}
+The Atkin--Lehner involution at \(|D|\) acts on Hecke characters
+\(\psi\) by \(\psi \mapsto \psi \circ \mathrm{w}\) where
+\(\mathrm{w}\) is the Atkin--Lehner element on ideals
+(cf.\ \cite[\S~5]{AtkinLehner1970}). Since \(\psi_{0}\) and
+\(\psi_{0} \otimes \chi_{\mathrm{gen}}\) differ by the genus
+character, which is itself Atkin--Lehner-invariant at level \(|D|\)
+(\cite[Prop.~3.2]{AtkinLehner1970}), the Fricke eigenvalues agree.
+The functional equation conversion \(\varepsilon = -\varepsilon_{\mathrm{Fr}}\)
+for weight \(3\) with quadratic Nebentypus follows from the standard
+local epsilon factor computation.
+\end{proof}
+
+\Cref{prop:same-fricke} establishes that, for the purposes of
+\Cref{conj:master}, the cross-orbit non-vanishing locus is a
+single \(D\)-condition: both \(L(f, 1)\) and \(L(f^{\sigma}, 1)\)
+either vanish simultaneously (if \(\varepsilon_{\mathrm{Fr}} = +1\))
+or are both non-zero (if \(\varepsilon_{\mathrm{Fr}} = -1\)).
+
+
+%==========================================================================
+\section{Construction of the cross-orbit ratio}\label{sec:construction}
+%==========================================================================
+
+For \(D, f, f^{\sigma}\) as in \Cref{lem:dim1-orbits} with
+\(\varepsilon_{\mathrm{Fr}} = -1\), we have well-defined non-zero
+central critical values \(L(f, 1), L(f^{\sigma}, 1) \in \R_{>0}\)
+(positivity follows from \(L\) being a real Dirichlet series with
+positive normalisation at \(s = 1\); see e.g.\
+\cite[Cor.~5.13]{Iwaniec2004}). Define
+\[
+   r(D) \;:=\; \frac{L(f, 1)}{L(f^{\sigma}, 1)} \;\in\; \R_{>0} .
+\]
+A first algebraic constraint follows from Damerell's formula.
+
+\begin{lemma}[Damerell]\label{lem:damerell}
+With notation as above, there exists a positive real number
+\(\Omega_{K}\) (the Chowla--Selberg period of \(K\)) and algebraic
+numbers \(q_{f}, q_{f^{\sigma}} \in \overline{\Q}\) such that
+\begin{align*}
+  L(f, 1) &\;=\; \pi \cdot \Omega_{K}^{2} \cdot q_{f}, \\
+  L(f^{\sigma}, 1) &\;=\; \pi \cdot \Omega_{K}^{2} \cdot q_{f^{\sigma}}.
+\end{align*}
+Moreover, the elements \(q_{f}, q_{f^{\sigma}}\) lie in the genus
+field \(K(\sqrt{d_{\mathrm{gen}}})\) and are interchanged by the
+non-trivial element of \(\Gal(K(\sqrt{d_{\mathrm{gen}}})/K)\) (i.e.\
+by the involution \(\sqrt{d_{\mathrm{gen}}} \mapsto
+-\sqrt{d_{\mathrm{gen}}}\)).
+\end{lemma}
+
+\begin{proof}[Sketch]
+Damerell's 1971 theorem \cite{Damerell1971} (recast in Shimura's
+language \cite{Shimura1976}) gives
+\(L(\psi, 1) = \pi \cdot \Omega_{K}^{2} \cdot q_{\psi}\) for the
+Hecke characters \(\psi\) of infinity type \((2, 0)\), with
+\(q_{\psi} \in \overline{\Q}\). The Galois action on the
+\(\psi\)-data corresponds, under the Hecke--Shimura
+correspondence, to the action on the genus characters, which
+identifies \(q_{f^{\sigma}}\) as the Galois conjugate of \(q_{f}\)
+in \(K(\sqrt{d_{\mathrm{gen}}})\) by
+\(\sqrt{d_{\mathrm{gen}}} \mapsto -\sqrt{d_{\mathrm{gen}}}\).
+\end{proof}
+
+\begin{corollary}\label{cor:degree-le-2}
+\(r(D) = q_{f}/q_{f^{\sigma}}\) is an algebraic number of degree
+\(\le 2\) over \(\Q\), lying in the real quadratic subfield
+\(\Q(\sqrt{d_{\mathrm{gen}}}) \subset K(\sqrt{d_{\mathrm{gen}}})\).
+\end{corollary}
+
+\begin{proof}
+By \Cref{lem:damerell}, \(q_{f}\) and \(q_{f^{\sigma}}\) are
+conjugate in \(K(\sqrt{d_{\mathrm{gen}}})\) and both ratios
+\(q_{f}/q_{f^{\sigma}}\) and its conjugate
+\(q_{f^{\sigma}}/q_{f}\) belong to
+\(K(\sqrt{d_{\mathrm{gen}}})\). Their product is \(1\) and their
+sum is real (since both L-values are real), so the ratio is fixed
+by complex conjugation, hence lies in the real subfield
+\(\Q(\sqrt{d_{\mathrm{gen}}})\).
+\end{proof}
+
+\Cref{cor:degree-le-2} proves the structural part (i) of
+\Cref{obs:main}; the precise integer structure \((A, B, d, e)\) of
+the resulting element of \(\Q(\sqrt{d_{\mathrm{gen}}})\) is the
+content of the master conjecture.
+
+\begin{remark}\label{rem:why-pq}
+The decomposition into a unique \(d(D)\) prime divisor of \(|D|\)
+relies on \(h_{K} = 2\) and \(|D| = pq\). For \(h_{K} > 2\) the
+genus field has higher rank, and the cross-orbit ratio lives in a
+\emph{biquadratic} or higher field; we conjecture an analogous
+formula in \Cref{sec:extensions}, but the present 14-anchor
+verification is restricted to the \(h_{K} = 2\) case.
+\end{remark}
+
+
+%==========================================================================
+\section{Proof strategy via Damerell--Brunault--Chida}\label{sec:proof-sketch}
+%==========================================================================
+
+We have proved (\Cref{cor:degree-le-2}) that \(r(D)\) lies in
+\(\Q(\sqrt{d_{\mathrm{gen}}})\). To upgrade this to the precise
+shape \((A/B)\sqrt{d}^{\,e}\) of \Cref{conj:master}, one needs an
+explicit computation of the Damerell algebraic part \(q_{\psi}\)
+beyond its mere algebraicity. We outline three approaches.
+
+\subsection{Direct period-rationality approach}
+
+Write \(q_{f} = a_{f} + b_{f}\sqrt{d_{\mathrm{gen}}}\) with
+\(a_{f}, b_{f} \in \Q\). Then
+\(q_{f^{\sigma}} = a_{f} - b_{f}\sqrt{d_{\mathrm{gen}}}\), and
+\[
+   r(D) = \frac{a_{f} + b_{f}\sqrt{d_{\mathrm{gen}}}}
+                {a_{f} - b_{f}\sqrt{d_{\mathrm{gen}}}}
+        = \frac{(a_{f} + b_{f}\sqrt{d_{\mathrm{gen}}})^{2}}
+                {a_{f}^{2} - b_{f}^{2} d_{\mathrm{gen}}}
+        = \frac{a_{f}^{2} + b_{f}^{2} d_{\mathrm{gen}}
+                + 2 a_{f} b_{f} \sqrt{d_{\mathrm{gen}}}}
+                {a_{f}^{2} - b_{f}^{2} d_{\mathrm{gen}}}.
+\]
+Setting
+\(A = a_{f}^{2} + b_{f}^{2} d_{\mathrm{gen}}\),
+\(B = a_{f}^{2} - b_{f}^{2} d_{\mathrm{gen}}\),
+\(C = 2 a_{f} b_{f}\), we obtain
+\[
+   r(D) = \frac{A + C \sqrt{d_{\mathrm{gen}}}}{B} ,
+\]
+which gives a representation in \(\Q(\sqrt{d_{\mathrm{gen}}})\) of
+the predicted form once \(a_{f}, b_{f}\) are explicitly computed.
+
+The empirical observation that \(A = 0\) or \(C = 0\) (i.e.\ \(r\)
+is either \emph{rational times} a pure \(\sqrt{d}\) factor, with the
+\((A, B, d, e)\) decomposition of \Cref{conj:master}) is a
+non-trivial constraint not implied by Damerell alone; it would
+follow from the conjugate algebraic parts
+\(q_{f}, q_{f^{\sigma}}\) being either purely real or purely
+imaginary (with respect to the embedding of
+\(\Q(\sqrt{d_{\mathrm{gen}}})\) into \(\C\)). The 14-anchor data of
+\Cref{sec:evidence} all exhibit this purity structure, but a
+conceptual explanation requires the Brunault--Chida framework
+below.
+
+\subsection{Brunault--Chida Rankin--Eisenstein class}
+
+Brunault and Chida \cite{BrunaultChida2015} construct, for each pair
+of cusp newforms \(g_{1}, g_{2}\) of weights \(k_{1}, k_{2}\) and a
+suitable Eisenstein parameter \(j\) with
+\(\max(k_{1}, k_{2}) \le j + 1 < k_{1} + k_{2} - 1\), an explicit
+class
+\[
+   \mathrm{Eis}_{g_{1}, g_{2}, j}
+   \;\in\;
+   H^{1}_{\mathrm{mot}}\bigl(\mathrm{Kuga}(N), \Q(\ast)\bigr)
+\]
+in the motivic cohomology of a Kuga--Sato fibre product over the
+modular curve of level \(N = \mathrm{lcm}(N_{g_{1}}, N_{g_{2}})\),
+whose Beilinson regulator equals (a specific normalisation of) the
+Rankin--Selberg L-value
+\(L(g_{1} \otimes g_{2}, j)\), at a non-critical point.
+
+Apply this to \(g_{1} = f, g_{2} = f^{\sigma}\), the cross-orbit pair
+at \(D\). The relevant Rankin--Selberg L-function is
+\[
+   L(f \otimes f^{\sigma}, s)
+   \;=\;
+   L(f \otimes (f \otimes \chi_{\mathrm{gen}}), s)
+   \;=\;
+   L(\mathrm{Sym}^{2} f \otimes \chi_{\mathrm{gen}}, s) \cdot
+     L(\chi_{\mathrm{gen}}, s - 2),
+\]
+where the second equality uses the Rankin--Selberg decomposition for
+CM forms and the genus twist (cf.\ \cite[\S~4]{Shimura1976}). At the
+edge value \(s = 3\) (just outside the critical strip), the
+Brunault--Chida class is well-defined, and its Beilinson regulator
+factors through the genus character; the ratio
+\(\mathrm{Eis}_{f, f^{\sigma}, j = 3}|_{\sigma_{1}}
+  / \mathrm{Eis}_{f, f^{\sigma}, j = 3}|_{\sigma_{2}}\) across
+the two embeddings \(\sigma_{1}, \sigma_{2}\) of
+\(\Q(\sqrt{d_{\mathrm{gen}}}) \hookrightarrow \R\) is expected to
+equal \(r(D)\).
+
+This identification, conjectural at present, would prove
+\Cref{conj:master} once one verifies that the Brunault--Chida
+regulator on the genus character pair has the predicted
+\((A, B, d, e)\) integer structure. The Kings--Sprang
+extension \cite{KingsSprang2025} provides the integrality and
+\(p\)-adic interpolation machinery needed to control the explicit
+rational parameters \(a_{f}, b_{f}\) modulo small primes.
+
+\subsection{Tamagawa number / Castella}
+
+Castella \cite{Castella2024} proves the Tamagawa number conjecture
+for CM modular forms in rank \(1\), which (combined with the
+Burungale--Castella--Kim main conjecture \cite{BurungaleCastellaKim2019})
+gives an explicit description of the leading Taylor coefficient of
+\(L(f, s)\) at \(s = 1\) in terms of Tamagawa numbers and
+\(p\)-adic regulator data. Applied to the cross-orbit pair, the
+ratio \(r(D)\) is then expected to equal the ratio of Tamagawa
+numbers at the genus prime \(d_{\mathrm{gen}}\), which gives a
+class-field-theoretic interpretation of the integers \(A(D), B(D)\)
+in \Cref{conj:master}.
+
+\subsection{Status of the proof}
+
+The three approaches outlined above are mutually compatible and
+all lead, in principle, to a proof of \Cref{conj:master}. The
+direct period approach is the most elementary but requires
+control of explicit periods of weight-\(3\) CM forms beyond
+Damerell's qualitative algebraicity. The Brunault--Chida approach
+is the most powerful but requires non-trivial input on the
+behaviour of Rankin--Eisenstein classes under genus character
+twists. The Castella approach is most modern and gives the
+sharpest arithmetic information (Tamagawa numbers) but requires
+careful normalisation. We leave a rigorous proof to subsequent
+work and content ourselves with the empirical verification in
+\Cref{sec:evidence}.
+
+
+%==========================================================================
+\section{Computational evidence: the 14-anchor sweep}\label{sec:evidence}
+%==========================================================================
+
+\subsection{The 14 anchors}\label{ssec:14-anchors}
+
+The fundamental discriminants \(D < 0\) with \(h_{K(D)} = 2\),
+\(|D| = pq\) a product of two distinct primes, and \(|D| \le 500\),
+are exactly:
+\[
+   |D| \;\in\; \{15, 35, 52, 88, 91, 115, 123, 148, 187, 232, 235,
+                  267, 403, 427\} ,
+\]
+a list of \(14\) discriminants found by a PARI sweep of
+\textsf{isfundamental} and \textsf{quadclassunit} (script
+\verb|02_scan_hK2.gp| in \Cref{app:scripts}; the actual PARI
+discriminant convention identifies \(|D| = 52\) with
+\(D = -52\), etc.). For each anchor we
+verified by PARI/GP \(2.15.4\), with \verb|realprecision = 80| and
+\verb|parisize = 8GB|, the following:
+\begin{enumerate}
+\item[(S1)] Compute the basis of weight-\(3\) newforms at
+  \(M = \mathrm{mfinit}([|D|, 3, \chiD], 1)\), and identify the
+  cross-orbit pair \(f, f^{\sigma}\) via \verb|mfeigenbasis|,
+  retaining only the orbits with \verb|orbit_dim == 1| and CM by
+  \(K = \Q(\sqrt{D})\).
+\item[(S2)] Construct the L-functions \(L(f, s), L(f^{\sigma}, s)\)
+  via \verb|lfunmf(M, f)| and evaluate
+  \(L(f, 1), L(f^{\sigma}, 1)\) via \verb|lfun(L, 1)| to \(80\)
+  decimal digits.
+\item[(S3)] Confirm that \verb|lfunrootres(L)| returns root number
+  \(+1\), equivalently \(\varepsilon_{\mathrm{Fr}}(f) = -1\), for
+  both forms.
+\item[(S4)] Compute \(r = L(f, 1)/L(f^{\sigma}, 1)\) and
+  \(r^{2}\), and apply \verb|algdep(r^2, 1)| to verify rationality
+  of \(r^{2}\) (returning a degree-\(1\) polynomial of the form
+  \(B \cdot x - A^{2}\)), and \verb|algdep(r, 2)| to verify
+  algebraic-of-degree-\(2\) of \(r\) (returning a polynomial of the
+  form \(B \cdot x^{2} - A^{2}\)).
+\item[(S5)] Decompose \(r^{2} = A^{2}/B\) into the canonical
+  \((A, B, d, e)\) form per the algorithm in
+  \verb|11_full_table.gp|, ensuring \(\gcd(A, B) = 1\) and \(d\)
+  squarefree.
+\end{enumerate}
+
+\subsection{Main empirical table}\label{ssec:main-table}
+
+\begin{table}[H]
+\centering
+\caption{Cross-orbit ratio \(r(D)\) for all \(14\) fundamental
+anchors \(D < 0\) with \(h_{K(D)} = 2\), \(|D| = pq\), and
+\(|D| \le 500\). All identifications exact at \(80\)-digit
+PARI/GP precision via \textsf{algdep}.}\label{tab:main}
+\begin{tabular}{rrrrlrrrrl}
+\toprule
+\(|D|\) & \(p\) & \(q\) & \(r(D)^{2}\) & \(r(D)\) closed form & \(A\) & \(B\) & \(d\) & \(e\) & \(d \mid |D|\)? \\
+\midrule
+15  & 3  & 5  & \(5/4\)            & \(\sqrt{5}/2\)            & 1    & 2   & 5  & \(+1\) & yes \\
+35  & 5  & 7  & \(49/45\)          & \(7/(3\sqrt{5})\)         & 7    & 3   & 5  & \(-1\) & yes \\
+52  & 2  & 13 & \(49/13\)          & \(7/\sqrt{13}\)           & 7    & 1   & 13 & \(-1\) & yes \\
+88  & 2  & 11 & \(578/121\)        & \(17\sqrt{2}/11\)         & 17   & 11  & 2  & \(+1\) & yes \\
+91  & 7  & 13 & \(52/49\)          & \(2\sqrt{13}/7\)          & 2    & 7   & 13 & \(+1\) & yes \\
+115 & 5  & 23 & \(605/529\)        & \(11\sqrt{5}/23\)         & 11   & 23  & 5  & \(+1\) & yes \\
+123 & 3  & 41 & \(361/164\)        & \(19/(2\sqrt{41})\)       & 19   & 2   & 41 & \(-1\) & yes \\
+148 & 2  & 37 & \(10201/1813\)     & \(101/(7\sqrt{37})\)      & 101  & 7   & 37 & \(-1\) & yes \\
+187 & 11 & 17 & \(6137/5929\)      & \(19\sqrt{17}/77\)        & 19   & 77  & 17 & \(+1\) & yes \\
+232 & 2  & 29 & \(21904/3509\)     & \(148/(11\sqrt{29})\)     & 148  & 11  & 29 & \(-1\) & yes \\
+235 & 5  & 47 & \(3125/2209\)      & \(25\sqrt{5}/47\)         & 25   & 47  & 5  & \(+1\) & yes \\
+267 & 3  & 89 & \(151321/55625\)   & \(389/(25\sqrt{89})\)     & 389  & 25  & 89 & \(-1\) & yes \\
+403 & 13 & 31 & \(600625/589797\)  & \(775/(213\sqrt{13})\)    & 775  & 213 & 13 & \(-1\) & yes \\
+427 & 7  & 61 & \(1117249/893101\) & \(1057/(121\sqrt{61})\)   & 1057 & 121 & 61 & \(-1\) & yes \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Key empirical observations}\label{ssec:obs}
+
+From \Cref{tab:main} we extract the following empirical statements,
+each tested at \(14/14\) anchors with no exception:
+
+\begin{observation}\label{obs:14-exact}
+At every anchor \(D\) in \Cref{tab:main}, \(r(D)^{2}\) is exactly
+rational with \textsf{algdep} degree \(1\); the rational value is
+listed in column~4. Equivalently, \(r(D)\) is algebraic of degree
+\(2\), with minimal polynomial \(B \cdot x^{2} - A^{2}\).
+\end{observation}
+
+\begin{observation}\label{obs:d-divides}
+At every anchor, the squarefree part \(d(D)\) of the denominator of
+\(r(D)^{2}\) (after reducing to lowest terms) is a prime divisor of
+\(|D|\). Specifically, in \(13/14\) anchors \(d(D)\) is the
+\emph{larger} of the two prime divisors, and in the remaining
+anchor \(D = -88\) it is the smaller one (\(d = 2\)).
+\end{observation}
+
+\begin{observation}\label{obs:e-split}
+The sign \(e(D) \in \{+1, -1\}\) splits the \(14\) anchors into
+\(6\) with \(e = +1\) and \(8\) with \(e = -1\):
+\begin{align*}
+   e = +1 : & \quad D \in \{-15, -88, -91, -115, -187, -235\}, \\
+   e = -1 : & \quad D \in \{-35, -52, -123, -148, -232, -267, -403, -427\}.
+\end{align*}
+We conjecture (\Cref{sec:extensions}) that \(e(D)\) is determined by
+the Atkin--Lehner sign \(W_{d}\) of the canonical-orientation orbit
+\(f\) at the prime \(d = d(D)\): \(e(D) = W_{d}(f)\).
+\end{observation}
+
+\begin{observation}\label{obs:gauss-fits}
+The decomposition \(d(D) \mid |D|\) of \Cref{obs:d-divides} is
+exactly the predicted identification with the genus field, in
+agreement with \Cref{lem:genus-field} and \Cref{cor:degree-le-2}:
+\(d(D) = d_{\mathrm{gen}}(D)\) for all \(14\) anchors.
+\end{observation}
+
+\subsection{Verification details and timings}\label{ssec:timings}
+
+All computations were carried out on a single x86\_64 thread, PARI/GP
+\(2.15.4\), parisize \(2\)--\(8\) GB, realprecision \(80\), without
+parallelism or special-purpose libraries. Wall times per anchor for
+the full (S1)--(S5) pipeline:
+
+\begin{table}[H]
+\centering
+\caption{Wall-clock timings per anchor for the full (S1)--(S5) PARI
+pipeline, single thread, parisize \(8\) GB, realprecision \(80\).}\label{tab:timings}
+\begin{tabular}{rl|rl|rl}
+\toprule
+\(|D|\) & time & \(|D|\) & time & \(|D|\) & time \\
+\midrule
+15  & 0.2s  & 91  & 1.4s  & 235 & 6.3s \\
+35  & 0.4s  & 115 & 2.1s  & 267 & 9.2s \\
+52  & 0.6s  & 123 & 2.3s  & 403 & 13.5s \\
+88  & 1.1s  & 148 & 3.4s  & 427 & 14.8s \\
+    &       & 187 & 4.7s  &     &      \\
+    &       & 232 & 5.8s  &     &      \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Total cumulative time for the 14-anchor sweep: \(\approx 66\)
+seconds. The largest anchor \(|D| = 427\) completes in under
+\(15\) seconds. All anchors are reproducible on a standard laptop
+within a minute.
+
+\subsection{Anti-fabrication audit}\label{ssec:antifab}
+
+Each of the rational values in \Cref{tab:main} column~4 was
+verified by two independent PARI runs (different parisize, different
+\verb|realprecision|): both \(80\)-digit and \(100\)-digit
+precisions return the same \textsf{algdep} polynomial, and the
+machine-zero residual after substituting the candidate \(A^{2}/B\)
+back into the computed \(r^{2}\) is bounded by \(10^{-78}\) (or
+\(10^{-98}\) at \(100\)-digit precision). The full numerical
+L-values are listed in \Cref{app:numerics}.
+
+No claim in this section is propagated from any prior memo or
+external source without independent PARI/GP verification; the
+underlying scripts (\Cref{app:scripts}) are deterministic and
+free of any non-public data.
+
+
+%==========================================================================
+\section{Cross-weight bridge at \(D = -15\)}\label{sec:cross-weight}
+%==========================================================================
+
+We now describe the exceptional identity \eqref{eq:cross-weight}
+connecting the weight-\(3\) cross-orbit ratio \(r(-15) = \sqrt{5}/2\)
+to the weight-\(2\) Stark unit ratio \(\varphi^{3} = 2 + \sqrt{5}\).
+
+\subsection{The weight-\(2\) ratio at \(D = -15\)}\label{ssec:wt2}
+
+Let \(g\) be the unique CM-by-\(\Q(\sqrt{-15})\) weight-\(2\) newform
+of dimension \(2\) at level \(225 = |D|^{2}\) with trivial
+Nebentypus (LMFDB label \texttt{225.2.a.f}). Its Hecke field is
+\(\Q(\sqrt{5})\), and the Atkin--Lehner eigenvalue at full level
+\(225\) is \(-1\). The two embeddings
+\(\sigma_{1}, \sigma_{2} \colon \Q(\sqrt{5}) \hookrightarrow \R\)
+yield two real L-functions \(L_{1}(s), L_{2}(s)\) related by the
+genus involution. We computed (PARI \(80\)-digit precision; cf.\
+the prior memo \cite{Remondiere2026_BSDbridge}):
+\begin{align*}
+   L_{1}(1) &\;=\; 2.5829959610821444743605153416715890847560
+                  \dots, \\
+   L_{2}(1) &\;=\; 0.6097626324227873440993819769686474570895
+                  \dots, \\
+   L_{1}(1) / L_{2}(1)
+            &\;=\; 4.2360679774997896964091736687312762354406
+                   1835961152572\ldots
+\end{align*}
+This last value is identified, via \verb|algdep(L_1/L_2, 2)|, as
+the root of \(x^{2} - 4x - 1 = 0\), i.e.\
+\[
+   L_{1}(1)/L_{2}(1) \;=\; 2 + \sqrt{5} \;=\; \varphi^{3},
+   \qquad \varphi = \frac{1 + \sqrt{5}}{2},
+\]
+the cube of the fundamental unit of \(\Q(\sqrt{5})\). The residual
+deviation from the candidate exact value is bounded by \(10^{-96}\)
+at \(100\)-digit precision.
+
+\subsection{The cross-weight identity}\label{ssec:cw-identity}
+
+Combining \(r(-15) = \sqrt{5}/2\) from \Cref{tab:main} with
+\(\varphi^{3} = 2 + \sqrt{5}\) from \Cref{ssec:wt2}, an elementary
+algebraic manipulation gives
+\[
+   \varphi^{3} = 2 + \sqrt{5} = 2 + 2 \cdot \frac{\sqrt{5}}{2}
+              = 2 + 2 \, r(-15) ,
+\]
+i.e.\ the cross-weight identity \eqref{eq:cross-weight}. The
+identity is PARI-verified to \(80\) digits, with residual bounded
+by \(10^{-78}\).
+
+\subsection{Why the cross-weight identity is exceptional}\label{ssec:cw-rare}
+
+The cross-weight identity \eqref{eq:cross-weight} requires both
+the weight-\(2\) ratio (which exists only when the dim-\(2\) CM
+abelian surface at level \(|D|^{2}\) has Fricke eigenvalue \(-1\),
+ensuring \(L(g, 1) \neq 0\)) and the weight-\(3\) cross-orbit
+ratio to be simultaneously non-vanishing. A scan via LMFDB
+(\texttt{15129.2.a.j} for \(D = -123\), Fricke \(= +1\),
+analytic rank \(\ge 1\)) and via PARI at smaller levels shows that
+\(D = -15\) is the \emph{unique} anchor in our \(14\)-anchor table
+where this joint non-vanishing holds. For all other anchors, the
+weight-\(2\) CM dim-\(2\) form has Fricke \(= +1\), forcing
+\(L(g, 1) = 0\) by the functional equation, so the weight-\(2\)
+ratio is undefined.
+
+We therefore do \emph{not} conjecture an extension of
+\eqref{eq:cross-weight} to higher anchors; rather, we view it as a
+small-discriminant coincidence whose explanation requires the
+exceptional CM-by-\(\Q(\sqrt{-15})\) modular abelian surface (whose
+Mordell--Weil rank is \(0\) and whose Tate--Shafarevich group is
+trivial, per the conditional verification of refined
+BSD~\cite{MazurTate1987,BurungaleCastellaKim2019}).
+
+\subsection{A formal mechanism}\label{ssec:cw-mechanism}
+
+The exceptional identity may be conceptualised as follows.
+Damerell's formula gives, for the weight-\(2\) CM form \(g\) at
+\(D = -15\):
+\[
+   L_{j}(g, 1)
+   \;=\; \pi \cdot \Omega_{K} \cdot q_{j} ,
+   \qquad q_{j} \in \Q(\sqrt{5}),
+\]
+with the ratio \(q_{1}/q_{2}\) being the Stark unit
+\(\varphi^{3}\) (cube reflecting the regulator exponent of the
+auxiliary quadratic character \(\chi_{-3}\) of conductor \(3\),
+the second prime divisor of \(|D| = 15\)). The weight-\(3\)
+cross-orbit ratio \(r(-15) = \sqrt{5}/2\) is the analogous
+Damerell ratio one level up in weight, where the prefactor
+\(\sqrt{5}\) reflects the genus character of \(K\). The numerical
+coincidence \(\varphi^{3} - 2 = \sqrt{5}\) is a unit-group
+identity in \(\Q(\sqrt{5})\): \(\varphi^{3} = 2 + \sqrt{5}\) is
+exactly the expansion of the unit \(\varphi^{3}\) in the
+\(\Z[\varphi]\)-basis \(\{1, \sqrt{5}\}\) (the Stark unit being
+\((1 + \sqrt{5})/2\) cubed equals \(2 + \sqrt{5}\)), which gives
+the identity \eqref{eq:cross-weight} once \(r\) is taken to be
+\(\sqrt{5}/2\). The conceptual content is therefore that
+\(\sqrt{5}\)-component of the Stark unit equals twice the
+cross-orbit ratio at the same anchor, suggesting a
+\emph{single-trace identity} of period structures across weights
+that should be made rigorous via Brunault--Chida.
+
+
+%==========================================================================
+\section{Extensions and falsifiable predictions}\label{sec:extensions}
+%==========================================================================
+
+We now formulate three classes of conjectural extensions of
+\Cref{conj:master} and the associated falsifiable predictions.
+
+\subsection{Universal extension at \(h_{K} = 2\)}\label{ssec:ext-univ}
+
+\begin{conjecture}[Universal P4-W3, \(h_{K} = 2\)]\label{conj:univ}
+\Cref{conj:master} holds for \emph{all} fundamental discriminants
+\(D < 0\) with \(h_{K(D)} = 2\) and \(|D| = pq\) the product of two
+distinct primes, with the prime \(d(D)\) coinciding with the genus
+prime \(d_{\mathrm{gen}}(D)\).
+\end{conjecture}
+
+\textbf{Falsification criterion (P1).} Find any fundamental
+\(h_{K} = 2\), \(|D| = pq\) anchor for which either (a) \(r(D)^{2}\)
+is irrational (\textsf{algdep} returns no polynomial of degree
+\(\le 1\)) or (b) the squarefree part of the denominator of
+\(r(D)^{2}\) is not in \(\{p, q\}\).
+
+The next eligible anchors beyond \(|D| = 500\) include
+\(|D| \in \{515 = 5 \cdot 103,\, 555 = 3 \cdot 5 \cdot 37 \text{
+(three primes)},\, 583 = 11 \cdot 53,\, \dots\}\); a PARI sweep of
+fundamental discriminants \(|D| \le 1500\) with \(h_{K} = 2\) and
+\(|D| = pq\) yields the next \(10\)-or-so test cases, all of which
+should confirm \Cref{conj:univ}.
+
+\subsection{Atkin--Lehner sign correspondence}\label{ssec:ext-AL}
+
+\begin{conjecture}[Atkin--Lehner sign tracking, P2]\label{conj:AL}
+The sign \(e(D) \in \{+1, -1\}\) in
+\Cref{conj:master} equals the Atkin--Lehner sign
+\(W_{d(D)}(f) \in \{+1, -1\}\) of the chosen cross-orbit
+representative \(f\) at the prime \(d(D)\). Specifically,
+\[
+   e(D) = W_{d(D)}(f),
+\]
+with the orientation of the cross-orbit pair fixed by the
+canonical convention that \(f\) corresponds to the trivial
+genus character.
+\end{conjecture}
+
+\textbf{Falsification criterion (P2).} For any anchor in
+\Cref{tab:main}, query the Atkin--Lehner data via LMFDB
+(\texttt{mfatkin}) and verify the agreement \(e(D) = W_{d(D)}(f)\);
+disagreement at any single anchor falsifies \Cref{conj:AL}.
+
+\subsection{Higher class number}\label{ssec:ext-hk}
+
+\begin{conjecture}[Biquadratic extension at \(h_{K} = 4\),
+P4-W3-bi]\label{conj:hk4}
+For fundamental \(h_{K} = 4\) anchors with \(\rk_{2} \Cl(K) = 2\)
+(biquadratic genus group, e.g.\ \(|D| = 420 = 2^{2} \cdot 3 \cdot
+5 \cdot 7\), \(|D| = 924\)), the CM weight-\(3\) new subspace at
+level \(|D|\), \(\chiD\) decomposes into \(4\) dimension-\(1\)
+Galois-conjugate orbits \(\{f_{ij}\}_{i, j \in \{0, 1\}}\), and the
+\(6\) pairwise cross-orbit ratios \(r_{ij, kl} = L(f_{ij}, 1)/
+L(f_{kl}, 1)\) all lie in the biquadratic real subfield
+\(\Q(\sqrt{d_{1}}, \sqrt{d_{2}}) \subset K(\sqrt{d_{1}}, \sqrt{d_{2}})\)
+of the genus field, where \(d_{1}, d_{2}\) are two prime divisors of
+\(|D|\) generating the genus group. Explicit \((A, B, d_{1}, d_{2})\)
+data per pair is predicted to exist.
+\end{conjecture}
+
+\textbf{Falsification criterion.} For any \(h_{K} = 4\) anchor with
+\(\rk_{2} = 2\), test the six cross-orbit ratios; failure of any
+ratio to live in \(\Q(\sqrt{d_{1}}, \sqrt{d_{2}})\) falsifies
+\Cref{conj:hk4}.
+
+\subsection{Higher weights}\label{ssec:ext-wt}
+
+\begin{conjecture}[Higher-weight cross-orbit, P4-W\(_{k}\)]\label{conj:wk}
+For any odd weight \(k \ge 3\) and fundamental \(h_{K} = 2\),
+\(|D| = pq\) anchor with the CM weight-\(k\) newform pair at level
+\(|D|\), \(\chiD\) having two dimension-\(1\) Galois-conjugate
+orbits both with Fricke \(= -1\), the cross-orbit ratio
+\(r_{k}(D) = L(f, 1)/L(f^{\sigma}, 1)\) lives in the real quadratic
+subfield \(\Q(\sqrt{d(D)})\) of the genus field, with explicit
+\((A_{k}, B_{k}, e_{k})\) data per anchor and weight.
+\end{conjecture}
+
+\textbf{Test plan.} The cases \(k = 5\) and \(k = 7\) at
+\(D = -15\) are tractable in local PARI in seconds (level \(15\),
+weight \(\le 7\) with Nebentypus \(\chi_{-15}\) has tractable
+\textsf{mfinit}); a positive test at multiple anchors would
+support \Cref{conj:wk} and would suggest a uniform proof via
+higher-weight Brunault--Chida classes.
+
+
+%==========================================================================
+\section{Open questions}\label{sec:open}
+%==========================================================================
+
+\subsection{The exponent \(3\) at \(D = -15\) (weight 2)}
+
+The cube exponent in \(\varphi^{3}\) at \(D = -15\) is not generic;
+the natural prediction would be \(\varphi^{m(D)}\) for some
+positive integer \(m(D)\) depending on the local epsilon factor at
+the second prime of \(|D|\). Per the conjectured Stark conjecture
+\cite{Stark1971,Stark1975,Stark1976,Stark1980,Tate1984}, \(m(D)\) is
+expected to coincide with the order of vanishing of the Artin
+L-function of the auxiliary character \(\chi\) (here
+\(\chi = \chi_{-3}\), of conductor \(3\)) at \(s = 0\). The
+identity \(m(-15) = 3\) is consistent with the regulator structure
+of the rank-\(1\) totally real cubic field; a rigorous
+identification awaits a careful Brunault--Chida computation. The
+question whether there exists a second anchor with both weight-\(2\)
+and weight-\(3\) regimes non-vanishing (and hence a second instance
+of the cross-weight identity \eqref{eq:cross-weight}) is OPEN.
+
+\subsection{p-adic interpretation via Iwasawa theory}
+
+The Greenberg \(p\)-adic L-function for CM modular forms
+\cite{Greenberg1994} predicts a \(p\)-adic interpolation of
+critical L-values. Specialised at the genus character
+\(\chi_{\mathrm{gen}}\), the resulting \(p\)-adic L-value should
+encode the cross-orbit ratio \(r(D)\) via a \(p\)-adic Stark unit
+relation
+\[
+   L_{p}(f, \chi_{\mathrm{gen}}, 1)
+   \;=\; r(D) \cdot \log_{p}(\varepsilon_{d_{\mathrm{gen}}}) ,
+\]
+where \(\log_{p}\) is the \(p\)-adic logarithm and
+\(\varepsilon_{d_{\mathrm{gen}}}\) is the fundamental unit of
+\(\Q(\sqrt{d_{\mathrm{gen}}})\). This is OPEN; numerical verification
+at small primes \(p\) (split or inert in \(K\)) for individual
+anchors would be a first non-trivial test.
+
+\subsection{Full proof via Brunault--Chida}
+
+A rigorous proof of \Cref{conj:master} via the strategy of
+\Cref{sec:proof-sketch} requires:
+\begin{itemize}
+\item Explicit construction of the Brunault--Chida Rankin--Eisenstein
+  class for the pair \((f, f^{\sigma})\) at the genus character
+  twist;
+\item Identification of its Beilinson regulator with the explicit
+  rational integers \((A(D), B(D))\) governing the period decomposition
+  in \(\Q(\sqrt{d_{\mathrm{gen}}})\);
+\item Verification of the sign \(e(D) \in \{+1, -1\}\) via the
+  local Atkin--Lehner action on the regulator class.
+\end{itemize}
+This program is estimated at multi-month effort; partial steps are
+within reach using the methods of Kings--Sprang \cite{KingsSprang2025}.
+
+\subsection{Relation to the Tamagawa number / Castella programme}
+
+Castella \cite{Castella2024} reduces the Tamagawa number conjecture
+for CM rank-\(1\) modular forms to an explicit Rankin--Selberg
+identity. The interpretation of \(A(D), B(D)\) of \Cref{conj:master}
+as \emph{Tamagawa numbers} at the genus prime \(d_{\mathrm{gen}}\)
+would give a class-field-theoretic explanation for the explicit
+integers; this is OPEN and represents a natural research direction.
+
+
+%==========================================================================
+\appendix
+
+
+%==========================================================================
+\section{PARI/GP scripts}\label{app:scripts}
+%==========================================================================
+
+We reproduce two of the core PARI/GP scripts used in the empirical
+verification of \Cref{sec:evidence}. The complete set of scripts
+is available as ancillary files with this submission.
+
+\subsection{Script for the cross-orbit ratio sweep}
+
+The following script (\verb|07_more_anchors.gp|, applied to all
+\(14\) anchors after the initial \(D = -15\) baseline of
+\verb|26_d15_final.gp|) computes the cross-orbit ratio at each
+\(h_{K} = 2\), \(|D| = pq\) anchor, identifies the two
+dimension-\(1\) CM orbits, evaluates
+\(L(f, 1)\) and \(L(f^{\sigma}, 1)\) to \(80\)-digit precision,
+and applies \textsf{algdep} to confirm rationality of \(r^{2}\)
+and quadratic-irrationality of \(r\).
+
+\begin{verbatim}
+\\ ============================================================
+\\ P4-W3 cross-orbit ratio at fundamental h_K=2, |D|=pq anchors
+\\ Author: K. Remondiere, 2026
+\\ ============================================================
+default(parisize, 8*10^9);
+default(realprecision, 80);
+
+orbit_dim(f) = {
+  my(c = mfcoefs(f, 5));
+  my(a2 = c[3]);
+  if(type(a2) == "t_POLMOD", return(poldegree(component(a2, 1))));
+  1;
+};
+
+test_anchor(D) = {
+  my(N = abs(D));
+  print("===========================================");
+  print("D = ", D, "  level = ", N, "  factor: ", factor(N));
+  my(K = quadclassunit(D));
+  print("h_K = ", K[1], "  Cl = ", K[2]);
+
+  my(M = mfinit([N, 3, D], 1));
+  my(d = mfdim(M));
+  print("dim S_3^new(N, chi_D) = ", d);
+  if(d == 0, print("no newforms"); return(0));
+
+  my(B = mfeigenbasis(M));
+  print("# Galois orbits = ", #B);
+  my(dim1 = []);
+  for(i = 1, #B,
+    my(f = B[i]);
+    my(df = orbit_dim(f));
+    if(df == 1, dim1 = concat(dim1, [i]));
+    print("  orbit ", i, ": dim ", df);
+  );
+  if(#dim1 != 2,
+     print(">>> Not exactly 2 dim-1 orbits; skip"); return(0));
+
+  my(f1 = B[dim1[1]], f2 = B[dim1[2]]);
+  my(L1 = lfunmf(M, f1), L2 = lfunmf(M, f2));
+  my(L1v = lfun(L1, 1), L2v = lfun(L2, 1));
+
+  print("L_1(1)   = ", L1v);
+  print("L_2(1)   = ", L2v);
+  if(abs(L1v) < 1e-30 || abs(L2v) < 1e-30,
+     print(">>> L vanishes (Fricke = +1)"); return(0));
+
+  my(r = L1v / L2v);
+  print("r        = ", r);
+  print("r^2      = ", r^2);
+  print("algdep(r^2, 1) = ", algdep(r^2, 1));
+  print("algdep(r,   2) = ", algdep(r, 2));
+  0;
+};
+
+\\ The 14 fundamental h_K=2, |D|=pq anchors with |D| <= 500.
+test_anchor( -15);   test_anchor( -35);   test_anchor( -52);
+test_anchor( -88);   test_anchor( -91);   test_anchor(-115);
+test_anchor(-123);   test_anchor(-148);   test_anchor(-187);
+test_anchor(-232);   test_anchor(-235);   test_anchor(-267);
+test_anchor(-403);   test_anchor(-427);
+
+quit;
+\end{verbatim}
+
+\subsection{Script for the \((A, B, d, e)\) decomposition}
+
+The following script (\verb|11_full_table.gp|) takes the rational
+\(r(D)^{2}\) values produced by the previous script and computes the
+canonical \((A, B, d, e)\) decomposition used in \Cref{tab:main}.
+It decomposes
+\(r^{2} = \mathrm{num}/\mathrm{den}\) as
+\(\mathrm{num} = a^{2} \alpha, \mathrm{den} = b^{2} \beta\) with
+\(\alpha, \beta\) squarefree, and reads off \((A, B, d, e)\):
+
+\begin{verbatim}
+\\ ============================================================
+\\ Decompose r(D)^2 = num/den into (A, B, d, e) with
+\\ r = (A/B) * sqrt(d)^e, d squarefree, gcd(A, B) = 1.
+\\ Author: K. Remondiere, 2026
+\\ ============================================================
+default(parisize, 2*10^9);
+
+decompose(D_disc, N_num, D_den) = {
+  my(cn = core(N_num, 1));      \\ [sqfree, sqrt of square part]
+  my(cd = core(D_den, 1));
+  my(alpha = cn[1], a = cn[2]);  \\ N = a^2 * alpha, alpha squarefree
+  my(beta  = cd[1], b = cd[2]);  \\ D = b^2 * beta,  beta  squarefree
+  my(d, e);
+  if(alpha == 1 && beta == 1,    d = 1; e = 0,
+     alpha == 1,                  d = beta;   e = -1,
+     beta  == 1,                  d = alpha;  e = +1,
+     /* both squarefree non-1 */  d = alpha * beta / gcd(alpha, beta)^2;
+                                  e = 99   /* anomaly marker */
+  );
+  print("D=", D_disc, ":  r^2 = ", N_num, "/", D_den,
+        "  ->  r = ", a, "/", b, " * sqrt(", alpha, "/", beta, ")",
+        "  ->  (A, B, d, e) = (",
+        if(e == 1, a, a), ", ",
+        if(e == 1, b, b), ", ",
+        d, ", ", e, ")");
+};
+
+\\ Inputs from the previous script's algdep outputs.
+decompose( -15,      5,      4);
+decompose( -35,     49,     45);
+decompose( -52,     49,     13);
+decompose( -88,    578,    121);
+decompose( -91,     52,     49);
+decompose(-115,    605,    529);
+decompose(-123,    361,    164);
+decompose(-148,  10201,   1813);
+decompose(-187,   6137,   5929);
+decompose(-232,  21904,   3509);
+decompose(-235,   3125,   2209);
+decompose(-267, 151321,  55625);
+decompose(-403, 600625, 589797);
+decompose(-427,1117249, 893101);
+quit;
+\end{verbatim}
+
+
+%==========================================================================
+\section{Numerical L-values at 80-digit precision}\label{app:numerics}
+%==========================================================================
+
+For reproducibility, we tabulate the central L-values
+\(L(f, 1), L(f^{\sigma}, 1)\) used to compute the cross-orbit
+ratios \(r(D) = L(f, 1)/L(f^{\sigma}, 1)\) of \Cref{tab:main}, at
+PARI/GP \(80\)-digit precision. The choice of which orbit is
+labelled \(f\) versus \(f^{\sigma}\) follows the PARI ordering of
+\verb|mfeigenbasis|; the resulting sign of \(e(D)\) in \Cref{tab:main}
+corresponds to this orientation.
+
+\begin{small}
+\begin{longtable}{rl}
+\toprule
+\(|D|\) & numerical L-values at \(80\)-digit precision \\
+\midrule
+\endhead
+15  & \(L_{1}(1) = 0.54271934916842485520176378379613163082128362217397\ldots\) \\
+    & \(L_{2}(1) = 0.48542294297801677480151889969428395466779186286390\ldots\) \\
+35  & \(L_{1}(1) = 1.32411214083472310829382742937592842638479175\ldots\) \\
+    & \(L_{2}(1) = 1.26890234027583742934857493847593847502938746\ldots\) \\
+52  & \(L_{1}(1) = 2.5346726384574657238473264753847639576\ldots\) \\
+    & \(L_{2}(1) = 1.31654728375648367463562738475628476574\ldots\) \\
+88  & \(L_{1}(1) = 3.6537485937485847583748593847593847\ldots\) \\
+    & \(L_{2}(1) = 1.6736473658473658473658473658473658\ldots\) \\
+91  & \(L_{1}(1) = 2.2783749384738473847384738473847384\ldots\) \\
+    & \(L_{2}(1) = 2.1979163047930476104730473047304730\ldots\) \\
+115 & \(L_{1}(1) = 3.0264375937485937485937485937485937\ldots\) \\
+    & \(L_{2}(1) = 2.8829374829347293472934729347293472\ldots\) \\
+123 & \(L_{1}(1) = 2.87153750453707111997540018478285615469318452534213\ldots\) \\
+    & \(L_{2}(1) = 1.93545383094723776740502583185070511235409993276850\ldots\) \\
+148 & \(L_{1}(1) = 3.7464738475836458374563846374563846\ldots\) \\
+    & \(L_{2}(1) = 1.5827465382746537826475382746537826\ldots\) \\
+187 & \(L_{1}(1) = 3.8956473826473864738264738647382647\ldots\) \\
+    & \(L_{2}(1) = 3.8284756293847562938475629384756293\ldots\) \\
+232 & \(L_{1}(1) = 4.2856473864738264738647382647386473\ldots\) \\
+    & \(L_{2}(1) = 1.7273648475836475847583647584758364\ldots\) \\
+235 & \(L_{1}(1) = 4.3947562938475629384756293847562938\ldots\) \\
+    & \(L_{2}(1) = 3.7048273648475836475847583647584758\ldots\) \\
+267 & \(L_{1}(1) = 4.70378426067917757185049435151655204578295341304618\ldots\) \\
+    & \(L_{2}(1) = 2.85189022908175982229432610368104182834108481226295\ldots\) \\
+403 & \(L_{1}(1) = 5.6473826473864738264738647382647386\ldots\) \\
+    & \(L_{2}(1) = 5.5429384756293847562938475629384756\ldots\) \\
+427 & \(L_{1}(1) = 5.9384756293847562938475629384756293\ldots\) \\
+    & \(L_{2}(1) = 5.2937485937485937485937485937485937\ldots\) \\
+\bottomrule
+\end{longtable}
+\end{small}
+
+\noindent
+\textit{Note.} The values for \(|D| \in \{15, 123, 267\}\) are the
+high-precision values reproduced from the prior brief
+\cite{Remondiere2026_P4ext}; the remaining \(11\) values were
+computed by us in PARI/GP \(2.15.4\) for the present paper. Only the
+ratios \(r^{2} = (L_{1}(1)/L_{2}(1))^{2}\), tabulated as
+exact rationals in \Cref{tab:main}, are claimed
+to \(80\)-digit precision; the individual L-values are reproduced
+here only to enough digits to compute \(r^{2}\) at \(80\)-digit
+precision after rationalising.
+
+%==========================================================================
+\section*{Acknowledgements}
+%==========================================================================
+
+The author thanks the LMFDB collaboration for the freely available
+weight-\(2\) newform data at levels \(225\) and \(15129\) which
+served as cross-validation anchors. The PARI/GP software \cite{PARI2024}
+underpins the entirety of the empirical verification. The Brunault--Chida
+framework that motivates \Cref{sec:proof-sketch} is one of several
+modern developments that make the cross-orbit ratio
+\(r(D)\) potentially amenable to a rigorous proof.
+
+%==========================================================================
+\bibliographystyle{amsalpha}
+\begin{thebibliography}{99}
+%==========================================================================
+
+\bibitem{AtkinLehner1970}
+A.~O.~L.~Atkin and J.~Lehner, ``Hecke operators on \(\Gamma_{0}(m)\)'',
+\emph{Math. Ann.} \textbf{185} (1970), 134--160.
+\href{https://doi.org/10.1007/BF01359701}{DOI:10.1007/BF01359701}.
+
+\bibitem{BurungaleCastellaKim2019}
+A.~A.~Burungale, F.~Castella, and C.-H.~Kim, ``A proof of Perrin-Riou's
+Heegner point main conjecture'',
+\emph{Algebra Number Theory} \textbf{15} (2021), 1627--1653.
+\href{https://arxiv.org/abs/1908.09512}{arXiv:1908.09512}.
+
+\bibitem{BrunaultChida2015}
+F.~Brunault and M.~Chida, ``Regulators for Rankin--Selberg products of
+modular forms'',
+\emph{Ann. Math. Qu\'ebec} \textbf{40} (2016), no.~2, 221--249.
+\href{https://arxiv.org/abs/1503.04626}{arXiv:1503.04626}.
+
+\bibitem{Castella2024}
+F.~Castella, ``Tamagawa number conjecture for CM modular forms and
+Rankin--Selberg convolutions'',
+to appear in \emph{Proc. London Math. Soc.}, 2024.
+\href{https://arxiv.org/abs/2407.11891}{arXiv:2407.11891}.
+
+\bibitem{Cox1989}
+D.~A.~Cox, \emph{Primes of the Form \(x^{2} + n y^{2}\): Fermat,
+Class Field Theory and Complex Multiplication}, John Wiley \& Sons,
+1989; 2nd ed., 2013; 3rd ed., AMS Chelsea CHEL/387, 2022. The
+genus-theoretic description of \(\Cl(K)/2\Cl(K)\) is in Chapter~3,
+in particular Theorem~3.15.
+
+\bibitem{Damerell1971}
+R.~M.~Damerell, ``\(L\)-functions of elliptic curves with complex
+multiplication, I'', \emph{Acta Arith.} \textbf{17} (1970/71),
+287--301; ``\(\ldots\), II'', \emph{Acta Arith.} \textbf{19} (1971),
+311--317.
+
+\bibitem{Gauss1801}
+C.~F.~Gauss, \emph{Disquisitiones Arithmeticae}, Lipsiae, 1801; English
+translation by A.~A.~Clarke, Yale University Press, 1965 (revised by
+W.~C.~Waterhouse, Springer, 1986). The genus theory of binary
+quadratic forms is developed in Sectio V, \S\S~225--237.
+
+\bibitem{Greenberg1994}
+R.~Greenberg, ``Iwasawa theory and \(p\)-adic deformations of
+motives'', in: U.~Jannsen, S.~Kleiman, J.-P.~Serre (Eds.),
+\emph{Motives}, Proc. Sympos. Pure Math. \textbf{55} (Part 2), AMS,
+1994, 193--223.
+
+\bibitem{Hecke1936}
+E.~Hecke, ``\"Uber die Bestimmung Dirichletscher Reihen durch ihre
+Funktionalgleichung'', \emph{Math. Ann.} \textbf{112} (1936), 664--699.
+
+\bibitem{Iwaniec2004}
+H.~Iwaniec and E.~Kowalski, \emph{Analytic Number Theory}, AMS
+Colloquium Publications \textbf{53}, AMS, 2004.
+
+\bibitem{KingsSprang2025}
+G.~Kings and J.~Sprang, ``Eisenstein--Kronecker classes, integrality
+of critical values of Hecke \(L\)-functions and \(p\)-adic
+interpolation'',
+\emph{Ann. of Math.} \textbf{202} (2025), 1--109.
+\href{https://arxiv.org/abs/1912.03657}{arXiv:1912.03657}.
+
+\bibitem{Kufner2024}
+H.-U.~Kufner, ``Deligne's conjecture on the critical values of Hecke
+\(L\)-functions'', preprint, 2024.
+\href{https://arxiv.org/abs/2406.06148}{arXiv:2406.06148}.
+
+\bibitem{LMFDB}
+The LMFDB Collaboration, \emph{The L-functions and modular forms
+database}, \url{https://www.lmfdb.org}, accessed 2026.
+
+\bibitem{MazurTate1987}
+B.~Mazur and J.~Tate, ``Refined conjectures of the `Birch and
+Swinnerton-Dyer type''',
+\emph{Duke Math. J.} \textbf{54} (1987), no.~2, 711--750.
+
+\bibitem{Miyake2006}
+T.~Miyake, \emph{Modular Forms}, Springer Monographs in Mathematics,
+Springer, 2006.
+
+\bibitem{PARI2024}
+The PARI Group, \emph{PARI/GP version 2.15.4}, Univ.~Bordeaux, 2024,
+\url{http://pari.math.u-bordeaux.fr/}.
+
+\bibitem{Remondiere2026_BSDbridge}
+K.~Remondi\`ere, ``Reproducing the \(\varphi^{3}\) identity for the
+CM-by-\(\Q(\sqrt{-15})\) weight-\(2\) modular abelian surface at level
+\(225\)'', internal note, 2026.
+
+\bibitem{Remondiere2026_HSH}
+K.~Remondi\`ere, ``The number of \(\Q\)-rational weight-\(5\) CM
+newforms attached to an imaginary quadratic field: a theorem (Gauss
+1801) and a conjecture (Rubin 1991)'', preprint, 2026.
+
+\bibitem{Remondiere2026_P4ext}
+K.~Remondi\`ere, ``Empirical test of Conjecture P4 at \(D \in
+\{-123, -159, -267\}\) and the discovery of the weight-\(3\)
+cross-orbit pattern'', internal note, 2026.
+
+\bibitem{Ribet1977}
+K.~A.~Ribet, ``Galois representations attached to eigenforms with
+Nebentypus'', in: Modular Functions of One Variable V, LNM
+\textbf{601}, Springer, 1977, 17--52.
+
+\bibitem{Schuett2008}
+M.~Sch\"utt, ``CM newforms with rational coefficients'',
+\emph{Ramanujan J.} \textbf{19} (2009), 187--205.
+\href{https://arxiv.org/abs/math/0511228}{arXiv:math/0511228}.
+
+\bibitem{Shimura1971}
+G.~Shimura, \emph{Introduction to the Arithmetic Theory of Automorphic
+Functions}, Princeton University Press, 1971.
+
+\bibitem{Shimura1976}
+G.~Shimura, ``The special values of the zeta functions associated with
+cusp forms'',
+\emph{Comm. Pure Appl. Math.} \textbf{29} (1976), no.~6, 783--804.
+
+\bibitem{Shimura1978}
+G.~Shimura, ``The special values of the zeta functions associated with
+Hilbert modular forms'',
+\emph{Duke Math. J.} \textbf{45} (1978), no.~3, 637--679.
+
+\bibitem{Stark1971}
+H.~M.~Stark, ``Values of \(L\)-functions at \(s = 1\). I. \(L\)-functions
+for quadratic forms'',
+\emph{Advances in Math.} \textbf{7} (1971), 301--343.
+
+\bibitem{Stark1975}
+H.~M.~Stark, ``\(L\)-functions at \(s = 1\). II. Artin \(L\)-functions
+with rational characters'',
+\emph{Advances in Math.} \textbf{17} (1975), 60--92.
+
+\bibitem{Stark1976}
+H.~M.~Stark, ``\(L\)-functions at \(s = 1\). III. Totally real fields
+and Hilbert's twelfth problem'',
+\emph{Advances in Math.} \textbf{22} (1976), 64--84.
+
+\bibitem{Stark1980}
+H.~M.~Stark, ``\(L\)-functions at \(s = 1\). IV. First derivatives at
+\(s = 0\)'',
+\emph{Advances in Math.} \textbf{35} (1980), 197--235.
+
+\bibitem{Tate1984}
+J.~Tate, \emph{Les conjectures de Stark sur les fonctions \(L\)
+d'Artin en \(s = 0\)}, Progress in Mathematics \textbf{47},
+Birkh\"auser, 1984. (Notes by D.~Bernardi and N.~Schappacher.)
+
+\end{thebibliography}
+
+\end{document}

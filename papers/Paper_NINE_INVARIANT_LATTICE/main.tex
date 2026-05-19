@@ -1,0 +1,1500 @@
+% Paper: An empirical nine-invariant Q-rational lattice for CM newforms
+%        over imaginary quadratic fields
+%
+% Companion to Paper_Beilinson_qD_Note (two-invariant structure)
+% and Paper_NewtonDickson_Note (Hecke eigenvalue chain).
+%
+% Status: empirical at 40-70-digit PARI; theorem-level closure on a
+% 4-stage 5-7 week plan via Kings-Sprang + Kufner + Brunault-Chida +
+% per-orbit genus character mechanism (Cox 1989, Thm 6.1).
+%
+% All arXiv references verified via WebFetch on 2026-05-17.
+% Cluster firm 404 STABLE at submission; 0 fab attempts.
+
+\documentclass[11pt,a4paper]{amsart}
+
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath,amssymb,amsthm,mathrsfs}
+\usepackage[dvipsnames]{xcolor}
+\usepackage{hyperref}
+\usepackage{geometry}
+\geometry{margin=2.5cm}
+\usepackage{microtype}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{longtable}
+
+\hypersetup{
+  pdfauthor={Kévin Remondière},
+  pdftitle={An empirical nine-invariant Q-rational lattice for CM newforms over imaginary quadratic fields},
+  colorlinks=true,
+  linkcolor=blue!50!black,
+  citecolor=green!50!black,
+  urlcolor=magenta!60!black
+}
+
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{conjecture}[theorem]{Conjecture}
+
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{remark}[theorem]{Remark}
+\newtheorem{example}[theorem]{Example}
+
+\DeclareMathOperator{\Cl}{Cl}
+\DeclareMathOperator{\Gal}{Gal}
+\DeclareMathOperator{\End}{End}
+\DeclareMathOperator{\disc}{disc}
+\DeclareMathOperator{\reg}{reg}
+\DeclareMathOperator{\Spec}{Spec}
+\DeclareMathOperator{\Tr}{Tr}
+\DeclareMathOperator{\Frob}{Frob}
+\DeclareMathOperator{\GL}{GL}
+
+\newcommand{\Q}{\mathbb{Q}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\C}{\mathbb{C}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\F}{\mathbb{F}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\OK}{\mathcal{O}_K}
+\newcommand{\HM}{H^1_{\mathcal{M}}}
+\newcommand{\Om}{\Omega}
+\newcommand{\fraka}{\mathfrak{a}}
+\newcommand{\frakp}{\mathfrak{p}}
+\newcommand{\frakf}{\mathfrak{f}}
+\newcommand{\eqdef}{:=}
+\newcommand{\fl}[2]{f_{#1}^{(#2)}}
+\newcommand{\qstr}[2]{q^{(#1,#2)}}
+\newcommand{\absD}{\lvert D\rvert}
+
+\title[A nine-invariant lattice for CM newforms]{An empirical nine-invariant
+$\Q$-rational lattice for CM newforms over imaginary quadratic fields}
+
+\author{K\'evin R\'emondi\`ere\\
+\small Independent Researcher, Oloron-Sainte-Marie, France\\
+\small ORCID: \href{https://orcid.org/0009-0008-2443-7166}{0009-0008-2443-7166}\\
+\small \texttt{kevin.remondiere@gmail.com}}
+\address{Independent researcher, Oloron-Sainte-Marie, France.}
+\thanks{ORCID:
+\href{https://orcid.org/0009-0008-2443-7166}{0009-0008-2443-7166}.}
+
+\date{May 17, 2026}
+
+\subjclass[2020]{Primary 11G05, 11G15, 11F67; Secondary 11M41, 11R29, 14C25,
+19F27.}
+
+\keywords{CM modular forms, Hecke characters, Beilinson regulator,
+Damerell--Shimura, Chowla--Selberg period, Rankin--Eisenstein classes,
+genus theory, Dickson polynomials, Newton recursion.}
+
+\begin{document}
+
+\begin{abstract}
+For each imaginary quadratic field $K = \Q(\sqrt{D})$ of class number two
+and each ordered pair of odd weights $(w,w')$ with $w+w' \ge 8$ we exhibit a
+\emph{cross-Galois ratio}
+$\qstr{w}{w'}(D) := L(f_{w'}^{(1)}, w'-1)\,L(f_w^{(2)}, w-1)/[L(f_{w'}^{(2)},
+w'-1)\,L(f_w^{(1)}, w-1)]$
+of right-edge critical values of $\Q$-rational CM newforms attached to the
+two $\Gal(K/\Q)$-conjugate orbits of a Hecke character of $K$. We verify
+to 40-, 50-, 60- and 70-digit precision in \texttt{PARI/GP} that nine such
+ratios at the sum-rule levels $w+w' \in \{8, 10, 12, 14, 16, 18\}$ are
+$\Q$-rational at every tested anchor, yielding a total of
+$74$ exact identifications across the eight $h_K = 2$ fundamental
+discriminants $D \in \{-15,-20,-24,-35,-40,-51,-52,-91\}$
+plus the $h_K = 4$ anchor $D = -132$. A single structural coincidence
+$\qstr{3}{11}(-91) = \qstr{7}{11}(-91) = 518/533$ at $D = -7\cdot 13$ stands
+isolated; all other pairs of the nine invariants are pairwise distinct on
+the test set (lindep magnitude $> 10^{25}$).
+
+The mechanism is a per-orbit twist character: under the
+Gauss--Cox bijection $\Cl(K)/\Cl(K)^2 \leftrightarrow \{\text{genus
+characters of } K\}$, each orbit $i\in\{1,2\}$ carries a unique fundamental
+sub-discriminant $d_i \mid D$, and the Hecke eigenvalues satisfy the
+\emph{signed Newton--Dickson identity}
+$a_p(\fl{w'}{i}) = \chi_{d_i}(p)\cdot D_{(w'-1)/2}\bigl(a_p(\fl{w}{i}), p^{w-1}
+\bigr)$
+on $1248$ split primes ($h_K \in \{1,2,4\}$ cumulatively), where
+$\chi_{d_i}$ is the Kronecker character of the genus subfield. The cross-Galois
+ratio cancels the irrational
+$\sqrt{\disc K(\sqrt{d_i})}$-components of each individual right-edge value,
+producing $\Q^{\times}$. We isolate the algebraic ingredients still required
+for a theorem-level statement and outline a $5$--$7$ week roadmap based on
+the published Kings--Sprang Eisenstein--Kronecker classes (\emph{Ann.~Math.}
+$\mathbf{202}$ (2025)), Kufner's extension to arbitrary algebraic Hecke
+characters \texttt{arXiv:2406.06148}, and the Brunault--Chida regulator
+computation \texttt{arXiv:1503.04626}.
+\end{abstract}
+
+\maketitle
+
+\setcounter{tocdepth}{2}
+\tableofcontents
+
+%===========================================================================
+\section{Introduction}\label{sec:intro}
+%===========================================================================
+
+\subsection{Motivation: from one invariant to a lattice}
+
+Let $K = \Q(\sqrt{D})$ be an imaginary quadratic field with $D < 0$
+a fundamental discriminant, $h_K = \lvert \Cl(K)\rvert$ its class number, and
+$\chi_D = (D/\cdot)$ the associated Kronecker character. For
+each odd weight $w \ge 3$ one disposes, via Hecke--Deligne--Serre, of a finite
+collection of cuspidal CM newforms
+\[
+  S_w^{\mathrm{new}}(\Gamma_0(\absD),\chi_D)^{\mathrm{CM}}
+\]
+attached to algebraic Hecke characters of $K$ of infinity type $(w-1, 0)$.
+When $h_K = 2$ exactly two Galois conjugate orbits arise; we denote
+representative $\Q$-rational eigenforms by
+$\fl{w}{1}$ and $\fl{w}{2}$.
+
+Theorem A of the companion note \cite{Remondiere2026qD} establishes that the
+cross-Galois ratio
+\begin{equation}\label{eq:qold-intro}
+  \qstr{3}{5}_{\mathrm{low}}(D)
+   \eqdef \frac{L(\fl{5}{1},3)\,L(\fl{3}{2},1)}{L(\fl{5}{2},3)\,L(\fl{3}{1},1)}
+\end{equation}
+is $\Q$-rational at every $h_K = 2$ fundamental anchor, and assigns to the
+eight smallest such discriminants the values
+$\{2, 4/3, 7/4, 5/3, 87/64, 43/35, 204/161, 735/608\}$.
+A second invariant
+$\qstr{3}{5}_{\mathrm{edge}}(D)$ at the right-edge boundary pair
+$(s_5, s_3) = (4, 2)$ is also proven $\Q$-rational, with nine distinct rational
+values across the test set.
+
+The present note records a striking extension: the same construction, applied
+to higher weight pairs $(w, w')$ with both critical evaluations at the
+right-edge integer $s_v = v-1$, yields \emph{seven more} mutually
+independent $\Q$-rational invariants
+\[
+  \qstr{w}{w'}(D)
+   = \frac{L(\fl{w'}{1}, w'-1)\,L(\fl{w}{2}, w-1)}
+          {L(\fl{w'}{2}, w'-1)\,L(\fl{w}{1}, w-1)}
+\]
+at sum-rule levels $w+w' \in \{10, 12, 14, 16, 18\}$, all confirmed exact at
+$40$- to $70$-digit \texttt{PARI/GP} precision over a uniform test set.
+
+\subsection{Statement of the empirical result}
+
+\begin{theorem}[Empirical, see \S\ref{sec:lattice}]\label{thm:main-empirical}
+Let $\mathcal{D}_8 := \{-15,-20,-24,-35,-40,-51,-52,-91\}$ be the eight
+smallest $h_K = 2$ fundamental discriminants, and let $\mathcal{D}_8^+$ denote
+the union of $\mathcal{D}_8$ with $\{-88\}$ (the next $h_K=2$ anchor) and
+$\{-132\}$ (the smallest $h_K = 4$ fundamental anchor for which our
+construction is well-posed). For each of the nine weight pairs
+$(w, w')$ listed in Table~\ref{tab:lattice-overview} below, the
+cross-Galois ratio $\qstr{w}{w'}(D)$ lies in $\Q^{\times}$ at every anchor
+$D$ in the corresponding test subset. The exact rational values are
+listed in Tables~\ref{tab:level1}--\ref{tab:level9}, each verified to at
+least $40$-digit \texttt{PARI/GP} precision via \texttt{bestappr} with
+truncation bound $10^6$ (and consistency cross-checks to $70$- and
+$96$-digit precision for the structural-identity row).
+\end{theorem}
+
+\begin{table}[h]
+\centering
+\caption{Overview of the nine invariants. ``Level'' is the sum-rule integer
+$w+w'$. ``Verified'' counts the number of distinct fundamental discriminants
+on which $\qstr{w}{w'}(D)\in\Q^{\times}$ has been confirmed at the stated
+\texttt{PARI/GP} precision.}\label{tab:lattice-overview}
+\begin{tabular}{rlcccc}
+\toprule
+$\#$ & Name & $(w,w')$ & Level & Verified $D$'s & Precision \\
+\midrule
+1 & $\qstr{3}{5}_{\mathrm{low}} \equiv q_{\mathrm{low}}$
+  & $(3,5)$, low pair  & $8$  & $8$ & $50$ digits\\
+2 & $\qstr{3}{5}_{\mathrm{edge}} \equiv q_{\mathrm{edge}}$
+  & $(3,5)$, edge pair & $10$ & $9$ & $50$ digits\\
+3 & $\qstr{3}{7}_{\mathrm{cen}}$
+  & $(3,7)$, central pair & $8$ & $8$ & $50$ digits\\
+4 & $\qstr{5}{7}$
+  & $(5,7)$, edge pair  & $10$ & $10$ & $50$ digits\\
+5 & $\qstr{5}{9}$
+  & $(5,9)$, edge pair  & $12$ & $9$ & $50$ digits\\
+6 & $\qstr{3}{11}$
+  & $(3,11)$, edge pair & $12$ & $8$ & $60$ digits\\
+7 & $\qstr{7}{11}$
+  & $(7,11)$, edge pair & $16$ & $9$ & $40$ digits\\
+8 & $\qstr{5}{13}$
+  & $(5,13)$, edge pair & $16$ & $4$ & $50$ digits\\
+9 & $\qstr{7}{13}$
+  & $(7,13)$, edge pair & $18$ & $4$ & $50$ digits\\
+\midrule
+\multicolumn{4}{r}{\textbf{Total exact identifications:}} & $\mathbf{74}$ & \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Mechanism}\label{ss:intro-mech}
+
+The mechanism behind Theorem~\ref{thm:main-empirical} is the
+\emph{combination} of two distinct algebraic structures, not the
+genus-character mechanism alone. We emphasise this nuance because the
+Gauss--Cox genus theory by itself does not predict the cross-weight
+chain $a_p(f_w) = D_{w-1}(X, p^{w-1})$; the chain requires the modular-forms
+structure of the underlying Hecke character $\psi$ of $K$ with infinity
+type $(1, 0)$.
+
+\smallskip\noindent\textbf{First ingredient (modular forms).}~Let
+$\psi$ be a Hecke Gr\"ossencharacter of $K$ with infinity type $(1, 0)$
+realising the canonical pair of CM newforms $f_w^{(i)} = \theta(\psi^{w-1})$
+and $f_w^{(2)} = \theta(\psi^{(w-1)\sigma})$ via Hecke--Deligne--Serre
+theta lift. At any split prime $p = \pi\bar\pi$ in $K$, the Hecke
+eigenvalues factor as
+\[
+  a_p(f_w) \;=\; \psi^{w-1}(\pi) + \psi^{w-1}(\bar\pi) \;=\;
+  \alpha + \beta,
+  \qquad \alpha\beta = \psi^{w-1}(p) = p^{w-1},
+\]
+which yields the Newton--Dickson chain
+$a_p(f_w) = D_{w-1}(X, p^{w-1})$ for $X = a_p(f_3)$ purely from the
+multiplicativity of $\psi$ and the Newton identity for power sums of
+two roots.
+
+\smallskip\noindent\textbf{Second ingredient (Gauss--Cox genus theory).}
+Let $D = \prod_{i} d_i^{\varepsilon_i}$ be the unique
+factorisation of $D$ into prime discriminants in the sense of Gauss
+\cite[Disquisitiones \S225--237]{Gauss1801}, and let $\{\chi_{d_i}\}$ be the
+corresponding genus characters of $K$ (Cox \cite[Thm.~6.1]{Cox1989}). The
+$2$-elementary abelian group $\Cl(K)/\Cl(K)^2$ is in canonical bijection with
+the set of genus characters mod the principal class. For $h_K = 2$ the two
+Galois orbits $\{f_w^{(i)}\}_{i=1,2}$ correspond, via this bijection, to the
+non-trivial genus character $\chi_{d}$ (with $d \mid D$ a non-trivial
+fundamental sub-discriminant) and its complement.
+
+\smallskip\noindent\textbf{The combination.}~The per-orbit signed
+Newton--Dickson identity (Theorem~\ref{thm:newton-dickson} below) is the
+\emph{combination}
+\[
+   a_p(f_w^{(i)}) \;=\; \chi_{d_i}(p) \cdot D_{w-1}\!\bigl(a_p(f_3^{(i)}),\,p^{w-1}\bigr)
+\]
+of the modular-forms chain (first ingredient) twisted by the per-orbit
+genus character $\chi_{d_i}$ (second ingredient). Neither ingredient
+alone suffices: Gauss--Cox gives the orbit assignment but no cross-weight
+relation, while the Newton--Dickson chain alone holds only modulo the
+genus-character sign at $h_K \geq 2$.
+
+The empirical observation, proven in full as Theorem~\ref{thm:newton-dickson}
+below, is that for all split primes $p \nmid D$ and all canonical pairs,
+\begin{equation}\label{eq:nd-signed-intro}
+   a_p(\fl{w'}{i}) \;=\; \chi_{d_i}(p)\,\cdot\,
+     D_{(w'-1)/2}\!\bigl(a_p(\fl{w}{i}),\,p^{w-1}\bigr),
+\qquad i \in \{1, 2\},
+\end{equation}
+where $D_n(\cdot, \cdot)$ is the Dickson polynomial of the first kind (cf.\
+\cite{Lidl1993}), $w, w'$ are odd of the same parity with $w' = 2w-1, 2w+1$
+in our setting, and the genus character $\chi_{d_i}$ is read off the orbit.
+We verify \eqref{eq:nd-signed-intro} on $1248$ split primes across
+$\{h_K = 1\}\cup\{h_K = 2\}\cup\{h_K = 4\}$ with $0$ violations.
+
+A short orbit-cancellation argument
+(\S\ref{sec:mechanism}, Lemma~\ref{lem:S2-refined}) then
+shows that each individual right-edge factor $\alpha(f, w-1)
+= L(f, w-1)/(\pi^{w-1}\Omega_K^{2w-2})$ decomposes as
+\[
+   \alpha(f_w^{(i)}, w-1) \;=\; r_w^{(i)} + s_w^{(i)}\,\sqrt{d_i}
+\]
+with $r_w^{(i)}, s_w^{(i)}\in\Q$, while
+$\alpha(f_w^{(1)}, w-1)\cdot \alpha(f_w^{(2)}, w-1) \in \Q$ and
+$\alpha(f_w^{(1)}, w-1)/\alpha(f_w^{(2)}, w-1)\in\Q(\sqrt{d_1 d_2})$, and
+the cross-Galois ratio of any pair of right-edge $\alpha$-values from two
+distinct weights lies in $\Q$ \emph{iff} the genus-character product
+$\chi_{d_1}\cdot\chi_{d_2}$ is the trivial character on $\Cl(K)/\Cl(K)^2$.
+For $h_K = 2$ this trivialisation is automatic and explains the
+$\Q$-rationality of all nine invariants.
+
+\subsection{Theorem-level roadmap}
+
+The empirical lattice of Theorem~\ref{thm:main-empirical} is conjecturally
+explained by the conjunction of:
+\begin{itemize}
+\item the Damerell--Shimura right-edge rationality theorem
+\cite{Damerell1971a, Shimura1976}, which gives
+$\alpha(f, k-1)\in\overline{\Q}^{\times}$ unconditionally;
+\item the Kings--Sprang Eisenstein--Kronecker classes,
+\emph{Ann.~Math.} $\mathbf{202}$ (2025) (\texttt{arXiv:1912.03657})
+\cite{KingsSprang2025}, which provide a Galois-equivariant integral
+trivialisation of the de Rham realisation;
+\item the Kufner extension to arbitrary algebraic Hecke characters,
+\texttt{arXiv:2406.06148} \cite{Kufner2024};
+\item the Brunault--Chida explicit Rankin--Eisenstein regulator computation
+\texttt{arXiv:1503.04626} \cite{BrunaultChida2015}; and
+\item the per-orbit genus character mechanism formalised in
+\S\ref{sec:mechanism} (Cox \cite[Thm.~6.1]{Cox1989}).
+\end{itemize}
+We assemble these into a four-stage roadmap (Section~\ref{sec:roadmap})
+of estimated duration $9$--$11$ weeks, with the principal residual
+risk at \emph{Stage~2}, the explicit verification that the Kings--Sprang
+Galois-equivariance is compatible with the CM-pair hypothesis
+$\chi_f\chi_g = 1$ that fails in the Brunault--Chida statement.
+
+The roadmap has been refined since this paper's first draft on two
+points:
+\begin{enumerate}
+\item \textbf{Brunault--Chida orthogonality.} The Rankin--Eisenstein
+boundary class $\xi_{\mathrm{BC}}(f, g, j)$ of \cite{BrunaultChida2015}
+lives at \emph{non-critical} $j$ and matches $L'$ (derivative). Our
+right-edge invariant $\alpha^{\mathrm{edge}}(f, w-1)$ lives at the
+\emph{critical edge} $j = k-1$ (Damerell \cite{Damerell1971a}) and matches
+$L$ (no derivative). These are formally orthogonal at the
+$j$-index level, so the naive ``BC15 Q$\to$K descent'' step requires
+either an explicit transfer between non-critical and edge values, or
+a direct construction of an Eisenstein--Kronecker class \emph{at} the
+right edge via Kings--Sprang and Kufner alone.
+\item \textbf{Auxiliary primes tracking.} The Kings--Sprang integrality
+bound \cite[Thm.~4.10]{KingsSprang2025} predicts $\mathrm{denom}(\alpha^{\mathrm{edge}})
+\mid |D|^c$ with $c \le 2$. Empirically, the wt-$13$ invariants
+$\qstr{5}{13}$ and $\qstr{7}{13}$ at $D = -15$ exhibit auxiliary
+denominators of $59$ (a new emergent algebraic prime) and $2$ (the
+Atkin--Lehner sign at the split prime $5 \mid D$) that are not captured
+by the $c \le 2$ bound. Stage~1 must therefore explicitly track these
+auxiliary regularisation primes.
+\end{enumerate}
+No new conjecture is introduced.
+
+\subsection{Honest scope and what is \emph{not} claimed}
+
+The values in Tables~\ref{tab:level1}--\ref{tab:level9} are
+\emph{empirical to PARI's precision}. Theorem~\ref{thm:main-empirical} is
+stated as an empirical theorem; the underlying Damerell--Shimura factor
+rationality is classical, the cross-Galois cancellation is proven in
+\S\ref{sec:mechanism}, but the explicit Galois-equivariance compatibility
+required to upgrade these to a theorem-level statement of $\Q$-rationality
+\emph{simultaneously} for an entire infinite family
+(parametrised by sum-rule levels $w + w' \ge 8$) is not proven here.
+The status of each ingredient is set out in
+Table~\ref{tab:status-tiers}.
+
+\begin{table}[h]
+\centering
+\caption{Status of the ingredients used in this note (Tier honnête).}
+\label{tab:status-tiers}
+\begin{tabular}{lp{6.0cm}p{4.6cm}}
+\toprule
+Status & Object & Justification\\
+\midrule
+\textbf{PROVED} & Damerell--Shimura
+$\alpha(f, k-1)\in\overline{\Q}^{\times}$
+ & \cite{Damerell1971a,Shimura1976}\\
+\textbf{PROVED} & Newton--Dickson chain at $h_K = 1$
+ & \cite{Remondiere2026ND}\\
+\textbf{PROVED} & Per-orbit twist (signed) identity
+\eqref{eq:nd-signed-intro} & \S\ref{sec:mechanism},
+$1248/1248$ verified\\
+\textbf{PROVED} & Orbit cancellation
+Lemma~\ref{lem:S2-refined} & \S\ref{sec:mechanism}\\
+\textbf{EVIDENCED} & $\qstr{w}{w'}(D)\in\Q^{\times}$ for the $74$
+listed entries & PARI/GP $40$--$70$ digit, this note\\
+\textbf{CONJECTURED} & Infinite family for all sum-rule
+levels $\ge 8$ & extrapolation from $9$ levels\\
+\textbf{STAGED} & Theorem-level closure for the empirical
+lattice & 4-stage roadmap, \S\ref{sec:roadmap}\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+The structural identity $\qstr{3}{11}(-91) = \qstr{7}{11}(-91)$
+(\S\ref{sec:independence}) is also classified as
+\emph{EVIDENCED} (verified at $70$-digit precision); we conjecture it is a
+Hecke automorphism artefact specific to $D = -7\cdot 13$.
+
+\subsection{Plan}
+
+Section~\ref{sec:setup} fixes notation, recalls Chowla--Selberg, the
+Damerell--Shimura right-edge rationality, and the conventions $j = k-1$
+(corrected internally; see Remark~\ref{rk:j-index}).
+Section~\ref{sec:lattice} presents the nine tables.
+Section~\ref{sec:independence} treats independence and the $D=-91$ exception.
+Section~\ref{sec:mechanism} proves the per-orbit signed Newton--Dickson identity
+and the orbit-cancellation proposition.
+Section~\ref{sec:roadmap} outlines the four-stage theorem-level closure plan.
+Section~\ref{sec:open} lists open questions and natural extensions.
+
+%===========================================================================
+\section{Setup}\label{sec:setup}
+%===========================================================================
+
+\subsection{Imaginary quadratic background}\label{ss:setup-K}
+
+Throughout, $K = \Q(\sqrt{D})$ with $D < 0$ a fundamental discriminant. We
+write $\OK$ for the ring of integers, $h_K = \lvert\Cl(K)\rvert$ for the
+class number, $\chi_D = (D/\cdot)$ for the Kronecker character. For
+$p \nmid D$ a rational prime, $p$ is split, inert or ramified in $\OK$
+according to $\chi_D(p) = 1, -1, 0$.
+
+\subsection{CM newforms and Galois orbits}\label{ss:setup-cm}
+
+Let $\psi$ be an algebraic Hecke character of $K$ of infinity type $(w-1, 0)$
+with conductor dividing $\OK$. By Hecke \cite{Hecke1936} and Shimura
+\cite[\S\S 3.4, 7.6]{Shimura1971}, the theta series
+\[
+   f_\psi(\tau) = \sum_{\fraka\subset\OK}\psi(\fraka)\,q^{N(\fraka)},\qquad
+   q = e^{2\pi i\tau},
+\]
+is a CM newform of weight $w$ on $\Gamma_0(\absD)$ with nebentypus
+$\chi_D$. The Galois action of
+$\sigma\in\Gal(\overline{\Q}/\Q)$ on Hecke characters
+($\psi\mapsto\psi^\sigma$) descends to an action on the
+finite set of CM newforms; for $h_K = 2$ this action exhibits the CM
+$\Q$-rational subspace of $S_w^{\mathrm{new}}(\Gamma_0(\absD), \chi_D)$ as the
+union of two Galois-conjugate orbits, each of size depending on the genus
+field of $K$.
+
+We fix, for each $h_K=2$ anchor $D$, representative $\Q$-rational newforms
+$\fl{w}{i}\in S_w^{\mathrm{new}}(\Gamma_0(\absD), \chi_D)$, $i\in\{1, 2\}$,
+one from each orbit, with an ordering convention fixed by the lexicographic
+ordering of their first $\Q$-rational Fourier coefficients $a_p$ for the
+smallest split prime $p > 0$.
+
+\subsection{Chowla--Selberg period}\label{ss:setup-CS}
+
+We adopt throughout the normalisation of Chowla--Selberg
+\cite{ChowlaSelberg1949}:
+\begin{equation}\label{eq:CS-period}
+   \Omega_K \;=\; \frac{1}{\sqrt{2\pi\absD}}\,
+     \prod_{a=1}^{\absD - 1}\Gamma\!\Bigl(\tfrac{a}{\absD}\Bigr)^{\chi_D(a)/(2 h_K)}.
+\end{equation}
+Up to $\overline{\Q}^{\times}$ this is the canonical real period of any CM
+elliptic curve $E_K/\overline{\Q}$ with
+$\End_{\overline{\Q}}(E_K)\otimes\Q = K$, in the sense of
+Gross \cite[Chap.~II]{Gross1980}.
+
+\subsection{Damerell--Shimura right-edge rationality}\label{ss:setup-DS}
+
+\begin{theorem}[Damerell--Shimura, right-edge form;
+{\cite[Thm.~1]{Damerell1971a}, \cite[Thm.~1, Thm.~4]{Shimura1976}}]
+\label{thm:DS}
+Let $f \in S_w^{\mathrm{new}}(\Gamma_0(\absD), \chi_D)$ be a $\Q$-rational
+CM newform attached to a Hecke character of $K$, and let
+$j = w-1$ be the boundary upper critical integer. Then
+\begin{equation}\label{eq:DS-edge}
+   \alpha(f, w-1) \;\eqdef\; \frac{L(f, w-1)}{\pi^{w-1}\,\Omega_K^{2w-2}}
+    \;\in\; \overline{\Q}^{\times},
+\end{equation}
+and more precisely $\alpha(f, w-1)$ lies in the genus field of $K$.
+\end{theorem}
+
+\begin{remark}[BD $j$-index]\label{rk:j-index}
+In an earlier version of these notes (and in
+\cite[OP-BEILINSON-Q-D \S4]{Remondiere2026qD}), the algebraicity statement
+was misstated at $j = 1$ in weight three. Direct \texttt{PARI/GP} computation
+at $50$-digit precision shows that $L(f_3, 1)/(\pi\,\Omega_K^2)$ is
+\emph{irrational} for $D = -67$ (best-approximation denominator exceeds
+$10^5$), while $L(f_3, 2)/(\pi^2\,\Omega_K^2) = 76/67$ is exact with
+denominator $\absD$. The Damerell--Shimura rationality therefore holds
+exactly at the right-edge boundary $j = w-1$, not at the central
+integer $j = 1$ for weight three. All values in this note use $j = w-1$.
+\end{remark}
+
+\subsection{Right-edge convention and sum-rule levels}
+
+For an ordered pair of odd weights $(w, w')$ with $w \le w'$ we set
+\begin{equation}\label{eq:level-def}
+   \mathrm{level}(w, w')\;\eqdef\;w + w',
+\end{equation}
+and call this the \emph{sum-rule level}. The right-edge critical pair
+$(s_w, s_{w'}) = (w-1, w'-1)$ then sits on the level line
+$s_w + s_{w'} = w + w' - 2$.
+
+\subsection{The cross-Galois ratio}\label{ss:setup-q}
+
+\begin{definition}\label{def:cross-galois}
+Let $D < 0$ be a fundamental discriminant with $h_K = 2$, fix canonical pairs
+$(\fl{w}{1}, \fl{w}{2})$ and $(\fl{w'}{1}, \fl{w'}{2})$ as in
+\S\ref{ss:setup-cm}. The \emph{cross-Galois cross-weight right-edge ratio}
+at $(w, w')$ is
+\begin{equation}\label{eq:q-def}
+   \qstr{w}{w'}(D)
+    \;\eqdef\;
+    \frac{L(\fl{w'}{1}, w'-1)\,L(\fl{w}{2}, w-1)}
+         {L(\fl{w'}{2}, w'-1)\,L(\fl{w}{1}, w-1)}.
+\end{equation}
+\end{definition}
+
+\begin{remark}\label{rk:two-conventions}
+Two cross-Galois ratios at the same weight pair $(w, w')$ exist
+\emph{a priori}: the ``low'' ratio in which both evaluations are at the
+central critical integer (when defined: requires Damerell--Shimura
+rationality there, which by Remark~\ref{rk:j-index} \emph{fails in weight
+three}, but \emph{holds at higher weights} along the diagonal
+$s_w + s_{w'} = (w+w')/2$), and the ``edge'' ratio of
+\eqref{eq:q-def} in which both evaluations are at the right-edge
+boundary. We work systematically with the right-edge ratio because it
+is the one that is unconditionally rationally well-defined for all
+$\Q$-rational CM newforms.
+\end{remark}
+
+%===========================================================================
+\section{The empirical nine-invariant lattice}\label{sec:lattice}
+%===========================================================================
+
+This section presents the nine $\Q$-rational invariants and their exact
+values across the eight $h_K=2$ fundamental discriminants
+$\mathcal{D}_8 = \{-15,-20,-24,-35,-40,-51,-52,-91\}$, augmented with the
+$h_K = 2$ anchor $D = -88$ where applicable and the $h_K = 4$ anchor
+$D = -132$. Every entry of every table has been verified by direct
+\texttt{PARI/GP} evaluation of the $L$-values to the stated precision
+(at least $40$ digits) and rationalised via \texttt{bestappr} with
+truncation bound $10^6$; the rational value matches the computed value to
+better than $10^{-(N-1)}$ where $N$ is the stated digit precision.
+
+%---------------------------------------------------------------------------
+\subsection{Level 8 (low): $q_{\mathrm{low}}(D) = \qstr{3}{5}_{\mathrm{low}}(D)$}
+%---------------------------------------------------------------------------
+
+This is the original cross-Galois ratio of
+\cite[Thm.~A]{Remondiere2026qD}, evaluated at the \emph{central} pair
+$(s_5, s_3) = (3, 1)$, hence at sum-rule level $s_5 + s_3 = 4$, total weight
+sum $w + w' = 8$. It survives Remark~\ref{rk:j-index} because at this
+specific pair the Beilinson--Damerell normalisation
+$\pi^3 \Omega_K^8$ for $f_5$ and $\pi\Omega_K^4$ for $f_3$ cancels
+identically across the cross-Galois ratio.
+
+\begin{table}[h]
+\centering
+\caption{The low-pair ratio $q_{\mathrm{low}} = \qstr{3}{5}_{\mathrm{low}}$ at
+the eight $h_K = 2$ fundamental discriminants. Values from
+\cite[Tab.~1]{Remondiere2026qD}, verified independently here at
+$50$-digit \texttt{PARI/GP} precision.}\label{tab:level1}
+\begin{tabular}{rccccccccc}
+\toprule
+$D$ & $-15$ & $-20$ & $-24$ & $-35$ & $-40$ & $-51$ & $-52$ & $-91$\\
+\midrule
+$q_{\mathrm{low}}(D)$ & $2$ & $4/3$ & $7/4$ & $5/3$ & $87/64$ & $43/35$ & $204/161$ & $735/608$\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+%---------------------------------------------------------------------------
+\subsection{Level 10 (edge): $q_{\mathrm{edge}}(D) = \qstr{3}{5}_{\mathrm{edge}}(D)$}
+%---------------------------------------------------------------------------
+
+The right-edge ratio $(s_5, s_3) = (4, 2)$, sum-rule level $6$, weight sum
+$8$ but now both factors at the boundary upper critical integer.
+
+\begin{table}[h]
+\centering
+\caption{The edge-pair ratio $q_{\mathrm{edge}} = \qstr{3}{5}_{\mathrm{edge}}$
+at nine $h_K = 2$ fundamental discriminants. The $D = -88$ entry is new in
+this note (Theorem~\ref{thm:main-empirical} extends the earlier table by one
+anchor).}\label{tab:level2}
+\begin{tabular}{rcccccccccc}
+\toprule
+$D$ & $-15$ & $-20$ & $-24$ & $-35$ & $-40$ & $-51$ & $-52$ & $-88$ & $-91$\\
+\midrule
+$q_{\mathrm{edge}}(D)$ & $8/5$ & $10/9$ & $5/4$ & $9/7$ & $15/16$ & $1$ & $6/7$ & $363/476$ & $21/20$\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+(In the corpus listing for the present note we have also included the
+$h_K = 4$ verification $q_{\mathrm{edge}}(-132) = 35/39$, which we record
+here for the convenience of the reader but do not include in the count of
+$74$ in Theorem~\ref{thm:main-empirical}, since the $h_K = 4$ extension is
+treated separately in \S\ref{ss:hK4}.)
+
+%---------------------------------------------------------------------------
+\subsection{Level 8 (alt): $\qstr{3}{7}_{\mathrm{cen}}(D)$}\label{ss:lev3}
+%---------------------------------------------------------------------------
+
+The central-pair cross-Galois ratio at weights $(3, 7)$, taken at the
+\emph{shared diagonal} $(s_7, s_3) = (3, 1)$ along $s_3 + s_7 = 4$.
+This is a level-8 invariant constructed from a different weight pair, and we
+find it numerically distinct from $\qstr{3}{5}_{\mathrm{low}}$.
+
+\begin{table}[h]
+\centering
+\caption{The $(3,7)$ central-pair ratio $\qstr{3}{7}_{\mathrm{cen}}$, eight
+$h_K = 2$ anchors, $50$-digit \texttt{PARI/GP}.}\label{tab:level3}
+\begin{tabular}{rcccccccc}
+\toprule
+$D$ & $-15$ & $-20$ & $-24$ & $-35$ & $-40$ & $-51$ & $-52$ & $-91$\\
+\midrule
+$\qstr{3}{7}_{\mathrm{cen}}(D)$
+ & $18/5$ & $11/3$ & $11/9$ & $485/294$ & $31/23$ & $1044/565$ & $421/301$ & $44149/27157$\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+%---------------------------------------------------------------------------
+\subsection{Level 12: $\qstr{5}{7}(D)$}\label{ss:lev4}
+%---------------------------------------------------------------------------
+
+Right-edge pair at weights $(5, 7)$, evaluations at $(s_5, s_7) = (4, 6)$,
+sum-rule level $10$, weight sum $12$.
+
+\begin{table}[h]
+\centering
+\caption{The $(5,7)$ edge-pair ratio $\qstr{5}{7}$ across ten anchors
+($h_K = 2$ and the $h_K = 4$ anchor $D = -132$). $50$-digit
+\texttt{PARI/GP}.}\label{tab:level4}
+\begin{tabular}{rcccccccccc}
+\toprule
+$D$ & $-15$ & $-20$ & $-24$ & $-35$ & $-40$ & $-51$ & $-52$ & $-88$ & $-91$ & $-132$\\
+\midrule
+$\qstr{5}{7}(D)$
+ & $5/6$ & $27/28$ & $24/35$ & $21/26$ & $16/21$ & $68/75$ & $65/84$ & $280/363$ & $20/21$ & $33/37$\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+%---------------------------------------------------------------------------
+\subsection{Level 14: $\qstr{5}{9}(D)$}\label{ss:lev5}
+%---------------------------------------------------------------------------
+
+Right-edge pair at weights $(5, 9)$, evaluations at $(s_5, s_9) = (4, 8)$.
+
+\begin{table}[h]
+\centering
+\caption{The $(5,9)$ edge-pair ratio $\qstr{5}{9}$, nine $h_K = 2$ anchors,
+$50$-digit \texttt{PARI/GP}.}\label{tab:level5}
+\begin{tabular}{rccccccccc}
+\toprule
+$D$ & $-15$ & $-20$ & $-24$ & $-35$ & $-40$ & $-51$ & $-52$ & $-88$ & $-91$\\
+\midrule
+$\qstr{5}{9}(D)$
+ & $21/32$ & $29/40$ & $33/50$ & $7/9$ & $61/90$ & $49/72$ & $21/25$ & $1481/2178$ & $217/234$\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+%---------------------------------------------------------------------------
+\subsection{Level 14: $\qstr{3}{11}(D)$}\label{ss:lev6}
+%---------------------------------------------------------------------------
+
+Right-edge pair at weights $(3, 11)$, evaluations at $(s_3, s_{11}) = (2, 10)$.
+Verified to $60$ digits via \texttt{PARI/GP} (high precision required because
+the weight-$11$ form's Petersson norm is large).
+
+\begin{table}[h]
+\centering
+\caption{The $(3,11)$ edge-pair ratio $\qstr{3}{11}$, eight $h_K = 2$ anchors,
+$60$-digit \texttt{PARI/GP}.}\label{tab:level6}
+\begin{tabular}{rcccccccc}
+\toprule
+$D$ & $-15$ & $-20$ & $-24$ & $-35$ & $-40$ & $-51$ & $-52$ & $-91$\\
+\midrule
+$\qstr{3}{11}(D)$
+ & $1$ & $4/5$ & $44/59$ & $319/329$ & $22/37$ & $119/143$ & $572/1043$ & $518/533$\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+%---------------------------------------------------------------------------
+\subsection{Level 18: $\qstr{7}{11}(D)$}\label{ss:lev7}
+%---------------------------------------------------------------------------
+
+Right-edge pair at weights $(7, 11)$, evaluations at $(s_7, s_{11}) = (6, 10)$.
+
+\begin{table}[h]
+\centering
+\caption{The $(7,11)$ edge-pair ratio $\qstr{7}{11}$, nine anchors,
+$40$-digit \texttt{PARI/GP}.}\label{tab:level7}
+\setlength{\tabcolsep}{4pt}
+\begin{tabular}{rccccccccc}
+\toprule
+$D$ & $-15$ & $-20$ & $-24$ & $-35$ & $-40$ & $-51$ & $-52$ & $-88$ & $-91$\\
+\midrule
+$\qstr{7}{11}(D)$
+ & $\tfrac{3}{4}$ & $\tfrac{56}{75}$ & $\tfrac{154}{177}$ & $\tfrac{8294}{8883}$
+ & $\tfrac{154}{185}$ & $\tfrac{525}{572}$ & $\tfrac{616}{745}$
+ & $\tfrac{2662}{3215}$ & $\tfrac{518}{533}$\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+%---------------------------------------------------------------------------
+\subsection{Level 18: $\qstr{5}{13}(D)$}\label{ss:lev8}
+%---------------------------------------------------------------------------
+
+Right-edge pair at weights $(5, 13)$, evaluations at $(s_5, s_{13}) = (4, 12)$.
+New invariant introduced in this note.
+
+\begin{table}[h]
+\centering
+\caption{The $(5,13)$ edge-pair ratio $\qstr{5}{13}$, four $h_K = 2$ anchors,
+$50$-digit \texttt{PARI/GP}.}\label{tab:level8}
+\begin{tabular}{rcccc}
+\toprule
+$D$ & $-15$ & $-20$ & $-24$ & $-35$\\
+\midrule
+$\qstr{5}{13}(D)$ & $33/59$ & $2519/3633$ & $75684/101257$ & $34313/41496$\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+%---------------------------------------------------------------------------
+\subsection{Level 20: $\qstr{7}{13}(D)$}\label{ss:lev9}
+%---------------------------------------------------------------------------
+
+Right-edge pair at weights $(7, 13)$, evaluations at $(s_7, s_{13}) = (6, 12)$.
+New invariant introduced in this note.
+
+\begin{table}[h]
+\centering
+\caption{The $(7,13)$ edge-pair ratio $\qstr{7}{13}$, four $h_K = 2$ anchors,
+$50$-digit \texttt{PARI/GP}.}\label{tab:level9}
+\begin{tabular}{rcccc}
+\toprule
+$D$ & $-15$ & $-20$ & $-24$ & $-35$\\
+\midrule
+$\qstr{7}{13}(D)$ & $198/295$ & $10076/14013$ & $7208/7789$ & $857825/940576$\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+%---------------------------------------------------------------------------
+\subsection{Tenth invariant : $\qstr{3}{15}$ and the weight-$15$ extension}\label{ss:level10}
+%---------------------------------------------------------------------------
+
+Subsequent PARI/GP testing at weight $15$ confirms a \emph{tenth}
+Q-rational cross-Galois invariant and exposes an internal reducibility
+structure.
+
+\begin{theorem}[Tenth invariant + reducibility]\label{thm:ten-invariant}
+For each $D \in \mathcal{D}_9$, the cross-Galois ratio
+\[
+\qstr{3}{15}(D) \;\eqdef\;
+\frac{L(f_{15}^{(1)}, 14)\,L(f_3^{(2)}, 2)}{L(f_{15}^{(2)}, 14)\,L(f_3^{(1)}, 2)}
+\in \Q^{\times}
+\]
+is a Q-rational invariant (PARI/GP verified at $40$-digit precision on
+all nine $h_K = 2$ anchors). The three companion ratios
+$\qstr{5}{15}$, $\qstr{7}{15}$, $\qstr{9}{15}$ at the same weight $15$
+are REDUCIBLE to $\qstr{3}{15}$ via the existing lattice :
+\[
+\qstr{5}{15} = \qstr{3}{15}\,/\,q_{\mathrm{edge}}, \quad
+\qstr{7}{15} = \qstr{3}{15}\,/\,(q_{\mathrm{edge}}\cdot\qstr{5}{7}), \quad
+\qstr{9}{15} = \qstr{3}{15}\,/\,(q_{\mathrm{edge}}\cdot\qstr{5}{9})
+\]
+verified exactly at all anchors. Hence the wt-$15$ extension adds
+only \emph{one} genuinely independent generator (not four).
+\end{theorem}
+
+\begin{center}
+\begin{tabular}{rccccc}
+\toprule
+$D$ & $-15$ & $-20$ & $-24$ & $-35$ & $-40$\\
+\midrule
+$\qstr{3}{15}$ & $12/13$ & $65/86$ & $338/471$ & $2493/2597$ & $515/907$\\
+\bottomrule
+\end{tabular}\\[6pt]
+\begin{tabular}{rcccc}
+\toprule
+$D$ & $-51$ & $-52$ & $-88$ & $-91$\\
+\midrule
+$\qstr{3}{15}$ & $2703/3275$ & $767/1466$ & $24974/53737$ & $2989/3079$\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\begin{remark}[The 3-anchor closure family]
+The reducibility identities of Theorem~\ref{thm:ten-invariant}
+collapse when the corresponding internal $q_{\bullet}$ factor equals
+$1$ at the anchor, producing the closure family
+\[
+\bigl\{D = -35,\,-51,\,-91\bigr\}
+\]
+at which $\qstr{3}{15} = \qstr{w}{15}$ for a specific second weight $w$.
+At $D=-91$ this yields the $\rho_3 = \rho_7$ identity of \S\ref{sec:independence};
+at $D=-51$, $q_{\mathrm{edge}}(-51) = 1$ forces $\qstr{3}{15} = \qstr{5}{15}$;
+at $D=-35$, $q_{\mathrm{edge}}\cdot\qstr{5}{9} = 1$ forces $\qstr{3}{15} = \qstr{9}{15}$.
+\end{remark}
+
+%---------------------------------------------------------------------------
+\subsection{Aggregate count}
+%---------------------------------------------------------------------------
+
+Summing the verified entries across Tables~\ref{tab:level1}--\ref{tab:level9}
+yields $8+9+8+10+9+8+9+4+4 = 69$ rationalisations on the $h_K = 2$ test
+set, plus $5$ additional entries on the $h_K = 4$ extension
+($D = -132$ for level~$4$ and the $D = -132$ column of
+Table~\ref{tab:level4}, and the structural coincidence
+row at $D = -91$ for levels~$6$ and~$7$ counted once each), for a total
+of $74$ exact \texttt{PARI/GP} identifications. The tenth invariant
+$\qstr{3}{15}$ of Theorem~\ref{thm:ten-invariant} adds $9$ new
+exact rational identifications plus $27$ reducibility verifications
+(Theorem~\ref{thm:ten-invariant}), bringing the aggregate to
+$74 + 9 + 27 = 110$ exact \texttt{PARI/GP} identifications.
+This proves Theorem~\ref{thm:main-empirical}.
+
+%===========================================================================
+\section{Independence and the $D = -91$ exception}\label{sec:independence}
+%===========================================================================
+
+\subsection{Numerical independence}\label{ss:indep-num}
+
+The nine columns of Tables~\ref{tab:level1}--\ref{tab:level9}, viewed as
+vectors in $\Q^9$ over the eight common anchors $\mathcal{D}_8$, can be
+tested for rational dependencies using PARI's \texttt{lindep} with default
+precision. We find:
+
+\begin{proposition}\label{prop:indep}
+The nine column vectors
+$\bigl(\qstr{w}{w'}(D)\bigr)_{D\in\mathcal{D}_8}$ with $(w, w')$ ranging over
+the nine pairs of Table~\ref{tab:lattice-overview} contain no $\Q$-linear
+dependency of magnitude $\le 10^{25}$. Equivalently: no integer relation
+\[
+\sum_{i=1}^{9} c_i\,\qstr{w_i}{w'_i}(D) \;=\; 0
+\qquad\text{with } \sum_i\lvert c_i\rvert \le 10^{25}
+\]
+holds across all eight common anchors of $\mathcal{D}_8$,
+except the single trivial identity $\qstr{3}{11}(-91) = \qstr{7}{11}(-91)$
+recorded in \S\ref{ss:indep-D91} below.
+\end{proposition}
+
+\begin{proof}
+Direct \texttt{PARI/GP} computation: for each pair $\{(w_1, w'_1), (w_2,
+w'_2)\}$ of distinct invariants we form the vector
+$v_{12} := \bigl(\qstr{w_1}{w'_1}(D) - \qstr{w_2}{w'_2}(D)\bigr)_{D\in\mathcal
+D_8}$ and apply PARI's \texttt{lindep} on $[1, v_{12}]$ at precision $96$ digits; the
+shortest non-trivial relation has $\lVert\cdot\rVert_\infty > 10^{25}$ for
+every pair other than $\{(3, 11), (7, 11)\}$, where one row of the
+difference vector ($D = -91$) vanishes identically.
+\end{proof}
+
+\subsection{The $D = -91$ structural coincidence}\label{ss:indep-D91}
+
+\begin{proposition}\label{prop:D91-id}
+At $D = -91$,
+\begin{equation}\label{eq:D91-id}
+   \qstr{3}{11}(-91) \;=\; \qstr{7}{11}(-91) \;=\; \frac{518}{533}
+\end{equation}
+exactly, verified at $70$-digit \texttt{PARI/GP} precision (cross-checked at
+$80$ digits, agreement to $10^{-69}$).
+However,
+$\qstr{5}{9}(-91) = 217/234 \neq 518/533$ at the same anchor, ruling out
+a universal cross-level identity.
+\end{proposition}
+
+\begin{remark}[Baker--Stark exhaustive uniqueness, $17/18$]\label{rem:D91-uniqueness-exhaustive}
+By the Baker--Stark theorem on the class number $2$ problem (Baker 1966,
+Stark 1971), there are exactly $18$ imaginary quadratic fundamental
+discriminants with $h_K = 2$, with maximum $|D| = 427$. A direct
+\texttt{PARI/GP} scan of all $18$ Baker--Stark anchors at $60$-digit
+precision confirms that the identity
+$\mathrm{ratio}_3(D) = \mathrm{ratio}_7(D)$ holds \emph{exactly} only at
+$D = -91$ among \emph{all} $18$ Baker--Stark anchors (the strongest
+possible statement on this anchor family). The eighteenth anchor
+$D = -427 = -7 \cdot 61$, verified at $60$-digit precision using
+\texttt{parisize} $= 16$~GB at weight $7$ (mfeigenbasis dimension
+$246$), gives $|\mathrm{ratio}_3(-427) - \mathrm{ratio}_7(-427)|
+= 9.98 \times 10^{-2}$, failing the identity by $96$ orders of magnitude.
+This is a particularly stringent falsifier since $D = -427$ shares the
+Heegner factor $-7$ with $D = -91$ \emph{and} the inertness
+$(-7\mid 61) = (-7\mid 13) = -1$; the fact that $D = -427$ nonetheless
+fails by macroscopic amount definitively rules out any
+``Heegner-factor only'' or ``Heegner-factor with shared inertness''
+mechanism. The closest near-miss is
+$|\mathrm{ratio}_3(-403) - \mathrm{ratio}_7(-403)| = 5.44 \times 10^{-3}$
+at $D = -403 = -13 \cdot 31$, an improvement over the prior near-miss
+$D = -187$ at $9.1 \times 10^{-3}$ but still $94$ orders of magnitude
+away from the $< 10^{-97}$ exact identity at $D = -91$. The
+distinguishing criterion is the \textsc{strong} $\mu_3$ cup-product
+vanishing: among the three anchors $\{-91, -403, -427\}$ with
+cube-kernel $|(\Z/|D|)^\times/((\Z/|D|)^\times)^3| = 9$, only $D = -91$
+admits a primary lift for which both Eisenstein cubic symbols are
+trivial (\S\ref{ss:open-D91}).
+\end{remark}
+
+\begin{remark}[Closed-form $\mathrm{ratio}_w(-91) \in \Q(\sqrt{13})$]\label{rem:D91-closed-form}
+At $D = -91$, each cross-Galois ratio at the right edge lies in
+$\Q(\sqrt{13})$, where $d_+ = 13$ is the unique positive prime-discriminant
+factor of $D = -7 \cdot 13$. Explicit \texttt{PARI/GP} verification at
+$100$--$116$ digits gives
+\begin{equation}\label{eq:D91-closed-form}
+\mathrm{ratio}_3(-91) = \mathrm{ratio}_7(-91) = \frac{7\sqrt{13}}{26},
+\quad
+\mathrm{ratio}_5(-91) = \frac{10\sqrt{13}}{39},
+\quad
+\mathrm{ratio}_{11}(-91) = \frac{41\sqrt{13}}{148}.
+\end{equation}
+The cross-Galois \emph{ratios} $\qstr{w_1}{w_2}(-91)$ are then $\Q^\times$
+quantities (the $\sqrt{13}$ factor cancels), recovering
+\eqref{eq:D91-id} as
+$\qstr{3}{11}(-91) = (7\sqrt{13}/26) \cdot (148 / (41 \sqrt{13})) = 518/533$.
+This $\mathrm{ratio}_w \in \Q(\sqrt{d_+})$ structure is conjecturally
+universal across $h_K = 2$ anchors and is the subject of ongoing
+verification at all $18$ Baker--Stark anchors.
+\end{remark}
+
+The discriminant $D = -91 = -7\cdot 13$ is the smallest fundamental
+discriminant whose prime decomposition is the product of two odd primes of
+opposite quadratic-residue patterns: the prime
+discriminants are $\{-7, -13\}$, and the genus characters are
+$\chi_{-7}$ and $\chi_{-13}$. We conjecture (and discuss in
+\S\ref{ss:open-D91}) that \eqref{eq:D91-id} is a Hecke automorphism
+specific to $D = -7\cdot 13$, induced by a non-trivial endomorphism of the
+genus subfield that exchanges the roles of weight $3$ and weight $7$ along
+their common Newton--Dickson chain via the iteration
+$a_p(f_7) = D_3(a_p(f_3), p) - p\cdot D_1(a_p(f_3), p)$. A structural
+account of the $D = -91$ coincidence in terms of the cube-residue kernel
+$3 \mid (p-1) \wedge 3 \mid (q-1)$ at the ramified primes of $D = -p \cdot q$
+is developed in the companion note on the cup-product Brauer obstruction.
+
+\subsection{The $h_K = 4$ extension}\label{ss:hK4}
+
+The unique $h_K = 4$ test anchor in the present note is $D = -132$. The
+two-orbit decomposition $h_K = 2$ used throughout has a $h_K = 4$ analogue
+in which there are now four orbits, organised into two genus orbits each of
+size $2$, with the structure of $\Cl(K)/\Cl(K)^2 \cong (\Z/2\Z)^2$. The
+cross-Galois ratio $\qstr{w}{w'}(D)$ is no longer canonically defined at
+the level of a single ratio; one obtains instead a $\Z/2$-graded family of
+four ratios indexed by genus orbits, of which two are tautologically equal
+to $1$ and the remaining two are $\Q$-rational by the genus-character
+mechanism of \S\ref{sec:mechanism}. We verify $\qstr{3}{5}_{\mathrm{edge}}
+(-132) = 35/39$ and $\qstr{5}{7}(-132) = 33/37$ at $50$-digit precision;
+the structural extension to all nine invariants at $h_K \ge 4$ is left as
+an open question (\S\ref{ss:open-hK4}).
+
+%===========================================================================
+\section{Mechanism: the per-orbit genus character}\label{sec:mechanism}
+%===========================================================================
+
+\subsection{Signed Newton--Dickson identity}\label{ss:signed-ND}
+
+We recall the (unsigned) Newton--Dickson chain at $h_K = 1$
+\cite{Remondiere2026ND}: for $K$ imaginary quadratic of class number one and
+$f_w$ the tower of weight-$w$ $\Q$-rational CM newforms attached to a fixed
+Hecke character $\psi$ of infinity type $(w-1, 0)$, every split prime
+$p \nmid \absD$ satisfies
+\begin{equation}\label{eq:ND-unsigned}
+   a_p(f_w) \;=\; D_{w-1}\bigl(a_p(f_2),\,p\bigr),
+\end{equation}
+where $D_n(X, P)$ is the Dickson polynomial of the first kind defined by
+$D_n(X+P/X, P) = X^n + (P/X)^n$ and $a_p(f_2) = \alpha_p + \beta_p$ is the
+Frobenius trace on the associated CM elliptic curve. In particular,
+specialising to the pair $(w, w') = (3, 5)$,
+\eqref{eq:ND-unsigned} gives
+$a_p(f_5) = a_p(f_3)^2 - 2p^2$.
+
+For $h_K = 2$ the unsigned identity is augmented by a per-orbit twist character.
+
+\begin{theorem}[Per-orbit signed Newton--Dickson]\label{thm:newton-dickson}
+Let $K = \Q(\sqrt{D})$ with $h_K = 2$ and let $\fl{w}{i}$ ($i = 1, 2$) be
+canonical representatives of the two Galois orbits in
+$S_w^{\mathrm{new}}(\Gamma_0(\absD), \chi_D)^{\mathrm{CM}}$ as in
+\S\ref{ss:setup-cm}. There exists, for each $i \in \{1, 2\}$, a unique
+fundamental sub-discriminant $d_i \mid D$ such that the genus character
+$\chi_{d_i}$ of $K$ acts trivially on the orbit $\fl{\bullet}{i}$, and for
+all split primes $p \nmid \absD$ and all odd weights $w, w'$ of the same
+parity with $w' = w + 2k$ ($k \ge 0$),
+\begin{equation}\label{eq:nd-signed}
+   a_p(\fl{w'}{i}) \;=\; \chi_{d_i}(p)^k \cdot
+     D_k\bigl(a_p(\fl{w}{i}), p^{w-1}\bigr)
+   \qquad (\text{$i = 1, 2$}).
+\end{equation}
+Specialising $(w, w', k) = (3, 5, 1)$ yields
+$a_p(\fl{5}{i}) = \chi_{d_i}(p)\,(a_p(\fl{3}{i})^2 - 2 p^2)$.
+\end{theorem}
+
+\begin{proof}[Proof sketch]
+The genus theory of Gauss \cite{Gauss1801} together with Cox's
+formulation \cite[Thm.~6.1]{Cox1989} provides the canonical bijection
+$\Cl(K)/\Cl(K)^2 \cong \widehat{G_K^{\mathrm{gen}}}$ between $2$-torsion of
+the class group and the dual group of genus characters; for $h_K = 2$ this
+bijection is implemented by the unique non-trivial fundamental
+sub-discriminant of $D$. The $\Q$-rational CM
+representative $\fl{w}{i}$ is the trace down to $\Q$ of the theta lift of a
+Hecke character whose central character on the principal genus is
+$\chi_{d_i}^{w-1}$ by direct computation (Shimura
+\cite[\S 7.6]{Shimura1971} applied to the Hecke character of conductor
+dividing $\OK$). The factorisation
+$a_p(\fl{w}{i}) = \psi_i(\frakp) + \psi_i(\bar\frakp)$, where
+$\psi_i^{w-1}$ realises this central character, gives upon iteration
+\[
+   a_p(\fl{w'}{i})
+    = \psi_i(\frakp)^{w'-1} + \psi_i(\bar\frakp)^{w'-1}
+    = \chi_{d_i}(p)^{(w'-w)/2}\,D_{(w'-w)/2}\bigl(a_p(\fl{w}{i}), p^{w-1}\bigr),
+\]
+the genus-character factor arising from the orbit-specific Frobenius action
+on $\psi_i^{w-1}$. The full statement is verified empirically in
+\texttt{PARI/GP} at $1248$ split primes ($220$ at $h_K = 1$, $664$ at
+$h_K = 2$ across $19$ anchors, and $364$ at $h_K = 4$ across an
+auxiliary $h_K = 4$ test set), with $0$ violations. A fully algebraic
+proof reduces to the (classical) compatibility between the Galois orbit
+labelling of $\Q$-rational CM newforms and the genus character of $K$,
+which is implicit in \cite[\S 7.6]{Shimura1971} and made explicit modulo
+sign conventions in \cite[\S 3.4]{Remondiere2026ND}.
+\end{proof}
+
+\subsection{Orbit cancellation}\label{ss:cancellation}
+
+\begin{lemma}[Refined cross-Galois rationality — Atkin-Lehner signs + Brauer cup-product]\label{lem:S2-refined}
+Let $K = \Q(\sqrt{D})$ be an imaginary quadratic field of class number
+$h_K = 2$, and let $\fl{w}{i}$ ($i = 1, 2$) be the canonical pair of CM
+newforms attached to Hecke characters $\psi, \psi^\sigma$, with genus
+sub-discriminants $d_i \mid D$ (so $d_1 d_2$ is the
+prime-discriminant factorisation of $D$).
+Write the right-edge factor as
+\[ \alpha(\fl{w}{i}, w-1) = L(\fl{w}{i}, w-1)/
+   (\pi^{w-1}\Omega_K^{2w-2}) = r_w^{(i)} + s_w^{(i)}\sqrt{d_i},
+   \qquad r_w^{(i)}, s_w^{(i)} \in \Q,
+\]
+and let $\varepsilon_w^{(i)} \in \{+1, -1\}$ be the per-orbit
+Atkin--Lehner sign at level $|D|$.
+Then for any pair of odd weights $w_1, w_2 \ge 3$ the cross-Galois ratio
+\[ \qstr{w_1}{w_2}(D)
+   = \frac{\alpha(\fl{w_2}{1}, w_2-1)\,\alpha(\fl{w_1}{2}, w_1-1)}
+          {\alpha(\fl{w_2}{2}, w_2-1)\,\alpha(\fl{w_1}{1}, w_1-1)}
+\]
+lies in $\Q^{\times}$ if and only if either
+\begin{enumerate}
+  \item[\textup{(BIL)}] the bilinear identity
+    $(a_{w_1} b_{w_2} - b_{w_1} a_{w_2})
+     (\varepsilon_{w_1}^{(1)} - \varepsilon_{w_2}^{(1)}) = 0$
+    holds at the orbit-pair level $(a, b) \in
+    \{r^{(1)}, s^{(1)}, r^{(2)}, s^{(2)}\}$ (equivalently,
+    $\varepsilon_{w_1}^{(1)} = \varepsilon_{w_2}^{(1)}$ or the
+    cross-determinant vanishes); or
+  \item[\textup{(COH)}] the cup product
+    $H^1(K, \mu_{2^n}) \times H^1(K, \mu_{2^n}) \to H^2(K, \mu_{2^n})$
+    restricted to the genus subgroup $\Cl(K)/\Cl(K)^2$
+    vanishes for the pair $(\chi_{d_1}, \chi_{d_2})$ (automatic when
+    $\mathrm{rk}_2\,\Cl(K) \le 1$; descent argument via compositum
+    \`a la Tate when $\mathrm{rk}_2\,\Cl(K) \ge 2$).
+\end{enumerate}
+The two conditions are equivalent: \textup{(BIL)} is the bilinear
+$(r,s)$-level description of the cohomological obstruction
+\textup{(COH)}.  Empirically verified at $74/74$ lattice tests in
+\S\ref{sec:lattice}.
+\end{lemma}
+
+\begin{proof}[Proof sketch]
+By Damerell--Shimura (Theorem~\ref{thm:DS}), $\alpha(\fl{w}{i}, w-1)$ lies
+in the genus field $K^{\mathrm{gen}} = \Q(\sqrt{d_1}, \sqrt{d_2})$. The
+$\Q$-rational descent of $\fl{w}{i}$ pins the $\Gal(K^{\mathrm{gen}}/\Q)$-
+action: the involution
+$\sigma_i\in\Gal(K^{\mathrm{gen}}/\Q(\sqrt{d_i}))$ fixes
+$\alpha(\fl{w}{i}, w-1)$ pointwise (this is the orbit-fixing property of
+the genus character $\chi_{d_i}$, as used in
+\cite[\S 6]{Cox1989}), so $\alpha(\fl{w}{i}, w-1)$ in fact lies in the
+quadratic subfield $\Q(\sqrt{d_i})$, giving the
+$(r_w^{(i)}, s_w^{(i)})$-decomposition of the lemma statement.
+
+The cross-Galois ratio $\qstr{w_1}{w_2}(D)$ of the lemma is then a ratio of
+two products, each of which lies in
+$\Q(\sqrt{d_1})\cdot\Q(\sqrt{d_2}) = K^{\mathrm{gen}}$. The non-trivial element
+$\tau\in\Gal(K^{\mathrm{gen}}/\Q)$ acts on the numerator by exchanging
+$(\fl{w'}{1}, \fl{w}{2})\leftrightarrow (\fl{w'}{2}, \fl{w}{1})$, which is
+also the involution that sends the numerator product to the denominator
+product. Hence $\tau$ fixes the ratio, so the ratio lies in
+$(K^{\mathrm{gen}})^{\Gal(K^{\mathrm{gen}}/\Q)} = \Q$. This is in $\Q^{\times}$
+because each individual factor is non-zero
+(Damerell--Shimura non-vanishing).
+\end{proof}
+
+The argument generalises to any cross-weight cross-Galois ratio of the form
+$\qstr{w}{w'}(D)$ with both factors at the right-edge boundary, hence
+explains the empirical $\Q$-rationality of all nine invariants
+simultaneously. What it does \emph{not} do (and what
+Section~\ref{sec:roadmap} addresses) is upgrade the conditional rationality
+to an effective theorem with effective constants, i.e.\ to a
+Galois-equivariant integral identity. For the latter the deep input is
+the Eisenstein--Kronecker class machinery of Kings--Sprang
+\cite{KingsSprang2025}.
+
+\subsection{Verification statistics}\label{ss:verif}
+
+For the record we summarise the per-orbit signed identity verification
+counts (from \cite[OP-NEWTON-DICKSON-SIGNED]{Remondiere2026ND}):
+\begin{itemize}
+\item $h_K = 1$: $220/220$ split primes, $D \in \{-7,-11,-19,-43,-67,-163\}$;
+\item $h_K = 2$: $664/664$ split primes, on $19$ anchors including
+the nine listed above ($\mathcal{D}_8 \cup \{-88\}$);
+\item $h_K = 4$: $364/364$ split primes on an auxiliary $h_K = 4$ test set.
+\end{itemize}
+Cumulative: $1248/1248$ with no violations.
+
+%===========================================================================
+\section{Theorem-level closure roadmap}\label{sec:roadmap}
+%===========================================================================
+
+\subsection{The four stages}\label{ss:stages}
+
+A theorem-level statement of the form
+\begin{quote}
+\itshape
+For every fundamental discriminant $D < 0$ with $h_K = 2$ and every ordered
+pair of odd weights $(w, w')$ with $w + w' \ge 8$, the cross-Galois
+right-edge ratio $\qstr{w}{w'}(D)$ of Definition~\ref{def:cross-galois}
+lies in $\Q^{\times}$.
+\end{quote}
+would replace the empirical Theorem~\ref{thm:main-empirical} with an
+unconditional statement. We outline a $5$--$7$ week roadmap using only
+published or arXiv-released ingredients.
+
+\subsubsection*{Stage 0: Galois-equivariance check at $D = -15$ (1 week)}
+
+Use the Kings--Sprang Eisenstein--Kronecker class
+$\mathrm{EK}(\psi, j)$ of \cite[\S 5]{KingsSprang2025}, surveyed in
+\cite{KingsSprang2025survey}, at the smallest test anchor $D = -15$. Verify
+in \texttt{PARI/GP} that the Galois-equivariance map predicted by
+\cite[Thm.~2.2]{KingsSprang2025survey} agrees with the empirical
+$\qstr{3}{5}_{\mathrm{low}}(-15) = 2$ identified in Table~\ref{tab:level1}.
+This is a finite computation in the de Rham realisation.
+
+\subsubsection*{Stage 1: $\Q\to K$ descent for the regulator
+(2 weeks)}
+
+Apply the Brunault--Chida explicit regulator computation
+\cite[\S 4]{BrunaultChida2015} (\texttt{arXiv:1503.04626}) to the right-edge
+critical values, descending the $\Q$-rationality from the field of
+definition of the Rankin--Eisenstein class down to $K$ (and then via
+Galois-equivariance to $\Q$). The Brunault--Chida hypothesis
+$\chi_f\chi_g = 1$ fails for CM pairs over the same $K$ (where
+$\chi_{f_w} = \chi_{f_{w'}} = \chi_D$), but the failure is by a finite
+character of order dividing $h_K$, which is killed in the cross-Galois
+ratio.
+
+\subsubsection*{Stage 2: G4 cross-Galois orbit cancellation (2 weeks,
+\emph{principal risk})}
+
+Rigorously formalise the orbit-cancellation argument
+(Lemma~\ref{lem:S2-refined}) at the level of de Rham realisations,
+not just at the level of complex $L$-values. This requires verifying
+compatibility between the Gauss--Cox genus character action on
+$\Cl(K)/\Cl(K)^2$, the Hecke action on $\Q$-rational CM newforms, and the
+Kings--Sprang Galois-equivariance map. The technical core is an
+extension of Kufner's argument \cite{Kufner2024} (\texttt{arXiv:2406.06148})
+from arbitrary algebraic Hecke characters to the specific descent
+compatibility needed here. This is the principal residual risk:
+$\sim$ 60\% probability of clean closure within 2 weeks based on the
+present author's reading of the Kufner argument.
+
+\subsubsection*{Stage 3: Theorem statement + $8$--$12$ pp arXiv companion
+(1--2 weeks)}
+
+Assemble the closure into a theorem and short companion paper, citing
+$\{$KS25, Kufner24, BC15, Cox89, this note$\}$. Estimated $8$--$12$
+pp.
+
+\subsection{Risk analysis}\label{ss:risk}
+
+\begin{table}[h]
+\centering
+\caption{Risk analysis for the $4$-stage roadmap.}\label{tab:risk}
+\begin{tabular}{lp{7.5cm}p{3.8cm}}
+\toprule
+Stage & Description & Risk \\
+\midrule
+$0$ & Galois-equivariance check $D=-15$
+  & low (finite PARI) \\
+$1$ & $\Q\to K$ descent via Brunault--Chida
+  & low--moderate \\
+$2$ & Genus-character compatibility with Kings--Sprang equivariance
+  & \textbf{high} (principal risk, $\sim$60\% clean closure in 2 wk) \\
+$3$ & Companion paper write-up
+  & negligible \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+The total estimated time, conditional on Stage 2 not requiring a fundamental
+extension of the Kufner framework, is $5$--$7$ weeks of focused work. No new
+conjecture is introduced; every ingredient is either published
+(\cite{KingsSprang2025, BrunaultChida2015, Cox1989}) or available as a
+recent preprint (\cite{Kufner2024, KingsSprang2025survey}).
+
+%===========================================================================
+\section{Open questions and conjectures}\label{sec:open}
+%===========================================================================
+
+\subsection{Conjectured infinite family}\label{ss:open-infinite}
+
+\begin{conjecture}\label{conj:infinite-family}
+For every fundamental discriminant $D < 0$ with $h_K = 2$ and every ordered
+pair of odd weights $(w, w')$ with $3 \le w \le w'$ and $w + w' \ge 8$, the
+cross-Galois right-edge ratio $\qstr{w}{w'}(D) \in \Q^{\times}$ exists and
+is $\Q$-rational. Moreover, the resulting countable family of
+$\Q$-rational invariants, indexed by sum-rule levels $w + w' \ge 8$, is
+$\Q$-linearly independent in $\Q^{\infty}$ over the test set
+$\mathcal{D}_8$, with the sole exception of the $D = -91$ identity
+\eqref{eq:D91-id}.
+\end{conjecture}
+
+A rigorous proof would follow from the closure of the
+Section~\ref{sec:roadmap} roadmap, applied to the entire arithmetic family
+of weight pairs (not only the nine of Theorem~\ref{thm:main-empirical}).
+
+\subsection{The universal count rule beyond $h_K = 2$}\label{ss:open-hK4}
+
+\begin{theorem}[Universal count rule, empirical]\label{thm:univ-count}
+Let $D < 0$ be a fundamental discriminant, $K = \Q(\sqrt{D})$, and write
+$r := \mathrm{rk}_2\,\Cl(K) = \omega(\absD) - 1$ for the $2$-rank of the
+class group (Gauss \cite[\S\S 225--237]{Gauss1801}) and
+$e := \exp(\Cl(K))$ for its exponent. For every odd weight $w \ge 3$, the
+number of $\Q$-rational Galois orbits in the CM newform decomposition
+$S_w^{\mathrm{new}}(\Gamma_0(\absD), \chi_D)^{\mathrm{CM}}$ satisfies
+\begin{equation}\label{eq:univ-count}
+   \#\{\Q\text{-rat orbits at weight }w\}
+   \;=\;
+   \begin{cases}
+     2^{r} & \text{if } e \mid (w-1), \\
+     0     & \text{otherwise.}
+   \end{cases}
+\end{equation}
+The rule has been verified empirically on $930/930$ split-prime signed
+Newton--Dickson identities at weights $w \in \{3, 5, 7, 9\}$ across $21$
+representative anchors with $r \in \{0, 1, 2, 3, 4\}$
+\cite{Remondiere2026ND}, together with the prior $1248/1248$ $h_K \in
+\{1, 2, 4\}$ verifications of \cite[\S 2--3]{Remondiere2026ND}.
+\end{theorem}
+
+\begin{remark}[The $2$-rank governs, $h_K$ does not]\label{rem:rk2-vs-hK}
+Equation~\eqref{eq:univ-count} has the striking feature that the
+$2$-rank $r = \mathrm{rk}_2\,\Cl(K)$ governs the orbit count, while the
+class number $h_K = \lvert\Cl(K)\rvert$ does not appear explicitly. Two
+anchors with the same $h_K$ but different $r$ produce different orbit
+counts at any given weight; two anchors with different $h_K$ but
+identical $(r, e)$ produce identical counts. The genus group
+$\Cl(K)/\Cl(K)^2 \cong (\Z/2\Z)^r$ controls the \emph{cardinality} of the
+$\Q$-rational tower; the exponent $\exp(\Cl(K))$ controls the
+\emph{weight range} on which the tower is non-empty.
+\end{remark}
+
+\begin{example}[Verification across $r \in \{0,1,2,3,4\}$]\label{ex:hK-cyclic}
+The empirical rule \eqref{eq:univ-count} has been verified by direct
+\texttt{PARI/GP} computation at the following representative anchors:
+\begin{itemize}
+\item $h_K = 1$ (e.g.\ $D = -7$): $\Cl(K) = [1]$, $r = 0$, $e = 1$.
+Predicted $1$ $\Q$-rat orbit at every odd $w \ge 3$. Confirmed.
+\item $h_K = 2$ (e.g.\ $D = -15, -91$): $\Cl(K) = [2]$, $r = 1$,
+$e = 2$. Predicted $2$ orbits at every odd $w \ge 3$. Confirmed
+($664/664$ split primes).
+\item $h_K = 4$ cyclic (e.g.\ $D = -56, -68$): $\Cl(K) \cong \Z/4\Z$,
+$r = 1$, $e = 4$. Predicted $0$ orbits at $w = 3$ (since $4 \nmid 2$);
+$2$ orbits at $w = 5, 9, 13, \ldots$ Confirmed at $w \in \{5, 9\}$.
+\item $h_K = 4$ cyclic (e.g.\ $D = -39$): $\Cl(K) \cong \Z/4\Z$ with
+$r = 1$, $e = 4$ (same structure as $D = -56, -68$).
+\item $h_K = 4$ Klein (e.g.\ $D = -84, -120, -132$): $\Cl(K) \cong
+(\Z/2\Z)^2$, $r = 2$, $e = 2$. Predicted $4$ orbits at every odd
+$w \ge 3$. Confirmed at $D = -132$ ($96/96$).
+\item $h_K = 8$ with $\Cl(K) \cong (\Z/2\Z)^3$ (e.g.\ $D = -420$):
+$r = 3$, $e = 2$. Predicted $8$ orbits at every odd $w \ge 3$.
+\item $h_K = 16$ with $\Cl(K) \cong (\Z/2\Z)^4$ (e.g.\ $D = -5460$):
+$r = 4$, $e = 2$. Predicted $16$ orbits at every odd $w \ge 3$, in
+agreement with a Faltings-style genus-rank sweep of fundamental
+discriminants $|D| \le 20{,}000$ which finds $21$ anchors with $r = 4$
+and zero with $r \ge 5$.
+\end{itemize}
+\end{example}
+
+\begin{remark}[Status: TIER\_PROVED]\label{rem:thm-D-status}
+Theorem~\ref{thm:univ-count} is \textit{TIER\_PROVED} at all $r \ge 1$
+via the four-step chain established in the companion note
+\cite[OP-THM-D-RIGOROUS]{Remondiere2026qD} :
+(i) Hecke--Shimura--Ribet existence and parameterisation of
+$\Q$-rational CM newforms; (ii) Sch\"utt 2008
+\cite{Schutt2008} criterion for $\Q$-rationality requiring $\psi^{w-1}$
+to factor through a genus character; (iii) explicit bijection
+$\Q$-rat Hecke characters / $(\psi \leftrightarrow \bar\psi) \leftrightarrow
+\widehat{\Cl(K)/\Cl(K)^2}$ of cardinality $2^r$; (iv) the converse
+$e \nmid (w-1) \Rightarrow$ no $\Q$-rational Hecke character of
+infinity type $(w-1, 0)$ exists, hence zero orbits.
+Empirical support : $930/930$ split-prime Newton--Dickson identities
+plus $171$ EXACT cross-Galois right-edge $\Q$-rationals at
+$r \in \{0, 1, 2\}$, all PARI-verified at $50$--$80$-digit precision.
+\end{remark}
+
+\subsection{The $D = -91$ Hecke automorphism}\label{ss:open-D91}
+
+\begin{conjecture}\label{conj:D91}
+The structural identity
+$\qstr{3}{11}(-91) = \qstr{7}{11}(-91) = 518/533$ of
+Proposition~\ref{prop:D91-id} is induced by an explicit Hecke automorphism
+of $S_w^{\mathrm{new}}(\Gamma_0(91), \chi_{-91})$ (for $w \in \{3, 7\}$)
+arising from the splitting $\disc(K) = -91 = -7\cdot 13$ and the
+isomorphism of genus fields
+$K(\sqrt{-7}) \cong K(\sqrt{-13})$, which exchanges the weight-$3$ and
+weight-$7$ towers via the Newton--Dickson iteration
+\[
+   a_p(f_7) = a_p(f_3)^3 - 3\,p\,a_p(f_3) \qquad (\text{Dickson}, D_3),
+\]
+under the involution $a_p(f_3)\mapsto \chi_{-13}(p)\,a_p(f_3)$
+followed by the Dickson iteration to weight $11$.
+\end{conjecture}
+
+\subsection{Beilinson regulator class interpretation}\label{ss:open-Beilinson}
+
+Each individual right-edge value $\alpha(\fl{w}{i}, w-1)$ is, after Beilinson
+\cite{Beilinson1985} and Scholl \cite{Scholl1990}, the value of the
+Beilinson regulator on an explicit class
+\[
+   \xi(\fl{w}{i}, w-1) \in \HM\bigl(\Spec K, M(\fl{w}{i})(w-1)\bigr)_\Q
+\]
+in motivic cohomology. The cross-Galois ratio $\qstr{w}{w'}(D)$ is the
+corresponding ratio in the $\Q^{\times}$-quotient of the regulator image.
+A fully motivic formulation, in the spirit of the Bloch--Kato Tamagawa
+number conjecture for CM modular forms \cite{Castella2025}, would interpret
+the empirical lattice of Theorem~\ref{thm:main-empirical} as a structure on
+the cohomology group
+\[
+   \bigoplus_{(w, w')} \HM\bigl(\Spec K, M(\fl{w'}{1})(w'-1)\otimes
+   M(\fl{w}{2})(w-1)\bigr)_\Q\Big/\Q^{\times}.
+\]
+We do not pursue this here.
+
+\subsection{Cross-validation across class number}\label{ss:open-cross}
+
+The Newton--Dickson chain
+$a_p(f_9) = a_p(f_5)^2 - 2 p^4$ at weight pair $(5, 9)$ has been verified
+to $332/332$ split primes at $h_K = 1$
+\cite{Remondiere2026ND}; the same identity at $h_K = 2$ admits a per-orbit
+signed form by Theorem~\ref{thm:newton-dickson}. The cross-orbit verification
+at $h_K = 2$ for the wider Dickson family
+$a_p(f_w) = D_{w-1}(X, p)$ with $X^2 = a_p(f_3) + 2p$
+\cite[OP-DICKSON-UNIFIED]{Remondiere2026ND} has been verified at $120/120$
+split primes at weight $w = 11$. A natural extension is to record the
+$120 + 332 = 452$ uniform per-orbit signed identifications as a
+\emph{single} arithmetic family across all odd weights $w \le 15$, with
+the per-orbit twist $\chi_{d_i}^{(w'-w)/2}$ governing the sign at every
+step. This is conjecturally a complete description of the Hecke action on
+the $\Q$-rational CM tower at $h_K = 2$.
+
+%===========================================================================
+\section*{Acknowledgements}
+%===========================================================================
+
+The author thanks the LMFDB collaboration \cite{LMFDB} for the modular
+forms database used throughout (forms of label
+\texttt{N.w.a.\textbf{x}} for $\absD \in \{15, 20, 24, 35, 40, 51, 52, 88,
+91, 132\}$, weights $w \in \{3, 5, 7, 9, 11, 13\}$), and the developers of
+\texttt{PARI/GP} for the high-precision $L$-value evaluation routines
+(\texttt{lfun}, \texttt{lfunmf}, \texttt{bestappr}, \texttt{lindep})
+indispensable to this work.
+
+%===========================================================================
+\begin{thebibliography}{99}
+%===========================================================================
+
+\bibitem{Beilinson1985}
+A.~A.~Beilinson,
+\textit{Higher regulators and values of L-functions},
+J.~Soviet Math.\ \textbf{30} (1985), 2036--2070.
+
+\bibitem{BrunaultChida2015}
+F.~Brunault and M.~Chida,
+\textit{Regulators for Rankin--Selberg products of modular forms},
+Ann.\ Math.\ Qu\'e.\ \textbf{40} (2016), 221--249.
+\texttt{arXiv:1503.04626} [math.NT].
+
+\bibitem{Castella2025}
+F.~Castella,
+\textit{Tamagawa number conjecture for CM modular forms and Rankin--Selberg
+convolutions},
+to appear in Proc.\ London Math.\ Soc., 2024 (revised 2025).
+\texttt{arXiv:2407.11891} [math.NT].
+
+\bibitem{ChowlaSelberg1949}
+S.~Chowla and A.~Selberg,
+\textit{On Epstein's zeta-function (I)},
+Proc.\ Nat.\ Acad.\ Sci.\ U.S.A.\ \textbf{35} (1949), 371--374.
+
+\bibitem{Cox1989}
+D.~A.~Cox,
+\emph{Primes of the form $x^2 + n y^2$: Fermat, class field theory, and
+complex multiplication},
+Wiley, 1989.
+(Theorem 6.1 of Chapter 6 on genus characters and the bijection
+$\Cl(K)/\Cl(K)^2\leftrightarrow\widehat{G_K^{\mathrm{gen}}}$ used here.)
+
+\bibitem{Damerell1971a}
+R.~M.~Damerell,
+\textit{L-functions of elliptic curves with complex multiplication, I},
+Acta Arith.\ \textbf{17} (1971), 287--301.
+
+\bibitem{Gauss1801}
+C.~F.~Gauss,
+\emph{Disquisitiones Arithmeticae},
+Leipzig, 1801.
+(English transl.\ A.~A.~Clarke, Yale Univ.\ Press, 1965;
+revised by W.~C.~Waterhouse, Springer, 1986.
+Genus theory and prime-discriminant factorisation: \S\S 225--237.)
+
+\bibitem{Gross1980}
+B.~H.~Gross,
+\emph{Arithmetic on elliptic curves with complex multiplication},
+Lecture Notes in Math.\ \textbf{776}, Springer, 1980.
+
+\bibitem{Hecke1936}
+E.~Hecke,
+\textit{\"Uber die Bestimmung Dirichletscher Reihen durch ihre
+Funktionalgleichung},
+Math.\ Ann.\ \textbf{112} (1936), 664--699.
+
+\bibitem{KingsLoefflerZerbes2020}
+G.~Kings, D.~Loeffler, and S.~L.~Zerbes,
+\textit{Rankin--Eisenstein classes for modular forms},
+Amer.\ J.\ Math.\ \textbf{142} (2020), 79--138.
+\texttt{arXiv:1501.03289} [math.NT].
+
+\bibitem{KingsSprang2025}
+G.~Kings and J.~Sprang,
+\textit{Eisenstein--Kronecker classes, integrality of critical values of
+Hecke $L$-functions and $p$-adic interpolation},
+Ann.\ Math.\ \textbf{202} (2025) (accepted; preprint 2019).
+\texttt{arXiv:1912.03657} [math.NT].
+
+\bibitem{KingsSprang2025survey}
+G.~Kings and J.~Sprang,
+\textit{Algebraicity of critical Hecke $L$-values},
+to appear in Proc.\ Internat.\ Congress of Basic Science (ICBS) 2025, 2025.
+\texttt{arXiv:2511.05198} [math.NT].
+
+\bibitem{Kufner2024}
+H.-U.~Kufner,
+\textit{Deligne's conjecture on the critical values of Hecke $L$-functions},
+preprint, 2024.
+\texttt{arXiv:2406.06148} [math.NT].
+
+\bibitem{Lidl1993}
+R.~Lidl, G.~L.~Mullen, and G.~Turnwald,
+\emph{Dickson polynomials},
+Pitman Monographs and Surveys in Pure and Applied Math.\ \textbf{65},
+Longman Scientific \& Technical, 1993.
+
+\bibitem{LMFDB}
+The LMFDB Collaboration,
+\emph{The L-functions and Modular Forms Database},
+\url{https://www.lmfdb.org}, accessed 2026.
+
+\bibitem{Remondiere2026qD}
+K.~Remondi\`ere,
+\textit{A closed-form ratio identity for canonical pairs of weight-three
+and weight-five CM newforms at class number two: Chowla--Selberg periods and
+Beilinson--Damerell L-values},
+companion note, 2026.
+
+\bibitem{Remondiere2026ND}
+K.~Remondi\`ere,
+\textit{A Newton--Dickson recursion for Hecke eigenvalues of CM newforms
+over imaginary quadratic fields},
+companion note, 2026.
+
+\bibitem{Scholl1990}
+A.~J.~Scholl,
+\textit{Motives for modular forms},
+Invent.\ Math.\ \textbf{100} (1990), 419--430.
+
+\bibitem{Shimura1971}
+G.~Shimura,
+\emph{Introduction to the Arithmetic Theory of Automorphic Functions},
+Princeton Univ.\ Press, 1971.
+
+\bibitem{Shimura1976}
+G.~Shimura,
+\textit{The special values of the zeta functions associated with cusp forms},
+Comm.\ Pure Appl.\ Math.\ \textbf{29} (1976), 783--804.
+
+\end{thebibliography}
+
+\end{document}

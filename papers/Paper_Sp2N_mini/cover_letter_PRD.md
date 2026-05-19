@@ -2,7 +2,7 @@
 
 **Manuscript** : "A one-parameter Sp(2N) glueball mass formula from
 lattice data"
-**Author** : Kévin Remondière (Independent researcher, Tarbes, France)
+**Author** : Kévin Remondière (Independent researcher, Oloron-Sainte-Marie, France)
 **ORCID** : 0009-0008-2443-7166
 **Email** : kevin.remondiere [at] gmail.com
 **Length** : 4 pp (revtex4-2 PRD reprint style), 1 table, 11 references
@@ -12,7 +12,7 @@ lattice data"
 
 Kévin Remondière
 Independent researcher
-Tarbes, France
+Oloron-Sainte-Marie, France
 ORCID: 0009-0008-2443-7166
 kevin.remondiere [at] gmail.com
 

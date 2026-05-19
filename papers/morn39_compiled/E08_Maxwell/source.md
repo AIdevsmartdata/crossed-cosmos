@@ -1,6 +1,6 @@
 # Maxwell's U(1) electromagnetism as a K-theoretic invariant of a complex-multiplication K3 surface: a falsifiable noncommutative-geometry prediction
 
-**Author**: ECI Collaboration (integrator: Opus 4.7, MAX-EFFORT v1.0 finalisation, 2026-05-10 evening).
+**Author**: ECI Collaboration (integrator: LLM, MAX-EFFORT v1.0 finalisation, 2026-05-10 evening).
 **Target**: *Physical Review D* (regular article) / *Journal of High Energy Physics* (alternative).
 **Status**: **DRAFT v1.0 — submission-prep 82-85%**. Gap-3 PRINCIPAL of the v0.1 draft (the lattice invariant $c_{\mathrm{Pic}}$) is now CLOSED at $c_{\mathrm{Pic}}(\tilde X_{-67}) = 20$ via three independent derivations (NCG spectral action, heterotic K3 worldsheet threshold, F-theory CY4 base Mordell-Weil), all PARI-verified. The new principal gap is **Open Problem-3** (slope-vs-constant disambiguation), urgent for LEP-compatibility. After OP-1, -3, -4, -5 closure (estimated 6-8 weeks), the manuscript graduates to PRD-tier submission.
 **MSC 2020**: 14J28 (K3 surfaces), 19L50 (twisted K-theory and topological K-theory), 58B34 (noncommutative geometry methods in differential geometry), 81T75 (noncommutative geometry methods in QFT), 81V19 (other gauge theory aspects).

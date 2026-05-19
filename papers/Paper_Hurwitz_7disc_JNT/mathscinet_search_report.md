@@ -3,7 +3,7 @@
 **Paper**: "Real quadratic discriminants with integer Hurwitz ratio $D^2 / B_{2,\chi_D}$: a finite list of seven"
 **Author**: Kévin Remondière
 **Search date**: 2026-05-11
-**Searcher**: Opus 4.7 (1M context) MAX EFFORT
+**Searcher**: LLM (1M context) MAX EFFORT
 **Conducted via**: Web search (WebFetch denied at runtime; MathSciNet behind paywall not directly accessible from sandbox; relied on Google Scholar / arXiv / publisher search results retrieved via WebSearch)
 
 ---
@@ -177,7 +177,7 @@ This is honest both about classical foundations (Hurwitz, Iwasawa, Washington, Z
 
 ## §7 Notes on the Mistral / DS V4 Pro / Sonnet hallucination caveats (memory MEMORY.md)
 
-This search used **Opus 4.7 + WebSearch only**, no DS V4 Pro or Mistral. The hallu cluster from MEMORY.md (currently at 155 firm + various flagged-weak) is NOT augmented by this paper draft, since:
+This search used **LLM + WebSearch only**, no DS V4 Pro or Mistral. The hallu cluster from MEMORY.md (currently at 155 firm + various flagged-weak) is NOT augmented by this paper draft, since:
 
 - All references are checked against publisher databases (Springer, Cambridge, Princeton, MSP, Project Euclid, JSTOR, Semantic Scholar, Hirzebruch Collection at MPIM Bonn).
 - No arXiv IDs are cited (the paper is purely about classical literature).

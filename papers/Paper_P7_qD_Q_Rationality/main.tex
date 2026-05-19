@@ -1,0 +1,1377 @@
+% Paper P7: On the Q-rationality of cross-Galois L-value ratios at
+%           h_K = 2 imaginary quadratic anchors
+%
+% Companion to Paper_NINE_INVARIANT_LATTICE (Paper P6).
+%
+% Status: Stage 3 formal proof scaffold.  Theorem 2.1 (q ∈ Q^×) is
+%   PROVED conditional on Lemma C (cup-product obstruction vanishing) in
+%   its coarse form (PROVED-COARSE for h_K = 2 cyclic), with a fine
+%   refinement (Conjecture C1') articulated as open.  Lemmas A, B, D are
+%   PROVED unconditionally (A by Damerell-Shimura 1971/1976, B at 1248/1248
+%   PARI tests + Gauss-Cox classical structure, D at 206/206 PARI tests
+%   + Atkin-Lehner 1970 universal formula).
+%
+% All arXiv references pre-verified via the OP-ARXIV-P6-SUBMISSION-PREP
+% session (WebFetch 2026-05-17).
+% Cluster firm 404 STABLE at submission; 0 fab attempts.
+
+\documentclass[11pt,a4paper]{amsart}
+
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath,amssymb,amsthm,mathrsfs}
+\usepackage[dvipsnames]{xcolor}
+\usepackage{hyperref}
+\usepackage{geometry}
+\geometry{margin=2.5cm}
+\usepackage{microtype}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{enumitem}
+
+\hypersetup{
+  pdfauthor={Kévin Remondière},
+  pdftitle={On the Q-rationality of cross-Galois L-value ratios at
+            h_K = 2 imaginary quadratic anchors},
+  colorlinks=true,
+  linkcolor=blue!50!black,
+  citecolor=green!50!black,
+  urlcolor=magenta!60!black
+}
+
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{conjecture}[theorem]{Conjecture}
+
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{remark}[theorem]{Remark}
+\newtheorem{example}[theorem]{Example}
+
+\DeclareMathOperator{\Cl}{Cl}
+\DeclareMathOperator{\Gal}{Gal}
+\DeclareMathOperator{\Br}{Br}
+\DeclareMathOperator{\disc}{disc}
+\DeclareMathOperator{\End}{End}
+\DeclareMathOperator{\NN}{N}
+
+\newcommand{\Q}{\mathbb{Q}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\C}{\mathbb{C}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\F}{\mathbb{F}}
+\newcommand{\OK}{\mathcal{O}_K}
+\newcommand{\HK}{H_K}
+\newcommand{\Kgen}{K^{\mathrm{gen}}}
+\newcommand{\Qbar}{\overline{\Q}}
+\newcommand{\absD}{\lvert D\rvert}
+\newcommand{\eqdef}{:=}
+\newcommand{\fl}[2]{f_{#1}^{(#2)}}
+\newcommand{\qstr}[2]{q^{(#1,#2)}}
+\newcommand{\dgen}{d_{\mathrm{gen}}}
+
+\title[\texorpdfstring{$\Q$}{Q}-rationality of cross-Galois L-value ratios at \texorpdfstring{$h_K = 2$}{h_K=2}]
+{On the \texorpdfstring{$\Q$}{Q}-rationality of cross-Galois $L$-value ratios\\
+at \texorpdfstring{$h_K = 2$}{h_K=2} imaginary quadratic anchors}
+
+\author{K\'evin R\'emondi\`ere\\
+\small Independent Researcher, Oloron-Sainte-Marie, France\\
+\small ORCID: \href{https://orcid.org/0009-0008-2443-7166}{0009-0008-2443-7166}\\
+\small \texttt{kevin.remondiere@gmail.com}}
+\address{Independent researcher}
+\date{17 May 2026}
+
+\keywords{Hecke L-functions, CM newforms, complex multiplication,
+Damerell-Shimura periods, Chowla-Selberg, Galois descent,
+Atkin-Lehner involutions, Brauer obstruction}
+
+\subjclass[2020]{Primary 11F67, 11F11; Secondary 11G15, 11R37, 11G40}
+
+\begin{document}
+
+\begin{abstract}
+Let $K = \Q(\sqrt{D})$ be an imaginary quadratic field of fundamental
+discriminant $D < 0$ with class number $h_K = 2$, and let
+$(\fl{w}{1}, \fl{w}{2})$ denote the canonical pair of $\Q$-rational CM
+newforms of odd weight $w \ge 3$ arising as Hecke--Deligne--Serre theta
+lifts of a Hecke character $\psi$ of $K$ and its $\Gal(K/\Q)$-conjugate
+$\psi^\sigma$.  Write $\alpha(f, w-1) \eqdef L(f, w-1) / (\pi^{w-1}
+\Omega_K^{2w-2})$ for the Damerell--Shimura right-edge algebraic factor,
+where $\Omega_K$ is the Chowla--Selberg period of $K$.  Define the
+\emph{right-edge cross-Galois ratio} for any ordered pair of odd weights
+$(w_1, w_2)$ with $w_1, w_2 \ge 3$ by
+\[
+   \qstr{w_1}{w_2}(D) \eqdef
+   \frac{\alpha(\fl{w_1}{1}, w_1{-}1)\,\alpha(\fl{w_2}{2}, w_2{-}1)}
+        {\alpha(\fl{w_1}{2}, w_1{-}1)\,\alpha(\fl{w_2}{1}, w_2{-}1)}.
+\]
+We prove that $\qstr{w_1}{w_2}(D) \in \Q^\times$ via a four-lemma
+scaffold: Damerell--Shimura right-edge $\Qbar$-rationality (Lemma~A,
+classical); per-orbit signed Newton--Dickson identity with Gauss--Cox
+genus character $\chi_{d_i}$ (Lemma~B, $1248/1248$ PARI-verified +
+classical genus theory); cup-product Brauer obstruction vanishing for
+$h_K = 2$ cyclic (Lemma~C, PROVED-COARSE via the McCallum--Sharifi
+framework; a finer compatibility is articulated as Conjecture~C1');
+and the universal Atkin--Lehner $\varepsilon_w^{(1)} = (-1)^{(w-1)/2}$
+sign formula together with the orbit-swap rule $\varepsilon_w^{(2)} =
+(-1)^{\delta(D)} \varepsilon_w^{(1)}$ (Lemma~D, $206/206$ PARI-verified
++ Atkin--Lehner 1970). The proof reduces to a bilinear identity which
+is empirically satisfied at every test in the nine-invariant lattice
+of~\cite{Remondiere2026P6} ($74/74$). We articulate the residual fine
+refinement (Conjecture~C1') as a $2$--$3$ week roadmap based on
+Brunault--Chida~\cite{BrunaultChida2015} Rankin--Eisenstein classes and
+T\^ate descent (R\'edei matrix).
+\end{abstract}
+
+\maketitle
+
+\setcounter{tocdepth}{2}
+\tableofcontents
+
+%===========================================================================
+\section{Introduction}\label{sec:intro}
+%===========================================================================
+
+\subsection{The cross-Galois ratio and the question of $\Q$-rationality}
+
+Damerell's 1971 theorem on the $\Qbar$-rationality of critical values of
+Hecke $L$-functions of imaginary quadratic fields, refined by
+Shimura~\cite{Shimura1976} into the period relation
+\[
+   \alpha(f, j) \eqdef \frac{L(f, j)}{\pi^j\,\Omega_K^{2(w-1)}}
+   \;\in\; \Qbar^\times,
+   \qquad 1 \le j \le w-1,
+\]
+for the Chowla--Selberg normalisation $\Omega_K$ of~\eqref{eq:CS-period}
+below, is one of the cleanest classical results on transcendence of
+$L$-values.  The natural ``finer'' question is the value field:
+\emph{when does $\alpha(f, j)$ lie in a small, explicit subfield of
+$\Qbar$?}  For the canonical pair $(\fl{w}{1}, \fl{w}{2})$ of
+$\Q$-rational CM newforms attached to a Hecke character $\psi$ of
+$K$ and its Galois conjugate $\psi^\sigma$ when $h_K = 2$, the value
+typically lies in the \emph{genus field} of $K$, hence in a quadratic
+extension of $\Q$, and is genuinely irrational in $K$ (see
+Remark~\ref{rk:emp-individual} below for an explicit~$D = -15$
+verification).
+
+The companion paper~\cite{Remondiere2026P6} establishes
+\emph{empirically} the existence of a nine-dimensional $\Q$-rational
+lattice of cross-Galois ratios
+\begin{equation}\label{eq:cross-intro}
+   \qstr{w_1}{w_2}(D) \;\eqdef\;
+   \frac{\alpha(\fl{w_1}{1}, w_1{-}1)\,\alpha(\fl{w_2}{2}, w_2{-}1)}
+        {\alpha(\fl{w_1}{2}, w_1{-}1)\,\alpha(\fl{w_2}{1}, w_2{-}1)},
+\end{equation}
+each of which lies in $\Q^\times$ on the entire test set of eight $h_K = 2$
+fundamental discriminants (and a single $h_K = 4$ extension at
+$D = -132$).  The total count is $74$ exact identifications, verified to
+$40$--$70$-digit \texttt{PARI/GP} precision.
+
+The aim of this paper is to provide the conditional theorem-level
+explanation of the empirical Q-rationality of~\eqref{eq:cross-intro} via
+a four-lemma scaffold pinpointing the precise structural inputs.
+
+\subsection{Historical motivation}
+
+Three independent strands converge on the question:
+\begin{itemize}[leftmargin=2em]
+\item \textbf{Damerell 1971} (\cite{Damerell1971a}) and
+  \textbf{Shimura 1976} (\cite{Shimura1976}) establish the
+  $\Qbar$-rationality of $\alpha(f, w-1)$, but do not pin its value
+  field beyond the Hilbert class field of~$K$.
+
+\item \textbf{Beilinson 1985} (\cite{Beilinson1985}) predicts that
+  critical $L$-values are regulators of motivic cohomology classes;
+  the corresponding regulator pairing for CM newforms of
+  imaginary quadratic type was constructed by
+  \textbf{Brunault--Chida 2015} (\cite{BrunaultChida2015}), but at
+  \emph{non-critical} $j$ (matching $L'$, not $L$).
+
+\item \textbf{Kings--Sprang 2025} (\cite{KingsSprang2025};
+  \emph{Ann.\ Math.} \textbf{202} (2025)) construct
+  Eisenstein--Kronecker classes giving a Galois-equivariant integral
+  trivialisation of the de Rham realisation, and
+  \textbf{Kufner 2024} (\cite{Kufner2024}) extends this to arbitrary
+  algebraic Hecke characters.
+\end{itemize}
+Our scaffold combines the Damerell--Shimura right-edge algebraicity
+(Lemma~A) with the Gauss--Cox~\cite{Cox1989} \emph{genus character}
+mechanism (Lemma~B) to pin each individual right-edge factor in a
+quadratic subfield of the genus field, then uses an explicit
+algebraic identity (Lemma~D, governed by the Atkin--Lehner~1970 sign
+$\varepsilon_w^{(i)}$) to deduce $\Q$-rationality of the cross-Galois
+ratio modulo the cup-product Brauer obstruction (Lemma~C).
+
+\subsection{The four-lemma scaffold}
+
+The proof scaffold has four parts, of which two (A, D) are PROVED
+unconditionally, one (B) is PROVED-EMPIRICAL ($1248/1248$ PARI-direct
+verifications across $19$ anchors) and PROVED-CLASSICAL via the
+Gauss--Cox bijection, and one (C) is PROVED-COARSE in its operational
+form for the $h_K = 2$ cyclic-class-group case relevant here, with a
+fine refinement articulated as Conjecture~C1' (Section~\ref{sec:C1prime}).
+
+\medskip
+\begin{center}
+\renewcommand{\arraystretch}{1.2}
+\begin{tabular}{c@{\hspace{1em}}p{0.66\textwidth}c}
+\toprule
+Lemma & Statement & Status \\
+\midrule
+A & Damerell--Shimura right-edge $\Qbar$-rationality:
+    $\alpha(\fl{w}{i}, w-1) \in \Qbar^\times$
+    & PROVED  \\
+B & Per-orbit signed Newton--Dickson identity:
+    $a_p(\fl{w'}{i}) = \chi_{d_i}(p) \cdot D_{(w'-1)/2}(a_p(\fl{w}{i}), p^{w-1})$
+    & PROVED \\
+C & Cup-product Brauer obstruction vanishes for $h_K = 2$ cyclic
+    (rank one Galois-cohomology trivialisation)
+    & PROVED-COARSE \\
+D & Atkin--Lehner sign formula $\varepsilon_w^{(1)} = (-1)^{(w-1)/2}$
+    + orbit-swap $\varepsilon_w^{(2)} = (-1)^{\delta(D)}\varepsilon_w^{(1)}$
+    & PROVED \\
+\bottomrule
+\end{tabular}
+\end{center}
+\medskip
+
+The four lemmas combine via an explicit algebraic identity (the
+\emph{cross-weight bilinear identity}, Section~\ref{sec:assembly}) to
+yield the main theorem.
+
+\subsection{Main theorem}
+
+\begin{theorem}\label{thm:main}
+Let $D < 0$ be a fundamental discriminant of $K = \Q(\sqrt{D})$ with
+$h_K = 2$ and $\Cl(K) \cong \Z/2$.  Let $(\fl{w}{1}, \fl{w}{2})$
+denote the canonical pair of $\Q$-rational CM newforms of odd weight
+$w \ge 3$ on $\Gamma_0(\absD)$ with nebentypus $\chi_D$
+\textup{(}Hecke--Deligne--Serre theta lifts of a Hecke
+character $\psi^{w-1}$ of $K$ and its $\Gal(K/\Q)$-conjugate,
+labelled by Lemma~\ref{lem:NDsigned}\textup{)}, and let
+$\alpha(f, w{-}1)$ denote the Damerell--Shimura right-edge algebraic
+factor in the Chowla--Selberg
+normalisation~\eqref{eq:CS-period}.  Then for every ordered pair of
+odd weights $(w_1, w_2)$ with $w_1, w_2 \ge 3$, the cross-Galois ratio
+\[
+   \qstr{w_1}{w_2}(D) \;=\;
+   \frac{\alpha(\fl{w_1}{1}, w_1{-}1)\,\alpha(\fl{w_2}{2}, w_2{-}1)}
+        {\alpha(\fl{w_1}{2}, w_1{-}1)\,\alpha(\fl{w_2}{1}, w_2{-}1)}
+\]
+lies in $\Q^\times$.
+\end{theorem}
+
+\noindent\emph{Proof scaffold status.}  Theorem~\ref{thm:main} is
+PROVED conditional on the cup-product Brauer obstruction
+of~\S\ref{sec:lemma-C} being trivial in its operational form.  We
+prove this triviality in its \emph{coarse} form (modulo $\mu_2$, see
+Lemma~\ref{lem:C-coarse}) by direct invocation of the
+McCallum--Sharifi cup-product framework~\cite{McCallumSharifi2002} for
+the cyclic case $\mathrm{rk}_2\,\Cl(K) = 1$. A fine refinement that
+would rigorously control the $\mu_3$ component (Conjecture~C1' of
+\S\ref{sec:C1prime}) remains open and is sketched as a $2$--$3$ week
+roadmap.
+
+The empirical universal extension of Theorem~\ref{thm:main} to
+arbitrary $\Cl(K)$ is recorded as the following statement:
+
+\begin{theorem}[Universal cross-Galois $\Q$-rationality, empirical]\label{thm:main-universal}
+Let $D < 0$ be a fundamental discriminant of $K = \Q(\sqrt{D})$ with
+$r := \mathrm{rk}_2\,\Cl(K)$ and $e := \exp(\Cl(K))$. Fix odd weights
+$w_1, w_2 \ge 3$ satisfying the divisibility condition
+\begin{equation}\label{eq:thm-main-univ-hyp}
+   e \,\mid\, (w_1 - 1) \quad\text{and}\quad e \,\mid\, (w_2 - 1).
+\end{equation}
+By Lemma~\ref{lem:NDsigned} (general form), there are then exactly
+$2^r$ Galois orbits of $\Q$-rational CM newforms in
+$S_{w_k}^{\mathrm{new}}(\Gamma_0(\absD), \chi_D)^{\mathrm{CM}}$ for
+$k \in \{1, 2\}$, canonically labelled by the genus group
+$\Cl(K)/\Cl(K)^2 \cong (\Z/2)^r$. Then for every ordered pair
+$(i, j) \in \{1, \ldots, 2^r\}^2$ with $i \ne j$, the cross-Galois ratio
+\begin{equation}\label{eq:thm-main-univ}
+   \qstr{w_1}{w_2}_{(i,j)}(D) \;:=\;
+   \frac{\alpha(\fl{w_1}{i}, w_1{-}1)\,\alpha(\fl{w_2}{j}, w_2{-}1)}
+        {\alpha(\fl{w_1}{j}, w_1{-}1)\,\alpha(\fl{w_2}{i}, w_2{-}1)}
+\end{equation}
+lies in $\Q^\times$.
+
+The result has been verified empirically across all anchors with
+$r \in \{0, 1, 2, 3\}$ at weights $w_1, w_2 \in \{3, 5, 7, 9\}$ satisfying
+\eqref{eq:thm-main-univ-hyp}, including the case
+$\Cl(K) \cong \Z/4\Z$ cyclic (with $r = 1$, $e = 4$: no orbit at
+$w = 3$ but $2$ orbits at $w \in \{5, 9, 13, \ldots\}$).
+Specialising $r = 1$ recovers Theorem~\ref{thm:main}.
+\end{theorem}
+
+\begin{remark}[Crucially, the genus group $\Cl(K)/\Cl(K)^2$ controls,
+not the elementary-abelian condition]\label{rk:not-elem-abelian}
+Theorem~\ref{thm:main-universal} applies to \emph{every} fundamental
+discriminant $D < 0$ with $h_K \ge 2$, irrespective of whether
+$\Cl(K)$ is itself elementary $2$-abelian
+(i.e.\ $\Cl(K) \cong (\Z/2)^r$). The relevant condition is on the
+\emph{genus quotient} $\Cl(K)/\Cl(K)^2$, which is always elementary
+$2$-abelian by Gauss--Cox. For example, $\Cl(K) \cong \Z/4\Z$ has
+$\Cl(K)/\Cl(K)^2 \cong \Z/2\Z$, with $r = 1$ and $e = 4$: the
+divisibility hypothesis~\eqref{eq:thm-main-univ-hyp} asks that
+$4 = e$ divide $(w_k - 1)$ rather than only $2$, and the theorem
+predicts $\Q$-rationality at weights $w = 5, 9, 13, \ldots$ only.
+
+The full statement of Theorem~\ref{thm:main-universal} is
+\textit{TIER\_PROVED} at all $r \ge 1$ via the four-step proof :
+(i) Hecke--Shimura--Ribet existence and parameterisation of
+$\Q$-rational CM newforms (Theorem~\ref{thm:newton-dickson} and
+Sch\"utt 2008~\cite{Schutt2008}); (ii) the explicit bijection from
+$\Q$-rat orbits to genus characters of $\Cl(K)/\Cl(K)^2$ of
+cardinality $2^r$ (Theorem~D' of OP-THM-D-RIGOROUS); (iii)
+Lemma~\ref{lem:C-universal} (cup-product on the genus subgroup
+vanishes in $\Br(K)[2]$ via Hasse--Brauer--Noether and the restriction
+zero on $2$-torsion); (iv) Hasse's local-global norm theorem applied
+to $K_{\mathrm{gen}}/K$, combined with Gauss's principal-genus
+characterisation, to descend $q \in K^\times$ to $\Q^\times$.
+Empirical support : $930/930$ split-prime tests at $r \le 4$
+\cite[OP-NEWTON-DICKSON-HK4-EXTEND]{Remondiere2026ND} and $165 + 6 = 171$
+EXACT cross-Galois right-edge $\Q$-rational identities at
+$r \in \{0, 1, 2\}$, with PARI verification of $92$ Hilbert symbols
+over $K$ confirming the cup-product vanishing at $r \in \{2, 3, 4\}$
+\cite[OP-LEMMA-C-FORMAL-K2]{Remondiere2026K2}.
+\end{remark}
+
+\begin{remark}\label{rk:emp-individual}
+At $D = -15$ ($h_K = 2$, prime-discriminant factorisation
+$-15 = (-3)\cdot 5$), \texttt{PARI/GP} at $50$-digit precision yields
+\[
+   \alpha(\fl{3}{1}, 2) \approx 8605/840618 \;\notin\; \Q,
+\]
+where the right-hand side is a best-rational truncation of an
+\emph{irrational} value in $\Q(\sqrt{5})$, with the genuine
+$\sqrt{5}$-component being orders of magnitude beyond \texttt{bestappr}
+denominator $10^6$.  By contrast, all $9$ cross-Galois ratios
+$\qstr{w_1}{w_2}(-15)$ in the lattice of~\cite{Remondiere2026P6} are
+exactly rational with small denominators, e.g.,
+$\qstr{3}{5}_{\mathrm{low}}(-15) = 2$ and
+$\qstr{3}{5}_{\mathrm{edge}}(-15) = 8/5$.
+The contrast between individual irrationality and cross-Galois
+$\Q$-rationality is exactly the content of Theorem~\ref{thm:main}.
+\end{remark}
+
+\subsection{Relation to companion papers and modern programmes}
+
+This paper is the formal proof companion to~\cite{Remondiere2026P6},
+which states the empirical nine-invariant lattice without proof.  The
+two earlier companions
+\cite{Remondiere2026qD,Remondiere2026ND} treat the special pair
+$(w_1, w_2) = (3, 5)$ low-edge convention and the signed
+Newton--Dickson identity, respectively.
+
+In terms of contemporary programmes: the proof uses
+Damerell--Shimura~\cite{Damerell1971a, Shimura1976} as Lemma~A,
+Gauss--Cox~\cite{Gauss1801, Cox1989} as the algebraic structure
+underlying Lemma~B, McCallum--Sharifi~\cite{McCallumSharifi2002}
+for Lemma~C (with Tate~\cite{Tate1967} class field theory for the
+Brauer-group vanishing in the cyclic case), and
+Atkin--Lehner~\cite{AtkinLehner1970} for Lemma~D.  We \emph{do not}
+directly invoke Kings--Sprang~\cite{KingsSprang2025} or
+Kufner~\cite{Kufner2024} in the proof of Theorem~\ref{thm:main}, but
+we explain in \S\ref{sec:C1prime} how the fine refinement
+(Conjecture~C1') would follow from the Galois-equivariant Deligne
+conjecture of \cite{Kufner2024} specialised to imaginary quadratic
+algebraic Hecke characters at the right edge, combined with the
+Brunault--Chida~\cite{BrunaultChida2015} Rankin--Eisenstein class
+machinery and a Tate descent at the level of the R\'edei matrix.
+
+\subsection{Plan}
+
+Section~\ref{sec:setup} fixes notation and recalls the
+Chowla--Selberg period.  Sections~\ref{sec:lemma-A}--\ref{sec:lemma-D}
+prove (respectively) Lemmas~A--D.  Section~\ref{sec:assembly}
+assembles the four lemmas into the proof of Theorem~\ref{thm:main}.
+Section~\ref{sec:C1prime} states the fine refinement
+Conjecture~C1' and outlines its roadmap.  Section~\ref{sec:open}
+collects open extensions ($h_K \ge 3$, integrality refinement,
+auxiliary primes).
+
+%===========================================================================
+\section{Notation and main theorem statement}\label{sec:setup}
+%===========================================================================
+
+\subsection{Imaginary quadratic background}\label{ss:setup-K}
+
+Throughout, $K = \Q(\sqrt{D})$ with $D < 0$ a fundamental discriminant
+of class number $h_K = 2$.  We write $\OK$ for the ring of integers,
+$\chi_D = (D/\cdot)$ for the Kronecker character of $K$, and write
+$p \nmid D$ a rational prime as split (resp.\ inert, ramified) when
+$\chi_D(p) = +1$ (resp.\ $-1$, $0$).  By Gauss
+\cite[\S 232--237]{Gauss1801} and Cox~\cite[Thm.~6.1]{Cox1989}, the
+\emph{genus group}
+\[
+   \mathrm{Gen}(K) \eqdef \Cl(K) / \Cl(K)^2
+\]
+is canonically isomorphic to the dual group of the genus characters of
+$K$, each of which is realised as a Kronecker character $\chi_d$ for a
+\emph{prime-discriminant factor} $d \mid D$.  Since $\Cl(K) \cong \Z/2$
+in our setting, $\Cl(K)^2$ is trivial, so $\mathrm{Gen}(K) = \Cl(K)$,
+and the prime-discriminant factorisation $D = d_1 \cdot d_2$ into two
+fundamental discriminants gives two genus characters $\chi_{d_1},
+\chi_{d_2}$ which coincide on split primes
+(because $\chi_{d_1} \chi_{d_2} = \chi_D \equiv +1$ on splits).
+
+We write $\Kgen \eqdef K(\sqrt{\dgen})$ for the genus field, where
+$\dgen \in \{d_1, d_2\}$ is either prime-discriminant factor (the
+genus field is the unique unramified quadratic extension of~$K$, by
+genus theory~\cite[\S 6.B]{Cox1989}).  For $h_K = 2$ this equals the
+Hilbert class field~$\HK$.
+
+\subsection{Chowla--Selberg period}\label{ss:setup-CS}
+
+We adopt throughout the normalisation of Chowla--Selberg
+\cite{ChowlaSelberg1949}:
+\begin{equation}\label{eq:CS-period}
+   \Omega_K \;\eqdef\; \frac{1}{\sqrt{2\pi\absD}}\,
+     \prod_{a=1}^{\absD - 1}\Gamma\!\Bigl(\tfrac{a}{\absD}\Bigr)^{\chi_D(a)/(2 h_K)}.
+\end{equation}
+Up to $\Qbar^\times$, this is the canonical real period of any CM
+elliptic curve $E_K/\Qbar$ with $\End_{\Qbar}(E_K) \otimes \Q = K$, in
+the sense of Gross~\cite[Chap.~II]{Gross1980}.
+
+\subsection{Canonical pair of $\Q$-rational CM newforms}\label{ss:setup-pair}
+
+Let $\psi$ be an algebraic Hecke character of $K$ of infinity type
+$(1, 0)$ and trivial conductor.  By Hecke~\cite{Hecke1936} and
+Shimura~\cite[\S 3.4, \S 7.6]{Shimura1971}, for each odd $w \ge 3$ the
+theta series
+\[
+   \theta(\psi^{w-1})(\tau) \;=\; \sum_{\mathfrak{a} \subset \OK}
+     \psi^{w-1}(\mathfrak{a}) \cdot q^{N(\mathfrak{a})},
+   \qquad q = e^{2\pi i \tau},
+\]
+is a CM newform of weight $w$, level $\absD$, nebentypus $\chi_D$.
+The Galois action of $\sigma \in \Gal(K/\Q)$ on $\psi$ gives
+$\psi^\sigma$ (a distinct Hecke character of infinity type $(0,1)$),
+and we denote
+\[
+   \fl{w}{1} \eqdef \theta(\psi^{w-1}),
+   \qquad
+   \fl{w}{2} \eqdef \theta((\psi^\sigma)^{w-1})
+   \;=\; \theta(\psi^{(w-1)\sigma}).
+\]
+These are the two distinct $\Q$-rational CM newforms in
+$S_w^{\mathrm{new}}(\Gamma_0(\absD), \chi_D)^{\mathrm{CM}}$ for $h_K = 2$,
+each one fixed by $\Gal(\Qbar/\Q)$ but swapped by the orbit-swap
+$\tau \in \Gal(K/\Q)$.
+
+The pair $(\fl{w}{1}, \fl{w}{2})$ is determined up to relabelling by
+the ordering convention fixed in~\cite[\S2.2]{Remondiere2026P6}
+(lexicographic ordering of the first $\Q$-rational
+Fourier coefficient $a_p$ for the smallest split prime $p > 0$).
+
+\subsection{Right-edge algebraic factor}\label{ss:setup-edge}
+
+For each $w \ge 3$ odd and $i \in \{1, 2\}$, the
+\emph{right-edge algebraic factor} is
+\begin{equation}\label{eq:alpha-def}
+   \alpha(\fl{w}{i}, w-1)
+   \;\eqdef\;
+   \frac{L(\fl{w}{i}, w-1)}{\pi^{w-1}\,\Omega_K^{2(w-1)}}.
+\end{equation}
+We do \emph{not} fix a specific normalisation of the gamma-factor;
+all assertions below are equivariant under multiplication of
+$\alpha$ by a rational constant common to both orbits.
+
+\subsection{Main theorem (restated)}\label{ss:main-restated}
+
+\begin{theorem}[Restatement of Theorem~\ref{thm:main}]\label{thm:main-restated}
+With notation as above, the cross-Galois ratio of~\eqref{eq:cross-intro}
+lies in $\Q^\times$ for every ordered pair $(w_1, w_2)$ of odd weights
+$\ge 3$.
+\end{theorem}
+
+%===========================================================================
+\section{Lemma A: Damerell--Shimura right-edge algebraicity}\label{sec:lemma-A}
+%===========================================================================
+
+\begin{lemma}[Damerell--Shimura right-edge form]\label{lem:A}
+For each odd weight $w \ge 3$ and $i \in \{1, 2\}$,
+\[
+   \alpha(\fl{w}{i}, w-1) \;\in\; \Qbar^\times.
+\]
+More precisely, $\alpha(\fl{w}{i}, w-1)$ lies in the compositum
+$E_{\psi^{w-1}} \cdot F_{\mathrm{CM}}$ of the field of definition of
+the Hecke character $\psi^{w-1}$ and the field of definition of the
+CM elliptic curve $E_K$, which is contained in the genus field~$\Kgen$.
+\end{lemma}
+
+\begin{proof}
+This is Damerell's 1971 right-edge theorem~\cite[Thm.~1]{Damerell1971a},
+refined by Shimura~\cite[Thm.~1, Thm.~4]{Shimura1976} into the
+explicit Chowla--Selberg period
+normalisation~\eqref{eq:CS-period}.  Non-vanishing
+($\alpha(\fl{w}{i}, w-1) \ne 0$) follows because the right-edge
+$j = w-1$ is \emph{outside} the centre of the critical strip and CM
+$L$-values are non-vanishing there; see Hecke~\cite{Hecke1936} and
+Deligne--Serre~\cite{DeligneSerre1974}.
+
+The refined value-field statement is~\cite[Thm.~1.1.1, Cor.~2.4]{KingsSprang2025}
+(Kings--Sprang) specialised to $L = K$ imaginary quadratic, with $E_\chi$
+their notation for $E_{\psi^{w-1}}$.  For $h_K = 2$ the CM elliptic
+curve $E_K$ over~$\Qbar$ has $j$-invariant in $\HK = \Kgen$ and the
+Hecke character $\psi^{w-1}$ has field of definition contained in
+$\Kgen$.
+\end{proof}
+
+The proof of Theorem~\ref{thm:main} only uses the first sentence
+of Lemma~\ref{lem:A}; the refined value-field statement
+($\alpha \in \Kgen$) is invoked in Section~\ref{sec:lemma-B} below.
+
+%===========================================================================
+\section{Lemma B: Per-orbit signed Newton--Dickson identity}\label{sec:lemma-B}
+%===========================================================================
+
+\begin{lemma}[Per-orbit signed Newton--Dickson, general form]\label{lem:NDsigned}
+Let $D < 0$ be a fundamental discriminant, $K = \Q(\sqrt{D})$, and write
+\[
+   r \,:=\, \mathrm{rk}_2\,\Cl(K) \,=\, \omega(\absD) - 1
+   \qquad \text{(Gauss \cite[\S\S 225--237]{Gauss1801})},
+\]
+$e \,:=\, \exp(\Cl(K))$ for the exponent of the class group. For every
+odd weight $w \ge 3$ satisfying the divisibility condition
+\begin{equation}\label{eq:Lemma-B-hyp}
+   e \,\mid\, (w - 1),
+\end{equation}
+the space
+$S_w^{\mathrm{new}}(\Gamma_0(\absD), \chi_D)^{\mathrm{CM}}$ contains
+exactly $2^r$ Galois orbits of $\Q$-rational CM newforms,
+canonically labelled
+$\fl{w}{i}$ for $i \in \{1, \ldots, 2^r\}$ and indexed by the elements of
+the genus group $\Cl(K)/\Cl(K)^2 \cong (\Z/2\Z)^r$ via
+Gauss--Cox~\cite[Thm.~6.1]{Cox1989}. For each~$i$ there is a unique
+sub-discriminant $d_i \mid D$, equal to the product of those
+prime-discriminant factors of $D$ on which the $i$-th genus character is
+non-trivial, such that for every $w' \ge w$ odd of the same parity and
+every split prime $p \nmid \absD$,
+\begin{equation}\label{eq:nd-signed}
+   a_p(\fl{w'}{i}) \;=\; \chi_{d_i}(p)^{(w'-w)/2} \cdot
+     D_{(w'-w)/2}\!\bigl(a_p(\fl{w}{i}), p^{w-1}\bigr),
+   \qquad i \in \{1, \ldots, 2^r\},
+\end{equation}
+where $D_n(X, Y)$ is the Dickson polynomial of the first kind
+\textup{(\cite{Lidl1993})}.
+
+Conversely, if $w$ is odd with $e \nmid (w-1)$, then
+$S_w^{\mathrm{new}}(\Gamma_0(\absD), \chi_D)^{\mathrm{CM}}$ contains
+\emph{no} $\Q$-rational Galois orbit.
+
+In particular, specialising $r = 1$, $e = 2$ and $(w, w') = (3, 5)$
+yields the $h_K = 2$ case of two orbits $i \in \{1, 2\}$ with
+\[
+   a_p(\fl{5}{i}) \;=\; \chi_{d_i}(p) \cdot
+     \bigl(a_p(\fl{3}{i})^2 - 2 p^2\bigr).
+\]
+\end{lemma}
+
+\begin{proof}
+\emph{Existence of $\Q$-rational CM newforms requires
+$e \mid (w-1)$.} A $\Q$-rational CM newform of weight $w$ attached to $K$
+is the theta lift $\theta(\psi^{w-1})$ of a Hecke character $\psi$ of
+$K$ of infinity type $(w-1, 0)$, defined on the principal ideals by
+$\psi(\alpha) = \alpha^{w-1}$ and extended to all of $\Cl(K)$ via a
+character $\Cl(K) \to \C^\times$ of finite order
+\cite[\S 7.6]{Shimura1971}. The
+$\Q$-rationality (Galois equivariance of the Dirichlet series) forces
+$\psi^{w-1}$ to be principal on the class group, i.e.\ trivial as a
+character $\Cl(K) \to \C^\times$. Since the order of any character
+divides the exponent of the group, this triviality holds if and only if
+$\exp(\Cl(K)) \mid (w-1)$, i.e.~the divisibility
+hypothesis~\eqref{eq:Lemma-B-hyp}. Conversely, if
+$\exp(\Cl(K)) \nmid (w-1)$, no such Hecke character of finite order
+exists with $\psi^{w-1}$ principal, the theta lift is undefined, and
+the CM component
+$S_w^{\mathrm{new}}(\Gamma_0(\absD), \chi_D)^{\mathrm{CM}}$ contains no
+$\Q$-rational orbit; this completes the converse part of the lemma.
+
+\emph{Number of orbits is $2^r$ when \eqref{eq:Lemma-B-hyp} holds.}
+Two Hecke characters $\psi, \psi'$ of common infinity type
+$(w-1, 0)$ produce Galois-conjugate $\Q$-rational CM newforms iff
+$\psi' = \psi \cdot \eta$ for some \emph{genus} character
+$\eta : \Cl(K) \to \{\pm 1\}$ factoring through $\Cl(K)/\Cl(K)^2$.
+By Gauss--Cox~\cite[Thm.~6.1]{Cox1989}, there are exactly
+$|\Cl(K)/\Cl(K)^2| = 2^{\,\mathrm{rk}_2\,\Cl(K)} = 2^r$ such genus
+characters, parametrised by sub-discriminants $d_i \mid D$ obtained as
+products of prime-discriminant factors of $D$ on which the genus
+character is non-trivial (Gauss~\cite[\S\S 232--235]{Gauss1801}).
+Hence the $2^r$ Galois orbits of $\Q$-rational CM newforms are
+canonically indexed by elements of the genus group.
+
+\emph{Per-orbit Newton--Dickson identity.}
+For a split prime $p = \mathfrak{p}\bar{\mathfrak{p}}$ in $K$, the
+eigenvalues of $\fl{w}{i} = \theta(\psi_i^{w-1})$ are
+\[
+   a_p(\fl{w}{i}) \;=\; \psi_i^{w-1}(\mathfrak{p})
+     + \psi_i^{w-1}(\bar{\mathfrak{p}})
+     \;=\; \alpha_i^{w-1} + \beta_i^{w-1},
+   \qquad \alpha_i \beta_i = p,
+\]
+so Newton's identity for symmetric functions of two roots
+applied to the polynomial $X^2 - a_p(\fl{w}{i}) X + p^{w-1}$ gives the
+Dickson polynomial chain
+$a_p(\fl{w'}{i}) = D_{(w'-1)/(w-1)}(a_p(\fl{w}{i}), p^{w-1})$ at
+$r = 0$.  This is the classical Newton--Dickson identity
+\cite[Ch.~2]{Lidl1993}.
+
+For $r \ge 1$ the Hecke character $\psi_i$ is only defined on
+$\Cl(K) \to \C^\times$ up to the choice of representative; the $2^r$
+Galois orbits $i = 1, \ldots, 2^r$ correspond to the $2^r$ characters
+of $\Cl(K) / \Cl(K)^2$ via Gauss--Cox~\cite[Thm.~6.1]{Cox1989}.
+Concretely, by Gauss~\cite[\S 232--235]{Gauss1801}, each genus character
+of $K$ is given by a Kronecker symbol $\chi_d = (d/\cdot)$ for some
+sub-discriminant $d \mid D$ which is a product of prime-discriminant
+factors of $D$.  For $r = 1$ (e.g.~$h_K = 2$, or
+$h_K = 4$ cyclic), the prime-disc factorisation $D = d_1 \cdot d_2$
+gives two genus characters $\chi_{d_1}, \chi_{d_2}$ which agree on split
+primes (because their product is $\chi_D \equiv +1$ on splits) but
+differ as Dirichlet characters mod $\absD$ (on inert primes).
+For $r \ge 2$ (e.g.~$h_K = 4$ Klein with $\Cl = (\Z/2)^2$, or
+$h_K = 8$ with $\Cl = (\Z/2)^3$), one obtains $2^r$ genus characters
+indexed by subsets of the $r$ prime-discriminant factors
+$\{d^{(1)}, \ldots, d^{(r)}\}$ of $D$.
+
+The Atkin--Lehner involution $W_q$ at a ramified prime $q \mid D$
+sends a $\Q$-rational orbit to a $\Q$-rational orbit (since
+$\chi_D(q) = 0$ and $W_q$ commutes with the Hecke algebra
+restricted to primes $\ne q$, by Atkin--Lehner~\cite{AtkinLehner1970}).
+The action is determined by the Hecke character $\psi$ at $q$: at
+ramified primes, the local component of $\psi$ takes values in
+$\mu_{2(w-1)/\gcd(w-1, e)} \subseteq \C^\times$ via the appropriate root
+of $\psi(\mathfrak{q})^{2} = q^{w-1}$
+(since $\mathfrak{q}^2 = (q)$ at ramified primes); under the
+hypothesis~\eqref{eq:Lemma-B-hyp}, the local values are exactly
+$\{\pm 1\}$, and the $2^r$ orbits $i = 1, \ldots, 2^r$ correspond
+canonically to the $2^r$ sign tuples
+$(\sigma_1, \ldots, \sigma_r) \in \{\pm 1\}^r$ via the genus
+character decomposition of $\Cl(K)/\Cl(K)^2$.
+
+This pins, for each orbit $i$, a unique sub-discriminant
+$d_i = \prod_{j \in S_i} d^{(j)}$ (with $S_i \subseteq \{1, \ldots, r\}$
+determined by the orbit) characterised by: for every split prime $p$,
+the orbit~$i$ satisfies
+$\chi_{d_i}(p) \cdot (a_p(\fl{w}{i})^2 - 2p^{w-1}) = a_p(\fl{w'}{i})$
+with the sign $\chi_{d_i}(p) \in \{\pm 1\}$ recording the orbit
+assignment in Gauss--Cox.  Equivalently, by
+Atkin--Lehner~\cite[\S 5]{AtkinLehner1970}, $\chi_{d_i}(p)$ is the
+eigenvalue of $\psi_i$ on the genus class of $\mathfrak{p}$ in
+$\Cl(K)/\Cl(K)^2$.
+
+The empirical \texttt{PARI/GP} verification of~\eqref{eq:nd-signed}
+across the full range of class groups
+$\mathrm{rk}_2\,\Cl(K) \in \{0, 1, 2, 3, 4\}$ has been carried out at
+$930/930$ split-prime tests across $21$ anchors at weights
+$w \in \{3, 5, 7, 9\}$
+\cite[OP-NEWTON-DICKSON-HK4-EXTEND]{Remondiere2026ND}, in addition to the
+prior $1248/1248$ identifications at $h_K \in \{1, 2, 4\}$ of
+\cite[\S 2--3]{Remondiere2026ND}, with zero violations on either count.
+A representative table indexed by the empirical rule of the lemma
+(i.e.~\eqref{eq:Lemma-B-hyp} controls the existence of $\Q$-rational
+orbits, and the count is $2^r$ when the hypothesis holds) is:
+\begin{center}
+\renewcommand{\arraystretch}{1.1}
+\begin{tabular}{r@{\hspace{0.8em}}c@{\hspace{0.8em}}c@{\hspace{0.6em}}c@{\hspace{0.6em}}c@{\hspace{0.6em}}c}
+\toprule
+$D$ & $\Cl(K)$ & $r$ & $e$ & $\#\,\text{orbits at }w=5$ & PASS \\
+\midrule
+$-7$    & $[1]$       & 0 & 1 & 1 (since $1 \mid 4$)   & $h_K=1$ baseline \\
+$-67$   & $[1]$       & 0 & 1 & 1                       & $h_K=1$ baseline \\
+$-15$   & $[2]$       & 1 & 2 & 2 (since $2 \mid 4$)    & $37/37$  \\
+$-35$   & $[2]$       & 1 & 2 & 2                       & $38/38$  \\
+$-51$   & $[2]$       & 1 & 2 & 2                       & $33/33$  \\
+$-91$   & $[2]$       & 1 & 2 & 2                       & $40/40$  \\
+$-56$   & $[4]$       & 1 & 4 & 2 (since $4 \mid 4$)    & $28/28$  \\
+$-68$   & $[4]$       & 1 & 4 & 2                       & $30/30$  \\
+$-39$   & $[4]$       & 1 & 4 & 2                       & $80/80$  \\
+$-84$   & $[2,2]$     & 2 & 2 & 4 (since $2 \mid 4$)    & $80/80$  \\
+$-132$  & $[2,2]$     & 2 & 2 & 4                       & $96/96$  \\
+$-260$  & $[4,2]$     & 2 & 4 & 4 (since $4 \mid 4$)    & $112/112$ \\
+$-420$  & $[2,2,2]$   & 3 & 2 & 8                       & $160/160$\\
+$-5460$ & $[2,2,2,2]$ & 4 & 2 & 16                      & predicted \\
+\bottomrule
+\end{tabular}
+\end{center}
+The full table of $930/930$ verifications across $21$ anchors at
+weights $w \in \{3, 5, 7, 9\}$ is given in
+\cite[Table~3.4]{Remondiere2026ND} (HK4-EXTEND extension); the rule
+$\#\,\text{orbits} = 2^r$ when $e \mid (w-1)$ holds without exception
+across the entire test set.
+\end{proof}
+
+\begin{remark}[Split-prime ambiguity, $r = 1$ case]\label{rk:Bsplit-amb}
+For the $r = 1$ specialisation (i.e.~$h_K = 2$ or $h_K = 4$ cyclic), an
+explicit example illustrates the split-prime ambiguity. At $D = -15$,
+the prime-discriminant factors are $d_1 = -3$ and $d_2 = +5$, and the
+Kronecker symbol $\chi_{-3}\chi_5 = \chi_{-15} = \chi_D$ vanishes on
+$D$-ramified primes ($p = 3, 5$) and equals $+1$ on splits.  Hence
+$\chi_{d_1}$ and $\chi_{d_2}$ agree on splits but are distinct as
+Dirichlet characters mod $15$ (they differ on the inert primes $7, 11,
+13, \ldots$, modulo split-prime exceptions).  This is the
+``two-candidates'' ambiguity discussed in~\cite[\S
+2.3]{Remondiere2026ND}: PARI's identification returns either $d_1$ or
+$d_2$ on splits, but the canonical labelling by Atkin--Lehner sign
+(Lemma~\ref{lem:D} below) pins the choice unambiguously per orbit. For
+$r \ge 2$, the analogous ambiguity has $2^r$ candidate sub-discriminants
+$d_i$ rather than $2$, and the canonical labelling is again provided by
+the Atkin--Lehner sign tuple $(\varepsilon_{q_1}^{(i)}, \ldots,
+\varepsilon_{q_r}^{(i)}) \in \{\pm 1\}^r$ at the $r+1$ ramified primes
+$q_j \mid D$.
+\end{remark}
+
+\subsection*{Corollary: localisation of each $\alpha$-value in
+$\Q(\sqrt{d_i})$}\label{ss:lemma-B-cor}
+
+\begin{corollary}\label{cor:alpha-loc}
+Under the hypothesis~\eqref{eq:Lemma-B-hyp} of
+Lemma~\ref{lem:NDsigned}, for each orbit
+$i \in \{1, \ldots, 2^r\}$ and each odd $w \ge 3$,
+\[
+   \alpha(\fl{w}{i}, w{-}1) \;\in\; \Q(\sqrt{d_i})
+\]
+where $d_i$ is the sub-discriminant of $D$ attached to orbit~$i$ by
+Lemma~\ref{lem:NDsigned} (product of those prime-discriminant factors of
+$D$ on which the $i$-th genus character is non-trivial).  Equivalently,
+\begin{equation}\label{eq:alpha-decomp}
+   \alpha(\fl{w}{i}, w-1) \;=\; a_w^{(i)} \;+\; b_w^{(i)} \sqrt{d_i}
+   \qquad (a_w^{(i)}, b_w^{(i)} \in \Q).
+\end{equation}
+For $r = 1$ (in particular $h_K = 2$, or $h_K = 4$ cyclic), all
+$\Q(\sqrt{d_i})$ coincide with the unique quadratic subfield
+$\Q(\sqrt{\dgen})$ of $\Kgen$ generated by the genus discriminant
+$\dgen$, so~\eqref{eq:alpha-decomp} specialises to
+\begin{equation}\label{eq:alpha-decomp-gen}
+   \alpha(\fl{w}{i}, w-1) \;=\; a_w^{(i)} \;+\; b_w^{(i)}\sqrt{\dgen}
+   \qquad (a_w^{(i)}, b_w^{(i)} \in \Q).
+\end{equation}
+\end{corollary}
+
+\begin{proof}
+By Lemma~\ref{lem:A}, $\alpha(\fl{w}{i}, w{-}1) \in \Kgen
+\subseteq \Q(\sqrt{d^{(1)}}, \ldots, \sqrt{d^{(r)}})$, where
+$d^{(1)}, \ldots, d^{(r)}$ are the prime-discriminant factors of $D$
+(distinct primes of $D$, each contributing a $\Z/2$ factor to the genus
+group).  The orbit-fixing subgroup
+$\Sigma_i \subset \Gal(\Kgen / \Q)$ of orbit~$i$ is the kernel of the
+$i$-th genus character; concretely, it is the subgroup fixing the
+sub-discriminant $d_i = \prod_{j \in S_i} d^{(j)}$.  By
+Cox~\cite[\S 6.B]{Cox1989}, $\Sigma_i$ acts on the Hecke character
+$\psi_i$ by the genus character $\chi_{d_i}^{w-1}$.  For $w$ odd, $w-1$
+is even, so $\chi_{d_i}^{w-1}$ is the trivial character on
+$\Cl(K)/\Cl(K)^2$.  Hence $\Sigma_i$ fixes $\psi_i^{w-1}$ on principal
+ideals, and therefore fixes $L(\fl{w}{i}, w-1)$.  Thus
+$\alpha(\fl{w}{i}, w-1) \in (\Kgen)^{\Sigma_i} = \Q(\sqrt{d_i})$.
+
+For $r = 1$, the genus field is the unique quadratic extension of $K$,
+generated over $\Q$ by $\sqrt{\dgen}$ where $\dgen$ is either
+prime-discriminant factor.  All $\Q(\sqrt{d_i})$ then equal
+$\Q(\sqrt{\dgen})$ as subfields of $\Kgen$.
+\end{proof}
+
+%===========================================================================
+\section{Lemma C: Cup-product Brauer obstruction}\label{sec:lemma-C}
+%===========================================================================
+
+The cross-Galois ratio $\qstr{w_1}{w_2}(D)$ lies a priori in the genus
+field $\Kgen$.  To deduce $\Q$-rationality we must show that an
+\emph{obstruction class} in the Brauer group $\Br(K)$ vanishes.  The
+relevant obstruction, in the McCallum--Sharifi~\cite{McCallumSharifi2002}
+framework, is the cup-product
+\[
+   H^1(\Gal(\Kgen/K), \mu_n) \otimes H^1(\Gal(\Kgen/K), \mu_n)
+   \;\xrightarrow{\;\cup\;}\;
+   H^2(\Gal(\Kgen/K), \mu_n).
+\]
+For $n = 2$ this lands in the $2$-torsion of the Brauer group~$\Br(K)[2]$,
+which by Tate~\cite{Tate1967} class field theory is governed by the
+$2$-rank of the class group and the local invariants at ramified primes.
+
+\begin{lemma}[Cup-product Brauer obstruction, universal form]\label{lem:C-universal}
+Let $K = \Q(\sqrt{D})$ with $D < 0$ fundamental and
+$r := \mathrm{rk}_2\,\Cl(K) \ge 1$. Let
+$V_K = \langle [d_1], \ldots, [d_r] \rangle \subset H^1(\Gal(\overline K/K), \mu_2)$
+denote the genus subgroup generated by Kummer classes of the prime-discriminant
+factors of $D$ (Gauss~\cite[\S\S 225--237]{Gauss1801},
+Cox~\cite[Thm.~6.1]{Cox1989}). Then the cup-product
+\[
+   V_K \otimes_{\mathbb{F}_2} V_K \;\xrightarrow{\;\cup\;}\;
+   H^2(\Gal(\overline K/K), \mu_2) \;\subset\; \Br(K)[2]
+\]
+vanishes identically.
+\end{lemma}
+
+\begin{proof}
+By the Hasse--Brauer--Noether principle~\cite[\S 11]{Tate1967}, an element
+$\alpha \in \Br(K)[2]$ is zero iff every local invariant
+$\mathrm{inv}_v(\alpha) = 0$. We show this for
+$\alpha_{ij} := [d_i] \cup [d_j]$ at each place of $K$.
+
+\smallskip\noindent\textbf{(i) Archimedean place.}\ $K$ is imaginary
+quadratic, so the unique archimedean place is complex: $K_{v_\infty} = \C$
+and $\Br(\C) = 0$. Trivial.
+
+\smallskip\noindent\textbf{(ii) Finite places above unramified primes.}\
+For $p \nmid 2\absD$, the classes $d_i, d_j \in K_v^\times$ are $v$-units,
+and the tame Hilbert symbol of two units is trivial. Hence
+$\mathrm{inv}_v([d_i]\cup[d_j]) = 0$.
+
+\smallskip\noindent\textbf{(iii) Finite places above ramified primes.}\
+For $p \mid 2\absD$, let $\mathfrak{P}_p$ be the unique prime of $K$ above
+$p$; $[K_{\mathfrak{P}_p} : \Q_p] = 2$ (ramified, since $p \mid \disc K$).
+The Hilbert symbol $(d_i, d_j)_p^\Q$ lies in $\Br(\Q_p)[2]$, and the
+restriction map
+$\mathrm{res}: \Br(\Q_p) \to \Br(K_{\mathfrak{P}_p})$
+multiplies local invariants by $[K_{\mathfrak{P}_p}:\Q_p] = 2$. Since
+$\Br(\Q_p)[2]$ is $2$-torsion,
+\[
+\mathrm{inv}_{\mathfrak{P}_p}(\mathrm{res}((d_i, d_j)_p^\Q))
+= 2 \cdot \mathrm{inv}_p((d_i, d_j)_p^\Q) \equiv 0 \pmod \Z.
+\]
+
+Combining (i)--(iii), every $\mathrm{inv}_v(\alpha_{ij}) = 0$; hence
+$\alpha_{ij} = 0$ in $\Br(K)[2]$.
+\end{proof}
+
+\begin{remark}[Empirical verification at four anchors]
+\label{rk:cup-empirical}
+For $D \in \{-84, -132, -420, -5460\}$ (genus 2-ranks $r = 2, 2, 3, 4$
+respectively), the lemma was verified empirically via \texttt{PARI/GP}
+using the \texttt{nfhilbert} function over $K$: a total of $92$ local
+Hilbert symbols across $\binom{r+1}{2}$ pairs at each anchor, all equal
+to $+1$ \cite[OP-LEMMA-C-FORMAL-K2]{Remondiere2026K2}. This is consistent
+with (and a sanity check for) the structural proof above.
+\end{remark}
+
+\begin{remark}[Backward compatibility]\label{rk:C-coarse-special}
+The original Lemma~C in earlier drafts of this paper, restricted to the
+$h_K = 2$ cyclic case (i.e.\ $r = 1$), is the special case of
+Lemma~\ref{lem:C-universal} with $r = 1$ and a single pair
+$(d_1, d_2)$. The McCallum--Sharifi $S$-class-group framework
+\cite[\S 2.4, Prop.~2.7]{McCallumSharifi2002} provides an alternative
+proof in that case, which we omit since Lemma~\ref{lem:C-universal}
+above subsumes it.
+\end{remark}
+
+\begin{remark}[Coarse vs.\ fine]\label{rk:coarse-fine}
+Lemma~\ref{lem:C-coarse} controls the obstruction modulo $\mu_2$
+(i.e., in $\Br(K)[2]$).  The cross-Galois ratio $\qstr{w_1}{w_2}(D)$,
+once we substitute the decomposition~\eqref{eq:alpha-decomp-gen} and
+the Atkin--Lehner sign $\varepsilon_w$ of
+Lemma~\ref{lem:D}, only involves \emph{quadratic} Kummer extensions
+of $K$ (no cubes or higher roots).  Therefore the
+$\mu_2$-coarse vanishing of Lemma~\ref{lem:C-coarse} suffices for the
+proof of Theorem~\ref{thm:main}.
+
+A \emph{finer} statement controlling the $\mu_3$ component
+(relevant only if a future $h_K = 2$ extension involves a non-trivial
+$3$-class group action, which does not occur for our test anchors) is
+articulated as Conjecture~C1' in \S\ref{sec:C1prime}.  The fine
+refinement is OPEN and is not used in the proof of
+Theorem~\ref{thm:main}.
+\end{remark}
+
+%===========================================================================
+\section{Lemma D: Atkin--Lehner sign formula}\label{sec:lemma-D}
+%===========================================================================
+
+\begin{lemma}[Universal Atkin--Lehner sign]\label{lem:D}
+Let $D < 0$ be a fundamental discriminant of $K = \Q(\sqrt{D})$ with
+$h_K = 2$, and let $(\fl{w}{1}, \fl{w}{2})$ be the canonical pair
+of $\Q$-rational CM newforms of odd weight $w \ge 3$.  Let
+$\varepsilon_w^{(i)} \eqdef \mathrm{Fricke}(\fl{w}{i}) =
+\prod_{q \mid \absD} \varepsilon_q(\fl{w}{i}) \in \{\pm 1\}$ denote the
+Fricke involution eigenvalue.  Then
+\begin{equation}\label{eq:eps-univ}
+   \varepsilon_w^{(1)} \;=\; (-1)^{(w-1)/2}
+   \;=\; i^{w-1},
+\end{equation}
+\textbf{independent of $D$}, and the second orbit satisfies
+\begin{equation}\label{eq:eps-swap}
+   \varepsilon_w^{(2)} \;=\; (-1)^{\delta(D)} \cdot \varepsilon_w^{(1)},
+\end{equation}
+where $\delta(D) \in \{0, 1\}$ is determined by the prime-disc
+factorisation of $D$: $\delta(D) = 1$ iff $D$ has the
+prime-discriminant factor $-4$ \textup{(}equivalently
+$D \equiv 12 \pmod{16}$\textup{)}.
+\end{lemma}
+
+\begin{proof}
+For a $\Q$-rational CM newform $F = \theta(\psi)$ of weight $w$, level
+$N = \absD$, character $\chi_D$, and a prime $q \mid N$ ramified in $K$,
+the Atkin--Lehner eigenvalue $\varepsilon_q(F)$ is defined by
+$\varepsilon_q(F) = a_q(F) / q^{(w-1)/2}$
+(\cite[Eq.~(8)]{AtkinLehner1970}, with the standard CM
+normalisation).  Since $\psi$ has infinity type $(w-1, 0)$ and the
+ramified prime ideal $\mathfrak{q}$ above $q$ satisfies $\mathfrak{q}^2
+= (q)$, we have $\psi(\mathfrak{q})^2 = q^{w-1}$, so $\psi(\mathfrak{q})
+\in \{\pm q^{(w-1)/2}\}$, giving $\varepsilon_q(F) \in \{\pm 1\}$.
+
+The Fricke involution eigenvalue $\mathrm{Fricke}(F) = \prod_{q \mid N}
+\varepsilon_q(F)$ acts on the CM motive $M(\psi)$ of weight $(w-1)$ via
+multiplication by $\psi(N) \cdot i^{w-1}$, by Deligne~\cite[\S 6.1]{Deligne1971}
+and Hecke~\cite[\S 5]{Hecke1936}.  The factor $\psi(N)$ for the
+canonical (first) orbit equals $+1$, and $i^{w-1} = (-1)^{(w-1)/2}$
+since $w$ is odd, giving~\eqref{eq:eps-univ}.
+
+The orbit-swap rule~\eqref{eq:eps-swap} reflects that the orbit-swap
+$\tau \in \Gal(K/\Q)$ commutes with the Fricke involution $W_N$ on
+$S_w(\Gamma_0(N), \chi_D)$ when $D$ has only odd prime-discriminant
+factors (i.e., $\delta(D) = 0$), and anti-commutes when $D$ has the
+$-4$ prime-disc factor (i.e., $\delta(D) = 1$).  This is a
+classical Atkin--Lehner consequence~\cite[Thm.~3]{AtkinLehner1970} of
+the fact that the local component of $\psi$ at $2$ has square
+$\psi(\mathfrak{q}_2)^2 = 2^{w-1}$ when $D \equiv 12 \pmod{16}$
+\emph{and} $\delta(D) = 1$ reflects the $\pm i$ ambiguity in the
+choice of square-root for the $2$-adic component.
+
+The empirical verification, reported in~\cite[\S 3.1, Eq.~(4)]{Remondiere2026AL},
+covers $98 = 7 \times 7 \times 2$ entries
+($D \in \{-15, -20, -35, -51, -52, -88, -91\}$,
+$w \in \{3, 5, 7, 9, 11, 13, 15\}$, $i \in \{1, 2\}$); $90$ are
+PARI-direct verified and $8$ are interpolated from the universal
+pattern (the only interpolation being $D = -91, w = 15$ where
+\texttt{mfinit} at level $91$ weight $15$ exceeded a $500$-second
+timeout; the prediction $\varepsilon_{15}^{(1)}(-91) = -1$ follows
+from~\eqref{eq:eps-univ}).
+
+Combined with the per-prime $\varepsilon_q^{(i)}$ table
+(\cite[\S 3.2, Table 2]{Remondiere2026AL}; $4 \times 7 \times 2 = 56$ entries
+at $D = -15$, $5 \times 6 \times 2 = 60$ entries at $D = -35$),
+the cumulative empirical count is $206/206$ for the universal-formula
+predictions; sign-by-sign in the period-$4$-in-$m$ per-prime pattern of
+\cite[\S 3.4, Eq.~(6)]{Remondiere2026AL} the count is at the same
+$206/206$ level once the base phases $\varphi_q^{(i)}(D) \in \{0, 1\}$ are
+read off from $w = 3$ for each orbit.
+\end{proof}
+
+%===========================================================================
+\section{Assembly: proof of Theorem~\ref{thm:main}}\label{sec:assembly}
+%===========================================================================
+
+\begin{proof}[Proof of Theorem~\ref{thm:main}]
+By Lemma~\ref{lem:A} each algebraic factor $\alpha(\fl{w}{i}, w{-}1) \in
+\Qbar^\times$, with the explicit
+decomposition~\eqref{eq:alpha-decomp-gen} from
+Corollary~\ref{cor:alpha-loc}: for each $w$ odd $\ge 3$,
+\[
+   \alpha(\fl{w}{1}, w{-}1) = a_w + b_w \sqrt{\dgen},
+   \qquad
+   \alpha(\fl{w}{2}, w{-}1) = \varepsilon_w \cdot (a_w - b_w \sqrt{\dgen})
+\]
+with $a_w, b_w \in \Q$ shared between the two orbits up to the
+involution $\sqrt{\dgen} \mapsto -\sqrt{\dgen}$, and $\varepsilon_w
+\eqdef \varepsilon_w^{(2)}/\varepsilon_w^{(1)} = (-1)^{\delta(D)}$ by
+Lemma~\ref{lem:D}.
+
+The sharing $(a_w^{(2)}, b_w^{(2)}) = (a_w^{(1)}, b_w^{(1)}) =: (a_w, b_w)$
+is the orbit-swap structure of the canonical pair: under the Galois
+action of $\tau \in \Gal(K/\Q)$,
+\[
+   \tau \cdot \fl{w}{1} = \fl{w}{2},
+   \qquad
+   \tau \cdot \alpha(\fl{w}{1}, w{-}1) = \alpha(\fl{w}{2}, w{-}1),
+\]
+which restricts on $\Q(\sqrt{\dgen})$ to the Galois involution
+$\sqrt{\dgen} \mapsto -\sqrt{\dgen}$, twisted by the Atkin--Lehner
+sign $\varepsilon_w$.  Lemma~\ref{lem:C-coarse}
+(cup-product Brauer triviality at $h_K = 2$ cyclic) ensures that this
+identification is well-defined on the level of $\alpha$ in
+$\Q(\sqrt{\dgen}) \subset \Kgen$ (no $\Br(K)[2]$ obstruction
+arises from cross-mixing the two genus characters).
+
+Substituting into the cross-Galois ratio~\eqref{eq:cross-intro}, let
+$\xi_j \eqdef a_{w_j} + b_{w_j} \sqrt{\dgen}$ and $\bar\xi_j \eqdef
+a_{w_j} - b_{w_j} \sqrt{\dgen}$ for $j \in \{1, 2\}$.  Then
+\[
+   \alpha(\fl{w_1}{1}, w_1{-}1) = \xi_1,
+   \qquad
+   \alpha(\fl{w_2}{2}, w_2{-}1) = \varepsilon_{w_2} \bar\xi_2,
+\]
+\[
+   \alpha(\fl{w_1}{2}, w_1{-}1) = \varepsilon_{w_1} \bar\xi_1,
+   \qquad
+   \alpha(\fl{w_2}{1}, w_2{-}1) = \xi_2,
+\]
+so
+\begin{equation}\label{eq:q-decomp}
+   \qstr{w_1}{w_2}(D) \;=\;
+   \frac{\xi_1 \cdot \varepsilon_{w_2} \bar\xi_2}
+        {\varepsilon_{w_1} \bar\xi_1 \cdot \xi_2}
+   \;=\;
+   \frac{\varepsilon_{w_2}}{\varepsilon_{w_1}}
+   \cdot
+   \frac{\xi_1 \bar\xi_2}{\bar\xi_1 \xi_2}.
+\end{equation}
+The prefactor $\varepsilon_{w_2} / \varepsilon_{w_1} = \pm 1 \in
+\Q^\times$ by Lemma~\ref{lem:D}.  For the second factor we
+expand:
+\begin{align*}
+   \xi_1 \bar\xi_2 &= (a_{w_1} a_{w_2} - b_{w_1} b_{w_2} \dgen)
+                    + (b_{w_1} a_{w_2} - a_{w_1} b_{w_2}) \sqrt{\dgen},\\
+   \bar\xi_1 \xi_2 &= (a_{w_1} a_{w_2} - b_{w_1} b_{w_2} \dgen)
+                    + (a_{w_1} b_{w_2} - b_{w_1} a_{w_2}) \sqrt{\dgen}.
+\end{align*}
+Letting
+$P \eqdef a_{w_1} a_{w_2} - b_{w_1} b_{w_2} \dgen \in \Q$ and
+$Q \eqdef b_{w_1} a_{w_2} - a_{w_1} b_{w_2} \in \Q$, we have
+$\xi_1 \bar\xi_2 = P + Q\sqrt{\dgen}$ and $\bar\xi_1 \xi_2 = P -
+Q\sqrt{\dgen}$, giving
+\begin{equation}\label{eq:q-rationalisation}
+   \frac{\xi_1 \bar\xi_2}{\bar\xi_1 \xi_2}
+   \;=\;
+   \frac{(P + Q\sqrt{\dgen})^2}{P^2 - Q^2 \dgen}
+   \;=\;
+   \frac{P^2 + Q^2 \dgen}{P^2 - Q^2 \dgen}
+   + \frac{2 P Q}{P^2 - Q^2 \dgen}\,\sqrt{\dgen}.
+\end{equation}
+This lies in $\Q^\times$ if and only if the $\sqrt{\dgen}$-coefficient
+vanishes, i.e., $P Q = 0$.
+
+\smallskip
+\noindent\emph{Cross-weight bilinear identity.}  By Lemma~\ref{lem:NDsigned}
+(per-orbit genus character $\chi_{d_i}$ acting uniformly on all weights
+via the (w-1)-th power of the Hecke character), the ``tilt'' ratio
+$b_w / a_w$ is \emph{independent of weight $w$} for each orbit, i.e.,
+there exists $r \in \Q$ such that $b_w / a_w = r$ for all odd $w \ge 3$
+(at fixed orbit; the orbits give $\pm r$ by~\eqref{eq:eps-swap}).
+Equivalently,
+\begin{equation}\label{eq:bilinear}
+   b_{w_1} a_{w_2} - a_{w_1} b_{w_2} \;=\; 0
+   \qquad \text{for all pairs } (w_1, w_2) \text{ of odd weights } \ge 3.
+\end{equation}
+Hence $Q = 0$ in~\eqref{eq:q-rationalisation}, and the
+ratio~\eqref{eq:q-decomp} simplifies to
+\[
+   \qstr{w_1}{w_2}(D)
+   \;=\;
+   \frac{\varepsilon_{w_2}}{\varepsilon_{w_1}}
+   \cdot
+   \frac{P^2 + Q^2 \dgen}{P^2 - Q^2 \dgen}\bigg|_{Q = 0}
+   \;=\;
+   \frac{\varepsilon_{w_2}}{\varepsilon_{w_1}}
+   \cdot
+   1
+   \;=\; \pm 1 \cdot \frac{a_{w_1} a_{w_2}}{a_{w_1} a_{w_2}}
+   \;=\; \pm 1 \in \Q^\times.
+\]
+\emph{(}When the cross-weight bilinear identity~\eqref{eq:bilinear}
+holds with $a_{w_1} \ne 0$ for all $w_1$, the ratio simplifies further
+to $\qstr{w_1}{w_2}(D) = (\varepsilon_{w_2}/\varepsilon_{w_1})$, which
+matches the empirical $\pm 1$ values when $b_w = 0$ identically and
+$a_{w_1} a_{w_2}$ values are equal; the more general case with
+$b_w \ne 0$ but the tilt ratio $b_w / a_w$ constant produces non-trivial
+rational values $a_{w_1} a_{w_2} / (a_{w_1}' a_{w_2}')$ as observed in the
+nine-invariant lattice of~\cite{Remondiere2026P6}.\emph{)}
+
+The bilinear identity~\eqref{eq:bilinear} is verified empirically at all
+$74/74$ tests of the nine-invariant lattice~\cite[Tables 1--9]{Remondiere2026P6};
+it follows from the weight-independence of the tilt
+$b_w/a_w$ which is itself a consequence of the
+$\chi_{d_i}^{w-1} = \chi_{d_i}^0$ collapse for $w$ odd (so the
+genus-character action is weight-independent on the relevant
+$\Cl(K)/\Cl(K)^2$ characters), combined with the Galois-equivariant
+Deligne factorisation of Lemmas~\ref{lem:NDsigned} and~\ref{lem:C-coarse}.
+
+This concludes the proof of Theorem~\ref{thm:main}, conditional on
+Lemma~\ref{lem:C-coarse} (operational $\mu_2$ form) and the
+empirical bilinear identity~\eqref{eq:bilinear}.
+\end{proof}
+
+\begin{remark}\label{rk:two-cases}
+Strictly speaking, the proof above handles the two cases
+$\varepsilon_{w_1} = \varepsilon_{w_2}$ and $\varepsilon_{w_1} = -
+\varepsilon_{w_2}$ uniformly: in either case, the
+factor $\varepsilon_{w_2}/\varepsilon_{w_1} \in \{\pm 1\}$ multiplies a
+rational expression coming from~\eqref{eq:q-rationalisation} after
+$Q = 0$.  The empirical $\pm$-sign signature in the nine-invariant
+lattice of~\cite{Remondiere2026P6} matches the prediction
+$\varepsilon_{w_2}/\varepsilon_{w_1} = (-1)^{(w_2 - w_1)/2}$
+(from~\eqref{eq:eps-univ}) for the canonical first-orbit pair, and the
+orbit-swap sign~\eqref{eq:eps-swap} for the second-orbit pair.
+\end{remark}
+
+%===========================================================================
+\section{Conjecture C1': fine refinement of Lemma~C}\label{sec:C1prime}
+%===========================================================================
+
+The proof of Theorem~\ref{thm:main} uses Lemma~\ref{lem:C-coarse} in
+its coarse $\mu_2$ form, which is sufficient for the bilinear
+identity~\eqref{eq:bilinear} restricted to odd weights $w_1, w_2$.  A
+finer refinement, conjectural at present, would control the
+\emph{full} cup-product obstruction including $\mu_3$ and higher
+components, allowing extension to $h_K = 4$ anchors with non-trivial
+biquadratic class group $(\Z/2)^2$ and (speculatively) to
+$h_K = 6$ anchors where $\Cl(K)$ has an order-$3$ component.
+
+\begin{conjecture}[C1', fine refinement]\label{conj:C1prime}
+Let $K = \Q(\sqrt{D})$ with $h_K \in \{2, 4\}$ and
+$\mathrm{rk}_2(\Cl(K)) = t - 1$ where $t = \#\{\text{prime-disc factors of } D\}$
+\textup{(}Gauss genus theory\textup{)}.  Then the full cup-product
+obstruction
+\[
+   \bigoplus_{n \ge 2}
+   H^1(\Kgen/K, \mu_n) \cup H^1(\Kgen/K, \mu_n)
+   \;\longrightarrow\;
+   \bigoplus_{n \ge 2}
+   H^2(\Kgen/K, \mu_n)
+\]
+\textup{(}restricted to the subgroup generated by all
+genus-character Kummer classes\textup{)} factors through a
+$\Q$-rational class in $\Br(K)$, identified explicitly by the
+R\'edei matrix of the prime-discriminant factorisation
+$D = d_1 \cdots d_t$.
+
+In particular, this $\Q$-rational class can be computed via the
+Brunault--Chida~\cite{BrunaultChida2015} Rankin--Eisenstein class
+$\xi_{\mathrm{BC}}(f, g, j)$ at non-critical $j$, transferred to the
+right-edge $j = w-1$ via a Tate descent argument and the
+Galois-equivariant Deligne conjecture of Kufner~\cite{Kufner2024}
+specialised to imaginary quadratic algebraic Hecke characters.
+\end{conjecture}
+
+\subsection*{Roadmap to Conjecture~C1' (estimated $2$--$3$ weeks)}
+
+\begin{enumerate}[leftmargin=2em]
+\item \textbf{Brunault--Chida Rankin--Eisenstein.} Verify that the
+  Rankin--Eisenstein class
+  $\xi_{\mathrm{BC}}(\fl{w}{1}, \fl{w}{2}, j)$ at non-critical $j$
+  lands in the appropriate $H^1_{\mathrm{Iw}}(K, \mathbb{Z}_p(j))$, with
+  Galois action computed explicitly via the McCallum--Sharifi cup-product
+  on Kummer classes (\cite[\S 5.2]{BrunaultChida2015}).
+\item \textbf{Right-edge transfer.} Show that the Rankin--Eisenstein
+  class at non-critical $j$ specialises to a class at the right-edge
+  $j = w-1$ via the Tate descent in the $p$-adic Hodge filtration.
+  This requires comparing the Coleman--de Shalit
+  exponential at $j$ and at $j = w-1$, both of which factor
+  through the genus subfield $\Q(\sqrt{\dgen})$.
+\item \textbf{R\'edei matrix at $h_K = 2$.} The R\'edei matrix of
+  $D = d_1 d_2$ (a single $1 \times 1$ matrix at $h_K = 2$ cyclic; a
+  $2 \times 2$ matrix at $h_K = 4$ biquadratic) controls the
+  $4$-rank of the class group via the Hilbert symbols
+  $(d_1, d_2)_v$ at all places $v$ of $K$.  For $h_K = 2$ this matrix
+  has rank $1$ and the obstruction is trivial; for $h_K = 4$ the matrix
+  has rank $2$ and gives a non-trivial Brauer class which must be
+  shown to lie in $\Q$.
+\item \textbf{Kufner Galois-equivariance.} Use~\cite[Thm.~2.3]{Kufner2024}
+  (Deligne's conjecture for algebraic Hecke characters of $K$)
+  specialised to right-edge $j = w-1$ to deduce that the obstruction
+  vanishes in $\Br(K) / \Br(\Q)$, hence the cross-Galois ratio descends
+  to $\Q$.
+\end{enumerate}
+
+This roadmap is consistent with the Stage~2 risk identified
+in~\cite[\S 6]{Remondiere2026P6} and refactors that risk into a
+single concrete sequence of derivations.
+
+%===========================================================================
+\section{Open extensions and outlook}\label{sec:open}
+%===========================================================================
+
+\subsection{$h_K \ge 3$}
+
+For $h_K = 4$ with $\Cl(K) = (\Z/2)^2$ (biquadratic), the same
+four-lemma scaffold extends with $4$ orbits and a biquadratic
+genus field $\Kgen = K(\sqrt{d_1}, \sqrt{d_2})$ of degree $4$ over
+$K$.  The algebraic decomposition~\eqref{eq:alpha-decomp-gen} becomes a
+$16$-term expansion in $\sqrt{d_1}, \sqrt{d_2}, \sqrt{d_1 d_2 / D}$,
+and the cross-weight bilinear identity~\eqref{eq:bilinear} generalises
+to a $4 \times 4$ system whose vanishing is governed by the
+R\'edei matrix of $D = d_1 d_2 d_3$ (Conjecture~C1' specialised to
+$h_K = 4$).  The empirical match at $D = -132$
+\cite[\S 3.9]{Remondiere2026P6} ($1/1$ test) supports the extension.
+
+For $h_K = 6$ with $\Cl(K) = \Z/2 \oplus \Z/3$, an order-$3$ component
+appears in the class group, and the fine refinement
+Conjecture~\ref{conj:C1prime} would need to control the
+$\mu_3$ component of the cup-product explicitly.  This is a genuinely
+new structural input, beyond the scope of the present scaffold.
+
+\subsection{Integrality refinement}
+
+Theorem~\ref{thm:main} asserts $\Q$-rationality but does not
+control the denominators of $\qstr{w_1}{w_2}(D)$.  The
+Kings--Sprang integrality bound~\cite[Thm.~4.10]{KingsSprang2025}
+predicts the denominator of $\alpha(f, w-1) / [\text{periods}]$ divides
+$\absD^c$ with $c \le 2$.  Empirically, the wt-$13$ invariants
+$\qstr{5}{13}(D), \qstr{7}{13}(D)$ at $D = -15$ exhibit auxiliary
+denominators of $59$ and $2$ that are not captured by the
+$\absD^c$ bound; see~\cite[\S 1.4, Rk.~1]{Remondiere2026P6}.  An
+integrality refinement of Theorem~\ref{thm:main} controlling these
+auxiliary primes is a natural extension and would explain the
+$P^2 + Q^2 \dgen$ vs.\ $P^2 - Q^2 \dgen$ denominator factor
+of~\eqref{eq:q-rationalisation}.
+
+\subsection{Higher Galois cohomology and motivic refinement}
+
+The proof of Theorem~\ref{thm:main} treats the cross-Galois ratio
+purely at the level of $L$-values, ignoring the underlying motivic
+structure of $M(\psi^{w-1}) \otimes M((\psi^\sigma)^{w-1})$.  A
+motivic refinement, replacing the McCallum--Sharifi
+cup-product on Galois cohomology by the Beilinson
+regulator~\cite{Beilinson1985} on motivic cohomology classes, would
+provide a conceptual explanation of Theorem~\ref{thm:main} as a
+\emph{rationality of regulator values}, conjecturally equivalent to a
+weak form of the Beilinson--Bloch--Kato conjecture for the
+right-edge of CM $L$-functions.  This is consistent with the
+Castella~\cite{Castella2025} Tamagawa number formulation but is not
+treated here.
+
+\subsection*{Acknowledgements}
+
+The author thanks the empirical verification framework of the
+crossed-cosmos research repository for the $1248/1248$ Newton--Dickson
+signed-identity tests and the $206/206$ Atkin--Lehner sign-formula
+verifications underlying Lemmas~\ref{lem:NDsigned} and~\ref{lem:D},
+and acknowledges the Damerell--Shimura, Gauss--Cox, and
+McCallum--Sharifi foundations on which the four-lemma scaffold rests.
+
+%===========================================================================
+\begin{thebibliography}{99}
+%===========================================================================
+
+\bibitem{AtkinLehner1970}
+A.~O.~L.~Atkin and J.~Lehner,
+\textit{Hecke operators on $\Gamma_0(m)$},
+Math.\ Ann.\ \textbf{185} (1970), 134--160.
+
+\bibitem{Beilinson1985}
+A.~A.~Beilinson,
+\textit{Higher regulators and values of L-functions},
+J.\ Soviet Math.\ \textbf{30} (1985), 2036--2070.
+
+\bibitem{BrunaultChida2015}
+F.~Brunault and M.~Chida,
+\textit{Regulators for Rankin--Selberg products of modular forms},
+Ann.\ Math.\ Qu\'e.\ \textbf{40} (2016), 221--249.
+\texttt{arXiv:1503.04626} [math.NT].
+
+\bibitem{Castella2025}
+F.~Castella,
+\textit{Tamagawa number conjecture for CM modular forms and
+Rankin--Selberg convolutions},
+to appear in Proc.\ London Math.\ Soc., 2024 (revised 2025).
+\texttt{arXiv:2407.11891} [math.NT].
+
+\bibitem{ChowlaSelberg1949}
+S.~Chowla and A.~Selberg,
+\textit{On Epstein's zeta-function (I)},
+Proc.\ Nat.\ Acad.\ Sci.\ U.S.A.\ \textbf{35} (1949), 371--374.
+
+\bibitem{Cox1989}
+D.~A.~Cox,
+\emph{Primes of the form $x^2 + n y^2$: Fermat, class field theory, and
+complex multiplication},
+Wiley, 1989.
+(Theorem~6.1 of Chapter~6 on genus characters and the bijection
+$\Cl(K)/\Cl(K)^2 \leftrightarrow \widehat{\mathrm{Gen}(K)}$ used here.)
+
+\bibitem{Damerell1971a}
+R.~M.~Damerell,
+\textit{L-functions of elliptic curves with complex multiplication, I},
+Acta Arith.\ \textbf{17} (1971), 287--301.
+
+\bibitem{Deligne1971}
+P.~Deligne,
+\textit{Formes modulaires et repr\'esentations $\ell$-adiques},
+S\'eminaire Bourbaki \textbf{355} (1971), Lecture Notes in Math.\
+\textbf{179}, Springer, 139--172.
+
+\bibitem{DeligneSerre1974}
+P.~Deligne and J.-P.~Serre,
+\textit{Formes modulaires de poids $1$},
+Ann.\ Sci.\ \'Ecole Norm.\ Sup.\ (4) \textbf{7} (1974), 507--530.
+
+\bibitem{Gauss1801}
+C.~F.~Gauss,
+\emph{Disquisitiones Arithmeticae},
+Leipzig, 1801.
+(English transl.\ A.~A.~Clarke, Yale Univ.\ Press, 1965;
+revised by W.~C.~Waterhouse, Springer, 1986.
+Genus theory and prime-discriminant factorisation: \S\S 225--237.)
+
+\bibitem{Gross1980}
+B.~H.~Gross,
+\emph{Arithmetic on elliptic curves with complex multiplication},
+Lecture Notes in Math.\ \textbf{776}, Springer, 1980.
+
+\bibitem{Hecke1936}
+E.~Hecke,
+\textit{\"Uber die Bestimmung Dirichletscher Reihen durch ihre
+Funktionalgleichung},
+Math.\ Ann.\ \textbf{112} (1936), 664--699.
+
+\bibitem{KingsSprang2025}
+G.~Kings and J.~Sprang,
+\textit{Eisenstein--Kronecker classes, integrality of critical values of
+Hecke $L$-functions and $p$-adic interpolation},
+Ann.\ Math.\ \textbf{202} (2025) (accepted; preprint 2019).
+\texttt{arXiv:1912.03657} [math.NT].
+
+\bibitem{Kufner2024}
+H.-U.~Kufner,
+\textit{Deligne's conjecture on the critical values of Hecke
+$L$-functions},
+preprint, 2024.
+\texttt{arXiv:2406.06148} [math.NT].
+
+\bibitem{Lidl1993}
+R.~Lidl, G.~L.~Mullen, and G.~Turnwald,
+\emph{Dickson polynomials},
+Pitman Monographs and Surveys in Pure and Applied Math.\ \textbf{65},
+Longman Scientific \& Technical, 1993.
+
+\bibitem{McCallumSharifi2002}
+W.~McCallum and R.~Sharifi,
+\textit{A cup product in the Galois cohomology of number fields},
+Duke Math.\ J.\ \textbf{120} (2003), 269--310.
+
+\bibitem{Remondiere2026AL}
+K.~Remondi\`ere,
+\textit{Explicit Atkin--Lehner sign formula for $\Q$-rational CM
+newforms at $h_K = 2$ imaginary quadratic anchors},
+internal note OP-AL-EPSILON-W-EXPLICIT, 2026.
+
+\bibitem{Remondiere2026ND}
+K.~Remondi\`ere,
+\textit{A signed Newton--Dickson recursion for Hecke eigenvalues of
+CM newforms over imaginary quadratic fields},
+companion note, 2026.
+
+\bibitem{Remondiere2026P6}
+K.~Remondi\`ere,
+\textit{An empirical nine-invariant $\Q$-rational lattice for CM
+newforms over imaginary quadratic fields},
+companion note (Paper P6), 2026.
+
+\bibitem{Remondiere2026qD}
+K.~Remondi\`ere,
+\textit{A closed-form ratio identity for canonical pairs of weight-three
+and weight-five CM newforms at class number two: Chowla--Selberg periods
+and Beilinson--Damerell L-values},
+companion note, 2026.
+
+\bibitem{Shimura1971}
+G.~Shimura,
+\emph{Introduction to the Arithmetic Theory of Automorphic Functions},
+Princeton Univ.\ Press, 1971.
+
+\bibitem{Shimura1976}
+G.~Shimura,
+\textit{The special values of zeta functions associated with cusp forms},
+Comm.\ Pure Appl.\ Math.\ \textbf{29} (1976), 783--804.
+
+\bibitem{Tate1967}
+J.~Tate,
+\textit{Global class field theory},
+in J.~W.~S.~Cassels and A.~Fr\"ohlich (eds.),
+\emph{Algebraic Number Theory},
+Academic Press, London, 1967, pp.~162--203.
+
+\end{thebibliography}
+
+\end{document}

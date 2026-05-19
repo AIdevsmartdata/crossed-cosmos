@@ -138,7 +138,7 @@ All 19 bibliography entries have been cross-checked against publisher catalogues
 | Acknowledgment to PARI / LMFDB maintainers | OK |
 | Acknowledgment to Don Zagier | OK |
 | ORCID provided (0009-0008-2443-7166) | OK |
-| Affiliation = "Independent researcher, Tarbes, France" | OK |
+| Affiliation = "Independent researcher, Oloron-Sainte-Marie, France" | OK |
 | Email kevin.remondiere [at] gmail.com | OK |
 | No conflict of interest | OK (no funding, no employer) |
 

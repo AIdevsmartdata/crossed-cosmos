@@ -1,6 +1,6 @@
 # A universal Heegner–Hecke ratio for CM newforms and a tautological identity for the auxiliary spectral constant Φ_univ
 
-**Author** : Kevin Remondiere (with Opus 4.7 LLM-assisted typesetting)
+**Author** : Kevin Remondiere (with LLM LLM-assisted typesetting)
 **Date** : 2026-05-10
 **Target journal** : *Journal of Number Theory* (alternate : *Mathematische Annalen*)
 **Length** : ≈ 7 800 words / 18 typeset pp.

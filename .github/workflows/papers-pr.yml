@@ -57,7 +57,11 @@ jobs:
               fi
             done
           fi
-          JSON=$(printf '%s\n' "${PAPERS[@]}" | jq -R . | jq -s .)
+          if [ ${#PAPERS[@]} -eq 0 ]; then
+            JSON="[]"
+          else
+            JSON=$(printf '%s\n' "${PAPERS[@]}" | jq -R . | jq -cs .)
+          fi
           echo "papers=$JSON" >> "$GITHUB_OUTPUT"
           echo "Found ${#PAPERS[@]} ready paper(s): ${PAPERS[*]}"
 

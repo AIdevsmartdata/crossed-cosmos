@@ -51,11 +51,11 @@ CM newforms over imaginary quadratic fields, rational L-values (M142 hierarchy),
 |---|---|---|---:|---|
 | 1 | Rational special values of weight-5 CM newforms: a hierarchy and class-field-the… | [`M142_hierarchy_M183_M184`](papers/M142_hierarchy_M183_M184/) | 14 | TBD |
 | 2 | A three-lemma proof attempt for M183: the 3-adic denominator split rule for weig… | [`Paper_3_M183_3lemmas`](papers/Paper_3_M183_3lemmas/) | 13 | TBD |
-| 3 | Class Number One as a Vacuum Selection Rule: CM Field Constraints in Kanno—Watar… | [`Paper_B_h1_selection_KW`](papers/Paper_B_h1_selection_KW/) | 9 | TBD |
+| 3 | Class Number One as a Vacuum Selection Rule: CM Field Constraints in Kanno—Watar… | [`Paper_B_h1_selection_KW`](papers/Paper_B_h1_selection_KW/) | 10 | TBD |
 | 4 | A closed-form ratio identity for canonical pairs of weight-three and weight-five… | [`Paper_Beilinson_qD_Note`](papers/Paper_Beilinson_qD_Note/) | 8 | TBD |
 | 5 | Galois orbit structure of rational CM weight-5 newforms over imaginary quadratic… | [`Paper_ClK_orbit`](papers/Paper_ClK_orbit/) | 9 | TBD |
 | 6 | The number of $\mathbb{Q}$-rational weight-5 CM newforms attached to an imaginar… | [`Paper_HSH_v3_letter_JNT_v2`](papers/Paper_HSH_v3_letter_JNT_v2/) | 8 | J. Number Theory |
-| 7 | Real quadratic discriminants with integer Hurwitz ratio $D^{2}/B_{2,\chi_D}$: a … | [`Paper_Hurwitz_7disc_JNT`](papers/Paper_Hurwitz_7disc_JNT/) | 8 | J. Number Theory |
+| 7 | Real quadratic discriminants with integer Hurwitz ratio $D^{2}/B_{2,\chi_D}$: a … | [`Paper_Hurwitz_7disc_JNT`](papers/Paper_Hurwitz_7disc_JNT/) | 9 | J. Number Theory |
 | 8 | On the Q-rationality of cross-Galois $L$-value ratios at h_K=2 imaginary quadrat… | [`Paper_P7_qD_Q_Rationality`](papers/Paper_P7_qD_Q_Rationality/) | 13 | TBD |
 | 9 | The empirical hierarchy of rational $L$-values for CM newforms over class number… | [`Paper_unified_M142_hierarchy`](papers/Paper_unified_M142_hierarchy/) | 20 | TBD |
 
@@ -85,6 +85,25 @@ Preserved from earlier work, separate Zenodo records:
 - **Chimère Ω** — local-first LLM blueprint (`cs.LG`)
 
 See [`paper/`](paper/), [`paper/v6/`](paper/v6/), [`paper/v7_note/`](paper/v7_note/), [`paper/chimere_omega/`](paper/chimere_omega/) for full content and the historical PAPERS_v6.md (preserved as `PAPERS.md.v6-cosmology-2026-04`).
+
+---
+
+## Archived papers (anti-fabrication discipline)
+
+17 papers were archived after a thorough fact-check pass (DS Pro V4 high-reasoning + Opus adversarial review) on 2026-05-19, due to math errors, scope overclaims, fabricated references, or unjustified physical derivations. They are preserved at [`papers/archive/`](papers/archive/) for provenance, each with a short `ARCHIVED.md` note explaining the rejection reasons.
+
+These are **NOT** part of the publication corpus. Examples of issues caught:
+- `Paper_M187_period_identity` — Kronecker symbol wrong, Gauss factor of $i$ mistake
+- `Paper_NW_Voisin_index_NOTE` — arithmetic error ($-1-1+9-11 \neq 0$)
+- `Paper_RH_Lemma_JNT` — Riemann–von Mangoldt deg-1 vs deg-2 Hecke coefficient mismatch
+- `Paper_Hodge_Note_ExpMath` — invalid proof step (irrational does not cancel)
+- `Paper_P5_SMatrix_Beilinson` — SU(2) ratio numerical mismatch with AT2021
+- `Paper_6prime_excited_glueball_AdS` — fabricated 'Crossed Cosmos collaboration' attribution
+- `BIZ4_Heegner`, `CCNCG_K3FSM`, `E08_Maxwell`, `KleinSigma_LMP`, `ThmC6_FN` — tautology theorems / unsupported claims / unresolved gaps
+- `Paper_G3_G5_CMP`, `Paper_G4_obstruction`, `Paper_P4_KleinSigma_v1`, `Paper_SchuttHodge_MULTI_D_JNT`, `Phase_E_motivic_glueball` — sketch proofs / methodology issues / single-anchor coincidences
+- `Paper_HSH_v3_letter` (v1) — superseded by `Paper_HSH_v3_letter_JNT_v2` (active)
+
+Full anti-fab catch ledger: 110+ catches accumulated over the pipeline. See [reports/FACT_CHECK_2026-05-19.md](reports/FACT_CHECK_2026-05-19.md) for the full master summary.
 
 ---
 

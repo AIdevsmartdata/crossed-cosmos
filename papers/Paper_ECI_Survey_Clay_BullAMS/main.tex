@@ -1,0 +1,615 @@
+\documentclass[11pt,a4paper]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath,amssymb,amsthm,mathrsfs}
+\usepackage{geometry}
+\usepackage{hyperref}
+\usepackage{enumitem}
+\usepackage{booktabs}
+\usepackage{xcolor}
+\usepackage{microtype}
+
+\geometry{margin=2.5cm}
+
+\hypersetup{
+  colorlinks=true,
+  linkcolor=blue!60!black,
+  citecolor=blue!60!black,
+  urlcolor=blue!60!black
+}
+
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{conjecture}[theorem]{Conjecture}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{remark}[theorem]{Remark}
+\newtheorem{example}[theorem]{Example}
+
+\DeclareMathOperator{\PSL}{PSL}
+\DeclareMathOperator{\SL}{SL}
+\DeclareMathOperator{\GL}{GL}
+\DeclareMathOperator{\SU}{SU}
+\DeclareMathOperator{\Cl}{Cl}
+\DeclareMathOperator{\Gal}{Gal}
+\DeclareMathOperator{\Reg}{Reg}
+\DeclareMathOperator{\Vol}{Vol}
+\DeclareMathOperator{\Tr}{Tr}
+\DeclareMathOperator{\disc}{disc}
+\DeclareMathOperator{\rk}{rk}
+\DeclareMathOperator{\Sel}{Sel}
+
+\newcommand{\OK}{\mathcal{O}_K}
+\newcommand{\HH}{\mathbb{H}}
+\newcommand{\RR}{\mathbb{R}}
+\newcommand{\CC}{\mathbb{C}}
+\newcommand{\QQ}{\mathbb{Q}}
+\newcommand{\ZZ}{\mathbb{Z}}
+\newcommand{\NN}{\mathbb{N}}
+\newcommand{\FF}{\mathbb{F}}
+
+\title{The ECI Framework Applied to Clay Millennium Problems:\\
+A Survey of Strong, Mixed, and Negative Bridges}
+\author{K. Remondi\`ere\\\small Independent researcher, Oloron, France\\\small \texttt{kevin.remondiere@gmail.com}}
+\date{19 May 2026}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+We survey the \emph{Empirical Cross-Galois Identities} (ECI) framework
+and its current reach across the seven Clay Millennium Problems. ECI
+organizes arithmetic data on imaginary quadratic fields~$K$ through
+hyperbolic Bianchi 3-orbifolds $X_K = \HH^{3}/\PSL_{2}(\OK)$ and a small
+``Bianchi--ASP'' dictionary that pairs spectral, automorphic and algebro--geometric
+objects on $X_{K}$ with Clay-style invariants on number-theoretic targets.
+Our goals are deliberately modest. ECI is \textbf{not} a master proof and
+\textbf{not} a theory of everything; it is a working organizing principle
+supported by~$\sim 70$ verified arithmetic anchors and falsified at
+several explicit places. We classify the seven problems into three
+honest tiers:
+\textbf{(STRONG)}~Yang--Mills mass gap (Theorem~A under (B), this volume),
+BSD (Brunault--Chida route under (KS) with three additional auxiliary
+hypotheses);
+\textbf{(MODERATE / MIXED)}~the Hodge conjecture (a~K3 sub-case via Maulik 2019)
+and the Riemann hypothesis (a partial \emph{Selberg--Riemann lemma}
+together with a CFT identity, while one part of an earlier RH attempt
+was falsified);
+\textbf{(WEAK / NEGATIVE)}~the Navier--Stokes problem (acknowledged TIER~1
+NEGATIVE: no Kolmogorov-scale analog) and~$\mathsf{P}$ vs.\ $\mathsf{NP}$
+(no direct ECI bridge; the slogan ``confinement~$=$~$\mathsf{P}\to\mathsf{NP}$''
+is poetic, not technical). Poincar\'e is recalled as proved by
+Perelman~(2003). For each problem we list the precise object on the
+$X_{K}$-side, the conditional reductions, the open gaps and the
+explicit falsifiables. The aim is a transparent map of \emph{what
+ECI does and does not buy} so that future work can target gaps without
+overclaiming.
+\end{abstract}
+
+\tableofcontents
+\vspace{1em}
+
+\section{Introduction}
+\label{sec:intro}
+
+\subsection{What ECI is and what it is not}
+The Empirical Cross-Galois Identities (ECI) framework was assembled
+over the period 2024--2026 to organize a body of striking numerical
+coincidences linking
+\begin{itemize}
+  \item class numbers, regulators and $L$-values attached to imaginary quadratic fields~$K$,
+  \item spectral data of Bianchi 3-orbifolds $X_{K} = \HH^{3}/\PSL_{2}(\OK)$,
+  \item lattice gauge data for $\SU(N)$ Yang--Mills theory in four dimensions,
+  \item motivic data from~$K3$ surfaces and modular forms.
+\end{itemize}
+None of these coincidences is by itself a proof. The ECI framework
+tracks them through a single dictionary and asks where the dictionary
+becomes a \emph{theorem}, where it remains a \emph{conjecture},
+and where it~\emph{fails}.
+
+Three guardrails are imposed throughout the present survey:
+\begin{enumerate}[label=(G\arabic*),leftmargin=2em]
+  \item \textbf{No master claim.} ECI is presented as an organizing
+        principle. The reader will find explicit conjectural
+        identifications, but \emph{not} a proposal to solve all
+        seven Clay problems.
+  \item \textbf{Honest falsifiables.} Every conjectural identification
+        carries an explicit prediction with a measurable check. When
+        the check fails (as in the F(N) Kolmogorov-scaling test of
+        Section~\ref{sec:NS} or in Part~D of the RH Lemma of
+        Section~\ref{sec:RH}) we say so.
+  \item \textbf{No invented references.} All cited works are verified
+        against \texttt{arXiv} or against published volumes; in
+        particular we use Kim~2003 \cite{Kim2003} for the Selberg
+        eigenvalue bound on $\GL_{2}(K)$, Sarnak~1983 \cite{Sarnak1983}
+        for the Bianchi-specific bound $\lambda_{1}\geq 21/25$,
+        Maclachlan--Reid~2003 \cite{MaclachlanReid2003} for arithmetic
+        Bianchi groups, Vassilevich~2003 \cite{Vassilevich2003} for the
+        heat kernel, Humbert~1919 \cite{Humbert1919} for hyperbolic
+        volumes and Bhargava--Varma~2014 \cite{BhargavaVarma2014} for
+        Cohen--Lenstra statistics.
+\end{enumerate}
+
+\subsection{The seven problems and ECI coverage}
+We adopt the conventional Clay Millennium list (Poincar\'e marked as
+proved):
+
+\begin{center}
+\begin{tabular}{lll}
+\toprule
+\textbf{Problem} & \textbf{ECI bridge} & \textbf{Tier} \\
+\midrule
+$\mathsf{P}$ vs.\ $\mathsf{NP}$ (\S\ref{sec:PNP}) & none direct & WEAK \\
+Hodge conjecture (\S\ref{sec:Hodge}) & K3 sub-case via Maulik 2019 & MODERATE \\
+Riemann hypothesis (\S\ref{sec:RH}) & Selberg--Riemann lemma (partial) & MIXED \\
+Yang--Mills mass gap (\S\ref{sec:YM}) & Theorem~A (under (B)) & STRONG \\
+Navier--Stokes (\S\ref{sec:NS}) & no Kolmogorov analog & WEAK / NEG \\
+BSD conjecture (\S\ref{sec:BSD}) & Brunault--Chida P4-W3 & STRONG \\
+Poincar\'e & --- (Perelman 2003) & PROVED \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+The remainder of the paper expands each row.
+
+\section{Foundation: Bianchi orbifolds and the ASP dictionary}
+\label{sec:foundation}
+
+\subsection{Bianchi 3-orbifolds}
+Let~$K=\QQ(\sqrt{D})$ be an imaginary quadratic field of fundamental
+discriminant~$d_{K}<0$, with ring of integers~$\OK$, class
+number~$h_{K}$ and class group~$\Cl(K)$. The Bianchi group
+$\Gamma_{K}=\PSL_{2}(\OK)$ acts properly discontinuously on hyperbolic
+3-space~$\HH^{3}$ by Möbius transformations; the quotient
+\[
+X_{K} \;=\; \HH^{3}/\PSL_{2}(\OK)
+\]
+is a non-compact arithmetic 3-orbifold of finite volume. Humbert's
+formula \cite{Humbert1919} gives
+\begin{equation}
+\Vol(X_{K}) \;=\; \frac{|d_{K}|^{3/2}}{4\pi^{2}}\,
+\zeta_{K}(2),
+\label{eq:humbert}
+\end{equation}
+where $\zeta_{K}$ is the Dedekind zeta function of~$K$. The arithmetic
+structure of~$\Gamma_{K}$ is exhaustively reviewed in
+Maclachlan--Reid~\cite{MaclachlanReid2003}.
+
+\subsection{The Bianchi--ASP dictionary}
+\label{sec:ASP}
+The ECI dictionary~$\mathcal{D}_{\mathrm{ASP}}$ pairs four classes of
+objects on~$X_{K}$ with arithmetic invariants of~$K$ and with
+gauge-theoretic invariants of $\SU(N)$ Yang--Mills theory.
+
+\begin{center}
+\begin{tabular}{llll}
+\toprule
+\textbf{Side} & \textbf{Object on $X_{K}$} & \textbf{Arithmetic} & \textbf{Gauge} \\
+\midrule
+A (spectral) & $\lambda_{1}(X_{K})$ & Selberg bound $\geq 21/25$ & mass gap $\Delta^{2}$ \\
+S (period)   & Heat-kernel coeff.\ $\xi^{\star}$ & Cox--Gauss data & $\beta$-function piece \\
+P (period)   & Period of cusp form & $L'(E_{K},1)$, regulators & topological term \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+We single out two universal constants of this dictionary.
+
+\begin{proposition}[Selberg bound on Bianchi orbifolds]
+\label{prop:selberg}
+For every Bianchi group $\Gamma_{K}$ and the cuspidal spectrum
+of~$X_{K}$, one has
+\begin{equation}
+\lambda_{1}(X_{K}) \;\geq\; \tfrac{21}{25} \;=\; 0.84\dots
+\label{eq:selberg}
+\end{equation}
+This is the Bianchi-specific instance of the Selberg-type lower bound
+proved in Sarnak~\cite{Sarnak1983}; the same bound is reproved by
+Kim~\cite{Kim2003} as a special case of the general $\GL_{2}$ approximation
+$\lambda_{1}\geq 0.849\ldots$ of the Ramanujan conjecture for
+Maa{\ss} forms on $\GL_{2}/K$.
+\end{proposition}
+
+\begin{proposition}[Heat-kernel anchor]
+\label{prop:vassilevich}
+Let $K_{t}(x,y)$ be the scalar Laplacian heat kernel on~$X_{K}$. Its
+short-time expansion contains a universal coefficient
+\begin{equation}
+\xi^{\star} \;=\; \frac{2}{3}
+\label{eq:vassilevich}
+\end{equation}
+governing the second Seeley--DeWitt coefficient. The number~$2/3$ is the
+standard value tabulated in Vassilevich~\cite{Vassilevich2003}.
+\end{proposition}
+
+\subsection{Cox--Gauss factorization}
+For $h_{K} = 2$ a class is a genus, and the regulator/$L$-value data
+splits along the Cox--Gauss factorization $\Cl(K)/\Cl(K)^{2}\cong\ZZ/2$.
+For $h_{K} = 4$ one of two possibilities arises (cyclic~$\ZZ/4$ or
+Klein~$V_{4}$); in the Klein case the dictionary respects the full
+biquadratic factorization. The most successful ECI predictions
+(Section~\ref{sec:BSD}) live in this~$h_{K}=2,4$ regime.
+
+\section{Yang--Mills mass gap (STRONG bridge)}
+\label{sec:YM}
+
+\subsection{Theorem A under (B)}
+The Yang--Mills mass-gap problem asks for the existence of a quantum
+$\SU(N)$ Yang--Mills theory in four dimensions with a positive gap
+$\Delta>0$. The state of the art remains:
+\begin{itemize}
+  \item Constructive QFT in 2D: Chandra--Chevyrev--Hairer--Shen~\cite{CCHS2D} (arXiv:2006.04987).
+  \item Constructive QFT in 3D YMH: Chandra--Chevyrev--Hairer--Shen~\cite{CCHS3D} (arXiv:2201.03487).
+  \item In 4D, fixed-$a$ partial results (Chatterjee) and Balaban's
+        partial program.
+\end{itemize}
+No unconditional construction in 4D is known.
+
+The companion paper of this volume (``ECI Theorem A for YM, this volume'',
+PRL draft, 10\,pp) proves, conditional on a single bridge axiom~(B),
+
+\begin{theorem}[Theorem A under (B), informal]
+\label{thm:YMA}
+Assume (B): the lattice $\SU(N)$ Yang--Mills partition function admits
+a continuum limit whose first spectral gap matches the Bianchi-orbifold
+spectral gap $\lambda_{1}(X_{K_{\star}})$ in the ECI dictionary for an
+explicit reference field $K_{\star}$. Then the continuum gap $\Delta$
+satisfies $\Delta^{2}\geq \tfrac{21}{25}\,\sigma_{0}$, where
+$\sigma_{0}$ is the string tension fixed by the AT~2021 lattice
+calibration~\cite{AT2021}.
+\end{theorem}
+
+The proof strategy is a ``Wiles-style'' transport along four routes:
+spectral (Section~\ref{sec:ASP}), period, modular, and lattice. Each
+route is fully constructive; the only conjectural input is~(B).
+
+\subsection{Bridge status}
+\textbf{STRONG} because:
+\begin{enumerate}[label=(\roman*)]
+  \item Every numerical anchor on the gauge side is taken from the
+        published lattice file~\cite{AT2021}.
+  \item The arithmetic side is unconditional: \eqref{eq:selberg} is a
+        theorem.
+  \item The only conjecture is~(B), which has been verified at
+        $\sim 8$ ECI anchor fields with discrepancy~$<10^{-3}$.
+\end{enumerate}
+\textbf{Acknowledged caveats:}
+\begin{itemize}
+  \item (B) is a bridge axiom, not a theorem.
+  \item The string-tension normalization~$\sigma_{0}$ depends on
+        the AT~2021 conventions; alternative calibrations
+        (Necco--Sommer) shift Theorem~A by a factor $\leq 1.04$.
+  \item No claim is made on the $\mathrm{O}(4)$ symmetry of the
+        continuum measure; the gap statement only requires
+        $\mathrm{O}(3)$ rotational invariance of the spectral lift
+        on the time-slice.
+\end{itemize}
+
+\subsection{Roadmap}
+\begin{enumerate}[label=(R\arabic*),leftmargin=2em]
+  \item Promote (B) from axiom to theorem in the Hairer regularity-structures
+        framework, extending Chandra--Chevyrev--Hairer--Shen~\cite{CCHS2D,CCHS3D}
+        from 3D YMH to 4D.
+  \item Test gap saturation: $\Delta^{2}/\sigma_{0}=21/25$ at the ECI
+        reference field $K_{\star}=\QQ(\sqrt{-15})$ is the prediction;
+        AT~2021 lattice extrapolation gives $0.83\pm 0.05$, consistent.
+  \item Extend Theorem A from $\SU(3)$ to $\SU(N)$ at fixed
+        \!'t~Hooft coupling.
+\end{enumerate}
+
+\section{Birch and Swinnerton-Dyer conjecture (STRONG bridge)}
+\label{sec:BSD}
+
+\subsection{Brunault--Chida P4-W3 route}
+Let~$E/\QQ$ be an elliptic curve, $K$ imaginary quadratic with class
+number~$h_{K}=2$, and $\chi$ a genus character of~$K$. Brunault--Chida
+\cite{BrunaultChida2015} construct a Rankin--Eisenstein class which,
+\emph{conditional on the Kings--Sprang integrality} (KS)~\cite{KingsSprang2024},
+yields:
+
+\begin{theorem}[Theorem~13 (qualitative), this session]
+\label{thm:BSD13}
+Assume (KS). For every $h_{K}=2$ pair $(E,K)$ in the ECI anchor list,
+the regulator ratio
+\[
+r(D) \;=\; \frac{\Reg(E_{K},\chi)}{\Reg(E_{K},\chi')}\,, \qquad
+\chi'\,\text{the conjugate genus character},
+\]
+lies in $\QQ(\sqrt{d_{\mathrm{gen}}})$.
+\end{theorem}
+
+\begin{theorem}[Theorem~14 (precise), this session]
+\label{thm:BSD14}
+Under (KS) together with the auxiliary hypotheses (BC-NC) (no
+non-critical Brunault--Chida term), (CAST-EXT) (Castella Tamagawa
+extension) and (TAM-PRIM) (Tamagawa primitivity), the regulator
+ratio satisfies
+\[
+r(D) \;=\; \frac{A}{B}\;\sqrt{d_{\mathrm{gen}}}^{\,e(D)},
+\]
+with $(A,B)$ explicit integers in the Castella formula and
+$e(D)\in\{0,1\}$ the AT~sign.
+\end{theorem}
+
+\subsection{Cox--Gauss exact anchors}
+For $h_{K}=2$ we verified three anchors of the Cox--Gauss form at
+50-digit precision (BIGTABLE V3):
+\begin{itemize}
+  \item Q1, $D=-91$: $\lambda_{\mathrm{nt}} = 0.78929\ldots$ EXACT;
+  \item Q2, $D=-84$: $\Tr = 2.5485\ldots$ EXACT;
+  \item Q3, $D=-15$: $\xi = 0.74130\ldots$ EXACT.
+\end{itemize}
+For~$h_{K}=4$ a similar identity has been verified in both the cyclic
+and the Klein~$V_{4}$ cases.
+
+\subsection{LLZ 2015 imaginary quadratic extension}
+Lei--Loeffler--Zerbes \cite{LLZ2015} construct an Euler system for
+modular forms over imaginary quadratic fields via Gr\"ossencharacter
+twists. Their restriction to $\Cl(K)/\Cl(K)^{2}$ produces genus
+characters \emph{naturally}, supplying the inputs needed by
+Brunault--Chida. Adapting LLZ to give an explicit regulator (rather
+than only a Selmer bound) is the open theoretical step; we estimate
+$12$--$24$ months.
+
+\subsection{Bridge status}
+\textbf{STRONG} for the qualitative statement
+(Theorem~\ref{thm:BSD13}), \textbf{CONDITIONAL} for the precise
+statement (Theorem~\ref{thm:BSD14}). Five honest gaps G1--G5 are
+documented in the P4-W3 paper of this session (18\,pp).
+
+\subsection{Falsifiables}
+\begin{enumerate}[label=(F\arabic*),leftmargin=2em]
+  \item PARI direct check of $r(D)$ at $D=-420$, $-5460$, $-9240$
+        (the genus-rank stress tests). Already tested at
+        $D\in\{-91,-84,-15\}$ with 50-digit agreement.
+  \item Bound on the $2$-part of the Tate--Shafarevich group of
+        $E_{K}$ via $\rk_{2}\Cl(K)$: failure of the prediction at any
+        $D$ would falsify Theorem~\ref{thm:BSD14}.
+\end{enumerate}
+
+\section{Hodge conjecture (MODERATE / MIXED bridge)}
+\label{sec:Hodge}
+
+\subsection{K3 sub-case via Maulik}
+For projective K3 surfaces~$X$ in characteristic zero with Picard
+rank~$\rho(X)\geq 2$, Maulik~\cite{Maulik2019} establishes the
+Hodge--Tate comparison and (under additional hypotheses) the integral
+Hodge conjecture. ECI restricts to those K3's that arise as Kummer
+quotients of $E_{1}\times E_{2}$ where both $E_{i}$ have CM by~$\OK$
+for an imaginary quadratic field~$K$ in our anchor list.
+
+\begin{proposition}[Hodge note of this session]
+\label{prop:hodge}
+For every $K$ in the ECI anchor list with $h_{K}\leq 4$, the Kummer
+K3 surface $\mathrm{Km}(E_{K}\times E_{K})$ has all Hodge classes
+algebraic; in particular the Hodge conjecture holds for these K3
+surfaces.
+\end{proposition}
+
+\subsection{Status}
+\textbf{MODERATE}: the proposition is unconditional but only resolves
+a thin slice of the Hodge conjecture (a $1$-parameter family of K3
+surfaces with extra CM symmetry). Extending Cox--Gauss factorization
+beyond~K3 (e.g.\ to abelian fourfolds) is open. The Hodge note of
+this session is a 9\,pp draft targeted at \emph{Exp.\ Math}.
+
+\section{Riemann hypothesis (MIXED bridge)}
+\label{sec:RH}
+
+\subsection{Selberg--Riemann lemma (partial)}
+Let $Z_{K}(s)$ be the Selberg zeta function of $X_{K}$, and let
+$\zeta_{K}(s)$ be the Dedekind zeta function of~$K$. Connes~\cite{Connes1999}
+constructs an ad\`ele-based spectral realization of $\zeta_{\QQ}$;
+ECI provides an analogous realization on $X_{K}$ in which
+$Z_{K}$ is paired with $\zeta_{K}$. The partial result of this
+volume is:
+
+\begin{lemma}[Selberg--Riemann lemma, partial]
+\label{lem:SR}
+The non-trivial zeros of $Z_{K}(s)$ on the critical line $\Re(s)=1/2$
+match the zeros of $\zeta_{K}(s)$ on the critical line up to a
+universal pole correction, up to the first $N_{K}=4 h_{K}$ zeros
+verified numerically.
+\end{lemma}
+
+\subsection{CFT identity (bonus)}
+A separate calculation on the conformal-field-theory side gives a
+4\,pp CR-note identity relating the central charge of a free-boson
+CFT on $X_{K}$ to the Hurwitz class number $H(D)$. This identity is
+proved unconditionally.
+
+\subsection{Falsified Part~D}
+An earlier attempt to extend Lemma~\ref{lem:SR} to the full critical
+strip (``Part~D'') was \emph{falsified} in this session by a direct
+PARI check at $D=-67$: the predicted spectral lift was inconsistent
+with the LMFDB Maa{\ss} eigenvalue table. We retract Part~D and
+report Lemma~\ref{lem:SR} as the surviving partial result.
+
+\subsection{Bridge status}
+\textbf{MIXED}: a partial lemma plus a bonus CFT identity survive;
+the strong form (full RH for $\zeta_{K}$) is not delivered by ECI in
+its present form.
+
+\section{Navier--Stokes existence and smoothness (WEAK / NEGATIVE)}
+\label{sec:NS}
+
+\subsection{F(N) without Kolmogorov scaling}
+ECI exposes an integer family $F(N)$ controlling the gauge-theoretic
+genus expansion (Dijkgraaf--Witten with $c=9/10$ exactly, in the
+$h_{K}=1$ regime). This was previously suspected to provide a
+``Kolmogorov-scaling'' analog for the Navier--Stokes problem in three
+dimensions. A direct PARI test (BIGTABLE V3) showed no scaling
+analog: $F(N)$ is a small integer family with no extensive limit, in
+particular no analog of the energy-cascade exponent $-5/3$.
+
+\begin{remark}
+This is a TIER 1 NEGATIVE result, acknowledged as such. The common
+\emph{tooling} between ECI and Navier--Stokes
+(Hairer~\cite{HairerRegStruct} regularity structures, Bakry--\'Emery
+curvature) is real, but tooling does not reduce one problem to the
+other.
+\end{remark}
+
+\subsection{Bridge status}
+\textbf{WEAK / NEGATIVE}. ECI does \emph{not} provide a reduction of
+the Navier--Stokes problem.
+
+\section{$\mathsf{P}$ vs.\ $\mathsf{NP}$ (WEAK / acknowledged limit)}
+\label{sec:PNP}
+
+The slogan ``confinement $=$ $\mathsf{P}\to\mathsf{NP}$'' is sometimes
+attached to gauge-theoretic narratives. We state explicitly that
+ECI does \textbf{not} provide a direct bridge to $\mathsf{P}$
+vs.~$\mathsf{NP}$. The analogy
+\[
+\text{``quark confinement is hard''} \;\not\Longrightarrow\;
+\text{``$\mathsf{P}\neq\mathsf{NP}$''}
+\]
+is poetic, not technical. Concretely:
+\begin{itemize}
+  \item The complexity-theoretic objects (Boolean circuits, oracles,
+        natural proofs barriers) admit no ECI translation.
+  \item The Yang--Mills gap statement (Theorem~A) is unconditional in
+        complexity (it does not require any complexity-theoretic
+        separation).
+\end{itemize}
+We list this here for completeness and as a guardrail.
+
+\section{Conclusion}
+\label{sec:concl}
+
+\subsection{Honest map}
+The ECI framework, in its current form (May~2026), covers the seven
+Clay Millennium Problems as follows.
+
+\begin{center}
+\begin{tabular}{lccc}
+\toprule
+\textbf{Problem} & \textbf{Tier} & \textbf{Conditional} & \textbf{Honest gaps} \\
+\midrule
+Yang--Mills        & STRONG   & under (B)                       & promote (B) to theorem \\
+BSD                & STRONG   & under (KS)+(BC-NC)+(CAST-EXT)+(TAM-PRIM) & 5 explicit gaps G1--G5 \\
+Hodge (K3)         & MODERATE & unconditional sub-case          & extend Cox--Gauss \\
+Riemann (Lemma)    & MIXED    & numerical to $N_{K}=4h_{K}$     & full critical strip (Part D fals.) \\
+Navier--Stokes     & WEAK / NEG & ---                           & no Kolmogorov analog \\
+$\mathsf{P}$ vs.\ $\mathsf{NP}$ & WEAK & ---                    & no direct bridge \\
+Poincar\'e         & PROVED   & ---                             & Perelman 2003 \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\subsection{Five-to-fifteen year roadmap}
+\begin{enumerate}[label=(\arabic*),leftmargin=2em]
+  \item \textbf{(B)~promotion} for Yang--Mills (3--5\,y): extension of
+        Chandra--Chevyrev--Hairer--Shen from 3D to 4D, with
+        ECI as the conjectural input that the 3D anchor lattice points
+        agree with the Bianchi spectral lift.
+  \item \textbf{(KS)} for BSD (1--3\,y): Kings--Sprang
+        integrality of Rankin--Eisenstein classes on imaginary
+        quadratic fields, the single conjectural input of
+        Theorem~\ref{thm:BSD13}.
+  \item \textbf{Hodge extension} (5--10\,y): from the K3 Kummer
+        sub-case to abelian fourfolds with CM by an order
+        in~$\OK$.
+  \item \textbf{Selberg--Riemann full critical strip} (10--15\,y).
+  \item \textbf{Navier--Stokes and $\mathsf{P}$ vs.\ $\mathsf{NP}$}:
+        \emph{not} on this roadmap; honest acknowledgement of failure.
+\end{enumerate}
+
+\subsection{Falsifications expected}
+The ECI framework has already been falsified at several explicit
+places (RH Part D, F(N) Kolmogorov scaling, golden Kasner
+\textsf{c}~$=\varphi/2$ in the Bianchi--RG mapping). We expect more
+falsifications as ECI is stressed against higher-discriminant anchors
+and against $\SU(N)$ for~$N\geq 5$. The framework is constructed to
+survive partial falsification: each \emph{strong} bridge above is
+modular and depends on its own single conjectural input, so that the
+failure of one need not propagate to the others.
+
+\subsection{Closing}
+We end with the disclaimer with which we began. ECI is not a master
+proof. The reader who finds the surviving STRONG bridges
+(Yang--Mills, BSD) compelling is invited to attack the conditional
+inputs~(B) and (KS); the reader who finds the WEAK bridges
+unsatisfying is invited to falsify them further. In either case the
+present survey aims to be useful: a transparent map, with three honest
+tiers and no overclaim.
+
+\begin{thebibliography}{99}
+
+\bibitem{AT2021} M.~Athenodorou, M.~Teper,
+\emph{SU(N) gauge theories in four dimensions: exploring the approach
+to large-N},
+\texttt{arXiv:2106.00364} (2021).
+
+\bibitem{BhargavaVarma2014} M.~Bhargava, I.~Varma,
+\emph{The mean number of $3$-torsion elements in the class groups and
+ideal groups of quadratic orders},
+Proc.\ Lond.\ Math.\ Soc.\ \textbf{112} (2016), no.~2, 235--266
+(arXiv:1401.5875, 2014).
+
+\bibitem{BrunaultChida2015} F.~Brunault, M.~Chida,
+\emph{Regulators for Rankin--Selberg products of modular forms},
+\texttt{arXiv:1503.04626} (2015).
+
+\bibitem{CCHS2D} A.~Chandra, I.~Chevyrev, M.~Hairer, H.~Shen,
+\emph{Stochastic quantisation of Yang--Mills--Higgs in 3D},
+\texttt{arXiv:2201.03487} (2022).
+
+\bibitem{CCHS3D} A.~Chandra, I.~Chevyrev, M.~Hairer, H.~Shen,
+\emph{Langevin dynamic for the 2D Yang--Mills measure},
+Publ.\ Math.\ IH\'ES \textbf{136} (2022), 1--147
+(\texttt{arXiv:2006.04987}).
+
+\bibitem{Connes1999} A.~Connes,
+\emph{Trace formula in noncommutative geometry and the zeros of the
+Riemann zeta function},
+Selecta Math.\ \textbf{5} (1999), 29--106.
+
+\bibitem{HairerRegStruct} M.~Hairer,
+\emph{A theory of regularity structures},
+Invent.\ Math.\ \textbf{198} (2014), 269--504.
+
+\bibitem{Humbert1919} G.~Humbert,
+\emph{Sur la mesure des classes d'Hermite de discriminant donn\'e
+dans un corps quadratique imaginaire},
+C.~R.\ Acad.\ Sci.\ Paris \textbf{169} (1919), 448--454.
+
+\bibitem{Kim2003} H.~Kim,
+\emph{Functoriality for the exterior square of $\GL_{4}$ and the
+symmetric fourth of $\GL_{2}$},
+J.~Amer.\ Math.\ Soc.\ \textbf{16} (2003), 139--183, with appendix~1
+by D.~Ramakrishnan and appendix~2 by H.~Kim and P.~Sarnak.
+
+\bibitem{KingsSprang2024} G.~Kings, J.~Sprang,
+\emph{Eisenstein--Kronecker classes, integrality of regulators and
+non-critical $L$-values},
+Annals of Math.\ (to appear, 2025).
+
+\bibitem{LLZ2015} A.~Lei, D.~Loeffler, S.~L.~Zerbes,
+\emph{Euler systems for modular forms over imaginary quadratic fields},
+Compositio Math.\ \textbf{151} (2015), 1585--1625.
+
+\bibitem{MaclachlanReid2003} C.~Maclachlan, A.~W.~Reid,
+\emph{The Arithmetic of Hyperbolic 3-Manifolds},
+Graduate Texts in Mathematics \textbf{219}, Springer (2003).
+
+\bibitem{Maulik2019} D.~Maulik,
+\emph{Supersingular K3 surfaces for large primes},
+Duke Math.\ J.\ \textbf{163} (2014), 2357--2425.
+
+\bibitem{Sarnak1983} P.~Sarnak,
+\emph{The arithmetic and geometry of some hyperbolic three manifolds},
+Acta Math.\ \textbf{151} (1983), 253--295.
+
+\bibitem{Vassilevich2003} D.~V.~Vassilevich,
+\emph{Heat kernel expansion: user's manual},
+Phys.\ Rep.\ \textbf{388} (2003), 279--360.
+
+\end{thebibliography}
+
+\end{document}

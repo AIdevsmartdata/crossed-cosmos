@@ -1,0 +1,21 @@
+#!/bin/bash
+# Pre-commit hook : gitleaks scan staged changes + history scan
+set -e
+
+# Scan staged
+echo "[pre-commit] gitleaks scan staged..."
+gitleaks protect --staged --no-banner --redact 2>&1 || {
+  echo ""
+  echo "❌ gitleaks detected secret(s) in STAGED changes — commit blocked."
+  echo "   Remove secret(s) or move to env/secrets manager, then re-stage."
+  exit 1
+}
+
+# Scan history (last 50 commits) — strict mode
+echo "[pre-commit] gitleaks scan recent history..."
+gitleaks detect --source . --log-opts="-50" --no-banner --redact 2>&1 | tail -5 || {
+  echo "⚠️  gitleaks found issues in history (last 50 commits). Review."
+  # Non-blocking for history (already committed), just warn
+}
+
+echo "✓ gitleaks scan clean"

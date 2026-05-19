@@ -49,9 +49,10 @@
 \newcommand{\CC}{\mathbb{C}}
 \newcommand{\OK}{\mathcal{O}_K}
 
-\title{Arithmetic Hamiltonians on Bianchi orbifolds\\
-and an unconditional lower bound for an arithmetic surrogate\\
-of the SU($N$) Yang--Mills mass gap}
+\title{An empirical scaling relation between\\
+SU($N$) lattice glueball masses and class-number-$N$\\
+imaginary quadratic Bianchi spectra:\\
+definitions, observations, open questions}
 \author{K\'evin R\'emondi\`ere\\
 \small{Independent researcher, Oloron-Sainte-Marie, France}\\
 \small{ORCID: \href{https://orcid.org/0009-0008-2443-7166}{0009-0008-2443-7166}}\\
@@ -62,28 +63,7 @@ of the SU($N$) Yang--Mills mass gap}
 \maketitle
 
 \begin{abstract}
-We propose an arithmetic surrogate Hamiltonian $\Harith(N)$ acting on
-$L^2(X_N)$ where $X_N = \HH^3/\PSL_2(\OK)$ is a Bianchi $3$-orbifold attached
-to a canonical imaginary quadratic field $\KASP(N)$, and we prove unconditionally
-\[
-  \marith(N)/\sqrt{\sigma_0} \;=\; C(N)\,\sqrt{\lambda_1(X_N)}\;\geq\;C(N)\sqrt{21/25}\;>\;0,
-\]
-where $C(N) = \sqrt{2\pi e}\cdot\sqrt{2/3}\cdot F(N)$ with the
-Dijkgraaf--Witten genus factor $F(N) = (9/10)(N^2{+}1)/N^2$, and where
-$\lambda_1(X_N) \geq 21/25 = 0.84$ is Sarnak's 1983 unconditional lower bound
-for the first non-zero Laplace eigenvalue on cusped Bianchi $3$-orbifolds. The
-arithmetic dictionary $\KASP\colon \NN^* \to \{\text{neg. fund. discs.}\}$
-defined by $\KASP(N) = D_{\min}$ such that $h_K = N$ and $\rk_2(\Cl K) = v_2(N)$
-is verified at $52/52$ values of $N \in \{1,\dots,30\}\cup\{16,\dots,50\}$
-by PARI/GP and is consistent with Cohen--Lenstra heuristics. The empirical
-identification of $\marith$ with the Athenodorou--Teper 2021 continuum lattice
-glueball mass $m_{0^{++}}^{\mathrm{lat}}$ on $7$ anchors fits at root-mean-square
-$0.85\%$, with Bayesian evidence ratio $\mathrm{BF} \simeq 210$ in favour of
-the parameter-free formula against any two-parameter alternative. We isolate as
-a separate \emph{Transport Conjecture} the identification of $\Harith$ with the
-physical Yang--Mills Hamiltonian on $\RR^4$, and indicate four mathematically
-plausible routes towards it (a Bianchi--YM functor, a Selberg trace identity,
-a Langlands--gauge correspondence, and a curvature-dimension inequality).
+We define an arithmetic surrogate scaling $\marith(N) = \sqrt{\sigma_0}\,C(N)\sqrt{\lambda_1(X_N)}$ built from (i) a class-number/2-rank dictionary $\KASP$ assigning a canonical imaginary quadratic field to each integer $N$, (ii) the Bianchi $3$-orbifold $X_N = \HH^3/\PSL_2(\OK)$ with its hyperbolic Laplacian first non-zero eigenvalue $\lambda_1(X_N)$, and (iii) a structural prefactor $C(N) = \sqrt{2\pi e}\cdot\sqrt{2/3}\cdot F(N)$ with $F(N) = (9/10)(N^2+1)/N^2$. We report a numerical match between $\marith(N)$ (taking $\lambda_1=1$) and the Athenodorou--Teper 2021 continuum-extrapolated lattice $m_{0^{++}}/\sqrt{\sigma}$ at root-mean-square deviation $0.85\%$ across six anchors $N\in\{2,3,4,5,6,\infty\}$. We dictate no theorem of physical identification: $\marith$ is here a definition, the lattice agreement is presented as an empirical observation, and the structural prefactor $C(N)$ is openly motivated (not derived). Open questions are gathered: the applicability of any Selberg-type lower bound to all Bianchi $3$-orbifolds, the existence of $\KASP(N)$ for $N\geq 31$ (in particular $N=32$), and the absence of a physical derivation of $F(N)$ from $4$D Yang--Mills.
 \end{abstract}
 
 % =========================================================================
@@ -97,48 +77,40 @@ of connections (the Wightman--G\aa rding axioms) remains open in four
 dimensions despite the recent $2$D and $3$D progress of Chandra--Chevyrev--
 Hairer--Shen~\cite{CCHS} and Chatterjee~\cite{Chatterjee2019}.
 
-\paragraph{Strategy (Wiles).} Rather than attempt the constructive measure
-directly, we follow a strategy analogous to Wiles' approach to Fermat:
-prove first a precise adjacent theorem about an \emph{arithmetic surrogate}
-of the Yang--Mills Hamiltonian, then state the identification with the
-physical Hamiltonian as a separate conjecture. The adjacent theorem is
-unconditional under standard analytic number theory; the conjecture is
-explicitly factorised into four candidate routes.
+\paragraph{Strategy.} We do not attempt the constructive measure. Instead we
+introduce, by definition, an arithmetic surrogate scaling $\marith(N)$
+built from class-number data on imaginary quadratic fields and the spectral
+geometry of Bianchi $3$-orbifolds, and we observe a numerical coincidence
+between this surrogate and the continuum-extrapolated lattice glueball mass.
+We do not claim a theorem of physical identification; the structural shape
+of the surrogate is openly motivated by analogy, not derived from $4$D
+Yang--Mills.
 
-\paragraph{Main result.} For every $N \in \NN$, $N \geq 2$, in the
-admissible range (to be made precise in Theorem~\ref{thm:A}), we associate a
-canonical imaginary quadratic field $\KASP(N)$ via a discriminant rule, an
-arithmetic hyperbolic orbifold $X_N = \HH^3/\PSL_2(\mathcal{O}_{\KASP(N)})$, and
-an arithmetic Hamiltonian $\Harith(N) = \sigma_0\,C(N)^2\,\Delta_{X_N}$ where
-$\Delta_{X_N}$ is the Laplace--Beltrami operator on $X_N$. The constant
-$C(N) = \sqrt{2\pi e}\cdot\sqrt{2/3}\cdot F(N)$ collects three structural
-factors deduced from the heat kernel on $\HH^3$, the Selberg pretrace
-formula and a Dijkgraaf--Witten genus expansion.
+\paragraph{Main object.} For every $N \in \NN$, $N \geq 2$, for which the
+dictionary $\KASP$ is defined (verified numerically for
+$N\in\{1,\dots,30\}\cup\{36,40,44,48\}$ and \emph{open} for $N=32$), we
+associate a canonical imaginary quadratic field $\KASP(N)$ via the
+class-number / 2-rank discriminant rule, an arithmetic hyperbolic orbifold
+$X_N = \HH^3/\PSL_2(\mathcal{O}_{\KASP(N)})$, and an arithmetic Hamiltonian
+$\Harith(N) = \sigma_0\,C(N)^2\,\Delta_{X_N}$ where $\Delta_{X_N}$ is the
+Laplace--Beltrami operator on $X_N$. The constant
+$C(N) = \sqrt{2\pi e}\cdot\sqrt{2/3}\cdot F(N)$ is a motivated structural
+prefactor (heat kernel on $\HH^3$, Stirling-type saddle-point, Dijkgraaf--Witten
+genus expansion); it is not derived from $4$D Yang--Mills.
 
-\paragraph{Theorem A (statement, see Section~\ref{sec:thmA}).}
-\emph{The lowest non-zero spectral excitation of $\Harith(N)$ satisfies}
-\[
-  \frac{\marith(N)}{\sqrt{\sigma_0}}
-  \;=\; C(N)\sqrt{\lambda_1(X_N)}
-  \;\geq\; C(N)\sqrt{21/25}\;>\;0,
-\]
-\emph{where the lower bound $\lambda_1(X_N) \geq 21/25 = 0.84$ is Sarnak's
-1983 theorem~\cite{Sarnak1983} on cusped Bianchi $3$-manifolds
-$\PSL_2(\OK)\backslash\HH^3$ for arbitrary imaginary quadratic $K$.}
+\paragraph{Empirical observation (see Section~\ref{sec:thmA}).}
+By definition of $\Harith(N)$, the lowest spectral excitation
+$\marith(N)/\sqrt{\sigma_0} = C(N)\sqrt{\lambda_1(X_N)}$ is tautological.
+We report, as an \emph{empirical observation} (Section~\ref{sec:empirical}),
+that this surrogate matches the AT2021 lattice continuum
+$m_{0^{++}}/\sqrt{\sigma}$ at root-mean-square $0.85\%$ across six anchors
+$N\in\{2,3,4,5,6,\infty\}$, under the saturation $\lambda_1(X_N)=1$.
 
-The theorem is unconditional in the following strict sense: no Yang--Mills
-measure existence, no Clay-level constructive QFT input, and no Iwasawa
-conjecture is invoked. The constants $\sqrt{2\pi e}$ and $\sqrt{2/3}$ are
-derived rigorously from the heat kernel on $\HH^3$; the genus factor $F(N)$
-is the Dijkgraaf--Witten ratio derived in Section~\ref{sec:thmA}; the Sarnak
-bound is published unconditionally for all imaginary quadratic
-$K$~\cite{Sarnak1983}, including the class numbers $h_K \in \{1,2,3,\dots,30\}$
-covered by the dictionary~$\KASP$.
-
-\paragraph{Transport Conjecture (see Section~\ref{sec:transport}).}
-The identification of $\Harith(N)$ with the physical Yang--Mills Hamiltonian
-on $\RR^4$ is stated as a separate conjecture, with four candidate routes
-(arithmetic--gauge functor, Selberg trace identity, Langlands, Bakry--\'Emery).
+We do not assert a universal positive lower bound on $\lambda_1(X_N)$. Sarnak's
+1983 paper~\cite{Sarnak1983} establishes a Selberg-type bound on specific
+arithmetic hyperbolic 3-manifolds; whether it applies to every Bianchi orbifold
+$\PSL_2(\OK)\backslash\HH^3$ in our anchor list, with arbitrary class number, is
+left as an open question (Section~\ref{sec:open}).
 
 \paragraph{Empirical evidence.} On 7 anchors $N \in \{2,3,4,5,6,\infty,\text{full}\}$
 the prediction $\marith(N)$ matches the continuum-extrapolated lattice
@@ -150,19 +122,27 @@ of the parameter-free formula against any two-parameter unrestricted fit
 
 \paragraph{What we do \emph{not} claim.} (i) We do not solve the Clay
 Millennium problem; the constructive Yang--Mills measure on $\RR^4$ remains
-open. (ii) The empirical fit cannot be elevated to a proof of physical
-identification: under Theorem A alone, $\marith$ is a quantity intrinsic to
-Bianchi geometry, with no a priori reason it should equal the lattice
-$m_{0^{++}}$. The Transport Conjecture is precisely the missing bridge.
+open. (ii) The empirical fit is a numerical observation, not a theorem of
+physical identification: $\marith$ is a quantity intrinsic to Bianchi
+geometry, with no a priori reason it should equal the lattice $m_{0^{++}}$.
+(iii) We do not claim a universal Selberg-type lower bound
+$\lambda_1(X_N)\geq 21/25$ for all Bianchi $3$-orbifolds: Sarnak's 1983
+result is stated for specific arithmetic 3-manifolds, and its applicability
+to every $X_N$ in our anchor list is open. (iv) We do not claim that
+$\KASP(N)$ is defined for every $N$: $N=32$ is an open numerical case in
+this work. (v) We do not derive the structural prefactor $F(N)=(9/10)(N^2+1)/N^2$
+from $4$D Yang--Mills; it is motivated by a Dijkgraaf--Witten analogy in
+$2$D and remains a hypothesis.
 
 \paragraph{Plan.} Section~\ref{sec:dict} establishes the dictionary $\KASP$
-and tabulates $30$ verified cases. Section~\ref{sec:Harith} defines
-$\Harith(N)$, derives $C(N)$, and reviews Sarnak's lower bound. Section~\ref{sec:thmA}
-proves Theorem~A. Section~\ref{sec:empirical} compares with AT2021 and
-reports the Bayesian model selection. Section~\ref{sec:transport} states
-the Transport Conjecture and sketches the four routes. Section~\ref{sec:open}
-lists the explicit open problems (Selberg strong, $\KASP(32)$ existence,
-functor construction).
+and tabulates the verified cases. Section~\ref{sec:Harith} defines
+$\Harith(N)$, motivates $C(N)$, and reviews the status of any Selberg-type
+lower bound. Section~\ref{sec:thmA} states the empirical scaling relation
+as a tautological proposition. Section~\ref{sec:empirical} reports the
+numerical match with AT2021 and the Bayesian comparison under
+$\lambda_1=1$ saturation. Section~\ref{sec:transport} articulates the open
+transport question and sketches four candidate routes. Section~\ref{sec:open}
+lists the five open questions (Q1--Q5).
 
 % =========================================================================
 \section{The arithmetic dictionary $\KASP$}\label{sec:dict}
@@ -199,24 +179,21 @@ $2$-Sylow part $\ZZ_N[2]$ of the centre $Z(\SU(N)) = \ZZ_N$. The dictionary
 is therefore essentially determined by the centre of the gauge group.
 \end{remark}
 
-\begin{theorem}\label{thm:exist}
-For every $N$ such that $N$ admits a fundamental discriminant of class
-number $N$ with the prescribed dyadic rank, the minimum $D_{\min}^{(N)}$
-exists and is finite. In particular $\KASP(N)$ is well defined.
-\end{theorem}
+\begin{proposition}[Tautological well-definedness]\label{prop:exist}
+For every $N$ such that the admissibility set
+$\{D < 0\ \text{fund. disc.}:\ h_K = N,\ \rk_2(\Cl K) = v_2(N)\}$ is non-empty,
+the minimum $D_{\min}^{(N)}$ exists by well-ordering of $\NN$, and $\KASP(N)$
+is well defined. This is a tautology: it asserts only that a non-empty set
+of positive integers has a least element.
+\end{proposition}
 
-\begin{proof}[Sketch]
-Cohen--Lenstra heuristics~\cite{CohenLenstra1984} predict positive
-density of imaginary quadratic fields with prescribed class group
-structure, and Bhargava--Varma 2014~\cite{BhargavaVarma2014} prove
-unconditional density bounds for the $2$-rank in the family of
-fundamental discriminants. Combined with Gauss genus theory, the
-admissible set $\{D : h_K = N,\ \rk_2 = v_2(N)\}$ is non-empty for
-every $N$ with $v_2(N) \leq \log_2 N$, in particular for every
-$N \leq 30$ and every $N$ of the form $N = 2^k \cdot m$ ($m$ odd) with
-$k \leq 4$. The minimum then exists by well-ordering of negative
-integers.
-\end{proof}
+\begin{remark}[Non-emptiness is an open question for general $N$]\label{rem:nonempty}
+We have verified by PARI/GP that the admissibility set is non-empty for
+$N\in\{1,\dots,30\}\cup\{36,40,44,48\}$. The case $N=32$ is open: no
+admissible $D$ with $|D|\leq 2\times 10^6$ has been found. Cohen--Lenstra
+heuristics~\cite{CohenLenstra1984} motivate but do not prove the
+non-emptiness at large $N$.
+\end{remark}
 
 \begin{remark}\label{rem:N32}
 For $N = 32 = 2^5$ the admissibility condition requires
@@ -306,115 +283,65 @@ for the cuspidal eigenvalues; the Eisenstein spectrum starts at $\geq 1$
 (the spectral parameter being $s = 1 \pm \sqrt{1 - \lambda}$, normalised
 so that $\lambda = 1$ corresponds to $s = 1$).
 
-\begin{theorem}[Sarnak 1983~\cite{Sarnak1983}]\label{thm:Sarnak}
-Let $K$ be any imaginary quadratic field with ring of integers $\OK$ and
-arbitrary class number $h_K \geq 1$. Let $\Gamma = \PSL_2(\OK)$ be the
-associated Bianchi group acting on hyperbolic $3$-space $\HH^3$. Then the
-first non-zero eigenvalue of the Laplace--Beltrami operator on the
-cuspidal part of $L^2(\Gamma\backslash\HH^3)$ satisfies
-\[
-  \lambda_1(\Gamma\backslash\HH^3) \;\geq\; \frac{21}{25} \;=\; 0.84.
-\]
-In particular, $\lambda_1(X_N) \geq 21/25$ for every $N$ in the admissible
-range of the dictionary~$\KASP$.
-\end{theorem}
+\begin{remark}[Sarnak 1983: scope]\label{rem:Sarnak}
+Sarnak's 1983 paper~\cite{Sarnak1983} establishes the Selberg-type lower
+bound $\lambda_1 \geq 21/25 = 0.84$ for the cuspidal Laplace spectrum of
+\emph{specific} arithmetic hyperbolic $3$-manifolds. The applicability of
+this bound to every Bianchi orbifold
+$\PSL_2(\mathcal{O}_{\KASP(N)})\backslash\HH^3$ in the present anchor list,
+with arbitrary class number $h_K = N$, is not asserted here; we treat it
+as an open question.
+\end{remark}
 
-This is the explicit lower bound established in Sarnak's 1983 Acta
-Mathematica paper~\cite{Sarnak1983} on cusped arithmetic hyperbolic
-$3$-manifolds. The bound applies to PSL$_2(\OK)$ for every imaginary
-quadratic $K$, including class numbers $h_K > 1$, and is the best
-\emph{unconditional} numerical lower bound known to the author for
-the full Bianchi group (without congruence-cover refinements).
-
-\begin{remark}[Improvements via base change]
+\begin{remark}[Conditional improvements via base change]
 Kim's 2003 sym$^4$ functoriality~\cite{Kim2003} together with the
-Kim--Sarnak appendix to that paper yields the GL$_2/\QQ$ Ramanujan-type
-bound $\theta \leq 7/64$, which for $\PSL_2(\ZZ)$ congruence covers
-(hyperbolic surfaces, dimension $2$) gives
-$\lambda_1 \geq 1/4 - (7/64)^2 = 975/4096 \approx 0.238$. Translating this
-to Bianchi $3$-manifolds via base change of automorphic representations from
-$\GL_2/\QQ$ to $\GL_2/K$ yields, conditionally on the applicability of the
-base-change lift to the relevant cuspidal forms, a sharper lower bound
-$\lambda_1 \geq 1 - (7/64)^2 \approx 0.988$ on the cuspidal forms in the
-image of base change. We do not use this sharper bound in the body of the
-paper: Sarnak's 21/25 bound is unconditional for all of $\PSL_2(\OK)$ and
-suffices for Theorem~A.
+Kim--Sarnak appendix yields the $\GL_2/\QQ$ Ramanujan approximation
+$\theta \leq 7/64$, hence $\lambda_1 \geq 1/4 - (7/64)^2 \approx 0.238$
+for congruence covers of $\PSL_2(\ZZ)\backslash\HH^2$. Base-changing from
+$\GL_2/\QQ$ to $\GL_2/K$ would conditionally improve the Bianchi-side
+bound, but unconditional applicability to every $X_N$ in our list is not
+asserted.
 \end{remark}
 
 \begin{remark}[Selberg strong is open]
 The Selberg eigenvalue conjecture (in its strong form, adapted to $\HH^3$)
 predicts $\lambda_1 \geq 1$ for arithmetic congruence quotients. This is
-open; Sarnak's $21/25$ bound is the best unconditional result. Under
-Selberg strong the inequality in Theorem~A becomes the equality
-$\marith/\sqrt{\sigma_0} = C(N)$.
+open. Numerically, the empirical match of Section~\ref{sec:empirical}
+corresponds to the saturation case $\lambda_1 = 1$, taken as a working
+assumption motivated by the data.
 \end{remark}
 
-\subsection{Heat-kernel constant $\sqrt{2\pi e}$}\label{ssec:stirling}
+\subsection{The motivating prefactor $C(N)$}\label{ssec:prefactor}
 
-On $\HH^3$ with constant curvature $-1$, the Minakshisundaram--Pleijel
-heat kernel expansion gives
-\begin{equation}\label{eq:heatkernel}
-  \Tr e^{-t\Delta_{X_N}} \;\sim\;
-  \frac{\Vol(X_N)}{(4\pi t)^{3/2}}\,e^{-t}
-  \cdot\Big(1 + a_2 t + a_4 t^2 + O(t^3)\Big),
-  \qquad t \to 0^+,
-\end{equation}
-with $a_2 = -\Vol(X_N)\cdot R/6$ and $a_4 = \Vol(X_N)/2$ on $\HH^3$
-\cite[\S 4]{Vassilevich2003}. The factor $e^{-t}$ is the standard shift
-due to scalar curvature $R = -6$ on $\HH^3$~\cite{Gilkey1995}.
-
-The lowest excitation extracted from the heat trace via Karamata's tauberian
-theorem~\cite{Karamata1930,Gangolli1968} and a saddle-point Mellin transform
-gives, for the cuspidal part on $X_N$,
-\begin{equation}\label{eq:mass}
-  m^2 \;\sim\; \frac{2\pi e}{\Vol(X_N)^{2/3}}\;\sigma\;\lambda_1(X_N)
-  \cdot[\text{sub-leading corrections}].
-\end{equation}
-The factor $\sqrt{2\pi e}$ is the Stirling-type constant emerging from the
-saddle-point of $\Gamma(1/2)\Gamma(3/2)$. We treat it as a universal
-analytic constant; its origin in the heat-kernel asymptotic is laid out
-in detail in the supplementary material to this work.
-
-\subsection{Heat-kernel ratio $\sqrt{2/3}$}\label{ssec:23}
-
-The Seeley--DeWitt coefficients on $\HH^3$ are
-\[
-  A_2 = \frac{R}{6}\Vol = -\Vol, \qquad
-  A_4 = \frac{1}{360}\,(5R^2 + 2|\mathrm{Ric}|^2 + 2|\mathrm{Riem}|^2 - 12\nabla^2 R)\Vol
-      = \frac{\Vol}{2},
-\]
-giving the universal ratio $|A_4/A_2| = 1/2$ on $\HH^3$~\cite{Gilkey1995,Vassilevich2003}.
-The sub-leading mass correction extracted from the Mellin saddle-point gives
-\[
-  \xi^{\star} \;=\; \frac{1}{1 + |A_4/A_2|} \;=\; \frac{2}{3},
-\]
-which is a universal property of constant negative curvature in dimension
-$d = 3$ (\emph{indépendant} of $K$, $D$ and of the choice of anchor).
-
-\subsection{Dijkgraaf--Witten factor $F(N)$}\label{ssec:FN}
-
-The Dijkgraaf--Witten $\ZZ_2$ genus expansion of the partition function
-of $\SU(N)/\ZZ_N$ gauge theory~\cite{Witten1992} gives
-$Z_g \sim N^{2-2g}$ for genus $g$, with $Z_0(N) = N^2 = 9$ for $N=3$, and
-the leading correction $Z_1 = 1$ universal. The ratio
-\[
-  F(N) \;:=\; \frac{Z_0}{Z_0 + Z_1} \cdot \frac{N^2 + 1}{N^2}
-  \;=\; \frac{9}{10}\cdot\frac{N^2+1}{N^2},
-\]
-appears as the structural $N$-dependence of $C(N)$. The fraction
-$9/10 = Z_0(3)/(Z_0(3) + Z_1)$ is exact under the $\SU(3)$ normalisation
-chosen to match the constituent-gluon model.
-
-\subsection{Assembly}
-
-We assemble these three factors:
+We define
 \begin{equation}\label{eq:CN}
-  C(N) := \sqrt{2\pi e}\,\sqrt{2/3}\,F(N).
+  C(N) := \sqrt{2\pi e}\,\sqrt{2/3}\,F(N),
+  \qquad F(N) = \frac{9}{10}\cdot\frac{N^2+1}{N^2}.
 \end{equation}
 Numerically, $\sqrt{2\pi e} \simeq 4.1327$, $\sqrt{2/3} \simeq 0.8165$,
-giving $C(\infty) = \sqrt{2\pi e}\sqrt{2/3} \cdot 9/10 \simeq 3.037$ and
-$C(3) = \sqrt{2\pi e}\sqrt{2/3}\cdot 9/10 \cdot 10/9 = \sqrt{2\pi e}\sqrt{2/3}
-\simeq 3.374$.
+$F(\infty) = 9/10$, $F(3) = 1$, giving $C(\infty)\simeq 3.037$ and
+$C(3)\simeq 3.374$.
+
+The three factors are motivated as follows; \emph{we do not claim a
+derivation from $4$D Yang--Mills}.
+\begin{itemize}[noitemsep]
+\item $\sqrt{2\pi e}$ is a Stirling-type constant arising in saddle-point
+analyses of Mellin transforms of heat traces on hyperbolic spaces. Its
+appearance here is motivated by the Minakshisundaram--Pleijel expansion
+\cite[\S 4]{Vassilevich2003} and the Karamata tauberian theorem
+\cite{Karamata1930,Gangolli1968}, but the precise step linking the
+heat trace on $X_N$ to a glueball mass on $\RR^4$ is not rigorous.
+\item $\sqrt{2/3}$ is the value of $\xi^\star = 1/(1+|A_4/A_2|)$ where
+$A_2, A_4$ are Seeley--DeWitt coefficients on $\HH^3$
+\cite{Gilkey1995,Vassilevich2003}. This is a universal property of constant
+negative curvature in dimension three, but its identification with the
+glueball-mass ratio in Yang--Mills is again not rigorous.
+\item $F(N) = (9/10)(N^2+1)/N^2$ is motivated by a Dijkgraaf--Witten genus
+expansion of the partition function of $2$D Yang--Mills, with the
+normalisation fixed by setting $F(3)=1$ for the constituent-gluon model.
+Whether this 2D-motivated formula has any rigorous origin in $4$D
+$\SU(N)$ Yang--Mills is an open question (Section~\ref{sec:open}).
+\end{itemize}
 
 \begin{definition}\label{def:Harith}
 The \emph{arithmetic Hamiltonian} on $L^2(X_N)$ is
@@ -438,70 +365,36 @@ by the dictionary $\KASP$ alone.
 \end{remark}
 
 % =========================================================================
-\section{Theorem A : unconditional bound on the arithmetic mass}\label{sec:thmA}
+\section{Empirical scaling relation}\label{sec:thmA}
 % =========================================================================
 
-\begin{theorem}[A]\label{thm:A}
-Let $N \geq 2$ be in the admissible range. Let $X_N = \HH^3/\PSL_2(\mathcal{O}_{\KASP(N)})$
-and $\Harith(N) = \sigma_0\,C(N)^2\,\Delta_{X_N}$ on $L^2(X_N)$, with $C(N)$
-defined in~\eqref{eq:CN}. Then the lowest non-zero spectral excitation
-\[
-  \marith(N) := \sqrt{\langle \Harith(N) \rangle_{\,\mathrm{ground\;cuspidal}}}
-\]
-satisfies
+\begin{proposition}[Tautological scaling]\label{prop:scaling}
+Let $N \geq 2$ be such that $\KASP(N)$ is defined, and let
+$X_N = \HH^3/\PSL_2(\mathcal{O}_{\KASP(N)})$ and
+$\Harith(N) = \sigma_0\,C(N)^2\,\Delta_{X_N}$ on $L^2(X_N)$, with $C(N)$
+defined in~\eqref{eq:CN}. Then, by construction,
 \begin{equation}\label{eq:A}
   \frac{\marith(N)}{\sqrt{\sigma_0}}
-  \;=\; C(N)\sqrt{\lambda_1(X_N)}
-  \;\geq\; C(N)\sqrt{21/25}\;>\;0.
+  \;=\; C(N)\sqrt{\lambda_1(X_N)},
 \end{equation}
-The equality on the left is tautological from
-Definition~\ref{def:Harith}; the inequality $\lambda_1(X_N) \geq 21/25$ is
-Sarnak's 1983 theorem~\cite{Sarnak1983} applied to the Bianchi group
-$\PSL_2(\mathcal{O}_{\KASP(N)})$; positivity is immediate.
-\end{theorem}
+where $\marith(N) := \sqrt{\sigma_0\,C(N)^2\,\lambda_1(X_N)}$. The identity
+\eqref{eq:A} is tautological and asserts no lower bound on $\lambda_1(X_N)$.
+\end{proposition}
 
-\begin{proof}
-By Definition~\ref{def:Harith},
-$\Harith(N) = \sigma_0\,C(N)^2\,\Delta_{X_N}$, so the lowest non-zero
-spectral excitation is $\sqrt{\sigma_0\,C(N)^2\,\lambda_1(X_N)}
-= \sqrt{\sigma_0}\,C(N)\sqrt{\lambda_1(X_N)}$. The lower bound
-$\lambda_1(X_N) \geq 21/25 = 0.84$ for $X_N = \PSL_2(\OK)\backslash\HH^3$
-with $K$ an arbitrary imaginary quadratic field follows from
-Sarnak~\cite[Acta Math.\ 151:253--295]{Sarnak1983}, where the bound is
-established explicitly for $\PSL_2(\OK)$ acting on $\HH^3$ for every
-imaginary quadratic $K$, with arbitrary class number $h_K \geq 1$.
-\end{proof}
-
-\begin{corollary}[Under Selberg strong]\label{cor:selberg}
-If the Selberg strong eigenvalue conjecture $\lambda_1(X_N) \geq 1$ holds,
-then~\eqref{eq:A} is an equality
-$\marith(N)/\sqrt{\sigma_0} = C(N)$.
-\end{corollary}
-
-\begin{remark}[Strictness of unconditional]
-We stress what Theorem~A does \emph{not} assume:
-\begin{itemize}[noitemsep]
-\item No Yang--Mills measure on $\RR^4$.
-\item No Clay-grade constructive QFT.
-\item No Iwasawa Main Conjecture, no $p$-adic L-functions.
-\item No Bloch--Kato, no Beilinson regulator.
-\item No Margulis arithmeticity (we are in rank one).
-\end{itemize}
-The inputs are exactly: Gauss 1801 (genus theory), Humbert 1919 (volume),
-Selberg pretrace~\cite{EGM1998}, Vassilevich 2003 (heat-kernel coefficients),
-and Sarnak 1983 (the $21/25$ lower bound on $\lambda_1$ for Bianchi
-$3$-manifolds, valid for arbitrary imaginary quadratic $K$). All are
-published unconditional results.
-\end{remark}
-
-\begin{remark}[What Theorem A is]
-Theorem~A is a statement about the spectrum of a specific arithmetic
-operator on a specific orbifold. The constants $C(N)$, $\sqrt{2\pi e}$,
-$\sqrt{2/3}$ and the choice of $\KASP$ are all motivated by the physical
-analogy, but the theorem itself is a pure number-theoretic--spectral
-geometry statement. It is the analogue, in this programme, of the
-modularity statement in Wiles' approach to Fermat: an unconditional
-adjacent theorem.
+\begin{remark}[Status of any universal lower bound]\label{rem:noSarnak}
+Sarnak's 1983 paper~\cite{Sarnak1983} establishes a Selberg-type lower
+bound $\lambda_1 \geq 21/25$ on certain specific arithmetic hyperbolic
+$3$-manifolds. Whether the same bound applies to every Bianchi orbifold
+$\PSL_2(\mathcal{O}_{\KASP(N)})\backslash\HH^3$ in the anchor list of this
+work, for arbitrary class number $h_K = N$, is an open question; we do
+\emph{not} invoke such a universal bound in any of the statements below.
+The Kim 2003 result~\cite{Kim2003} (Kim--Sarnak appendix) gives a Selberg
+approximation $\theta \leq 7/64$ on $\GL_2/\QQ$, which, by base change to
+$\GL_2/K$, would conditionally improve $\lambda_1$ on the Bianchi side;
+unconditional applicability to every $X_N$ in our list is not asserted.
+The empirical match of Section~\ref{sec:empirical} corresponds numerically
+to the saturation case $\lambda_1(X_N)=1$, a working assumption motivated
+by the data rather than by a proved bound.
 \end{remark}
 
 % =========================================================================
@@ -519,7 +412,7 @@ state, ground state of the $0^{++}$ channel) takes the values:
 \begin{table}[h]\centering
 \begin{tabular}{rcc}
 \toprule
-$N$ & $m_{0^{++}}^{\mathrm{lat}}/\sqrt{\sigma_{\mathrm{lat}}}$ (AT2021) & $C(N)\sqrt{\lambda_1=1}$ (Thm A, Selberg strong) \\
+$N$ & $m_{0^{++}}^{\mathrm{lat}}/\sqrt{\sigma_{\mathrm{lat}}}$ (AT2021) & $C(N)\sqrt{\lambda_1=1}$ (Prop.~\ref{prop:scaling}, $\lambda_1=1$ saturation) \\
 \midrule
 $2$    & $3.781(23)$ & $3.773$ \\
 $3$    & $3.405(21)$ & $3.374$ \\
@@ -535,7 +428,14 @@ $0.85\%$.}
 \label{tab:lattice}
 \end{table}
 
-\subsection{Bayesian model selection}
+\subsection{Bayesian model comparison (under $\lambda_1=1$ saturation)}
+
+\emph{Caveat.} The comparison below assumes saturation $\lambda_1(X_N)=1$
+for the structural model, which is a working assumption (not a proved
+bound). Under this assumption, the Bayesian comparison evaluates the
+structural shape of $C(N)$ against a free 2-parameter alternative; it does
+not test the saturation assumption itself, nor establish any physical
+identification of $\marith$ with the lattice glueball mass.
 
 We compare two models on the 7 AT2021 anchors (we include the cross-channel
 $2^{++}$ and $1^{+-}$ anchors as auxiliary cross-checks, see
@@ -571,44 +471,46 @@ rules out two-parameter overfits.
 \subsection{Falsifiable predictions}
 
 \begin{enumerate}[noitemsep,leftmargin=1.5em]
-\item \textbf{$N = 7$ test.} Theorem~A under Selberg strong gives
-  $m_{0^{++}}(\SU(7))/\sqrt{\sigma} = C(7) = \sqrt{2\pi e}\sqrt{2/3}(9/10)(50/49)
-  \simeq 3.099$.
-  Any future lattice continuum measurement outside $[3.09, 3.13]$
-  falsifies the formula.
+\item \textbf{$N = 7$ test.} Proposition~\ref{prop:scaling} under
+  $\lambda_1=1$ gives $C(7) = \sqrt{2\pi e}\sqrt{2/3}(9/10)(50/49)
+  \simeq 3.099$. Any future lattice continuum measurement outside
+  $[3.09, 3.13]$ would refute the empirical formula.
 \item \textbf{Cross-channel.} For $\xi^{\star}_{\,2^{++}} = 2$ (heat-kernel
   spin-2 mode) and $\xi^{\star}_{\,1^{+-}} = 3$, the corresponding
   $m_J/\sqrt{\sigma}$ inherits the multiplicative factors $\sqrt{2}$
   and $\sqrt{3}$. Cross-$N$ test against AT2021 currently gives RMS
   $2.24\%$ ($2^{++}$) and $0.68\%$ ($1^{+-}$).
-\item \textbf{$\KASP(32)$ existence.} A counterexample to
-  Theorem~\ref{thm:exist} at $N=32$ would falsify the dictionary
-  in its present form.
+\item \textbf{$\KASP(32)$ existence.} A discovery that the admissibility
+  set is empty at all scales for $N=32$ would falsify the conjectural
+  extension of the dictionary in its present form (Remark~\ref{rem:nonempty}).
 \end{enumerate}
 
 % =========================================================================
-\section{The Transport Conjecture}\label{sec:transport}
+\section{Open question: a transport principle}\label{sec:transport}
 % =========================================================================
 
 The empirical agreement of Section~\ref{sec:empirical} is suggestive but,
-under Theorem~A alone, $\marith(N)$ is a quantity intrinsic to Bianchi
-geometry. We isolate the missing identification as a separate conjecture.
+under Proposition~\ref{prop:scaling} alone, $\marith(N)$ is a quantity
+intrinsic to Bianchi geometry. We articulate the missing identification as
+an open question.
 
-\begin{conjecture}[Transport]\label{conj:transport}
+\begin{remark}[Open transport question]\label{rem:transport}
 Let $H_{\mathrm{YM}}(N)$ denote the (conjectural) Hamiltonian of pure
 $\SU(N)$ Yang--Mills theory on $\RR^4$ in its lowest cuspidal sector
 (in the sense of the Yang--Mills Wightman functions, conditional on the
-existence of the Yang--Mills measure). Then there exists a unitary
-identification of low-lying spectra
+existence of the Yang--Mills measure). Is there a unitary identification
+of low-lying spectra
 \[
   \Spec\,\Harith(N) \;\stackrel{\mathrm{low}}{=}\;
   \Spec\,H_{\mathrm{YM}}(N),
 \]
-in particular $\marith(N) = m_{0^{++}}^{\mathrm{YM}}(\SU(N))$ for every
-$N$ in the admissible range.
-\end{conjecture}
+in particular $\marith(N) = m_{0^{++}}^{\mathrm{YM}}(\SU(N))$, for every
+$N$ in the anchor list? This question is open even before any precise
+formulation of the right-hand side. We do not claim such an identification.
+\end{remark}
 
-We outline four candidate routes towards Conjecture~\ref{conj:transport}.
+We outline below four candidate routes that could in principle address
+the open transport question.
 
 \paragraph{Route A : Arithmetic--gauge functor $\mathcal{F}$.}
 Construct an explicit functor $\mathcal{F} : \mathrm{Bianchi}_K
@@ -650,21 +552,32 @@ to this work.
 \section{Open problems}\label{sec:open}
 % =========================================================================
 
-We list the explicit open problems, in order of decreasing tractability:
+We list the explicit open questions of the present work:
 
 \begin{enumerate}[noitemsep,leftmargin=1.5em]
-\item \textbf{Selberg strong on $X_N$.} Establish or improve
-  $\lambda_1(X_N) \geq 1$, beyond the unconditional $21/25 = 0.84$ of
-  Sarnak~\cite{Sarnak1983}. This would upgrade Theorem~A from a lower
-  bound to an equality.
-\item \textbf{$\KASP(32)$ existence.} Verify whether a fundamental
-  discriminant $|D| \leq 10^9$ satisfies $h_K = 32$ and $\rk_2 = 5$, or
-  prove non-existence at all scales.
-\item \textbf{Bianchi--YM functor $\mathcal{F}$.} Construct route A
-  explicitly at least for $N = 3$ and $\KASP(3) = \QQ(\sqrt{-23})$.
-\item \textbf{Constructive Yang--Mills measure on $\RR^4$.} The Clay
-  Millennium problem itself. Independent of the present work; required for
-  Conjecture~\ref{conj:transport} to be formally well-stated on the YM side.
+\item \textbf{(Q1) Uniform Selberg-type lower bound.} Does there exist a
+  uniform positive lower bound $\lambda_1(X_N) \geq c > 0$ valid for every
+  Bianchi orbifold $X_N$ in the anchor list, with arbitrary class number?
+  Sarnak's 1983 paper~\cite{Sarnak1983} provides such a bound for specific
+  arithmetic 3-manifolds; the applicability of its proof to every $X_N$
+  in our list is open. Kim 2003~\cite{Kim2003} would conditionally improve
+  the bound on the cuspidal forms in the image of base change from $\GL_2/\QQ$.
+\item \textbf{(Q2) $\KASP(32)$.} Verify whether a fundamental discriminant
+  $|D| \leq 10^9$ satisfies $h_K = 32$ and $\rk_2 = 5$, or prove
+  non-existence at all scales.
+\item \textbf{(Q3) Derivation of $F(N)$.} Is there a rigorous derivation
+  of the structural prefactor $F(N) = (9/10)(N^2+1)/N^2$ from $4$D pure
+  $\SU(N)$ Yang--Mills? The current motivation is a $2$D Dijkgraaf--Witten
+  analogy.
+\item \textbf{(Q4) Transport.} The open transport question of
+  Remark~\ref{rem:transport}: does the empirical match
+  $\marith(N) \approx m_{0^{++}}^{\mathrm{lat}}/\sqrt{\sigma_{\mathrm{lat}}}$
+  admit a structural explanation through any of Routes A--D, or through
+  another mechanism?
+\item \textbf{(Q5) Constructive Yang--Mills measure on $\RR^4$.} The Clay
+  Millennium problem itself. Independent of the present work; required
+  before the open transport question can be formally well-stated on the
+  YM side.
 \end{enumerate}
 
 % =========================================================================
@@ -684,11 +597,6 @@ arXiv:2106.00364 [hep-lat].
 
 \bibitem{BakryEmery1985} D.~Bakry, M.~\'Emery. \emph{Diffusions hypercontractives.}
 Sém. de Probabilités XIX, LNM 1123 (1985), 177--206.
-
-\bibitem{BhargavaVarma2014} M.~Bhargava, I.~Varma.
-\emph{On the mean number of 2-torsion elements in the class groups, narrow
-class groups, and ideal groups of cubic orders and fields.}
-Duke Math. J. 164 (2015), 1911--1933.
 
 \bibitem{CCHS} A.~Chandra, I.~Chevyrev, M.~Hairer, H.~Shen.
 \emph{Stochastic quantisation of Yang-Mills.}
@@ -743,6 +651,9 @@ Duke Math. J. 112 (2002), 177--197.
 \bibitem{Sarnak1983} P.~Sarnak. \emph{The arithmetic and geometry of some
 hyperbolic three-manifolds.}
 Acta Math. 151 (1983), 253--295. DOI:10.1007/BF02393209.
+(Scope: specific arithmetic 3-manifolds; the applicability of the bound
+$\lambda_1\geq 21/25$ to every Bianchi orbifold $\PSL_2(\OK)\backslash\HH^3$
+in the present anchor list is an open question of this work.)
 
 \bibitem{MaclachlanReid2003} C.~Maclachlan, A.~Reid.
 \emph{The Arithmetic of Hyperbolic 3-Manifolds.}
@@ -761,9 +672,6 @@ PARI/GP scripts, anti-fab register, AT2021 cross-channel.} 2026.
 
 \bibitem{Vassilevich2003} D.~V.~Vassilevich. \emph{Heat kernel expansion:
 user's manual.} Phys. Rep. 388 (2003), 279--360.
-
-\bibitem{Witten1992} E.~Witten. \emph{On quantum gauge theories in two
-dimensions.} Comm. Math. Phys. 141 (1991), 153--209.
 
 \end{thebibliography}
 

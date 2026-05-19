@@ -2,7 +2,7 @@
 
 **Manuscript** : "An obstruction to the uniform Poincaré route for the
 Yang–Mills mass gap"
-**Author** : Kévin Remondière (Independent researcher, Tarbes, France)
+**Author** : Kévin Remondière (Independent researcher, Oloron-Sainte-Marie, France)
 **ORCID** : 0009-0008-2443-7166
 **Email** : kevin.remondiere [at] gmail.com
 **Length** : 3 pp, no figures, 17 references (all bibliographic items
@@ -13,7 +13,7 @@ independently verified against primary sources)
 
 Kévin Remondière
 Independent researcher
-Tarbes, France
+Oloron-Sainte-Marie, France
 ORCID: 0009-0008-2443-7166
 kevin.remondiere [at] gmail.com
 
@@ -59,7 +59,7 @@ routes (Otto–Villani LSI, Eberle reflection couplings, 't Hooft
 twist on `T⁴`, partial Coulomb gauge) — three are closed,
 the 't Hooft twist remains open.
 (§3) *Empirical verdict.* A multi-perspective adversarial analysis
-(nine independent DeepSeek–V4–Pro workers + Opus–4.7 audit, full
+(nine independent LLM–V4–Pro workers + Opus–4.7 audit, full
 protocol logged) yields `P((★) true) ∈ [0.05, 0.18]`, median
 `0.10–0.12`, *strictly below* the pre-registered 30% pivot.
 (§4) *"No known route" ≠ "route closed".* The Holley–Stroock bound

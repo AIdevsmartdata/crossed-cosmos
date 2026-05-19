@@ -447,7 +447,7 @@ commutator vanishes. **Verified, unconditional.**
 Yang–Mills (no matter, no Higgs). It contrasts with the [CC07] Standard Model
 construction where the first-order condition forces the specific structure of
 the internal algebra (because the Yukawa matrix is non-trivial). The verdict
-[Y51_03 (morn51)] of one DeepSeek auxiliary computation, which embedded the
+[Y51_03 (morn51)] of one auxiliary LLM-based computation, which embedded the
 problem into a NC-torus model $C^\infty(T^2_\theta) \rtimes \mathbb{Z}_N$ and
 deduced first-order from a deformation-quantization centrality condition, is
 *not* the proof we use here: the model used in this paper is the

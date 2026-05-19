@@ -99,7 +99,7 @@ manuscript in any direction your expertise suggests.
 Sincerely,
 Kévin Remondière
 Independent researcher
-Tarbes, France
+Oloron-Sainte-Marie, France
 ORCID: 0009-0008-2443-7166
 kevin.remondiere [at] gmail.com
 
@@ -160,7 +160,7 @@ expertise suggérera.
 Sincèrement,
 Kévin Remondière
 Chercheur indépendant
-Tarbes, France
+Oloron-Sainte-Marie, France
 ORCID : 0009-0008-2443-7166
 kevin.remondiere [at] gmail.com
 
@@ -219,7 +219,7 @@ Manuscript PDF and PARI verification script attached.
 Sincerely,
 Kévin Remondière
 Independent researcher
-Tarbes, France
+Oloron-Sainte-Marie, France
 ORCID: 0009-0008-2443-7166
 kevin.remondiere [at] gmail.com
 

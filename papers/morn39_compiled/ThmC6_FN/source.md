@@ -1,6 +1,6 @@
 # An unconditional lower bound on the Yang–Mills mass gap on the heterotic-CM-K3 family via Deligne–Ramanujan and Hecke
 
-**Author**: ECI Collaboration (final integrator: Opus 4.7 (1M context), MAX-EFFORT publication mode, 2026-05-10; PUSH-2 corrected $\mathcal{F}(N)$ revision applied 2026-05-10).
+**Author**: ECI Collaboration (final integrator: LLM (1M context), MAX-EFFORT publication mode, 2026-05-10; PUSH-2 corrected $\mathcal{F}(N)$ revision applied 2026-05-10).
 **Target journal**: *Journal of Number Theory* (short-note section).
 **Length**: approximately 8 500 words, target 13–16 printed pages.
 **MSC 2020**: 11F11 (modular forms of integer weight), 11F30 (Fourier coefficients of automorphic forms), 11F33 (special values of L-functions and modular forms), 14J28 (K3 surfaces), 81T13 (Yang–Mills and other gauge theories).

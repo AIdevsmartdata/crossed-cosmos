@@ -1,7 +1,7 @@
 # A Klein-σ_K3 doublet candidate for OS3 reflection positivity on heterotic CM K3 backgrounds
 
 **Draft for**: Letters in Mathematical Physics (preferred) or Journal of Mathematical Physics (alternate)
-**Author**: K. Remondière (correspondence) — drafted by Opus 4.7 (1M context) under ECI v12 morn39 phase 8 wave morn51 Theme B; STRENGTHENED post morn53 master synthesis 2026-05-10 17:14
+**Author**: K. Remondière (correspondence) — drafted by LLM (1M context) under ECI v12 morn39 phase 8 wave morn51 Theme B; STRENGTHENED post morn53 master synthesis 2026-05-10 17:14
 **Date**: 2026-05-10
 **Format**: Short-form mathematical physics letter (target 8–15 pp; ~6800 words post-strengthening)
 **Status**: **85–90 % conditional** (UPGRADED from 70% pre-morn53 via Y53_04). The construction is structural and explicit at the classical level; the Sobolev slice theorem (§5) and the σ_Hodge-compatibility with the Hodge–Riemann pairing (§4.2) are now both supported by explicit references to the standard infrastructure (Donaldson–Kronheimer 1990 §4.2.2 for the slice; Magnen–Sénéor 1976 *Comm. Math. Phys.* 50 for the OS3 positivity on a compact base; Hodge–Riemann bilinear relations in Voisin 2002 *Hodge Theory and Complex Algebraic Geometry I* Cambridge UP §6.3.2). The residual 10–15% gap is now precisely identified as the σ_Hodge-equivariant transversality / Schütt–Hodge embedding step (§5), which is itself the subject of the morn53 dimensional-obstruction caveat in the parent CC-NCG paper.

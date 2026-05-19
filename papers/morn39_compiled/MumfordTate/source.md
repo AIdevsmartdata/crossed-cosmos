@@ -1,6 +1,6 @@
 # Formalization of the Mumford-Tate Torus Framework — Algebraicity of Hodge Cycles on Self-Products of $h_K = 1$ CM Elliptic Curves, Replacing the Schoen 1988 Attribution
 
-**Authors** : Opus 4.7 (theorem formalization mode, MAX EFFORT)
+**Authors** : LLM (theorem formalization mode, MAX EFFORT)
 **Date** : 2026-05-11 (morn68 + morn69 follow-up #4 ; post-digest dispatch)
 **Source dispatches** : `Opus_morn68_morn69_combined_digest.md` §3.4 (NP4 Mumford-Tate explicit) + §4.1 (convergence with Hodge Z_D Opus) ; `Opus_DEEP_Schutt_Hodge_KugaSato.md` §3.1, §3.2 (Hodge type computation for $V_D$ inside $\mathrm{Sym}^4 H^1((E_K)^4)$)
 **Target audience** : algebraic / arithmetic geometers, with a CM-theory and Hodge-theory background ; this is an exposition of established (1968-1982) classical theorems applied to a specific 6-discriminant CM family

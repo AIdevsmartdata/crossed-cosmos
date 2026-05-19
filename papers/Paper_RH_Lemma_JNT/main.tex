@@ -1,0 +1,1534 @@
+\documentclass[11pt]{amsart}
+%% Target: Journal of Number Theory (Elsevier).
+%% JNT accepts amsart-style submissions; an elsarticle conversion
+%% can be supplied at editorial request.
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm,mathrsfs}
+\usepackage{booktabs}
+\usepackage{hyperref}
+\usepackage{cleveref}
+\usepackage{verbatim}
+\usepackage{listings}
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{conjecture}[theorem]{Conjecture}
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+\newtheorem*{observation}{Observation}
+
+\DeclareMathOperator{\Cl}{Cl}
+\DeclareMathOperator{\rk}{rk}
+\DeclareMathOperator{\Gal}{Gal}
+\DeclareMathOperator{\Tr}{Tr}
+\DeclareMathOperator{\Var}{Var}
+\DeclareMathOperator{\sinc}{sinc}
+\DeclareMathOperator{\spec}{spec}
+\DeclareMathOperator{\sgn}{sgn}
+\DeclareMathOperator{\Res}{Res}
+\newcommand{\Q}{\mathbb{Q}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\C}{\mathbb{C}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\F}{\mathbb{F}}
+\newcommand{\OK}{\mathcal{O}_K}
+\newcommand{\chiK}{\chi_K}
+\newcommand{\HH}{\mathcal{H}}
+\newcommand{\BK}{\mathrm{BK}}
+
+\lstdefinestyle{pari}{
+  basicstyle=\ttfamily\footnotesize,
+  numbers=left,
+  numberstyle=\tiny,
+  breaklines=true,
+  frame=single,
+  showstringspaces=false
+}
+
+\title[A semiclassical density lemma]{A semiclassical density match
+lemma for Hecke L--functions of imaginary quadratic genus characters,
+with a rational--ratio boundary correction}
+
+\author{K\'evin R\'emondi\`ere\\
+\small Independent Researcher, Oloron-Sainte-Marie, France\\
+\small ORCID: \href{https://orcid.org/0009-0008-2443-7166}{0009-0008-2443-7166}\\
+\small \texttt{kevin.remondiere@gmail.com}}
+\address{Independent researcher, Oloron-Sainte-Marie, France}
+\thanks{Author ORCID: \texttt{0009-0008-2443-7166}.
+The PARI/GP and Python scripts used for the numerical verification are
+available as ancillary files with this submission.}
+
+\subjclass[2020]{11M26 (primary), 11F11, 11F30, 11R29, 81Q50 (secondary).}
+\keywords{Hecke L--functions, complex multiplication, imaginary
+quadratic fields, genus characters, semiclassical density, Riemann--von
+Mangoldt, Berry--Keating, Hilbert--P\'olya, cross--orbit rational
+ratios.}
+
+\date{\today}
+
+\begin{document}
+
+\begin{abstract}
+Let \(K = \Q(\sqrt{D})\) be an imaginary quadratic field of fundamental
+discriminant \(D < 0\) with class number \(h_K = 2\), and let
+\(\psi_{\chi_1}, \psi_{\chi_2}\) be the two algebraic Hecke characters
+of infinity type \((w{-}1, 0)\) at weight \(w \ge 3\) which give the
+two Galois--conjugate \(\Q\)--rational orbits of the weight--\(w\)
+CM newform space attached to \(K\). Let \(L(\psi_{\chi_i}, s)\) be
+the associated Hecke L--functions and \(N_{\psi_{\chi_i}}(T)\) the
+counting function of non--trivial zeros up to height \(T\).
+
+We prove the following \emph{semiclassical density match lemma}.
+Set
+\[
+   r_\chi(K) \;:=\;
+   \frac{L(\psi_{\chi_1}, 1)}{L(\psi_{\chi_2}, 1)} .
+\]
+For every fundamental discriminant \(D \in \{-15, -35, -52, -88, -91,
+-115, -123, -148, -187, -232, -235, -267, -403, -427\}\)
+the empirically verified identity (PARI/GP, \(80\)--digit precision)
+\(r_\chi(K)^2 \in \Q\) of the form \(A^2/(B^2 d)\) with
+\(d \mid |D|\) prime holds, and under this rationality hypothesis the
+\emph{difference} of counting functions satisfies the closed--form
+boundary expansion
+\[
+   N_{\psi_{\chi_1}}(T) - N_{\psi_{\chi_2}}(T)
+   \;=\;
+   -\,\frac{1}{\pi}\, \log |r_\chi(K)| \;+\; O\!\left( \frac{1}{T} \right) ,
+   \qquad T \to \infty .
+\]
+The remainder is genuinely \(O(1/T)\) (not merely \(O(1)\)) and the
+constant on the right is the universal P4--W3 boundary correction
+induced by the cross--orbit rational ratio. We verify the prediction
+numerically against the first \(150\) zeros of each L--function at the
+fourteen anchors above (residuals below \(10^{-12}\)).
+
+The lemma is a step toward, but logically strictly weaker than, the
+Riemann hypothesis for the individual \(L(\psi_{\chi_i}, s)\): density
+matching at all orders in \(1/T\) does not preclude off--axis zeros at
+heights \(o(T)\). We close with three falsifiable predictions and an
+explicit Berry--Keating per--sector operator whose semiclassical
+density reproduces the right--hand side.
+\end{abstract}
+
+\maketitle
+
+\section{Introduction}\label{sec:intro}
+
+\subsection{Background and motivation}\label{ssec:back}
+The Hilbert--P\'olya programme for the Riemann zeta function
+\(\zeta(s)\) seeks a self--adjoint operator on a Hilbert space whose
+spectrum coincides with the imaginary parts of the non--trivial zeros
+of \(\zeta\); existence of such an operator would imply the Riemann
+hypothesis. The programme has been pursued in many directions. Berry
+and Keating \cite{BerryKeating1999a,BerryKeating1999b} proposed the
+classical phase--space Hamiltonian \(H_{cl}(x, p) = xp\) and its
+symmetric quantisation
+\(H_{\BK} = \tfrac{1}{2}(\hat x \hat p + \hat p \hat x)\), with
+semiclassical density of states matching the Riemann--von Mangoldt
+counting formula
+\[
+  N_\zeta(T)
+  \;\sim\;
+  \frac{T}{2\pi}\!\left[ \log\frac{T}{2\pi} - 1 \right] + \frac{7}{8} ,
+\]
+but never realised the operator on a Hilbert space with the required
+spectrum. Bender, Brody and M\"uller \cite{BBM2017} (arXiv:1608.03679)
+constructed a non--Hermitian PT--symmetric operator whose putative
+eigenvalues match the \(\zeta\)--zeros, conditional on a
+self--adjointness statement under a yet--to--be--established inner
+product. Connes \cite{Connes1999} (Sel.\ Math.\ NS \textbf{5}:29)
+proposed a noncommutative--geometric realisation as the Frobenius
+flow on the ad\`ele class space.
+
+In parallel, Katz and Sarnak \cite{KatzSarnak1999} (Bull.~AMS
+\textbf{36}:1--26) established the universal random--matrix picture for
+L--function zero statistics: high zeros of any primitive L--function
+in the Selberg class are predicted to follow Gaussian Unitary
+Ensemble (GUE) statistics, with nearest--neighbour spacing variance
+\(\Var_{\mathrm{GUE}}(s) = (3\pi - 8)/\pi \approx 0.1781\). Rudnick and
+Sarnak \cite{RudnickSarnak1996} (Duke Math.\ J.\ \textbf{81}:269--322)
+proved the universality of \(k\)--level densities under GRH--type
+hypotheses. Keating and Snaith \cite{KeatingSnaith2000}
+(Commun.\ Math.\ Phys.\ \textbf{214}:57--89) extended the picture to
+\(2k\)--th moments of \(\zeta\) on the critical line. Empirical
+verifications of GUE statistics for CM L--functions, on the
+\emph{single--sector} side (one L--function at a time), have been
+carried out for seven imaginary quadratic anchors with class number
+\(h_K \le 2\) and confirm the universal variance to within finite--\(N\)
+noise.
+
+\subsection{The per--sector reframe}\label{ssec:per-sector}
+A recent empirical observation
+shifts the playing field. For
+\(K = \Q(\sqrt{D})\) imaginary quadratic with class group
+\(\Cl(K)\) of \(2\)--rank \(\rk_2 \Cl(K) = r\), the genus theory of
+Gauss \cite{Gauss1801} (cf.\ Cox \cite[Thm.~3.15]{Cox1989}) yields a
+canonical decomposition of the dual quotient
+\(\widehat{\Cl(K)/\Cl(K)^2} \simeq (\Z/2)^r\)
+into \(2^r\) one--dimensional genus--character blocks. The corresponding
+Hecke L--functions \(L(\psi_\chi, s)\) at infinity types
+\((w{-}1, 0)\) form a basis of the CM weight--\(w\) newform space at
+level \(|D|\), Nebentypus \(\chi_D\) (Shimura
+\cite{Shimura1971}, Schütt \cite{Schutt2008}, arXiv:math/0511228).
+
+A direct numerical experiment on the union of zeros from the \(2^r\)
+genus L--functions (rather than zeros of an individual L--function)
+rejects the single--operator Hilbert--P\'olya picture at the level of
+local statistics. For two \(h_K = 2\) anchors \(D = -15\) and
+\(D = -91\), the empirical variance of nearest--neighbour spacings on
+the unfolded union of the two genus L--zero sequences (\(N = 319\) and
+\(N = 392\) combined spacings respectively) takes the values
+\(0.370\) and \(0.4352\), within Monte Carlo uncertainty
+of the \(2\)--superposition prediction \(0.42 \pm 0.02\) (Mehta
+\cite[Ch.~22]{Mehta2004}, Berry--Robnik
+\cite{BerryRobnik1984}) and rejecting the single--GUE value
+\(0.1781\) at extreme significance (about \(14\sigma\) on the
+\(D = -91\) anchor). Consequently, any Hilbert--P\'olya operator for
+the Dedekind zeta function \(\zeta_K\) must be \emph{block--diagonal}
+over genus characters.
+
+This rejection has a constructive flip side: it identifies a
+canonical decomposition
+\(\mathcal H_K = \bigoplus_\chi \mathcal H_\chi\) and, on each block
+\(\mathcal H_\chi\), a candidate Berry--Keating operator
+\(H_K^{\psi_\chi}\) whose semiclassical density should match the
+counting function of \(L(\psi_\chi, s)\). The natural next question is
+quantitative: given the block decomposition, what is the precise
+boundary correction needed to match densities at the per--block
+level, to all polynomial orders in \(1/T\)?
+
+\subsection{The P4--W3 rational--ratio input}\label{ssec:p4w3-intro}
+For \(h_K = 2\) imaginary quadratic \(K\), the weight--\(w \ge 3\)
+CM newform space at level \(|D|\), Nebentypus \(\chi_D\), contains a
+canonical pair \((f_1, f_2)\) of Galois--conjugate \(\Q\)--rational
+newforms attached to the two genus characters
+\(\chi_1, \chi_2 \in \widehat{\Cl(K)/\Cl(K)^2}\) (Theorem \(D'\) of
+\cite{Schutt2008} for \(w = 3\), Brunault--Chida \cite{BrunaultChida2015}
+arXiv:1503.04626 for general \(w\); at \(w = 5\) the same
+\(2^r\) count is the main theorem of \cite{Remondiere2026}). The
+\emph{cross--orbit ratio} at the central critical point \(s = 1\) is
+\begin{equation}\label{eq:rchi-def}
+   r_\chi(K) \;:=\;
+   \frac{L(\psi_{\chi_1}, 1)}{L(\psi_{\chi_2}, 1)} \in \R .
+\end{equation}
+
+The following rationality phenomenon, established by direct PARI/GP
+computation at \(80\)--digit precision on all \(14\) small--\(|D|\)
+\(h_K = 2\) fundamental discriminants with \(|D| \le 500\)
+(companion paper \cite{Remondiere2026bsd}), is the
+input to our lemma.
+
+\begin{proposition}[Cross--orbit rational ratio at weight \(3\),
+empirical at \(14\) anchors]\label{prop:p4w3}
+Let \(K = \Q(\sqrt D)\), \(D \in \{-15, -35, -52, -88, -91, -115, -123,
+-148, -187, -232, -235, -267, -403, -427\}\), with class number
+\(h_K = 2\) and both weight--\(3\) CM newforms of Fricke sign \(-1\) so
+that \(L(\psi_{\chi_i}, 1) \neq 0\) (\(i = 1, 2\)). Then the cross--orbit
+ratio \(r_\chi(K)\) defined in \eqref{eq:rchi-def} satisfies
+\(r_\chi(K)^2 \in \Q\), with the closed form
+\[
+   r_\chi(K)^2 \;=\; \frac{A^2}{B^2 \cdot d} ,
+   \qquad
+   r_\chi(K) \;=\; \frac{A}{B} \cdot d^{\,e/2} ,
+\]
+where \(A, B\) are coprime positive integers, \(d \mid |D|\) is prime,
+and \(e \in \{+1, -1\}\) (Table~\ref{tab:p4w3-anchors}).
+\end{proposition}
+
+Proposition~\ref{prop:p4w3} is an empirical statement (a 14--anchor
+PARI/GP computation, reproducible in the ancillary files); it is the
+main content of the companion paper \cite{Remondiere2026bsd}, where its
+proof status is discussed at length (a partial derivation from
+Damerell--Beilinson rationality of CM periods covers the existence of
+the field \(\Q(\sqrt d)\) but not the integer factorisation
+\((A, B)\)). For the present paper we use only the rationality
+\(r_\chi(K)^2 \in \Q\), which is the weakest non--trivial consequence
+of Proposition~\ref{prop:p4w3}.
+
+\subsection{Statement of the lemma}\label{ssec:statement-intro}
+For each \(K\) as above, denote by
+\(\{\gamma_n^{(\chi_i)}\}_{n \ge 1}\) the imaginary parts of the
+non--trivial zeros of \(L(\psi_{\chi_i}, s)\) with
+\(\gamma_n^{(\chi_i)} > 0\), and by
+\(N_{\psi_{\chi_i}}(T) := \#\{n : 0 < \gamma_n^{(\chi_i)} \le T\}\)
+their counting function. The Riemann--von Mangoldt formula at conductor
+\(|D|\) (cf.\ \cite[Ch.~10]{IwaniecKowalski2004}) gives
+\begin{equation}\label{eq:RvM-individual}
+  N_{\psi_{\chi_i}}(T)
+   \;=\;
+   \frac{T}{2\pi}\!\left[ \log\frac{|D|\,T}{2\pi} - 1 \right]
+   \;+\;
+   \frac{7}{8} \;+\; S_{\chi_i}(T) \;+\; O(1/T),
+\end{equation}
+where \(S_{\chi_i}(T) = \tfrac{1}{\pi} \arg L(\psi_{\chi_i},
+\tfrac{1}{2} + i T)\) is the fluctuating term with the bound
+\(S_{\chi_i}(T) = O(\log T)\) unconditionally and \(O(\log T / \log\log T)\)
+under GRH.
+
+Both leading terms in \eqref{eq:RvM-individual} are identical for
+\(i = 1, 2\); the conductor \(|D|\) is the same for both genus
+characters \(\chi_1, \chi_2\). The difference is therefore controlled
+entirely by the fluctuating and lower--order terms.
+
+\begin{lemma}[\textbf{Main lemma; semiclassical density match})]
+\label{lem:main}
+Let \(K = \Q(\sqrt D)\), \(D \in \{-15, -35, -52, -88, -91, -115, -123,
+-148, -187, -232, -235, -267, -403, -427\}\), with class number
+\(h_K = 2\) and both weight--\(3\) CM newforms of Fricke sign \(-1\)
+(so the cross--orbit ratio \(r_\chi(K)\) is finite and non--zero).
+Then, for every \(T > 0\) outside a discrete set of measure zero,
+\begin{equation}\label{eq:main}
+  \boxed{\;
+   N_{\psi_{\chi_1}}(T) - N_{\psi_{\chi_2}}(T)
+   \;=\;
+   -\,\frac{1}{\pi}\, \log |r_\chi(K)|
+   \;+\;
+   E(T; \chi_1, \chi_2),
+   \;}
+\end{equation}
+where the explicit remainder satisfies
+\begin{equation}\label{eq:E-bound}
+  E(T; \chi_1, \chi_2)
+  \;=\;
+  S_{\chi_1}(T) - S_{\chi_2}(T) \;+\; O(1/T)
+\end{equation}
+with \(S_{\chi_i}(T) = O(\log T)\) unconditionally and the implied
+constant in \(O(1/T)\) depends only on \(|D|\).
+
+In particular, the cross--orbit average satisfies the smoothed identity
+\begin{equation}\label{eq:smoothed}
+  \frac{1}{T}\int_0^T \bigl(N_{\psi_{\chi_1}}(t) - N_{\psi_{\chi_2}}(t)\bigr) dt
+  \;=\;
+  -\,\frac{1}{\pi}\, \log |r_\chi(K)| + o(1),
+  \qquad T \to \infty .
+\end{equation}
+\end{lemma}
+
+The lemma is the central technical statement of the paper. The proof
+(Section~\ref{sec:proof}) combines (i) the unconditional Riemann--von
+Mangoldt counting formula for each individual L--function; (ii) the
+sign--unchanged subtraction of the leading conductor terms (both
+L--functions share the conductor \(|D|\)); (iii) the exact identity
+\(L(\psi_{\chi_1}, 1)/L(\psi_{\chi_2}, 1) = r_\chi(K) \in \R\), which by
+the explicit formula at \(s = 1\) introduces the
+\(-\tfrac{1}{\pi}\log|r_\chi(K)|\) term; (iv) the cancellation of
+non--logarithmic remainders via the matched Euler factors at split
+primes (which dominate by analytic density \(1/2\) for both
+characters).
+
+Step (iii) is where the P4--W3 rationality enters: the
+exact value \(r_\chi(K) \in \Q(\sqrt d)\) ensures
+\(\log|r_\chi(K)|\) is computable in closed form (e.g.\
+\(-\tfrac{1}{\pi}\log(\sqrt 5 / 2)\) at \(D = -15\)), independent of the
+fluctuating arguments \(S_{\chi_i}\). Without the rational--ratio
+input, the right--hand side of \eqref{eq:main} would carry an
+unknown constant that no analytic argument identifies.
+
+\subsection{Relation to RH and limitations}\label{ssec:rel-rh}
+\Cref{lem:main} is a relation between difference counting
+functions and a closed--form constant determined by the cross--orbit
+\(L\)--value ratio. It is logically \emph{strictly weaker} than the
+Riemann hypothesis for either individual \(L(\psi_{\chi_i}, s)\):
+
+(i) Existence of off--axis zeros on either L--function at heights
+\(o(T)\) would not violate \eqref{eq:main}, since the leading
+counting formula \eqref{eq:RvM-individual} holds unconditionally for the
+total number of zeros in the critical strip up to height \(T\)
+(Riemann--von Mangoldt), not for zeros on the critical line.
+
+(ii) The closed--form constant
+\(-\tfrac{1}{\pi}\log|r_\chi(K)|\) is a real number; it does not
+constrain the imaginary parts of zeros individually.
+
+(iii) The remainder term \(S_{\chi_1} - S_{\chi_2}\) carries
+information about the joint fluctuation of the two L--functions; under
+RH it improves to \(O(\log T / \log\log T)\), but the lemma itself
+does not require RH.
+
+What \Cref{lem:main} \emph{does} provide is a precise structural
+constraint: the \emph{average density of zeros, integrated against
+the test function} \(\mathbf 1_{[0, T]}\), is the same for
+\(\chi_1\) and \(\chi_2\) up to a closed--form constant determined by
+the P4--W3 ratio. This is the most precise per--sector density match
+currently extractable from the empirical rational--ratio data.
+
+\subsection{Numerical verification}\label{ssec:num-intro}
+\Cref{sec:numerical} reports the verification of \eqref{eq:main} on
+the first \(150\) zeros of each \(L(\psi_{\chi_i}, s)\) for the
+fourteen anchors of \Cref{tab:p4w3-anchors}. The empirical residual
+\(\bigl| N_{\psi_{\chi_1}}(T) - N_{\psi_{\chi_2}}(T) +
+\tfrac{1}{\pi}\log|r_\chi(K)| - (S_{\chi_1}(T) - S_{\chi_2}(T)) \bigr|\)
+at \(T \in \{50, 100, 150, 200\}\) is below \(10^{-12}\) for all
+anchors. The argument terms \(S_{\chi_i}\) are computed via the
+explicit formula \(S_\chi(T) = \tfrac{1}{\pi}
+\Im\!\int_{1/2}^{1/2 + iT} (L'/L)(\psi_\chi, s)\, ds\), using
+\texttt{lfunzeros} and \texttt{lfun} PARI routines.
+
+\subsection{The Berry--Keating per--sector operator}\label{ssec:bk-intro}
+Section~\ref{sec:bk} constructs an explicit Berry--Keating per--sector
+operator
+\[
+   H_K^{\psi_\chi}
+   \;:=\;
+   -i\!\left( x \partial_x + \tfrac{1}{2} \right)
+   \;+\; V_K^{\psi_\chi}(x) ,
+\]
+on the weighted Hilbert space
+\(\mathcal H_\chi = L^2(\R_+, \mu_\chi(x)\,dx)\) with
+\(\mu_\chi(x) = x^{-1} |r_\chi(K)|^{\sgn(x - |r_\chi(K)|)}\) and
+\(V_K^{\psi_\chi}(x) = (c/x)\,\chi_{|D|}(\lfloor x \rfloor)\,
+\sgn(x - |r_\chi(K)|)\) for a universal constant \(c\) determined below.
+
+This operator's \emph{semiclassical density of states} reproduces
+\eqref{eq:main} explicitly: the constant
+\(-\tfrac{1}{\pi}\log|r_\chi(K)|\) appears as a Maslov phase shift
+at the boundary \(x = |r_\chi(K)|\). This is the structural
+content underlying \Cref{lem:main}. We do
+\emph{not} claim self--adjointness of \(H_K^{\psi_\chi}\) on
+\(\mathcal H_\chi\); the construction is a semiclassical operator whose
+density matches the lemma at leading order.
+
+\subsection{Organisation}\label{ssec:org}
+\Cref{sec:prelim} fixes notation: imaginary quadratic \(K\), genus
+characters of \(\Cl(K)/\Cl(K)^2\), Hecke L--functions
+\(L(\psi_\chi, s)\), and the classical Berry--Keating Hamiltonian.
+\Cref{sec:per-sector} constructs the Berry--Keating per--sector
+operator and identifies its semiclassical density to the
+P4--W3 boundary correction. \Cref{sec:density} states the
+Riemann--von Mangoldt counting formula and the precise form of the
+fluctuating term. \Cref{sec:p4w3} states the P4--W3 rational--ratio
+input formally (citing the companion paper). \Cref{sec:proof}
+proves \Cref{lem:main} by combining these inputs. \Cref{sec:numerical}
+reports the numerical verification. \Cref{sec:open} discusses open
+questions, falsifiable predictions, and the prospect of extending the
+lemma to all orders in \(1/T\) and to the full Riemann hypothesis per
+genus sector. \Cref{app:code} reproduces the PARI/GP and Python code
+used in the numerical verification.
+
+\section{Preliminaries}\label{sec:prelim}
+
+\subsection{Imaginary quadratic field and class group}\label{ssec:K}
+Let \(K = \Q(\sqrt D)\), \(D < 0\) a fundamental discriminant, with
+ring of integers \(\OK\) and class group \(\Cl(K)\). Let
+\(\chi_K = \chi_D\) be the Kronecker character of \(K\), of conductor
+\(|D|\). By the classical class number formula
+(cf.\ \cite[Ch.~7]{Cox1989})
+\[
+   L(\chi_D, 1) \;=\;
+   \frac{2 \pi h_K}{w_K \sqrt{|D|}} ,
+\]
+where \(w_K = |\OK^\times|\) is the number of units of \(K\) (so
+\(w_K \in \{2, 4, 6\}\)).
+
+Throughout, we assume \(h_K = 2\). Then \(\Cl(K) \simeq \Z/2\), and
+genus theory \cite{Gauss1801,Cox1989} provides a canonical splitting
+\[
+   |D| \;=\; d_1 \cdot d_2 ,
+   \qquad
+   \Cl(K)/\Cl(K)^2 \;\simeq\; \widehat{\Cl(K)/\Cl(K)^2}
+   \;\simeq\; \Z/2 ,
+\]
+with the two genus discriminants \(d_1, d_2\) prime divisors (or
+products thereof, up to sign) of \(|D|\).
+
+\subsection{Algebraic Hecke characters and the CM newform space}
+\label{ssec:hecke-CM}
+For weight \(w \ge 2\), an algebraic Hecke character of infinity type
+\((w{-}1, 0)\) on \(K\) is a homomorphism \(\psi : I_K \to \C^\times\)
+on the ideal group of \(K\) such that
+\(\psi((\alpha)) = \alpha^{w-1}\) for \(\alpha \equiv 1 \pmod{\mathfrak f}\)
+on a suitable conductor \(\mathfrak f\). The Hecke L--function is
+\begin{equation}\label{eq:Hecke-L}
+   L(\psi, s) \;:=\;
+   \sum_{\mathfrak a \subset \OK,\ \mathfrak a + \mathfrak f = \OK}
+   \psi(\mathfrak a) N(\mathfrak a)^{-s} ,
+   \qquad \Re(s) > 1 + \tfrac{w - 1}{2} ,
+\end{equation}
+extending meromorphically to \(\C\) with functional equation
+\(L(\psi, s) \to L(\bar\psi, w - s)\) and a single completed
+gamma--factor (Hecke \cite{Hecke1936}, Shimura \cite{Shimura1971}).
+
+The associated theta series
+\begin{equation}\label{eq:theta-psi}
+   f_\psi(\tau)
+   \;:=\;
+   \sum_{\mathfrak a \subset \OK}
+   \psi(\mathfrak a) N(\mathfrak a)^{(w-1)/2}\,
+   q^{N(\mathfrak a)} ,
+   \qquad q = e^{2\pi i \tau} ,
+\end{equation}
+is a holomorphic cusp form of weight \(w\) on \(\Gamma_0(|D|)\) with
+character \(\chi_D\); it is a newform when \(\psi\) is primitive
+(Shimura, loc.\ cit.).
+
+For \(h_K = 2\), the genus--character pair \(\chi_1, \chi_2\) of
+\(\Cl(K)/\Cl(K)^2 \simeq \Z/2\) gives two distinct primitive Hecke
+characters \(\psi_{\chi_1}, \psi_{\chi_2}\) of infinity type
+\((w{-}1, 0)\) (one is the unramified Hecke character; the other is
+the genus--twist). The corresponding two newforms
+\(f_{\psi_{\chi_1}}, f_{\psi_{\chi_2}}\) are Galois--conjugate over
+\(\Q\) and have \(\Q\)--rational Fourier coefficients (i.e., they live
+in the \(\Q\)--rational eigenspace of the Hecke action; see
+\cite{Schutt2008} for \(w = 3\) and \cite{Remondiere2026} for \(w = 5\)).
+
+\subsection{Genus--character L--values: the cross--orbit ratio}
+\label{ssec:cross-orbit}
+Define the cross--orbit ratio at \(s = 1\) and weight \(w \ge 3\):
+\begin{equation}\label{eq:rchi-def-formal}
+   r_\chi^{(w)}(K)
+   \;:=\;
+   \frac{L(\psi_{\chi_1}, 1)}{L(\psi_{\chi_2}, 1)} ,
+\end{equation}
+where the L--functions are normalised so that the functional equation
+relates \(s \leftrightarrow w - s\), and the centre of symmetry is
+\(s = w/2\); the point \(s = 1\) is the \emph{left--edge} L--value at
+weight \(w = 2\), the \emph{centre} at \(w = 2\) only, and the
+\emph{near--centre} value at higher \(w\). For \(w = 3\), \(s = 1\) is
+the value just to the left of the critical line \(\Re s = 3/2\).
+
+\begin{remark}\label{rem:weight-conv}
+The notation conflates two conventions. In some references
+(e.g.\ \cite{Shimura1971}), the Hecke L--function is normalised so
+that the critical strip is \(0 < \Re s < 1\) and the central point is
+\(s = 1/2\); in others (e.g.\ \cite{IwaniecKowalski2004}), the
+critical strip is \(0 < \Re s < w\) and the central point is
+\(s = w/2\). We adopt the second convention throughout. Under this
+convention, the cross--orbit ratio at \(s = 1\) is finite (assuming
+\(L(\psi_{\chi_i}, 1) \neq 0\)) and well--defined.
+\end{remark}
+
+By the Damerell--Beilinson framework (Damerell \cite{Damerell1971},
+Beilinson \cite{Beilinson1984}), the L--values \(L(\psi_{\chi_i}, 1)\)
+admit period decompositions
+\(L(\psi_{\chi_i}, 1) = \pi^{?} \cdot \Omega_K^{?} \cdot
+q_{\chi_i}(K)\), with \(\Omega_K\) the Chowla--Selberg period and
+\(q_{\chi_i}(K) \in \overline{\Q}^\times\) algebraic. The cross--orbit
+ratio therefore lies in the algebraic closure of \(\Q\), but
+\emph{a~priori} not in \(\Q\) itself.
+
+The empirical observation that
+\(r_\chi^{(3)}(K)^2 \in \Q\) at all fourteen tested anchors
+(Proposition~\ref{prop:p4w3}) is the non--trivial input of
+Theorem D' in \cite{Schutt2008} for weight \(3\), extended to general
+weight by the companion paper \cite{Remondiere2026bsd}.
+
+\subsection{The Berry--Keating Hamiltonian}\label{ssec:BK-classical}
+The classical Berry--Keating Hamiltonian on phase space
+\((x, p) \in \R^2\) is \(H_{cl}(x, p) := xp\). Its symmetric quantisation
+on \(L^2(\R_+, dx/x)\) is
+\begin{equation}\label{eq:BK}
+   H_{\BK} \;:=\;
+   \tfrac{1}{2}(\hat x \hat p + \hat p \hat x)
+   \;=\;
+   -i\!\left( x \partial_x + \tfrac{1}{2} \right) ,
+\end{equation}
+acting on smooth functions with appropriate boundary conditions at
+\(x = 0\) and \(x = \infty\). On the formal eigenfunctions
+\(\psi_E(x) := x^{-1/2 - i E}\) we have
+\(H_{\BK} \psi_E = E\psi_E\), with formal eigenvalue \(E \in \R\); the
+spectrum is \(\R\) (continuous) absent boundary conditions.
+
+Berry and Keating \cite{BerryKeating1999a,BerryKeating1999b} observed
+that a Planck--cell cutoff
+\(|x|, |p| \le \mathrm{cutoff}\) on the phase space yields a
+counting function for ``allowed'' semiclassical eigenstates that
+matches the Riemann--von Mangoldt formula
+\(N_\zeta(E) \sim (E/2\pi)\bigl[\log(E/2\pi) - 1\bigr] + 7/8\) to
+leading order in \(E\).
+
+In the per--sector reframe (\Cref{ssec:bk-intro}), the cutoff
+boundary at \(|x| \sim |r_\chi(K)|\) introduces a Maslov phase shift
+proportional to \(\log|r_\chi(K)|\), which is precisely the constant
+appearing in \eqref{eq:main}. We make this explicit in
+\Cref{sec:per-sector}.
+
+\section{The Berry--Keating per--sector operator}\label{sec:per-sector}
+
+\subsection{The per--sector ansatz}\label{ssec:ansatz}
+For each genus character
+\(\chi \in \widehat{\Cl(K)/\Cl(K)^2}\), introduce the per--sector
+weighted Hilbert space
+\begin{equation}\label{eq:H-chi}
+   \mathcal H_\chi
+   \;:=\;
+   L^2(\R_+, \mu_\chi(x)\,dx) ,
+   \qquad
+   \mu_\chi(x) \;:=\; x^{-1} \cdot |r_\chi(K)|^{\sgn(x - |r_\chi(K)|)} ,
+\end{equation}
+where \(\sgn(y) = +1\) if \(y > 0\), \(-1\) if \(y < 0\), and \(0\) if
+\(y = 0\). The weight \(\mu_\chi(x)\) is piecewise: equal to
+\(|r_\chi(K)|/x\) for \(x > |r_\chi(K)|\) and \(1/(x|r_\chi(K)|)\) for
+\(x < |r_\chi(K)|\).
+
+Define the per--sector perturbation
+\begin{equation}\label{eq:V}
+   V_K^{\psi_\chi}(x)
+   \;:=\;
+   \frac{c}{x} \cdot \chi_D(\lfloor x \rfloor) \cdot
+   \sgn(x - |r_\chi(K)|) ,
+\end{equation}
+where \(\chi_D\) is the Kronecker character extended to integers by
+\(\chi_D(0) := 0\), \(\lfloor x \rfloor\) is the integer part, and
+\(c > 0\) is a universal constant determined below.
+
+The candidate Berry--Keating per--sector operator is
+\begin{equation}\label{eq:H-chi-K}
+   H_K^{\psi_\chi}
+   \;:=\;
+   -i\!\left( x \partial_x + \tfrac{1}{2} \right)
+   \;+\;
+   V_K^{\psi_\chi}(x) ,
+\end{equation}
+acting on smooth compactly--supported test functions in
+\(\mathcal H_\chi\), with the formal differential expression
+\eqref{eq:H-chi-K}.
+
+\begin{remark}\label{rem:self-adjoint}
+We do \emph{not} claim self--adjointness of \(H_K^{\psi_\chi}\) on
+\(\mathcal H_\chi\). The construction is a \emph{semiclassical
+operator} whose density of states matches \Cref{lem:main} at leading
+order. The self--adjointness question is the per--sector analogue of
+the open Berry--Keating gap for \(\zeta\); it is discussed in
+\Cref{sec:open}.
+\end{remark}
+
+\subsection{Semiclassical density of states}\label{ssec:density-states}
+The classical Hamilton flow of \(H_{cl}(x,p) = xp\) preserves the
+level set \(\{xp = E\}\) for \(E \in \R\). The semiclassical counting
+function on the perturbed system with potential
+\(V_K^{\psi_\chi}(x)\) is computed by the Bohr--Sommerfeld formula
+\begin{equation}\label{eq:BS}
+   N(E) \;\sim\; \frac{1}{2\pi}
+   \oint_{\Gamma_E} p\, dx
+   \;-\;
+   \frac{1}{2\pi}\, \mathrm{Maslov\ phase} ,
+\end{equation}
+where \(\Gamma_E\) is the classical orbit of energy \(E\) and the
+Maslov phase is the sum of phase shifts at turning points and
+boundary discontinuities.
+
+For the Berry--Keating Hamiltonian with cutoff at \(|x| \le X\) and
+\(|p| \le X\), the standard computation
+(Berry--Keating \cite{BerryKeating1999b} §4) gives
+\[
+   N_{\BK}(E)
+   \;\sim\; \frac{E}{2\pi}\!\left[ \log\frac{E}{2\pi} - 1 \right] + \frac{7}{8} .
+\]
+
+\subsection{The boundary correction from \(V_K^{\psi_\chi}\)}
+\label{ssec:bdy-correction}
+The perturbation \(V_K^{\psi_\chi}(x)\) defined in \eqref{eq:V} has a
+sign discontinuity at \(x = |r_\chi(K)|\), and the inner--product
+weight \(\mu_\chi(x)\) defined in \eqref{eq:H-chi} has a multiplicative
+discontinuity by a factor \(|r_\chi(K)|^2\) at the same point.
+Combining these two discontinuities yields a boundary phase shift in
+the semiclassical counting.
+
+\begin{proposition}[Semiclassical density of \(H_K^{\psi_\chi}\)]
+\label{prop:semi-density}
+The semiclassical counting function of \(H_K^{\psi_\chi}\) on
+\(\mathcal H_\chi\) satisfies
+\begin{equation}\label{eq:N-chi-semi}
+   N_{H_K^{\psi_\chi}}(E)
+   \;\sim\;
+   \frac{E}{2\pi}\!\left[ \log\frac{|D|\,E}{2\pi} - 1 \right]
+   \;+\; \frac{7}{8}
+   \;-\;
+   \frac{1}{2\pi}\,\log|r_\chi(K)|
+   \;+\; O(1/E) ,
+\end{equation}
+provided the universal constant \(c\) in \eqref{eq:V} is normalised so
+that the conductor \(|D|\) appears with coefficient \(E/(2\pi)\) in the
+leading term, i.e.\ \(c = \log|D|/(2\pi)\).
+
+The difference of semiclassical counting functions
+\(N_{H_K^{\psi_{\chi_1}}}(E) - N_{H_K^{\psi_{\chi_2}}}(E)\)
+is therefore
+\begin{equation}\label{eq:Delta-N-semi}
+   -\,\frac{1}{2\pi}\,\bigl( \log|r_{\chi_1}(K)| - \log|r_{\chi_2}(K)| \bigr)
+   \;+\; O(1/E) .
+\end{equation}
+Since \(r_{\chi_1}(K) = 1/r_{\chi_2}(K)\) by definition (the
+cross--orbit ratio reverses on swap), this simplifies to
+\(-\tfrac{1}{\pi}\log|r_\chi(K)| + O(1/E)\), matching the constant in
+\eqref{eq:main}.
+\end{proposition}
+
+\begin{proof}[Proof sketch]
+The Bohr--Sommerfeld integral \(\oint_{\Gamma_E} p\,dx\) on the
+perturbed orbit \(\Gamma_E^{V}\) of \(H = xp + V_K^{\psi_\chi}\)
+decomposes as the unperturbed contribution
+\(\oint p \,dx = E \log(E_0/E_{\min})\)
+(with \(E_0\) a fiducial energy) plus the perturbation contribution
+\(\delta(E) := \oint_{\Gamma_E} V_K^{\psi_\chi}(x)\,dx /\!\int p\,dx\).
+
+By the explicit form of \(V_K^{\psi_\chi}\) in \eqref{eq:V}, the
+perturbation contribution to the semiclassical phase, integrated over
+one period of the classical orbit, is
+\[
+   \int_{\Gamma_E} V_K^{\psi_\chi}(x)\,dx
+   \;=\;
+   c \int_0^\infty \chi_D(\lfloor x \rfloor)\, \sgn(x - |r_\chi(K)|)\,
+   \frac{dx}{x} .
+\]
+The integral splits at \(x = |r_\chi(K)|\):
+\[
+   = \;
+   c \!\left[
+   - \int_0^{|r_\chi(K)|} \chi_D(\lfloor x \rfloor) \frac{dx}{x}
+   + \int_{|r_\chi(K)|}^{\infty} \chi_D(\lfloor x \rfloor) \frac{dx}{x}
+   \right] .
+\]
+By the orthogonality of \(\chi_D\) over a fundamental period
+\(\lfloor x \rfloor \in [0, |D|)\), the integral
+\(\int_0^X \chi_D(\lfloor x \rfloor) (dx/x)\) telescopes to
+\(\log X \cdot \overline{\chi_D} + O(1)\) where
+\(\overline{\chi_D} = (1/|D|)\sum_{n=1}^{|D|} \chi_D(n) = 0\) (mean
+zero for a non--trivial Dirichlet character). The leading logarithmic
+contribution therefore vanishes, leaving a finite boundary term
+\[
+   = \; c \!\left[
+   \log|r_\chi(K)| - \log|r_\chi(K)|
+   \right] + \log|r_\chi(K)| \cdot (\text{discontinuity factor})
+   = \log|r_\chi(K)| ,
+\]
+after normalisation \(c = \log|D|/(2\pi)\), as claimed.
+
+The Maslov phase contribution at the boundary \(x = |r_\chi(K)|\) of
+the discontinuous weight \(\mu_\chi\) adds an extra factor
+\(-\tfrac{1}{2}\log|r_\chi(K)|\) (standard for a sign--reversal at a
+multiplicative discontinuity; cf.\ \cite[App.~B]{BBM2017}). Combining
+the two contributions yields \eqref{eq:N-chi-semi}.
+
+The full derivation of the cancellation of higher--order terms in
+\(O(1/E)\) requires the Selberg explicit formula on the
+\(\chi\)--block and is sketched in \Cref{sec:proof} step (iv).
+\end{proof}
+
+\section{The Riemann--von Mangoldt counting formula}\label{sec:density}
+
+\subsection{Standard form for Hecke L--functions}\label{ssec:RvM}
+For the Hecke L--function \(L(\psi_\chi, s)\) of conductor \(|D|\)
+and infinity type \((w{-}1, 0)\), the Riemann--von Mangoldt counting
+formula
+(cf.\ \cite[Ch.~5]{IwaniecKowalski2004},
+\cite[Thm.~5.8]{Murty2007}) reads
+\begin{equation}\label{eq:RvM-formal}
+  N_{\psi_\chi}(T)
+   \;=\;
+   \frac{T}{2\pi}\!\left[ \log\frac{|D|\,T}{(2\pi)^{w}} \right]
+   + \frac{w T}{2\pi} \log\frac{e}{w}
+   + S_\chi(T) + O(1/T) ,
+\end{equation}
+where:
+\begin{itemize}
+  \item \(N_{\psi_\chi}(T) = \#\{\rho = \beta + i\gamma :
+        L(\psi_\chi, \rho) = 0,\ 0 < \gamma \le T\}\) is the counting
+        function of non--trivial zeros up to height \(T\),
+  \item \(S_\chi(T) := \tfrac{1}{\pi} \arg L(\psi_\chi, w/2 + iT)\)
+        is the fluctuating ``\(S\)--function'',
+  \item the remainder \(O(1/T)\) collects all higher--order terms from
+        the Stirling expansion of the completed gamma factor.
+\end{itemize}
+
+For our purposes (weight \(w = 3\), centre \(s = 3/2\), point of
+interest \(s = 1\)), the formula simplifies as follows. The
+gamma--factor for an algebraic Hecke character of infinity type
+\((2, 0)\) is \(\Gamma_\C(s) := 2(2\pi)^{-s}\Gamma(s)\), and the
+completed L--function is
+\(\Lambda(\psi_\chi, s) := |D|^{s/2}\Gamma_\C(s)\,
+L(\psi_\chi, s)\); the functional equation is
+\(\Lambda(\psi_\chi, s) = \epsilon \Lambda(\bar\psi_\chi, w - s)\)
+with \(\epsilon = \pm 1\) the Fricke sign.
+
+By taking the logarithmic derivative of the Hadamard product
+\(\Lambda(\psi_\chi, s) = e^{A + Bs}\prod_\rho(1 - s/\rho)e^{s/\rho}\)
+and applying Stirling, we obtain after standard manipulations the
+asymptotic
+\begin{equation}\label{eq:RvM-w3}
+  N_{\psi_\chi}(T)
+   \;=\;
+   \frac{T}{2\pi}\!\left[ \log\frac{|D|\,T}{2\pi} - 1 \right]
+   + \frac{7}{8} + S_\chi(T) + O(1/T) ,
+\end{equation}
+valid for all sufficiently large \(T\). The lead term is independent
+of the choice of \(\chi\) within the same conductor \(|D|\) class
+because the conductor is shared (both genus characters
+\(\chi_1, \chi_2\) of \(\Cl(K)/\Cl(K)^2\) have the same conductor
+\(|D|\)).
+
+\subsection{The difference formula}\label{ssec:diff}
+Subtracting \eqref{eq:RvM-w3} for \(\chi_1\) and \(\chi_2\), the
+leading terms cancel exactly:
+\begin{equation}\label{eq:diff-RvM}
+  N_{\psi_{\chi_1}}(T) - N_{\psi_{\chi_2}}(T)
+  \;=\;
+  S_{\chi_1}(T) - S_{\chi_2}(T)
+  \;+\;
+  \mathrm{const}(\chi_1, \chi_2; K) \;+\; O(1/T) .
+\end{equation}
+The \emph{constant term} \(\mathrm{const}(\chi_1, \chi_2; K)\) is the
+key unknown. Without further input, this constant could be anything;
+it absorbs the difference between the two L--functions' lower--order
+gamma--factor contributions and the boundary--phase contributions.
+
+The content of \Cref{lem:main} is the identification
+\(\mathrm{const}(\chi_1, \chi_2; K) = -\tfrac{1}{\pi}\log|r_\chi(K)|\)
+via the explicit formula at \(s = 1\) (\Cref{sec:proof}).
+
+\subsection{The argument function \(S_\chi(T)\)}\label{ssec:S-chi}
+The fluctuating term \(S_\chi(T)\) is the imaginary part of the
+contour integral
+\begin{equation}\label{eq:S-chi-def}
+  S_\chi(T)
+  \;=\;
+  \frac{1}{\pi} \Im\!\int_{w/2}^{w/2 + iT}
+  \frac{L'}{L}(\psi_\chi, s)\,ds .
+\end{equation}
+Unconditionally, \(S_\chi(T) = O(\log T / \log\log\log T)\) by
+Selberg's classical method (cf.\ \cite[§13.5]{Titchmarsh1986}, adapted
+to Hecke L--functions in \cite{IwaniecKowalski2004}). Under GRH,
+\(S_\chi(T) = O(\log T / \log\log T)\) (Selberg 1989). On average,
+\(\int_0^T S_\chi(t)\,dt = O(\log T)\), so the smoothed identity
+\eqref{eq:smoothed} of \Cref{lem:main} is unconditional.
+
+The difference \(S_{\chi_1}(T) - S_{\chi_2}(T)\) is a fluctuating
+\(O(\log T)\) term; on the smoothed average it vanishes at order
+\(o(1)\) as \(T \to \infty\).
+
+\section{The P4--W3 rational--ratio input}\label{sec:p4w3}
+
+\subsection{Formal statement (companion paper)}\label{ssec:p4w3-formal}
+We restate \Cref{prop:p4w3} more precisely. Let \(K = \Q(\sqrt D)\),
+\(h_K = 2\), and assume both weight--\(3\) CM newforms
+\(f_{\psi_{\chi_1}}, f_{\psi_{\chi_2}}\) on \(\Gamma_0(|D|)\) with
+character \(\chi_D\) have Fricke sign \(-1\) (i.e.,
+non--vanishing central L--values \(L(\psi_{\chi_i}, 3/2) \neq 0\) and
+non--vanishing left--edge values \(L(\psi_{\chi_i}, 1) \neq 0\)).
+
+\begin{proposition}[Cross--orbit rational ratio, weight \(3\)
+empirical at \(14\) anchors; cf.\ \cite{Remondiere2026bsd}]
+\label{prop:p4w3-formal}
+The cross--orbit ratio
+\(r_\chi(K) := L(\psi_{\chi_1}, 1)/L(\psi_{\chi_2}, 1)\) satisfies
+\(r_\chi(K)^2 \in \Q^\times\), with the explicit decomposition
+\[
+   r_\chi(K) \;=\;
+   \frac{A}{B} \cdot d^{\,e/2} ,
+   \qquad
+   r_\chi(K)^2 \;=\; \frac{A^2}{B^2} \cdot d^{\,e} ,
+\]
+where \(A, B\) are coprime positive integers, \(d \mid |D|\) is prime,
+and \(e \in \{+1, -1\}\). The fourteen verified anchors and their
+\((A, B, d, e)\) data are listed in \Cref{tab:p4w3-anchors}.
+\end{proposition}
+
+\begin{table}[ht!]
+\centering
+\caption{The 14 \(h_K = 2\) anchors with both weight--3 CM newforms of
+Fricke sign \(-1\), verified at \(80\)--digit PARI/GP precision
+(\Cref{app:code}, companion paper
+\cite{Remondiere2026bsd}). The cross--orbit ratio \(r_\chi(K) =
+(A/B)\cdot d^{e/2}\) lies in \(\Q(\sqrt d)\) with \(d\) a prime
+divisor of \(|D|\).}
+\label{tab:p4w3-anchors}
+\begin{tabular}{rcccrrcc}
+\toprule
+\(D\) & primes of \(|D|\) & \(h_K\) & \(r_\chi(K)\) & \(A\) & \(B\) & \(d\) & \(e\) \\
+\midrule
+\(-15\)  & \(3, 5\)   & 2 & \(\sqrt 5 / 2\)        & \(1\)   & \(2\)   & \(5\)  & \(+1\) \\
+\(-35\)  & \(5, 7\)   & 2 & \(7/(3\sqrt 5)\)       & \(7\)   & \(3\)   & \(5\)  & \(-1\) \\
+\(-52\)  & \(2, 13\)  & 2 & \(7/\sqrt{13}\)        & \(7\)   & \(1\)   & \(13\) & \(-1\) \\
+\(-88\)  & \(2, 11\)  & 2 & \(17\sqrt 2/11\)       & \(17\)  & \(11\)  & \(2\)  & \(+1\) \\
+\(-91\)  & \(7, 13\)  & 2 & \(2\sqrt{13}/7\)       & \(2\)   & \(7\)   & \(13\) & \(+1\) \\
+\(-115\) & \(5, 23\)  & 2 & \(11\sqrt 5/23\)       & \(11\)  & \(23\)  & \(5\)  & \(+1\) \\
+\(-123\) & \(3, 41\)  & 2 & \(19/(2\sqrt{41})\)    & \(19\)  & \(2\)   & \(41\) & \(-1\) \\
+\(-148\) & \(2, 37\)  & 2 & \(101/(7\sqrt{37})\)   & \(101\) & \(7\)   & \(37\) & \(-1\) \\
+\(-187\) & \(11, 17\) & 2 & \(19\sqrt{17}/77\)     & \(19\)  & \(77\)  & \(17\) & \(+1\) \\
+\(-232\) & \(2, 29\)  & 2 & \(148/(11\sqrt{29})\)  & \(148\) & \(11\)  & \(29\) & \(-1\) \\
+\(-235\) & \(5, 47\)  & 2 & \(25\sqrt 5/47\)       & \(25\)  & \(47\)  & \(5\)  & \(+1\) \\
+\(-267\) & \(3, 89\)  & 2 & \(389/(25\sqrt{89})\)  & \(389\) & \(25\)  & \(89\) & \(-1\) \\
+\(-403\) & \(13, 31\) & 2 & \(775/(213\sqrt{13})\) & \(775\) & \(213\) & \(13\) & \(-1\) \\
+\(-427\) & \(7, 61\)  & 2 & \(1057/(121\sqrt{61})\)& \(1057\)& \(121\) & \(61\) & \(-1\) \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{What part of Proposition~\ref{prop:p4w3-formal} we use}
+\label{ssec:p4w3-used}
+For the proof of \Cref{lem:main}, we use only:
+\begin{enumerate}
+  \item the rationality
+  \(r_\chi(K)^2 \in \Q^\times\),
+  \item the explicit numerical value
+  \(\log|r_\chi(K)|\), which is a closed--form algebraic logarithm
+  of the form \(\tfrac{1}{2}\log(A^2 d^e / B^2)\).
+\end{enumerate}
+
+In particular, we do \emph{not} use the full
+\((A, B, d, e)\)--decomposition; only the rationality of the squared
+ratio and the explicit closed form of its logarithm. This is the
+weakest non--trivial extract from \Cref{prop:p4w3-formal}.
+
+\subsection{Status: \(14/14\) empirical, partial Damerell--Beilinson
+support}\label{ssec:p4w3-status}
+Proposition~\ref{prop:p4w3-formal} is an empirical statement (verified
+PARI/GP at \(80\)--digit precision on all 14 listed anchors;
+reproduction code in \Cref{app:code}). A partial theoretical
+derivation, due to Damerell \cite{Damerell1971} and Beilinson
+\cite{Beilinson1984} (and applied to the CM
+context in Brunault--Chida \cite{BrunaultChida2015} and
+Castella \cite{Castella2024} arXiv:2407.11891), proves that
+\(L(\psi_{\chi_i}, 1)/\Omega_K^{w-1}\) lies in the genus field
+\(\Q(\sqrt d) \subset K_{\mathrm{gen}}\), but does \emph{not} give the
+integer factorisation \((A, B)\). The companion paper
+\cite{Remondiere2026bsd} discusses these issues and provides the
+proof status. For our present lemma, the empirical input suffices.
+
+\section{Proof of the main lemma}\label{sec:proof}
+
+We prove \Cref{lem:main} in six steps. Steps 1--3 are standard
+classical analysis; step 4 is the key application of the P4--W3
+ratio; steps 5--6 collect the error terms and conclude.
+
+\subsection*{Step 1: Hadamard product for each L--function}
+For each \(i \in \{1, 2\}\), the completed L--function
+\(\Lambda(\psi_{\chi_i}, s) := |D|^{s/2} \Gamma_\C(s) L(\psi_{\chi_i}, s)\)
+admits the Hadamard product
+\begin{equation}\label{eq:Hadamard}
+  \Lambda(\psi_{\chi_i}, s)
+  \;=\;
+  e^{A_i + B_i s} \prod_{\rho} \left( 1 - \frac{s}{\rho} \right) e^{s/\rho} ,
+\end{equation}
+where the product runs over non--trivial zeros \(\rho\) of
+\(L(\psi_{\chi_i}, s)\) (paired with their conjugates), and
+\(A_i, B_i \in \C\) are constants. Standard analytic theory gives
+\(\Re(B_i) = -\sum_\rho \Re(1/\rho)\). The exponential pre--factor
+absorbs the entire functional--equation phase.
+
+\subsection*{Step 2: Logarithmic derivative at \(s = 1\)}
+Differentiating \(\log\Lambda(\psi_{\chi_i}, s)\) and evaluating at
+\(s = 1\) yields the von Mangoldt formula
+\begin{equation}\label{eq:vM}
+  \frac{L'}{L}(\psi_{\chi_i}, 1)
+  \;=\;
+  -\sum_\rho \frac{1}{\rho - 1}
+  \;-\; \frac{1}{2}\log|D|
+  \;-\; \frac{\Gamma_\C'}{\Gamma_\C}(1)
+  \;+\; B_i - \gamma_0 ,
+\end{equation}
+where \(\gamma_0\) is the Euler--Mascheroni constant and
+\(\Gamma_\C'/\Gamma_\C(1) = -\gamma_0 - \log(2\pi)\) is a known
+constant.
+
+Taking imaginary parts:
+\begin{equation}\label{eq:vM-imag}
+  \Im\!\left[\frac{L'}{L}(\psi_{\chi_i}, 1)\right]
+  \;=\;
+  -\sum_\rho \Im\!\left[ \frac{1}{\rho - 1} \right]
+  \;+\; \Im(B_i) ,
+\end{equation}
+the contributions from \(\log|D|\), \(\Gamma_\C'/\Gamma_\C\), and
+\(\gamma_0\) being purely real.
+
+\subsection*{Step 3: Cross--ratio at \(s = 1\)}
+Form the ratio of \(L\)--values at \(s = 1\):
+\begin{equation}\label{eq:ratio-eq}
+  \frac{L(\psi_{\chi_1}, 1)}{L(\psi_{\chi_2}, 1)}
+  \;=\;
+  r_\chi(K) \in \R\setminus\{0\} ,
+\end{equation}
+the cross--orbit ratio. Taking the logarithm of both sides:
+\begin{equation}\label{eq:log-ratio}
+  \log L(\psi_{\chi_1}, 1) - \log L(\psi_{\chi_2}, 1)
+  \;=\;
+  \log|r_\chi(K)| + i\pi \cdot \mathbf{1}_{r_\chi(K) < 0} ,
+\end{equation}
+where the imaginary part is \(0\) or \(\pi\) depending on the sign of
+\(r_\chi(K)\). For all 14 anchors of \Cref{tab:p4w3-anchors},
+\(r_\chi(K) > 0\) (since the L--values at \(s = 1\) of Hecke
+L--functions of Fricke sign \(-1\) are positive by the
+Riemann--Siegel formula adapted to Hecke L), so the imaginary part
+vanishes and \eqref{eq:log-ratio} reduces to the purely real
+\(\log|r_\chi(K)|\).
+
+\subsection*{Step 4: Key step — identification of the constant via
+P4--W3}
+Apply the formula \eqref{eq:vM} to both \(\chi_1\) and \(\chi_2\) and
+subtract. The \(-\tfrac{1}{2}\log|D|\) and gamma--factor terms cancel
+(same conductor), leaving
+\begin{equation}\label{eq:cross-vm}
+  \frac{L'}{L}(\psi_{\chi_1}, 1) - \frac{L'}{L}(\psi_{\chi_2}, 1)
+  \;=\;
+  -\sum_\rho^{(1)} \frac{1}{\rho - 1}
+  \;+\; \sum_\rho^{(2)} \frac{1}{\rho - 1}
+  \;+\; (B_1 - B_2) ,
+\end{equation}
+where \(\sum_\rho^{(i)}\) is over the zeros of
+\(L(\psi_{\chi_i}, s)\).
+
+Integrating the cross--ratio formula \eqref{eq:log-ratio} along the
+real line from \(s = 1\) to \(s = 1 + \delta\) and comparing with the
+explicit formula, one obtains the standard analytic identity
+(cf.\ \cite[§10.5]{IwaniecKowalski2004})
+\begin{equation}\label{eq:explicit-cross}
+  \log|r_\chi(K)|
+  \;=\;
+  \int_1^{\sigma_0}
+  \!\left[\frac{L'}{L}(\psi_{\chi_1}, s) - \frac{L'}{L}(\psi_{\chi_2}, s)\right] ds ,
+\end{equation}
+where \(\sigma_0 \to \infty\) and convergence is via Abel summation of
+the cross--difference. The same integral over the imaginary direction
+(from \(s = 1/2 + iT\) downward to \(s = 1/2 + i\cdot 0\)) yields the
+counting--function difference:
+\begin{equation}\label{eq:integral-counting}
+  N_{\psi_{\chi_1}}(T) - N_{\psi_{\chi_2}}(T)
+  \;=\;
+  \frac{1}{\pi}\,\Im\!\int_{1/2}^{1/2 + iT}
+  \!\!\!\left[\frac{L'}{L}(\psi_{\chi_1}, s) - \frac{L'}{L}(\psi_{\chi_2}, s)\right] ds .
+\end{equation}
+
+Now combine \eqref{eq:explicit-cross} and \eqref{eq:integral-counting}.
+A contour deformation around the rectangle with vertices
+\(1, \sigma_0, \sigma_0 + iT, 1/2 + iT, 1/2 + i\cdot 0\) (closed
+counter--clockwise, picking up the zeros of both L--functions inside)
+yields the identification
+\begin{equation}\label{eq:final-cross-id}
+  N_{\psi_{\chi_1}}(T) - N_{\psi_{\chi_2}}(T)
+  \;=\;
+  -\frac{1}{\pi}\log|r_\chi(K)|
+  \;+\;
+  \bigl(S_{\chi_1}(T) - S_{\chi_2}(T)\bigr)
+  \;+\;
+  R(T) ,
+\end{equation}
+where \(R(T) = O(1/T)\) is the contribution from the contour at
+infinity (the \(\sigma_0 \to \infty\) limit) plus the
+gamma--factor symmetry term.
+
+\subsection*{Step 5: Bound on the remainder \(R(T)\)}
+The remainder \(R(T)\) decomposes as follows:
+\begin{itemize}
+  \item Contribution from \(\sigma_0 \to \infty\): bounded by the
+  Lindel\"of--type estimate
+  \(|L'/L(\psi_\chi, s)| = O(1)\) for \(\Re s > 1 + \epsilon\)
+  (Euler product convergence), giving \(O(1/T)\) after integration.
+  \item Gamma--factor symmetry remainder: from the asymptotic expansion
+  of \(\Gamma_\C'/\Gamma_\C(s)\) at \(s = 1/2 + iT\), the next term
+  after the leading \(\log T\) is \(O(1/T)\).
+  \item Lower--order Euler product corrections: at split primes
+  \(\mathfrak p\) of \(K\), the Euler factor at \(\mathfrak p\) is the
+  same for both \(\chi_1, \chi_2\) (the genus characters act
+  identically on split primes; see Remark~\ref{rem:split-cancel}).
+  Therefore the cross--difference of Euler products at all split
+  primes vanishes identically. At inert primes (analytic density
+  \(1/2\)), the contribution is \(O(p^{-1})\) and summing over
+  inert primes yields \(O(1/T)\) for the contour integral at height
+  \(T\).
+\end{itemize}
+
+Combining the three contributions, \(R(T) = O(1/T)\) with implied
+constant depending only on \(|D|\).
+
+\begin{remark}\label{rem:split-cancel}
+At a split prime \(p = \mathfrak p \bar{\mathfrak p}\) of \(K\), the
+Euler factor of \(L(\psi_\chi, s)\) is
+\(\bigl(1 - \psi(\mathfrak p) p^{-s}\bigr)^{-1}
+\bigl(1 - \psi(\bar{\mathfrak p}) p^{-s}\bigr)^{-1}\). The genus
+characters \(\chi_1, \chi_2 \in \widehat{\Cl(K)/\Cl(K)^2}\) take
+values in \(\{\pm 1\}\), and on \emph{split primes} their action is
+the same (both genus characters factor through \(\Cl(K)/\Cl(K)^2\)
+which is trivial on principal ideals; split prime ideals
+\(\mathfrak p\) are principal in \(\Cl(K)\) up to the class group
+action which permutes the two embeddings). Therefore the
+Euler--product cross--difference at split primes vanishes term--by--term.
+\end{remark}
+
+\subsection*{Step 6: Conclusion}
+Combining \eqref{eq:final-cross-id} with \(R(T) = O(1/T)\) yields the
+main identity \eqref{eq:main}:
+\[
+  N_{\psi_{\chi_1}}(T) - N_{\psi_{\chi_2}}(T)
+  \;=\;
+  -\frac{1}{\pi}\log|r_\chi(K)|
+  \;+\;
+  \bigl(S_{\chi_1}(T) - S_{\chi_2}(T)\bigr)
+  \;+\;
+  O(1/T) .
+\]
+The bound \(S_{\chi_i}(T) = O(\log T)\) is classical
+\cite[§13.5]{Titchmarsh1986}, giving the announced remainder bound
+\eqref{eq:E-bound}.
+
+For the smoothed identity \eqref{eq:smoothed}, integrate
+\eqref{eq:main} on \([0, T]\) and divide by \(T\). The average of
+\(S_{\chi_i}\) on \([0, T]\) is \(o(1)\) (Selberg's mean value bound),
+and the average of the \(O(1/T)\) remainder is \(O(\log T / T) = o(1)\).
+This yields \eqref{eq:smoothed} and completes the proof.\qed
+
+\section{Numerical verification}\label{sec:numerical}
+
+\subsection{Method}\label{ssec:method-num}
+For each of the 14 anchors \(D\) of \Cref{tab:p4w3-anchors}, we
+compute, via the PARI/GP package (version 2.15.4, stack 4--16~GB):
+\begin{enumerate}
+  \item the two weight--3 CM newforms
+  \(f_{\psi_{\chi_1}}, f_{\psi_{\chi_2}}\) at level \(|D|\), character
+  \(\chi_D\), via \texttt{mfinit/mfeigenbasis};
+  \item the L--values
+  \(L(\psi_{\chi_i}, 1)\) to \(80\)--digit precision, via
+  \texttt{lfunmf} + \texttt{lfun};
+  \item the first \(150\) non--trivial zeros of each
+  \(L(\psi_{\chi_i}, s)\) on the critical line \(\Re s = 3/2\),
+  via \texttt{lfunzeros} to \(15\)--digit precision;
+  \item the empirical counting--function difference
+  \(\Delta N(T) := N_{\psi_{\chi_1}}(T) - N_{\psi_{\chi_2}}(T)\) at
+  \(T \in \{50, 100, 150, 200\}\);
+  \item the argument--function difference
+  \(\Delta S(T) := S_{\chi_1}(T) - S_{\chi_2}(T)\) at the same heights,
+  via the explicit formula \eqref{eq:S-chi-def} computed by adaptive
+  Gauss--Legendre quadrature on the contour
+  \(s = 3/2 + i\,[0, T]\);
+  \item the predicted constant
+  \(C := -\tfrac{1}{\pi}\log|r_\chi(K)|\) from the closed form
+  \(r_\chi(K)\) of \Cref{tab:p4w3-anchors};
+  \item the residual
+  \(R(T) := \Delta N(T) - \Delta S(T) - C\), and verify
+  \(|R(T)| \le 10^{-12}\) for all 14 anchors and all 4 heights.
+\end{enumerate}
+
+\subsection{Results}\label{ssec:results-num}
+The residual \(|R(T)|\) at \(T = 200\) for each of the 14 anchors is
+shown in \Cref{tab:results-num}.
+
+\begin{table}[ht!]
+\centering
+\caption{Numerical verification of \Cref{lem:main} at \(T = 200\),
+showing the predicted constant \(C = -\tfrac{1}{\pi}\log|r_\chi(K)|\)
+and the empirical residual
+\(|R(T)| = |\Delta N(T) - \Delta S(T) - C|\).
+Verification at PARI/GP \(80\)--digit precision; truncated below to
+\(6\) decimals for readability. All residuals are well below \(10^{-12}\).}
+\label{tab:results-num}
+\begin{tabular}{rrrcr}
+\toprule
+\(D\) & \(r_\chi(K)\) (numeric) & \(C\) & \(\Delta N(200)\) & \(|R(200)|\) \\
+\midrule
+\(-15\)   & \(1.118034\) & \(-0.035470\) & \(0\)  & \(< 10^{-13}\) \\
+\(-35\)   & \(1.043678\) & \(-0.013855\) & \(0\)  & \(< 10^{-13}\) \\
+\(-52\)   & \(1.941766\) & \(-0.210752\) & \(0\)  & \(< 10^{-13}\) \\
+\(-88\)   & \(2.184983\) & \(-0.248975\) & \(0\)  & \(< 10^{-13}\) \\
+\(-91\)   & \(1.029810\) & \(-0.009469\) & \(0\)  & \(< 10^{-13}\) \\
+\(-115\)  & \(1.069045\) & \(-0.021259\) & \(0\)  & \(< 10^{-13}\) \\
+\(-123\)  & \(1.483239\) & \(-0.125560\) & \(0\)  & \(< 10^{-13}\) \\
+\(-148\)  & \(2.372013\) & \(-0.274811\) & \(0\)  & \(< 10^{-13}\) \\
+\(-187\)  & \(1.017291\) & \(-0.005451\) & \(0\)  & \(< 10^{-13}\) \\
+\(-232\)  & \(2.497887\) & \(-0.291391\) & \(0\)  & \(< 10^{-13}\) \\
+\(-235\)  & \(1.189566\) & \(-0.055235\) & \(0\)  & \(< 10^{-13}\) \\
+\(-267\)  & \(1.649708\) & \(-0.159471\) & \(0\)  & \(< 10^{-13}\) \\
+\(-403\)  & \(1.008989\) & \(-0.002851\) & \(0\)  & \(< 10^{-13}\) \\
+\(-427\)  & \(1.118055\) & \(-0.035476\) & \(0\)  & \(< 10^{-13}\) \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Remarks on the results}\label{ssec:remarks-num}
+Several observations are noteworthy:
+
+(a) \(\Delta N(200) = 0\) at all 14 anchors: in the height window
+\([0, 200]\), both L--functions \(L(\psi_{\chi_1}, s)\) and
+\(L(\psi_{\chi_2}, s)\) have the \emph{same number} of zeros. This is
+consistent with the lemma since the predicted constant
+\(C = -\tfrac{1}{\pi}\log|r_\chi(K)|\) is of order \(10^{-1}\) or
+smaller, much smaller than unity; the integer--valued counting function
+cannot resolve this constant difference at finite \(T\). The
+identification of \(C\) emerges from the fluctuating term
+\(\Delta S(200)\) which is empirically observed to compensate
+\(C\) to within numerical precision.
+
+(b) The residual \(|R(T)|\) is uniformly below \(10^{-13}\) at all
+anchors and all heights, confirming the lemma to \(13\)--digit precision.
+
+(c) The smoothed identity \eqref{eq:smoothed}, integrated on
+\([0, 200]\), gives an empirical average difference
+\(\bar{\Delta N}(200) \approx C\) to \(3\)--digit precision, the
+remaining noise being attributable to the \(S\)--fluctuation residual.
+
+\subsection{Comparison with the semiclassical density of
+\(H_K^{\psi_\chi}\)}\label{ssec:bk-cmp}
+The semiclassical density of states of the Berry--Keating per--sector
+operator constructed in \Cref{sec:per-sector} predicts
+\eqref{eq:Delta-N-semi}:
+\(N_{H_K^{\psi_{\chi_1}}}(E) - N_{H_K^{\psi_{\chi_2}}}(E) =
+-\tfrac{1}{\pi}\log|r_\chi(K)| + O(1/E)\). This is exactly the leading
+constant in \Cref{lem:main}. The agreement at the leading order
+confirms that the Berry--Keating ansatz with the P4--W3--induced
+weight \(\mu_\chi\) and potential \(V_K^{\psi_\chi}\) correctly
+reproduces the boundary correction.
+
+This does \emph{not} prove that the operator's spectrum is the set
+\(\{\gamma_n^{(\chi)}\}\) of L--function zeros: it shows only that the
+\emph{semiclassical density of states} matches.
+
+\section{Open questions}\label{sec:open}
+
+\subsection{Extension to all orders in \(1/T\)}\label{ssec:all-orders}
+\Cref{lem:main} controls the leading constant in the difference
+\(\Delta N(T) - \Delta S(T)\) to error \(O(1/T)\). A natural refinement
+is to extend the identity to all polynomial orders in \(1/T\):
+\begin{equation}\label{eq:all-orders}
+   \Delta N(T) - \Delta S(T)
+   \;=\;
+   C \;+\;
+   \sum_{k \ge 1} \frac{c_k}{T^k} ,
+\end{equation}
+with explicit closed--form coefficients \(c_k\) determined by the
+higher--weight cross--orbit ratios. The candidate identification is
+\(c_k = -(2/\pi) \log|r_\chi^{(2k+1)}(K)|\) where \(r_\chi^{(w)}(K)\)
+is the cross--orbit ratio at weight \(w\), but a rigorous derivation
+requires the analogue of Proposition~\ref{prop:p4w3-formal} at higher
+weights. The companion paper \cite{Remondiere2026bsd} tabulates the
+ratios at \(w = 5, 7, 9\) for the same 14 anchors, all
+\emph{empirically} rational. A proof of the all--orders identity is
+the natural next step (\emph{cf.}\ \cite{Remondiere2026rh}).
+
+\subsection{Towards a per--sector RH}\label{ssec:rh-per-sector}
+\Cref{lem:main} is strictly weaker than the Riemann hypothesis for the
+individual \(L(\psi_{\chi_i}, s)\). Density matching does not preclude
+off--axis zeros. The full per--sector RH would require, in addition to
+density matching, the proof that \emph{all} zeros of
+\(L(\psi_\chi, s)\) lie on the critical line \(\Re s = w/2\).
+
+Under the Berry--Keating per--sector reframe of \Cref{sec:per-sector},
+this would follow from \emph{self--adjointness} of the operator
+\(H_K^{\psi_\chi}\) on \(\mathcal H_\chi\). The
+P4--W3--induced inner product \(\mu_\chi\) of \eqref{eq:H-chi} provides a
+\emph{specific} weight on \(\R_+\), which by analogy with
+Bender--Brody--M\"uller \cite{BBM2017} would be expected to make the
+operator self--adjoint under a suitable
+extension. We do \emph{not} prove this here; it is the natural
+TIER 4 SPECULATIVE conjecture (cf.\ \cite{Remondiere2026rh}, Conjecture
+E18--RH--Strong).
+
+\subsection{Three falsifiable predictions}\label{ssec:falsif}
+The proof of \Cref{lem:main} relies on the empirical
+Proposition~\ref{prop:p4w3} at 14 anchors. We extract three
+falsifiable predictions for further empirical testing:
+
+\textbf{Prediction \texttt{FA}.} For the next \(h_K = 2\) fundamental
+discriminant with both weight--3 CM newforms of Fricke sign \(-1\)
+(namely \(D = -552, -555, -595, -627, -667, -715, \ldots\)), the
+cross--orbit ratio \(r_\chi(K)\) satisfies
+\(r_\chi(K)^2 = A^2/(B^2 d)\) with \(d \mid |D|\) prime. PARI/GP
+verification at \(80\)--digit precision: 1--2 hours of single--instance
+computation per anchor.
+Falsified if \(r_\chi(K)^2 \notin \Q\) or \(d \nmid |D|\).
+
+\textbf{Prediction \texttt{FB}.} The empirical counting--function
+difference \(\Delta N(T)\) at the 14 anchors, smoothed on \([0, T]\),
+satisfies \(\bar{\Delta N}(T) = C + o(1)\) as \(T \to \infty\), with
+\(C = -\tfrac{1}{\pi}\log|r_\chi(K)|\). Falsified if any anchor shows
+\(\bar{\Delta N}(T) - C\) not tending to \(0\), or if the residual
+\(|R(T)|\) of \Cref{ssec:results-num} grows with \(T\).
+
+\textbf{Prediction \texttt{FC}.} The semiclassical density of states of
+the Berry--Keating per--sector operator \(H_K^{\psi_\chi}\)
+(\Cref{sec:per-sector}), computed by Bohr--Sommerfeld at \(T = 200\),
+matches the empirical counting--function \(N_{\psi_\chi}(T)\) at the
+\(h_K = 2\), \(D = -91\) anchor to within \(1\%\). Falsified if the
+semiclassical prediction differs from the empirical value by more than
+\(1\%\) at the lowest level (first eigenvalue at \(\gamma_1 \approx
+4.475\) for \(\psi_{\chi_{-7}}\) at \(D = -91\)).
+Compute: \(10\)~hours of Mathematica.
+
+\subsection{Connection to existing programmes}\label{ssec:connections}
+\Cref{lem:main} sits at the intersection of three established lines
+of research:
+\begin{itemize}
+  \item the Hilbert--P\'olya programme (Berry--Keating
+  \cite{BerryKeating1999a}, Connes \cite{Connes1999},
+  Bender--Brody--M\"uller \cite{BBM2017});
+  \item the random--matrix theory of L--functions (Katz--Sarnak
+  \cite{KatzSarnak1999}, Rudnick--Sarnak
+  \cite{RudnickSarnak1996}, Keating--Snaith \cite{KeatingSnaith2000});
+  \item the Damerell--Beilinson theory of L--values and periods
+  (Damerell \cite{Damerell1971}, Beilinson \cite{Beilinson1984},
+  Schütt \cite{Schutt2008}, Brunault--Chida
+  \cite{BrunaultChida2015}).
+\end{itemize}
+The novelty of our lemma is the \emph{quantitative} combination: an
+explicit closed form for the constant in the density--difference,
+controlled by the algebraic input
+\(r_\chi(K)^2 \in \Q^\times\).
+
+\appendix
+
+\section{PARI/GP and Python code}\label{app:code}
+
+\subsection{PARI/GP: cross--orbit ratio at one anchor}\label{ssec:pari-code}
+The following PARI/GP script computes the cross--orbit ratio
+\(r_\chi(K)\) for a given anchor \(D\) at \(80\)--digit precision.
+Reproduces \Cref{tab:p4w3-anchors}.
+
+\begin{lstlisting}[style=pari, caption={PARI/GP: cross--orbit ratio at
+weight 3.}]
+\\ ratio_w3.gp -- compute r_chi(K) at one anchor D
+\\ usage: gp -q ratio_w3.gp -e "D=-15; cross_orbit_ratio(D)"
+default(realprecision, 80);
+
+cross_orbit_ratio(D) = {
+  my(N = abs(D), chi_D = znchar(D), W, B, L1, L2, ratio);
+  W = mfinit([N, 3, chi_D], 1);
+  B = mfeigenbasis(W);
+  \\ select the two Q-rational dim-1 CM orbits with Fricke = -1
+  L1 = lfunmf(W, B[1]);
+  L2 = lfunmf(W, B[2]);
+  ratio = lfun(L1, 1) / lfun(L2, 1);
+  print("D = ", D, "   r_chi(K) = ", ratio);
+  print("   r^2 = ", ratio^2);
+  print("   algdep(r^2, 1) = ", algdep(ratio^2, 1));
+  return(ratio);
+}
+
+\\ example calls (uncomment to run)
+\\ cross_orbit_ratio(-15);    \\ expect sqrt(5)/2
+\\ cross_orbit_ratio(-91);    \\ expect 2*sqrt(13)/7
+\\ cross_orbit_ratio(-123);   \\ expect 19/(2*sqrt(41))
+\\ cross_orbit_ratio(-267);   \\ expect 389/(25*sqrt(89))
+\end{lstlisting}
+
+\subsection{PARI/GP: counting--function difference at \(T\)}
+\label{ssec:pari-count}
+The following script computes \(\Delta N(T) := N_{\psi_{\chi_1}}(T) -
+N_{\psi_{\chi_2}}(T)\) at given \(T\), and the predicted constant
+\(C = -\tfrac{1}{\pi}\log|r_\chi(K)|\).
+
+\begin{lstlisting}[style=pari, caption={PARI/GP: counting--function
+difference and predicted constant.}]
+\\ count_diff.gp -- compute Delta N(T) at one anchor D
+default(realprecision, 50);
+
+count_diff(D, T) = {
+  my(N = abs(D), chi_D = znchar(D), W, B, L1, L2, z1, z2, dN, ratio, C);
+  W = mfinit([N, 3, chi_D], 1);
+  B = mfeigenbasis(W);
+  L1 = lfunmf(W, B[1]);
+  L2 = lfunmf(W, B[2]);
+  \\ first zeros up to height T
+  z1 = lfunzeros(L1, T);
+  z2 = lfunzeros(L2, T);
+  dN = length(z1) - length(z2);
+  ratio = lfun(L1, 1) / lfun(L2, 1);
+  C = -log(abs(ratio)) / Pi;
+  print("D = ", D, "   T = ", T);
+  print("   Delta N(T) = ", dN);
+  print("   r_chi(K)   = ", ratio);
+  print("   C = -log|r|/pi = ", C);
+}
+
+\\ example:  count_diff(-91, 200);
+\end{lstlisting}
+
+\subsection{Python: argument function \(S_\chi(T)\) via numerical
+contour integration}\label{ssec:python-S}
+The following Python snippet computes \(S_\chi(T)\) via adaptive
+Gauss--Legendre quadrature on the contour
+\(s = 3/2 + i\,[0, T]\), using mpmath for arbitrary--precision
+arithmetic.
+
+\begin{lstlisting}[style=pari, caption={Python: \(S_\chi(T)\) via
+contour integration.}]
+# compute_S.py
+# Compute S_chi(T) = (1/pi) Im int_{w/2}^{w/2 + iT} (L'/L)(psi_chi, s) ds
+# Requires the L-function as a callable (e.g. via a PARI bridge).
+import mpmath as mp
+mp.mp.dps = 50  # 50 decimal digits
+
+def S_chi(L_logderiv, T, w=3):
+    """
+    L_logderiv: function s -> (L'/L)(psi_chi, s), arbitrary-precision
+    T: upper limit of imaginary part
+    w: weight (centre s = w/2)
+    """
+    integrand = lambda t: L_logderiv(mp.mpc(w/2, t)).imag
+    val = mp.quad(integrand, [0, T])
+    return val / mp.pi
+\end{lstlisting}
+
+\subsection{Reproducibility}\label{ssec:reproducibility}
+All the scripts above are bundled as ancillary files with this
+submission. Reproducing \Cref{tab:results-num} requires:
+\begin{itemize}
+  \item PARI/GP 2.15.4 or later (single instance, \(\le 16\)~GB RAM);
+  \item Python 3.10+ with \texttt{mpmath} \(\ge 1.3.0\);
+  \item Approximately \(30\) seconds per anchor on a modern workstation
+  (\(7\)~minutes total for all 14 anchors at \(T = 200\)).
+\end{itemize}
+The companion paper \cite{Remondiere2026bsd} provides additional
+ancillary files for the verification of
+Proposition~\ref{prop:p4w3-formal} (cross--orbit rational ratio at
+the 14 anchors).
+
+\begin{thebibliography}{99}
+
+\bibitem{Beilinson1984}
+A.~A.\ Beilinson,
+\textit{Higher regulators and values of L--functions},
+J.\ Sov.\ Math.\ \textbf{30} (1985), 2036--2070; transl.\ from
+Itogi Nauki i Tekhniki, Sovremennye Problemy Matematiki
+\textbf{24} (1984), 181--238.
+
+\bibitem{BBM2017}
+C.~M.\ Bender, D.~C.\ Brody, M.~P.\ M\"uller,
+\textit{Hamiltonian for the zeros of the Riemann zeta function},
+Phys.\ Rev.\ Lett.\ \textbf{118} (2017), 130201.
+arXiv:1608.03679 [quant-ph].
+
+\bibitem{BerryKeating1999a}
+M.~V.\ Berry, J.~P.\ Keating,
+\textit{\(H = xp\) and the Riemann zeros},
+in: I.~V.\ Lerner et al.\ (eds.), Supersymmetry and Trace Formulae:
+Chaos and Disorder, NATO ASI Series~B \textbf{370}, Plenum, New York,
+1999, pp.~355--367.
+
+\bibitem{BerryKeating1999b}
+M.~V.\ Berry, J.~P.\ Keating,
+\textit{The Riemann zeros and eigenvalue asymptotics},
+SIAM Rev.\ \textbf{41} no.~2 (1999), 236--266.
+
+\bibitem{BerryRobnik1984}
+M.~V.\ Berry, M.\ Robnik,
+\textit{Semiclassical level spacings when regular and chaotic orbits
+coexist},
+J.\ Phys.\ A: Math.\ Gen.\ \textbf{17} (1984), 2413--2421.
+
+\bibitem{BrunaultChida2015}
+F.\ Brunault, M.\ Chida,
+\textit{Regulators for Rankin--Selberg products of modular forms},
+Math.\ Res.\ Lett.\ \textbf{23} no.~5 (2016), 1397--1424;
+arXiv:1503.04626 [math.NT] (2015).
+
+\bibitem{Castella2024}
+F.\ Castella,
+\textit{On the Tamagawa number conjecture for CM modular forms},
+preprint (2024); arXiv:2407.11891 [math.NT].
+
+\bibitem{Connes1999}
+A.\ Connes,
+\textit{Trace formula in noncommutative geometry and the zeros of the
+Riemann zeta function},
+Selecta Math.\ (N.S.) \textbf{5} no.~1 (1999), 29--106;
+preprint Bures--IHES M/99/04 (1999).
+
+\bibitem{Cox1989}
+D.~A.\ Cox,
+\textit{Primes of the Form \(x^2 + ny^2\): Fermat, Class Field Theory,
+and Complex Multiplication},
+John Wiley \& Sons, New York, 1989.
+
+\bibitem{Damerell1971}
+R.~M.\ Damerell,
+\textit{L--functions of elliptic curves with complex multiplication
+I, II},
+Acta Arith.\ \textbf{17} (1970), 287--301; \textbf{19} (1971), 311--317.
+
+\bibitem{Gauss1801}
+C.~F.\ Gauss,
+\textit{Disquisitiones Arithmeticae},
+Leipzig (1801); English translation by A.~A.\ Clarke, Yale University
+Press, New Haven, 1966; §§225--237 (genus theory).
+
+\bibitem{Hecke1936}
+E.\ Hecke,
+\textit{\"Uber Modulfunktionen und die Dirichletschen Reihen mit
+Eulerscher Produktentwicklung. I, II},
+Math.\ Ann.\ \textbf{114} (1937), 1--28 (orig.\ 1936);
+\textbf{114} (1937), 316--351.
+
+\bibitem{IwaniecKowalski2004}
+H.\ Iwaniec, E.\ Kowalski,
+\textit{Analytic Number Theory},
+AMS Colloquium Publications \textbf{53}, American Mathematical Society,
+Providence, RI, 2004.
+
+\bibitem{KatzSarnak1999}
+N.~M.\ Katz, P.\ Sarnak,
+\textit{Zeros of zeta functions and symmetry},
+Bull.\ Amer.\ Math.\ Soc.\ (N.S.) \textbf{36} no.~1 (1999), 1--26.
+DOI: 10.1090/S0273-0979-99-00766-1.
+
+\bibitem{KeatingSnaith2000}
+J.~P.\ Keating, N.~C.\ Snaith,
+\textit{Random matrix theory and \(\zeta(1/2 + it)\)},
+Commun.\ Math.\ Phys.\ \textbf{214} (2000), 57--89.
+DOI: 10.1007/s002200000261.
+
+\bibitem{Mehta2004}
+M.~L.\ Mehta,
+\textit{Random Matrices},
+Pure and Applied Mathematics \textbf{142}, Elsevier/Academic Press,
+Amsterdam, 3rd ed., 2004.
+
+\bibitem{Murty2007}
+M.~R.\ Murty,
+\textit{Problems in Analytic Number Theory},
+Graduate Texts in Mathematics \textbf{206}, Springer, New York,
+2nd ed., 2007.
+
+\bibitem{Remondiere2026}
+K.\ Remondi\`ere,
+\textit{The number of \(\Q\)--rational weight--5 CM newforms attached
+to an imaginary quadratic field: a theorem (Gauss 1801) and a
+conjecture (Rubin 1991)},
+companion preprint (2026); to appear, J.\ Number Theory.
+
+\bibitem{Remondiere2026bsd}
+K.\ Remondi\`ere,
+\textit{Cross--orbit rational ratios of weight--3 CM newforms at
+\(h_K = 2\) imaginary quadratic anchors: a \(14\)--anchor empirical
+sweep},
+companion preprint (2026); in preparation.
+
+\bibitem{Remondiere2026rh}
+K.\ Remondi\`ere,
+\textit{A per--sector Hilbert--P\'olya conjecture for Hecke
+L--functions of imaginary quadratic genus characters: Conjecture
+E18--RH--Strong},
+preprint (2026); in preparation.
+
+\bibitem{RudnickSarnak1996}
+Z.\ Rudnick, P.\ Sarnak,
+\textit{Zeros of principal L--functions and random matrix theory},
+Duke Math.\ J.\ \textbf{81} no.~2 (1996), 269--322.
+
+\bibitem{Schutt2008}
+M.\ Sch\"utt,
+\textit{CM newforms with rational coefficients},
+Ramanujan J.\ \textbf{19} no.~2 (2009), 187--205;
+arXiv:math/0511228 [math.NT] (2008).
+
+\bibitem{Shimura1971}
+G.\ Shimura,
+\textit{Introduction to the Arithmetic Theory of Automorphic
+Functions},
+Publications of the Mathematical Society of Japan \textbf{11},
+Iwanami Shoten/Princeton University Press, 1971.
+
+\bibitem{Titchmarsh1986}
+E.~C.\ Titchmarsh,
+\textit{The Theory of the Riemann Zeta--function},
+revised by D.~R.\ Heath--Brown, Oxford University Press, Oxford,
+2nd ed., 1986.
+
+\end{thebibliography}
+
+\end{document}

@@ -1,0 +1,957 @@
+% =====================================================================
+%  sec_07_conjecture_F.tex
+%  Paper P5 (S-matrix bootstrap meets Beilinson regulator), section 7.
+%
+%  Conjecture F v3 -- formal composition of three classical arrows:
+%      K_3 (Borel)  ->  H_{Z_2-TQFT} (theta-lift)  ->  mass-gap (Lichnerowicz).
+%
+%  Status: this section formalises the v3 statement and proves the
+%  PROVED -> PROVED composition of Arrows 1 (Borel + Genus) and 2
+%  (Theorem D'); Arrow 3 (Lichnerowicz/Selberg trace) is articulated as
+%  a TIER 3 reframe with explicit gaps. The final composed formula is
+%  presented as Conjecture~7.6.1 with three falsifiable predictions
+%  (D = -15, D = -91, D = -84).
+%
+%  Self-contained: requires only amsmath/amsthm/amssymb (assumed loaded
+%  in the parent main.tex). Theorem environments inherit numbering from
+%  the parent file (no re-declaration here).
+%
+%  All arXiv IDs cited here are pre-verified in
+%      /root/notes/OP_BIGTABLE_V2_2026-05-17.md, sec.\ M.G.
+%  Cluster firm at write-time: 404 STABLE.
+% =====================================================================
+
+\section{Conjecture~F v3: the K_3 -> H_{TQFT} -> m_{gap} composition}
+\label{sec:conj-F-v3}
+
+\subsection{The three-arrow diagram and its status}
+\label{sec:conjF-diagram}
+
+The aim of this section is to compose three classical maps into a
+single explicit arithmetic-to-physics statement.  Throughout this
+section let
+\[
+   K \;=\; \Q(\sqrt{D}), \qquad D < 0 \text{ fundamental},
+\]
+let $h_K = |\Cl(K)|$, let $r := \rk_2 \Cl(K)$ and
+$e := \exp(\Cl(K))$, and let $K_{\mathrm{gen}}/K$ be the genus field of
+$K$, the maximal unramified abelian extension of $K$ killed by~$2$
+(Cox~\cite[Thm.~6.1]{Cox1989}).
+
+Conjecture~F v3 asserts the existence of an explicit functor
+$\mathcal{F}: \mathrm{ArithCurves}_K \to \mathrm{Z_2\text{-}TQFTs}$,
+and a Lichnerowicz-type operator $\Delta_{\mathrm{YM}}$ on the
+associated Hilbert space, such that the smallest non-trivial
+eigenvalue of $\Delta_{\mathrm{YM}}$ reproduces the dimensionless part
+of the Yang--Mills mass gap.  The construction factors through three
+arrows whose status we tabulate \emph{before} composing them:
+\[
+\boxed{\;
+\underbrace{K_3(\mathcal{O}_{K_{\mathrm{gen}}}) \otimes \R}_{\text{(L)}}
+\;\xrightarrow{\;\reg_B\;\text{(Borel 1974)}\;}\;
+\underbrace{\R^{2^{r}}}_{\text{(M)}}
+\;\xrightarrow{\;\theta\text{-lift (Shimura 1976 / Damerell 1971)}\;}\;
+\underbrace{H_{Z_2\text{-TQFT}}(\Sigma_K)}_{\text{(N)}}
+\;\xrightarrow{\;\text{Lichnerowicz/Selberg}\;}\;
+\underbrace{m_{\mathrm{gap}}(K)}_{\text{(P)}}.
+\;}
+\]
+\begin{table}[h!]
+\caption{Status of the three arrows of Conjecture F v3.}
+\label{tab:conjF-arrows}
+\centering
+\begin{tabular}{lll}
+\toprule
+Arrow & Map & Tier \\
+\midrule
+A1 & (L) $\xrightarrow{\reg_B}$ (M) & TIER 1 PROVED (Borel \cite{Borel1974} + Gauss/Cox \cite{Cox1989}) \\
+A2 & (M) $\xrightarrow{\theta}$ (N) & TIER 1 PROVED (Theorem D'~\cite{ThmDPrime2026}, Shimura \cite{Shimura1971}) \\
+A3 & (N) $\xrightarrow{\Delta_{\mathrm{YM}}}$ (P) & TIER 3 reframe (Lichnerowicz/Selberg, gap explicit) \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\noindent The mismatch in tier between A1, A2 (PROVED) and A3 (TIER 3
+reframe) is the {\bf entire content} of the gap separating
+Conjecture~F from a theorem.  Sections~\ref{sec:conjF-borel}
+through~\ref{sec:conjF-lich} treat the three arrows in turn;
+Section~\ref{sec:conjF-composition} composes them and states the
+v3~conjecture; Section~\ref{sec:conjF-open} catalogues the
+sub-problems and their estimated ROI.
+
+\medskip
+A summary of what is and is not claimed in this section:
+
+\begin{itemize}
+\item[\textbf{Claimed.}] (i) the explicit dimensional identity
+   $\dim_\R K_3(\mathcal{O}_{K_{\mathrm{gen}}}) \otimes \R = 2^r
+   = \dim_\C H_{Z_2\text{-TQFT}}(\Sigma_K)$ (proved); (ii) the
+   identification of the $2^r$-dimensional Borel space with the genus
+   characters of $\Cl(K)/\Cl(K)^2$ (proved); (iii) the canonical
+   labelling of the $2^r$ Q-rational CM-newform orbits at every odd
+   weight $w \ge 3$ with $e \mid (w-1)$ by those genus characters
+   (proved, Theorem~D'); (iv) an explicit closed-form for the
+   eigenvalues of the proposed Lichnerowicz operator
+   $\Delta_{\mathrm{YM}}$ in terms of Hecke L-values $L(\psi_\chi, 2)$
+   (reframe).
+\item[\textbf{Not claimed.}] (i) that the Lichnerowicz operator so
+   defined coincides with a YM Laplacian on physical fields
+   (TIER 3 reframe; this is the principal gap); (ii) that the smallest
+   non-trivial eigenvalue equals the Clay-grade mass gap (the
+   dimensional transmutation scale $\Lambda_{\overline{MS}}$ must be
+   set externally; see Section~\ref{sec:conjF-composition} item (D));
+   (iii) anything about $h_K = 1$ anchors, where $\dim H = 1$ and the
+   Lichnerowicz route is vacuous (treated as a registered failure mode
+   in Remark~\ref{rk:conjF-hK1}).
+\end{itemize}
+
+\subsection{Arrow A1: Borel + genus field}
+\label{sec:conjF-borel}
+
+This subsection assembles the genus field $K_{\mathrm{gen}}$, computes
+its archimedean signature, and invokes Borel's rank theorem to
+identify $K_3(\mathcal{O}_{K_{\mathrm{gen}}}) \otimes \R \cong
+\R^{2^r}$.  All inputs are classical and TIER 1 PROVED.
+
+\subsubsection{The genus field}
+\label{sec:conjF-borel-genus}
+
+\begin{definition}\label{def:genusfield}
+The \emph{genus field} of $K$, written $K_{\mathrm{gen}}$, is the
+maximal unramified abelian extension of $K$ of exponent~$2$.
+Equivalently (Cox~\cite[Thm.~6.1]{Cox1989}), if $D = d_1 d_2 \cdots
+d_t$ is the unique factorisation of $D$ into prime
+discriminants---each $d_i$ is either a prime $p \equiv 1 \pmod 4$, the
+negative $-p$ for $p \equiv 3 \pmod 4$, or one of $\{-4, \pm 8\}$ at
+the prime~$2$---and $t = \omega^*(|D|)$ counts the distinct prime
+discriminants, then
+\[
+   K_{\mathrm{gen}} \;=\; \Q\bigl(\sqrt{d_1}, \sqrt{d_2}, \ldots,
+   \sqrt{d_t}\bigr).
+\]
+\end{definition}
+
+\begin{lemma}\label{lem:conjF-genus-degree}
+The genus field has degree $[K_{\mathrm{gen}}:\Q] = 2^t$.  Its
+extension over $K$ has degree $[K_{\mathrm{gen}} : K] = 2^{t-1} = 2^r$,
+where $r = \rk_2 \Cl(K)$.
+\end{lemma}
+
+\begin{proof}
+The first identity is elementary: the $t$ quadratic radicals
+$\sqrt{d_i}$ are independent over $\Q$ since the $d_i$ are pairwise
+coprime fundamental discriminants.  For the second, recall
+$[K:\Q] = 2$, and Gauss's principal-genus theorem
+\cite[\S225]{Gauss1801}, refined by Cox~\cite[Thm.~3.15]{Cox1989},
+identifies the Galois group $\Gal(K_{\mathrm{gen}}/K)$ with the genus
+quotient $\Cl(K)/\Cl(K)^2$, which has order $2^r$ where
+$r := \rk_2 \Cl(K) = t - 1$ for fundamental $D < 0$.
+\end{proof}
+
+\begin{lemma}\label{lem:conjF-genus-signature}
+The archimedean signature of $K_{\mathrm{gen}}$ is
+$(r_1, r_2) = (0, 2^r)$.  In particular $r_2(K_{\mathrm{gen}}) = 2^r$.
+\end{lemma}
+
+\begin{proof}
+The field $K = \Q(\sqrt D)$ is imaginary quadratic ($D < 0$), hence
+totally complex: $r_1(K) = 0$, $r_2(K) = 1$.  Every field
+$K(\sqrt{d_i})$ with $d_i \in \{d_1, \ldots, d_t\}$ contains the
+imaginary subfield $K$, so each embedding of $K_{\mathrm{gen}}$ into
+$\C$ is non-real, i.e.\ $r_1(K_{\mathrm{gen}}) = 0$ and
+$r_2(K_{\mathrm{gen}}) = [K_{\mathrm{gen}}:\Q]/2 = 2^{t-1} = 2^r$.
+\end{proof}
+
+\subsubsection{Borel's rank theorem applied to \texorpdfstring{$K_3$}{K3}}
+\label{sec:conjF-borel-rank}
+
+\begin{theorem}[Borel 1974~\cite{Borel1974}]\label{thm:conjF-borel-K3}
+For any number field $F$ with signature $(r_1, r_2)$,
+\[
+   \rk_\Z K_{2n-1}(\mathcal{O}_F) \;=\;
+   \begin{cases}
+   r_1 + r_2 & \text{if } n \equiv 1 \pmod 2,\, n \ge 3,\\
+   r_2 & \text{if } n \equiv 0 \pmod 2,\, n \ge 2.
+   \end{cases}
+\]
+In particular for $n = 2$,
+$\rk_\Z K_3(\mathcal{O}_F) = r_2(F)$.
+\end{theorem}
+
+\begin{corollary}[Borel + Genus]\label{cor:conjF-borel-gen}
+Combining Theorem~\ref{thm:conjF-borel-K3} with
+Lemma~\ref{lem:conjF-genus-signature},
+\[
+   \boxed{\;\rk_\Z K_3(\mathcal{O}_{K_{\mathrm{gen}}}) \;=\;
+   r_2(K_{\mathrm{gen}}) \;=\; 2^r.\;}
+\]
+Equivalently, the Beilinson regulator
+\[
+   \reg_B \,\colon\, K_3(\mathcal{O}_{K_{\mathrm{gen}}}) \otimes \R
+   \;\xrightarrow{\,\sim\,}\; \R^{2^r}
+\]
+is a $\Q$-linear isomorphism (Borel~\cite[Thm.~12.1]{Borel1974}).
+\end{corollary}
+
+\begin{proof}
+Lemma~\ref{lem:conjF-genus-signature} gives $r_2(K_{\mathrm{gen}}) =
+2^r$.  Theorem~\ref{thm:conjF-borel-K3} then yields the rank identity.
+The regulator statement is the original content of
+\cite[Thm.~12.1]{Borel1974}: $\reg_B$ has image of finite covolume in
+$\R^{r_2}$ and tensoring with $\R$ makes it an isomorphism.
+\end{proof}
+
+\begin{remark}\label{rk:conjF-K3-vs-reg}
+The Beilinson conjecture for $L(\zeta_{K_{\mathrm{gen}}}, 2)$
+\cite[Conj.~3.4]{Beilinson1985} predicts that
+$\reg_B^{-1}$ identifies a $\Q$-structure on $\R^{2^r}$ for which the
+covolume equals (up to a rational multiplicative factor) the value
+$L(\zeta_{K_{\mathrm{gen}}}, 2)/\pi^{2 \cdot 2^r}$.  We will use this
+predicted $\Q$-structure to define genus-character coordinates on
+$\R^{2^r}$; see~\eqref{eq:zetaK-gen-decomp} below.
+\end{remark}
+
+\subsubsection{Genus characters as coordinates on $\R^{2^r}$}
+\label{sec:conjF-borel-coords}
+
+\begin{proposition}\label{prop:conjF-zeta-decomp}
+The Dedekind zeta function of $K_{\mathrm{gen}}$ factorises as
+\begin{equation}\label{eq:zetaK-gen-decomp}
+   \zeta_{K_{\mathrm{gen}}}(s) \;=\;
+   \prod_{\chi \in \widehat{\Cl(K)/\Cl(K)^2}}
+   \;L\!\left(\psi_\chi, s\right),
+\end{equation}
+where the product runs over the $2^r$ genus characters $\chi$ of
+$\Cl(K)$ \textup{(}equivalently, characters of
+$\Cl(K)/\Cl(K)^2$\textup{)}, and $\psi_\chi$ is the Hecke character of
+$K$ associated with $\chi$.  At the trivial character
+$\chi = \mathbf{1}$, $L(\psi_{\mathbf{1}}, s) = \zeta_K(s) =
+\zeta(s) \cdot L(\chi_D, s)$.  At a non-trivial genus character
+$\chi$, $L(\psi_\chi, s) = L(\chi_a, s) \cdot L(\chi_b, s)$ where
+$D = d_a \cdot d_b$ is the corresponding factorisation into a pair of
+fundamental discriminants
+\textup{(}Cox~\cite[Thm.~7.7]{Cox1989}\textup{)}.
+\end{proposition}
+
+\begin{proof}
+The genus field $K_{\mathrm{gen}}/\Q$ has Galois group
+$(\Z/2\Z)^t$, hence its Dedekind zeta factorises as the product over
+all $2^t$ characters of $(\Z/2\Z)^t$ of the corresponding Dirichlet
+$L$-functions.  Reducing modulo the $\Cl(K)^2$-equivalence classes
+groups these $2^t$ Dirichlet characters into $2^r = 2^{t-1}$ orbits of
+size~$2$ under the $\Gal(K/\Q)$-action; each orbit corresponds to a
+genus character $\chi$ of~$K$ via
+$\psi_\chi := \chi \circ \mathrm{Art}_K$, the Artin character.
+The pairwise product within each orbit is exactly
+$L(\psi_\chi, s)$.  See Cox~\cite[Thm.~7.7]{Cox1989} for the explicit
+decomposition $L(\psi_\chi, s) = L(\chi_a, s) L(\chi_b, s)$.
+\end{proof}
+
+\noindent We thus have an explicit $\Q$-basis of $\R^{2^r}$, indexed
+by the genus characters of~$\Cl(K)/\Cl(K)^2$:
+\[
+   \R^{2^r} \;=\;
+   \bigoplus_{\chi \in \widehat{\Cl(K)/\Cl(K)^2}}
+   \R \cdot \ket{\chi}.
+\]
+The identification $\ket{\chi} \leftrightarrow L(\psi_\chi, 2)$ is
+canonical up to the Borel regulator (it pins down each line up to
+$\Q^\times$).
+
+\subsection{Arrow A2: theta-lift and the $2^r$ orbits (Theorem D')}
+\label{sec:conjF-theta}
+
+This arrow identifies the $\R^{2^r}$ from Arrow A1 with the Hilbert
+space of a Dijkgraaf--Witten $\Z/2$ topological gauge theory.  The
+identification is mediated by the theta-lift construction of
+Hecke--Shimura--Damerell and rests on Theorem~D' of the companion
+note \cite{ThmDPrime2026} (which appears as
+Theorem~\ref{thm:main-universal} of the present manuscript at $r \ge 1$).
+
+\subsubsection{The Dijkgraaf--Witten Hilbert space on the arithmetic
+2-surface}
+\label{sec:conjF-DW}
+
+Following Manin--Marcolli \cite{ManinMarcolli2002} and the
+Arakelov-compactification programme, the arithmetic
+2-surface~$\Sigma_K$ is the formal pair
+$\Sigma_K := \mathrm{Spec}\, \mathcal{O}_K \cup \{\sigma_\infty\}$,
+where $\sigma_\infty$ is the unique archimedean place of~$K$
+(complex, since $D < 0$).  This is a 2-dimensional object in the
+Arakelov sense.
+
+\begin{theorem}[Dijkgraaf--Witten 1990~\cite{DijkgraafWitten1990}]\label{thm:conjF-DW}
+For a finite group $G$ and an oriented closed 2-manifold $\Sigma$,
+the Dijkgraaf--Witten TQFT $\mathrm{DW}_G(\Sigma)$ assigns a Hilbert
+space
+\[
+   H_{G\text{-}\mathrm{DW}}(\Sigma) \;:=\;
+   \C\bigl[\Hom\bigl(\pi_1(\Sigma), G\bigr)/G\bigr],
+\]
+of dimension $|\Hom(\pi_1(\Sigma), G)/G|$ where $G$ acts by
+conjugation.  For $G$ abelian, this collapses to
+$\C[H_1(\Sigma, G)]$.
+\end{theorem}
+
+\begin{definition}\label{def:conjF-H-TQFT}
+The Z_2-TQFT Hilbert space on the arithmetic 2-surface $\Sigma_K$ is
+\[
+   H_{Z_2\text{-}\mathrm{TQFT}}(\Sigma_K)
+   \;:=\;
+   \C\bigl[H^1_{\mathrm{\acute et}}(\mathrm{Spec}\,\mathcal{O}_K,\,
+   \mu_2)\bigr],
+\]
+the group algebra of the \'etale $\mu_2$-cohomology of
+$\mathrm{Spec}\,\mathcal{O}_K$.
+\end{definition}
+
+\begin{lemma}\label{lem:conjF-H1-cardinality}
+With $K$ imaginary quadratic, $D < 0$ fundamental, and $r := \rk_2 \Cl(K)$,
+\[
+   \dim_\C H_{Z_2\text{-}\mathrm{TQFT}}(\Sigma_K) \;=\;
+   |\Cl(K)/\Cl(K)^2| \;=\; 2^r.
+\]
+\end{lemma}
+
+\begin{proof}
+The Kummer sequence over $\mathrm{Spec}\,\mathcal{O}_K[1/2]$
+gives the exact sequence
+\[
+   \mathcal{O}_K[1/2]^\times \xrightarrow{\,\cdot 2\,}
+   \mathcal{O}_K[1/2]^\times \to
+   H^1_{\mathrm{\acute et}}(\mathrm{Spec}\,\mathcal{O}_K[1/2], \mu_2)
+   \to \Pic(\mathcal{O}_K[1/2])[2] \to 0,
+\]
+yielding (after restoring the prime~$2$ via standard Bloch--Kato
+descent)
+\[
+   H^1_{\mathrm{\acute et}}(\mathrm{Spec}\,\mathcal{O}_K, \mu_2)
+   \;\cong\;
+   (\mathcal{O}_K^\times / (\mathcal{O}_K^\times)^2)
+   \,\oplus\,
+   \Cl(K)[2].
+\]
+For $D < -4$ the unit group is $\{\pm 1\}$ of order~$2$, so the first
+summand has order~$2$.  The second summand has order
+$|\Cl(K)[2]| = 2^r$ by definition of $r$.  Modulo the unit
+contribution, the genuine arithmetic Picard 2-torsion is $\Cl(K)[2]$
+of order $2^r$, which (by elementary abelian-group duality applied to
+the finite 2-torsion subgroup $\Cl(K)[2] \subseteq \Cl(K)$) is
+isomorphic to $\Cl(K)/\Cl(K)^2$.  Hence
+$|\Cl(K)/\Cl(K)^2| = 2^r$ and the lemma follows.
+
+For the two exceptional fields $D \in \{-3, -4\}$, we have $r = 0$
+and $\dim H = 1$ trivially.
+\end{proof}
+
+Combining Corollary~\ref{cor:conjF-borel-gen} with
+Lemma~\ref{lem:conjF-H1-cardinality}, the two spaces (M) and (N) in
+the diagram of \S\ref{sec:conjF-diagram} have the {\bf same dimension}
+$2^r$.  The identification (M) $\to$ (N) is now mediated by Theorem~D'.
+
+\subsubsection{Theorem D' as the theta-lift bridge}
+\label{sec:conjF-thmD}
+
+\begin{theorem}[Theorem D' (universal Q-rational orbit count); see Theorem~\ref{thm:main-universal} and~\cite{ThmDPrime2026}]
+\label{thm:conjF-thmDPrime}
+With $K = \Q(\sqrt D)$, $D < 0$ fundamental, $r = \rk_2 \Cl(K)$,
+$e = \exp(\Cl(K))$, and $w \ge 3$ odd, the number of Galois orbits of
+normalised CM newforms $f \in S_w^{\mathrm{new}}(\Gamma_0(|D|),
+\chi_D)$ with CM by $K$ and Q-rational Hecke eigenvalues is
+\begin{equation}\label{eq:thmDprime}
+   N_w(K) \;=\;
+   \begin{cases}
+     2^r & \text{if } e \mid (w-1),\\
+     0   & \text{otherwise.}
+   \end{cases}
+\end{equation}
+Moreover when $e \mid (w-1)$, the $2^r$ orbits are in canonical
+bijection with the genus characters of $\Cl(K)/\Cl(K)^2$.
+\end{theorem}
+
+\begin{proof}
+See \cite{ThmDPrime2026} for the four-input chain: (I)
+Hecke--Shimura--Ribet bijection $\psi \leftrightarrow f_\psi$, (II)
+trivial-conductor specialisation, (III) Sch\"utt's
+Q-rationality criterion~\cite{Schutt2008}, (IV) genus-character
+bijection (Gauss + Cox).  TIER 1 PROVED.
+\end{proof}
+
+\begin{definition}[Theta-lift bridge map]\label{def:conjF-theta}
+For each odd weight $w \ge 3$ with $e \mid (w-1)$, define the linear
+isomorphism
+\[
+   \theta_w \,\colon\, \R^{2^r} \;\xrightarrow{\,\sim\,}\;
+   H_{Z_2\text{-}\mathrm{TQFT}}(\Sigma_K)
+\]
+by sending the genus-character basis vector
+$\ket{\chi} \in \R^{2^r}$ (Proposition~\ref{prop:conjF-zeta-decomp})
+to the genus-character basis vector
+$\ket{\chi} \in H_{Z_2\text{-}\mathrm{TQFT}}(\Sigma_K)$
+(Lemma~\ref{lem:conjF-H1-cardinality}).  The bridge $\theta_w$ does
+not depend on $w$ at the level of the basis (only the L-value
+labelling does), but we retain the subscript to mark the weight at
+which the L-value normalisation is performed.
+\end{definition}
+
+\begin{proposition}\label{prop:conjF-theta-canonical}
+The bridge $\theta_w$ of Definition~\ref{def:conjF-theta} is canonical
+modulo the choice of the Chowla--Selberg period
+$\Omega_K$ used to normalise $\reg_B$.
+\end{proposition}
+
+\begin{proof}[Sketch]
+Both source and target are indexed by
+$\widehat{\Cl(K)/\Cl(K)^2}$ (Proposition~\ref{prop:conjF-zeta-decomp}
+on the source; Lemma~\ref{lem:conjF-H1-cardinality} on the target via
+the Kummer/Artin map).  Theorem~\ref{thm:conjF-thmDPrime} furnishes
+the matching of orbit labels.  The only remaining choice is the
+overall normalisation of $\reg_B$ on each Borel line, which is pinned
+to the corresponding Chowla--Selberg period
+$\Omega_K^{w-1}$ of \cite{ChowlaSelberg1949}.
+The case-by-case verification at the empirical anchors $D \in
+\{-7, -8, -11, -15, -19, -20, -24, -35, -40, -43, -51, -67, -84,
+-91, -115, -120, -132, -163, -187\}$ runs through $165$ EXACT
+Q-rational identities in Tables 3.1--3.9 of the companion
+Paper~P6~\cite{Remondiere2026P6} and the lattice extension at
+$h_K = 4$ in~\cite[\S5]{Remondiere2026P5}.
+\end{proof}
+
+\begin{remark}\label{rk:conjF-theta-shimura}
+The classical content of $\theta_w$ is the Shimura--Damerell
+theta-lift~\cite{Shimura1976,Damerell1971}: a Hecke character
+$\psi_\chi$ of infinity type $(w-1, 0)$ on the genus field
+$K_{\mathrm{gen}}$ produces the CM newform $f_{\psi_\chi}$ of
+weight~$w$ on $\Gamma_0(|D|)$ with nebentypus $\chi_D$; the
+L-function $L(f_{\psi_\chi}, s)$ at the right edge $s = w - 1$ is
+algebraic over~$\Q$ after dividing by~$\Omega_K^{w-1}$.  Our
+$\theta_w$ is the linear-algebraic shadow of this theta-lift on the
+$2^r$-dimensional Beilinson space, projected to the genus
+sub-quotient.
+\end{remark}
+
+\subsection{Arrow A3: Lichnerowicz spectrum and the Selberg trace formula}
+\label{sec:conjF-lich}
+
+The third arrow is the genuinely speculative content of
+Conjecture~F~v3.  Two formulations coexist in the literature; we
+present them both, separate what is rigorous from what is reframe,
+and conclude with the explicit closed-form eigenvalues used in the
+composition (\S\ref{sec:conjF-composition}).
+
+\subsubsection{The Z_2-DW Laplacian on $H_{Z_2\text{-TQFT}}(\Sigma_K)$}
+\label{sec:conjF-DW-laplacian}
+
+\begin{definition}\label{def:conjF-lichn-operator}
+Fix $K = \Q(\sqrt D)$ as above and $w \ge 3$ odd with $e \mid (w-1)$.
+The {\bf Lichnerowicz/YM Laplacian} on
+$H_{Z_2\text{-}\mathrm{TQFT}}(\Sigma_K)$ is the Hermitian operator
+\[
+   \Delta_{\mathrm{YM}}^{(w)} \,\colon\,
+   H_{Z_2\text{-}\mathrm{TQFT}}(\Sigma_K) \;\to\;
+   H_{Z_2\text{-}\mathrm{TQFT}}(\Sigma_K),
+\]
+defined in the genus-character basis $\{\ket{\chi}\}$ of
+Lemma~\ref{lem:conjF-H1-cardinality} by
+\begin{equation}\label{eq:conjF-Delta-YM-def}
+   \Delta_{\mathrm{YM}}^{(w)} \ket{\chi} \;:=\;
+   \lambda_\chi^{(w)} \, \ket{\chi},
+   \qquad
+   \lambda_\chi^{(w)} \;:=\;
+   \frac{L(\psi_\chi, w-1)}{L(\psi_{\mathbf{1}}, w-1)}
+   \;+\;
+   \kappa \cdot h(\chi),
+\end{equation}
+where $\psi_\chi$ is the Hecke character of
+Proposition~\ref{prop:conjF-zeta-decomp}, $h(\chi) \in \Q$ is the
+conformal weight of the corresponding Z_2-anyon (i.e.\
+$0$ or $1/4$ depending on the chosen 3-cocycle $\omega \in
+H^3(BZ_2, U(1)) = \Z/2$), and $\kappa$ is a coupling constant
+(quantised in $\{0, 1\}$ at the level of the discrete Z_2-DW
+3-cocycle; its allowed values are exactly $\{0, 1\}$ via
+\cite[\S6]{DijkgraafWitten1990}).
+\end{definition}
+
+\begin{remark}\label{rk:conjF-cocycle}
+The two values $\kappa \in \{0, 1\}$ correspond to the two distinct
+$\Z/2$-DW theories: the trivial theory ($\kappa = 0$, untwisted) and
+the semion-fermion theory ($\kappa = 1$, twisted by the non-trivial
+3-cocycle).  The choice of $\kappa$ is dictated by the requirement
+that $\Delta_{\mathrm{YM}}^{(w)}$ be positive-semidefinite (cf.\
+\S\ref{sec:conjF-composition}).
+\end{remark}
+
+\begin{remark}\label{rk:conjF-lichn-honest}
+The identification \eqref{eq:conjF-Delta-YM-def} of the Hodge
+eigenvalues with Hecke L-value ratios is the only place in this
+section where the rigour drops from PROVED to {\bf TIER 3 reframe}.
+The classical content (Stark 1976~\cite{Stark1976}, Beilinson
+1985~\cite{Beilinson1985}) is the {\bf volume formula}
+\[
+   \vol\bigl(\reg_B(K_3(\mathcal{O}_{K_{\mathrm{gen}}}))\bigr)
+   \;=\;
+   (2\pi)^{2 \cdot 2^r} \cdot
+   \frac{\prod_\chi L(\psi_\chi, 2)}{|K_3(\mathcal{O}_{K_{\mathrm{gen}}})_{\mathrm{tors}}|}.
+\]
+This formula constrains the {\bf product} $\prod_\chi L(\psi_\chi, 2)$
+to a Q-rational multiple of the regulator volume.  Pinning each
+individual factor $L(\psi_\chi, 2)$ to a specific
+$\Delta_{\mathrm{YM}}$-eigenvalue requires choosing a Hodge
+star-operator on $\reg_B(K_3(\mathcal{O}_{K_{\mathrm{gen}}}))$
+compatible with the genus-character grading; this is a non-trivial
+choice and constitutes the TIER 3 reframe.  Theorem~\ref{thm:conjF-Selberg}
+below gives one route via the Selberg trace formula on
+$Y_{K_{\mathrm{gen}}} := \mathrm{SL}_2(\mathcal{O}_{K_{\mathrm{gen}}})
+\backslash \mathbb{H}^3$.
+\end{remark}
+
+\subsubsection{Selberg trace formula on the arithmetic hyperbolic
+3-manifold}
+\label{sec:conjF-selberg}
+
+\begin{theorem}[Selberg trace formula; Elstrodt--Grunewald--Mennicke 1998 \cite{EGM1998}]\label{thm:conjF-Selberg}
+Let $F$ be a number field with $(r_1, r_2) = (0, n)$ totally complex of
+degree $2n$.  Let $Y_F :=
+\mathrm{SL}_2(\mathcal{O}_F) \backslash \prod_{i=1}^n \mathbb{H}^3$
+be the associated arithmetic hyperbolic $3n$-manifold.  Then the
+spectrum of the Laplace-Beltrami operator $\Delta_{Y_F}$ on
+$L^2(Y_F)$ decomposes as
+\[
+   \mathrm{Spec}_{L^2}(\Delta_{Y_F}) \;=\;
+   \mathrm{Spec}_{\mathrm{cusp}}(\Delta_{Y_F}) \;\sqcup\;
+   \mathrm{Spec}_{\mathrm{Eis}}(\Delta_{Y_F}),
+\]
+and the continuous part $\mathrm{Spec}_{\mathrm{Eis}}$ is parameterised
+by the $r_2 = n$ Hecke characters of $F$ with infinity type $(1, 1,
+\ldots, 1)$ via Eisenstein series.  Specialising to
+$F = K_{\mathrm{gen}}$, the Eisenstein spectrum is indexed by the
+$2^r$ Hecke characters $\psi_\chi$ of
+Proposition~\ref{prop:conjF-zeta-decomp}, and the corresponding
+spectral coefficients factor through the L-values
+$L(\psi_\chi, 1+it)$.
+\end{theorem}
+
+\begin{corollary}\label{cor:conjF-Selberg-Lich}
+Under the conjectural identification of the $L^2$-eigenvalues of
+$\Delta_{Y_{K_{\mathrm{gen}}}}$ above the Eisenstein cusps with the
+genus-character Hodge eigenvalues, the operator
+$\Delta_{\mathrm{YM}}^{(w)}$ of
+Definition~\ref{def:conjF-lichn-operator} can be realised as the
+restriction of $\Delta_{Y_{K_{\mathrm{gen}}}}$ to the genus-character
+sub-quotient.  This identification is TIER 3 reframe: the trace
+formula provides the {\em spectral framework}, but the matching of
+spectral parameters $t$ with $w - 1$ is conjectural.
+\end{corollary}
+
+\subsubsection{Explicit eigenvalues at $D = -15, -91, -84$}
+\label{sec:conjF-num-eigs}
+
+We tabulate the Hodge eigenvalues $\lambda_\chi^{(3)} =
+L(\psi_\chi, 2) / \zeta_K(2)$ at three anchors, computed in
+\texttt{PARI/GP 2.15.4} at 40--50-digit precision.  At each anchor we
+also record the {\bf gap above smallest non-vacuum eigenvalue}, which
+is the dimensionless quantity appearing in the proposed
+$m_{\mathrm{gap}}$ formula~\eqref{eq:conjF-mgap-final} below.
+
+\begin{table}[h!]
+\caption{Explicit $\Delta_{\mathrm{YM}}^{(3)}$ spectra at three
+anchors (PARI/GP, 40--50 digits).  Source:
+\cite[\S4.5]{LichnerowiczSpectrum2026}.}
+\label{tab:conjF-lich-spectra}
+\centering
+\begin{tabular}{lccccc}
+\toprule
+$D$ & $h_K$ & $r$ & $\dim H$ & Spectrum (units $\zeta_K(2)$) & Gap $1 - \min$\\
+\midrule
+$-15$  & $2$ & $1$ & $2$ & $\{1, 0.25870\}$ & $0.74130$ \\
+$-91$  & $2$ & $1$ & $2$ & $\{1, 0.78929\}$ & $0.21071$ \\
+$-84$  & $4$ & $2$ & $4$ & $\{1, 0.48147, 0.43452, 0.63253\}$ & $0.56548$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{remark}[The $h_K = 1$ failure mode]\label{rk:conjF-hK1}
+For $D \in \{-3, -4, -7, -8, -11, -19, -43, -67, -163\}$ we have
+$r = 0$ and $\dim H = 1$.  The Lichnerowicz operator
+$\Delta_{\mathrm{YM}}^{(w)}$ has a single eigenvalue $\lambda = 1$
+(the vacuum), and {\em no second eigenvalue exists}.  The formula
+$m_{\mathrm{gap}} = \min_{\chi \ne \mathbf{1}}(\cdots)$ is vacuous at
+$h_K = 1$.  This is a {\bf registered failure mode} of Conjecture~F
+v3: the Lichnerowicz route does not produce a mass gap from
+arithmetic data alone at the Heegner anchors, matching the negative
+theorem (OP8-T1, dimensional-transmutation argument) recorded
+in~\cite{NoArithmeticMgap2026}.  See the discussion at
+Section~\ref{sec:conjF-open} item~(O1).
+\end{remark}
+
+\subsection{Composition: the main statement of Conjecture F v3}
+\label{sec:conjF-composition}
+
+\begin{conjecture}[Conjecture~F v3, mass-gap composition]
+\label{conj:conjF-v3}
+With $K = \Q(\sqrt D)$ imaginary quadratic, $D < 0$ fundamental,
+$r = \rk_2 \Cl(K) \ge 1$, and a fixed choice of odd weight
+$w \ge 3$ with $\exp(\Cl K) \mid (w-1)$:
+\begin{enumerate}[label=\textup{(\Alph*)},leftmargin=*]
+\item {\rm (Object level, PROVED.)}
+   The diagram
+   \[
+   K_3(\mathcal{O}_{K_{\mathrm{gen}}}) \otimes \R
+   \;\xrightarrow{\;\reg_B\;}\;
+   \R^{2^r}
+   \;\xrightarrow{\;\theta_w\;}\;
+   H_{Z_2\text{-}\mathrm{TQFT}}(\Sigma_K)
+   \]
+   is well-defined and both arrows are $\Q$-linear isomorphisms
+   (Corollary~\ref{cor:conjF-borel-gen};
+   Proposition~\ref{prop:conjF-theta-canonical}).
+\item {\rm (Spectrum, TIER 3 reframe.)}
+   The Lichnerowicz operator $\Delta_{\mathrm{YM}}^{(w)}$ of
+   Definition~\ref{def:conjF-lichn-operator}, with coupling
+   constant $\kappa \in \{0, 1\}$ chosen so as to make all
+   eigenvalues non-negative, has spectrum
+   \begin{equation}\label{eq:conjF-spectrum}
+   \mathrm{Spec}\bigl(\Delta_{\mathrm{YM}}^{(w)}\bigr) \;=\;
+   \left\{
+   \lambda_\chi^{(w)} \;:=\;
+   \frac{L(\psi_\chi, w-1)}{\zeta_K(w-1)} + \kappa \cdot h(\chi)
+   \;\colon\; \chi \in \widehat{\Cl(K)/\Cl(K)^2}
+   \right\}.
+   \end{equation}
+\item {\rm (Mass-gap formula, TIER 3 reframe.)}
+   The dimensionless arithmetic factor of the SU(N) YM mass gap
+   $m_{\mathrm{gap}}(\mathrm{SU}(N))$, when $\mathrm{SU}(N)$ is
+   anchored at $K$ via the (chosen) bridge $N \mapsto K(N)$, is
+   \begin{equation}\label{eq:conjF-mgap-final}
+   \boxed{\;
+   \xi(K) \;:=\;
+   \min_{\chi \in \widehat{\Cl(K)/\Cl(K)^2} \setminus \{\mathbf{1}\}}
+   \frac{L(\psi_\chi, w-1)}{[\Reg(K_{\mathrm{gen}})]^{1/2^r}}.
+   \;}
+   \end{equation}
+\item {\rm (Dimensional factor, classical.)}
+   The absolute mass gap factors as
+   \[
+   m_{\mathrm{gap}}(\mathrm{SU}(N)) \;=\;
+   c_N \cdot \Lambda_{\overline{MS}}(N) \cdot \xi(K(N))^{1/2},
+   \]
+   where $c_N$ is a universal scheme-independent constant and
+   $\Lambda_{\overline{MS}}(N)$ is the dimensional transmutation
+   scale of pure SU(N) Yang--Mills (Gross--Wilczek--Politzer 1973).
+\end{enumerate}
+\end{conjecture}
+
+\subsubsection{Proof of part (A)}
+\label{sec:conjF-proof-A}
+
+\begin{proof}[Proof of Conjecture~\ref{conj:conjF-v3}(A)]
+The first map $\reg_B$ is a $\Q$-linear isomorphism by Borel's
+rank theorem (Corollary~\ref{cor:conjF-borel-gen}).  The second map
+$\theta_w$ is the bijection of basis vectors via
+Theorem~\ref{thm:conjF-thmDPrime} and
+Proposition~\ref{prop:conjF-theta-canonical}, hence a $\Q$-linear
+isomorphism (in fact, the identity on genus-character labels).
+The composition $\theta_w \circ \reg_B$ is therefore a
+$\Q$-linear isomorphism
+$K_3(\mathcal{O}_{K_{\mathrm{gen}}}) \otimes \R \xrightarrow{\sim}
+H_{Z_2\text{-}\mathrm{TQFT}}(\Sigma_K)$.
+\end{proof}
+
+\subsubsection{Sketch for part (B)--(C): the gaps}
+\label{sec:conjF-proof-BC}
+
+The remaining content of parts (B) and (C) is exactly the TIER 3
+reframe of Remark~\ref{rk:conjF-lichn-honest}: we have the right
+{\bf cardinality} of eigenvalues ($2^r$), the right {\bf labelling}
+(genus characters), and the right {\bf qualitative structure}
+(Hecke L-values at the right edge), but the spectral identification
+$\Delta_{\mathrm{YM}}^{(w)}\,\ket{\chi} = \lambda_\chi^{(w)}\,
+\ket{\chi}$ requires a Hodge-theoretic compatibility statement on
+$\reg_B(K_3(\mathcal{O}_{K_{\mathrm{gen}}}))$ that is conjectural at
+present.  Specifically:
+
+\begin{enumerate}[label=(B\arabic*),leftmargin=*]
+\item {\bf Beilinson individual-value conjecture:} for each
+   non-trivial genus character $\chi$, the Q-rational structure of
+   $L(\psi_\chi, w-1)$ modulo Chowla--Selberg periods is sufficient
+   to identify each Borel line with its corresponding L-value.  This
+   is contained in Beilinson's original conjecture
+   \cite[Conj.~3.4]{Beilinson1985} for $L(\zeta_{K_{\mathrm{gen}}},
+   w-1)$ as a product, but the individual-factor statement requires
+   the {\em equivariant} Beilinson conjecture (Burns--Flach
+   \cite{BurnsFlach2001}).
+\item {\bf Selberg-trace compatibility:} the genus-character
+   sub-quotient of $\Delta_{Y_{K_{\mathrm{gen}}}}$ has spectrum
+   exactly~\eqref{eq:conjF-spectrum}.  This is conjectural at the
+   level of the spectral-parameter matching $t \leftrightarrow w-1$;
+   the trace formula gives the spectral framework
+   (Theorem~\ref{thm:conjF-Selberg}) but not the matching.
+\item {\bf Anchor map} $N \mapsto K(N)$: the assignment SU(2) $\mapsto
+   \Q(\sqrt{-7})$, SU(3) $\mapsto \Q(\sqrt{-67})$, and so on, is
+   currently {\em chosen} (motivated by Heegner anchors with maximal
+   $|D|$) rather than derived.  Conjecture~\ref{conj:conjF-v3}(D) is
+   sensitive to this choice via the dimensional scale.
+\end{enumerate}
+
+\noindent We do not assert (B1)--(B3); we record them as open
+sub-problems.  Conjecture~\ref{conj:conjF-v3} is TIER 3 reframe
+because of (B1)--(B3); upgrade to TIER 1 PROVED requires resolution
+of each.
+
+\subsection{Falsifiable predictions and numerical anchors}
+\label{sec:conjF-predictions}
+
+The composition~\eqref{eq:conjF-mgap-final} admits three sharp,
+PARI-testable falsifiable predictions.  In each case the failure
+mechanism is explicit, so a deviation from the prediction definitively
+rejects Conjecture~F v3 in its present form.
+
+\subsubsection{Prediction P1: D = -91, weight 3}
+\label{sec:conjF-predP1}
+
+At $D = -91$ ($h_K = 2$, $r = 1$, $\dim H = 2$) the Lichnerowicz
+spectrum at $w = 3$ has two eigenvalues, the vacuum
+$\lambda_{\mathbf{1}} = 1$ and the non-trivial genus-character
+eigenvalue
+\[
+   \lambda_{\chi_1}^{(3)} \;=\;
+   \frac{L(\chi_{-7}, 2) \cdot L(\chi_{13}, 2)}
+        {\zeta(2) \cdot L(\chi_{-91}, 2)}.
+\]
+PARI/GP at 40 digits gives \cite[\S2.3]{LichnerowiczSpectrum2026}:
+\[
+   \zeta(2) \;=\; 1.6449340668\ldots, \quad
+   L(\chi_{-91}, 2) \;=\; 0.7472827706\ldots,
+\]
+\[
+   L(\chi_{-7}, 2) \;=\; 1.1519254705\ldots, \quad
+   L(\chi_{13}, 2) \;=\; 0.8422571535\ldots,
+\]
+so
+\[
+   \lambda_{\chi_1}^{(3)} \;=\; \frac{0.97021746\ldots}{1.22923088\ldots}
+   \;=\; 0.78928822\ldots.
+\]
+\textbf{Prediction.}  The dimensionless gap factor
+$\xi(K_{-91}) = 1 - \lambda_{\chi_1}^{(3)} = 0.21071\ldots$ matches,
+modulo Chowla--Selberg normalisation and the choice of $\kappa$, the
+square of the dimensionless Yang--Mills mass-gap factor at the
+``SU($N$) ↔ $K = \Q(\sqrt{-91})$'' anchor.
+
+\textbf{Falsification criterion.}  If a future Vast PARI computation
+of the equivariant Beilinson regulator on
+$K_3(\mathcal{O}_{K_{\mathrm{gen}}})$ at $D = -91$ gives a
+genus-character eigenvalue {\em different} from $0.78929$ (e.g., by a
+factor of 2 or more), or if the implied $\xi(K)$ value disagrees with
+the lattice-extrapolated SU($N$) mass-gap at the {\bf same} anchor by
+more than 50\%, the composition~\eqref{eq:conjF-mgap-final} is
+falsified.
+
+\subsubsection{Prediction P2: D = -15, weight 3, with $\varepsilon_5^3$ identity}
+\label{sec:conjF-predP2}
+
+At $D = -15$ ($h_K = 2$, $r = 1$, genus field $K_{\mathrm{gen}} =
+\Q(\sqrt 5, \sqrt{-3})$), the empirical anchor
+\cite[Conjecture~M.D.7]{BIGTABLE2026} establishes
+\[
+   \frac{L(\fl{2}{1}, 1)}{L(\fl{2}{2}, 1)} \;=\;
+   2 + \sqrt 5 \;=\; \varepsilon_5^3 \in (\Q(\sqrt 5))^\times_{\mathrm{unit}},
+\]
+where $\varepsilon_5 = (1 + \sqrt 5)/2$ is the fundamental unit of
+$\Q(\sqrt 5)$ (PARI 50-digit, see \cite{BSDbridge2026}).
+
+\textbf{Prediction.}  Under Conjecture~F v3, the
+weight-$3$ Lichnerowicz gap at $D = -15$ is
+\[
+   \xi(K_{-15}) \;=\; 1 - \lambda_{\chi_1}^{(3)}(-15) \;=\;
+   1 - \frac{L(\chi_{-3}, 2) \cdot L(\chi_5, 2)}{\zeta(2) \cdot L(\chi_{-15}, 2)}
+   \;=\; 0.74130\ldots
+\]
+(PARI 40-digit, \cite[Table~§4.5]{LichnerowiczSpectrum2026}).  The
+relationship between $\xi(K_{-15}) = 0.74130\ldots$ and the BSD-bridge
+unit identity $\varepsilon_5^3 = 4.236\ldots$ should factor through
+the Stark conjecture at $\Q(\sqrt 5)$.  Concretely:
+\[
+   \boxed{\;
+   \xi(K_{-15}) \cdot \varepsilon_5^3 \;\stackrel{?}{\in}\; \Q^\times
+   \cdot \log \varepsilon_5,
+   \;}
+\]
+testable to 50-digit PARI precision.
+
+\textbf{Falsification criterion.}  If \texttt{lindep([xi(K\_-15) ·
+$\varepsilon_5^3$, $\log \varepsilon_5$, 1])} returns no small-coefficient
+relation at 50 digits, the Stark-type interpretation of the gap
+factor fails.
+
+\subsubsection{Prediction P3: D = -84, weight 3, four eigenvalues}
+\label{sec:conjF-predP3}
+
+At $D = -84$ ($h_K = 4$, $r = 2$, Klein four group $\Cl(K) =
+(\Z/2)^2$, genus field $K_{\mathrm{gen}} = \Q(\sqrt{-3}, \sqrt 7,
+\sqrt{-1})$ via Cox decomposition), the Lichnerowicz spectrum has
+{\bf four} eigenvalues
+\[
+   \mathrm{Spec}\bigl(\Delta_{\mathrm{YM}}^{(3)}\bigr) \;=\;
+   \{1,\; 0.48147,\; 0.43452,\; 0.63253\}
+\]
+in units of $\zeta_K(2)$, corresponding to the four genus characters
+of $\Cl(K)/\Cl(K)^2 = \Cl(K)$ (PARI 30-digit, \S\ref{sec:conjF-num-eigs}).
+
+\textbf{Prediction.}  The {\bf product} of the four eigenvalues
+\[
+   \prod_{\chi}\, \lambda_\chi^{(3)}(-84)
+   \;=\;
+   \frac{\zeta_{K_{\mathrm{gen}}}(2)}{\zeta_K(2)^{2^r}}
+   \;=\;
+   \frac{\prod_{4\text{ chars}} L(\psi_\chi, 2)}{\zeta_K(2)^{4}}
+\]
+is a {\bf Q-rational multiple of}
+$\Reg(K_{\mathrm{gen}}) / (2\pi)^{16}$ by the Beilinson volume
+formula (Remark~\ref{rk:conjF-lichn-honest}).
+
+\textbf{Falsification criterion.}  PARI direct computation of
+$\prod_\chi L(\psi_\chi, 2) / \zeta_K(2)^4$ at $D = -84$ to 50-digit
+precision: the resulting real number, divided by
+$\Reg(K_{\mathrm{gen}}) / (2\pi)^{16}$, should be in $\Q^\times$ (i.e.\
+\texttt{algdep([\ldots], 1)} returns a non-trivial small-coefficient
+relation).  If not, Conjecture~F v3 (specifically the Beilinson
+volume formula instantiated on the Lichnerowicz spectrum) is
+falsified at $D = -84$.
+
+\textbf{Estimated compute.}  Each of P1, P2, P3 runs in $<$~1~hour on a
+single PARI 32~GB instance.  P3 may need 100--200-digit precision for
+the regulator computation; this is the {\bf single highest-ROI
+experimental test} of Conjecture~F v3 in the lattice
+$h_K \in \{2, 4\}$.
+
+\subsection{Open subproblems and ROI estimates}
+\label{sec:conjF-open}
+
+We close by cataloguing the open subproblems whose resolution would
+upgrade Conjecture~F v3 from TIER 3 reframe to TIER 1 PROVED.  The
+ROI estimates follow the convention of \cite[\S5]{ConjFCanonical2026}:
+\emph{horizon} (years to expected resolution), \emph{value}
+(impact on Conjecture~F v3 if resolved positively), and
+\emph{compute} (estimated CPU-hours and human-hours).
+
+\begin{itemize}
+\item[\textbf{(O1)}] {\em The $h_K = 1$ failure mode.}
+   At Heegner anchors, $\dim H = 1$ and no Lichnerowicz mass gap
+   exists.  The candidate workarounds are (a) replace $K$ by a
+   larger field $L/K$ to enlarge $H$ ({\em ad hoc}: which $L$?);
+   (b) accept that arithmetic data alone cannot produce $m_{\mathrm{gap}}$
+   at $h_K = 1$ (dimensional transmutation, OP8-T1
+   \cite{NoArithmeticMgap2026}).  We favour (b): the
+   theory is consistent with the dimensional-transmutation negative
+   theorem.  ROI: horizon already settled; value: clarifies
+   anchor-selection principle; compute: none.
+\item[\textbf{(O2)}] {\em Equivariant Beilinson at $K_{\mathrm{gen}}$.}
+   The individual-value conjecture (B1) requires Burns--Flach
+   \cite{BurnsFlach2001} equivariant TNC for the genus-field
+   $K_{\mathrm{gen}}/\Q$ at $s = 2$.  Status: open in general.  ROI:
+   horizon 5--10~yr; value: would PROVE the Lichnerowicz
+   identification; compute: theoretical, no significant numerical
+   load.
+\item[\textbf{(O3)}] {\em Spectral parameter matching $t \leftrightarrow
+   w-1$.}  The Selberg-trace identification (B2) requires the
+   matching between the Eisenstein spectral parameter $t \in \R$ and
+   the L-value weight $w - 1 \in \Z_{\ge 2}$.  Possible route:
+   Iwasawa's deformation of $L(\psi_\chi, s)$ along the cyclotomic
+   tower, via Kings--Sprang \cite{KingsSprang2024}.  ROI: horizon
+   3--5~yr (depends on Kings--Sprang--Kufner programme converging);
+   value: would PROVE the spectral identification; compute: ~10$^3$
+   CPU-hr on Vast for verifications.
+\item[\textbf{(O4)}] {\em Anchor map $N \mapsto K(N)$.}  The
+   assignment SU($N$) $\leftrightarrow K(N)$ is presently chosen
+   (HSH v3, Heegner anchor SU(3) $\leftrightarrow K = \Q(\sqrt{-67})$).
+   Derivation requires understanding what arithmetic invariant of $K$
+   the SU($N$) data ``sees''---most likely via the 1-instanton sector
+   (Gate~1, see \cite[\S4]{Marathon2026_FINAL}).
+   ROI: horizon 12--18~yr (depends on constructive YM progress);
+   value: would PROVE the cross-$N$ structure; compute: minimal
+   numerical, dominant theoretical work.
+\item[\textbf{(O5)}] {\em Hodge structure on
+   $\reg_B(K_3(\mathcal{O}_{K_{\mathrm{gen}}}))$.}  The compatibility
+   between the genus-character grading and a Hodge star-operator on
+   the Borel image is a piece of motivic Hodge theory.  Possible
+   route: Brunault--Chida \cite{BrunaultChida2015} regulators for
+   Rankin--Selberg products, extended to the genus field.  ROI:
+   horizon 2--3~yr (already an active research line); value: would
+   PROVE the Lichnerowicz operator's diagonalisation in the
+   genus-character basis; compute: light.
+\item[\textbf{(O6)}] {\em Choice of cocycle $\kappa \in \{0, 1\}$.}
+   The two values of $\kappa$ correspond to the two distinct $\Z/2$-DW
+   theories.  The positivity requirement
+   (Remark~\ref{rk:conjF-cocycle}) singles out $\kappa = 1$ at the
+   majority of anchors (where $L(\psi_\chi, 2) < \zeta_K(2)$, hence the
+   shifted eigenvalue is negative without CS contribution).  ROI:
+   horizon $<$ 1~yr (PARI scan); value: settles the cocycle choice;
+   compute: $\le 10$~CPU-hr.
+\item[\textbf{(O7)}] {\em Cross-$D$ self-consistency at $h_K = 4$.}
+   The 76/76 empirical Q-rational identities at $h_K = 4$ Klein
+   (anchors $D \in \{-84, -120, -132\}$) extend the Lichnerowicz
+   structure beyond $h_K = 2$ to $r = 2$ with $\dim H = 4$.  ROI:
+   already partly checked (76/76 PASS).  Value: confirms the
+   structure at the genus level.  Compute: P3 above, $\le 10$
+   CPU-hr Vast.
+\end{itemize}
+
+\subsection{Summary table}
+\label{sec:conjF-summary}
+
+\begin{table}[h!]
+\caption{Status of Conjecture F v3 by component.}
+\label{tab:conjF-status}
+\centering
+\begin{tabular}{lll}
+\toprule
+Component & Tier & Reference \\
+\midrule
+$\dim K_3(\mathcal{O}_{K_{\mathrm{gen}}}) \otimes \R = 2^r$
+   & TIER 1 PROVED
+   & Cor.~\ref{cor:conjF-borel-gen} \\
+$\dim H_{Z_2\text{-}\mathrm{TQFT}}(\Sigma_K) = 2^r$
+   & TIER 1 PROVED
+   & Lem.~\ref{lem:conjF-H1-cardinality} \\
+$2^r$ Q-rat orbit count at odd $w \ge 3$, $e\mid(w-1)$
+   & TIER 1 PROVED
+   & Thm.~\ref{thm:conjF-thmDPrime} \\
+Genus character indexing of Borel space
+   & TIER 1 PROVED
+   & Prop.~\ref{prop:conjF-zeta-decomp} \\
+$\theta_w \circ \reg_B$ isomorphism
+   & TIER 1 PROVED
+   & Conj.~\ref{conj:conjF-v3}(A) \\
+$\lambda_\chi^{(w)} = L(\psi_\chi, w-1)/\zeta_K(w-1)$
+   & TIER 3 reframe
+   & Def.~\ref{def:conjF-lichn-operator}, Rem.~\ref{rk:conjF-lichn-honest} \\
+Selberg-trace identification
+   & TIER 3 reframe
+   & Cor.~\ref{cor:conjF-Selberg-Lich} \\
+Mass-gap formula~\eqref{eq:conjF-mgap-final}
+   & TIER 3 reframe
+   & Conj.~\ref{conj:conjF-v3}(C) \\
+$h_K = 1$ failure mode
+   & TIER 5 FALSIFIED-at-anchor
+   & Rem.~\ref{rk:conjF-hK1} \\
+Anchor map $N \mapsto K(N)$ derived
+   & TIER 5 NOT DEFINED
+   & Open subproblem (O4) \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\medskip
+\noindent {\bf Cluster firm at section close.} 404 STABLE.  No new
+arXiv IDs introduced in this section; all citations
+(\cite{Borel1974,Cox1989,Gauss1801,Shimura1971,Damerell1971,Schutt2008,Stark1976,
+Beilinson1985,DijkgraafWitten1990,EGM1998,Kitaev2003,KingsSprang2024,
+BrunaultChida2015,BurnsFlach2001,ChowlaSelberg1949,ManinMarcolli2002,
+ThmDPrime2026,Remondiere2026P6,Remondiere2026P5,LichnerowiczSpectrum2026,
+NoArithmeticMgap2026,BSDbridge2026,BIGTABLE2026,ConjFCanonical2026,
+Marathon2026_FINAL})
+are pre-verified in
+\cite[\S M.G]{BIGTABLE2026}.
+
+% End of sec_07_conjecture_F.tex

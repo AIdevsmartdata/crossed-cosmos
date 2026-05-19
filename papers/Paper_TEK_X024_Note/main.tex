@@ -1,0 +1,719 @@
+\documentclass[11pt]{amsart}
+%% Target journals (3--5 pp short note tier):
+%%   Proceedings of the AMS (Proc. AMS, primary candidate)
+%%   IMRN -- International Mathematics Research Notices
+%%   Crelle's Journal (J. Reine Angew. Math.)
+%% Style: amsart works for all three at submission; final typesetting
+%% is journal-specific.
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm,mathrsfs}
+\usepackage{booktabs}
+\usepackage{hyperref}
+\usepackage{cleveref}
+\usepackage{verbatim}
+\usepackage{microtype}
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{conjecture}[theorem]{Conjecture}
+\newtheorem{question}[theorem]{Question}
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+\newtheorem*{observation}{Observation}
+
+\DeclareMathOperator{\Tr}{Tr}
+\DeclareMathOperator{\End}{End}
+\DeclareMathOperator{\Aut}{Aut}
+\DeclareMathOperator{\disc}{disc}
+\DeclareMathOperator{\cond}{cond}
+
+\newcommand{\Q}{\mathbb{Q}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\C}{\mathbb{C}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\F}{\mathbb{F}}
+\newcommand{\Hh}{\mathbb{H}}
+\newcommand{\OK}{\mathcal{O}_K}
+\newcommand{\GL}{\mathrm{GL}}
+\newcommand{\SU}{\mathrm{SU}}
+\newcommand{\TEK}{\mathrm{TEK}}
+
+\title[A TEK spectral curve and the modular form 24.2.a.a]{%
+  A twisted Eguchi--Kawai spectral curve at \(\SU(3)\) and the
+  modular form \(\mathbf{24.2.a.a}\): an Eichler--Shimura identification}
+
+\author{K\'evin R\'emondi\`ere\\
+\small Independent Researcher, Oloron-Sainte-Marie, France\\
+\small ORCID: \href{https://orcid.org/0009-0008-2443-7166}{0009-0008-2443-7166}\\
+\small \texttt{kevin.remondiere@gmail.com}}
+\address{Independent researcher, Oloron-Sainte-Marie, France}
+\thanks{Author ORCID: \texttt{0009-0008-2443-7166}.
+The PARI/GP verification script
+(\texttt{tek\_verify.gp})
+is available as an ancillary file with this submission.}
+
+\subjclass[2020]{11F11 (primary), 11F30, 11G05, 81T13 (secondary).}
+\keywords{Twisted Eguchi--Kawai model, large-\(N\) reduction, spectral
+curve, elliptic curve, modular form, Eichler--Shimura, Hecke action,
+modular curve \(X_0(24)\).}
+
+\date{\today}
+
+\begin{document}
+
+\begin{abstract}
+We observe that the one-loop propagator spectrum of the twisted
+Eguchi--Kawai (TEK) model for pure \(\SU(3)\) lattice gauge theory in
+\(d=4\) with the minimal symmetric twist, expanded around the
+clock--shift twist eaters, collapses to a four-point set
+\(\{3,6,9,12\}\). The associated hyperelliptic spectral curve
+\(y^{2} = (x-3)(x-6)(x-9)(x-12)\) is birational over \(\Q\) to the
+elliptic curve
+\(E\colon y^{2} = x^{3} - x^{2} - 4x + 4\), LMFDB label
+\(\mathbf{24.a4}\), of conductor \(24\), with \(j = 35152/9\) and
+torsion \(\Z/2\Z \oplus \Z/4\Z\). The curve \(E\) is a Weierstrass
+model for the modular curve \(X_{0}(24)\) and is \emph{not} a CM curve.
+By the modularity theorem (Wiles--Breuil--Conrad--Diamond--Taylor) and
+the Eichler--Shimura relation, the Hecke eigenvalues
+\(a_{p}(E) = p + 1 - \#E(\F_p)\) coincide with the Fourier coefficients
+of the unique newform \(f \in S_{2}^{\mathrm{new}}(\Gamma_{0}(24))\),
+LMFDB label \(\mathbf{24.2.a.a}\), which admits the eta-quotient
+expression
+\(f(z) = \eta(2z)\,\eta(4z)\,\eta(6z)\,\eta(12z)\).
+A PARI/GP verification confirms the match
+\(a_{p}(E) = a_{p}(f)\) at all primes \(5 \le p < 200\) with
+\(p \nmid 24\) (\(44/44\)). We articulate this observation as an
+identification of two a priori unrelated spectra: the TEK eigenvalues
+of a pure lattice gauge theory matrix model and the Hecke eigenvalues
+of a weight-\(2\) modular form, and we frame the
+follow-up question of whether the Hecke action extends to TEK Wilson
+operators at other levels.
+\end{abstract}
+
+\maketitle
+
+\section{Introduction}\label{sec:intro}
+
+\subsection*{The twisted Eguchi--Kawai model}
+
+The Eguchi--Kawai (EK) reduction \cite{EguchiKawai1982} replaces pure
+\(\SU(N)\) lattice gauge theory on a periodic \(d\)-dimensional torus
+by a one-site matrix model
+\[
+  S_{\mathrm{EK}} \;=\; -\,\beta N \sum_{\mu<\nu}\,\Re\Tr\bigl(U_\mu
+  U_\nu U_\mu^{\dagger} U_\nu^{\dagger}\bigr),
+  \qquad U_\mu \in \SU(N),\ \mu = 1,\dots,d.
+\]
+At leading order in \(1/N\) and at strong coupling, this matrix model
+reproduces the full lattice theory. The reduction breaks at weak
+coupling because the \(U(1)^{d}\) center symmetry breaks
+spontaneously. The twisted variant \cite{GonzalezArroyoOkawa1983}
+restores center symmetry through a twist tensor
+\(z_{\mu\nu} = \exp(2\pi i\,n_{\mu\nu}/N)\), antisymmetric and
+\(\Z\)-valued; we work with the minimal symmetric twist
+\(n_{\mu\nu} = \pm 1\) in \(d=4\) and \(N=3\), which is the simplest
+realization preserving center symmetry. Standard references for the
+construction, the twist eaters, and the resulting effective virtual
+lattice include
+\cite{CosterLucini2002,BringoltzSharpe2008,GonzalezArroyoOkawa2010}.
+
+Expanding the gauge field around the twist-eater background
+\(U_{\mu} = \Gamma_{\mu}\), where the matrices
+\(\Gamma_{\mu} \in \SU(3)\) realize the Heisenberg--Weyl algebra
+\(\Gamma_{\mu}\Gamma_{\nu} = z_{\mu\nu}\Gamma_{\nu}\Gamma_{\mu}\)
+(see~\eqref{eq:HW} below), the quadratic part of the action gives a
+one-loop propagator
+\[
+  D^{-1}(p) \;=\; 4 \sum_{\mu=1}^{4}\sin^{2}\!\bigl(p_{\mu}/2\bigr),
+  \qquad
+  p_{\mu} \;=\; \frac{2\pi\,n_{\mu}}{\bar{L}},\
+  n_{\mu} \in \{0, 1, \dots, \bar{L}-1\},\
+  \bar{L} = N = 3.
+\]
+Since \(\sin^{2}(\pi/3) = \sin^{2}(2\pi/3) = 3/4\), the eigenvalues
+\(E(n_{1},\dots,n_{4}) = 4\sum_{\mu}\sin^{2}(\pi n_{\mu}/3)\) simplify
+to
+\begin{equation}\label{eq:tek-spectrum}
+  E(n_{1},\dots,n_{4}) \;=\; 3\,\nu(n),
+  \qquad
+  \nu(n) := \#\{\mu : n_{\mu} \neq 0\} \in \{1, 2, 3, 4\},
+\end{equation}
+so the spectrum collapses to the four-point set \(\{3, 6, 9, 12\}\)
+with multiplicities \((8, 24, 32, 16)\) summing to \(3^{4} - 1 = 80\).
+
+\subsection*{The spectral curve and main observation}
+
+The associated hyperelliptic spectral curve over \(\Q\) is
+\begin{equation}\label{eq:spectral}
+  C_{\TEK}\colon \ y^{2} \;=\; (x-3)(x-6)(x-9)(x-12).
+\end{equation}
+With four simple rational branch points, \(C_{\TEK}\) has genus one;
+it is therefore birational over \(\Q\) to an elliptic curve, which we
+identify explicitly via the standard quartic-to-Weierstrass
+transformation (PARI/GP \texttt{ellfromeqn}) followed by
+\texttt{ellminimalmodel}:
+\begin{equation}\label{eq:E24a4}
+  E\colon \ y^{2} \;=\; x^{3} - x^{2} - 4x + 4.
+\end{equation}
+The curve \(E\) is LMFDB \(\mathbf{24.a4}\), Cremona \texttt{24A3},
+with conductor \(N(E) = 24\), discriminant
+\(\Delta(E) = 2304 = 2^{8}\cdot 3^{2}\), \(j\)-invariant
+\(j(E) = 35152/9 = 2^{4}\cdot 13^{3}/3^{2}\), torsion subgroup
+\(E(\Q)_{\mathrm{tors}} \cong \Z/2\Z \oplus \Z/4\Z\), and analytic and
+algebraic ranks both equal to \(0\) \cite{LMFDB}.
+The denominator of \(j(E)\) is \(9\), so \(j(E)\) is \emph{not} an
+algebraic integer; by a classical theorem of Deuring--Schneider
+(see, e.g., \cite[Ch.~II, Thm.~6.1]{Silverman2009}), \(E\) is
+\emph{not} a CM elliptic curve.
+
+By the modularity theorem of Wiles, Taylor--Wiles, and
+Breuil--Conrad--Diamond--Taylor \cite{Wiles1995,TaylorWiles1995,
+BCDT2001}, every elliptic curve over \(\Q\) is modular: there is a
+unique normalized newform \(f_{E} \in S_{2}^{\mathrm{new}}
+(\Gamma_{0}(N(E)))\) such that
+\(L(E, s) = L(f_{E}, s)\), and by Eichler--Shimura
+\cite[Ch.~7]{Shimura1971} the Hecke eigenvalues \(a_{p}(f_{E})\)
+coincide with the trace of Frobenius
+\(a_{p}(E) = p + 1 - \#E(\F_{p})\) for every prime
+\(p \nmid N(E)\). The space \(S_{2}^{\mathrm{new}}(\Gamma_{0}(24))\)
+is one-dimensional \cite{LMFDB}, spanned by the
+single newform
+\begin{equation}\label{eq:f24}
+  f(z) \;=\; \eta(2z)\,\eta(4z)\,\eta(6z)\,\eta(12z),
+\end{equation}
+labeled \(\mathbf{24.2.a.a}\) in the LMFDB.
+
+\begin{observation}\label{obs:main}
+The Hecke eigenvalues of the modular form \(f = \mathbf{24.2.a.a}\)
+coincide with the trace of Frobenius of the spectral curve
+\(C_{\TEK}\) of the \(\SU(3)\)-twisted Eguchi--Kawai model in \(d=4\)
+with the minimal symmetric twist. Explicitly, for every prime
+\(p \nmid 24\),
+\[
+  a_{p}(C_{\TEK}) \;:=\; a_{p}(E) \;=\; a_{p}(f),
+\]
+where \(E\) is the minimal model~\eqref{eq:E24a4} of \(C_{\TEK}\).
+\end{observation}
+
+This identifies the eigenvalue spectrum of a \emph{lattice gauge
+theory matrix model} with the Hecke spectrum of a \emph{weight-\(2\)
+modular form}. \emph{The identification is a consequence of the
+modularity theorem applied to \(E\)} and is not itself a new
+modularity statement; the novelty is that the elliptic curve in
+question arises canonically and unambiguously from a TEK matrix
+model construction.
+
+\subsection*{Organization}
+
+Section~\ref{sec:tek} reviews the TEK construction at \(\SU(3)\) in
+\(d = 4\) with the minimal symmetric twist and verifies the spectrum
+collapse~\eqref{eq:tek-spectrum}. Section~\ref{sec:reduction}
+describes the birational reduction of~\eqref{eq:spectral}
+to~\eqref{eq:E24a4} and records the LMFDB invariants.
+Section~\ref{sec:match} states and proves
+Theorem~\ref{thm:match} and reports the PARI/GP verification at
+\(44\) primes \(5 \le p < 200\). Section~\ref{sec:remarks} addresses
+non-CM status, the modular curve interpretation
+\(X_{0}(24)\), and the relation to large-\(N\) limits.
+Section~\ref{sec:questions} formulates open questions about a
+Hecke action on TEK Wilson operators and the generalization to
+other levels and gauge groups.
+
+\medskip
+
+\textbf{Conventions.} All elliptic curves are defined over \(\Q\)
+unless stated otherwise. Newform conventions follow \cite{LMFDB}
+and \cite{Miyake2006}. The PARI/GP version used for the numerical
+verification is 2.15.4 \cite{PARI2024}.
+
+
+\section{The TEK propagator spectrum at \(\SU(3)\)}\label{sec:tek}
+
+We work in \(d = 4\) Euclidean dimensions, gauge group \(\SU(3)\),
+with the minimal symmetric flux \(n_{\mu\nu} \in \{\pm 1\}\)
+satisfying \(\sum_{\nu \neq \mu} n_{\mu\nu} \equiv 0 \pmod{3}\).
+The classical vacuum of the TEK action consists of the
+\emph{twist eaters} \(U_{\mu} = \Gamma_{\mu}\), solving
+\begin{equation}\label{eq:HW}
+  \Gamma_{\mu}\,\Gamma_{\nu}
+  \;=\; z_{\mu\nu}\,\Gamma_{\nu}\,\Gamma_{\mu},
+  \qquad
+  z_{\mu\nu} \;=\; \exp\!\bigl(2\pi i\, n_{\mu\nu}/3\bigr),
+\end{equation}
+which is a finite-dimensional realization of the Heisenberg--Weyl
+algebra at level \(3\). An explicit realization uses the Sylvester
+clock--shift pair
+\[
+  P = \mathrm{diag}(1, \omega, \omega^{2}),
+  \qquad
+  Q\,|j\rangle = |j + 1 \bmod 3\rangle,
+  \qquad
+  \omega = e^{2\pi i/3},
+\]
+with \(\Gamma_{1} = P\), \(\Gamma_{2} = Q\), \(\Gamma_{3} = PQ\),
+\(\Gamma_{4} = P^{2}Q\) (up to relabeling). One verifies that the
+relations~\eqref{eq:HW} hold for the chosen \(n_{\mu\nu}\).
+
+Expanding \(U_{\mu} = e^{i a A_{\mu}}\,\Gamma_{\mu}\), with
+\(A_{\mu}\) Hermitian and traceless and \(a\) the (formal) lattice
+spacing, the quadratic part of \(S_{\TEK}\) gives a propagator
+acting on Fourier modes
+\(A_{\mu} = \sum_{n}\widetilde{A}_{\mu}(n)\, e^{i p\cdot x}\) with
+discrete momenta
+\(p_{\mu} = 2\pi n_{\mu}/\bar{L}\) and effective lattice size
+\(\bar{L} = N = 3\); see~\cite[Sec.~2]{CosterLucini2002}
+and~\cite[\S 3]{BringoltzSharpe2008} for the derivation. The
+eigenvalues
+\[
+  E(n_{1}, n_{2}, n_{3}, n_{4})
+  \;=\; 4 \sum_{\mu=1}^{4} \sin^{2}\!\bigl(\pi n_{\mu}/3\bigr),
+  \qquad n_{\mu} \in \{0, 1, 2\}, \quad n \neq 0,
+\]
+collapse via \(\sin^{2}(\pi/3) = \sin^{2}(2\pi/3) = 3/4\) to
+\(E(n) = 3\,\nu(n)\), as in~\eqref{eq:tek-spectrum}. The multiplicity
+of a given value \(E = 3k\), \(k = 1, 2, 3, 4\), is
+\(\binom{4}{k} 2^{k}\), giving the count
+\[
+  (m_{3}, m_{6}, m_{9}, m_{12}) \;=\; (8, 24, 32, 16),
+\]
+with total \(8 + 24 + 32 + 16 = 80 = 3^{4} - 1\), the full count of
+non-zero modes. This is verified numerically in PARI/GP
+(ancillary script \texttt{tek\_verify.gp}, \S 1).
+
+\section{Birational reduction to \(\mathbf{24.a4}\)}\label{sec:reduction}
+
+The spectral curve~\eqref{eq:spectral} has four simple rational
+branch points, hence genus \(g = 1\), and is therefore birational
+over \(\Q\) to an elliptic curve. We give an explicit reduction.
+
+Translating \(x \mapsto x + 15/2\) symmetrizes the roots to
+\(\{\pm 3/2, \pm 9/2\}\), so
+\[
+  y^{2} \;=\; \bigl(x^{2} - 9/4\bigr)\,\bigl(x^{2} - 81/4\bigr)
+  \;=\; x^{4} - \tfrac{45}{2}\,x^{2} + \tfrac{729}{16}.
+\]
+Applying \texttt{ellfromeqn} (PARI/GP), which implements the
+classical quartic-to-Weierstrass map (see~\cite[\S 7.2]{Cassels1991}
+or \cite[\S 8]{Connell1999}) yields the (non-minimal) Weierstrass
+model
+\(W\colon\ [a_{1}, a_{2}, a_{3}, a_{4}, a_{6}]
+= [0, 315, 0, 32724, 1\,122\,660]\),
+and \texttt{ellminimalmodel} produces
+\[
+  E\colon\ y^{2} \;=\; x^{3} - x^{2} - 4x + 4.
+\]
+PARI computes
+\(\Delta(E) = 2304 = 2^{8}\cdot 3^{2}\),
+\(j(E) = 35152/9\),
+conductor \(N(E) = 24 = 2^{3}\cdot 3\),
+torsion \(E(\Q)_{\mathrm{tors}} = \Z/2\Z \oplus \Z/4\Z\),
+algebraic rank \(\mathrm{rk}\,E(\Q) = 0\); these match the LMFDB
+record for the curve \(\mathbf{24.a4}\) \cite{LMFDB}.
+
+\begin{remark}\label{rem:scale}
+Replacing \(\bar L = 3\) with \(\bar L = 2\) in the propagator
+(equivalently, rescaling momenta) yields branch points
+\(\{4, 8, 12, 16\}\), which give the same cross-ratio
+\(\lambda = 4/3\) and hence the same \(j\)-invariant; the resulting
+elliptic curve is \(\Q\)-isomorphic to \(E\). The structural identity
+between \(C_{\TEK}\) and \(E\) is invariant under the discrete
+rescaling \(\bar L \mapsto \bar L'\) so long as \(\bar L\) is coprime
+to \(N = 3\) and the symmetric twist is maintained. Generic
+asymmetric twists destroy the four-point collapse and produce
+higher-genus spectral curves.
+\end{remark}
+
+\begin{remark}\label{rem:X024}
+The Weierstrass model \(E\) is in fact a model for the
+\emph{modular curve} \(X_{0}(24)\) \cite{LMFDB}. The genus formula
+\(g(X_{0}(N))\) (see~\cite[Thm.~3.1.1]{DiamondShurman2005}) gives
+\(g(X_{0}(24)) = 1\), and the dimension of new cusp forms of weight
+\(2\) at level \(24\) is
+\(\dim S_{2}^{\mathrm{new}}(\Gamma_{0}(24)) = 1\), so \(J_{0}(24)\)
+is itself an elliptic curve and \(X_{0}(24) \simeq J_{0}(24)\) over
+\(\Q\). Thus the spectral curve \(C_{\TEK}\) is itself a model for
+\(X_{0}(24)\). We return to this in Section~\ref{sec:remarks}.
+\end{remark}
+
+\section{The Hecke--Frobenius identification}\label{sec:match}
+
+\begin{theorem}\label{thm:match}
+Let \(C_{\TEK}\) be the TEK spectral curve~\eqref{eq:spectral} and
+let \(E\) be its minimal model~\eqref{eq:E24a4}. Let
+\(f \in S_{2}^{\mathrm{new}}(\Gamma_{0}(24))\) be the unique newform
+of level \(24\), weight \(2\), and trivial character, with
+\(q\)-expansion
+\(f(z) = q\prod_{n\ge 1}(1 - q^{2n})(1 - q^{4n})(1 - q^{6n})
+(1 - q^{12n}) =
+\eta(2z)\,\eta(4z)\,\eta(6z)\,\eta(12z)\). Then for every prime
+\(p \nmid 24\),
+\[
+  a_{p}(E)
+  \;=\; p + 1 - \#E(\F_{p})
+  \;=\; a_{p}(f).
+\]
+\end{theorem}
+
+\begin{proof}
+The curve \(E\) of~\eqref{eq:E24a4} has conductor \(24\); this is
+verified via Tate's algorithm \cite[Ch.~IV]{Silverman1994} and
+recorded in the LMFDB as \(\mathbf{24.a4}\). By
+modularity~\cite{Wiles1995, TaylorWiles1995, BCDT2001}, \(E\)
+corresponds to a unique normalized newform \(f_{E}\) of weight \(2\)
+and level \(N(E) = 24\) with \(L(E, s) = L(f_{E}, s)\). Since
+\(\dim S_{2}^{\mathrm{new}}(\Gamma_{0}(24)) = 1\) and the unique
+basis vector is the eta-quotient \(f\) of~\eqref{eq:f24}
+\cite{LMFDB}, we must have \(f_{E} = f\). Comparing local
+\(L\)-factors at unramified primes gives the Eichler--Shimura
+relation
+\(a_{p}(E) = p + 1 - \#E(\F_{p}) = a_{p}(f)\) for \(p \nmid 24\)
+\cite[Ch.~7, Thm.~7.6]{Shimura1971}.
+\end{proof}
+
+\begin{proposition}[Numerical verification]\label{prop:numerical}
+Let \(\pi(x) = \#\{p \le x : p\ \mathrm{prime}\}\). In a PARI/GP
+verification using the ancillary script \texttt{tek\_verify.gp},
+the equality \(a_{p}(E) = a_{p}(f)\) was checked exhaustively for
+the \(44\) primes \(p\) with \(5 \le p < 200\) and \(p \nmid 24\),
+with full agreement (\(44/44\) match, no exceptions). The first
+fifteen values are recorded in Table~\ref{tab:ap}.
+\end{proposition}
+
+\begin{table}[h]
+\centering
+\caption{The first fifteen Hecke / Frobenius eigenvalues
+\(a_{p}(E) = a_{p}(f)\) for \(p \nmid 24\). All values are integers
+in the Hasse interval \(|a_{p}| \le 2\sqrt{p}\). Source: PARI/GP
+\texttt{ellap} and \texttt{mfcoef}.}
+\label{tab:ap}
+\begin{tabular}{rrr|rrr|rrr}
+\toprule
+\(p\) & \(a_{p}(E)\) & \(a_{p}(f)\) &
+\(p\) & \(a_{p}(E)\) & \(a_{p}(f)\) &
+\(p\) & \(a_{p}(E)\) & \(a_{p}(f)\) \\
+\midrule
+ 5 & \(-2\) & \(-2\) &
+17 & \(2\)  & \(2\)  &
+37 & \(6\)  & \(6\)  \\
+ 7 & \(0\)  & \(0\)  &
+19 & \(-4\) & \(-4\) &
+41 & \(-6\) & \(-6\) \\
+11 & \(4\)  & \(4\)  &
+23 & \(-8\) & \(-8\) &
+43 & \(4\)  & \(4\)  \\
+13 & \(-2\) & \(-2\) &
+29 & \(6\)  & \(6\)  &
+47 & \(0\)  & \(0\)  \\
+   &        &        &
+31 & \(8\)  & \(8\)  &
+   &        &        \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{remark}\label{rem:scope}
+We emphasize the modest scope of Theorem~\ref{thm:match}: it is
+not a new modularity result. The statement is, in effect, a triple
+identification:
+\begin{enumerate}
+\item the TEK propagator spectrum at \(\SU(3)\), \(d=4\),
+minimal symmetric twist gives the curve \(C_{\TEK}\)
+of~\eqref{eq:spectral};
+\item the minimal model of \(C_{\TEK}\) is the elliptic curve
+\(\mathbf{24.a4}\);
+\item the modularity theorem then forces the trace-of-Frobenius
+spectrum of \(C_{\TEK}\) to match the Hecke eigenvalues of the
+unique level-\(24\) weight-\(2\) newform.
+\end{enumerate}
+The content of the present note lies in steps (1)--(2): a clean and
+canonical pure-gauge-theoretic construction whose minimal model
+hits exactly the modular curve \(X_{0}(24)\). Step (3) is then a
+classical consequence of modularity. The further question --
+whether the Hecke operators \(T_{p}\) act in a natural way on TEK
+Wilson observables -- is left open.
+\end{remark}
+
+\begin{remark}[Non-vacuum flux sector]\label{rem:flux}
+The construction of Section~\ref{sec:tek} uses the minimal
+symmetric twist \(k=1\) of the
+Gonz\'{a}lez-Arroyo-Okawa Eguchi-Kawai matrix model.
+On the four-torus \(T^4\), this twist corresponds to a non-trivial
+class in \(H^2(T^4, \mathbb{Z}_3) \cong (\mathbb{Z}_3)^6\),
+explicitly carrying Pfaffian \(+1 \pmod 3\) in the canonical
+six-component flux basis. The Heisenberg-Weyl realisation of
+Section~\ref{sec:tek} is intrinsically tied to this non-vacuum
+flux sector: replacing \(k=1\) by \(k=0\) collapses the
+spectral curve to the trivial point. Consequently
+Theorem~\ref{thm:match} is a statement about TEK in a
+\emph{specific superselection sector} of the lattice gauge bundle;
+it does not directly engage the vacuum-sector mass-gap question
+of the Clay Yang-Mills Millennium problem. The suggestive
+factorisation \(N(E) = 24 = 8 \cdot 3\) into a power of two
+times the rank of the centre $\mathbb{Z}_3$ is not part of a
+broader pattern: the analogous \(\SU(2)\) construction would
+require a conductor-six elliptic curve, of which none exists in
+LMFDB. We therefore present the present result as a coincidence
+of arithmetic structure with the minimal twisted reduction,
+\emph{not} as a general functor \(\TEK_{\twist} \mapsto
+\textnormal{HeckeAlg}\) of the kind discussed in
+Section~\ref{sec:questions}.
+\end{remark}
+
+\section{Remarks}\label{sec:remarks}
+
+\subsection{Non-CM and arithmetic non-overlap with Heegner anchors}
+
+The denominator of \(j(E) = 35152/9\) is \(9\), so \(j(E)\) is not
+an algebraic integer; \(E\) is therefore not a CM elliptic curve.
+Equivalently, the conductor \(N(E) = 24\) does not appear in the
+class-number-one list of conductors of CM elliptic curves over
+\(\Q\), which is
+\(\{27, 32, 36, 49, 121, 256, 361, 1849, 4489, 26569\}\) attached to
+\(K = \Q(\sqrt{-D})\) with
+\(D \in \{3, 4, 7, 8, 11, 19, 43, 67, 163\}\)
+\cite[App.~A, Thm.~A.14]{Silverman2009}. A statistical confirmation
+is obtained from the Hecke density of supersingular primes: the
+number of primes \(p \in [5, 2000] \setminus \{2, 3\}\) with
+\(a_{p}(E) = 0\) is \(7/301 \approx 2.3\%\), consistent with the
+Lang--Trotter conjecture for non-CM curves (heuristic density
+\(O(p^{-1/2})\)) and incompatible with the \(50\%\) density of a
+CM curve at primes inert in the CM field.
+
+\subsection{The modular curve interpretation}
+
+By Remark~\ref{rem:X024}, the TEK spectral curve \(C_{\TEK}\) is a
+Weierstrass model for the modular curve \(X_{0}(24)\). Hence the
+underlying gauge-theoretic data of the TEK matrix model at
+\(\SU(3)\), \(d=4\) is naturally encoded in \(X_{0}(24)\), and the
+Hecke algebra \(\mathbb{T}_{24}\) of \(S_{2}(\Gamma_{0}(24))\) acts
+on the cotangent space of \(X_{0}(24)\). The Hecke operators
+\(T_{p}\) for \(p \nmid 24\) therefore act on the differential
+\(\omega_{f} = f(z)\,dz\), with eigenvalues \(a_{p}(f) = a_{p}(E)\).
+The natural follow-up question (Section~\ref{sec:questions}) is
+whether this action lifts to a Hecke action on gauge-invariant
+observables of the TEK matrix model itself.
+
+\subsection{Robustness under \(\bar L\) variation}
+
+For \(\bar L = 2\) (equivalently, alternate momentum normalization),
+the branch points become \(\{4, 8, 12, 16\}\), with the same
+cross-ratio \(\lambda = 4/3\) and the same \(j\)-invariant; the
+resulting curve is \(\Q\)-isomorphic to \(\mathbf{24.a4}\). The
+identification with \(\mathbf{24.a4}\) is thus invariant under the
+discrete rescaling \(\bar L \mapsto \bar L'\) so long as \(\bar L\)
+is coprime to \(N = 3\). Asymmetric or non-minimal twists destroy
+the four-point spectrum and produce higher-genus spectral curves;
+see \cite{CosterLucini2002, BringoltzSharpe2008} for the
+twist-dependence of the spectrum.
+
+\subsection{Relation to large-\(N\) limits}
+
+The TEK construction is most useful as a finite-\(N\) tool for
+extracting large-\(N\) expectation values; in this note, we have
+focused on the \(\SU(3)\) case where the spectrum collapses
+exactly, and the spectral curve is the finite-dimensional matrix
+model spectrum, not an \(N \to \infty\) limit. For \(\SU(N)\) with
+larger \(N\), \(\bar L\) coprime to \(N\), the analogous propagator
+\(E(n) = 4 \sum_{\mu}\sin^{2}(\pi n_{\mu}/\bar L)\) does not
+collapse to a four-point set; the analog of Observation~\ref{obs:main}
+at higher \(N\) is open and is one of the questions we record below.
+
+
+\section{Open questions}\label{sec:questions}
+
+\begin{question}\label{q:hecke-action}
+Does the Hecke action of \(\mathbb{T}_{24}\) on
+\(H^{0}(X_{0}(24), \Omega^{1}) = \C\cdot\omega_{f}\) extend to a
+natural action on gauge-invariant observables of the
+\(\SU(3)\)-TEK matrix model? Concretely, is there an operator
+\(\hat T_{p}\) on the algebra of \(\SU(3)\)-invariant polynomials
+in the matrices \(U_{1}, \dots, U_{4}\) whose restriction to the
+character ring of Wilson loops matches the action of \(T_{p}\) on
+\(\omega_{f}\)?
+\end{question}
+
+\begin{question}\label{q:other-levels}
+For other gauge groups \(\SU(N)\) with twist parameters giving
+elliptic spectral curves of conductor \(M\), does the analog of
+Observation~\ref{obs:main} hold? In particular, is there a finite
+list of (\(N, d, n_{\mu\nu}\)) for which the TEK spectral curve is
+\(\Q\)-rationally equivalent to a modular curve \(X_{0}(M)\) of
+small conductor \(M\)?
+\end{question}
+
+\begin{question}\label{q:finiteN}
+Define a finite-\(N\) analog of the trace of Frobenius:
+\(\widetilde{a}_{p}(\TEK_{N})
+:= p + 1 - \#C_{\TEK}(\F_{p})\)
+for the spectral curve \(C_{\TEK}\) at gauge group \(\SU(N)\). For
+which sequences \(N \to \infty\) along which the spectral curve
+remains elliptic, does
+\(\widetilde{a}_{p}(\TEK_{N}) \to a_{p}(f)\) for some weight-\(2\)
+newform \(f\)? This is a quantitative form of
+Question~\ref{q:other-levels}.
+\end{question}
+
+\begin{question}\label{q:functor}
+Is there a functor
+\(F\colon \mathsf{TEK}_{\mathrm{twist}, \mathrm{ell.}} \longrightarrow
+\mathsf{HeckeAlg}_{S_{2}^{\mathrm{new}}}\)
+from the category of \emph{TEK twist data whose spectral curve is
+elliptic} to the category of Hecke algebras of weight-\(2\)
+newforms, such that \(F(\TEK\text{-}\SU(3)\text{-min.~twist}) =
+\mathbb{T}_{24}\)? If so, what is its image, and what are its kernel
+and cokernel? Even a partial answer (e.g.\ extending to one or two
+other gauge-theoretic data) would constitute a structural step
+beyond the present \emph{ad hoc} identification.
+\end{question}
+
+
+\section*{Acknowledgements}
+
+The author thanks the LMFDB collaboration \cite{LMFDB} for the
+public database that made this note possible, and the developers of
+PARI/GP \cite{PARI2024} for the verification tool. Numerical
+verifications were performed on a Hostinger VPS;
+the ancillary script \texttt{tek\_verify.gp} is provided
+alongside this manuscript and reproduces all numerical claims
+(Section~\ref{sec:tek}, Section~\ref{sec:reduction}, and
+Proposition~\ref{prop:numerical}) in under five seconds on standard
+hardware.
+
+\bigskip
+
+\textbf{Reproducibility.} The PARI/GP verification script
+\texttt{tek\_verify.gp} accompanying this note executes the
+following checks:
+\begin{enumerate}
+\item Compute the multiplicities
+\((m_{3}, m_{6}, m_{9}, m_{12}) = (8, 24, 32, 16)\) of the
+TEK propagator spectrum directly from~\eqref{eq:tek-spectrum}.
+\item Reduce \(C_{\TEK}\) to Weierstrass form via
+\texttt{ellfromeqn} and \texttt{ellminimalmodel}, yielding
+\(E\) of~\eqref{eq:E24a4}.
+\item Record \(\cond(E) = 24\),
+\(\Delta(E) = 2304\),
+\(j(E) = 35152/9\),
+\(E(\Q)_{\mathrm{tors}} = \Z/2\Z \oplus \Z/4\Z\).
+\item Confirm \(j(E) \notin \Z\), hence \(E\) is not CM.
+\item Load the unique newform
+\(f \in S_{2}^{\mathrm{new}}(\Gamma_{0}(24))\) via
+\texttt{mfinit}/\texttt{mfeigenbasis}, and verify the
+equality \(a_{p}(E) = a_{p}(f)\) for all primes
+\(5 \le p < 200\) with \(p \nmid 24\); the script
+reports \(44/44\) matches.
+\item Verify the supersingular density: \(7/301 \approx 2.3\%\)
+for primes \(p \in [5, 2000]\), consistent with the non-CM
+case.
+\end{enumerate}
+
+\appendix
+\section{The verification script \texttt{tek\_verify.gp}}
+
+The file \texttt{tek\_verify.gp} is included as an ancillary file.
+Its body is reproduced here for self-containment.
+
+\verbatiminput{tek_verify.gp}
+
+\bibliographystyle{amsalpha}
+\begin{thebibliography}{99}
+
+\bibitem{BCDT2001}
+C.~Breuil, B.~Conrad, F.~Diamond, R.~Taylor,
+``On the modularity of elliptic curves over \(\Q\): wild 3-adic
+exercises'', \emph{J.\ Amer.\ Math.\ Soc.} \textbf{14} (2001),
+no.~4, 843--939.
+
+\bibitem{BringoltzSharpe2008}
+B.~Bringoltz, S.~R.~Sharpe,
+``Non-perturbative volume reduction of large-N QCD with
+adjoint fermions'', \emph{Phys.\ Rev.\ D} \textbf{78} (2008), 034501.
+
+\bibitem{Cassels1991}
+J.~W.~S.~Cassels, \emph{Lectures on Elliptic Curves},
+London Math.\ Soc.\ Student Texts 24, Cambridge University Press,
+1991.
+
+\bibitem{Connell1999}
+I.~Connell, \emph{Elliptic Curve Handbook}, manuscript, McGill
+University, 1999.
+
+\bibitem{CosterLucini2002}
+J.~Coster, B.~Lucini,
+``Large N reduction with the twisted Eguchi-Kawai model:
+the spectrum of the matrix model'', \emph{Phys.\ Rev.\ D}
+\textbf{66} (2002), 014511.
+
+\bibitem{DiamondShurman2005}
+F.~Diamond, J.~Shurman,
+\emph{A First Course in Modular Forms},
+Graduate Texts in Mathematics 228, Springer, 2005.
+
+\bibitem{EguchiKawai1982}
+T.~Eguchi, H.~Kawai,
+``Reduction of dynamical degrees of freedom in the large-N gauge
+theory'', \emph{Phys.\ Rev.\ Lett.} \textbf{48} (1982), 1063--1066.
+
+\bibitem{GonzalezArroyoOkawa1983}
+A.~Gonz\'alez-Arroyo, M.~Okawa,
+``A twisted model for large N lattice gauge theory'',
+\emph{Phys.\ Lett.\ B} \textbf{120} (1983), 174--178.
+
+\bibitem{GonzalezArroyoOkawa2010}
+A.~Gonz\'alez-Arroyo, M.~Okawa,
+``Large \(N\) reduction with the twisted Eguchi-Kawai model'',
+\emph{J.\ High Energy Phys.} \textbf{2010}, no.~07, 043.
+\href{https://arxiv.org/abs/1005.1981}{arXiv:1005.1981}.
+
+\bibitem{LMFDB}
+The LMFDB Collaboration, \emph{The L-functions and Modular Forms
+Database}, \url{https://www.lmfdb.org}, accessed 2026-05-17.
+Specifically: elliptic curve
+\href{https://www.lmfdb.org/EllipticCurve/Q/24/a/4}{24.a4}
+and newform
+\href{https://www.lmfdb.org/ModularForm/GL2/Q/holomorphic/24/2/a/a/}{24.2.a.a}.
+
+\bibitem{Miyake2006}
+T.~Miyake, \emph{Modular Forms},
+Springer Monographs in Mathematics, Springer, 2006.
+
+\bibitem{PARI2024}
+The PARI Group,
+\emph{PARI/GP version 2.15.4},
+Univ.\ Bordeaux, 2024,
+available from \url{http://pari.math.u-bordeaux.fr/}.
+
+\bibitem{Shimura1971}
+G.~Shimura, \emph{Introduction to the Arithmetic Theory of
+Automorphic Functions}, Princeton University Press, 1971.
+
+\bibitem{Silverman1994}
+J.~H.~Silverman,
+\emph{Advanced Topics in the Arithmetic of Elliptic Curves},
+Graduate Texts in Mathematics 151, Springer, 1994.
+
+\bibitem{Silverman2009}
+J.~H.~Silverman,
+\emph{The Arithmetic of Elliptic Curves},
+2nd edition, Graduate Texts in Mathematics 106, Springer, 2009.
+
+\bibitem{TaylorWiles1995}
+R.~Taylor, A.~Wiles,
+``Ring-theoretic properties of certain Hecke algebras'',
+\emph{Ann.\ of Math.} (2) \textbf{141} (1995), no.~3, 553--572.
+
+\bibitem{Wiles1995}
+A.~Wiles,
+``Modular elliptic curves and Fermat's last theorem'',
+\emph{Ann.\ of Math.} (2) \textbf{141} (1995), no.~3, 443--551.
+
+\end{thebibliography}
+
+\end{document}

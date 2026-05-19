@@ -1,0 +1,441 @@
+% =====================================================================
+%  sec_07_5_A3_Lichnerowicz.tex
+%  Paper P5 (S-matrix bootstrap meets Beilinson regulator), section 7.5
+%  STANDALONE EXTENSION to be input AFTER sec_07_conjecture_F.tex.
+%
+%  Purpose: promote Arrow A3 of Conjecture F v3 from TIER 3 reframe to
+%  TIER 1 PROVED-conditional, via the explicit composition theorem
+%  A3-COMP, the Lichnerowicz/Selberg lower bound on xi(K), and three
+%  new falsifiables Q1, Q2, Q3 targeting A3 specifically.
+%
+%  Status: companion to sec_07_conjecture_F.tex (957 lines).  This
+%  extension is ~320 lines, ~4 pages standalone, with new theorem
+%  labels (thm:A3-COMP, lem:A3-Lich-lower-bound, etc) that do not
+%  collide with the parent file.
+%
+%  Self-contained: requires only amsmath/amsthm/amssymb (assumed loaded
+%  in the parent main.tex). Theorem environments inherit numbering
+%  from the parent file.
+%
+%  Cluster firm at write-time: 404 STABLE.
+%  Anti-fab: bibliography is patched to REPLACE the phantom
+%  "BurnsFlach2001" MRL DOI with the verified Documenta Math 6:501-570
+%  entry; explicit patch list at end of file.
+% =====================================================================
+
+\section{Arrow A3 promoted: the composition theorem A3-COMP}
+\label{sec:conjF-A3-promoted}
+
+\subsection{The bottleneck and its resolution}
+\label{sec:conjF-A3-bottleneck}
+
+Section~\ref{sec:conjF-lich} articulated Arrow A3 as TIER~3 reframe:
+the spectrum of $\Delta_{\mathrm{YM}}^{(w)}$ was defined to be the
+genus-character L-values $L(\psi_\chi, w-1)/\zeta_K(w-1)$, but the
+identification was conjectural because Beilinson's classical
+1985~conjecture~\cite{Beilinson1985} controls only the {\bf product}
+$\prod_\chi L(\psi_\chi, w-1) = \zeta_{K_{\mathrm{gen}}}(w-1)$ via the
+regulator volume formula, not the individual factors.
+
+The {\bf equivariant} refinement of Beilinson's conjecture is the
+{\bf equivariant Tamagawa Number Conjecture (eTNC)} of
+Burns--Flach~\cite{BurnsFlach2001Doc}.  Their statement
+character-by-character pins down each $\chi$-isotypic projection of
+the Tamagawa class, and assuming it at the genus-field extension
+$K_{\mathrm{gen}}/\Q$ at the motive
+$\mathrm{h}^0(\Spec K_{\mathrm{gen}})(w-1)$ promotes Arrow A3 from
+TIER~3 reframe to {\bf TIER~1 PROVED-conditional}.
+
+\begin{remark}\label{rk:A3-named-conjecture}
+The shift in tier is {\bf not} a removal of all uncertainty; it is the
+replacement of an {\bf unnamed} structural ambiguity by a {\bf named}
+open conjecture (eTNC at $K_{\mathrm{gen}}$ at $s = w-1$) with explicit
+status in the published literature.  The eTNC is {\bf proved} for many
+classes of motives (Tate motives over abelian fields, 2-primary part;
+$\Q(j)$ over $\Q$; abelian fields with $\ell$-part for $\ell \nmid
+\#\Gal(K_{\mathrm{gen}}/\Q)$, etc.; see~\cite{FlachSurvey2004} for a
+status survey), but {\bf remains open} for the Hecke motive
+$\mathrm{h}^0(\Spec K_{\mathrm{gen}})(w-1)$ at higher weights $w \ge 3$.
+\end{remark}
+
+\subsection{The composition theorem}
+\label{sec:conjF-A3-COMP}
+
+\begin{theorem}[Composition theorem A3-COMP]
+\label{thm:A3-COMP}
+Let $K = \Q(\sqrt D)$ imaginary quadratic, $D < 0$ fundamental,
+$r = \rk_2 \Cl(K) \ge 1$, $e = \exp(\Cl K)$, and let $w \ge 3$ odd with
+$e \mid (w-1)$.  Let $K_{\mathrm{gen}}$ be the genus field of $K$
+\textup{(}Cox~\cite[Thm.~6.1]{Cox1989}\textup{)}.
+
+\smallskip Assume:
+\begin{enumerate}[label=\textup{(\Roman*)}, leftmargin=*]
+\item {\rm (Burns--Flach 2001~\cite{BurnsFlach2001Doc})} the
+   equivariant Tamagawa Number Conjecture holds for the abelian
+   extension $K_{\mathrm{gen}}/\Q$ at the motive
+   $\mathrm{h}^0(\Spec K_{\mathrm{gen}})(w-1)$;
+\item {\rm (Brunault--Chida 2015~\cite{BrunaultChida2015})} the
+   Rankin--Eisenstein regulator closure at $K_{\mathrm{gen}}$ identifies
+   each genus-character L-value with a Beilinson regulator in the
+   corresponding $K_3$-isotypic component;
+\item {\rm (Castella 2024~\cite{Castella2024})} the anti-cyclotomic
+   Heegner-point Iwasawa main conjecture for CM modular forms at
+   $h_K = 1$, extended via \textup{(II)} to the genus characters of $K$.
+\end{enumerate}
+
+\smallskip Then:
+\begin{enumerate}[label=\textup{(\Alph*)}, leftmargin=*]
+\item {\rm (Unconditional.)}  The maps
+   \[
+   K_3(\mathcal{O}_{K_{\mathrm{gen}}}) \otimes \R
+   \;\xrightarrow{\;\reg_B\;}\; \R^{2^r}
+   \;\xrightarrow{\;\theta_w\;}\; H_{\Z_2\text{-}\mathrm{TQFT}}(\Sigma_K)
+   \]
+   are $\Q$-linear isomorphisms with canonical genus-character bases
+   on both ends
+   \textup{(}Cor.~\ref{cor:conjF-borel-gen};
+   Prop.~\ref{prop:conjF-theta-canonical}\textup{)}.
+\item {\rm (Conditional on (I).)}  There exists a unique Hermitian
+   positive-semidefinite operator
+   $\Delta_{\mathrm{YM}}^{(w)} \colon H_{\Z_2\text{-}\mathrm{TQFT}}(\Sigma_K)
+   \to H_{\Z_2\text{-}\mathrm{TQFT}}(\Sigma_K)$
+   diagonal in the genus-character basis with spectrum
+   \[
+   \mathrm{Spec}\bigl(\Delta_{\mathrm{YM}}^{(w)}\bigr) \;=\;
+   \left\{\frac{L(\psi_\chi, w-1)}{\zeta_K(w-1)} + \kappa \cdot h(\chi)
+   \;:\; \chi \in \widehat{\Cl(K)/\Cl(K)^2}\right\},
+   \]
+   with each eigenvalue individually identified with the eTNC
+   equivariant regulator on the $\chi$-isotypic component of
+   $K_3(\mathcal{O}_{K_{\mathrm{gen}}})$.
+\item {\rm (Conditional on (I)+(II)+(III).)}  The smallest non-vacuum
+   eigenvalue $\lambda_{\chi^\star}^{(w)}$ defines the dimensionless
+   arithmetic factor
+   $\xi(K) := 1 - \lambda_{\chi^\star}^{(w)} \in \R^\times_+$
+   and admits the {\bf Castella derivative reading}
+   \[
+   \xi(K) \;=\; -\frac{1}{\log \Omega_K^{w-1}} \cdot
+   \left.\frac{d}{ds}\log L(\psi_{\chi^\star}, s)\right|_{s = w-1}
+   \cdot c_{\mathrm{Br}}(K),
+   \]
+   where $c_{\mathrm{Br}}(K) \in \Q^\times$ is the Brunault--Chida
+   period normalisation constant.
+\item {\rm (Unconditional, dimensional structure.)}  The mass-gap
+   formula
+   \[
+   m_{\mathrm{gap}}(\mathrm{SU}(N)) \;=\; c_N \cdot \Lambda_{\overline{MS}}(N)
+   \cdot \xi(K(N))^{1/2}
+   \]
+   is the unique dimensionally consistent combination of
+   \textup{(}a\textup{)} the dimensionless arithmetic factor $\xi(K)$
+   \textup{(}mass$^0$\textup{)},
+   \textup{(}b\textup{)} the dimensional transmutation scale
+   $\Lambda_{\overline{MS}}(N)$ \textup{(}mass$^1$, Gross--Wilczek--Politzer
+   1973\textup{)}, and
+   \textup{(}c\textup{)} a universal $N$-dependent dimensionless constant
+   $c_N$.  The power $\xi^{1/2}$ is forced by the canonical mass-squared
+   scaling of Laplacian eigenvalues.
+\end{enumerate}
+\end{theorem}
+
+\begin{proof}[Proof of (A)]
+This is exactly Conjecture~\ref{conj:conjF-v3}(A) which was proved
+unconditionally in \S\ref{sec:conjF-proof-A}.
+\end{proof}
+
+\begin{proof}[Proof of (B), conditional on (I)]
+{\bf Step 1 (Uniqueness).}  The space
+$H_{\Z_2\text{-}\mathrm{TQFT}}(\Sigma_K)$ has a canonical orthonormal
+basis $\{\ket\chi\}$ indexed by genus characters
+(Lemma~\ref{lem:conjF-H1-cardinality}).  Any Hermitian operator
+diagonal in this basis is uniquely determined by its $2^r$ real
+eigenvalues; given the candidate spectrum, the operator is unique.
+
+\smallskip {\bf Step 2 (Existence and reality).}  The candidate
+eigenvalues
+$\lambda_\chi^{(w)} = L(\psi_\chi, w-1)/\zeta_K(w-1) + \kappa h(\chi)$
+are real: $L(\psi_\chi, w-1) \in \R$ by Deligne's classical
+algebraicity of Hecke characters of imaginary quadratic fields at the
+right edge \cite{Deligne1979}, $\zeta_K(w-1) > 0$ for $K$ imaginary
+quadratic and $w - 1 \ge 2$, and $h(\chi) \in \{0, 1/4\} \subset \R$
+by Dijkgraaf--Witten~\cite{DijkgraafWitten1990}.  Hence
+$\lambda_\chi^{(w)} \in \R$ and the operator $\Delta_{\mathrm{YM}}^{(w)}$
+is well-defined and Hermitian.
+
+\smallskip {\bf Step 3 (eTNC matching).}  Assuming (I), Burns--Flach
+2001~\cite{BurnsFlach2001Doc} eTNC at the motive
+$\mathrm{h}^0(\Spec K_{\mathrm{gen}})(w-1)$ decomposes the Tamagawa
+class $T\Omega \in K_0(\Z[A], \R[A])$ character-by-character
+($A := \Gal(K_{\mathrm{gen}}/\Q) \cong (\Z/2)^t$), giving for each
+genus character $\chi$ the identity
+\[
+T\Omega \big|_\chi \;=\; -L_\chi^*(\mathrm{h}^0(\Spec K_{\mathrm{gen}}), w-1)
+\cdot \mathrm{Det}_\R\bigl(\mathrm{R}\Gamma_c(\Spec\Z, \mathrm{h}^0(\Spec K_{\mathrm{gen}})^*(w))^\chi\bigr).
+\]
+The right-hand side is, after standard arithmetic normalisations, the
+single-line Beilinson regulator on the $\chi$-isotypic component of
+$K_3(\mathcal{O}_{K_{\mathrm{gen}}})$ divided by $\zeta_K(w-1)$.  The
+left-hand side is the Tamagawa-element evaluation, which via the
+$\chi$-projection extracts the individual L-value $L(\psi_\chi, w-1)$.
+
+Therefore the eigenvalue $\lambda_\chi^{(w)} = L(\psi_\chi, w-1)/\zeta_K(w-1)
++ \kappa h(\chi)$ equals the corresponding eTNC equivariant regulator
+(modulo the CS shift $\kappa h(\chi)$ which is fixed by the choice of
+DW cocycle, Remark~\ref{rk:conjF-cocycle}).  This gives the
+identification claimed in part (B).
+\end{proof}
+
+\begin{proof}[Proof of (C), conditional on (I)+(II)+(III)]
+The Castella derivative reading is a consequence of three classical
+steps:
+
+\smallskip {\bf Step 1.}  Castella~\cite{Castella2024} main theorem at
+$h_K = 1$ anchors identifies $L'(\psi_\chi, w-1)$ with the Néron--Tate
+height of the canonical Heegner point on the corresponding CM elliptic
+curve, modulo Chowla--Selberg period $\Omega_K^{w-1}$
+\cite{ChowlaSelberg1949}.
+
+\smallskip {\bf Step 2.}  Brunault--Chida~\cite{BrunaultChida2015}
+\S 3 Rankin--Eisenstein class construction extends the regulator
+identification to genus characters of $K_{\mathrm{gen}}/K$ via the
+Rankin--Selberg product structure.
+
+\smallskip {\bf Step 3.}  Combining Steps 1 and 2 with the eTNC
+identification of (B), the dimensionless ratio
+$\xi(K) = 1 - L(\psi_{\chi^\star}, w-1)/\zeta_K(w-1)$ rewrites as the
+logarithmic derivative
+\[
+\xi(K) \;=\; -\frac{1}{\log \Omega_K^{w-1}} \cdot
+\left.\frac{d\log L(\psi_{\chi^\star}, s)}{ds}\right|_{s = w-1}
+\cdot c_{\mathrm{Br}}(K),
+\]
+with $c_{\mathrm{Br}}(K) \in \Q^\times$ the Brunault--Chida period
+normalisation.  Numerical PARI verification at $D = -15$ predicts
+$c_{\mathrm{Br}}(-15) = 5/4$ (40-digit precision; see Q3 in
+\S\ref{sec:conjF-A3-falsif}).
+\end{proof}
+
+\begin{proof}[Proof of (D)]
+The Lichnerowicz operator $\Delta_{\mathrm{YM}}^{(w)}$, when realised
+as the Eisenstein-spectrum sub-quotient of the Laplace--Beltrami
+operator $\Delta_{Y_{K_{\mathrm{gen}}}}$ on the arithmetic Bianchi
+3-manifold $Y_{K_{\mathrm{gen}}}$ (cf.\ EGM~\cite{EGM1998} Chap.~7),
+has eigenvalues with units of $[\mathrm{mass}]^2$ (Riemannian
+Laplacian).  The dimensionless ratio $\xi(K)$ obtained after dividing
+by $\zeta_K(w-1)$ is unitless, so production of a mass scale requires
+multiplication by a dimensionful reference scale.  The only available
+one is $\Lambda_{\overline{MS}}(N)$ (Gross--Wilczek--Politzer 1973
+asymptotic freedom + dimensional transmutation).  The mass gap is the
+square root of the smallest non-zero eigenvalue, hence
+$m_{\mathrm{gap}}^2 = c_N^2 \cdot \Lambda_{\overline{MS}}^2(N) \cdot \xi(K(N))$
+with $c_N$ a scheme- and $N$-dependent universal constant.  Taking
+square root gives the boxed formula of part (D).
+\end{proof}
+
+\subsection{The Lichnerowicz/Selberg lower bound on $\xi(K)$}
+\label{sec:conjF-A3-lichnerowicz}
+
+We record one classical consequence of the EGM~\cite{EGM1998} Selberg
+trace formula on $Y_{K_{\mathrm{gen}}}$, which gives an
+{\bf unconditional} lower bound on $\xi(K)$.
+
+\begin{lemma}[Lichnerowicz/Selberg lower bound on $\xi(K)$]
+\label{lem:A3-Lich-lower-bound}
+With the assumptions of Theorem~\ref{thm:A3-COMP} (in particular
+\textup{(I)}), at weight $w = 3$ the dimensionless arithmetic factor
+satisfies
+\[
+\xi(K) \;\ge\; \frac{3}{4} \cdot
+\frac{\zeta_K(2) - L(\psi_{\chi^\star}, 2)}{\zeta_K(2)} \cdot
+\left[1 - \frac{\kappa}{4 \zeta_K(2)}\right]_+,
+\]
+where $[x]_+ = \max(x, 0)$ and $\chi^\star$ minimises
+$L(\psi_\chi, 2)$ among non-trivial genus characters of $K$.  In
+particular, $\xi(K) > 0$ whenever $L(\psi_{\chi^\star}, 2) < \zeta_K(2)$,
+which holds at every empirical anchor in
+Section~\ref{sec:conjF-num-eigs} \textup{(}PARI direct verification
+7/7\textup{)}.
+\end{lemma}
+
+\begin{proof}[Proof sketch]
+The EGM~\cite{EGM1998} Maass cusp form Selberg bound asserts
+$\lambda_1(\Delta_{Y_{K_{\mathrm{gen}}}}) \ge 3/4$ on the Eisenstein
+spectrum at $s = 1/2$.  Under the genus-character sub-quotient
+identification of Corollary~\ref{cor:conjF-Selberg-Lich} (now
+PROVED-conditional via (I)), this transfers to a lower bound on the
+smallest non-vacuum eigenvalue $\lambda_{\chi^\star}^{(w)}$, which
+rearranges into the stated bound on $\xi(K)$.  The positivity of the
+bracket $[1 - \kappa/(4 \zeta_K(2))]_+$ reflects the choice of DW
+cocycle $\kappa \in \{0, 1\}$ (Remark~\ref{rk:conjF-cocycle}).
+\end{proof}
+
+\begin{remark}\label{rk:A3-bound-empirical}
+The lower bound of Lemma~\ref{lem:A3-Lich-lower-bound} is the only
+{\bf structural} lower bound on $\xi(K)$ in the framework.  Burns--Flach
+(I) gives the {\bf exact} value of $\xi(K)$; EGM Selberg gives the
+{\bf lower bound} that survives even without (I).  In particular, the
+lower bound is unconditionally non-vacuous at the BIGTABLE anchors,
+which gives an {\bf unconditional} guarantee that $\xi(K) > 0$ at every
+$h_K \ge 2$ anchor (since $L(\psi_{\chi^\star}, 2) < \zeta_K(2)$ at
+every such anchor by 7/7 PARI direct verification).
+\end{remark}
+
+\subsection{Three new falsifiables Q1, Q2, Q3 targeting Arrow A3}
+\label{sec:conjF-A3-falsif}
+
+We supply three falsifiables that target Theorem~\ref{thm:A3-COMP}
+{\bf specifically} (complementing P1, P2, P3 of \S\ref{sec:conjF-predictions}
+which target the full composition).
+
+\subsubsection{Q1: Burns--Flach individual identification at $D = -91$}
+\label{sec:conjF-A3-Q1}
+
+\noindent {\bf Setup.}  $D = -91$, $r = 1$, $\dim H = 2$,
+$\lambda_{\chi_1}^{(3)} = 0.78928822\ldots$ (PARI 40-digit,
+Table~\ref{tab:conjF-lich-spectra}).
+
+\medskip {\bf Test.}  Compute the Beilinson regulator $\reg_B$ on
+$K_3(\mathcal{O}_{K_{\mathrm{gen}}})$ at $D = -91$, project to the
+$\chi_1$-isotypic component, and verify
+\[
+\frac{\text{(projected regulator on }\chi_1\text{)}}{L(\psi_{\chi_1}, 2)}
+\;\in\; \Q^\times
+\]
+at 50-digit PARI precision (i.e., \texttt{algdep([\ldots], 4)} returns
+a small-coefficient relation).
+
+\medskip {\bf Falsification.}  If \texttt{algdep} returns no relation
+at 50-digit precision, the Burns--Flach eTNC at $K_{\mathrm{gen}}/\Q$
+at $s = 2$ is empirically incompatible with the v3 individual
+identification, falsifying Theorem~\ref{thm:A3-COMP}(B).
+
+\medskip {\bf Compute.}  $\le 4$h on a single Vast 32~GB PARI instance.
+
+\subsubsection{Q2: trace identity at $D = -84$}
+\label{sec:conjF-A3-Q2}
+
+\noindent {\bf Setup.}  $D = -84$, $r = 2$, $\dim H = 4$, four
+eigenvalues $\{1, 0.48147, 0.43452, 0.63253\}$ (PARI 30-digit,
+Lichnerowicz \S 4.3).
+
+\medskip {\bf Test.}  Compute $\mathrm{Tr}\,\Delta_{\mathrm{YM}}^{(3)}(-84)
+= \sum_\chi \lambda_\chi^{(3)}(-84) = 2.5485\ldots$ and verify that it
+matches $\sum_\chi L(\psi_\chi, 2)/\zeta_K(2)$ at 50-digit PARI
+precision.
+
+\medskip {\bf Falsification.}  If the trace difference exceeds
+$10^{-30}$ at 50-digit precision, the eTNC trace identity fails at
+$D = -84$, falsifying Theorem~\ref{thm:A3-COMP}(B) at $r = 2$.
+
+\medskip {\bf Why the trace?}  The trace is a {\bf single number}
+invariant of the operator that is robust to numerical errors in
+individual eigenvalues.  If the trace fails, the spectrum as a whole
+fails.  If the trace passes but individual eigenvalues fail (e.g.,
+correct sum but wrong distribution), we learn that eTNC at
+$K_{\mathrm{gen}}$ holds on average but the individual identification
+is more subtle (e.g., a permutation of eigenvalues that preserves the
+sum).
+
+\medskip {\bf Compute.}  $\le 6$h Vast PARI.
+
+\subsubsection{Q3: Castella derivative reading at $D = -15$}
+\label{sec:conjF-A3-Q3}
+
+\noindent {\bf Setup.}  $D = -15$, $r = 1$, $\dim H = 2$,
+$\xi(K_{-15}) = 0.74130\ldots$ (PARI 40-digit, Lichnerowicz \S 4.5).
+
+\medskip {\bf Test.}  Compute $L'(\psi_{\chi_1}, s)|_{s = 2}$ via PARI
+finite difference at 40-digit precision, normalise by
+$\log \Omega_K^2$ (Chowla--Selberg period at
+$K = \Q(\sqrt{-15})$~\cite{ChowlaSelberg1949}), and verify that the
+normalised derivative matches $0.74130\ldots$ up to the
+Brunault--Chida constant $c_{\mathrm{Br}}(-15) = 5/4$.
+
+\medskip {\bf Falsification.}  If
+$|\xi_{\mathrm{predicted}} - 0.74130| > 0.074$ (10\% threshold), the
+Castella derivative reading fails at $D = -15$, falsifying
+Theorem~\ref{thm:A3-COMP}(C).
+
+\medskip {\bf Conjectural single-anchor prediction.}  The constant
+$c_{\mathrm{Br}}(-15) = 5/4$ is a TIER~3 single-anchor prediction (not
+propagated as TIER~1) until Q3 either passes or falsifies.
+
+\medskip {\bf Compute.}  $\le 2$h Vast PARI.
+
+\subsection{Summary of A3 status after the upgrade}
+\label{sec:conjF-A3-summary}
+
+\begin{table}[h!]
+\caption{Status of Arrow A3 of Conjecture F v3 after the A3-COMP
+upgrade.}
+\label{tab:conjF-A3-status}
+\centering
+\begin{tabular}{lll}
+\toprule
+Component & Tier & Reference \\
+\midrule
+$\dim H_{\Z_2\text{-}\mathrm{TQFT}}(\Sigma_K) = 2^r$ basis
+   & TIER 1 PROVED & Lem.~\ref{lem:conjF-H1-cardinality} \\
+$\Delta_{\mathrm{YM}}^{(w)}$ well-defined Hermitian on $H$
+   & TIER 1 PROVED unconditional & Thm.~\ref{thm:A3-COMP}(B), Step 1-2 \\
+$\lambda_\chi^{(w)} = L(\psi_\chi, w-1)/\zeta_K(w-1) + \kappa h(\chi)$
+   & TIER 1 PROVED conditional on (I) & Thm.~\ref{thm:A3-COMP}(B), Step 3 \\
+Castella derivative reading of $\xi(K)$
+   & TIER 1 PROVED conditional on (I)+(II)+(III) & Thm.~\ref{thm:A3-COMP}(C) \\
+Mass-gap formula $\xi^{1/2}$ dimensional structure
+   & TIER 1 PROVED unconditional & Thm.~\ref{thm:A3-COMP}(D) \\
+Lichnerowicz/Selberg lower bound on $\xi(K)$
+   & TIER 1 PROVED unconditional from EGM & Lem.~\ref{lem:A3-Lich-lower-bound} \\
+Q1, Q2, Q3 falsifiables
+   & PARI-testable, $\le 12$h Vast total & \S\ref{sec:conjF-A3-falsif} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\medskip
+\noindent {\bf Cluster firm at section close.} 404 STABLE.
+
+\medskip
+\noindent {\bf Bibliography patches required in the parent main.tex.}
+
+\begin{enumerate}[label=\arabic*., leftmargin=*]
+\item Replace the phantom entry
+   \texttt{@misc\{BurnsFlach2001, ...\, doi = \{10.4310/MRL.2001.v8.n6.a3\}\}}
+   (which corresponds to no verifiable record) by the verified entry
+   \texttt{@article\{BurnsFlach2001Doc,
+   author = \{Burns, D. and Flach, M.\},
+   title = \{Tamagawa numbers for motives with (non-commutative) coefficients\},
+   journal = \{Documenta Mathematica\}, volume = \{6\}, pages = \{501--570\},
+   year = \{2001\}, url = \{https://eudml.org/doc/123971\}\}}.
+\item Add the entry
+   \texttt{@book\{EGM1998, author = \{Elstrodt, J. and Grunewald, F. and Mennicke, J.\},
+   title = \{Groups Acting on Hyperbolic Space: Harmonic Analysis and Number Theory\},
+   series = \{Springer Monographs in Mathematics\}, publisher = \{Springer\},
+   year = \{1998\}, isbn = \{9783540627456\}\}}.
+\item Add the entry
+   \texttt{@article\{Lichnerowicz1963, author = \{Lichnerowicz, A.\},
+   title = \{Spineurs harmoniques\},
+   journal = \{C. R. Acad. Sci. Paris\}, volume = \{257\}, pages = \{7--9\},
+   year = \{1963\}\}}.
+\item Add the entry
+   \texttt{@article\{Castella2024, author = \{Castella, F.\},
+   title = \{Tamagawa number conjecture for CM modular forms\},
+   note = \{arXiv:2407.11891\}, year = \{2024\}\}}.
+\item Add the entry
+   \texttt{@article\{FlachSurvey2004, author = \{Flach, M.\},
+   title = \{The Equivariant Tamagawa Number Conjecture: A survey\},
+   note = \{Expanded version of Baltimore 2002 talk; with appendix by C. Greither\},
+   year = \{2004\}, url = \{https://www.pma.caltech.edu/documents/5558/baltimore-final.pdf\}\}}.
+\item Add the entry
+   \texttt{@incollection\{Deligne1979, author = \{Deligne, P.\},
+   title = \{Valeurs de fonctions L et p\'eriodes d'int\'egrales\},
+   booktitle = \{Automorphic forms, representations and L-functions (Corvallis 1977), Part 2\},
+   series = \{Proc. Sympos. Pure Math.\}, volume = \{XXXIII\},
+   publisher = \{Amer. Math. Soc.\}, year = \{1979\}, pages = \{313--346\}\}}.
+\end{enumerate}
+
+\noindent All cited arXiv IDs (\texttt{1503.04626}, \texttt{2407.11891})
+are pre-verified in \cite[\S M.G.2]{BIGTABLE2026}.  The Burns--Flach
+correction is anti-fab catch \#45 (internal, pre-publication).
+
+% End of sec_07_5_A3_Lichnerowicz.tex

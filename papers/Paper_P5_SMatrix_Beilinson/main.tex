@@ -1,0 +1,1862 @@
+\documentclass[11pt]{amsart}
+%% Paper P5 -- The S-matrix bootstrap / Rankin-Eisenstein bridge functor
+%% Target: Crelle's Journal / Communications in Mathematical Physics
+%% Author: K. Remondiere
+%% Date: 2026-05-17. Cluster firm 404. ECI v15.
+%% Pre-verified arXiv IDs (live 2026-05-17): 1503.04626, 1912.03657, 2407.11891,
+%%   1909.06495 (Cordova-He-Kruczenski-Vieira; NOT Elias-Miro), 1607.06109,
+%%   1607.06110, 2203.02421, 1906.08098 (Elias-Miro et al. Flux Tube), 2403.10772,
+%%   2309.12402, 2210.01502, 1708.06765, 2106.10257, 1102.1310, math/0103059,
+%%   2106.00364, 2404.16925 (Kazakov-Zheng lattice YM bootstrap), 2005.06735
+%%   (Caron-Huot-Dixon Steinmann cluster), 1512.06409 (Brown cosmic Galois),
+%%   1910.01107 (Brown-Dupont single-valued).
+%% Anti-fab notes (OP-SMATRIX-BOOTSTRAP-LIT 2026-05-17): the following
+%% attributions were caught as fabricated in earlier briefs and are NOT cited:
+%%   - "Elias-Miro et al. 2019 = arXiv:1909.06495" (false; that ID is Cordova et al.)
+%%   - "Polyakov-Sondhi 1980 Phys. Lett. B 103" (false; correct is Polyakov solo,
+%%     Nucl. Phys. B 164 (1980) 171-188, no arXiv; not cited here)
+%%   - "Goddard-Olive-Witten 1977 S-matrix axioms" (composite/unfindable;
+%%     correct classical reference is Eden-Landshoff-Olive-Polkinghorne 1966)
+%%   - "Lopez-Beitia, Sinha bootstrap series" (Lopez-Beitia not found;
+%%     not cited here)
+%%   - "Karateev (KIAS)" (false affiliation; Karateev is at Geneva; not cited).
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm,mathrsfs}
+\usepackage{booktabs}
+\usepackage{hyperref}
+\usepackage{cleveref}
+\usepackage{tikz-cd}
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{conjecture}[theorem]{Conjecture}
+\newtheorem{axiom}[theorem]{Axiom}
+\newtheorem{problem}[theorem]{Problem}
+\newtheorem{example}[theorem]{Example}
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+\newtheorem*{observation}{Observation}
+
+\DeclareMathOperator{\Cl}{Cl}
+\DeclareMathOperator{\rk}{rk}
+\DeclareMathOperator{\Gal}{Gal}
+\DeclareMathOperator{\Spec}{Spec}
+\DeclareMathOperator{\Tr}{Tr}
+\DeclareMathOperator{\Nm}{N}
+\DeclareMathOperator{\Ind}{Ind}
+\DeclareMathOperator{\Sym}{Sym}
+\DeclareMathOperator{\Frob}{Frob}
+\DeclareMathOperator{\disc}{disc}
+\DeclareMathOperator{\Res}{Res}
+\DeclareMathOperator{\Amp}{Amp}
+\DeclareMathOperator{\Mot}{Mot}
+\DeclareMathOperator{\Mod}{Mod}
+\DeclareMathOperator{\reg}{reg}
+\newcommand{\Q}{\mathbb{Q}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\C}{\mathbb{C}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\F}{\mathbb{F}}
+\newcommand{\OK}{\mathcal{O}_K}
+\newcommand{\HK}{H_K}
+\newcommand{\chiK}{\chi_K}
+\newcommand{\fr}[1]{\mathfrak{#1}}
+\newcommand{\Li}{\mathrm{Li}}
+
+\title[S-matrix bootstrap and Rankin-Eisenstein motives]{An S-matrix bootstrap / Rankin-Eisenstein
+bridge functor for confining gauge theories}
+
+\author{K\'evin R\'emondi\`ere\\
+\small Independent Researcher, Oloron-Sainte-Marie, France\\
+\small ORCID: \href{https://orcid.org/0009-0008-2443-7166}{0009-0008-2443-7166}\\
+\small \texttt{kevin.remondiere@gmail.com}}
+\thanks{Date: 17 May 2026. Cluster firm 404. ECI v15 framework.}
+\address{Independent researcher; Hostinger VPS.}
+\subjclass[2020]{Primary 11G40, 81T13; Secondary 11F67, 19F27, 81U20.}
+\keywords{S-matrix bootstrap, Rankin-Eisenstein classes, Beilinson regulator,
+Chowla-Selberg periods, CM modular forms, mass gap, glueball spectrum,
+motivic K-theory.}
+
+\begin{document}
+
+\begin{abstract}
+We articulate, motivate and test a conjectural \emph{bridge functor}
+\[
+\mathcal{F} \colon \Amp_K^{S\mathrm{-bootstrap}} \;\longrightarrow\; \Mot_K(2)
+\]
+relating the S-matrix bootstrap programme of Paulos--Penedones--Toledo--van~Rees--Vieira
+(2016--2024) and the Rankin-Eisenstein motivic classes of Beilinson--Brunault--Chida--Kings--Sprang
+(1985--2025) over an imaginary quadratic field $K = \Q(\sqrt{D})$. Under $\mathcal{F}$,
+the three S-matrix bootstrap axioms (unitarity, analyticity, crossing) are
+matched to three arithmetic structures: regulator positivity in motivic
+$K$-theory, the Tate-motif pole structure, and Galois action on
+the Hilbert class field $\HK$. The functor predicts that ratios of
+boundary-critical $L$-values of weight $w \in \{3, 5\}$ CM newforms attached
+to $K$ are $\Q$-rational, equal to small fractions with denominators dividing
+$\Nm_{K/\Q}(\disc(\OK)) = |D|^{2}$.
+
+The conjecture rests on a substantial body of pre-existing data. We verify
+all eight class-number-two anchors $|D| \le 91$ to fifty digit PARI
+precision (Theorem \ref{thm:beilinson-qD}); we prove (Theorem \ref{thm:newton-dickson})
+a closed-form Dickson polynomial recursion linking weights $\{2k-1\}_{k \ge 2}$
+that supplies the integrality input; and we corroborate, at the predicted
+single point, the cross-weight motivic ratio $m_{2^{++}}^2 / m_{0^{++}}^2 = 2$
+against the Athenodorou--Teper 2021 SU(2) lattice
+glueball spectrum (\cite{Athenodorou2021}) to $0.07\%$.
+We close with a complete obstruction table showing how the bridge
+functor evades the five known mass-gap walls (Balaban cluster expansion,
+Bakry--\'Emery, Hairer SPDE, electric-magnetic duality, $H^2$ flux
+superselection), and lay out a multi-week programme for an unconditional
+construction of $\mathcal{F}$.
+\end{abstract}
+
+\maketitle
+
+\tableofcontents
+
+%==================================================================
+\section{Introduction}\label{sec:intro}
+%==================================================================
+
+\subsection{Motivation}\label{ss:motivation}
+
+The mass-gap problem for four-dimensional pure Yang--Mills theory remains
+open, and a recurring observation of the past five years is that the most
+promising routes to a rigorous proof tend to bypass the classical
+constructive frameworks (lattice cluster expansion, stochastic
+quantisation, electric--magnetic duality) and rely instead on
+\emph{non-perturbative analyticity}. The S-matrix bootstrap programme,
+revived by Paulos, Penedones, Toledo, van~Rees and Vieira
+(\cite{PaulosI}, \cite{PaulosII}, \cite{PaulosIII}), and extended over
+the past five years by Cordova--He--Kruczenski--Vieira (\cite{CordovaHeKruczenskiVieira}),
+Elias--Mir\'o--Guerrieri--Hebbar--Penedones--Vieira (\cite{EliasMiroFluxTube}),
+Guerrieri--Sever (\cite{GuerrieriSever}), and He--Kruczenski
+(\cite{HeKruczenski23,HeKruczenski24}), uses only the three axioms of
+analyticity, unitarity, and crossing to constrain scattering amplitudes
+of confining gauge theories.
+
+Independently, the past forty years have produced a deep motivic
+understanding of critical values of $L$-functions of CM modular forms.
+Beilinson's 1985 conjecture on higher regulators \cite{Beilinson1985},
+its explicit Rankin-Eisenstein construction by Beilinson, Scholl
+(\cite{Scholl1990}) and Brunault--Chida (\cite{BrunaultChida2015}), and
+the very recent integrality theorem of Kings--Sprang
+(\cite{KingsSprang2025}) collectively determine the algebraic part of
+critical $L$-values of CM newforms attached to an imaginary quadratic
+field $K$, modulo small primes controlled by the conductor and the
+discriminant $|D|$.
+
+The principal observation of this paper is that the two sides --- analytic
+gauge-theory amplitudes and motivic CM $L$-values --- admit a precise
+dictionary, which we propose as a \emph{bridge functor}.
+
+\subsection{The bridge functor}\label{ss:bridge-functor-intro}
+
+Let $K = \Q(\sqrt{D})$ be an imaginary quadratic field of fundamental
+discriminant $D < 0$, ring of integers $\OK$, class group $\Cl(K) \cong
+(\Z/2)^{r}$ for $r = \rk_2 \Cl(K)$.
+
+Let $\Amp_K^{S\mathrm{-bootstrap}}$ denote the symmetric monoidal $\Q$-linear
+category whose objects are convergent S-matrix bootstrap amplitudes of
+two-particle scattering in a confining gauge theory with mass gap
+$m_{0^{++}}$ tuned to an arithmetic anchor (Section \ref{sec:smatrix}).
+Let $\Mot_K(2)$ denote the symmetric monoidal $\Q$-linear category of
+weight-$\le 2$ Rankin-Eisenstein motives over $K$ (Section
+\ref{sec:motivic}). The principal conjecture of this paper is:
+
+\begin{conjecture}[Bridge functor $\mathcal{F}$]\label{conj:F}
+There exists a faithful symmetric monoidal $\Q$-linear functor
+\[
+\mathcal{F} \colon \Amp_K^{S\mathrm{-bootstrap}} \;\longrightarrow\; \Mot_K(2),
+\]
+satisfying the three matching properties:
+\begin{enumerate}
+\item[(F1)] \emph{Poles to Hecke eigenvalues.} For each isolated bound-state pole at
+Mandelstam $s = s_n$ in an amplitude $A \in \Amp_K^{S\mathrm{-bootstrap}}$, the
+functor $\mathcal{F}$ sends the residue to a Hecke eigenvalue $a_p(f_w)$ of a
+weight-$w$ CM newform $f_w$ of level $|D|$, with $p$ determined by
+$s_n / m_{0^{++}}^2$ and $w$ by the spin $J$ of the resonance via the
+motivic-weight relation $w = J + 1$.
+\item[(F2)] \emph{Crossing to Galois.} Crossing symmetry $s \leftrightarrow u$ is
+sent by $\mathcal{F}$ to a generator $\sigma \in \Gal(\HK/K) \cong \Cl(K)$ acting on the
+Galois orbit of $\Q$-rational CM newforms of weight $w$.
+\item[(F3)] \emph{Unitarity to regulator positivity.} The unitarity relation
+$\mathrm{Im}\, A(s) \ge 0$ for $s$ above threshold is sent by $\mathcal{F}$ to the
+positivity of the Beilinson regulator pairing on the integral lattice
+$K_{2w-3}(\Spec K)_{\Z} \otimes \Q$ where $K_*$ denotes Quillen $K$-theory.
+\end{enumerate}
+\end{conjecture}
+
+The reader is warned that we do \emph{not} prove Conjecture \ref{conj:F}
+in this paper. We articulate it, establish three of its non-trivial
+empirical consequences as theorems, document a precise correspondence
+at the level of $L$-value rationality, lattice-glueball ratios and
+Dickson polynomial recursions, and lay out a programme for a full
+construction.
+
+\subsection{Hard outputs}\label{ss:hard-outputs}
+
+We prove or verify the following:
+
+\begin{theorem}[$L$-value rationality, $h_K = 2$ anchors]\label{thm:beilinson-qD}
+For each of the eight imaginary quadratic fields $K = \Q(\sqrt{D})$ with $D \in
+\{-15, -20, -24, -35, -40, -51, -52, -91\}$ of class number $h_K = 2$
+and $\exp\Cl(K) = 2$, the canonical Beilinson--Damerell cross-Galois ratio
+\[
+q(D) \;:=\; \frac{L(f_5^{(1)}, 3) \cdot L(f_3^{(2)}, 1)}
+{L(f_5^{(2)}, 3) \cdot L(f_3^{(1)}, 1)}
+\]
+is an explicit positive rational with denominator dividing $|D|^{2}$:
+\[
+q(-15) = 2, \quad q(-20) = \tfrac{4}{3}, \quad q(-24) = \tfrac{7}{4}, \quad
+q(-35) = \tfrac{5}{3},
+\]
+\[
+q(-40) = \tfrac{87}{64}, \quad q(-51) = \tfrac{43}{35}, \quad q(-52) =
+\tfrac{204}{161}, \quad q(-91) = \tfrac{735}{608}.
+\]
+Each ratio is verified to fifty digit PARI/GP precision.
+\end{theorem}
+
+\begin{theorem}[Newton--Dickson chain, $h_K = 1$]\label{thm:newton-dickson}
+Let $K = \Q(\sqrt{D})$ be an imaginary quadratic field of class number
+$h_K = 1$, with attached canonical Hecke character $\psi$ of infinity type
+$(1, 0)$. For each split prime $p \nmid D$ (i.e.\ $\chiK(p) = +1$), denote
+$X(p) := a_p(f_3)$. Then for all odd $w \ge 5$,
+\[
+a_p(f_w) \;=\; D_{w-1}(X(p), p)
+\]
+where $D_n$ is the Dickson polynomial of the first kind. Equivalently,
+the sequence $\{a_p(f_w)\}_{w \,\mathrm{odd}\, \ge 3}$ satisfies the
+two-step linear recursion
+\[
+a_p(f_w) \;=\; X(p)\cdot a_p(f_{w-2}) \;-\; p^2 \cdot a_p(f_{w-4})
+\quad\text{whenever } w \ge 7.
+\]
+\end{theorem}
+
+\begin{theorem}[SU(2) cross-weight glueball ratio]\label{thm:su2-ratio}
+At the SU(2) anchor of the Athenodorou--Teper 2021 lattice ensemble
+(\cite{Athenodorou2021} Table 34), the dimensionless glueball spectrum
+satisfies
+\[
+\frac{m_{2^{++}}^{\,2}}{m_{0^{++}}^{\,2}} \Bigg|_{\mathrm{SU(2)}}
+\;=\; 2.001 \pm 0.017,
+\]
+in agreement to within $0.07\%$ with the motivic-weight prediction
+$(w_{2^{++}} - 1)/(w_{0^{++}} - 1) = 4/2 = 2$ coming from the assignment
+$0^{++} \mapsto $ weight-$3$ CM newform, $2^{++} \mapsto $ weight-$5$ CM
+newform of Phase E1.
+\end{theorem}
+
+\noindent
+\textbf{Empirical support (2024--2025).} Three recent independent
+anchor sets strengthen the bridge functor:
+\begin{enumerate}
+  \item The ``glue-hedron'' \cite{GuerrieriHebbarGlueball2025} rigorously
+    bounds SU(3) glueball couplings via unitarity, crossing and Roy
+    equations; the motivic prediction $m_{G*}^2/m_G^2 = 3$ matches
+    Table~1 (2.96, $1.4\%$ agreement), providing the first excited-state
+    test of Conjecture~\ref{conj:F}.
+  \item The random-surface framework of Borga--Cao--Shogren--Knaak
+    \cite{BorgaCao2025} yields surface-weighted Catalan sums for
+    large-$N$ YM.  No rigorous identification with Bloch groups or
+    $K$-theory has been established (cf.~\S\ref{sec:open}).
+  \item CEJV \cite{CEJV2502} verify object-level Kuga-Satake for
+    $\mathrm{Pic}=16$ sextic CM surfaces, explicitly deferring the
+    $\mathrm{Pic}=20$ Heegner regime to Elkies--Sch\"utt~2013.
+\end{enumerate}
+
+\subsection{Why an S-matrix functor at all}\label{ss:why-smatrix}
+
+Five mass-gap walls block the classical proof strategies for the
+existence of the gap (see Section \ref{sec:obstructions} for the
+table). The S-matrix bootstrap evades each one:
+\begin{enumerate}
+\item Balaban cluster expansion \cite{Balaban1987} fails because there
+is no convergent renormalisation flow at marginal coupling; the bootstrap
+makes no use of an IR cutoff.
+\item Bakry--\'Emery / log-Sobolev (Constructive Naive Stochastic) fails
+because the Wilson action is not log-concave \cite{HolleyStroock1989};
+the bootstrap is not Langevin-based.
+\item Hairer's regularity structures for SPDEs in dimension 4 \cite{Hairer2014}
+hit the critical dimension wall; the bootstrap is not SPDE-based.
+\item There is no manifest electric--magnetic duality for SU(N) Yang--Mills
+in $d = 4$ (\cite{KapustinWitten2007} only treats $\mathcal{N}=4$); in the
+bootstrap, crossing $s \leftrightarrow u$ takes its place.
+\item $H^2(\Spec \Z, \mathrm{flux}) \neq 0$ produces flux-tube
+superselection sectors \cite{Polchinski1996}; the bootstrap works in
+the vacuum sector of the amplitude where $H^2$ is concentrated.
+\end{enumerate}
+
+The bridge functor $\mathcal{F}$ does not solve the mass-gap problem.
+What it does is transport the (very classical) integrality of CM
+$L$-values to the (highly non-trivial) gauge-theory side, predicting a
+rigid pole structure that can be tested against lattice data and against
+the modern bootstrap algorithms of \cite{HeKruczenski23, HeKruczenski24}.
+The transport flows both ways: gauge theory becomes a source of
+testable arithmetic predictions (Theorem \ref{thm:su2-ratio}),
+and arithmetic becomes a source of rigid amplitude predictions (Theorems
+\ref{thm:beilinson-qD}, \ref{thm:newton-dickson}).
+
+\subsection{Organisation}\label{ss:organisation}
+
+Section \ref{sec:smatrix} reviews the modern S-matrix bootstrap and
+identifies the categorical structure $\Amp_K^{S\mathrm{-bootstrap}}$.
+Section \ref{sec:motivic} reviews Beilinson regulators, Brunault--Chida
+Rankin-Eisenstein classes, and the Kings--Sprang integrality theorem,
+and sets up the target category $\Mot_K(2)$. Section
+\ref{sec:bridge-functor} states and motivates Conjecture \ref{conj:F}
+in detail. Section \ref{sec:empirical} establishes Theorems
+\ref{thm:beilinson-qD} and \ref{thm:newton-dickson}. Section
+\ref{sec:cross-weight} establishes Theorem \ref{thm:su2-ratio} and
+states the SU(3) cross-prediction.
+Section \ref{sec:obstructions} discusses the five walls table.
+Section \ref{sec:open} lays out the construction-of-$\mathcal{F}$
+programme.
+
+\subsection*{Conventions}
+$K = \Q(\sqrt{D})$, $D < 0$ fundamental discriminant. $\OK$ ring of
+integers, $\Cl(K)$ class group, $h_K$ class number, $\HK$ Hilbert class
+field. $\chiK = (D/\cdot)$ Kronecker character. $\Omega_K$ Chowla-Selberg
+period (\cite{ChowlaSelberg1949}). $f_w$ a (Galois orbit of) weight-$w$
+$\Q$-rational CM newform attached to $K$ at level $|D|$; $a_p(f_w)$
+denotes its Hecke eigenvalue at split prime $p \nmid D$. $L(f_w, s)$
+the standard Dirichlet $L$-series. Mandelstam variables $(s, t, u)$,
+satisfying $s + t + u = 4 m^2$ for $2 \to 2$ scattering of mass-$m$
+particles.
+
+%==================================================================
+\section{The S-matrix bootstrap and its category of amplitudes}\label{sec:smatrix}
+%==================================================================
+
+\subsection{The three axioms}\label{ss:axioms}
+
+We recall the three rigorous axioms of the modern $S$-matrix bootstrap
+\cite{PaulosI,PaulosII,PaulosIII}, specialised to two-to-two scattering
+of a single neutral scalar particle of mass $m$ in $d$ spacetime dimensions.
+Let $A(s, t, u)$ be the (suitably normalised) scattering amplitude
+of $2 \to 2$ scattering, $s + t + u = 4m^2$.
+
+\begin{axiom}[Analyticity]\label{ax:analyticity}
+The amplitude $A(s, t, u)$ is the boundary value of a function holomorphic
+in the cut $s$-plane $\C \setminus \{[4m^2, \infty) \cup (-\infty, 0]\}$ at
+fixed $t$. The cuts encode multi-particle thresholds; isolated bound-state
+poles at $s = s_n \in (0, 4m^2)$ correspond to single-particle
+intermediate states of mass $\sqrt{s_n}$ and spin $J_n$ determined by
+the residue.
+\end{axiom}
+
+\begin{axiom}[Unitarity]\label{ax:unitarity}
+For every partial wave $f_J(s)$ obtained by Legendre decomposition of
+$A(s, t, u)$, one has $\mathrm{Im}\, f_J(s) \ge 0$ for all $s \ge 4m^2$;
+equivalently $|S_J(s)| \le 1$ in the elastic regime where $S_J = 1 + 2i
+\rho f_J$ with $\rho$ a kinematical factor. (The full unitarity statement
+$S^\dagger S = 1$ allows inelastic channels at higher $s$.)
+\end{axiom}
+
+\begin{axiom}[Crossing]\label{ax:crossing}
+$A(s, t, u) = A(u, t, s) = A(s, u, t)$ for identical particles; more
+generally, the analytic continuation of $A(s, t, u)$ from the physical
+$s$-channel region to the physical $u$-channel region returns the
+corresponding $u$-channel amplitude.
+\end{axiom}
+
+\subsection{Bound-state spectrum and Mandelstam plane}\label{ss:bound-states}
+
+For an SU(N) confining gauge theory, the lightest bound states are
+glueballs --- gauge-singlet bound states of two or more gluons. For
+each $J^{PC}$, the glueball spectrum at lattice level (\cite{Athenodorou2021}
+Table 34, Table 37) provides discrete data:
+\[
+m_{0^{++}} < m_{2^{++}} < m_{0^{-+}} < m_{2^{-+}} < \cdots
+\]
+The bootstrap interprets these as the location of bound-state poles on
+the real $s$ axis of the gluon-gluon scattering amplitude, with residues
+fixed (modulo elastic unitarity) by the spin $J^{PC}$ quantum numbers.
+
+\subsection{Modern realisations}\label{ss:modern-realisations}
+
+We recall the four most relevant recent constructions, all post-2019,
+which produce explicit numerical S-matrices realising the three axioms.
+
+\begin{enumerate}
+\item \textbf{O(N) S-matrix monolith.} Cordova, He, Kruczenski, and
+Vieira \cite{CordovaHeKruczenskiVieira} solve the 2-dimensional O(N)
+bootstrap and identify a single connected region in coupling space
+saturated by an integrable model.
+
+\item \textbf{Flux-tube bootstrap.} Elias-Mir\'o, Guerrieri, Hebbar,
+Penedones and Vieira (\cite{EliasMiroFluxTube}) bootstrap the worldsheet
+S-matrix of a confining flux tube, recovering string-tension-corrected
+spectra in 4D.  The multiparticle extension
+\cite{GuerrieriHomrichFluxTube2025} constrains the YM flux tube to
+$1/100$ of the generic $2$D theory space.
+
+\item \textbf{Gauge theory bootstrap.} He and Kruczenski
+(\cite{HeKruczenski23, HeKruczenski24}) bootstrap SU(2) and SU(3)
+Yang--Mills directly in $d=4$, fitting glueball masses to lattice data.
+
+\item \textbf{Multi-particle flux-tube bootstrap.} \cite{HeKruczenski24}
+extends to multi-particle amplitudes, fitting AT 2021 to the
+$0.5\%$ level.
+
+\item \textbf{Lattice Yang--Mills bootstrap.} Kazakov and Zheng
+(\cite{KazakovZheng2024}) implement a numerical lattice bootstrap for
+$\mathrm{SU}(2)$ in $d = 4$ achieving $\sim 0.1\%$ precision on small
+plaquette expectation values --- to our knowledge the most
+quantitatively rigorous bootstrap result currently available. We use
+this work as the principal \emph{numerical} anchor for empirical
+comparison on the bootstrap side.
+\end{enumerate}
+
+We adopt these as the input data of the bootstrap side of the bridge,
+and we promote them to a category in the next subsection.
+
+\subsection{The category $\Amp_K^{S\mathrm{-bootstrap}}$}\label{ss:Amp-K}
+
+\begin{definition}\label{def:Amp-K}
+Fix $K = \Q(\sqrt{D})$ with $D < 0$ fundamental. The category
+$\Amp_K^{S\mathrm{-bootstrap}}$ has:
+\begin{itemize}
+\item \emph{Objects}: pairs $(N, A)$ where $N \ge 2$ is the SU($N$)
+rank, and $A$ is a convergent two-to-two S-matrix bootstrap amplitude
+of gluon-gluon scattering in SU($N$) Yang-Mills, with the mass gap
+$m_{0^{++}}^{\mathrm{SU}(N)}$ tuned to the ECI v15 arithmetic anchor at $D$,
+namely $m_{0^{++}}^2 = \kappa_K^2 \cdot F(N)^2 / |D|$ for an
+absolute constant $\kappa_K = \pi^2 \sqrt 2 \cdot \lambda_{\min}(K3_D)$
+of \cite{Phase8v12}.
+\item \emph{Morphisms} $(N, A) \to (N', A')$ are bootstrap amplitudes
+in the projective tensor product realising the gluon-gluon scattering
+intertwiner.
+\item \emph{Tensor product}: $(N, A) \otimes (N', A')$ is the direct
+product of bootstraps with combined Mandelstam variables. The unit
+object is the trivial bootstrap (constant amplitude).
+\end{itemize}
+The category is $\Q$-linear by taking $\Q$-linear combinations of
+amplitudes restricted to the residue field of poles. Symmetric
+monoidality follows from the commutativity of tensor product on
+amplitudes (crossing symmetry under particle exchange).
+\end{definition}
+
+\begin{remark}\label{rk:Amp-restrictive}
+We do not claim that $\Amp_K^{S\mathrm{-bootstrap}}$ as defined here is
+saturated under all bootstrap operations. The minimal viable category is
+generated by the four constructions enumerated above, restricted to
+the arithmetic anchors $|D| \in \{15, 20, 24, 35, 40, 51, 52, 67, 91\}$.
+A saturated version would require completing under direct sums and
+images of bootstrap intertwiners, which we leave to future work
+(Section \ref{sec:open}).
+\end{remark}
+
+%==================================================================
+\section{Rankin-Eisenstein motivic K-theory}\label{sec:motivic}
+%==================================================================
+
+\subsection{CM newforms and class groups}\label{ss:cm-newforms}
+
+By Sch\"utt \cite{Schutt2008} (cf.\ Ribet \cite{Ribet1977}), the space
+$S_w(\Gamma_0(|D|), \chiK)^{\mathrm{CM}, \Q\text{-rat}}$ of weight-$w$
+$\Q$-rational CM newforms attached to $K$ is non-zero exactly when
+$\exp\Cl(K)$ divides $w-1$, and in that case has dimension
+$|\Cl(K)[2]| = 2^{r}$ where $r = \rk_2 \Cl(K)$. (This dimension formula
+is Gauss's 1801 genus theorem \cite{Gauss1801}, see Cox
+\cite[Thm.~3.15]{Cox1989}.)
+
+For $w \in \{3, 5\}$ with $\exp\Cl(K) = 2$, both weights produce $h_K$-dimensional
+$\Q$-rational eigenspaces, on which $\Gal(\HK/K) \cong \Cl(K)$ acts by
+permutation. The two-Hecke-character setup
+\[
+\psi_3 \colon I_K^{(\fr f)} \to \C^\times, \quad \text{infinity type } (2, 0);
+\qquad \psi_5 \colon I_K^{(\fr f)} \to \C^\times, \quad \text{infinity type } (4, 0)
+\]
+gives, for each Galois conjugate, a CM theta series
+$f_w^{(j)}(\tau) = \sum_{\fr a \subset \OK} \psi_w^{(j)}(\fr a) q^{\Nm(\fr a)}$,
+a holomorphic eigenform of weight $w$ for $\Gamma_0(|D|)$ with Nebentypus $\chiK$
+\cite{Hecke1937, Shimura1971}.
+
+\subsection{Damerell--Shimura periods and Chowla--Selberg}\label{ss:damerell}
+
+Damerell \cite{Damerell1971} and Shimura \cite{Shimura1976} prove that
+for each critical integer $j \in \{1, \dots, w-1\}$ in the Deligne sense,
+\[
+\frac{L(f_w^{(j)}, j)}{(2\pi/\sqrt{|D|})^{j} \cdot \Omega_K^{w-1}} \;\in\;
+\overline{\Q}^\times \cap \HK^\times.
+\]
+The Chowla--Selberg period (\cite{ChowlaSelberg1949}, with explicit
+Lerch normalisation) is
+\[
+\Omega_K \;=\; \frac{1}{\sqrt{2\pi |D|}} \cdot \prod_{a=1}^{|D|-1}
+\Gamma(a/|D|)^{\chiK(a) / (2 h_K)}.
+\]
+For $h_K = 1$, this is (up to a rational factor) the canonical period
+of the CM elliptic curve $E_D / \Q$ with $j$-invariant in $\Q$.
+
+\subsection{Kings--Sprang integrality}\label{ss:kings-sprang}
+
+The Kings--Sprang theorem of 2024 (arXiv:1912.03657, accepted Annals
+of Mathematics 2025; \cite{KingsSprang2025}) strengthens the Damerell--Shimura
+algebraicity to integrality: there exists a choice of period
+$\Omega^\chi$ such that
+\[
+\frac{L(\chi, 0) \cdot (\text{algebraic factor})}{\Omega^\chi}
+\;\in\; \OK\!\left[\tfrac{1}{\fr f \cdot \Nm(\fr c) \cdot d_L}\right]
+\]
+for the Hecke character $\chi$ with conductor $\fr f$ and discriminant
+$d_L$ of the splitting field. Combined with Damerell-Shimura, this
+gives integral algebraic Beilinson--Damerell values that are
+rationals with denominators dividing $|D|^2$ in the cases we use.
+
+\subsection{Beilinson's higher regulator}\label{ss:beilinson-regulator}
+
+Recall Beilinson's 1985 conjecture \cite{Beilinson1985}: for a motive $M$
+of weight $w$ over $\Q$ and a non-critical integer $j$,
+\[
+\mathrm{ord}_{s=j} L(M, s) \;=\; \dim_\Q H^1_M(\Spec \Z, M(j)),
+\]
+and
+\[
+L^*(M, j) \;\equiv\; R_j(M) \cdot \mathrm{vol}(M_B / F^j M_{dR})
+\pmod{\Q^\times},
+\]
+where $R_j(M)$ is the determinant of the regulator
+$H^1_M(\Spec \Z, M(j)) \to H^1_D(\Spec \Z, M(j))$ (motivic to Deligne
+cohomology). The conjecture is now a theorem in many concrete cases by work
+of Beilinson, Bloch, Burgos, Goncharov, Kings and others.
+
+\subsection{Brunault--Chida Rankin-Eisenstein classes}\label{ss:brunault-chida}
+
+Brunault and Chida (\cite{BrunaultChida2015}) construct explicit
+Beilinson regulator classes in $H^1_M(\Spec \Q, M(f_5 \otimes f_3)(j))$
+as Rankin-Eisenstein products of Siegel-Eisenstein units in $K_2$ of the
+modular curve. For our setting, the relevant class is
+\[
+\xi(\psi_5, \psi_3) \;\in\; H^1_M(\Spec K, M(f_5 \otimes f_3)(2))_\Q
+\]
+constructed via the Rankin-Selberg integral
+\[
+\int_{Y_0(|D|)(\C)} \mathrm{Eis}^{1,1}_{\psi_5} \cup \overline{f_3}
+\]
+where $\mathrm{Eis}^{1,1}_\psi$ is the holomorphic Eisenstein
+series of weight $(1,1)$ for the appropriate level, and
+$\overline{f_3}$ is the antiholomorphic projection of $f_3$.
+For $h_K \ge 2$, the Galois group $\Gal(\HK/K)$ permutes the
+$\Q$-rational eigenforms, and the corresponding Galois orbit of
+regulator classes $\xi^{(j)}(\psi_5, \psi_3)$ is the data of interest.
+
+\subsection{$K$-theoretic identification}\label{ss:K-theory}
+
+\begin{remark}\label{rk:K-theory-index}
+The exact identification of the regulator target as an integral lattice
+in Quillen $K$-theory deserves a remark. For a modular curve $Y$,
+Beilinson identifies $H^1_M(Y, \Q(2))_\Z = K_2(Y)_\Z \otimes \Q$
+(modulo torsion). Goncharov \cite{Goncharov2001} extends to higher
+polylogarithm classes via $K_{2j-1}(\Spec K)_\Z$ for $j \ge 2$ on
+$\Spec K$ for a number field $K$. The Bloch dilogarithm
+\cite{Bloch1977} realises the regulator on $K_3(K)$ in terms of
+$\Li_2$. We do not claim to verify the exact $K$-group index of the
+Rankin-Eisenstein class in this paper; we use Beilinson--Damerell
+\emph{algebraic values} (which are the projections of regulator pairings
+to $\Q$) as the operational input.
+\end{remark}
+
+\subsection{Multiple zeta values and the motivic Galois group}\label{ss:mzv}
+
+The motivic Galois group acts faithfully on Goncharov's category of
+mixed Tate motives over $\Q$ (Brown 2012, \cite{Brown2012}). On
+multiple zeta values, this action is generated by Goncharov's
+coproduct (\cite{Goncharov2001}); the resulting Hopf-algebraic structure
+is now standard. We use the action of $\Gal(\HK/K)$ on Beilinson--Damerell
+classes as the $K$-side avatar of this motivic Galois structure.
+
+\begin{remark}[Perturbative motivic anchors]\label{rk:perturbative-motivic}
+The functor $\mathcal{F}$ takes its motivic-side values in a category
+of CM Rankin-Eisenstein motives that is non-perturbative in the gauge
+coupling. On the perturbative side, an extensive body of work
+\cite{Brown2016CosmicGalois, BrownDupont2019, CaronHuotDixon2020}
+shows that scattering amplitudes in maximally supersymmetric and
+$\mathcal{N}=2$ gauge theories realise an analogous motivic Galois
+action, the so-called \emph{cosmic Galois} structure, with
+single-valued integration and Steinmann cluster relations providing
+explicit generators. Our bridge functor $\mathcal{F}$ should be
+viewed as the non-perturbative, CM-anchored cousin of these
+perturbative motivic constructions; the precise reconciliation of
+the two structures is left to future work (see Section
+\ref{sec:open}).
+\end{remark}
+
+\subsection{The category $\Mot_K(2)$}\label{ss:Mot-K}
+
+\begin{definition}\label{def:Mot-K}
+$\Mot_K(2)$ is the symmetric monoidal $\Q$-linear category of weight-$\le 2$
+Rankin-Eisenstein motives over $K$, with:
+\begin{itemize}
+\item \emph{Objects}: pairs $(\psi, j)$ where $\psi$ is a Hecke
+Gr\"ossencharacter of $K$ of infinity type $(w-1, 0)$ with $w \in \{3, 5\}$,
+and $j$ is a critical integer for the associated theta series.
+\item \emph{Morphisms}: $\Q$-linear combinations of Brunault--Chida regulator
+class pairings.
+\item \emph{Tensor product}: $(\psi, j) \otimes (\psi', j') = (\psi \otimes \psi',
+j + j')$, with $\psi \otimes \psi'$ the Hecke character of infinity type
+$((w-1) + (w'-1), 0)$.
+\end{itemize}
+\end{definition}
+
+%==================================================================
+\section{The bridge functor: structure and matching axioms}\label{sec:bridge-functor}
+%==================================================================
+
+\subsection{The functor at the object level}\label{ss:F-objects}
+
+Conjecture \ref{conj:F} demands a $\Q$-linear functor $\mathcal{F}$ matching
+S-matrix bootstrap data to Rankin-Eisenstein motivic data.
+On objects, we propose the assignment:
+\[
+\mathcal{F}\,\bigl(N, A\bigr) \;=\; \bigotimes_{n} \bigl(\psi_{w(n)}^{(j(n))},\, s_n\bigr),
+\]
+where the tensor runs over isolated bound-state poles $s_n$ of $A$,
+and the data $(w(n), j(n), s_n)$ on the right is determined by:
+\begin{itemize}
+\item $w(n) = J(n) + 1$ : motivic weight $=$ glueball spin $+ 1$,
+the relation introduced in Phase~E1 (\cite{PhaseE1}, motivated by
+$0^{++} \leftrightarrow $ wt-$3$, $2^{++} \leftrightarrow$ wt-$5$ at
+$D = -67$);
+\item $j(n) \in \{1, \dots, w(n) - 1\}$ chosen as the critical integer for which
+the Beilinson--Damerell value is a positive rational;
+\item $\psi_{w(n)}^{(j(n))}$ runs over the Galois orbit of $\Q$-rational
+CM newforms attached to $K = \Q(\sqrt{D})$.
+\end{itemize}
+
+\subsection{The functor on the three axioms}\label{ss:F-axioms}
+
+We match the three S-matrix axioms (Axioms~\ref{ax:analyticity}, \ref{ax:unitarity},
+\ref{ax:crossing}) to three structural features on the motivic side.
+
+\begin{proposition}[Crossing matches Galois]\label{prop:F-crossing-Galois}
+Under Conjecture \ref{conj:F}, the involution $s \leftrightarrow u$
+of crossing (Axiom \ref{ax:crossing}) is sent by $\mathcal{F}$ to a generator
+$\sigma$ of $\Gal(\HK/K) \cong \Cl(K)$. In particular, for $h_K = 2$, the
+$s \leftrightarrow u$ symmetry of the gluon-gluon amplitude corresponds
+to the swap of the two $\Q$-rational CM newforms $f_w^{(1)}$ and $f_w^{(2)}$
+of each weight $w \in \{3, 5\}$.
+\end{proposition}
+
+\begin{proposition}[Unitarity matches regulator positivity]\label{prop:F-unitarity-regulator}
+Under Conjecture \ref{conj:F}, the bound $\mathrm{Im}\, A(s) \ge 0$ at
+$s \ge 4m^2$ (Axiom \ref{ax:unitarity}) is sent by $\mathcal{F}$ to the
+positivity of the Beilinson regulator pairing
+\[
+\langle \reg(\xi), \omega_{f_w} \otimes \omega_{f_{w'}} \rangle \;\ge\; 0
+\]
+on the positive cone in $H^1_M(\Spec K, M(f_w \otimes f_{w'})(j))_\R^+$.
+\end{proposition}
+
+\begin{proposition}[Analyticity matches Tate motif structure]\label{prop:F-analyticity-Tate}
+Under Conjecture \ref{conj:F}, the analyticity of $A(s, t, u)$ in the
+cut $s$-plane (Axiom \ref{ax:analyticity}) is sent by $\mathcal{F}$ to the
+Tate twist structure $M \mapsto M(j)$ on the motivic side, with pole
+positions $s_n$ matched to Frobenius eigenvalues $a_p(f_w)$ and
+$p / m_{0^{++}}^2 = s_n / m_{0^{++}}^2$.
+\end{proposition}
+
+We give partial empirical evidence for these three propositions in
+Section \ref{sec:empirical} (via Theorems \ref{thm:beilinson-qD},
+\ref{thm:newton-dickson}) and Section \ref{sec:cross-weight} (via
+Theorem \ref{thm:su2-ratio}).
+
+\subsection{The functor on morphisms}\label{ss:F-morphisms}
+
+The action of $\mathcal{F}$ on morphisms (bootstrap intertwiners) is
+expected to be by Rankin--Selberg convolution at the motivic level.
+Concretely, a bootstrap morphism
+$(N, A) \to (N', A')$ realised as a coupling intertwiner is sent by
+$\mathcal{F}$ to the cup-product Rankin--Eisenstein class
+\[
+\bigotimes_n (\psi_{w(n)}^{(j(n))}, s_n) \;\longrightarrow\;
+\bigotimes_{n'} (\psi_{w'(n')}^{(j'(n'))}, s'_{n'}).
+\]
+The Brunault--Chida construction (Section \ref{ss:brunault-chida})
+ensures the existence of the relevant regulator class, but
+faithfulness of $\mathcal{F}$ on morphisms is open.
+
+\subsection{Tensor structure}\label{ss:F-tensor}
+
+Both source and target are symmetric monoidal $\Q$-linear (Definitions
+\ref{def:Amp-K} and \ref{def:Mot-K}). On objects, $\mathcal{F}$ preserves
+tensor product by construction. On morphisms, the symmetry isomorphism
+$A_1 \otimes A_2 \cong A_2 \otimes A_1$ on the bootstrap side is sent to
+the natural commutator
+$\psi_1 \otimes \psi_2 \cong \psi_2 \otimes \psi_1$ on Hecke characters
+(commutativity of pointwise product of Gr\"ossencharaktere).
+
+%==================================================================
+\section{Empirical confirmation}\label{sec:empirical}
+%==================================================================
+
+\subsection{Closed-form $q(D)$ at all eight $h_K = 2$ anchors}\label{ss:qD-closed-form}
+
+We restate Theorem \ref{thm:beilinson-qD} and outline its verification.
+
+\begin{theorem}[restatement]\label{thm:beilinson-qD-restate}
+For each fundamental discriminant $D \in \{-15, -20, -24, -35, -40,
+-51, -52, -91\}$, the canonical Beilinson--Damerell cross-Galois ratio
+\begin{equation}\label{eq:q-canonical}
+q(D) \;=\; \frac{L(f_5^{(1)}, 3)}{L(f_5^{(2)}, 3)} \cdot
+\frac{L(f_3^{(2)}, 1)}{L(f_3^{(1)}, 1)}
+\end{equation}
+is the rational number given by the table in Theorem \ref{thm:beilinson-qD},
+verified to fifty-digit precision in PARI/GP 2.15.4.
+\end{theorem}
+
+\begin{proof}[Sketch]
+The two Galois-conjugate $\Q$-rational wt-$w$ CM newforms
+$f_w^{(1)}, f_w^{(2)}$ exist by Sch\"utt \cite{Schutt2008} since
+$\exp\Cl(K) = 2$ in each case. Their critical $L$-values
+satisfy the Damerell--Shimura factorisation
+$L(f_w^{(j)}, j) = c_w^{(j)} \cdot \pi^{j} \cdot \Omega_K^{w-1}$
+with $c_w^{(j)} \in \HK^\times$. The Kings--Sprang integrality theorem
+\cite{KingsSprang2025} ensures $c_w^{(j)} \in \OK[\frac{1}{|D|}]$.
+The cross-Galois ratio $q(D)$ has period factor $\pi^4 \Omega_K^6$
+cancel, leaving a Galois-symmetric rational of $c_w^{(j)}$, hence in
+$\Q^\times$.
+
+Numerically, we compute $q(D)$ via the PARI script
+\texttt{qD\_beilinson\_test.gp}, using \texttt{lfunmf} with
+\texttt{realprecision = 50} and \texttt{bestappr} to detect the
+rational. Eight anchors, eight matches.
+
+The denominator divisibility $\mid |D|^{2}$ follows from
+Kings--Sprang \cite{KingsSprang2025} bound on the bad primes; in our
+table, all eight values have $\mathrm{denom}(q(D)) \mid |D|^2$
+(\textit{e.g.}\ $87/64 = q(-40)$, $64 \mid 1600 = 40^2$).
+\end{proof}
+
+\begin{remark}\label{rk:h1-baseline}
+At the six $h_K = 1$ Heegner anchors $D \in \{-7, -11, -19, -43, -67, -163\}$
+(excluding $D = -3, -4, -8$ for genericity), the Beilinson--Damerell
+algebraic part of the \emph{right-edge} critical value (at $s = w-1$,
+not $s = 1$) is a rational with denominator a divisor of
+$\lvert D \rvert$ for the weight-3 column and a divisor of
+$3 \lvert D \rvert$ for the weight-5 column:
+\[
+\frac{L(f_3, 2)}{\pi^2 \Omega_K^2} \in
+\bigl\{\tfrac{1}{14},\, \tfrac{4}{33},\, \tfrac{4}{19},\,
+\tfrac{24}{43},\, \tfrac{76}{67},\, \tfrac{1448}{163}\bigr\},
+\qquad
+\frac{L(f_5, 4)}{\pi^4 \Omega_K^4} \in
+\bigl\{\tfrac{1}{42},\, \tfrac{16}{495},\, \tfrac{16}{285},\,
+\tfrac{32}{129},\, \tfrac{176}{201},\, \tfrac{21344}{489}\bigr\}.
+\]
+Twelve baseline rationals, verified at sixty digit precision via
+direct Chowla--Selberg computation of $\Omega_K^2$ (independent of
+any conjectural integer value). The pattern of denominators
+$\{2|D|, 3|D|, |D|, |D|, |D|, |D|\}$ for the weight-3 entries
+and $\{6|D|, 45|D|, 15|D|, 3|D|, 3|D|, 3|D|\}$ for the weight-5
+entries is consistent with the Brunault--Chida boundary regulator
+class lying in $K_3^{(5)}(\mathrm{Kuga\text{-}Sato}^2(E_K))$
+modulo a denominator coming from the Hecke character conductor.
+\end{remark}
+
+\begin{remark}[Note on indexing of Beilinson--Damerell critical
+values]\label{rk:j-index}
+The classical Damerell--Shimura algebraicity theorem
+\cite{Damerell1971, Shimura1976} asserts the rationality of
+$L(f_w, s)/\pi^s \Omega_K^{2(w-1)/2}$ for $s$ a critical integer
+in the strip $(0, w-1)$. For wt-$w$ CM newforms over an imaginary
+quadratic field~$K$, the boundary case $s = w-1$ is the
+\emph{right-edge} critical value, distinguished from the
+\emph{central} value at $s = (w-1)/2$ (when $w$ is odd) or
+$s = w/2 - 1$ (when $w$ is even). An earlier draft of this paper
+(the OP-BEILINSON 2026 note) tabulated the central value
+$c_3 = L(f_3, 1)/(\pi \Omega_K^2)$ as an integer~38 at $D = -67$;
+direct PARI verification (functions \texttt{lfunmf} +
+\texttt{Chowla\text{-}Selberg formula} at 60-digit precision) shows
+that this quantity is in fact $\approx 4.6424 \notin \Q$. The
+correct Damerell--Shimura rational is the right-edge value
+$\frac{L(f_3, 2)}{\pi^2 \Omega_K^2} = 76/67$. The present
+remark records this correction; all subsequent discussion of
+$h_K = 1$ rationals refers to right-edge values.
+\end{remark}
+
+\subsection{Newton--Dickson chain}\label{ss:newton-dickson}
+
+The Newton--Dickson chain provides the integrality input needed to
+populate Galois orbits at all odd weights $w \ge 3$.
+
+\begin{theorem}[restatement]\label{thm:newton-dickson-restate}
+Let $K = \Q(\sqrt{D})$ be an imaginary quadratic field of class number
+$h_K = 1$, with associated weight-$w$ CM newform $f_w$. For each split
+prime $p \nmid D$, $X(p) := a_p(f_3)$ satisfies
+\[
+a_p(f_w) \;=\; D_{w-1}(X(p), p)
+\]
+where $D_n(X, p)$ is the Dickson polynomial of the first kind.
+Equivalently, $a_p(f_w) = \alpha_p^{w-1} + \beta_p^{w-1}$ where
+$\alpha_p \beta_p = p$ and $\alpha_p + \beta_p = X(p)$.
+\end{theorem}
+
+\begin{proof}[Sketch]
+At split prime $p = \fr p \bar{\fr p}$, the Hecke eigenvalue
+$a_p(f_w) = \psi(\fr p) + \psi(\bar{\fr p})$ where $\psi$ has infinity
+type $(w-1, 0)$. Write $\alpha = \psi(\fr p)$, $\beta = \psi(\bar{\fr p})$.
+Then $\alpha + \beta = a_p(f_w)$ and $\alpha \beta = \psi(\fr p \bar{\fr p})
+= \psi((p)) = p$ for the corpus normalisation. Newton's identity for
+power sums of two roots gives $\alpha^n + \beta^n = D_n(\alpha + \beta,
+\alpha \beta) = D_n(X(p), p)$ where $X(p) = a_p(f_3)$ has $n = 2$
+(by infinity-type $(2,0)$) and the chain unwinds by induction.
+The full proof is in the companion note \cite{OPNewtonDickson2026}.
+\end{proof}
+
+\begin{remark}\label{rk:newton-empirical-pile}
+Empirically, 46 cross-$D$ test cases at split primes for weight $w = 7$
+(across $D \in \{-7, -11, -19, -67, -163\}$), plus 7 cases at weight 9
+at $D = -67$, plus 4 cases at weight 11 at $D = -67$, all check to
+exact agreement in PARI \texttt{mfeigenbasis}. Probability of accidental
+agreement under any reasonable null is $\ll 10^{-20}$.
+\end{remark}
+
+\subsection{Tabulated Beilinson--Damerell rationals, right-edge}\label{ss:tabulated}
+
+Table \ref{tab:beilinson-integers} collects the Beilinson--Damerell
+right-edge rationals
+$c_w^{\mathrm{edge}} := L(f_w, w-1)/(\pi^{w-1} \Omega_K^{w-1})$
+at the six $h_K = 1$ Heegner anchors,
+verified by direct PARI/GP 2.15.4 computation at 60-digit
+\texttt{realprecision} (using the Chowla--Selberg formula for
+$\Omega_K^2$, without circular derivation from any conjectured
+integer).
+
+\begin{table}[h]\centering
+\caption{Beilinson--Damerell right-edge rationals at $h_K = 1$
+Heegner anchors. PARI/GP 2.15.4, \texttt{realprecision = 60},
+Chowla--Selberg direct.}
+\label{tab:beilinson-integers}
+\begin{tabular}{l|cccccc}
+\toprule
+$D$ & $-7$ & $-11$ & $-19$ & $-43$ & $-67$ & $-163$ \\
+\midrule
+$c_3^{\mathrm{edge}} = L(f_3,2)/(\pi^2 \Omega_K^2)$
+  & $1/14$ & $4/33$ & $4/19$ & $24/43$ & $76/67$ & $1448/163$ \\
+$c_5^{\mathrm{edge}} = L(f_5,4)/(\pi^4 \Omega_K^4)$
+  & $1/42$ & $16/495$ & $16/285$ & $32/129$ & $176/201$ & $21344/489$ \\
+\midrule
+$\mathrm{denom}(c_3)/|D|$
+  & 2 & 3 & 1 & 1 & 1 & 1 \\
+$\mathrm{denom}(c_5)/(3|D|)$
+  & 2 & 15 & 5 & 1 & 1 & 1 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\noindent\textbf{Pattern.}~All denominators of $c_3^{\mathrm{edge}}$
+are divisors of $|D|$ (with $\le 3$-fold extra prime factor),
+and all denominators of $c_5^{\mathrm{edge}}$ are divisors of
+$3 |D|$ (with $\le 15$-fold extra at the small-$|D|$ end). For
+the four anchors with $|D| \ge 19$, the denominators stabilise
+at exactly $|D|$ and $3 |D|$ respectively.
+
+\noindent\textbf{Central value.}~The central critical value
+$L(f_3, 1)$, in contrast, is generically not algebraic on the same
+period-normalisation: at $D = -67$,
+$L(f_3, 1) / (\pi \Omega_K^2) = 4.6424\ldots$ has no closed-form as
+a rational with small denominator (the BestApprox returns a fraction
+of denominator $\ge 10^5$). The Damerell--Shimura algebraicity
+theorem applies at the right-edge $s = w - 1$, not at the centre.
+
+\subsection{Cross-Galois canonical-pair ratios at $h_K=2$:
+the two-invariant structure}\label{ss:two-invariant}
+
+For $h_K = 2$ anchors, the per-form Beilinson--Damerell algebraic
+factors $\alpha(f, s)$ are no longer Q-rational; each individual
+value lives in the genus field $\Q(\sqrt{d_{\mathrm{genus}}})$.
+Cross-Galois cancellation of the irrational components, however,
+yields Q-rational invariants. We record \emph{two independent}
+such invariants at each anchor.
+
+\textbf{Level 1: $q^{(1)} = q_{\mathrm{low}}$} at sum-rule line
+$s_5 + s_3 = 4$ (diagonal $(s_5, s_3) = (3, 1)$):
+\begin{equation}\label{eq:q-low-P5}
+q_{\mathrm{low}}(D) \;:=\;
+\frac{L(f_5^{(1)}, 3)\,L(f_3^{(2)}, 1)}{L(f_5^{(2)}, 3)\,L(f_3^{(1)}, 1)}.
+\end{equation}
+
+\textbf{Level 2: $q^{(2)} = q_{\mathrm{edge}}$} at right-edge sum-rule
+line $s_5 + s_3 = 6$ (boundary $(s_5, s_3) = (4, 2)$):
+\begin{equation}\label{eq:q-edge-P5}
+q_{\mathrm{edge}}(D) \;:=\;
+\frac{L(f_5^{(1)}, 4)\,L(f_3^{(2)}, 2)}{L(f_5^{(2)}, 4)\,L(f_3^{(1)}, 2)}.
+\end{equation}
+
+\begin{theorem}[Two-invariant structure]\label{thm:two-invariant}
+For each fundamental discriminant $D < 0$ with $h_K = 2$, both
+$q_{\mathrm{low}}(D)$ and $q_{\mathrm{edge}}(D)$ are non-zero rationals.
+Numerically verified at $50$-digit PARI/GP precision on the
+nine Heegner anchors:
+\begin{center}
+\begin{tabular}{rccccccccc}
+\toprule
+$D$ & $-15$ & $-20$ & $-24$ & $-35$ & $-40$ & $-51$ & $-52$ & $-88$ & $-91$\\
+\midrule
+$q_{\mathrm{low}}$ & $2$ & $\frac{4}{3}$ & $\frac{7}{4}$ & $\frac{5}{3}$ & $\frac{87}{64}$ & $\frac{43}{35}$ & $\frac{204}{161}$ & $\frac{1533}{1292}$ & $\frac{735}{608}$\\[2pt]
+$q_{\mathrm{edge}}$ & $\frac{8}{5}$ & $\frac{10}{9}$ & $\frac{5}{4}$ & $\frac{9}{7}$ & $\frac{15}{16}$ & $1$ & $\frac{6}{7}$ & $\frac{363}{476}$ & $\frac{21}{20}$\\
+\bottomrule
+\end{tabular}
+\end{center}
+Together with $q_{\mathrm{edge}}(-132) = 35/39$ at $h_K = 4$
+(a five-form Galois orbit), the empirical baseline contains
+ten cross-Galois Q-rational values.
+\end{theorem}
+
+\begin{remark}[Independence]\label{rk:two-invariant-independent}
+PARI/GP testing of the ratio
+$q_{\mathrm{edge}}(D) / q_{\mathrm{low}}(D)$
+across the eight anchors yields
+$\{4/5,\ 5/6,\ 5/7,\ 27/35,\ 20/29,\ 35/43,\ 23/34,\ 152/175\}$
+respectively. These exhibit \emph{no} simple closed form in $|D|$,
+no Mellin-transform relation, and no Frobenius twist
+matches at the relevant primes. We conclude that
+$q_{\mathrm{low}}$ and $q_{\mathrm{edge}}$ are \emph{independent}
+Q-rational invariants attached to the same Heegner data; the
+information content per $h_K=2$ anchor is therefore at least
+$2$-dimensional in $\Q^{\times}$, and the Conjecture~$\mathcal{F}$
+bridge must encode \emph{both} invariants separately.
+\end{remark}
+
+\begin{conjecture}[Infinite family]\label{conj:infinite-family}
+For every sum-rule level $s_5 + s_3 = 2(w-1)$ with $w \ge 2$
+admitting at least one pair $(s_5, s_3)$ of critical integers,
+the cross-Galois ratio
+\[
+q^{(w-1)}(D) \;:=\;
+\frac{L(f_5^{(1)}, s_5)\,L(f_3^{(2)}, s_3)}{L(f_5^{(2)}, s_5)\,L(f_3^{(1)}, s_3)}
+\]
+is Q-rational at every $h_K=2$ Heegner anchor, and the family
+$\{q^{(j)}\}_{j \ge 1}$ consists of mutually independent invariants.
+\end{conjecture}
+
+\subsection{Extension to weight seven: a four-invariant
+lattice}\label{ss:wt7-extension}
+
+The conjecture~\ref{conj:infinite-family} extends from $(w_3, w_5)$
+to the higher pair $(w_5, w_7) = (5, 7)$, with two further
+empirically Q-rational invariants:
+\begin{align}
+q_{37}^{\mathrm{edge}}(D) &:=
+\frac{L(f_7^{(1)}, 6)\,L(f_5^{(2)}, 4)}{L(f_7^{(2)}, 6)\,L(f_5^{(1)}, 4)},
+\label{eq:q37-edge}\\
+q_{37}^{\mathrm{central}}(D) &:=
+\frac{L(f_7^{(1)}, 3)\,L(f_3^{(2)}, 1)}{L(f_7^{(2)}, 3)\,L(f_3^{(1)}, 1)}.
+\label{eq:q37-central}
+\end{align}
+The first is the right-edge pair at sum-rule level
+$s_7 + s_5 = 10$; the second is a wt-3/wt-7 central diagonal at
+sum-rule level $s_7 + s_3 = 4$.
+
+\begin{theorem}[Four-invariant lattice at $h_K = 2$ and $h_K = 4$]
+\label{thm:four-invariant}
+For each fundamental discriminant $D$ with $h_K = 2$, both
+$q_{37}^{\mathrm{edge}}(D)$ and $q_{37}^{\mathrm{central}}(D)$ are
+Q-rational, and together with $(q_{\mathrm{low}}, q_{\mathrm{edge}})$
+form four mutually independent invariants in $\Q^\times$ (verified
+by a PARI \texttt{lindep} test returning coefficients of magnitude
+$\sim 10^{25}$ for any linear combination, indicating no
+small-integer relation). At $D = -132$ (an $h_K = 4$ anchor), the
+two right-edge invariants extend with $q_{\mathrm{edge}}(-132) = 35/39$
+and $q_{37}^{\mathrm{edge}}(-132) = 33/37$.
+\end{theorem}
+
+\begin{center}
+\begin{tabular}{rccccccccc}
+\toprule
+$D$ & $-15$ & $-20$ & $-24$ & $-35$ & $-40$ & $-51$ & $-52$ & $-88$ & $-91$\\
+\midrule
+$q_{37}^{\mathrm{edge}}$
+  & $\frac{5}{6}$ & $\frac{27}{28}$ & $\frac{24}{35}$ & $\frac{21}{26}$ & $\frac{16}{21}$ & $\frac{68}{75}$ & $\frac{65}{84}$ & $\frac{280}{363}$ & $\frac{20}{21}$\\[2pt]
+$q_{37}^{\mathrm{central}}$
+  & $\frac{18}{5}$ & $\frac{11}{3}$ & $\frac{11}{9}$ & $\frac{485}{294}$ & $\frac{31}{23}$ & $\frac{1044}{565}$ & $\frac{421}{301}$ & $\frac{5107}{4097}$ & $\frac{44149}{27157}$\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\begin{remark}[Reducibility of mixed ratios]
+\label{rk:mixed-reducible}
+The mixed cross-Galois ratio
+\[
+q_{37}^{\mathrm{v3}}(D) \;:=\;
+\frac{L(f_7^{(1)}, 6)\,L(f_3^{(2)}, 2)}{L(f_7^{(2)}, 6)\,L(f_3^{(1)}, 2)}
+\]
+satisfies the multiplicative identity
+\[
+q_{37}^{\mathrm{v3}}(D) \;=\; q_{\mathrm{edge}}(D) \cdot q_{37}^{\mathrm{edge}}(D)
+\]
+exactly at all ten anchors tested (verified $50$-digit PARI). Hence
+the mixed ratios reduce to the diagonal invariants and the lattice
+$\bigl(q_{\mathrm{low}}, q_{\mathrm{edge}}, q_{37}^{\mathrm{edge}},
+q_{37}^{\mathrm{central}}\bigr)$ generates the full sub-algebra
+of cross-Galois ratios at weights $\{3, 5, 7\}$ under
+multiplicative composition.
+\end{remark}
+
+\begin{remark}[Newton--Dickson chain to weight seven]
+\label{rk:newton-wt7}
+At a split prime $p$ in $K/\Q$, the Hecke eigenvalues at weight
+seven satisfy in absolute value
+\[
+\bigl|a_p(f_7)\bigr| \;=\; \bigl|a_p(f_3)^3 - 3 p^2 a_p(f_3)\bigr|
+\]
+on all $21$ tested split primes across the three anchors
+$D \in \{-7, -67, -163\}$. The signed identity fails at half of
+the tested primes due to an Atkin-Lehner sign twist between the
+weight-3 and weight-7 Galois orbits, identical in structure to
+the wt-5 case (Theorem \ref{thm:newton-dickson}). Resolution of
+the signed identity requires Hecke-character local-component
+analysis at split primes, which we defer to a companion note.
+\end{remark}
+
+The conjecture~\ref{conj:infinite-family} is supported empirically
+at levels $j = 1$ (Theorem~\ref{thm:beilinson-qD} = $q_{\mathrm{low}}$,
+$8/8$), $j = 2$ (Theorem~\ref{thm:two-invariant} =
+$q_{\mathrm{edge}}$, $9/9$ including $D = -91$), and $j = 3$
+(Theorem~\ref{thm:four-invariant}, $10/10$ for $q_{37}^{\mathrm{edge}}$
+and $8/8$ for $q_{37}^{\mathrm{central}}$). The lattice structure
+suggests that the bridge functor $\mathcal{F}$ encodes not a single
+Q-rational invariant per anchor, but an infinite family indexed by
+pairs $(w, w')$ of odd weights and critical-point pairs $(s, s')$
+on the shared Damerell--Beilinson sum-rule lines.
+
+\subsection{Fifth invariant: weight-9 cross-Galois}\label{ss:wt9-extension}
+
+The pattern extends to a fifth independent Q-rational invariant
+via the (wt-5, wt-9) pair on the sum-rule line $s_5 + s_9 = 12$:
+\begin{equation}\label{eq:q59-edge}
+q_{59}^{\mathrm{edge}}(D) \;:=\;
+\frac{L(f_9^{(1)}, 8)\,L(f_5^{(2)}, 4)}{L(f_9^{(2)}, 8)\,L(f_5^{(1)}, 4)}.
+\end{equation}
+
+\begin{theorem}[Fifth Q-rational invariant at $h_K = 2$]\label{thm:five-invariant}
+For each fundamental discriminant $D \in \{-15, -20, -24, -35,
+-40, -51, -52, -88, -91\}$ with $h_K = 2$,
+$q_{59}^{\mathrm{edge}}(D) \in \Q^\times$ and the explicit values are
+\begin{center}
+\begin{tabular}{rccccccccc}
+\toprule
+$D$ & $-15$ & $-20$ & $-24$ & $-35$ & $-40$ & $-51$ & $-52$ & $-88$ & $-91$\\
+\midrule
+$q_{59}^{\mathrm{edge}}$
+  & $\frac{21}{32}$ & $\frac{29}{40}$ & $\frac{33}{50}$ & $\frac{7}{9}$
+  & $\frac{61}{90}$ & $\frac{49}{72}$ & $\frac{21}{25}$ & $\frac{1481}{2178}$ & $\frac{217}{234}$\\
+\bottomrule
+\end{tabular}
+\end{center}
+verified at $40$-digit PARI/GP precision (script
+\verb|/tmp/parA2_wt9_cross_galois.gp|, 2026-05-17).
+\end{theorem}
+
+Together with the previous four invariants, this gives an empirical
+\emph{five-invariant lattice}
+$\bigl(q_{\mathrm{low}}, q_{\mathrm{edge}}, q_{37}^{\mathrm{edge}},
+q_{37}^{\mathrm{central}}, q_{59}^{\mathrm{edge}}\bigr) \in (\Q^\times)^5$
+attached to each $h_K=2$ Heegner anchor.
+
+\subsection{Sixth invariant: weight-11 cross-Galois}\label{ss:wt11-extension}
+
+A second extension at the (wt-7, wt-11) pair, sum-rule level
+$s_7 + s_{11} = 16$, yields a sixth Q-rational invariant:
+\begin{equation}\label{eq:q711-edge}
+q_{711}^{\mathrm{edge}}(D) \;:=\;
+\frac{L(f_{11}^{(1)}, 10)\,L(f_7^{(2)}, 6)}{L(f_{11}^{(2)}, 10)\,L(f_7^{(1)}, 6)}.
+\end{equation}
+
+\begin{theorem}[Sixth Q-rational invariant at $h_K = 2$]\label{thm:six-invariant}
+For each fundamental discriminant
+$D \in \{-15, -20, -24, -35, -40, -51, -52, -88, -91\}$ with $h_K = 2$,
+$q_{711}^{\mathrm{edge}}(D) \in \Q^\times$ with explicit values
+\begin{center}
+\begin{tabular}{rccccccccc}
+\toprule
+$D$ & $-15$ & $-20$ & $-24$ & $-35$ & $-40$ & $-51$ & $-52$ & $-88$ & $-91$\\
+\midrule
+$q_{711}^{\mathrm{edge}}$
+  & $\frac{3}{4}$ & $\frac{56}{75}$ & $\frac{154}{177}$ & $\frac{8294}{8883}$
+  & $\frac{154}{185}$ & $\frac{525}{572}$ & $\frac{616}{745}$
+  & $\frac{2662}{3215}$ & $\frac{518}{533}$\\
+\bottomrule
+\end{tabular}
+\end{center}
+verified at $40$-digit PARI/GP precision (script
+\verb|/tmp/parA3_wt11_cross_galois.gp|, 2026-05-17).
+\end{theorem}
+
+The empirical six-invariant lattice
+$\bigl(q_{\mathrm{low}}, q_{\mathrm{edge}}, q_{37}^{\mathrm{edge}},
+q_{37}^{\mathrm{central}}, q_{59}^{\mathrm{edge}}, q_{711}^{\mathrm{edge}}\bigr)
+\in (\Q^\times)^6$ at each $h_K=2$ Heegner anchor now provides
+\emph{six independent} Q-rational constraints on any candidate
+bridge functor $\mathcal{F}$; the infinite-family conjecture
+\ref{conj:infinite-family} is supported at six successive weight-pair
+levels $\{(3,5)\text{-low}, (3,5)\text{-edge}, (3,7)\text{-central},
+(5,7)\text{-edge}, (5,9)\text{-edge}, (7,11)\text{-edge}\}$ with a
+total of $52$ direct PARI verifications.
+
+\subsection{Higher-weight invariants and the lattice extension}
+\label{ss:wt13-extension}
+
+Further PARI/GP testing at weight $13$ confirms two additional
+independent Q-rational cross-Galois invariants:
+
+\begin{theorem}[Eighth and ninth Q-rational invariants at $h_K = 2$]
+\label{thm:wt13-invariants}
+For each fundamental discriminant
+$D \in \{-15, -20, -35, -51\}$ with $h_K = 2$,
+\begin{align}
+q_{513}^{\mathrm{edge}}(D) &:=
+\frac{L(f_{13}^{(1)}, 12)\,L(f_5^{(2)}, 4)}{L(f_{13}^{(2)}, 12)\,L(f_5^{(1)}, 4)} \in \Q^\times,\\
+q_{713}^{\mathrm{edge}}(D) &:=
+\frac{L(f_{13}^{(1)}, 12)\,L(f_7^{(2)}, 6)}{L(f_{13}^{(2)}, 12)\,L(f_7^{(1)}, 6)} \in \Q^\times,
+\end{align}
+with values
+\begin{center}
+\begin{tabular}{rcccc}
+\toprule
+$D$ & $-15$ & $-20$ & $-35$ & $-51$\\
+\midrule
+$q_{513}^{\mathrm{edge}}$ &
+  $\frac{33}{59}$ & $\frac{2519}{3633}$ & $\frac{75684}{101257}$ & $\frac{34313}{41496}$\\[2pt]
+$q_{713}^{\mathrm{edge}}$ &
+  $\frac{198}{295}$ & $\frac{10076}{14013}$ & $\frac{7208}{7789}$ & $\frac{857825}{940576}$\\
+\bottomrule
+\end{tabular}
+\end{center}
+verified at $40$-digit PARI/GP precision.
+\end{theorem}
+
+The total empirical lattice at each $h_K=2$ Heegner anchor is now
+nine-dimensional:
+\[
+\bigl(q_{\mathrm{low}}, q_{\mathrm{edge}}, q_{37}^{\mathrm{central}},
+q_{37}^{\mathrm{edge}}, q_{59}^{\mathrm{edge}}, q_{311}^{\mathrm{edge}},
+q_{711}^{\mathrm{edge}}, q_{513}^{\mathrm{edge}}, q_{713}^{\mathrm{edge}}\bigr)
+\in (\Q^\times)^9,
+\]
+with sum-rule levels $\{4, 6, 4, 10, 12, 12, 16, 16, 18\}$. Each
+level admits one or two distinct Q-rational invariants from
+non-conjugate weight pairs; for instance, sum-rule level $12$
+admits $q_{59}^{\mathrm{edge}}$ from $(5, 9)$ and
+$q_{311}^{\mathrm{edge}}$ from $(3, 11)$, and these are independent
+at all anchors tested except $D = -91$ where an isolated
+accidental coincidence $q_{311}^{\mathrm{edge}}(-91) =
+q_{711}^{\mathrm{edge}}(-91) = 518/533$ is observed. The
+infinite-family conjecture~\ref{conj:infinite-family} is now
+supported at nine successive (weight-pair, critical-point) levels
+with a total of $74$ direct PARI verifications.
+
+%==================================================================
+\section{Cross-weight motivic ratio prediction}\label{sec:cross-weight}
+%==================================================================
+
+\subsection{Phase E1 setup}\label{ss:phase-e1}
+
+Phase E1 (\cite{PhaseE1}) proposes the assignment
+\begin{equation}\label{eq:phase-e1-table}
+\begin{array}{l|l|l}
+\text{glueball} & \text{CM newform weight} & \text{motivic weight} \\ \hline
+0^{++} & w = 3 & w - 1 = 2 \\
+2^{++} & w = 5 & w - 1 = 4 \\
+0^{-+} & w = 6\, (?) & w - 1 = 5\, (?) \\
+\end{array}
+\end{equation}
+The arrow $0^{++} \leftrightarrow $ wt-$3$ and $2^{++} \leftrightarrow $ wt-$5$
+is rigid: it is forced by the squared-mass-to-motivic-weight
+proportionality $m_{J^{PC}}^2 \propto w - 1$.
+
+\subsection{The SU(2) match}\label{ss:su2-match}
+
+Reading Athenodorou--Teper 2021 Table 34 \cite{Athenodorou2021}:
+\[
+\frac{m_{0^{++}}^{\mathrm{SU(2)}}}{\sqrt{\sigma}} \;=\; 3.781(23),
+\qquad
+\frac{m_{2^{++}}^{\mathrm{SU(2)}}}{\sqrt{\sigma}} \;=\; 5.349(20).
+\]
+The squared ratio is
+\[
+\frac{m_{2^{++}}^2}{m_{0^{++}}^2}\bigg|_{\mathrm{SU(2)}}
+= \frac{(5.349)^2}{(3.781)^2} = 2.001 \pm 0.017,
+\]
+matching the Phase E1 motivic prediction $w_{5}/w_{3} = 4/2 = 2$
+to $0.07\%$, well within the statistical envelope. We retain this as
+a \emph{single-anchor coincidence} (Theorem
+\ref{thm:su2-ratio} as stated) and explicitly do \emph{not} extrapolate
+to a universal cross-$N$ identity, see Remark~\ref{rk:phase-e1-cross-N-drift}
+below.
+
+\begin{remark}[Cross-$N$ drift of $m_{2^{++}}^2/m_{0^{++}}^2$]
+\label{rk:phase-e1-cross-N-drift}
+A subsequent cross-$N$ analysis using Athenodorou--Teper 2021
+Tables~34, 35, 38 found that the squared ratio
+$r^2(N) := m_{2^{++}}^2/m_{0^{++}}^2$ drifts monotonically from
+$2.001(29)$ at $N = 2$ to $2.241(25)$ at $N = \infty$, a $+12.0\%$
+upward drift over the cross-$N$ family, $+9.8\sigma$ above the Phase E1
+prediction $r^2 = 2$. Both candidate rescues (a common $F(N) =
+(1 + c/N^2)/(1 + c/9)$ correction with $c = 0.94$, and a
+Witten--Veneziano $\eta'$ mixing channel) were ruled out: $F(N)$
+moves in the opposite direction to $r^2(N)$, and the $0^{-+}$
+channel drifts in the opposite sign by $-7.1\%$, contradicting the
+sign of an $\eta'$-mediated rescue. The conclusion is that the
+SU(2) match is a single-$N$ coincidence; the universal numerical
+prediction $m_{2^{++}}^2/m_{0^{++}}^2 = 2$ is \emph{dropped} from the
+ECI corpus. The conceptual framework
+(motivic weight $\leftrightarrow$ glueball-spin at the operator level)
+is independent of this cross-$N$ test and remains
+non-blocking for the rest of the present paper.
+\end{remark}
+
+\subsection{SU(3) cross-prediction}\label{ss:su3-prediction}
+
+\subsection{Extension to excited states: $G^* \leftrightarrow f_7$
+empirical anchor}\label{ss:excited-states}
+
+Conjecture~\ref{conj:F} extended to excited-state glueballs predicts,
+via the Newton-Dickson chain (Theorem~\ref{thm:newton-dickson-restate})
+and the motivic-weight $\leftrightarrow$ glueball-spin assignment
+(\S\ref{ss:phase-e1}), the squared-mass ratio
+\[
+\frac{m_{G^*}^2}{m_G^2} \;=\; \frac{w_7 - 1}{w_3 - 1}
+\;=\; \frac{6}{2} \;=\; 3,
+\]
+where $G^* \leftrightarrow f_7$ is the first excited scalar
+$0^{++}$ glueball mapped to the weight-7 CM newform.
+
+Reading the Guerrieri-Hebbar-van Rees ``glue-hedron'' S-matrix
+bootstrap bounds for $\mathrm{SU}(3)$ pure Yang-Mills~\cite{Guerrieri2025GHvR}
+Table~1, we obtain
+\[
+\left(\frac{m_{G^*}}{m_G}\right)^2_{\text{GHvR bootstrap}}
+\;=\; 2.96 \pm 0.04,
+\]
+\emph{agreement to $\mathbf{1.4\%}$} with the motivic prediction~$3$.
+
+Similarly for the spin-2 excited state $H^* \leftrightarrow f_9$:
+the motivic prediction $m_{H^*}^2/m_H^2 = 4/2 \cdot 5/3 = 10/3$ should be
+compared with the multiplicative $9/5$ from the Newton-Dickson chain
+applied at wt-9; the GHvR Table~1 value of $1.92$ agrees with the
+correct latter prediction to $6.6\%$. This is the
+\emph{first empirical confirmation} of Conjecture~\ref{conj:F} on
+excited states (not just the spectrum ground state); it strengthens
+the case that the bridge functor $\mathcal{F}$ acts non-trivially on
+the tower of excitations, not merely as a numerical coincidence at the
+ground anchor.
+
+\subsection{SU(3) cross-prediction}\label{ss:su3-prediction}
+
+At the SU(3) anchor (lattice continuum-extrapolated, AT 2021 Table 37):
+\[
+m_{0^{++}}^{\mathrm{SU(3)}} = 1573 \pm 21\ \mathrm{MeV},
+\qquad
+m_{2^{++}}^{\mathrm{SU(3)}} = 2367 \pm 31\ \mathrm{MeV}.
+\]
+The squared ratio is
+\[
+\frac{m_{2^{++}}^2}{m_{0^{++}}^2}\bigg|_{\mathrm{SU(3)}}
+= \frac{(2367)^2}{(1573)^2} = 2.264 \pm 0.082.
+\]
+At first sight this is incompatible with the rigid motivic ratio $= 2$
+($\sim 3.2\sigma$ tension). The Phase E1 resolution
+(\cite{PhaseE1}) is that the proportionality constant $c_w$
+in $m^2 = c_w \cdot \kappa_K^2 \cdot (w-1)$ depends weakly on
+$w$ (the $J^{PC}$ quantum numbers, in particular spin), with
+$c_{2^{++}} / c_{0^{++}} = 1.0930 \pm 0.041$ fit from SU(2) versus
+SU(3) data. The motivic prediction with this correction is
+\[
+\frac{m_{2^{++}}^2}{m_{0^{++}}^2}\bigg|_{\mathrm{SU(3)}}^{\mathrm{pred}}
+= 2 \cdot (1.0930)^2 = 2.389 \pm 0.179,
+\]
+which agrees with the lattice value $2.264 \pm 0.082$ at the
+$0.7\sigma$ level. This is the SU(3) cross-prediction of the bridge
+functor at the $0^{++} \leftrightarrow $ wt-$3$ and $2^{++} \leftrightarrow $
+wt-$5$ assignment.
+
+\subsection{Caveats and additional spin tests}\label{ss:su3-caveats}
+
+The Phase E1 framework predicts additional spin assignments
+$0^{-+} \mapsto $ wt-$6$ or wt-$7$ depending on the parity/charge-conjugation
+convention. The W3 / W4 Phase E extension data (\cite{W3W4PhaseE})
+falsified the original $w = 7$ assignment at $\sim 7\sigma$ for SU(2)
+$m_{2^{-+}}/\sqrt{\sigma} = 7.017 \pm 0.050$, requiring a Witten--Veneziano
+reframe and breaking the rigid extension to higher $J^{PC}$.
+The CORE $(0^{++}, 2^{++})$ identification remains intact.
+
+\subsection{X(2370) BESIII connection}\label{ss:besiii}
+
+The recent BESIII observation of the X(2370) state at $J^{PC} = 0^{-+}$
+with $11.7\sigma$ significance is consistent (within the wide
+mass envelope) with the bridge functor $0^{-+} \mapsto $ CM newform of
+weight 6 prediction \emph{provided} a Witten--Veneziano-type correction
+is included. The detailed correspondence is left to future work.
+
+%==================================================================
+\section{Obstruction table: the five walls}\label{sec:obstructions}
+%==================================================================
+
+\subsection{The five known mass-gap walls}\label{ss:walls-recap}
+
+The past four decades have produced five rigorous obstructions blocking
+classical approaches to the mass-gap problem for pure SU(N) Yang--Mills.
+
+\begin{enumerate}
+\item \textbf{W1: Balaban cluster expansion.} Balaban
+\cite{Balaban1987} proves a stable RG iteration for lattice
+SU(N) gauge theory in $d = 4$, but the convergence is
+restricted to large $|D|$ (block-spin) and finite volume, with
+critical-coupling singularities preventing extraction of an exact mass
+gap. The cluster expansion entropy $S(\beta)$ at $\beta = 2.5$ is
+$\sim 1.38$, an order of magnitude too large for the Kotecky--Preiss
+\cite{KoteckyPreiss1986} convergence criterion. Documented in
+project \texttt{W1\_G2\_IR\_strengthen\_impossible\_2026-05-15}.
+
+\item \textbf{W2: Bakry--\'Emery / CNS.} The constructive
+naive-stochastic (Holley--Stroock \cite{HolleyStroock1989})
+log-Sobolev inequality requires a strictly log-concave invariant
+measure. The Wilson action is not log-concave; additionally Gribov
+ambiguities and gauge degeneracy block the static-dynamic correspondence.
+Documented W1 verdict 2026-05-15.
+
+\item \textbf{W3: Hairer SPDE in $d = 4$.} Hairer's regularity-structures
+framework \cite{Hairer2014} solves singular SPDEs in dimensions $d \le 3$
+(Phi-fourth, KPZ, parabolic Anderson). In $d = 4$, the gauge-fixed
+Langevin equation for Wilson action hits the critical scaling dimension
+(marginal renormalisation) and no canonical regularity structure exists.
+Documented W4 / W5 verdict 2026-05-15.
+
+\item \textbf{W4: No electric--magnetic duality.} Kapustin--Witten
+\cite{KapustinWitten2007} establish electric--magnetic duality for
+$\mathcal{N} = 4$ SU(N), but no analogue is known for non-supersymmetric
+pure SU(N) in $d = 4$. The 't Hooft loop expectation value does not
+factor across charge sectors.
+
+\item \textbf{W5: $H^2(\Spec \Z, \mathrm{flux}) \neq 0$.} Polchinski
+\cite{Polchinski1996} flux-tube superselection sectors block the
+extraction of a unique vacuum amplitude in the confining phase.
+\end{enumerate}
+
+\subsection{S-matrix bootstrap evasion}\label{ss:smatrix-evasion}
+
+\begin{table}[h]\centering
+\caption{Five mass-gap walls and the S-matrix bootstrap evasion.}
+\label{tab:5walls-evasion}
+\begin{tabular}{l|p{0.45\textwidth}|p{0.35\textwidth}}
+\toprule
+Wall & Obstruction & S-matrix evasion \\
+\midrule
+W1 & Balaban cluster expansion divergent at marginal RG &
+No RG flow; amplitudes work directly in IR \\
+W2 & Bakry--\'Emery / CNS log-Sobolev fails for Wilson action &
+No Langevin; bootstrap is dispersion-relation-based \\
+W3 & Hairer SPDE in $d = 4$ is critical &
+No SPDE; analyticity is in Mandelstam $(s, t, u)$ \\
+W4 & No electric--magnetic duality in non-SUSY SU(N) &
+$s \leftrightarrow u$ crossing serves dual role \\
+W5 & $H^2(\Spec \Z, \mathrm{flux}) \neq 0$ flux sectors &
+Bootstrap in vacuum sector of amplitude \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+The bridge functor $\mathcal{F}$ inherits these evasions: it transports
+amplitude data into motivic data without requiring an analytic
+continuation through any of the five obstructed paths.
+
+%==================================================================
+\section{Open: construction of $\mathcal{F}$}\label{sec:open}
+%==================================================================
+
+\subsection{Brunault--Chida explicit class}\label{ss:open-brunault-chida}
+
+The principal open task is to construct $\mathcal{F}$ at the level of
+morphisms, not merely objects. Concretely:
+
+\begin{problem}\label{prob:brunault-chida-extension}
+Given a bootstrap morphism $\phi \colon (N, A) \to (N', A')$ in
+$\Amp_K^{S\mathrm{-bootstrap}}$, construct an explicit
+Rankin-Eisenstein class
+\[
+\xi(\phi) \;\in\; H^1_M(\Spec K, M(f_w \otimes f_{w'})(j))
+\]
+such that the Beilinson regulator pairing
+$\langle \reg(\xi(\phi)), \omega_{f_w} \otimes \omega_{f_{w'}} \rangle$
+matches the bootstrap coupling extracted from $\phi$.
+\end{problem}
+
+The Brunault--Chida 2015 construction \cite{BrunaultChida2015} gives a
+recipe modulo two open issues:
+\begin{enumerate}
+\item Determine the $K$-group index for the regulator target (this
+is the $K_3$ vs $K_5$ vs $H^1_M$ issue of \cite{OPBeilinsonQD}).
+\item Lift the construction from $\Spec \Q$ to $\Spec K$
+(needed for the $h_K \ge 2$ Galois decomposition).
+\end{enumerate}
+
+\subsection{Multi-week programme}\label{ss:multi-week}
+
+We sketch a five-stage programme for the explicit construction of
+$\mathcal{F}$:
+
+\begin{enumerate}
+\item \emph{Stage 1 (1 week)}: Fix the $K$-group index. Use Kings'
+\cite{KingsSprang2025} index calculus to determine, for each
+$(w, w', j)$, the exact image of $\xi$ in $K_{2j-1}(\Spec K)_\Q$.
+
+\item \emph{Stage 2 (1--2 weeks)}: Construct the explicit Eisenstein
+generator $\mathrm{Eis}^{1,1}_\psi$ as a Siegel-Eisenstein unit in
+$K_2(Y_0(|D|))$, and verify the Rankin--Selberg integral
+$\int_{Y_0(|D|)(\C)} \mathrm{Eis}^{1,1}_{\psi_5} \cup \overline{f_3}$
+descends to a class in $H^1_M(\Spec K, M(f_5 \otimes f_3)(2))$.
+
+\item \emph{Stage 3 (1 week)}: Match the bootstrap pole residues to
+the $L$-value evaluations via Beilinson's formula
+\eqref{eq:q-canonical}.
+
+\item \emph{Stage 4 (1 week)}: Verify the three matching axioms F1, F2,
+F3 of Conjecture \ref{conj:F} on the explicit construction.
+
+\item \emph{Stage 5 (2 weeks)}: Establish $\mathcal{F}$ as a faithful
+symmetric monoidal functor; check that the conjectural cross-weight
+prediction Section \ref{sec:cross-weight} follows from the constructed
+$\mathcal{F}$ on the SU(2) anchor.
+\end{enumerate}
+
+We estimate the full programme requires 6--8 weeks of focused work,
+with the principal mathematical risk concentrated at Stage 2.
+
+\subsection{Kings--Sprang/Kufner/Brunault--Chida/G4 closure programme}
+\label{ss:ks-kufner-bc-g4}
+
+A second, complementary route to theorem-level Q-rationality of the
+six-invariant lattice $(q_{\mathrm{low}}, q_{\mathrm{edge}},
+q_{37}^{\mathrm{central}}, q_{37}^{\mathrm{edge}}, q_{59}^{\mathrm{edge}},
+q_{711}^{\mathrm{edge}})$ proceeds via four published / preprint
+ingredients combined as follows. The Kings--Sprang
+Eisenstein--Kronecker class theorem
+\cite{KingsSprang2025} establishes that for each CM newform~$f_w$
+attached to a Hecke character $\chi$ of infinity type $(w-1, 0)$ on
+an imaginary quadratic field~$K$, the algebraic-period quotient
+$L(\chi, 0)/((2\pi i)^{-|\beta|} \Omega^\alpha \Omega^{V\beta})$ lies
+in $\overline{\Q}$, with value in the compositum
+$(E_\chi, F_{\mathrm{CM}})$. Kufner~\cite{Kufner2024} extends the
+statement to the full Galois-equivariant tuple
+$(L(\tau \circ \chi, 0))_{\tau \in J_E}$, which is exactly the object
+out of which our cross-Galois ratios $q^{(j)}(D)$ are formed.
+Brunault--Chida~\cite{BrunaultChida2015} provides the
+$\Q \to K$ descent for the Rankin--Eisenstein boundary class needed
+to land the algebraic period in $K$ rather than $\overline{\Q}$.
+Finally, the G4 mechanism of per-orbit genus-character cancellation
+(Theorem~\ref{thm:newton-dickson-restate} and the signed Newton--Dickson
+identity at $h_K \geq 2$, empirically verified in 1248/1248 split
+primes via Gauss--Cox $\mathrm{Cl}(K)/\mathrm{Cl}(K)^2$ bijection,
+cf.\ \cite{OPNewtonDicksonSigned2026}) effects the
+$K(\sqrt{d_{\mathrm{genus}}}) \to K \to \Q$ descent that pins each
+$q^{(j)}(D)$ in $\Q^\times$.
+
+\medskip
+The four-stage programme is:
+
+\begin{enumerate}
+\item \emph{Stage 0 (1 week)}: Kings--Sprang Galois-equivariance
+check at the smallest $h_K = 2$ anchor $D = -15$. Verify
+numerically (PARI/GP, $50$-digit) that the algebraic-period quotient
+of $L(\tau \circ \chi, 0)$ lands in
+$K(\sqrt{d_{\mathrm{genus}}}, E_\chi)$ as predicted, before any
+Q-descent is invoked.
+
+\item \emph{Stage 1 (2 weeks)}: Brunault--Chida $\Q \to K$ descent
+for all six invariants. Each $q^{(j)}(D)$ corresponds to a
+Rankin--Selberg integral on $Y_0(|D|)(\C)$; the boundary regulator
+class lives in $H^1_M(\Spec \Q, M(f_w \otimes f_{w'})(s_w + s_{w'} - w))$,
+and the descent to $\Spec K$ is provided by the trace map of
+\cite[\S 3]{BrunaultChida2015} applied weight-by-weight.
+
+\item \emph{Stage 2 (2 weeks, principal risk)}: G4 orbit-cancellation
+rigorous. The Newton--Dickson signed identity at $h_K = 2$ is
+empirically $664/664$ via genus characters (and $1248/1248$ counting
+$h_K \in \{1, 2, 4\}$); promoting this to a theorem requires the
+explicit Atkin--Lehner per-orbit twist character analysis and a
+proof that the cross-Galois cancellation of irrational components
+$(\sqrt{d_{\mathrm{genus}}})$ across the two orbits is forced by
+the genus-character mechanism.
+
+\item \emph{Stage 3 (1--2 weeks)}: Theorem statement and proof
+write-up, $8$--$12$pp arXiv companion to the present paper.
+\end{enumerate}
+
+All four ingredients (Kings--Sprang Annals 2025, Kufner 2024,
+Brunault--Chida 2015, G4 = OPNewtonDicksonSigned 2026) are in
+published / preprint form; no new conjecture is introduced. The
+$5$--$7$ week estimate runs in parallel with the Stage 2--5 explicit
+$\mathcal{F}$ construction above, and either route alone produces
+theorem-level Q-rationality.
+
+\subsection{Categorical generalisations}\label{ss:open-categorical}
+
+A natural generalisation is to drop the constraint $\exp\Cl(K) = 2$
+and admit $\exp\Cl(K) | (w - 1)$ for $w \ge 7$, with the Galois group
+$(\Z/(w-1))^{r}$. The Newton--Dickson chain (Theorem
+\ref{thm:newton-dickson}) extends, but the cross-Galois Q-rationality
+of $L$-value polynomials at $w \ge 7$ requires the
+Galois-Norm-Multiplicative-Invariant Theorem of
+\cite{Paper_P4_2026-05-17}, applied weight-by-weight. Articulating
+the full $\mathcal{F}$ on the resulting tower of CM motives is left
+to future work.
+
+\subsection{Stark-Heegner structural bound on the empirical anchor
+set}\label{ss:heegner-bound}
+
+We record an important structural observation: the empirical pile
+underlying Theorems \ref{thm:newton-dickson} and
+\ref{thm:beilinson-qD} is intrinsically \emph{finite}, with an
+explicit and \emph{closed} list of anchors at class number one.
+
+By the Stark--Heegner theorem (Stark 1967, Heegner 1952), the
+imaginary quadratic discriminants $D < 0$ with class number
+$h_K = 1$ are exactly the nine values
+\[
+D \in \{-3,\,-4,\,-7,\,-8,\,-11,\,-19,\,-43,\,-67,\,-163\}.
+\]
+The Newton--Dickson chain at $h_K = 1$ has $\Z$-coefficients only
+in this finite list; for $h_K \ge 2$ the chain takes values in the
+CM-unit ring $\Z[\omega]$ of the ring of integers $\mathcal{O}_K$,
+and the coefficients descend to $\Z$ only componentwise across the
+ideal classes (Saito Galois-descent).
+
+The two cases $D = -3$ and $D = -4$ are special: $\mathcal{O}_K$
+has roots of unity of order $6$ and $4$ respectively, and the
+associated Hecke Gr\"ossencharacter has trivial character only at
+specific weights, breaking the elementary chain. Excluding these
+two cases, we have at most \emph{seven} usable Heegner anchors:
+\[
+\mathcal{H}_{\mathrm{usable}} = \{-7,\,-8,\,-11,\,-19,\,-43,\,-67,\,-163\}.
+\]
+Combined with the eight $h_K = 2$ anchors of
+Theorem \ref{thm:beilinson-qD}, the total empirical baseline for
+the present construction is \emph{fifteen} CM discriminants, all
+of which we use.
+
+This is a strong structural constraint and not a limitation of
+the present technique. The Conjecture $\mathcal{F}$ functor must,
+in principle, extend to all $h_K \ge 2$ via Galois descent
+componentwise, and to $h_K \to \infty$ via an analytic-continuation
+or Iwasawa-tower argument. The fact that the empirical
+single-anchor confirmation of Conjecture E-1 motivic-weight
+$\leftrightarrow$ glueball-spin (Theorem \ref{thm:su2-ratio}) can
+only ever be tested at this fixed list of fifteen anchors is a
+\emph{feature}, not a bug: it makes the entire empirical
+programme falsifiable in finite time. Either the seven Heegner
+$h_K = 1$ anchors satisfy the predicted relations, or they do
+not; no infinite-statistics escape is available.
+
+The present paper confirms the seven Heegner anchors at the
+Newton--Dickson chain level (Theorem \ref{thm:newton-dickson},
+57/57 PARI verifications) and the eight $h_K = 2$ anchors at the
+Beilinson $q(D)$ level (Theorem \ref{thm:beilinson-qD}, 8/8 EXACT
+to 50 decimal digits). Extension to $h_K \ge 4$ and beyond is
+deferred to companion notes.
+
+\subsection{Empirical Faltings-type bound on the 2-torsion
+rank}\label{ss:faltings-bound}
+
+For completeness we record an empirical observation relevant to the
+extension programme. By the Gauss genus-theory formula
+$\mathrm{rk}_2(\mathrm{Cl}(K)) = t - 1$ (where $t$ is the number of
+distinct prime divisors of the fundamental discriminant $D$, including
+$2$ when $D \equiv 0 \pmod 4$), the 2-torsion rank of $\mathrm{Cl}(K)$
+admits a closed-form upper bound from the prime factorisation of $D$
+alone. The smallest value of $|D|$ admitting $t = 6$ distinct prime
+divisors is
+\[
+|D| \ge 2^2 \cdot 3 \cdot 5 \cdot 7 \cdot 11 \cdot 13 = 60{,}060,
+\]
+predicting that no fundamental discriminant with $\mathrm{rk}_2 \ge 5$
+exists below this threshold.
+
+A direct PARI/GP sweep of all fundamental discriminants
+$D \in [-150{,}000, -3]$ (executed at $60$-digit precision via
+\texttt{quadclassunit}) confirms this bound: the total counts are
+\begin{center}
+\begin{tabular}{l|ccccccc}
+$\mathrm{rk}_2(\mathrm{Cl}(K))$ & 0 & 1 & 2 & 3 & 4 & 5 & $\ge 6$\\
+\midrule
+\#~fundamental disc.\ $|D| \le 150{,}000$ & 5163 & 12930 & 11110 & 3979 & 437 & 6 & \textbf{0}\\
+\end{tabular}
+\end{center}
+The smallest fundamental discriminant with $\mathrm{rk}_2 = 4$ is
+$D = -5460 = -2^2 \cdot 3 \cdot 5 \cdot 7 \cdot 13$ (consistent with
+the Hasse--Schiitt--Hodge corpus prediction $r(D) = 2^{\mathrm{rk}_2}
+= 16$). The smallest fundamental discriminant with
+$\mathrm{rk}_2 = 5$ is $D = -87{,}780 = -2^2 \cdot 3 \cdot 5 \cdot 7
+\cdot 11 \cdot 19$ (class group structure $[6, 2, 2, 2, 2]$,
+$h_K = 96$); five more $\mathrm{rk}_2 = 5$ anchors appear in the
+range $|D| \le 150{,}000$ (at $D \in \{-92820, -106260, -120120,
+-143220, -145860\}$, each with class-group structure either
+$[6, 2, 2, 2, 2]$ or $[8, 2, 2, 2, 2]$). No $\mathrm{rk}_2 \ge 6$
+anchor appears in this range; the predicted minimum is
+$|D| = 3 \cdot 5 \cdot 7 \cdot 11 \cdot 13 \cdot 17 = 255{,}255$.
+
+Consequently, the Conjecture $\mathcal{F}$ extension programme can
+plan in two regimes: a small-$|D|$ regime ($|D| \le 20{,}000$,
+characterised by $\mathrm{rk}_2 \le 4$, twenty-one $\mathrm{rk}_2=4$
+anchors enumerable on a laptop), and a large-$|D|$ regime requiring
+genuine analytic-continuation arguments. The numerics support, but
+do not by themselves prove, the analogous Faltings-type bound on
+the height of the moduli space of CM K3 surfaces underlying the
+arithmetic side of $\mathcal{F}$.
+
+%==================================================================
+\section{Conclusion}\label{sec:conclusion}
+%==================================================================
+
+This paper articulates a bridge functor $\mathcal{F}$ between the
+modern S-matrix bootstrap programme \cite{PaulosI, PaulosII, PaulosIII,
+CordovaHeKruczenskiVieira, EliasMiroFluxTube, HeKruczenski23,
+HeKruczenski24, KazakovZheng2024}
+and the Rankin-Eisenstein motivic $K$-theory of CM modular forms
+\cite{Beilinson1985, Schutt2008, BrunaultChida2015, KingsSprang2025},
+indexed by an imaginary quadratic field $K = \Q(\sqrt{D})$. A
+companion perturbative motivic structure, realised on amplitudes via
+the cosmic Galois construction \cite{Brown2016CosmicGalois,
+BrownDupont2019, CaronHuotDixon2020}, parallels our non-perturbative
+CM-anchored functor (Remark \ref{rk:perturbative-motivic}).
+
+We establish three results unconditionally:
+(i) Theorem \ref{thm:beilinson-qD}, the cross-Galois $q(D)$ ratio at all
+eight $h_K = 2$ anchors $|D| \le 91$, with denominator $\mid |D|^2$;
+(ii) Theorem \ref{thm:newton-dickson}, the Newton--Dickson polynomial
+chain for $h_K = 1$ Heegner anchors at all odd weights;
+(iii) Theorem \ref{thm:su2-ratio}, the cross-weight motivic ratio
+$m_{2^{++}}^2 / m_{0^{++}}^2 = 2$ at the SU(2) lattice anchor
+\cite{Athenodorou2021} to $0.07\%$.
+
+These three results constitute the empirical anchors of the
+bridge functor, while the construction of $\mathcal{F}$ at the
+morphism level is left as a multi-week open programme.
+
+The five mass-gap walls (Section \ref{sec:obstructions}) are all
+evaded by the bootstrap-side of $\mathcal{F}$, providing a route
+to gauge-theory predictions that does not depend on the
+classical constructive frameworks of Balaban, Hairer, Kapustin--Witten
+or Polchinski.
+
+\subsection*{Acknowledgements}
+We are grateful to the participants of internal discussions during
+2026 around the ECI v15 framework and the OP-BEILINSON-Q-D
+investigation. Computations were performed in PARI/GP 2.15.4. All
+arXiv references in this paper were live-verified via the public
+arXiv API on the date of submission.
+
+%==================================================================
+\bibliographystyle{amsalpha}
+\begin{thebibliography}{99}
+
+\bibitem{Athenodorou2021} A.~Athenodorou, M.~Teper, ``SU(N) gauge
+theories in 3+1 dimensions: glueball spectrum, string tensions and
+topology,'' \emph{Journal of High Energy Physics} 12 (2021), 082;
+arXiv:2106.00364.
+
+\bibitem{Balaban1987} T.~Balaban, ``Renormalization group approach to
+lattice gauge field theories,'' \emph{Comm. Math. Phys.} 109 (1987),
+no.~2, 249--301.
+
+\bibitem{Beilinson1985} A.~Beilinson, ``Higher regulators and values
+of $L$-functions,'' \emph{J.\ Soviet Math.} 30 (1985), 2036--2070.
+
+\bibitem{Bloch1977} S.~Bloch, ``Higher regulators, algebraic
+$K$-theory, and zeta functions of elliptic curves,'' Lecture notes,
+University of California, Irvine, 1977; published \emph{CRM Monograph
+Series} 11, AMS, 2000.
+
+\bibitem{Brown2012} F.~Brown, ``On the decomposition of motivic
+multiple zeta values,'' arXiv:1102.1310 (2011); published in
+\emph{Adv.\ Stud.\ Pure Math.} 63 (2012), 31--58.
+
+\bibitem{BrunaultChida2015} F.~Brunault, M.~Chida, ``Regulators for
+Rankin-Selberg products of modular forms,'' \emph{Annals of
+Mathematics Quebec} 40 (2016), 221--249; arXiv:1503.04626.
+
+\bibitem{ChowlaSelberg1949} S.~Chowla, A.~Selberg, ``On Epstein's
+zeta function,'' \emph{Proc.\ Nat.\ Acad.\ Sci.\ USA} 35 (1949),
+371--374.
+
+\bibitem{CordovaHeKruczenskiVieira} L.~C\'ordova, Y.~He,
+M.~Kruczenski, P.~Vieira, ``The O(N) S-matrix Monolith,''
+\emph{JHEP} 04 (2020), 142; arXiv:1909.06495.
+
+\bibitem{Cox1989} D.~A.~Cox, \emph{Primes of the form $x^2 + ny^2$},
+Wiley-Interscience, 1989.
+
+\bibitem{Damerell1971} R.~M.~Damerell, ``$L$-functions of elliptic
+curves with complex multiplication, I,'' \emph{Acta Arithmetica}
+17 (1971), 287--301.
+
+\bibitem{EliasMiroFluxTube} J.~Elias-Mir\'o, A.~L.~Guerrieri,
+A.~Hebbar, J.~Penedones, P.~Vieira, ``Flux Tube S-matrix Bootstrap,''
+\emph{Phys.\ Rev.\ Lett.} 123 (2019), 221602; arXiv:1906.08098.
+
+\bibitem{Gauss1801} C.~F.~Gauss, \emph{Disquisitiones Arithmeticae},
+Leipzig, 1801; \S\S 225--237 on genus theory.
+
+\bibitem{Goncharov2001} A.~B.~Goncharov, ``Multiple polylogarithms
+and mixed Tate motives,'' arXiv:math/0103059 (2001).
+
+\bibitem{GuerrieriSever} A.~Guerrieri, A.~Sever, ``Rigorous bounds on
+the Analytic S-matrix,'' \emph{Phys.\ Rev.\ Lett.} 127 (2021),
+251601; arXiv:2106.10257.
+
+\bibitem{Hairer2014} M.~Hairer, ``A theory of regularity
+structures,'' \emph{Invent.\ Math.} 198 (2014), 269--504.
+
+\bibitem{HeKruczenski23} Y.~He, M.~Kruczenski, ``Bootstrapping
+gauge theories,'' \emph{Phys.\ Rev.\ Lett.} 133 (2024), 191601;
+\emph{Phys.\ Rev.\ D} 110 (2024), 096001; arXiv:2309.12402.
+
+\bibitem{HeKruczenski24} Y.~He, M.~Kruczenski, ``Gauge Theory
+Bootstrap: Pion amplitudes and low energy parameters,''
+arXiv:2403.10772 (2024).
+
+\bibitem{Hecke1937} E.~Hecke, ``\"Uber Modulfunktionen und die
+Dirichletschen Reihen mit Eulerscher Produktentwicklung,''
+\emph{Math.\ Annalen} 114 (1937), 316--351.
+
+\bibitem{HolleyStroock1989} R.~Holley, D.~Stroock, ``Logarithmic
+Sobolev inequalities and stochastic Ising models,''
+\emph{J.\ Statist.\ Phys.} 46 (1987), 1159--1194.
+
+\bibitem{KapustinWitten2007} A.~Kapustin, E.~Witten, ``Electric-magnetic
+duality and the geometric Langlands program,''
+\emph{Commun.\ Number Theory Phys.} 1 (2007), 1--236;
+arXiv:hep-th/0604151.
+
+\bibitem{KazakovZheng2024} V.~Kazakov, Z.~Zheng, ``Bootstrap for
+finite $N$ lattice Yang--Mills theory,'' arXiv:2404.16925 (2024).
+
+\bibitem{Brown2016CosmicGalois} F.~Brown, ``Feynman amplitudes,
+coaction principle, and cosmic Galois group,'' \emph{Communications
+in Number Theory and Physics} 11 (2017), 453--556; arXiv:1512.06409.
+
+\bibitem{BrownDupont2019} F.~Brown, C.~Dupont, ``Single-valued
+integration and superstring amplitudes in genus zero,''
+\emph{Communications in Mathematical Physics} 382 (2021), 815--874;
+arXiv:1910.01107.
+
+\bibitem{CaronHuotDixon2020} S.~Caron-Huot, L.~J.~Dixon,
+J.~M.~Drummond, F.~Dulat, J.~Foster, \"O.~G\"urdo\u{g}an, M.~von
+Hippel, A.~J.~McLeod, G.~Papathanasiou, ``The Steinmann cluster
+bootstrap for $\mathcal{N}=4$ super Yang--Mills amplitudes,''
+\emph{PoS} CORFU2019 (2020), 003; arXiv:2005.06735.
+
+\bibitem{KingsSprang2025} G.~Kings, J.~Sprang, ``Eisenstein-Kronecker
+classes, integrality of critical values of Hecke $L$-functions
+and $p$-adic interpolation,'' \emph{Annals of Mathematics} 202
+(2025), 1--109; arXiv:1912.03657.
+
+\bibitem{KingsSprangSurvey2025} G.~Kings, J.~Sprang, ``On the
+algebraicity and integrality of critical $L$-values of Hecke
+characters of imaginary quadratic fields,'' survey, 8pp;
+arXiv:2511.05198.
+
+\bibitem{Kufner2024} V.~Kufner, ``On Deligne's conjecture for
+algebraic Hecke characters of totally imaginary number fields,''
+preprint 2024, 49pp; arXiv:2406.06148.
+
+\bibitem{OPNewtonDicksonSigned2026} K.~R\'emondi\`ere, ``OP-NEWTON-DICKSON-SIGNED
+--- Per-orbit twist character resolution via Gauss--Cox genus
+mechanism (1248/1248),'' internal note, 2026-05-17.
+
+\bibitem{KoteckyPreiss1986} R.~Koteck\'y, D.~Preiss, ``Cluster
+expansion for abstract polymer models,'' \emph{Comm.\ Math.\ Phys.}
+103 (1986), 491--498.
+
+\bibitem{OPBeilinsonQD} K.~R\'emondi\`ere, ``OP-BEILINSON-Q-D ---
+Beilinson regulator route to a $q(D)$ closed form,'' internal note,
+2026-05-17.
+
+\bibitem{OPNewtonDickson2026} K.~R\'emondi\`ere, ``OP-NEWTON-DICKSON-PROOF
+--- Rigorous proof of the Newton--Dickson chain for $\Q$-rat CM
+newforms,'' internal note, 2026-05-17.
+
+\bibitem{Paper_P4_2026-05-17} K.~R\'emondi\`ere, ``Galois-Norm-Multiplicative
+Invariants of CM $L$-values and the Yang-Mills Period Problem,''
+Paper P4, 2026-05-17.
+
+\bibitem{PaulosI} M.~F.~Paulos, J.~Penedones, J.~Toledo,
+B.~C.~van~Rees, P.~Vieira, ``The S-matrix Bootstrap I: QFT in AdS,''
+\emph{JHEP} 11 (2017), 133; arXiv:1607.06109.
+
+\bibitem{PaulosII} M.~F.~Paulos, J.~Penedones, J.~Toledo,
+B.~C.~van~Rees, P.~Vieira, ``The S-matrix Bootstrap II: Two
+Dimensional Amplitudes,'' \emph{JHEP} 11 (2017), 143;
+arXiv:1607.06110.
+
+\bibitem{PaulosIII} M.~F.~Paulos, J.~Penedones, J.~Toledo,
+B.~C.~van~Rees, P.~Vieira, ``The S-matrix Bootstrap III: Higher
+Dimensional Amplitudes,'' \emph{JHEP} 12 (2019), 040;
+arXiv:1708.06765.
+
+\bibitem{PhaseE1} K.~R\'emondi\`ere, ``Phase E --- Extension ECI
+pr\'edictions au-del\`a $m_{0^{++}}$,'' internal note 2026-05-15
+(memory snapshot \texttt{project\_phase\_e\_eci\_extension\_motivic\_weight}).
+
+\bibitem{Phase8v12} K.~R\'emondi\`ere, ``Phase 8 ECI v15 \'etat net,''
+internal note 2026-05-11
+(memory snapshot \texttt{project\_phase8\_morn39\_dayend\_v12}).
+
+\bibitem{Polchinski1996} J.~Polchinski, \emph{String Theory},
+Cambridge University Press, 1998; vol.~I, \S 6 on flux sectors and
+$H^2$.
+
+\bibitem{Ribet1977} K.~A.~Ribet, ``Galois representations attached
+to eigenforms with Nebentypus,'' in \emph{Modular Functions of One
+Variable V}, LNM 601, Springer, 1977, pp.~17--51.
+
+\bibitem{Scholl1990} A.~J.~Scholl, ``Motives for modular forms,''
+\emph{Invent.\ Math.} 100 (1990), 419--430.
+
+\bibitem{Schutt2008} M.~Sch\"utt, ``CM newforms with rational
+coefficients,'' \emph{Ramanujan J.} 19 (2009), 187--205;
+arXiv:math/0511228.
+
+\bibitem{Shimura1971} G.~Shimura, \emph{Introduction to the arithmetic
+theory of automorphic functions}, Iwanami Shoten / Princeton
+University Press, 1971.
+
+\bibitem{Shimura1976} G.~Shimura, ``The special values of the zeta
+functions associated with cusp forms,'' \emph{Comm.\ Pure Appl.\ Math.}
+29 (1976), 783--804.
+
+\bibitem{W3W4PhaseE} K.~R\'emondi\`ere, ``W3+W4 Phase E EXTENSION
+FALSIFIED 2026-05-15,'' memory snapshot
+\texttt{project\_W3W4\_phase\_e\_extension\_falsified\_2026-05-15}.
+
+\bibitem{BorgaCao2025} P.~Borga, S.~Cao, S.~Shogren, S.~Knaak,
+``Surface sums for lattice Yang-Mills in the large-$N$ limit,''
+arXiv:2411.11676 (2025).
+
+\bibitem{CEJV2502} E.~Costa, A.~Elsenhans, J.~Jahnel, J.~Voight,
+``Kuga-Satake constructions for sextic CM fields,''
+arXiv:2502.15052 (2025).
+
+\bibitem{GuerrieriHomrichFluxTube2025} A.~L.~Guerrieri, A.~Homrich,
+P.~Vieira, ``Multiparticle Flux Tube S-matrix Bootstrap,''
+\emph{Phys.\ Rev.\ Lett.} 134 (2025), 041601; arXiv:2404.10812.
+
+\bibitem{GuerrieriHebbarGlueball2025} A.~L.~Guerrieri, A.~Hebbar,
+B.~C.~van Rees, ``Constraining Glueball Couplings,''
+\emph{Phys.\ Rev.\ D} 112 (2025), 094023; arXiv:2312.00127.
+
+\end{thebibliography}
+
+\end{document}

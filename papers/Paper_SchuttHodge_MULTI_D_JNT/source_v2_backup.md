@@ -1,6 +1,6 @@
 # Newton-identity rationality of split-prime Hecke eigenvalues for the canonical weight-5 CM newforms at the six imaginary-quadratic Heegner discriminants of class number one
 
-**Author** : Kevin Remondière (with Opus 4.7 LLM-assisted typesetting)
+**Author** : Kevin Remondière (with LLM LLM-assisted typesetting)
 **Date** : 2026-05-10
 **Target journal** : *Journal of Number Theory* (alternate, with the §5 Hodge extension fully developed : *Inventiones Mathematicae*)
 **Length** : ≈ 8 700 words / 17 typeset pp.
@@ -586,6 +586,6 @@ All eight values $\{-617, -1601, -2689, -3689, -4361, +5794, -4417, -3374\}$ are
 
 ---
 
-*End of Paper draft Schutt MultiD JNumberTheory v0.1 — Opus 4.7 (1M context, MAX EFFORT) — 2026-05-10*
+*End of Paper draft Schutt MultiD JNumberTheory v0.1 — LLM (1M context, MAX EFFORT) — 2026-05-10*
 
 Word count : ~8 700 words.

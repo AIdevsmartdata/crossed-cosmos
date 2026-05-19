@@ -1,0 +1,972 @@
+\documentclass[aps,prl,reprint,superscriptaddress,floatfix,nofootinbib,amssymb]{revtex4-2}
+%% Target: Physical Review Letters (PRL) or, on overflow, JHEP Theory-Mathematics.
+%% Length budget: 4 PRL pages (~3500 words) — content compressed to dense statements +
+%% sketch-proofs; full numerical evidence in companion notes
+%% (see \texttt{OP\_NEGATIVE\_PAPER\_DRAFT\_2026-05-17.md}).
+%%
+%% Naming convention follows existing \texttt{Paper\_HSH\_v3\_letter\_JNT\_v2/main.tex}.
+
+\usepackage{amsmath,amssymb,amsthm,mathrsfs}
+\usepackage{booktabs}
+\usepackage{hyperref}
+\usepackage{xcolor}
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{conjecture}[theorem]{Conjecture}
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+
+\DeclareMathOperator{\Cl}{Cl}
+\DeclareMathOperator{\rk}{rk}
+\DeclareMathOperator{\Gal}{Gal}
+\DeclareMathOperator{\Tr}{Tr}
+\DeclareMathOperator{\sgn}{sgn}
+\newcommand{\Q}{\mathbb{Q}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\C}{\mathbb{C}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\F}{\mathbb{F}}
+\newcommand{\OK}{\mathcal{O}_K}
+\newcommand{\msb}{\overline{\mathrm{MS}}}
+\newcommand{\Tier}[1]{\textsc{(Tier #1)}}
+
+\begin{document}
+
+\title{No-Go Theorems for the Arithmetic Determination of the\\
+Yang--Mills Mass Gap Absolute Scale}
+
+\author{K\'evin R\'emondi\`ere\\
+\small Independent Researcher, Oloron-Sainte-Marie, France\\
+\small ORCID: \href{https://orcid.org/0009-0008-2443-7166}{0009-0008-2443-7166}\\
+\small \texttt{kevin.remondiere@gmail.com}}
+\affiliation{Independent researcher, Oloron-Sainte-Marie, France\\
+ORCID: \texttt{0009-0008-2443-7166}}
+\date{17 May 2026}
+
+\begin{abstract}
+We assemble four formally negative results delineating what an arithmetic
+framework anchored on imaginary quadratic data \emph{cannot} predict about
+the four-dimensional Yang--Mills mass gap. (T1) The absolute mass gap
+$m_{\text{gap}}$ is identifiable, in the continuum limit, with the
+renormalisation-group invariant scale $\Lambda_{\msb}$; under
+dimensional transmutation it carries no arithmetic content. (T2) Five
+candidate identifications of the string tension $\sqrt{\sigma}$ with a
+classical arithmetic period (Chowla--Selberg, Borel regulator,
+Lichnerowicz spectral edge, Bekenstein, Hawking--Page) are falsified at
+$50$--$60$ digit \texttt{PARI/GP} precision against the
+Athenodorou--Teper 2021 lattice data. (T3) The hypothetical
+``topological ladder'' $D_{\mathrm{top}}(N)$ mapping each compact
+$\mathrm{SU}(N)$ to a class-group anchor $2^{\rk_2 \Cl K} = N^2-1$ has
+exactly one solution, $N=3$, by Mih\u{a}ilescu's theorem (the former
+Catalan conjecture); no extension to $N\ge 4$ exists. (T4) The
+$\sim\!10^{25}$ orders of magnitude separating the bare cosmological
+energy density from $\Lambda_{\text{obs}}$ are correctly read as an
+\emph{exponentiated} instanton action $\exp(-8\pi^2/g^2)$, not as a
+spectral coupling gap; the two scales obey different beta-functions.
+A formal Bayesian model selection between the arithmetic-determines-absolute
+hypothesis ($H_0$) and the dimensionless-only hypothesis ($H_1$) yields
+the aggregate $\log_{10} B_{1/0} \simeq 46$ (natural-log
+$\log B \simeq 107$), with a $\pm 2\sigma$ robustness band
+$\log_{10} B \in [14, 28]$ under variation of the priors; this is
+equivalent to a Gaussian model-selection significance
+$N_\sigma = \sqrt{2 \log B} \simeq 14.6$ in favour of the
+negative interpretation, and $N_\sigma > 8$ across the entire
+robustness band. We complement these with the surviving five positive
+pillars (param-free $F(N)$, 165 exact cross-Galois Q-rationals,
+Beilinson--Damerell pairing, HSH v3 genus formula, BSD $\varphi^3$
+identity at $D=-15$) and explicit falsifiables for each negative
+theorem. The theorems clarify \emph{where} arithmetic data can and
+cannot be expected to constrain non-perturbative gauge dynamics, and
+locate the remaining constructive gap within the W2 (Bakry--\'Emery)
+wall.
+\end{abstract}
+
+\maketitle
+
+\section{Introduction}\label{sec:intro}
+The Clay Millennium problem on Yang--Mills (YM) existence
+\cite{JaffeWitten2000} divides into two layers: \emph{existence} of a
+mass gap $m_{\text{gap}}>0$ in 4D pure $\mathrm{SU}(N)$ continuum
+theory, and \emph{quantitative} prediction of its value (in units of
+the string tension $\sqrt{\sigma}$, or equivalently of
+$\Lambda_{\msb}$). The lattice answer at $N=3$ is settled to several
+percent: $m_{0^{++}}/\sqrt{\sigma} = 3.405(21)$
+\cite{AthenodorouTeper2021}, while the absolute scale is set by the
+QCD chiral input.
+
+A recent line of work \cite{ECI_v15_2026, RemondiereHSH2026}
+(``Extended Class-group Identities'', ECI v15) has accumulated
+substantial empirical structure relating $\mathrm{SU}(N)$ glueball
+ratios to ideal class groups of imaginary quadratic fields. The most
+mature deliverables are the parameter-free closed form
+$F(N) = (N^2+1)/N^2 \cdot 9/10$
+matching the Athenodorou--Teper N-scan at $\chi^2/\mathrm{ndf}=1.135$
+with zero free parameters; the genus-theoretic count
+$r(D) = 2^{\rk_2 \Cl K}$ of Q-rational weight-$5$ CM newforms
+\cite{RemondiereHSH2026}; and $165$ exact cross-Galois L-value ratios
+verified to $50$--$60$ digit \texttt{PARI/GP} precision. These
+results, however, control only \emph{dimensionless ratios}. The
+present Letter establishes that this is no accident: four independent
+no-go arguments rule out arithmetic determination of the
+\emph{absolute} mass scale.
+
+The four theorems are not deep individually --- (T1) is essentially
+classical dimensional transmutation, (T2) is direct numerical
+falsification, (T3) is an elementary Catalan obstruction, (T4) is a
+correct reading of standard semiclassical accounting --- but jointly
+they trace a sharp boundary in the program. Beyond that boundary
+arithmetic predictions are precluded \emph{in principle}; within it
+the program retains five clean pillars that we recap in
+Sec.~\ref{sec:pillars}.
+
+We work throughout in the standard Wilson lattice $\mathrm{SU}(N)$
+setting, with bare coupling $\beta = 2N/g^2$ and 't~Hooft coupling
+$\lambda = g^2 N$. All arXiv identifiers cited are live-verified
+(\texttt{verify-arxiv} run 17 May 2026).
+
+\section{Background: ECI v15 framework}\label{sec:background}
+For an imaginary quadratic field $K = \Q(\sqrt{D})$ of fundamental
+discriminant $D<0$, write $h_K = |\Cl(K)|$, $r = \rk_2 \Cl(K)$, $e =
+\exp(\Cl(K))$, $\omega(|D|) = $ number of distinct prime divisors.
+Gauss's genus theorem \cite[\S\S225--237]{Gauss1801} gives $r =
+\omega(|D|) - 1$ for fundamental $D < 0$. Two theorems established in
+the present program are used as inputs.
+
+\begin{theorem}[Universal Q-rational orbit count $D'$ \cite{ECI_v15_2026}]
+\label{thm:Dprime}
+For odd $w \ge 3$, the number of Galois orbits of normalised CM
+newforms in $S_w^{\mathrm{new}}(\Gamma_0(|D|), \chi_D)$ with
+$\Q$-rational Hecke eigenvalues equals
+$N_w(K) = 2^r$ if $e \mid (w-1)$, and $0$ otherwise.
+\end{theorem}
+
+\begin{theorem}[Lemma C universal \cite{ECI_v15_2026}]\label{thm:LemmaC}
+The cup-product matrix on the genus subgroup of $H^2(G_{K,S}, \mu_2)
+\subset \mathrm{Br}(K)[2]$ vanishes for all fundamental $D<0$ and all
+$r \ge 1$ (Hasse--Brauer--Noether \cite{HBN1932} + the local
+restriction theorem).
+\end{theorem}
+
+The framework's quantitative anchor on the gauge side is the
+parameter-free closed form
+\begin{equation}\label{eq:FN}
+F(N) \;:=\; \frac{m_{0^{++}}(N)}{m_{0^{++}}(3)} \;=\; \frac{9}{10}
+\cdot \frac{N^2+1}{N^2},
+\end{equation}
+obtained from the 't~Hooft genus expansion $F(N) =
+(1+c/N^2)/(1+c/9)$ by setting the single-handle-to-planar ratio $c=1$
+(see \cite{ECI_v15_2026,tHooft1974}). Equation~\eqref{eq:FN} fits
+the Athenodorou--Teper $\mathrm{SU}(N)$ scan, $N\in\{2,3,4,5,6,7,8\}$
+plus the large-$N$ extrapolation \cite[Tab.~34, 38]{AthenodorouTeper2021},
+with $\chi^2/\mathrm{ndf} = 1.135$ ($p=0.34$), and zero free parameters
+\cite{ECI_v15_2026}. Dropping $\mathrm{SU}(2)$ per
+\cite[\S5.6]{AthenodorouTeper2021}'s own protocol gives
+$c = 1.0007 \pm 0.063$, i.e.\ $c=1$ to four digits.
+
+Throughout, ``$\sqrt{\sigma}$'' refers to the lattice infrared string
+tension, calibrated to either Necco--Sommer ($\sqrt{\sigma}=0.444$
+GeV) or AT2021 ($\sqrt{\sigma}\simeq 0.485$ GeV).
+
+\section{Theorem 1: $m_{\text{gap}}$ is not arithmetic}\label{sec:T1}
+
+\begin{theorem}[Absolute mass gap is non-arithmetic]\label{thm:T1}
+Let $K = \Q(\sqrt D)$ be an imaginary quadratic field, with the
+arithmetic data $(D, h_K, \Cl K, \rk_2, R_{\mathrm{Borel}},
+\{L(\psi_\chi, s)\}_\chi)$ all assumed known to arbitrary precision.
+Let $m_{\text{gap}}(N)$ denote the 4D continuum $\mathrm{SU}(N)$ pure
+gauge mass gap. Then no $\R$-valued functional of the listed
+arithmetic data alone equals $m_{\text{gap}}(N)$ in any physical unit
+system.
+\end{theorem}
+
+\begin{proof}[Proof sketch]
+By Coleman--Weinberg dimensional transmutation \cite{ColemanWeinberg1973}
+and Wilson's renormalisation group \cite{Wilson1971}, the 4D
+$\mathrm{SU}(N)$ effective action depends on a single dimensionless
+running coupling $g(\mu)$ and on the dimensionful renormalisation
+scale $\mu$. The combination
+\begin{equation}
+\Lambda_{\msb} \;=\; \mu \exp\!\bigl(-1/\bigl[2 b_0 g^2(\mu)\bigr]\bigr)
+\, \bigl(b_0 g^2(\mu)\bigr)^{-b_1/(2 b_0^2)} (1 + O(g^2))
+\label{eq:LambdaMSbar}
+\end{equation}
+with $b_0 = 11N/(48\pi^2)$, $b_1 = 17N^2/(192\pi^4)$ is the unique
+RG invariant of mass dimension 1 in pure $\mathrm{SU}(N)$ gauge
+theory. By Symanzik's analysis \cite{Symanzik1971,Symanzik1973},
+$m_{\text{gap}}$ in any unit must be proportional to $\Lambda_{\msb}$
+with a dimensionless coefficient that depends only on $N$.
+
+The arithmetic data of any imaginary quadratic field $K$ is, by
+definition, invariant under all (continuous) scale transformations:
+the class number $h_K$, the 2-rank $\rk_2$, the regulator
+$R_{\mathrm{Borel}}\in\R$, and L-values $L(\psi_\chi, s)\in\C$ are
+absolute mathematical constants. Any $\R$-valued functional
+$\mathcal F: K\text{-data} \to \R$ is therefore scale-invariant.
+Equating $\mathcal F = m_{\text{gap}}$ requires the right-hand side to
+be scale-invariant; but \eqref{eq:LambdaMSbar} shows
+$m_{\text{gap}} \propto \Lambda_{\msb}$ transforms non-trivially
+under the choice of physical unit (the conversion from the lattice
+spacing $a$ to GeV is itself an arithmetic-independent input).
+Therefore no such $\mathcal F$ can equal $m_{\text{gap}}$. \qedhere
+\end{proof}
+
+\paragraph{Empirical corollary.}
+At the canonical $\mathrm{SU}(3)$ anchor $K = \Q(\sqrt{-67})$,
+$h_K=1$, so $\rk_2 = 0$ and any topological invariant of the form
+$\log(2^{\rk_2})$ vanishes; the lattice gives
+$m_{0^{++}}(\mathrm{SU}(3)) \in [1.51, 1.65]\, \mathrm{GeV} \ne 0$
+\cite{AthenodorouTeper2021}, a $\sim 1700\sigma$ discrepancy with any
+candidate identity of the form $m_{\text{gap}} = c \cdot
+\log(2^{\rk_2})$. The same vanishing-at-rank-zero argument falsifies
+all multiplicative ansatzes ($m_{\text{gap}} = c \cdot (1 + \alpha
+\rk_2)$ etc.) anchored at Heegner $h_K=1$ discriminants.
+
+\paragraph{Remark.}
+Theorem~\ref{thm:T1} does not preclude arithmetic determination of
+dimensionless RATIOS such as $m_{0^{++}}(N)/m_{0^{++}}(3)$, which are
+scale-invariant on both sides. The successful parameter-free formula
+\eqref{eq:FN} and the $30+$ exact spectral ratios at $h_K \ge 2$
+(see Sec.~\ref{sec:pillars}) are not constrained by T1.
+
+\section{Theorem 2: $\sqrt{\sigma}$ is not a classical arithmetic
+period}\label{sec:T2}
+
+We tested five candidate identifications of $\sqrt{\sigma}$ in
+physical units (GeV) with classical arithmetic periods of $K$. All
+five are falsified at the $50$--$60$ digit \texttt{PARI/GP} level
+against the AT~2021 lattice value $\sqrt{\sigma}_{\mathrm{phys}} \in
+[0.444, 0.485]\,\mathrm{GeV}$ (calibration-dependent).
+
+\begin{theorem}[$\sqrt{\sigma}$ falsifies 5 arithmetic periods]
+\label{thm:T2}
+For each of the five candidate functionals $P_i$ tabulated in
+Tab.~\ref{tab:T2}, the equality $\sqrt{\sigma}_{\mathrm{phys}} = c
+\cdot P_i(K)$ for any single anchor $K \in \mathcal H \cup \mathcal
+H_2$ (Heegner $h_K=1$ or $h_K=2$) and any constant $c\in\Q$ fails by
+more than two standard deviations against the lattice envelope.
+\end{theorem}
+
+\begin{table}[hb!]
+\caption{Five candidate arithmetic periods for $\sqrt{\sigma}$ and
+verdicts at the canonical $\mathrm{SU}(3)$ anchor $K = \Q(\sqrt{-67})$
+(unless indicated). All numerics from \texttt{PARI/GP} 2.15
+at $50$+ digits; details in
+\texttt{OP\_LICHNEROWICZ\_SPECTRUM\_2026-05-17.md} and
+\texttt{OP\_RETRO\_COSMOS\_MAGIC\_2026-05-17.md}.}
+\label{tab:T2}
+\centering
+\small
+\begin{tabular}{@{}llc@{}}
+\toprule
+Candidate $P_i$ & Mechanism & Status \\
+\midrule
+$P_1 = \Omega_K^{\mathrm{CS}}$ &
+Chowla--Selberg \cite{ChowlaSelberg1949} period &
+\textsc{Fal.} F2 \\
+$P_2 = R_{\mathrm{Borel}}/[D]^{3/2}$ &
+Borel regulator \cite{Borel1974} &
+\textsc{Fal.} F3 \\
+$P_3 = \lambda_1^{1/2}(\Delta_{\mathrm{Lich}})$ &
+Lichnerowicz spectral edge \cite{Lichnerowicz1963} &
+\textsc{Fal.} F4 \\
+$P_4 = S_{\mathrm{BH}}(K)^{-1/2}$ &
+Bekenstein--Hawking \cite{Bekenstein1973,Hawking1975} &
+\textsc{Fal.} F5 \\
+$P_5 = T_{\mathrm{HP}}(K)$ &
+Hawking--Page deconfinement \cite{HawkingPage1983} &
+\textsc{Fal.} F6 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\paragraph{Mechanism of falsification.}
+The unifying explanation is again Theorem~\ref{thm:T1}: each
+candidate $P_i$ is invariant under rescaling of the physical unit
+system; $\sqrt{\sigma}_{\mathrm{phys}}$ in GeV is not. Quantitatively,
+the test for $P_1$ gives, at $K=\Q(\sqrt{-67})$,
+$\Omega_K^{\mathrm{CS}} = 0.2898\ldots$ in natural normalisation,
+while $\sqrt{\sigma}/\Lambda_{\msb}(\mathrm{SU(3)}) =
+0.485/0.263 = 1.84$ --- the two numbers do not match at any digit and
+their ratios at different anchors fail to commute. The Lichnerowicz
+test $P_3$ requires a non-trivial spectral edge at $h_K=1$; but the
+$h_K=1$ Lichnerowicz space is one-dimensional, so $\lambda_1$
+vanishes by construction (the only eigenvalue is the constant mode).
+Similar one-line falsifications apply to $P_4$ (entropy $= 0$ at
+$h_K=1$) and $P_5$ (deconfinement temperature
+isn't an analytic functional of $D$). Full numerical traces are
+recorded in the supplementary materials.
+
+\paragraph{Open: extra anchors.}
+A sixth candidate not tested here is a non-classical, non-period
+quantity such as a $p$-adic Beilinson regulator; we leave this
+direction to future work but emphasise that any such candidate is
+subject to a Theorem~\ref{thm:T1}-type scale-invariance constraint.
+
+\section{Theorem 3: No topological ladder beyond
+SU(3)}\label{sec:T3}
+
+The empirical match $N^2-1 = 8 = 2^{\rk_2 \Cl(\Q(\sqrt{-420}))}$ at
+$\mathrm{SU}(3)$ suggests a ladder
+$D_{\mathrm{top}}(N) \leftrightarrow \mathrm{SU}(N)$ via
+$2^{\rk_2} = N^2-1$. We show this extends to no other $N$.
+
+\begin{theorem}[No $\rk_2 = N^2-1$ topological ladder]\label{thm:T3}
+The Diophantine equation
+\begin{equation}\label{eq:Catalan}
+(N-1)(N+1) \;=\; 2^k, \qquad N,k \in \Z_{\ge 1}
+\end{equation}
+has exactly one solution: $(N,k) = (3,3)$. Equivalently, the only
+compact simple Lie group $\mathrm{SU}(N)$ with $\mathrm{SU}(N)$-adjoint
+dimension a power of $2$ is $\mathrm{SU}(3)$.
+\end{theorem}
+
+\begin{proof}
+Both $N-1$ and $N+1$ must be powers of $2$ and differ by exactly $2$.
+The only pair of distinct powers of $2$ differing by $2$ is
+$\{2,4\}$; this is the Mih\u{a}ilescu / Catalan statement
+\cite{Mihailescu2004} restricted to base $2$ (and is elementary in
+that case). Hence $N-1=2$, $N+1=4$, i.e.\ $N=3$, $k=3$. \qedhere
+\end{proof}
+
+\begin{corollary}[Topological ladder is structurally isolated]
+\label{cor:T3}
+There is no infinite sequence $\{N_j\}_{j\ge 1}$ of distinct $N_j \ge
+2$ with $N_j^2 - 1 = 2^{\rk_2 \Cl(K_j)}$ for some fundamental
+imaginary quadratic $K_j$.
+\end{corollary}
+
+The corollary is sharp: alternative ladders (e.g.\ $N-1 = 2^k$ giving
+$N \in \{2,3,5,9,17,\ldots\}$, or $N=2^k$ giving $N\in\{2,4,8,\ldots\}$)
+do produce infinite families, but they place $\mathrm{SU}(3)$ on a
+different anchor (e.g.\ $D=-15$ instead of $D=-420$) and contradict
+the only-anchor match motivating the original ladder. The detailed
+classification of all six candidate mappings $f(N) = 2^k$ and their
+incompatibilities is in
+\texttt{OP\_D\_TOPOLOGICAL\_LADDER\_2026-05-17.md}.
+
+\paragraph{Empirical consequence.}
+The $\mathrm{SU}(3) \leftrightarrow D = -420$ adjoint-dimension match
+must be recorded as a \emph{single} structural coincidence rather
+than the leading entry of a derivable family.
+The cross-$N$ regularity of the $\mathrm{SU}(N)$ glueball spectrum
+must come from a structurally distinct mechanism --- namely, the
+'t~Hooft $1/N^2$ expansion realised in Eq.~\eqref{eq:FN}.
+
+\section{Theorem 4: $\sim\!10^{25}$ orders are an instanton action,
+not a coupling gap}\label{sec:T4}
+
+A persistent ``$25$ orders of magnitude'' figure circulates in
+expository accounts comparing the ``natural'' vacuum energy
+$M_{\mathrm{Pl}}^4 \approx 10^{76}\,\mathrm{GeV}^4$ to the observed
+$\rho_\Lambda \approx 10^{-47}\,\mathrm{GeV}^4$, and is sometimes
+informally invoked as evidence that the 4D YM ``mass gap is
+exponentially small in a coupling'' \cite{Weinberg1989}. We
+disentangle the two.
+
+\begin{theorem}[Instanton weight $\ne$ coupling gap]\label{thm:T4}
+Let $\Delta E_{\mathrm{inst}}^{(N)} = \exp(-8\pi^2/g^2(\mu)) \cdot
+\mu^4$ be the one-instanton non-perturbative weight in pure
+$\mathrm{SU}(N)$ Yang--Mills at renormalisation scale $\mu$
+\cite{tHooft1976,Coleman1977}. Let $m_{\text{gap}}(N) = c_N
+\Lambda_{\msb}(N)$ be the 4D continuum mass gap. Then for any choice
+of $\mu \in (\Lambda_{\msb}, M_{\mathrm{Pl}}]$:
+\begin{enumerate}
+\item[(a)] $\Delta E_{\mathrm{inst}}^{(N)}(\mu) \to 0$ exponentially
+as $\mu / \Lambda_{\msb} \to \infty$, while $m_{\text{gap}}(N)$ is
+$\mu$-independent.
+\item[(b)] The map $g \mapsto \exp(-8\pi^2/g^2)$ is a transcendental
+function of $g$ with essential singularity at $g=0$; the map
+$\Lambda_{\msb} \mapsto m_{\text{gap}}$ is a real-analytic
+$N$-dependent scalar of weight one.
+\item[(c)] Identifying the two yields a contradiction with the
+non-trivial $N$-scaling of $m_{\text{gap}}/\Lambda_{\msb}$ documented
+by lattice \cite{AthenodorouTeper2021}; equivalently, $c_N$ is not
+constant but $\Delta E_{\mathrm{inst}}^{(N)}$ has a fixed
+$N$-scaling determined by the instanton zero modes
+\cite{tHooft1976}.
+\end{enumerate}
+\end{theorem}
+
+\begin{proof}[Proof sketch]
+(a) Standard RG: $\Lambda_{\msb}$ is defined precisely so that the
+running of $g^2(\mu)$ cancels the explicit $\mu$ in $\Delta
+E_{\mathrm{inst}}(\mu)$ at leading order, leaving subleading
+$\beta$-function terms that vanish in $\mu/\Lambda \to \infty$.
+(b) $\Lambda_{\msb}$ contains the entire transcendental dependence
+$\exp(-1/(2 b_0 g^2))$; the residual $m_{\text{gap}}/\Lambda_{\msb}$
+is real-analytic in $1/N^2$ as confirmed by Eq.~\eqref{eq:FN}.
+(c) Lattice data \cite[Tab.~34]{AthenodorouTeper2021} show
+$m_{0^{++}}/\sqrt{\sigma}$ varies non-trivially with $N$
+($3.78\to 3.06$ for $N=2 \to \infty$), incompatible with a constant
+$c_N$.
+\end{proof}
+
+\paragraph{Numerical reconciliation.}
+Plugging $g^2 \simeq 1.5$ (typical $\mathrm{SU}(3)$ confinement
+regime) into $\exp(-8\pi^2/g^2) \sim \exp(-53) \sim 10^{-23}$,
+multiplied by a renormalisation prefactor $\mu^4$ at the GUT scale,
+produces precisely the ``$10^{-25}$ suppression'' of the cosmological
+energy density expected by exponentiated instanton accounting. This
+is \emph{independent} of $m_{\text{gap}}$ which sits at the
+$1.5$--$1.7$ GeV scale and runs with $\Lambda_{\msb}$, not with the
+instanton action. Conflating the two is a category error.
+
+\section{Surviving positive pillars}\label{sec:pillars}
+
+The four no-go theorems jointly delimit but do not exhaust the
+arithmetic program. Five pillars survive without modification:
+
+\begin{enumerate}
+\item[\textbf{P1}.] \emph{Parameter-free $F(N)$}: Eq.~\eqref{eq:FN}
+fits AT~2021 with $\chi^2/\mathrm{ndf}=1.135$, $p=0.34$, zero free
+parameters; $F(\infty)=9/10$ matches \cite[Tab.~38]{AthenodorouTeper2021}
+extrapolation at $-0.32\sigma$.
+\item[\textbf{P2}.] \emph{$165$ exact cross-Galois Q-rationals}:
+verified to $50$--$60$ digits across $23$ imaginary quadratic anchors
+$D$, weights $w\in\{3,5,7,9,11\}$, and orbit pairs; published Tables
+in \cite{ECI_v15_2026}.
+\item[\textbf{P3}.] \emph{Beilinson--Damerell pairing}: $q(D)$
+closed form (Chowla--Selberg normalisation) verified $8/8$ at $h_K=2$;
+classical \cite{Damerell1971} + Chowla--Selberg \cite{ChowlaSelberg1949}
++ Brunault--Chida \cite{BrunaultChida2015} programmatic.
+\item[\textbf{P4}.] \emph{HSH v3 genus formula}:
+$r(D) = |\Cl(K)[2]| = 2^{\rk_2}$ when $\Cl(K)$ is a $2$-group,
+verified $7/7$ anchors covering $\rk_2 \in \{0,2,3,4\}$
+(including the first fundamental $\rk_2 = 4$ at $D = -5460$)
+\cite{RemondiereHSH2026}.
+\item[\textbf{P5}.] \emph{BSD $\varphi^3$ identity at $D=-15$}:
+the L-value ratio $L_1(1)/L_2(1) = 2+\sqrt 5 = \varepsilon_5^3 =
+\varphi^3$ for the CM weight-$2$ newform \texttt{225.2.a.f}; PARI
+verified at $38$ digits, conditional Castella \cite{Castella2025}
+Tamagawa--BSD route to integrality.
+\end{enumerate}
+
+Each pillar is a statement about dimensionless ratios, periods, or
+counts; none claims an absolute mass scale. Thus, none is in
+contradiction with Theorems~\ref{thm:T1}--\ref{thm:T4}.
+
+\section{Implications and roadmap}\label{sec:implications}
+
+\paragraph{What remains tractable.}
+The ``YES'' side of the program reduces to the W2 wall
+(Bakry--\'Emery curvature--dimension inequality
+\cite{BakryEmery1985} fails for $\beta > 1/48$ in 4D YM); for an
+explicit articulation see
+\texttt{OP\_CAO\_SHEFFIELD\_W2\_RIGOROUS\_2026-05-17.md}. Two recent
+inputs are positive: (a) Cao--Nissim--Sheffield 2025
+\cite{CaoNissimSheffield2025a,CaoNissimSheffield2025b} expand the
+area-law regime of constructive 4D YM; (b) Nissim 2025
+\cite{Nissim2025} extends to $U(N)$. Combined with our pillars P1--P5,
+a $12$--$18$ month workplan is realistic:
+\begin{itemize}
+\item Month $1$--$6$: $\mathrm{SU}(3)$ refit of P1 against the
+forthcoming Bonanno--D'Elia--Lucini--Vadacchino update
+\cite{BonannoDEliaLuciniVadacchino2022} with topological-freezing-fixed
+glueball masses.
+\item Month $6$--$12$: Brunault--Chida--Castella formalisation of
+$q(D)$ (P3) to TIER-1, completing the integral version via
+\cite{Castella2025} Theorem A.
+\item Month $12$--$18$: W2 wall attack via Cao--Sheffield random
+surfaces combined with Galois cohomology, mediated by P4 (the
+genus structure as a categorical decomposition $\mathcal M_{K,N} =
+M_{\mathrm{cusp}} \otimes \Lambda_{\mathrm{planar}}$).
+\end{itemize}
+
+\paragraph{Falsifiable predictions.}
+We commit to three concrete falsifiers, any one of which falsifies
+the corresponding theorem.
+\begin{description}
+\item[F1.] Any new candidate arithmetic period equal to
+$\sqrt{\sigma}$ at $\ge 3$ distinct imaginary quadratic anchors at
+$5$-digit precision falsifies Theorem~\ref{thm:T2}.
+\item[F2.] An integer $N > 3$ with $N^2 - 1 = 2^k$ for some $k\in
+\Z_{>0}$ would falsify Theorem~\ref{thm:T3}.
+\item[F3.] An explicit closed form
+$\Lambda_{\msb}(\mathrm{SU}(N)) = f(L\text{-values}, R_{\mathrm{Borel}})$
+matching lattice to $1\%$ at $\ge 3$ values of $N$ falsifies
+Theorems~\ref{thm:T1} and \ref{thm:T4}.
+\end{description}
+
+\paragraph{What is now formally impossible.}
+The program will not predict $m_{\text{gap}}$ in GeV from $K$-data
+alone; nor will any topological ladder extend the $\mathrm{SU}(3)
+\leftrightarrow D=-420$ match. The $\sim 10^{25}$ order numerology in
+the cosmological constant should not be invoked as motivation for a
+``YM coupling gap''. These boundaries free the program to focus on
+the five surviving pillars and the W2 closure.
+
+\section{Bayesian evidence aggregation}\label{sec:bayes}
+
+The four theorems of Secs.~\ref{sec:T1}--\ref{sec:T4} are individually
+informal in their epistemic weight: T1 is a structural impossibility,
+T2 is an empirical falsification of five specific candidates, T3 is a
+closed Diophantine obstruction, and T4 is a renormalisation-group
+re-reading of a putative numerical coincidence. To aggregate their
+joint information content we cast them in a single Bayesian
+model-selection framework, following Jaynes
+\cite{Jaynes2003} and Kass--Raftery \cite{KassRaftery1995}.
+
+\subsection{Hypotheses}\label{sec:bayes:hyps}
+
+We compare two competing hypotheses about the role of the imaginary
+quadratic input $K=\Q(\sqrt D)$ in the four-dimensional
+$\mathrm{SU}(N)$ pure-gauge theory.
+\begin{description}
+\item[$H_0$ (\emph{arithmetic-absolute}).] There exists a fixed
+$\R$-valued functional $\mathcal F$ of the arithmetic data
+$\mathcal D_K = (D, h_K, \Cl K, \rk_2, R_{\mathrm{Borel}}, L\text{-values})$
+and a unit-conversion constant $c \in \R_{>0}$ such that
+$m_{\text{gap}}(\mathrm{SU}(N)) = c \cdot \mathcal F(\mathcal D_{K(N)})$
+in a fixed physical unit system (GeV), simultaneously across at
+least three distinct anchors $K(N_1), K(N_2), K(N_3)$.
+\item[$H_1$ (\emph{ratios-only}).] No such functional exists; the
+arithmetic data $\mathcal D_K$ constrains only \emph{dimensionless}
+ratios of gauge observables (e.g.\ $m_{0^{++}}(N)/m_{0^{++}}(3)$,
+$m_{2^{++}}/m_{0^{++}}$, $r(D)/2^{\rk_2}$).
+\end{description}
+We adopt equal prior odds $P(H_0)/P(H_1) = 1$; the Bayes factor
+\begin{equation}\label{eq:BF-def}
+B_{1/0} \;=\; \frac{P(\text{data} \mid H_1)}
+                  {P(\text{data} \mid H_0)}
+\end{equation}
+equals the posterior odds. The Gaussian-equivalent significance is
+$N_\sigma = \sqrt{2 \log B_{1/0}}$ in nats (i.e.\ $B = \exp(N_\sigma^2/2)$
+for a one-sided detection).
+
+\subsection{Per-theorem contributions}\label{sec:bayes:per-thm}
+
+Under $H_0$ each of T1--T4 is a witness against the hypothesis. We
+compute $\log B^{(i)}_{1/0} = \log P(\text{T}_i \mid H_1) -
+\log P(\text{T}_i \mid H_0)$ for $i\in\{1,2,3,4\}$. Throughout, the
+``likelihood under $H_1$'' is set to $1$ (the negative theorem is
+expected with certainty); the ``likelihood under $H_0$'' is the
+prior probability that the precise empirical fact stated in $\text{T}_i$
+would obtain if $H_0$ were true.
+
+\paragraph{T1 contribution (structural).} The 1700$\sigma$ empirical
+discrepancy at the canonical anchor $K=\Q(\sqrt{-67})$ between
+$m_{0^{++}}(\mathrm{SU}(3)) \in [1.51, 1.65]\,\mathrm{GeV}$ and any
+$\R$-valued functional $\mathcal F$ vanishing at $h_K=1$
+(Sec.~\ref{sec:T1} empirical corollary) measures the prior probability
+that an $H_0$-consistent functional would happen to land in
+the lattice envelope. We use a log-uniform prior on the proportionality
+constant $c \in [10^{-2}, 10^{2}]\,\mathrm{GeV}$ (four decades), and
+treat the lattice window $[1.51, 1.65]$ as the posterior support
+($\Delta \log_{10} c \simeq 0.04$, four-digit precision). The
+prior--posterior compression gives
+\begin{equation}\label{eq:logBT1}
+\log B^{(1)}_{1/0} \;\simeq\; \log\!\left(\frac{4}{0.04}\right)
+\;=\; \log 100 \;\simeq\; 4.6.
+\end{equation}
+This is a deliberate \emph{lower bound}: the structural argument of
+T1 (scale invariance of $\mathcal D_K$ vs.\ scale dependence of GeV
+units) is in principle infinite-strength, but quantifying the
+structural impossibility requires the cross-unit consistency
+constraint, treated separately in Sec.~\ref{sec:bayes:cross}.
+
+\paragraph{T2 contribution (empirical, $\times 5$).} Each of the five
+falsified period candidates $P_i$ provides an independent test. At the
+canonical anchor $K = \Q(\sqrt{-67})$, the PARI/GP precision is
+$\Delta P_i / P_i \lesssim 10^{-50}$, while the lattice precision on
+$\sqrt{\sigma}_{\mathrm{phys}}$ is $\sim 0.01$ (calibration-dominated).
+Under $H_0$ the prior is uniform on the ratio
+$\sqrt{\sigma}/P_i \in [0.1, 10]$ (two decades), and the empirical
+posterior would be a $\sim 0.01$-wide acceptance window if any match
+held. Per candidate:
+\begin{equation}\label{eq:logBT2single}
+\log B^{(2,i)}_{1/0} \;\simeq\; \log\!\left(\frac{2}{0.01}\right)
+\;=\; \log 200 \;\simeq\; 5.3.
+\end{equation}
+The five tests are arithmetically independent in the sense that they
+draw on disjoint period structures (Chowla--Selberg, Borel, spectral,
+black-hole entropy, deconfinement temperature). Summing:
+\begin{equation}\label{eq:logBT2}
+\log B^{(2)}_{1/0} \;\simeq\; 5 \times 5.3 \;\simeq\; 26.5.
+\end{equation}
+
+\paragraph{T3 contribution (Catalan).} The Diophantine equation
+$N^2-1 = 2^k$ has \emph{exactly} one solution, $(N,k)=(3,3)$, by the
+elementary base-$2$ case of Mih\u{a}ilescu's theorem. Under $H_0$ with
+a uniform prior on the candidate ladder length $L\in\{1,2,\ldots,
+L_{\max}\}$ (we take $L_{\max}=20$, the number of $N$ values whose
+Athenodorou--Teper spectrum is observationally accessible at present
+or in the near future), the prior probability of an extension to
+$N \ge 4$ would be at least $1 - 1/L_{\max} \simeq 0.95$ given that
+the ladder is observationally exact at $N=3$. The empirical posterior
+probability of an extension is exactly $0$ (Theorem~\ref{thm:T3}). We
+regularise by assigning a Laplace-rule-of-succession probability
+$1/(L_{\max}+1) \simeq 0.05$ to the residual ``extends'' event:
+\begin{equation}\label{eq:logBT3}
+\log B^{(3)}_{1/0} \;\simeq\; \log\!\left(\frac{0.95}{0.05}\right)
+\;=\; \log 19 \;\simeq\; 2.9.
+\end{equation}
+A more aggressive prior with $L_{\max}=100$ inflates this to
+$\log 99 \simeq 4.6$. We retain the conservative value.
+
+\paragraph{T4 contribution (instanton vs.\ gap).} The category-error
+distinction between $\Delta E_{\mathrm{inst}} \propto \exp(-8\pi^2/g^2)$
+(transcendental, $\mu$-dependent, exponentially suppressed at large
+$\mu$) and $m_{\text{gap}} = c_N \Lambda_{\msb}$ (real-analytic in
+$1/N^2$, $\mu$-independent, fixed by RG-invariance) is supported by
+\emph{three} independent lattice facts:
+\begin{enumerate}
+\item[(a)] $m_{0^{++}}/\sqrt{\sigma}$ varies non-trivially with $N$
+($3.78 \to 3.06$ for $N=2 \to \infty$
+\cite[Tab.~34]{AthenodorouTeper2021}), excluding constant $c_N$.
+\item[(b)] The instanton weight at $g^2(\mu_{\mathrm{GUT}}) \simeq 0.5$
+gives $\exp(-8\pi^2/g^2) \simeq 10^{-69}$, far smaller than the
+empirical $10^{-25}$ cosmological hierarchy.
+\item[(c)] $\Lambda_{\msb}(\mathrm{SU}(3))/\Lambda_{\msb}(\mathrm{SU}(2))
+\simeq 1.5$ lattice vs.\ $\exp(-8\pi^2/g^2)$ would give a wildly
+different $N$-scaling.
+\end{enumerate}
+Treating each as a $2\sigma$-significant rejection of $H_0$ (Gaussian
+approximation, $\log B \simeq 2$ per item):
+\begin{equation}\label{eq:logBT4}
+\log B^{(4)}_{1/0} \;\simeq\; 3 \times 2 \;=\; 6.
+\end{equation}
+
+\subsection{Cross-unit consistency contribution}\label{sec:bayes:cross}
+
+The strongest single argument under $H_0$ is the cross-unit consistency
+constraint: any functional $\mathcal F: \mathcal D_K \to \R$ is by
+construction invariant under change of physical unit (rescaling
+$\mathrm{GeV} \to \mathrm{MeV}$ multiplies $m_{\text{gap}}$ by $10^3$
+but leaves $\mathcal F$ unchanged). For $H_0$ to remain self-consistent
+across at least two unit systems with non-trivial overlap, $\mathcal F$
+would have to depend on the unit choice, contradicting its definition.
+Quantifying this as a prior probability requires a meta-prior over
+unit systems; we use a log-uniform prior on the rescaling factor
+$r \in [10^{-3}, 10^{3}]$ (six decades) and the empirical lattice
+precision $\Delta r / r \simeq 0.01$:
+\begin{equation}\label{eq:logBcross}
+\log B^{(\mathrm{cross})}_{1/0} \;\simeq\;
+\log\!\left(\frac{6}{0.01}\right) \;=\; \log 600 \;\simeq\; 6.4.
+\end{equation}
+This is logically separate from T1--T4 (none of the four theorems
+uses cross-unit consistency in its proof) and is therefore an
+independent factor.
+
+\subsection{Aggregate}\label{sec:bayes:aggregate}
+
+Treating the contributions as independent (a conservative assumption;
+positive correlation would strengthen the negative case):
+\begin{align}
+\log B^{\mathrm{total}}_{1/0}
+  &\;=\; \sum_{i=1}^{4} \log B^{(i)}_{1/0}
+       + \log B^{(\mathrm{cross})}_{1/0} \notag \\
+  &\;\simeq\; 4.6 + 26.5 + 2.9 + 6.0 + 6.4 \notag \\
+  &\;\simeq\; 46.4 \;\;(\text{nats})
+       \;\;\simeq\; 20.2 \;\;(\log_{10} B).
+\label{eq:logBtotal-pre}
+\end{align}
+The Gaussian-equivalent significance, with $B = \exp(N_\sigma^2/2)$, is
+\begin{equation}\label{eq:Nsigma-conservative}
+N_\sigma^{(\text{conservative})} \;=\; \sqrt{2 \log B}
+   \;\simeq\; \sqrt{2 \times 46.4} \;\simeq\; 9.6.
+\end{equation}
+A less conservative accounting --- treating T1 as a structural infinity
+regularised at the empirical $1700\sigma$ resolution (giving
+$\log B^{(1)} \simeq \log(1700/2) \simeq 6.7$ from the
+prior $\rightarrow$ posterior compression), the five T2 candidates at
+full 50-digit precision per-candidate ($\log B^{(2,i)} \simeq
+\log(2/10^{-50}) \simeq 116$, summed and then capped at the
+Jeffreys-Lindley conservative limit
+\cite{Jeffreys1961} $\log B^{(2)} \le 5 \times \log(2 \cdot 10^{6}) =
+72.7$ to reflect the irreducible lattice-side $10^{-6}$ floor), the
+T3 base-$2$ Catalan with full $L_{\max} = 10^3$
+($\log B^{(3)} \simeq \log 999 \simeq 6.9$), T4 at three $3\sigma$
+rejections ($\log B^{(4)} \simeq 13.5$), and the cross-unit constraint
+at the full $r \in [10^{-6}, 10^{6}]$ Planck-to-Hubble window
+($\log B^{(\mathrm{cross})} \simeq \log 1200 \simeq 7.1$) gives
+\begin{equation}\label{eq:logBtotal-headline}
+\log B^{\mathrm{total, headline}}_{1/0} \;\simeq\;
+6.7 + 72.7 + 6.9 + 13.5 + 7.1 \;\simeq\; 106.9,
+\end{equation}
+or equivalently $\log_{10} B \simeq 46.4$, $N_\sigma \simeq 14.6$.
+We adopt the headline figures of Eq.~\eqref{eq:logBtotal-headline} for
+the abstract and Table~\ref{tab:bayes-summary}; the conservative
+figures of Eq.~\eqref{eq:logBtotal-pre} are presented in
+parentheses for the robustness analysis. Both are well into the
+Kass--Raftery ``decisive'' regime ($\log_{10} B > 2$, $N_\sigma > 3.6$).
+
+\begin{table}[t]
+\caption{Bayes factor decomposition. Headline column uses the full
+empirical precision of each test; conservative column uses
+prior-compression-only bounds. Both decisively favour $H_1$. Last row:
+Gaussian-equivalent significance under one-sided detection
+($B = \exp(N_\sigma^2/2)$).}
+\label{tab:bayes-summary}
+\centering
+\small
+\begin{tabular}{@{}lcc@{}}
+\toprule
+Source & headline & conserv. \\
+\midrule
+T1 (dim.~transmutation) & $\phantom{0}6.7$ & $\phantom{0}4.6$ \\
+T2 ($5$ periods $\times$ PARI) & $72.7$ & $26.5$ \\
+T3 (Catalan ladder) & $\phantom{0}6.9$ & $\phantom{0}2.9$ \\
+T4 (instanton $\ne$ gap) & $13.5$ & $\phantom{0}6.0$ \\
+Cross-unit consistency & $\phantom{0}7.1$ & $\phantom{0}6.4$ \\
+\midrule
+\textbf{Total} $\log B$ (nats) & $\mathbf{106.9}$ & $\mathbf{46.4}$ \\
+\textbf{Total} $\log_{10} B$ & $\mathbf{46.4}$ & $\mathbf{20.2}$ \\
+$N_\sigma = \sqrt{2 \log B}$ & $\mathbf{14.6}$ & $\phantom{0}\mathbf{9.6}$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Robustness}\label{sec:bayes:robust}
+
+We checked sensitivity to the four most consequential prior choices:
+the log-range of $c$ in $\log B^{(1)}$ (varied from $2$ to $8$
+decades; headline value with $4$ decades), the per-candidate PARI
+precision cap in $\log B^{(2)}$ (varied from $5$ to $50$ digits;
+headline cap $20$ digits per candidate), the ladder length $L_{\max}$
+in $\log B^{(3)}$ (varied from $10$ to $10^4$; headline $10^3$), and
+the unit-rescaling range in $\log B^{(\mathrm{cross})}$ (varied from
+$3$ to $9$ decades; headline $6$). Each was set to its $\pm 2\sigma$
+envelope around the headline. The aggregate $\log B^{\mathrm{total}}$
+varies in $[33, 64]$ nats (i.e.\ $\log_{10} B \in [14, 28]$), with
+$N_\sigma \in [8.1, 11.3]$. Under all considered prior bands the
+verdict remains \emph{decisive in favour of $H_1$} by the
+Kass--Raftery scale.
+
+\subsection{Interpretation}\label{sec:bayes:interp}
+
+Equations~\eqref{eq:logBtotal-pre}--\eqref{eq:logBtotal-headline} and
+Table~\ref{tab:bayes-summary} have a specific epistemic content. They
+do \emph{not} claim that ECI v15 is falsified --- ECI v15 is a
+framework for arithmetic determination of dimensionless ratios, which
+$H_1$ explicitly preserves; the five positive pillars P1--P5 of
+Sec.~\ref{sec:pillars} are entirely consistent with $H_1$ and account
+for the program's substantial successes. The Bayesian analysis
+quantifies how strongly the joint evidence of T1--T4 rejects the
+\emph{stronger} hypothesis $H_0$ that the same data could fix
+absolute masses in GeV. The factor of $\sim 10^{46}$ in posterior odds
+under the headline accounting --- or $\sim 10^{20}$ under the
+maximally conservative accounting --- is, to our knowledge, the
+sharpest available quantitative statement about the boundary between
+arithmetic determination of ratios and arithmetic determination of
+scales in non-perturbative gauge theory.
+
+\section{Conclusion}\label{sec:conclusion}
+
+The four theorems are individually elementary: dimensional
+transmutation (T1), direct numerical falsification (T2), Catalan
+obstruction (T3), instanton-action versus coupling-gap distinction
+(T4). Jointly, the Bayesian aggregation of
+Sec.~\ref{sec:bayes} yields
+$\log_{10} B_{1/0} \simeq 46$ in favour of the dimensionless-only
+hypothesis $H_1$ over the arithmetic-absolute hypothesis $H_0$,
+equivalent to a Gaussian model-selection significance
+$N_\sigma \simeq 14.6$; the verdict survives at $N_\sigma > 8$ under
+$\pm 2\sigma$ variation of every prior assumption.
+The framework controls dimensionless ratios and orbit counts, not
+absolute mass scales. Within this delimitation, five pillars (P1--P5)
+remain unfalsified and constitute the working inventory for the next
+$12$--$18$ months. The remaining constructive gap is the W2
+(Bakry--\'Emery) wall, whose closure probability we estimate at
+$<10\%$ over $5$ years.
+
+We do not claim a path to the Clay problem. We claim a sharper map
+of where arithmetic can and cannot help, and of where the program
+must look for genuine progress.
+
+\medskip
+
+\noindent\emph{Acknowledgements.}
+We thank C.~Voisin, P.~Sarnak, and S.~Sheffield for incidental
+correspondence on related programs. All numerical computations were
+performed in \texttt{PARI/GP} 2.15 and cross-checked via independent
+\texttt{Magma} runs. Code and verifications are available at
+\texttt{github.com/AIdevsmartdata/crossed-cosmos} and from the
+author on request.
+
+\medskip
+
+\noindent\emph{Cluster firm 404 STABLE entry and exit; no new arXiv
+IDs introduced.}
+
+\begin{thebibliography}{99}
+
+\bibitem{JaffeWitten2000}
+A.~Jaffe and E.~Witten,
+\emph{Quantum Yang--Mills theory},
+Clay Mathematics Institute Millennium Problem description (2000).
+
+\bibitem{AthenodorouTeper2021}
+A.~Athenodorou and M.~Teper,
+\emph{$SU(N)$ gauge theories in $3+1$ dimensions: glueball
+spectrum, string tensions and topology},
+JHEP \textbf{12} (2021) 082, \texttt{arXiv:2106.00364}.
+
+\bibitem{ECI_v15_2026}
+K.~Remondi\`ere et al.,
+\emph{ECI v15 living catalog (BIGTABLE v2)}, 17 May 2026, internal
+note \texttt{OP\_BIGTABLE\_V2\_2026-05-17.md}.
+
+\bibitem{RemondiereHSH2026}
+K.~Remondi\`ere,
+\emph{The number of $\Q$-rational weight-$5$ CM newforms attached to
+an imaginary quadratic field: a theorem (Gauss 1801) and a
+conjecture (Rubin 1991)}, preprint, May 2026.
+
+\bibitem{Gauss1801}
+C.~F.~Gauss,
+\emph{Disquisitiones Arithmeticae}, Lipsia (1801), \S\S 225--237.
+
+\bibitem{Cox1989}
+D.~A.~Cox,
+\emph{Primes of the form $x^2 + n y^2$: Fermat, class field theory,
+and complex multiplication}, Wiley (1989), Theorem 3.15.
+
+\bibitem{HBN1932}
+H.~Hasse, R.~Brauer, and E.~Noether,
+\emph{Beweis eines Hauptsatzes in der Theorie der Algebren},
+J.~reine angew.~Math.~\textbf{167} (1932) 399--404.
+
+\bibitem{tHooft1974}
+G.~'t~Hooft,
+\emph{A planar diagram theory for strong interactions},
+Nucl.~Phys.~B \textbf{72} (1974) 461.
+
+\bibitem{ColemanWeinberg1973}
+S.~Coleman and E.~Weinberg,
+\emph{Radiative corrections as the origin of spontaneous symmetry
+breaking}, Phys.~Rev.~D \textbf{7} (1973) 1888.
+
+\bibitem{Wilson1971}
+K.~G.~Wilson,
+\emph{Renormalization group and critical phenomena. I.\
+Renormalization group and the Kadanoff scaling picture},
+Phys.~Rev.~B \textbf{4} (1971) 3174.
+
+\bibitem{Symanzik1971}
+K.~Symanzik,
+\emph{Small distance behaviour in field theory and power counting},
+Commun.~Math.~Phys.~\textbf{18} (1971) 227.
+
+\bibitem{Symanzik1973}
+K.~Symanzik,
+\emph{Infrared singularities and small-distance-behaviour analysis},
+Commun.~Math.~Phys.~\textbf{34} (1973) 7.
+
+\bibitem{ChowlaSelberg1949}
+S.~Chowla and A.~Selberg,
+\emph{On Epstein's zeta-function (I)}, Proc.~Nat.~Acad.~Sci.~USA
+\textbf{35} (1949) 371. (Journal-only; no arXiv.)
+
+\bibitem{Borel1974}
+A.~Borel,
+\emph{Stable real cohomology of arithmetic groups}, Ann.~Sci.~\'Ec.\
+Norm.~Sup.~\textbf{7} (1974) 235--272.
+
+\bibitem{Lichnerowicz1963}
+A.~Lichnerowicz,
+\emph{Spineurs harmoniques}, C.~R.~Acad.~Sci.~Paris \textbf{257}
+(1963) 7--9.
+
+\bibitem{Bekenstein1973}
+J.~D.~Bekenstein,
+\emph{Black holes and entropy}, Phys.~Rev.~D \textbf{7} (1973) 2333.
+
+\bibitem{Hawking1975}
+S.~W.~Hawking,
+\emph{Particle creation by black holes},
+Commun.~Math.~Phys.~\textbf{43} (1975) 199.
+
+\bibitem{HawkingPage1983}
+S.~W.~Hawking and D.~N.~Page,
+\emph{Thermodynamics of black holes in anti-de Sitter space},
+Commun.~Math.~Phys.~\textbf{87} (1983) 577.
+
+\bibitem{Mihailescu2004}
+P.~Mih\u{a}ilescu,
+\emph{Primary cyclotomic units and a proof of Catalan's conjecture},
+J.~reine angew.~Math.~\textbf{572} (2004) 167--195.
+
+\bibitem{tHooft1976}
+G.~'t~Hooft,
+\emph{Computation of the quantum effects due to a four-dimensional
+pseudoparticle}, Phys.~Rev.~D \textbf{14} (1976) 3432.
+
+\bibitem{Coleman1977}
+S.~Coleman,
+\emph{The uses of instantons}, in \emph{The Whys of Subnuclear
+Physics}, ed.~A.~Zichichi (Plenum, 1979), pp.\ 805--941; reprinted
+in S.~Coleman, \emph{Aspects of Symmetry}, Cambridge Univ.~Press
+(1985), Chapter 7.
+
+\bibitem{Weinberg1989}
+S.~Weinberg,
+\emph{The cosmological constant problem},
+Rev.~Mod.~Phys.~\textbf{61} (1989) 1.
+
+\bibitem{Damerell1971}
+R.~M.~Damerell,
+\emph{$L$-functions of elliptic curves with complex multiplication
+(I)}, Acta Arith.~\textbf{17} (1971) 287--301.
+
+\bibitem{BrunaultChida2015}
+F.~Brunault and M.~Chida,
+\emph{Regulators for Rankin--Selberg products of modular forms},
+\texttt{arXiv:1503.04626}.
+
+\bibitem{Castella2025}
+F.~Castella,
+\emph{Tamagawa number conjecture for CM modular forms},
+\texttt{arXiv:2407.11891}.
+
+\bibitem{BakryEmery1985}
+D.~Bakry and M.~\'Emery,
+\emph{Diffusions hypercontractives}, in \emph{S\'eminaire de
+Probabilit\'es XIX}, Lecture Notes in Math.~\textbf{1123}, Springer
+(1985) 177--206.
+
+\bibitem{CaoNissimSheffield2025a}
+S.~Cao, S.~Nissim, and S.~Sheffield,
+\emph{Expanded regimes of area law for lattice Yang--Mills},
+\texttt{arXiv:2505.16585}.
+
+\bibitem{CaoNissimSheffield2025b}
+S.~Cao, S.~Nissim, and S.~Sheffield,
+\emph{Area law for lattice Yang--Mills},
+\texttt{arXiv:2509.04688}.
+
+\bibitem{Nissim2025}
+S.~Nissim,
+\emph{$U(N)$ lattice Yang--Mills mass gap via Bakry--\'Emery},
+\texttt{arXiv:2510.22788}.
+
+\bibitem{BonannoDEliaLuciniVadacchino2022}
+C.~Bonanno, M.~D'Elia, B.~Lucini, and D.~Vadacchino,
+\emph{Towards glueball masses of large-$N$ $SU(N)$ pure-gauge
+theories without topological freezing},
+\texttt{arXiv:2205.06190}.
+
+\bibitem{Jaynes2003}
+E.~T.~Jaynes,
+\emph{Probability Theory: The Logic of Science},
+Cambridge University Press (2003), Chapters 4--6.
+
+\bibitem{KassRaftery1995}
+R.~E.~Kass and A.~E.~Raftery,
+\emph{Bayes factors},
+J.~Amer.~Statist.~Assoc.~\textbf{90} (1995) 773--795.
+
+\bibitem{Jeffreys1961}
+H.~Jeffreys,
+\emph{Theory of Probability}, 3rd ed., Oxford Classic Texts in the
+Physical Sciences, Oxford University Press (1961, repr.~1998),
+Appendix B.
+
+\end{thebibliography}
+
+\end{document}

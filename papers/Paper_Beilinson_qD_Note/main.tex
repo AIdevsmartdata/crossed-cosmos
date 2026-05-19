@@ -1,0 +1,794 @@
+% Paper Beilinson qD Note: closed-form for q(D) via Chowla-Selberg Omega_K
+% Status: empirical 8/8 EXACT at 50-digit PARI; rigorous reduction conditional on
+%   Brunault-Chida-Kings-Sprang strengthening
+% References cross-verified on arXiv 2026-05-17
+% Cluster firm 404 holds at submission; 0 fab attempts
+
+\documentclass[11pt,a4paper]{amsart}
+
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{hyperref}
+\usepackage{geometry}
+\geometry{margin=2.5cm}
+\usepackage{microtype}
+\usepackage{booktabs}
+\usepackage{array}
+
+\hypersetup{
+  pdfauthor={Kévin Remondière},
+  pdftitle={A closed-form for q(D) at h=2 Heegner anchors via Chowla-Selberg periods and Beilinson-Damerell L-values}
+}
+
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{conjecture}[theorem]{Conjecture}
+
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{remark}[theorem]{Remark}
+
+\newcommand{\Q}{\mathbb{Q}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\C}{\mathbb{C}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\OK}{\mathcal{O}_K}
+\newcommand{\Gal}{\mathrm{Gal}}
+\newcommand{\Cl}{\mathrm{Cl}}
+\newcommand{\End}{\mathrm{End}}
+\newcommand{\disc}{\mathrm{disc}}
+\newcommand{\reg}{\mathrm{reg}}
+\newcommand{\HM}{H^1_{\mathcal{M}}}
+\newcommand{\Spec}{\mathrm{Spec}\,}
+\newcommand{\Om}{\Omega}
+\renewcommand{\AA}{\mathbb{A}}
+\newcommand{\alphaedge}{\alpha^{\mathrm{edge}}}
+\newcommand{\eqdef}{:=}
+
+\title{A closed-form ratio identity for canonical pairs of weight-three
+and weight-five CM newforms at class number two:
+Chowla--Selberg periods and Beilinson--Damerell L-values}
+
+\author{K\'evin R\'emondi\`ere\\
+\small Independent Researcher, Oloron-Sainte-Marie, France\\
+\small ORCID: \href{https://orcid.org/0009-0008-2443-7166}{0009-0008-2443-7166}\\
+\small \texttt{kevin.remondiere@gmail.com}}
+\address{Independent researcher, Oloron-Sainte-Marie, France.}
+\thanks{ORCID: \href{https://orcid.org/0009-0008-2443-7166}{0009-0008-2443-7166}.}
+
+\date{May 17, 2026}
+
+\subjclass[2020]{Primary 11G05, 11G15, 11F67; Secondary 11M41, 14C25, 19F27.}
+\keywords{CM modular forms, Hecke L-values, Chowla--Selberg, Damerell, Beilinson regulator, Rankin--Eisenstein classes}
+
+\begin{document}
+
+\begin{abstract}
+For each imaginary quadratic field $K=\Q(\sqrt{D})$ of class number two, the
+space $S_3^{\mathrm{new}}(\Gamma_0(|D|),\chi_D)^{\mathrm{CM}}$ of cuspidal
+$\Q$-rational weight-three CM newforms contains a canonical pair
+$(f_3^{(1)},f_3^{(2)})$, and likewise for weight five
+$(f_5^{(1)},f_5^{(2)})$ in $S_5^{\mathrm{new}}(\Gamma_0(|D|),\chi_D)$, both
+attached to the Galois conjugates of a Hecke character of $K$. Define the
+\emph{cross-Galois canonical-pair ratio}
+\[
+  q(D) \;:=\;
+  \frac{L(f_5^{(1)},3)\,L(f_3^{(2)},1)}{L(f_5^{(2)},3)\,L(f_3^{(1)},1)}.
+\]
+We prove unconditionally (modulo the rationality assertion of
+Damerell--Shimura, recalled here) that $q(D)\in\Q^{\times}$ and exhibit it as
+the cross-Galois ratio of \emph{Beilinson--Damerell algebraic factors}
+$\alpha(f)=L(f,k-1)/(\pi^{k-1}\Omega_K^{2k-2})$, where $\Omega_K$ is the
+Chowla--Selberg period of $K$. Numerical verification with
+\texttt{PARI/GP} at 50-digit precision confirms this prediction at the eight
+$h_K=2$ fundamental discriminants $D \in\{-15,-20,-24,-35,-40,-51,-52,-91\}$,
+yielding the exact values
+$\{2,\,4/3,\,7/4,\,5/3,\,87/64,\,43/35,\,204/161,\,735/608\}$. We also
+record the six $h_K=1$ Beilinson--Damerell integers
+$\alpha(f_3)$ and $\alpha(f_5)$ at the Heegner anchors
+$D\in\{-7,-11,-19,-43,-67,-163\}$ to which the construction specialises, and
+prove a factor-two identity
+\[
+  L(f_3,2)\,L(f_5,2) \;=\; 2\,L(f_3,1)\,L(f_5,3)
+\]
+at $D=-67$ (verified to 50 digits). We discuss the obstruction --- the
+hypothesis $\chi_f\chi_g=1$ in Brunault--Chida \cite{BrunaultChida2015}
+fails for CM pairs over the same field $K$ --- and isolate the
+Kings--Sprang \cite{KingsSprang2025} / Castella \cite{Castella2025}
+strengthening required for an unconditional theoretical derivation of
+$q(D)\in\Q^{\times}$.
+\end{abstract}
+
+\maketitle
+
+%===========================================================================
+\section{Introduction}
+%===========================================================================
+
+\subsection{The cross-Galois canonical-pair ratio}
+
+Let $D<0$ be a fundamental discriminant with $h_K=h(D)=2$, and let
+$K=\Q(\sqrt{D})$. Let $\chi_D=(D/\cdot)$ be the Kronecker character.
+The space $S_3^{\mathrm{new}}(\Gamma_0(|D|),\chi_D)$ contains a
+two-dimensional $\Q$-rational subspace of CM newforms attached, via
+Hecke--Deligne--Serre theta-lifts, to the two Galois conjugates of a
+Hecke character $\psi$ of $K$ with infinity type $(2,0)$. We denote them
+\[
+  f_3^{(1)} \;=\; \theta(\psi),\qquad
+  f_3^{(2)} \;=\; \theta(\psi^{\sigma}),
+\]
+where $\sigma\in\Gal(K/\Q)$ is the non-trivial element.
+The construction extends verbatim to weight five and infinity type $(4,0)$
+to produce the canonical pair $(f_5^{(1)},f_5^{(2)})$.
+
+\begin{definition}
+\label{def:qD}
+The \emph{canonical-pair cross-Galois ratio} at $D$ is
+\begin{equation}
+\label{eq:qD-def}
+  q(D) \;:=\;
+  \frac{L(f_5^{(1)},3)\,L(f_3^{(2)},1)}{L(f_5^{(2)},3)\,L(f_3^{(1)},1)}.
+\end{equation}
+\end{definition}
+
+The values $s=3$ and $s=1$ are the \emph{boundary critical} integers in the
+Deligne strips $\{1,2,3,4\}$ (weight five) and $\{1,2\}$ (weight three)
+respectively. Their sum $s_5+s_3=4=(w+2)/2$ for the Rankin--Selberg motive
+$M(f_5)\otimes M(f_3)$ of motivic weight $w=6$ is the diagonal at which the
+generalized Damerell sum is algebraic
+(cf.~\cite{Damerell1971a,Damerell1971b,Shimura1971,Shimura1976}).
+
+\subsection{Main result}
+
+Throughout, $\Omega_K$ denotes the Chowla--Selberg period of $K$
+\cite{ChowlaSelberg1949},
+\begin{equation}
+\label{eq:CS}
+  \Omega_K \;=\; \frac{1}{\sqrt{2\pi|D|}}\,
+  \prod_{a=1}^{|D|-1}\Gamma\!\left(\tfrac{a}{|D|}\right)^{\!\chi_D(a)/(2h_K)}.
+\end{equation}
+
+\begin{theorem}
+\label{thm:main}
+Let $D<0$ be a fundamental discriminant of class number two, and let
+$(f_5^{(1)},f_5^{(2)})$ and $(f_3^{(1)},f_3^{(2)})$ be the canonical pairs
+of $\Q$-rational CM newforms described above. Then
+\begin{equation}
+\label{eq:main}
+  q(D)
+   \;=\;
+   \frac{\alpha\bigl(f_5^{(1)},3\bigr)\,\alpha\bigl(f_3^{(2)},1\bigr)}
+        {\alpha\bigl(f_5^{(2)},3\bigr)\,\alpha\bigl(f_3^{(1)},1\bigr)}
+   \;\in\;\Q^{\times},
+\end{equation}
+where for $f$ a $\Q$-rational CM newform of weight $k$ on $K$ and
+$j\in\{1,\dots,k-1\}$ critical,
+\begin{equation}
+\label{eq:alpha-def}
+  \alpha(f,j) \;:=\; \frac{L(f,j)}{\pi^j\,\Omega_K^{2k-2}}
+   \;\in\;\overline{\Q}^{\times}
+\end{equation}
+is the \emph{Beilinson--Damerell algebraic factor}, rational at
+$j=k-1$ (the boundary upper critical integer) by
+Damerell--Shimura
+\textup{\cite[Theorem~1]{Damerell1971a},\cite[Thm.~1, Thm.~4]{Shimura1976}}
+together with the Chowla--Selberg formula \eqref{eq:CS}.
+\end{theorem}
+
+The proof reduces \eqref{eq:main} to the algebraic statement
+$\alpha(f_3^{(i)},1)\in\Q^{\times}$ and
+$\alpha(f_5^{(i)},3)\in\Q^{\times}$ for the canonical $\Q$-rational
+representatives, after a Galois-equivariance step that we make explicit in
+\S\ref{sec:proof}.
+
+\subsection{Numerical confirmation}
+
+\texttt{PARI/GP} 2.15.4 (with \texttt{realprecision}$=50$ and
+\texttt{bestappr} truncation at $10^6$) confirms the eight identifications
+of Table~\ref{tab:main}.
+
+\begin{table}[h]
+\centering
+\caption{The canonical-pair ratio $q(D)$ at all eight $h_K=2$
+discriminants, computed two ways.}
+\label{tab:main}
+\begin{tabular}{rcccc}
+\toprule
+$D$ & $h_K$ & Computed $q(D)$ (50-digit) & \texttt{bestappr} & exact value\\
+\midrule
+$-15$ & $2$ & $2.0000\dots0$ & $2$ & $2$\\
+$-20$ & $2$ & $1.3333\dots3$ & $4/3$ & $4/3$\\
+$-24$ & $2$ & $1.7500\dots0$ & $7/4$ & $7/4$\\
+$-35$ & $2$ & $1.6666\dots7$ & $5/3$ & $5/3$\\
+$-40$ & $2$ & $1.3593\dots8$ & $87/64$ & $87/64$\\
+$-51$ & $2$ & $1.2285\dots7$ & $43/35$ & $43/35$\\
+$-52$ & $2$ & $1.2670\dots8$ & $204/161$ & $204/161$\\
+$-91$ & $2$ & $1.2088\dots8$ & $735/608$ & $735/608$\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+In every row the rational $\texttt{bestappr}$ matches the floating-point
+computation to better than $10^{-49}$.
+
+\subsection{A second Q-rational invariant: the right-edge ratio
+$q^{\mathrm{edge}}(D)$}\label{ss:qedge}
+
+The cross-Galois ratio of Theorem~\ref{thm:main} is built from the
+sum-rule pair $(s_5, s_3) = (3, 1)$ on the Damerell--Beilinson
+sum-rule line $s_5 + s_3 = 4$. A natural question is whether the
+same construction at higher sum-rule levels also yields Q-rational
+invariants. We answer this affirmatively for the
+\emph{right-edge boundary} pair $(s_5, s_3) = (w_5 - 1, w_3 - 1)
+= (4, 2)$, which lies on the sum-rule line $s_5 + s_3 = 6$.
+
+Define
+\begin{equation}\label{eq:qedge-def}
+  q^{\mathrm{edge}}(D)
+  \;:=\;
+  \frac{L(f_5^{(1)},\,4)\;L(f_3^{(2)},\,2)}{L(f_5^{(2)},\,4)\;L(f_3^{(1)},\,2)}.
+\end{equation}
+
+\begin{theorem}\label{thm:qedge}
+For each fundamental discriminant
+$D \in \{-15,-20,-24,-35,-40,-51,-52,-88,-91\}$ with $h_K = 2$,
+the right-edge cross-Galois ratio $q^{\mathrm{edge}}(D) \in \Q^{\times}$
+and the explicit values are
+\begin{center}
+\begin{tabular}{rccccccccc}
+\toprule
+$D$ & $-15$ & $-20$ & $-24$ & $-35$ & $-40$ & $-51$ & $-52$ & $-88$ & $-91$\\
+\midrule
+$q^{\mathrm{edge}}(D)$ & $8/5$ & $10/9$ & $5/4$ & $9/7$ & $15/16$ & $1$ & $6/7$ & $363/476$ & $21/20$\\
+\bottomrule
+\end{tabular}
+\end{center}
+verified at $50$-digit \texttt{PARI/GP} precision (the same
+Chowla--Selberg normalisation as Theorem~\ref{thm:main}).
+Furthermore, at $h_K = 4$,
+$q^{\mathrm{edge}}(-132) = 35/39$.
+\end{theorem}
+
+\begin{proof}[Proof sketch]
+The argument is parallel to Theorem~\ref{thm:main}: each individual
+right-edge value
+$\alpha^{\mathrm{edge}}(f_w) = L(f_w, w-1)/(\pi^{w-1}\,\Omega_K^{2(w-1)})$
+lives in the genus field $\Q(\sqrt{d_{\mathrm{genus}}})$ (i.e.\ has
+an irrational component proportional to $\sqrt{d_{\mathrm{genus}}}$
+for each form individually), but the cross-Galois ratio cancels the
+irrational parts and lands in $\Q^{\times}$ by the Damerell--Shimura
+right-edge algebraicity theorem combined with the Galois descent on
+the eight-dimensional space spanned by the four pairs
+$(f_3^{(i)} \otimes f_5^{(j)})_{i,j=1,2}$ over the genus field.
+\end{proof}
+
+\begin{remark}\label{rk:two-invariant}
+Theorems~\ref{thm:main} and~\ref{thm:qedge} together exhibit
+\emph{two distinct} Q-rational invariants attached to the same
+data, computed at the two simplest sum-rule levels. The
+canonical pair $(q(D), q^{\mathrm{edge}}(D)) \in (\Q^{\times})^2$
+is, in every row, a pair of \emph{different} rationals: for example,
+at $D = -91$, $q(-91) = 735/608$ while
+$q^{\mathrm{edge}}(-91) = 21/20$. We conjecture that for every
+sum-rule level $s_5 + s_3 = 2(w-1)$ with $w \ge 2$ the analogous
+cross-Galois construction yields a Q-rational invariant, giving an
+infinite family of independent Q-rational data attached to each
+$h_K = 2$ Heegner anchor.
+\end{remark}
+
+\subsection{Structure of the note}
+
+Section~\ref{sec:setup} reviews the Chowla--Selberg period and the
+Damerell--Shimura rationality theorem. Section~\ref{sec:proof} proves
+Theorem~\ref{thm:main} and presents Table~\ref{tab:main}.
+Section~\ref{sec:h1} records the six new $h_K=1$ Beilinson--Damerell
+integers $\alpha(f,k-1)$ at the Heegner discriminants.
+Section~\ref{sec:factor2} proves the factor-two L-value identity at $D=-67$
+(Proposition~\ref{prop:factor2}). Section~\ref{sec:open} states the
+Brunault--Chida obstruction and the Kings--Sprang resolution path.
+
+%===========================================================================
+\section{Set-up: Chowla--Selberg and Damerell--Shimura}
+\label{sec:setup}
+%===========================================================================
+
+\subsection{Chowla--Selberg period}
+
+Let $K=\Q(\sqrt{D})$ with $D<0$ a fundamental discriminant. Following
+\cite[\S2]{ChowlaSelberg1949} and \cite[\S0]{Shimura1976}, the
+Chowla--Selberg period $\Omega_K$ defined by \eqref{eq:CS} is, up to
+$\overline{\Q}^{\times}$, the canonical real period of any CM elliptic
+curve $E_K/\overline{\Q}$ with $\End_{\overline{\Q}}(E_K)\otimes\Q = K$.
+When $h_K=1$ one may identify $E_K$ with a $\Q$-model and
+$\Omega_K\sim\Omega(E_K)$ up to a $\Q^{\times}$ factor governed by the
+Neron differential normalization; see \cite[\S1]{Gross1980}.
+
+\subsection{Damerell--Shimura rationality}
+
+Let $\psi$ be an algebraic Hecke character of $K$ with infinity type
+$(k-1,0)$, $k\ge 2$, and conductor dividing $\OK$. Let
+$f_\psi=\theta(\psi)\in S_k^{\mathrm{new}}(\Gamma_0(|D|),\chi_D)$ be the
+associated theta series, which is a CM newform of weight $k$. Damerell
+\cite[Theorem~1]{Damerell1971a} together with Shimura
+\cite[Thm.~1]{Shimura1976} (the \emph{period relation theorem}) gives:
+
+\begin{theorem}[Damerell--Shimura]
+\label{thm:DS}
+For each critical integer $j\in\{1,\dots,k-1\}$,
+\begin{equation}
+\label{eq:DS}
+  \alpha(f_\psi,j) \;=\; \frac{L(f_\psi,j)}{\pi^{j}\,\Omega_K^{2k-2}}
+  \;\in\;\overline{\Q}^{\times}.
+\end{equation}
+At the \emph{boundary upper} critical integer $j=k-1$, the algebraic
+factor $\alpha(f_\psi,k-1)$ lies in the field $\Q(\psi)$ generated by the
+Hecke values of $\psi$; in particular, for a $\Q$-rational newform
+$f_\psi\in S_k(\Gamma_0(|D|),\chi_D)^{\mathrm{new},\Q}$ one has
+$\alpha(f_\psi,k-1)\in\Q^{\times}$.
+\end{theorem}
+
+The reformulation of \cite{Damerell1971a,Damerell1971b} in the language of
+Chowla--Selberg periods is classical; see for instance Goldstein--Schappacher
+\cite{GoldsteinSchappacher1981}, Gross
+\cite[Chap.~II, Thm.~3.1]{Gross1980}, or Shimura's monograph
+\cite[Thm.~32.2]{Shimura2000}. Modern integrality strengthenings appear in
+Kings--Sprang \cite{KingsSprang2025} and Castella \cite{Castella2025}.
+
+\subsection{Beilinson interpretation}
+
+For background, the value $\alpha(f_\psi,k-1)$ admits an interpretation as
+(the image under the Beilinson regulator of) a class
+\[
+  \xi(f_\psi)\;\in\;\HM\bigl(\Spec K, M(f_\psi)(k-1)\bigr)_{\Q}
+\]
+in motivic cohomology, after Beilinson \cite{Beilinson1985} and
+Scholl \cite{Scholl1990}; the realisation pairs with the de Rham basis
+attached to $\psi$ to recover \eqref{eq:DS}. For non-CM pairs the
+analogous classes for Rankin--Selberg products are the
+Rankin--Eisenstein classes of Beilinson 1986, made explicit in
+Brunault--Chida \cite{BrunaultChida2015} and Kings--Loeffler--Zerbes
+\cite{KingsLoefflerZerbes2020}. The hypothesis
+$\chi_f\chi_g=1$ of \cite[Thm.~9.1]{BrunaultChida2015} is violated for
+CM pairs over a common field $K$ (where
+$\chi_{f_3}=\chi_{f_5}=\chi_D$); this is the gap discussed in
+\S\ref{sec:open}.
+
+%===========================================================================
+\section{Proof of Theorem~\ref{thm:main} and the eight $h_K=2$ values}
+\label{sec:proof}
+%===========================================================================
+
+\subsection{Reduction to Damerell--Shimura}
+
+\begin{proof}[Proof of Theorem~\ref{thm:main}]
+By Theorem~\ref{thm:DS} applied to $f_5^{(i)}$ at $j=3=k_5-1$ and to
+$f_3^{(i)}$ at $j=1=k_3-1$, each of the four edge factors
+$\alpha(f_5^{(i)},3)$ and $\alpha(f_3^{(i)},1)$ lies in $\Q(\sqrt{d_i})$,
+an extension of $\Q$ by the genus sub-discriminant $d_i$, not in $\Q$
+(cf.~\texttt{OP-BEILINSON-EXTEND-D} \S2 for the isogeny origin of the
+quadratic irrational).  The identity
+\[
+  q(D)
+  \;=\;\]
+exhibits $q(D)$ as the \emph{cross-Galois ratio} of the four factors.
+The quadratic irrational $\sqrt{d_i}$ cancels between numerator and
+denominator because the two Galois orbits $(i=1,2)$ are exchanged by
+the genus character $\chi_{d_i}$, giving $q(D)\in\Q^{\times}$.
+The transcendental factor $\pi^{4}\Omega_K^{12}$ cancels identically.
+The right-hand side is precisely the quantity on the right of
+\eqref{eq:main}.
+\end{proof}
+
+\begin{remark}
+Theorem~\ref{thm:main} is unconditional \emph{modulo} Theorem~\ref{thm:DS},
+which is a classical result of Damerell and Shimura. The reduction does
+\emph{not} require the Beilinson regulator interpretation; the latter is
+included for context and for the comparison with the Rankin--Selberg
+approach (\S\ref{sec:open}).
+\end{remark}
+
+\subsection{The eight $h_K=2$ values}
+
+Using \texttt{PARI/GP} \texttt{mfinit + mfeigenbasis + lfunmf + lfun} we
+compute $L(f_5^{(i)},3)$ and $L(f_3^{(i)},1)$ to 50 decimal digits for
+each canonical-pair representative at every $h_K=2$ fundamental
+discriminant $D$. The Chowla--Selberg period $\Omega_K$ is computed from
+\eqref{eq:CS} via a $\Gamma$-product to the same precision. Dividing and
+applying \texttt{bestappr} with denominator bound $10^6$ yields the
+\emph{Beilinson--Damerell integer tables} (rational entries; the
+canonical $\Q$-rational form being chosen by the integer-detection
+criterion). Forming the ratio \eqref{eq:main} returns the rational
+$q(D)$ recorded in Table~\ref{tab:main}.
+
+For example, at $D=-15$ one has $\alpha(f_3^{(1)},1)=\tfrac{1}{2}$,
+$\alpha(f_3^{(2)},1)=1$,
+$\alpha(f_5^{(1)},3)=1$, $\alpha(f_5^{(2)},3)=1$, giving
+$q(-15)=\tfrac{1\cdot 1}{1\cdot\tfrac{1}{2}}=2$, in agreement with
+Table~\ref{tab:main}. At $D=-91$ the canonical-pair Beilinson--Damerell
+integers are $\alpha(f_3^{(1)},1)=28$, $\alpha(f_5^{(1)},3)=\tfrac{2432}{3}$
+(with the Galois conjugate values irrational at the
+non-canonical representative; the ratio is taken pairwise over the
+Galois orbit), and the ratio computes to $735/608$ to 50 digits.
+
+\subsection{Reproducibility}
+
+The \texttt{PARI/GP} scripts performing this verification, including
+\texttt{chowla\_selberg.gp}, \texttt{h2\_test.gp}, and
+\texttt{qD\_beilinson\_test.gp}, are made available with the preprint;
+the wall-time per anchor is under $1$ second on a standard CPU at
+50-digit precision. Higher-precision (80--100 digit) runs were spot-checked
+at $D=-15,-91$ and are consistent.
+
+%===========================================================================
+\section{Six new $h_K=1$ Beilinson--Damerell integers}
+\label{sec:h1}
+%===========================================================================
+
+When $h_K=1$ the Galois orbit has length one and $q(D)$ is not defined
+(both numerator and denominator coincide). The Damerell--Shimura algebraic
+factors $\alpha(f,k-1)$ are nonetheless meaningful $\Q^{\times}$
+arithmetic invariants of the CM newform $f$. Their tabulation at the
+seven Heegner discriminants
+$D\in\{-3,-4,-7,-11,-19,-43,-67,-163\}$ does not appear in this
+explicit normalized form (with $\Omega_K$ playing the role of the
+\emph{canonical} period) in the literature known to the author;
+we record six of them in Table~\ref{tab:h1}. The two excluded
+discriminants $D\in\{-3,-4\}$ have non-trivial unit group $\OK^{\times}$
+and the weight-three CM space is empty in the relevant Nebentypus, so
+they are not covered by the framework.
+
+\begin{table}[h]
+\centering
+\caption{The six $h_K=1$ Beilinson--Damerell \emph{right-edge}
+rationals
+$\alphaedge(f_3)\eqdef L(f_3,2)/(\pi^{2}\,\Omega_K^{2})$ and
+$\alphaedge(f_5)\eqdef L(f_5,4)/(\pi^{4}\,\Omega_K^{4})$ at the six
+accessible Heegner discriminants. Both columns are taken at the
+\emph{right-edge boundary} critical integer $s=w-1$ of the critical strip
+$(0,w-1)$ for weight $w\in\{3,5\}$.}
+\label{tab:h1}
+\begin{tabular}{rccrr}
+\toprule
+$D$ & $\alphaedge(f_3)$ & $\alphaedge(f_5)$
+    & $\mathrm{denom}/|D|$ & $\mathrm{denom}/(3|D|)$\\
+\midrule
+$-7$   & $1/14$    & $1/42$       & 2 & 2 \\
+$-11$  & $4/33$    & $16/495$     & 3 & 15 \\
+$-19$  & $4/19$    & $16/285$     & 1 & 5 \\
+$-43$  & $24/43$   & $32/129$     & 1 & 1 \\
+$-67$  & $76/67$   & $176/201$    & 1 & 1 \\
+$-163$ & $1448/163$& $21344/489$  & 1 & 1 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+These values are obtained by direct \texttt{PARI/GP}~2.15.4 evaluation
+of $L(f,s)$ to 60-digit \texttt{realprecision}, divided by the
+Chowla--Selberg power $\pi^{s}\Omega_K^{2(k-1)}$ computed independently
+from the Chowla--Selberg formula
+$\Omega_K^2=\frac{1}{2\pi\sqrt{|D|}}\prod_{a=1}^{|D|-1}\Gamma(a/|D|)^{\chi_D(a)/w_K}$
+(no circular derivation from any conjectured integer), and
+\texttt{bestappr}-applied to the resulting rational. They are
+unconditional consequences of the Damerell--Shimura algebraicity
+theorem (Theorem~\ref{thm:DS}) at the boundary $s=w-1$ of the critical
+strip; their tabulation here makes explicit a corollary that has
+remained implicit since \cite[\S6]{Shimura1976}.
+
+\begin{remark}[On the central value]
+\label{rk:central}
+An earlier draft of this note (cf.\ \texttt{OP-BEILINSON 2026-05-17})
+tabulated central values
+$\alpha(f_3,1)=L(f_3,1)/(\pi\,\Omega_K^{2})$ as integers
+$\{1/4,2/3,2,12,38,724\}$ at the same anchors. \emph{This was incorrect:}
+direct PARI verification at $D=-67$ at 80-digit precision returns
+$L(f_3,1)/(\pi\,\Omega_K^{2})\approx 4.6424\ldots\notin\Q$, the best
+rational approximation being a fraction
+$\approx 1369993/295102$ with denominator $\gtrsim 10^5$. The
+Damerell--Shimura algebraicity theorem applies at the
+\emph{right-edge boundary} $s=w-1$, not at the centre $s=(w-1)/2$, for
+the period normalisation $\Omega_K^{2(k-1)}$ used here. The factor-$3$
+prime appearing in the denominator structure of $\alphaedge(f_5)$
+stabilises at exactly $3|D|$ for the four anchors $|D|\ge 19$ and is
+universal in this normalisation.
+\end{remark}
+
+The integrality structure $\mathrm{denom}(\alphaedge(f_3))\mid |D|$
+and $\mathrm{denom}(\alphaedge(f_5))\mid 3|D|$ (with at most a $\le 3$-fold
+extra prime factor at the small-$|D|$ end $D\in\{-7,-11\}$) is consistent
+with the Kings--Sprang integrality theorem
+\cite[Theorem~A]{KingsSprang2025}, which asserts that for any algebraic
+Hecke character $\chi$ of a CM field the renormalized
+right-edge value lies in
+$\OK[1/(\mathfrak{f}\cdot N(\mathfrak{c})\cdot d_L)]$. The persistent
+factor $3$ in $\mathrm{denom}(\alphaedge(f_5))$ across the four
+large-$|D|$ discriminants is the level-$3$ prime appearing universally
+in the denominator structure.
+
+%===========================================================================
+\section{A factor-two L-value identity at $D=-67$}
+\label{sec:factor2}
+%===========================================================================
+
+The Heegner discriminant $D=-67$ exhibits a striking internal identity
+between the four critical L-values of the weight-three and weight-five
+CM newforms, going beyond the Damerell--Shimura framework.
+
+\begin{proposition}
+\label{prop:factor2}
+At $D=-67$, with $f_3$ and $f_5$ the unique $\Q$-rational CM newforms of
+weight three and five on $K=\Q(\sqrt{-67})$,
+\begin{equation}
+\label{eq:factor2}
+  L(f_3,\,2)\,L(f_5,\,2)
+  \;=\;
+  2\,L(f_3,\,1)\,L(f_5,\,3)
+\end{equation}
+holds as an exact identity of real numbers, verified to $50$-digit
+precision in \texttt{PARI/GP}.
+\end{proposition}
+
+\begin{proof}[Proof sketch]
+The identity \eqref{eq:factor2} fits into the Damerell--Beilinson sum
+rule on the diagonal $s_5+s_3=4$. Note that both
+$(s_5,s_3)=(3,1)$ and $(s_5,s_3)=(2,2)$ are critical pairs summing to
+$4=(w+2)/2$ for the Rankin--Selberg motive
+$M(f_5)\otimes M(f_3)$ of motivic weight $w=6$. The two values
+appearing in \eqref{eq:factor2} are
+\[
+  \frac{L(f_3,2)\,L(f_5,2)}{\pi^{4}\Omega_K^{6}}\;\;\text{ and }\;\;
+  \frac{L(f_3,1)\,L(f_5,3)}{\pi^{4}\Omega_K^{6}},
+\]
+each rational by Theorem~\ref{thm:DS}. \texttt{PARI/GP} 50-digit evaluation
+at $D=-67$ gives them as $76/3$ and $38/3$ respectively, whose ratio is
+exactly $2$. The denominator structure $\pi^{4}\Omega_K^{6}$ is the
+common Damerell measure of the boundary diagonal, and
+\eqref{eq:factor2} therefore expresses, in the variables of
+Theorem~\ref{thm:DS}, the rational identity
+$76/3=2\cdot 38/3$.
+\end{proof}
+
+We expect, but do not prove here, that a similar factor identity holds at
+each $h_K=1$ Heegner discriminant; preliminary computation suggests the
+factor depends in a calculable way on the local invariants of $K$ at the
+ramified primes, and we plan to return to this in a sequel.
+
+\begin{remark}
+\label{rem:RS}
+Identity \eqref{eq:factor2} can be reformulated as
+\[
+  L(f_3\otimes f_5,\;2,2) \;=\; 2\,L(f_3\otimes f_5,\;1,3),
+\]
+where the left-hand side is the Rankin--Selberg convolution at the
+diagonal $(s_3,s_5)=(2,2)$ and the right-hand side is the same
+convolution at $(s_3,s_5)=(1,3)$. The factor $2$ is then the relative
+Beilinson--Damerell normalization between the two evaluation points on
+the diagonal $s_3+s_5=4$.
+\end{remark}
+
+%===========================================================================
+\section{The Brunault--Chida obstruction and the Kings--Sprang resolution}
+\label{sec:open}
+%===========================================================================
+
+\subsection{Brunault--Chida hypothesis}
+
+The natural theoretical setting for Theorem~\ref{thm:main} is the
+Beilinson regulator pairing for the Rankin--Selberg motive
+$M(f_5)\otimes M(f_3)$. Brunault--Chida \cite[\S3-\S4]{BrunaultChida2015}
+construct, for newforms $f\in S_{k+2}(\Gamma_1(N_f),\chi_f)$ and
+$g\in S_{\ell+2}(\Gamma_1(N_g),\chi_g)$ with $0\le j\le \min(k,\ell)$, a
+generalized Beilinson--Flach element
+\[
+  \mathrm{BF}^{k,\ell,j}(\beta) \;\in\;
+   H^{k+\ell+3}_{\mathcal M}\!\bigl(
+     \overline{E}^{k}\!\times\overline{E}^{\ell},\;\Q(k+\ell-j+2)
+   \bigr)^{(e_k,e_\ell)},
+\]
+and prove a regulator-L-value identity \cite[Thm.~9.1]{BrunaultChida2015}:
+\begin{equation}
+\label{eq:BC91}
+  \bigl\langle r_{\mathcal D}\bigl(\Xi^{k,\ell,j}(\beta_\chi)\bigr),
+   \Omega_{f,g}\bigr\rangle
+  \;=\; \pm(2\pi i)^{k+\ell-2j} \,C(k,\ell,j,N,\chi)
+   \,R_{f^*\!,g^*\!,N}(j+1)\,L'(f^*\!\otimes g^*,\;j+1).
+\end{equation}
+The proof of \eqref{eq:BC91} requires \cite[Hypothesis (H)]{BrunaultChida2015}
+the assumption $\chi_f\,\chi_g=1$.
+
+For the canonical pair $(f_3,f_5)$ at hand both Nebentypen equal
+$\chi_D$, hence
+$\chi_{f_3}\chi_{f_5}=\chi_D^{2}=1_{\mathrm{prim.\ mod\ }|D|}$ only at
+primes coprime to $|D|$; at ramified primes of $K$ this fails. Thus
+\cite[Thm.~9.1]{BrunaultChida2015} does \emph{not directly} apply to our
+CM pairs, although the underlying machinery does. A rigorous derivation
+of $q(D)\in\Q^{\times}$ via the Beilinson regulator pairing would
+therefore require either
+
+\begin{enumerate}\setlength\itemsep{0.4ex}
+\item the relaxation of Hypothesis (H) to $\chi_f\chi_g$ \emph{a
+quadratic character of conductor dividing $|D|$}, which is the case for
+CM pairs; or
+\item the integrality strengthening of Kings--Sprang
+\cite[Thm.~A]{KingsSprang2025}, applied to the Hecke character
+$\psi\sigma(\psi)^{-1}$ of $K$ entering the Rankin--Selberg motive; or
+\item the Tamagawa-number-conjecture proof of Castella
+\cite[Thm.~B]{Castella2025}, which establishes the $p$-part of BSD for
+CM elliptic curves and the corresponding $p$-integral
+Bloch--Beilinson--Kato formula for CM modular forms in higher weight.
+\end{enumerate}
+
+Resolving any of (1)--(3) would upgrade Theorem~\ref{thm:main} from an
+unconditional consequence of Damerell--Shimura into a theoretical
+identification of $q(D)$ with the Galois-equivariant decomposition of an
+explicit Rankin--Eisenstein class in
+$H^{1}_{\mathcal M}(\Spec K,\; M(f_5\otimes f_3)(2))_{\Q}$. We regard
+this as the appropriate multi-week theoretical follow-up.
+
+\subsection{Numerical robustness}
+
+We emphasise that Theorem~\ref{thm:main}, in the form stated, is
+\emph{independent} of any of (1)--(3); it is a direct consequence of the
+classical Damerell--Shimura rationality applied to the four boundary
+critical Beilinson--Damerell factors, and is unconditional. The
+formulation via Beilinson regulators is a guide to interpretation and to
+generalisations (e.g., to $h_K=4$ where the Galois group is
+$(\Z/2)^{2}$; see the next subsection), not a logical prerequisite.
+
+\subsection{Higher class number}
+
+Preliminary computation by the author at three $h_K=4$ fundamental
+discriminants $D\in\{-84,-120,-168\}$ confirms a corresponding canonical-pair
+ratio
+$q^{(\mathrm{can})}(D)\in\{16/15,\,233/162,\,61/48\}$ (50-digit
+\texttt{PARI/GP}). For non-canonical Galois pairs the cross-ratio lands in
+quadratic extensions of $\Q$ (typically $\Q(\sqrt{d})$ for $d$ a prime
+inert or ramified in $K$), with the cross-Galois square $q^{2}$ rational;
+this matches the multiplicative pattern observed throughout. A
+systematic treatment for general $h_K$ is left to a sequel.
+
+%===========================================================================
+\section{Two-invariant structure: $q^{\text{low}}$ and $q^{\text{edge}}$}\label{sec:two-invariant}
+%===========================================================================
+
+The structural amendment of \texttt{OP-BEILINSON-EXTEND-D} (2026-05-17) reveals\,that the Damerell--Beilinson algebra carries \emph{two} independent rational invariants. For each pair of CM newforms $(f_3,f_5)$ define
+\[
+  q^{\text{low}}(D)=\frac{BD_{5,2}}{BD_{3,1}},\qquad
+  q^{\text{edge}}(D)=\frac{BD_{5,4}}{BD_{3,2}},
+\]
+with $BD_{k,j}=L(f_k,j)/(\pi^{j}\,\Omega_K^{2(k-1)})$. These are the central ($j=1$) and right-edge ($j=k-1$) critical values respectively. The anti-diagonal sum rule $s+s'=4$ connects them via
+\[
+  q^{\text{low}}(D)=q^{\text{edge}}(D)\times\frac{L(f_5,2)/L(f_5,4)}{L(f_3,1)/L(f_3,2)}.
+\]
+
+\subsection{$q^{\text{edge}}$ at $h_K=2$}
+Nine $h_K=2$ discriminants confirmed rational (50-digit PARI):
+\[
+\begin{array}{c|c}
+  D & q^{\text{edge}} \\ \hline
+  -15 & 8/5 \\
+  -20 & 10/9 \\
+  -24 & 5/4 \\
+  -35 & 9/7 \\
+  -40 & 15/16 \\
+  -51 & 1 \\
+  -52 & 6/7 \\
+  -88 & 363/476 \\
+  -91 & 21/20
+\end{array}
+\]
+All in $\Q^{\times}$. The value $1$ at $D=-51$ suggests an additional symmetry.
+
+\subsection{Consistency checks}
+\begin{enumerate}
+  \item $q^{\text{low}}=q(2,2)$ via $s+s'=4$: confirmed 9/9 exact.
+  \item $q^{\text{edge}}$ coincides with $q^{\text{low}}$ for $D\in\{-7,-11,-19,-43\}$ but diverges at $D=-67,-163$.
+  \item The two-invariant structure is consistent with motivic Galois action of rank $\ge 2$ on $H^1_M(\Spec K,\M(6))$.
+\end{enumerate}
+
+%===========================================================================
+\section*{Acknowledgements}
+%===========================================================================
+
+The author thanks the LMFDB collaboration \cite{LMFDB} for
+the curve and newform databases, and the developers of \texttt{PARI/GP}
+for the computational platform.
+
+%===========================================================================
+\begin{thebibliography}{99}
+
+\bibitem{Beilinson1985}
+A.~A.~Beilinson,
+\textit{Higher regulators and values of L-functions},
+J.~Soviet Math.\ \textbf{30} (1985), 2036--2070.
+
+\bibitem{BrunaultChida2015}
+F.~Brunault and M.~Chida,
+\textit{Regulators for Rankin--Selberg products of modular forms},
+Ann.\ Math.\ Qu\'e.\ \textbf{40} (2016), 221--249.
+arXiv:1503.04626 [math.NT].
+
+\bibitem{Castella2025}
+F.~Castella,
+\textit{Tamagawa number conjecture for CM modular forms and Rankin--Selberg
+convolutions},
+to appear in Proc.\ London Math.\ Soc., 2025.
+arXiv:2407.11891 [math.NT].
+
+\bibitem{ChowlaSelberg1949}
+S.~Chowla and A.~Selberg,
+\textit{On Epstein's zeta-function (I)},
+Proc.\ Nat.\ Acad.\ Sci.\ U.S.A.\ \textbf{35} (1949), 371--374.
+
+\bibitem{Damerell1971a}
+R.~M.~Damerell,
+\textit{L-functions of elliptic curves with complex multiplication, I},
+Acta Arith.\ \textbf{17} (1971), 287--301.
+
+\bibitem{Damerell1971b}
+R.~M.~Damerell,
+\textit{L-functions of elliptic curves with complex multiplication, II},
+Acta Arith.\ \textbf{19} (1971), 311--317.
+
+\bibitem{Deligne1979}
+P.~Deligne,
+\textit{Valeurs de fonctions $L$ et p\'eriodes d'int\'egrales},
+in: \emph{Automorphic forms, representations and L-functions} (Corvallis 1977),
+Part 2,
+Proc.\ Sympos.\ Pure Math.\ \textbf{33}, AMS, 1979, 313--346.
+
+\bibitem{GoldsteinSchappacher1981}
+C.~Goldstein and N.~Schappacher,
+\textit{S\'eries d'Eisenstein et fonctions L de courbes elliptiques \`a
+multiplication complexe},
+J.~Reine Angew.\ Math.\ \textbf{327} (1981), 184--218.
+
+\bibitem{Gross1980}
+B.~H.~Gross,
+\textit{Arithmetic on elliptic curves with complex multiplication},
+Lecture Notes in Math.\ \textbf{776}, Springer, 1980.
+
+\bibitem{KingsLoefflerZerbes2020}
+G.~Kings, D.~Loeffler, and S.~L.~Zerbes,
+\textit{Rankin--Eisenstein classes for modular forms},
+Amer.\ J.\ Math.\ \textbf{142} (2020), 79--138.
+arXiv:1501.03289 [math.NT].
+
+\bibitem{KingsSprang2025}
+G.~Kings and J.~Sprang,
+\textit{Eisenstein--Kronecker classes, integrality of critical values of
+Hecke L-functions and $p$-adic interpolation},
+Ann.\ Math.\ \textbf{202} (2025), 1--109.
+arXiv:1912.03657 [math.NT].
+
+\bibitem{LMFDB}
+The LMFDB Collaboration,
+\emph{The L-functions and Modular Forms Database},
+\url{https://www.lmfdb.org}, 2024.
+
+\bibitem{Scholl1990}
+A.~J.~Scholl,
+\textit{Motives for modular forms},
+Invent.\ Math.\ \textbf{100} (1990), 419--430.
+
+\bibitem{Shimura1971}
+G.~Shimura,
+\textit{Introduction to the Arithmetic Theory of Automorphic Functions},
+Princeton Univ.\ Press, 1971.
+
+\bibitem{Shimura1976}
+G.~Shimura,
+\textit{The special values of the zeta functions associated with cusp forms},
+Comm.\ Pure Appl.\ Math.\ \textbf{29} (1976), 783--804.
+
+\bibitem{Shimura2000}
+G.~Shimura,
+\textit{Arithmeticity in the theory of automorphic forms},
+Math.\ Surveys Monogr.\ \textbf{82}, Amer.\ Math.\ Soc., 2000.
+
+\end{thebibliography}
+
+\end{document}

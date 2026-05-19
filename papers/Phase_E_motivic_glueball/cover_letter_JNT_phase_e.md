@@ -2,7 +2,7 @@
 
 **Manuscript** : "A motivic-weight anchor at SU(2)/D=−67: a single-discriminant
 correspondence and its finite-N limitations"
-**Author** : Kévin Remondière (Independent researcher, Tarbes, France)
+**Author** : Kévin Remondière (Independent researcher, Oloron-Sainte-Marie, France)
 **ORCID** : 0009-0008-2443-7166
 **Email** : kevin.remondiere [at] gmail.com
 **Length** : 11 pp total = 8 pp main body + 3 pp Appendix~A (cross-$N$ audit details), 4 tables, ancillary Python script
@@ -12,7 +12,7 @@ correspondence and its finite-N limitations"
 
 Kévin Remondière
 Independent researcher
-Tarbes, France
+Oloron-Sainte-Marie, France
 ORCID: 0009-0008-2443-7166
 kevin.remondiere [at] gmail.com
 

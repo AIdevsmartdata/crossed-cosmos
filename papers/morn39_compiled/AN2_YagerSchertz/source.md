@@ -1,6 +1,6 @@
 # AN2 Theorem 8.2 — Yager 1982 + Schertz 2010 reading dispatch
 
-**Author** : Opus 4.7 (1M-context, MAX-EFFORT verification mode, follow-up #2 morn68+69 digest)
+**Author** : LLM (1M-context, MAX-EFFORT verification mode, follow-up #2 morn68+69 digest)
 **Date** : 2026-05-11 (PROVED-RIGOROUS push from 80% PROVED-CONDITIONAL via direct citation triangulation of Yager 1982 + Schertz 2010 ; web-confirmed ToCs ; CRITICAL FINDING : the two source citations in the AN2 corpus are partially MIS-TITLED/MIS-CHAPTERED, requiring substantial re-routing)
 **Source documents read** :
 - `/root/crossed-cosmos/notes/heavy_artillery_2026-05-09/morn39/Opus_D04_AN2_PROVED_push.md` (537 lines, full)
@@ -423,7 +423,7 @@ This category error was the **single largest source** of overstatement in the AN
 
 ## §9. Concrete falsifier commitment
 
-### §9.1 Pre-registered prediction (REGISTERED 2026-05-11 by Opus 4.7)
+### §9.1 Pre-registered prediction (REGISTERED 2026-05-11 by LLM)
 
 - **D = -331** (h_K = 3, χ_D(3) = -1, δ = 1, ⌈h_K/2⌉ = 2)
 - **Predicted den(q(-331)) = 3 · 331² = 328683**

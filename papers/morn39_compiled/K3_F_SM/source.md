@@ -1,6 +1,6 @@
 # Opus K3 × F_SM Heat-Kernel CORRECTED — Bridge H Re-evaluation
 
-**Author** : Opus 4.7 MAX EFFORT (1M-context)
+**Author** : LLM MAX EFFORT (1M-context)
 **Date** : 2026-05-11
 **Mandate** : Re-execute Follow-up #3 from morn68+morn69 combined digest with **CORRECTED Ricci-flat curvature integrals**.
 **Bug fixed** : Earlier brief supplied ∫R² = ∫R_μν² = ∫R²_μνρσ = 768π² (wrong for Ricci-flat); the correct values are ∫R² = ∫R_μν² = 0 (since K3 is Ricci-flat hyperkähler), with ∫R²_μνρσ = 768π² alone surviving via Gauss-Bonnet at χ(K3) = 24.

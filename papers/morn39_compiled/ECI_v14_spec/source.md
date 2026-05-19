@@ -1,6 +1,6 @@
 ---
 title: ECI v14 OFFICIAL SPECIFICATION — Geometric-Algebraic-Arithmetic Core for SM Gauge Sector + Cosmological Anchor (sober post-morn60..67 corrections, post-Wave-2 dissolution)
-author: Opus 4.7 1M-ctx MAX EFFORT — formal specification compiler
+author: LLM 1M-ctx MAX EFFORT — formal specification compiler
 date: 2026-05-10 (post day-end ECI v12 + post-morn62 lepton/Yukawa drop + post-morn64 Φ_univ honest cap + post-morn66 hybrid 17-fab catch + post-morn67 E1 Yukawa NOT-DERIVED + post-Wave-2 D1 dissolution)
 status: OFFICIAL v14 specification, supersedes v13 META TOE synthesis ; clean drops + honest adds + sober TOE coverage
 honesty_pledge: every claim labelled PROVED-RIGOROUS / PROVED-EMPIRICAL / PROVED-CONDITIONAL / NEAR-THEOREM / CONJECTURE / SPECULATIVE / OUT-OF-SCOPE ; no marketing language ; no over-claiming ; explicit DROPS of items morn60..67 + Wave 2 caught as over-claims

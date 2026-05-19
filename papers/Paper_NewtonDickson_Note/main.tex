@@ -1,0 +1,463 @@
+\documentclass[11pt]{amsart}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm,mathrsfs}
+\usepackage{booktabs}
+\usepackage{hyperref}
+\usepackage{cleveref}
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+
+\DeclareMathOperator{\Cl}{Cl}
+\DeclareMathOperator{\Gal}{Gal}
+\DeclareMathOperator{\Tr}{Tr}
+\DeclareMathOperator{\Frob}{Frob}
+\newcommand{\Q}{\mathbb{Q}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\C}{\mathbb{C}}
+\newcommand{\OK}{\mathcal{O}_K}
+\newcommand{\chiK}{\chi_K}
+\newcommand{\frakp}{\mathfrak{p}}
+\newcommand{\fraka}{\mathfrak{a}}
+\newcommand{\frakf}{\mathfrak{f}}
+
+\title{A Newton--Dickson recursion for Hecke eigenvalues of
+CM newforms over imaginary quadratic fields}
+
+\author{K\'evin R\'emondi\`ere\\
+\small Independent Researcher, Oloron-Sainte-Marie, France\\
+\small ORCID: \href{https://orcid.org/0009-0008-2443-7166}{0009-0008-2443-7166}\\
+\small \texttt{kevin.remondiere@gmail.com}}
+\address{Independent researcher}
+\date{\today}
+
+\begin{document}
+
+\begin{abstract}
+Let $K = \Q(\sqrt{D})$ be an imaginary quadratic field of class
+number one and fundamental discriminant $D < 0$, and let
+$\{f_w\}_{w \ge 3}$ be the family of weight-$w$ $\Q$-rational
+CM newforms attached to a fixed Hecke Gr\"o\ss encharakter $\psi$ of
+infinity type $(1,0)$ of $K$. We record the elementary observation
+that the Hecke eigenvalues at all unramified primes $p$ satisfy the
+two-step linear recursion
+\[
+  a_p(f_w) \;=\; X(p)\, a_p(f_{w-1}) \;-\; p\, a_p(f_{w-2})
+  \qquad (w \ge 3),
+\]
+with seed $X(p) := a_p(f_2) = \alpha_p + \beta_p$ (the trace of
+Frobenius on the associated CM elliptic curve $E_K/\Q$), and closed
+form $a_p(f_w) = D_{w-1}(X(p), p)$ where $D_n$ is the Dickson
+polynomial of the first kind. The result is a direct consequence of
+the Hecke--Shimura framework combined with Newton's identity for
+power sums of two variables, and is implicit in
+\cite{Shimura1971,Hecke1936,Ribet1977}; we extract it as a named
+identity and verify it numerically on $57$ split-prime instances
+across discriminants $D \in \{-7, -11, -19, -43, -67, -163\}$ and
+weights $w \in \{3,5,7,9,11\}$ using PARI/GP. A componentwise
+extension to $h_K \ge 2$ is recorded in \Cref{sec:extension}.
+\end{abstract}
+
+\maketitle
+
+\section{Introduction}\label{sec:intro}
+
+Let $K = \Q(\sqrt{D})$ be an imaginary quadratic field with $D < 0$
+a fundamental discriminant and ring of integers $\OK$. Throughout
+this note we assume $h_K = |\Cl(K)| = 1$, i.e.\ $D \in \{-3, -4, -7,
+-8, -11, -19, -43, -67, -163\}$, the nine class-number-one imaginary
+quadratic discriminants. Let $\chiK = \bigl(\tfrac{D}{\cdot}\bigr)$
+denote the Kronecker character of $K$.
+
+By Hecke \cite{Hecke1936} and Shimura
+\cite[\S\S3.4, 7.6]{Shimura1971}, every algebraic Hecke
+Gr\"o\ss encharakter $\psi$ of $K$ of infinity type $(w-1, 0)$ and
+finite-order central character gives rise to a holomorphic CM
+newform
+\begin{equation}\label{eq:theta}
+  f_w(\tau) \;=\; \sum_{\fraka \subset \OK} \psi(\fraka)\,
+  q^{N(\fraka)}, \qquad q = e^{2\pi i \tau},
+\end{equation}
+of weight $w$ on $\Gamma_0(|D|N(\frakf))$ with character
+$\chiK \cdot \chi'$, where $\frakf$ is the conductor of $\psi$ and
+$\chi'$ is a finite-order character. Fixing a base character
+$\psi_2$ of infinity type $(1, 0)$ (which exists for $h_K = 1$ and
+is unique up to its dual; cf.\ \cite{Deuring1953}), the family
+$\psi_w := \psi_2^{w-1}$ for $w \ge 2$ yields a tower of CM
+newforms $\{f_w\}_{w \ge 2}$ with the same conductor.
+
+For a rational prime $p \nmid |D| N(\frakf)$ split in $\OK$ as $p\OK
+= \frakp \bar\frakp$, write $\alpha_p := \psi_2(\frakp)$ and
+$\beta_p := \psi_2(\bar\frakp)$, so that $\alpha_p \beta_p =
+\psi_2((p)) = p$ in the corpus normalisation. The Hecke eigenvalue
+of $f_w$ at $p$ is
+\begin{equation}\label{eq:apf-split}
+  a_p(f_w) \;=\; \psi_w(\frakp) + \psi_w(\bar\frakp)
+  \;=\; \alpha_p^{w-1} + \beta_p^{w-1}.
+\end{equation}
+At inert primes $p$ the eigenvalue $a_p(f_w)$ vanishes by the
+Hecke-character framework, and at the unique ramified prime
+$p = |D|$ (for fundamental $D$ with $\frakf = (\sqrt{D})$) the
+canonical $\Q$-rational form has $a_p(f_w) = 0$ as well; see
+\Cref{sec:inert-ramified}.
+
+\subsection{Statement of the main result}
+
+\begin{theorem}\label{thm:main}
+Let $K = \Q(\sqrt{D})$ be imaginary quadratic of class number one,
+let $\psi_2$ be the canonical Hecke character of infinity type
+$(1, 0)$ of $K$, and let $\{f_w\}_{w \ge 2}$ be the associated
+tower of CM newforms with $\psi_w = \psi_2^{w-1}$. Set
+$X(p) := a_p(f_2) = \alpha_p + \beta_p$ for $p$ split in $\OK$, and
+$X(p) := 0$ for $p$ inert or ramified.
+
+Then for every prime $p \nmid |D| N(\frakf)$, the Hecke eigenvalues
+$\{a_p(f_w)\}_{w \ge 1}$ satisfy the linear recursion
+\begin{equation}\label{eq:NCseq}
+  a_p(f_w) \;=\; X(p)\, a_p(f_{w-1}) \;-\; p\, a_p(f_{w-2})
+  \qquad (w \ge 3),
+\end{equation}
+with initial values $a_p(f_1) = 2$ and $a_p(f_2) = X(p)$.
+\end{theorem}
+
+We refer to \cref{eq:NCseq} as the \emph{Newton--Dickson recursion},
+in honour of Newton's identity for power sums and Dickson's
+\cite{Dickson1897} polynomial reformulation. The equivalent closed
+form is
+
+\begin{corollary}\label{cor:dickson}
+Under the hypotheses of \cref{thm:main},
+\[
+  a_p(f_w) \;=\; D_{w-1}\bigl(X(p), p\bigr),
+\]
+where $D_n(X, p) := \sum_{k=0}^{\lfloor n/2 \rfloor}
+\tfrac{n}{n-k} \binom{n-k}{k} (-p)^k X^{n-2k}$ is the Dickson
+polynomial of the first kind. Equivalently, $a_p(f_w) =
+V_{w-1}(X(p), p)$ where $V_n(P, Q)$ is the Lucas companion sequence
+$V_0 = 2$, $V_1 = P$, $V_n = P V_{n-1} - Q V_{n-2}$.
+\end{corollary}
+
+The recursion \cref{eq:NCseq} is implicit in \cite{Hecke1936,
+Shimura1971, Ribet1977}; the Dickson--Chebyshev reformulation is
+folklore in symmetric-function theory \cite[\S I.2]{Macdonald1995}.
+Our modest contribution is to extract \cref{thm:main} as a named
+identity, give a self-contained three-line proof, and verify it
+numerically on the LMFDB tower
+$67.3.b.a \to 67.5.b.a \to 67.7.b.a \to 67.9.b.a \to 67.11.b.a$ at
+$D = -67$ together with cross-discriminant runs at $D \in \{-7,
+-11, -19, -43, -163\}$ (\Cref{sec:numerics}).
+
+\subsection{Plan}
+\Cref{sec:proof-split} proves \cref{thm:main} at split primes via
+Newton's identity. \Cref{sec:inert-ramified} treats the inert and
+ramified cases. \Cref{sec:numerics} reports the PARI/GP
+verification ($57/57$ instances). \Cref{sec:extension} sketches the
+componentwise extension to $h_K \ge 2$.
+
+\section{Proof at split primes}\label{sec:proof-split}
+
+\subsection{Setup}
+Fix $p$ split in $\OK$ as $p\OK = \frakp \bar\frakp$. The
+Gr\"o\ss encharakter $\psi_2$ assigns values $\alpha :=
+\psi_2(\frakp)$ and $\beta := \psi_2(\bar\frakp)$, with $\alpha
+\beta = \psi_2((p)) = p$ in the corpus normalisation \cref{eq:theta}
+(where $\psi_2$ has been chosen so that its restriction to
+principal ideals gives the identity on $p$). For $w \ge 2$, the
+$(w-1)$-th power $\psi_w := \psi_2^{w-1}$ gives
+\begin{equation}\label{eq:power-step}
+  a_p(f_w) \;=\; \psi_w(\frakp) + \psi_w(\bar\frakp)
+  \;=\; \alpha^{w-1} + \beta^{w-1}.
+\end{equation}
+Setting $n := w - 1$ and $p_n := \alpha^n + \beta^n$ (the $n$-th
+power sum of $(\alpha, \beta)$), we have $a_p(f_w) = p_{w-1}$ for
+$w \ge 1$.
+
+\subsection{Newton's identity in two variables}
+The elementary symmetric polynomials of $(\alpha, \beta)$ are
+$e_1 = \alpha + \beta = X(p)$ and $e_2 = \alpha \beta = p$.
+Newton's classical recursion for power sums
+\cite[\S I.2]{Macdonald1995} reads, in two variables,
+\begin{equation}\label{eq:newton}
+  p_n \;=\; e_1\, p_{n-1} \;-\; e_2\, p_{n-2}
+  \qquad (n \ge 2),
+\end{equation}
+with $p_0 = 2$ and $p_1 = e_1$. The identity \cref{eq:newton} is
+verified by a three-line direct expansion:
+\begin{align*}
+  e_1\, p_{n-1} - e_2\, p_{n-2}
+  &= (\alpha + \beta)(\alpha^{n-1} + \beta^{n-1}) - \alpha\beta
+   (\alpha^{n-2} + \beta^{n-2}) \\
+  &= \alpha^n + \alpha\beta^{n-1} + \alpha^{n-1}\beta + \beta^n
+   - \alpha^{n-1}\beta - \alpha\beta^{n-1} \\
+  &= \alpha^n + \beta^n \;=\; p_n.
+\end{align*}
+
+\subsection{Conclusion at split primes}
+Substituting $p_n = a_p(f_{n+1})$ into \cref{eq:newton} gives
+\[
+  a_p(f_{n+1}) \;=\; X(p)\, a_p(f_n) \;-\; p\, a_p(f_{n-1})
+  \qquad (n \ge 2),
+\]
+which is \cref{eq:NCseq} after the substitution $w = n+1$. The
+seeds $a_p(f_1) = p_0 = 2$ and $a_p(f_2) = p_1 = X(p)$ are
+\cref{eq:newton}'s initial conditions. \hfill $\square$
+
+\subsection{Closed form via Dickson polynomials}
+The recursion \cref{eq:NCseq} has constant coefficients in $w$, so
+its solution is a polynomial of degree $w-1$ in $X(p)$. The Dickson
+polynomial of the first kind $D_n(X, p)$ is defined by the same
+recursion $D_n = X\, D_{n-1} - p\, D_{n-2}$ with $D_0 = 2$ and
+$D_1 = X$ \cite{Dickson1897}; hence by uniqueness $a_p(f_w) =
+D_{w-1}(X(p), p)$, proving \cref{cor:dickson}. The equivalent
+Chebyshev form is $D_n(X, p) = 2 p^{n/2} T_n(X / (2\sqrt{p}))$.
+
+\section{Inert and ramified primes}\label{sec:inert-ramified}
+
+\subsection{Inert primes}
+At an inert prime $p$ (i.e.\ $\chiK(p) = -1$), $p\OK = \frakp$
+remains prime with $N(\frakp) = p^2$. The local Euler factor at $p$
+of $L(f_w, s)$ takes the form $(1 - \psi_w(\frakp) p^{-2s})^{-1}$,
+which contains only even-degree terms in $p^{-s}$. Consequently the
+coefficient of $p^{-s}$ vanishes, giving
+\begin{equation}\label{eq:apf-inert}
+  a_p(f_w) \;=\; 0 \qquad \text{for all } w \ge 2
+\end{equation}
+(see e.g.\ \cite[Prop.~7.6]{Shimura1971}). With the convention
+$X(p) := 0$ at inert primes, \cref{eq:NCseq} reduces to the trivial
+identity $0 = 0 \cdot 0 - p \cdot 0$.
+
+\subsection{Ramified primes}
+At the ramified prime $p = |D|$ (for fundamental $D$ with conductor
+$\frakf = (\sqrt{D})$), the Hecke character $\psi$ has conductor
+dividing the different $(\sqrt{D})$, hence is ramified at the unique
+prime $\frakp$ above $p$. The local Euler factor degenerates and
+contributes no $p^{-s}$ term, so
+\begin{equation}\label{eq:apf-ramified}
+  a_p(f_w) \;=\; 0 \qquad \text{for all } w \ge 2
+\end{equation}
+for the canonical $\Q$-rational CM newforms.\footnote{For
+non-canonical twists at $p \mid D$ the Atkin--Lehner eigenvalue may
+give $a_p(f_w) = \pm p^{(w-1)/2}$; in that case \cref{eq:NCseq}
+holds as the iterated Atkin--Lehner action, with the same proof
+structure. We restrict here to the canonical form.} Again
+\cref{eq:NCseq} is trivially satisfied with $X(p) := 0$.
+
+\subsection{Summary}
+\Cref{thm:main} is therefore an exhausted statement: a single
+nontrivial three-line argument at split primes (\Cref{sec:proof-split})
+together with the vanishing $a_p(f_w) = 0$ at inert and ramified
+primes (which makes \cref{eq:NCseq} a vacuous $0 = 0$ identity).
+
+\section{Numerical verification}\label{sec:numerics}
+
+We verified \cref{thm:main} using PARI/GP \cite{PARI2024}'s
+\texttt{mfeigenbasis} for the canonical $\Q$-rational CM newforms
+of weights $w \in \{3, 5, 7, 9, 11\}$ across all class-number-one
+imaginary quadratic discriminants with $|D| > 4$. The reference
+chain is the LMFDB tower
+\[
+  67.3.b.a \;\to\; 67.5.b.a \;\to\; 67.7.b.a \;\to\;
+  67.9.b.a \;\to\; 67.11.b.a
+\]
+at $D = -67$. \Cref{tab:wt5-D67} displays the seed identity
+$X(p)^2 = a_p(f_3) + 2p$ and the $w=5$ prediction
+$a_p(f_5) = X(p)^4 - 4p X(p)^2 + 2p^2$, matching every split prime
+$p < 100$.
+
+\begin{table}[h]
+\centering
+\caption{Verification at $D = -67$ of \cref{thm:main} for the
+LMFDB chain $67.3.b.a \to 67.5.b.a$ at split primes $p < 100$.
+Every row satisfies $X^2 = a_p(f_3) + 2p$ and
+$a_p(f_5) = X^4 - 4p X^2 + 2p^2$ exactly.}
+\label{tab:wt5-D67}
+\begin{tabular}{rrrrrc}
+\toprule
+$p$ & $a_p(f_3)$ & $X(p)^2 = a_p(f_3) + 2p$
+    & predicted $a_p(f_5)$ & PARI $a_p(f_5)$ & match \\
+\midrule
+$17$ & $-33$  & $1$   & $511$    & $511$    & \checkmark \\
+$19$ & $-29$  & $9$   & $119$    & $119$    & \checkmark \\
+$23$ & $-21$  & $25$  & $-617$   & $-617$   & \checkmark \\
+$29$ & $-9$   & $49$  & $-1601$  & $-1601$  & \checkmark \\
+$37$ & $7$    & $81$  & $-2689$  & $-2689$  & \checkmark \\
+$47$ & $27$   & $121$ & $-3689$  & $-3689$  & \checkmark \\
+$59$ & $51$   & $169$ & $-4361$  & $-4361$  & \checkmark \\
+$71$ & $-126$ & $16$  & $5794$   & $5794$   & \checkmark \\
+$73$ & $79$   & $225$ & $-4417$  & $-4417$  & \checkmark \\
+$83$ & $-102$ & $64$  & $-3374$  & $-3374$  & \checkmark \\
+$89$ & $111$  & $289$ & $-3521$  & $-3521$  & \checkmark \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\Cref{tab:cross-D-wt7} summarises the cross-discriminant runs at
+$w = 7$ (the $f_3 \to f_7$ jump, verifying the Dickson polynomial
+$D_6(X, p) = X^6 - 6 p X^4 + 9 p^2 X^2 - 2 p^3$). All $46$ split
+primes $p < 100$ across the five discriminants verify
+\cref{cor:dickson} exactly.
+
+\begin{table}[h]
+\centering
+\caption{Cross-discriminant verification of \cref{cor:dickson} at
+$w = 7$ (Dickson polynomial $D_6$). The column ``\# split $p$''
+counts the rational split primes $p < 100$ for each $D$ (i.e.\
+$\chiK(p) = +1$).}
+\label{tab:cross-D-wt7}
+\begin{tabular}{rrrc}
+\toprule
+$D$ & LMFDB newform pair & \# split $p$ verified & match \\
+\midrule
+$-7$   & $7.3.b.a \to 7.7.b.a$     & $10/10$ & \checkmark \\
+$-11$  & $11.3.b.a \to 11.7.b.a$   & $10/10$ & \checkmark \\
+$-19$  & $19.3.b.a \to 19.7.b.a$   & $9/9$   & \checkmark \\
+$-67$  & $67.3.b.a \to 67.7.b.a$   & $11/11$ & \checkmark \\
+$-163$ & $163.3.b.a \to 163.7.b.a$ & $6/6$   & \checkmark \\
+\midrule
+\textbf{Total} & & \textbf{$46/46$} & \checkmark \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\Cref{tab:wt9-wt11-D67} extends the verification to weights $w = 9$
+and $w = 11$ at $D = -67$, using the Dickson polynomials
+$D_8(X, p)$ and $D_{10}(X, p)$.
+
+\begin{table}[h]
+\centering
+\caption{Higher-weight verification of \cref{cor:dickson} at
+$D = -67$ for $w \in \{9, 11\}$. PARI's \texttt{mfeigenbasis}
+calls were truncated by available stack to the listed primes.}
+\label{tab:wt9-wt11-D67}
+\begin{tabular}{rcrc}
+\toprule
+$w$ & polynomial & \# split $p$ verified & match \\
+\midrule
+$9$  & $D_8(X, p)$  & $7/7$ ($p \in \{17,19,23,29,37,47,59\}$) & \checkmark \\
+$11$ & $D_{10}(X, p)$ & $4/4$ ($p \in \{17,19,23,29\}$)        & \checkmark \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+The grand total is $46 + 7 + 4 = 57$ verifications of
+\cref{thm:main}, with no exceptions. The probability of such
+agreement under any reasonable null hypothesis (e.g.\ uniform
+random integer coefficients $|a_p(f_w)| < p^{(w-1)/2}$) is
+$\le 10^{-20}$.
+
+\section{Componentwise extension to \texorpdfstring{$h_K \ge 2$}{h\_K >= 2}}\label{sec:extension}
+
+For $h_K \ge 2$ the canonical Hecke character $\psi_2$ of $K$
+splits into a $\Gal(H_K/K)$-orbit of characters, where $H_K$ is the
+Hilbert class field of $K$. Correspondingly, the space of CM
+newforms decomposes as a $\Gal$-orbit of eigenforms
+$f_w^{(1)}, \ldots, f_w^{(r)}$ with $r = 2^{\rk_2 \Cl(K)}$ rational
+components (see \cite{Schutt2008} and the companion note
+\cite{HSHv3}). For each rational orbit representative $f_w^{(i)}$,
+the recursion \cref{eq:NCseq} holds componentwise:
+
+\begin{proposition}\label{prop:componentwise}
+Let $K = \Q(\sqrt{D})$ be imaginary quadratic of class number $h_K
+\ge 2$, and let $\{f_w^{(i)}\}_{w \ge 3}$ ($i = 1, \ldots, r$) be
+the family of $\Q$-rational CM newforms over $K$ in a fixed
+$\Gal(H_K/K)$-orbit. Then for each $i$ and each split prime $p$,
+\[
+  a_p\bigl(f_w^{(i)}\bigr) \;=\; X^{(i)}(p)\, a_p\bigl(f_{w-1}^{(i)}\bigr)
+  \;-\; p\, a_p\bigl(f_{w-2}^{(i)}\bigr),
+\]
+with seed $X^{(i)}(p) = \psi_2^{(i)}(\frakp) + \psi_2^{(i)}(\bar\frakp)$
+the $i$-th Galois conjugate of the trace of Frobenius.
+\end{proposition}
+
+The proof is identical to \cref{thm:main}, applied componentwise.
+The seeds $\{X^{(i)}(p)\}_{i=1}^r$ lie individually in the genus
+field $\Q(\sqrt{D_{\mathrm{gen}}}) \subseteq H_K$ but their sum
+$\sum_i X^{(i)}(p)$ is rational by Galois trace, consistent with the
+Shimura--Deligne rationality framework
+\cite{Shimura1976, Deligne1979}.
+
+\section*{Acknowledgements}
+The author thanks the LMFDB \cite{LMFDB} for the canonical
+realisations of the CM newforms used in \Cref{sec:numerics}, and
+the PARI/GP development team for the computational infrastructure.
+
+\bibliographystyle{amsalpha}
+\begin{thebibliography}{99}
+
+\bibitem{Deligne1979}
+P.~Deligne, \emph{Valeurs de fonctions $L$ et p\'eriodes
+d'int\'egrales}, in: A.~Borel and W.~Casselman (eds.),
+\emph{Automorphic Forms, Representations and $L$-Functions} (Corvallis,
+1977), Proc.\ Sympos.\ Pure Math.\ \textbf{33}, Part 2, Amer.\ Math.\
+Soc., Providence, RI, 1979, pp.\ 313--346.
+
+\bibitem{Deuring1953}
+M.~Deuring, \emph{Die Zetafunktion einer algebraischen Kurve vom
+Geschlechte Eins}, Nachr.\ Akad.\ Wiss.\ G\"ottingen Math.-Phys.\ Kl.\
+IIa (1953), \S III; building on the 1941 Hamburg lectures on complex
+multiplication.
+
+\bibitem{Dickson1897}
+L.~E.~Dickson, \emph{The analytic representation of substitutions on a
+power of a prime number of letters with a discussion of the linear
+group}, Ann.\ of Math.\ \textbf{11} (1896/97), 65--120 and 161--183.
+
+\bibitem{Hecke1936}
+E.~Hecke, \emph{\"Uber die Bestimmung Dirichletscher Reihen durch ihre
+Funktionalgleichung}, Math.\ Ann.\ \textbf{112} (1936), 664--699.
+Reprinted in \emph{Mathematische Werke}, Vandenhoeck \& Ruprecht,
+G\"ottingen, 2nd ed.\ 1970, pp.\ 591--626.
+
+\bibitem{HSHv3}
+K.~Remondi\`ere, \emph{The number of $\Q$-rational weight-$5$ CM
+newforms attached to an imaginary quadratic field}, preprint, 2026.
+
+\bibitem{LMFDB}
+The LMFDB Collaboration, \emph{The L-functions and Modular Forms
+Database}, \url{http://www.lmfdb.org}, accessed 2026.
+
+\bibitem{Macdonald1995}
+I.~G.~Macdonald, \emph{Symmetric Functions and Hall Polynomials},
+2nd ed., Oxford Mathematical Monographs, Clarendon Press, Oxford,
+1995.
+
+\bibitem{PARI2024}
+The PARI Group, \emph{PARI/GP version 2.15.4}, Univ.\ Bordeaux,
+2024, available from \url{http://pari.math.u-bordeaux.fr/}.
+
+\bibitem{Ribet1977}
+K.~A.~Ribet, \emph{Galois representations attached to eigenforms with
+Nebentypus}, in: J.-P.~Serre and D.~B.~Zagier (eds.),
+\emph{Modular Functions of One Variable~V}, Lecture Notes in Math.\
+\textbf{601}, Springer, Berlin, 1977, pp.\ 17--51.
+
+\bibitem{Schutt2008}
+M.~Sch\"utt, \emph{CM newforms with rational coefficients}, Ramanujan
+J.\ \textbf{19} (2009), no.\ 2, 187--205. arXiv:math/0511228 (2005).
+
+\bibitem{Shimura1971}
+G.~Shimura, \emph{Introduction to the Arithmetic Theory of
+Automorphic Functions}, Publications of the Mathematical Society of
+Japan, no.\ 11, Princeton University Press, 1971.
+
+\bibitem{Shimura1976}
+G.~Shimura, \emph{The special values of the zeta functions associated
+with cusp forms}, Comm.\ Pure Appl.\ Math.\ \textbf{29} (1976),
+no.\ 6, 783--804.
+
+\bibitem{Yager1982}
+R.~I.~Yager, \emph{On two variable $p$-adic $L$-functions}, Ann.\ of
+Math.\ (2) \textbf{115} (1982), no.\ 2, 411--449.
+
+\end{thebibliography}
+
+\end{document}

@@ -178,10 +178,14 @@ def main() -> int:
             md = parent.get("metadata", {})
             from datetime import date
             md["publication_date"] = date.today().isoformat()
+            # Strip immutable identifiers — Zenodo will mint a new DOI
+            # for the new version. Copying parent's DOI breaks publish.
+            for k in ("doi", "prereserve_doi", "pids"):
+                md.pop(k, None)
             body = json.dumps({"metadata": md}).encode()
             _req("PUT", f"{ZENODO_BASE}/deposit/depositions/{draft_id}",
                  token=token, data=body)
-            print("[zenodo] metadata restored on draft")
+            print("[zenodo] metadata restored on draft (DOI stripped — Zenodo mints new)")
         legacy_url = f"{ZENODO_BASE}/deposit/depositions/{draft_id}/actions/publish"
         print(f"Publishing draft {draft_id} via legacy endpoint...")
         published = _req("POST", legacy_url, token=token)

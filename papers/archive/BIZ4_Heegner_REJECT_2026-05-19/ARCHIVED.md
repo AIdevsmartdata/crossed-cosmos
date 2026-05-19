@@ -1,0 +1,1 @@
+Archived 2026-05-19 per DS Pro V4 fact-check: Theorem 6.2 is a tautology (trivial algebraic identity following from the definition of m_YM^form(D) := 2pi^2/sqrt(2|D|)); Theorem 6.1 universality claim ("independent of class number") unsubstantiated; "previously-circulated Conjecture A.1" is a strawman with no source. Not publication-ready.

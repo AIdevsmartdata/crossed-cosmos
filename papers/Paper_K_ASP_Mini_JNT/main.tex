@@ -11,9 +11,10 @@
 \theoremstyle{definition}
 \newtheorem{remark}{Remark}
 
-\title{An Explicit Dictionary $K_{\mathrm{ASP}}(N)$ between\\
-Imaginary Quadratic Fields and Integer Indices\\
-via Class Number and 2-Rank}
+\title{The empirical $K_{\mathrm{ASP}}(N)$ dictionary:\\
+a numerically verified correspondence between\\
+class-number-$N$ imaginary quadratic fields\\
+and $\mathrm{SU}(N)$ centre data}
 
 \author{K\'evin R\'emondi\`ere\\
 \small Independent Researcher, Oloron-Sainte-Marie, France\\
@@ -26,7 +27,7 @@ via Class Number and 2-Rank}
 \maketitle
 
 \begin{abstract}
-For each integer $N \geq 1$ we define $K_{\mathrm{ASP}}(N)$ to be the smallest (in absolute value) negative fundamental discriminant $D$ such that the imaginary quadratic field $K = \mathbb{Q}(\sqrt{D})$ has class number $h_K = N$ and 2-rank $\mathrm{rk}_2(\mathrm{Cl}(K)) = v_2(N)$, where $v_2$ denotes the 2-adic valuation. We prove the existence and uniqueness of $K_{\mathrm{ASP}}(N)$ for all $N$ where the underlying conditions are compatible with Gauss's genus theory, and verify the explicit dictionary numerically for $N \leq 50$ (with one expected gap at $N=32$ due to Cohen-Lenstra density). The dictionary provides a canonical embedding $\mathbb{Z}_{\geq 1} \hookrightarrow \{\text{imaginary quadratic fields}\}$ that is structurally compatible with the centre of $\mathrm{SU}(N)$ gauge groups, suggesting a natural arithmetic-physics correspondence.
+For each integer $N \geq 1$ we define $K_{\mathrm{ASP}}(N) = \mathbb{Q}(\sqrt{D_{\min}^{(N)}})$ where $D_{\min}^{(N)}$ is the smallest absolute value of a fundamental negative discriminant $D$ such that $\mathbb{Q}(\sqrt{D})$ has class number $h_K = N$ and $2$-rank $\mathrm{rk}_2(\mathrm{Cl}(K)) = v_2(N)$. We tabulate $K_{\mathrm{ASP}}(N)$ via PARI/GP for $N \in \{1,\ldots,30\}\cup\{36,40,44,48\}$, and we report $N = 32$ as an open numerical case (no admissible $|D|\leq 2\times 10^6$ found). Cohen-Lenstra-Gerth-Smith heuristics provide a motivation, not a proof, for the existence of $K_{\mathrm{ASP}}(N)$ at large $N$. The dictionary exhibits a structural compatibility with the centre $Z(\mathrm{SU}(N)) = \mathbb{Z}/N\mathbb{Z}$: $\mathrm{Cl}(K_{\mathrm{ASP}}(N))$ matches the cyclic and $2$-Sylow structure of $Z_N$. This compatibility is informal and does not constitute a theorem of arithmetic-physics correspondence.
 \end{abstract}
 
 \section{Introduction}
@@ -48,17 +49,17 @@ K_{\mathrm{ASP}}(N) = \min\bigl\{|D| : D < 0,\ D \text{ fund.\ disc.},\ h_K = N,
 where $K = \mathbb{Q}(\sqrt{D})$ and the minimum is taken over absolute values. We say $K_{\mathrm{ASP}}(N)$ is \emph{defined} if the set is non-empty.
 \end{definition}
 
-\begin{theorem}[Existence]
-For all $N \geq 1$, $K_{\mathrm{ASP}}(N)$ is defined.
-\end{theorem}
+\begin{proposition}[Tautological well-definedness]
+Whenever the admissibility set $\{D < 0\ \text{fund.\ disc.}: h_K = N,\ \mathrm{rk}_2(\mathrm{Cl}(K)) = v_2(N)\}$ is non-empty, the minimum $|D_{\min}^{(N)}|$ exists by well-ordering of $\mathbb{N}$, and $K_{\mathrm{ASP}}(N)$ is well defined.
+\end{proposition}
 
-\begin{theorem}[Explicit values]
-The values $K_{\mathrm{ASP}}(N)$ for $N \leq 50$ are listed in Table~\ref{tab:dict}.
-\end{theorem}
+\begin{remark}[Existence: empirical status]\label{rem:existence}
+We have verified by PARI/GP that the admissibility set is non-empty for $N \in \{1,\dots,30\} \cup \{36, 40, 44, 48\}$. The case $N = 32$ is open: no admissible discriminant with $|D| \leq 2 \times 10^6$ has been found. Cohen--Lenstra heuristics \cite{CohenLenstra1984} motivate, but do not prove, non-emptiness at large $N$. We do not claim a general existence theorem.
+\end{remark}
 
 \begin{table}[h]
 \centering
-\caption{$K_{\mathrm{ASP}}(N)$ for $N \leq 30$ (PARI verified)}
+\caption{$K_{\mathrm{ASP}}(N)$ for $N \in \{1,\ldots,30\}\cup\{32, 36, 40, 44, 48\}$ (PARI verified, $N=32$ open)}
 \label{tab:dict}
 \begin{tabular}{cccc|cccc}
 $N$ & $v_2(N)$ & $D$ & $\mathrm{Cl}(K)$ & $N$ & $v_2(N)$ & $D$ & $\mathrm{Cl}(K)$ \\
@@ -70,7 +71,7 @@ $N$ & $v_2(N)$ & $D$ & $\mathrm{Cl}(K)$ & $N$ & $v_2(N)$ & $D$ & $\mathrm{Cl}(K)
 5 & 0 & $-47$ & $\mathbb{Z}/5$ & 20 & 2 & $-455$ & $\mathbb{Z}/10\times\mathbb{Z}/2$ \\
 6 & 1 & $-87$ & $\mathbb{Z}/6$ & 24 & 3 & $-2184$ & $\mathbb{Z}/6\times(\mathbb{Z}/2)^2$ \\
 7 & 0 & $-71$ & $\mathbb{Z}/7$ & 28 & 2 & $-935$ & $\mathbb{Z}/14\times\mathbb{Z}/2$ \\
-8 & 3 & $-420$ & $(\mathbb{Z}/2)^3$ & 32 & 5 & ? ($|D|>50000$) & ? \\
+8 & 3 & $-420$ & $(\mathbb{Z}/2)^3$ & 32 & 5 & open ($|D|>2\!\times\!10^6$) & --- \\
 9 & 0 & $-199$ & $\mathbb{Z}/9$ & 36 & 2 & $-1295$ & $\mathbb{Z}/18\times\mathbb{Z}/2$ \\
 10 & 1 & $-119$ & $\mathbb{Z}/10$ & 40 & 3 & $-2415$ & $\mathbb{Z}/10\times(\mathbb{Z}/2)^2$ \\
 11 & 0 & $-167$ & $\mathbb{Z}/11$ & 44 & 2 & $-2135$ & $\mathbb{Z}/22\times\mathbb{Z}/2$ \\
@@ -122,40 +123,27 @@ $N$ & $D$ & $\zeta_K(2)$ & $\mathrm{Vol}(X_N)$ \\
 \end{tabular}
 \end{center}
 
-\section{Application: Arithmetic Yang-Mills Mass Gap (Theorem A)}
+\section{Application: an empirical scaling relation}\label{sec:scaling}
 
-\begin{theorem}[Arithmetic YM mass gap, unconditional]
-Define the arithmetic Hamiltonian on $L^2(X_N)$:
+We define the arithmetic surrogate scaling
 \[
-H_{\mathrm{arith}}(N) = \sigma_0 \cdot C(N)^2 \cdot \Delta_{X_N}
+\frac{m_{\mathrm{arith}}(N)}{\sqrt{\sigma_0}} \;:=\; C(N) \cdot \sqrt{\lambda_1(X_N)},
+\qquad
+C(N) = \sqrt{2\pi e \cdot 2/3} \cdot (9/10) \cdot (N^2+1)/N^2,
 \]
-where $C(N) = \sqrt{2\pi e \cdot 2/3} \cdot (9/10) \cdot (N^2+1)/N^2$ and $\sigma_0 > 0$ is a free scale parameter.
+where $X_N = \mathbb{H}^3 / \mathrm{PSL}_2(\mathcal{O}_{K_{\mathrm{ASP}}(N)})$ is the Bianchi $3$-orbifold and $\lambda_1(X_N)$ is the first non-zero eigenvalue of the hyperbolic Laplacian. This is a \emph{definition}, not a theorem.
 
-Then the spectral gap satisfies:
-\[
-\boxed{\frac{m_{\mathrm{arith}}(N)}{\sqrt{\sigma_0}} = C(N) \cdot \sqrt{\lambda_1(X_N)}}
-\]
-where $\lambda_1(X_N) \geq 21/25 = 0.84$ by Sarnak 1983 \cite{Sarnak1983}, the
-bound being valid for $\mathrm{PSL}_2(\mathcal{O}_K)$ for every imaginary
-quadratic field $K$, with arbitrary class number; and $\lambda_1 = 1$ under
-Selberg's strong conjecture.
-\end{theorem}
-
-\begin{proof}
-By construction, $\mathrm{Spec}(H_{\mathrm{arith}}) = \sigma_0 \cdot C(N)^2 \cdot \mathrm{Spec}(\Delta_{X_N})$. The spectral gap is the smallest non-zero eigenvalue $\lambda_1(X_N) \geq 21/25$ (Sarnak 1983, Acta Math.\ 151:253--295, Theorem on cusped Bianchi 3-manifolds for arbitrary imaginary quadratic $K$). Therefore $m_{\mathrm{arith}}^2 = \sigma_0 \cdot C(N)^2 \cdot \lambda_1 > 0$.
-\end{proof}
-
-\begin{remark}[Wiles strategy]
-Theorem~A is unconditional as a statement about the arithmetic operator $H_{\mathrm{arith}}$. The identification with the physical Yang-Mills Hamiltonian on $T^3$ is a separate conjecture (Transport), to be proved via the AdS/CFT bulk correspondence, the Kapustin-Witten geometric Langlands framework, or the Cao-Nissim-Sheffield rigorous continuum YM construction.
+\begin{remark}[Empirical match, no universal Selberg-type bound invoked]
+The companion paper \cite{Remondiere2026PRL} reports a root-mean-square agreement of $0.85\%$ between $m_{\mathrm{arith}}(N)/\sqrt{\sigma_0}$ (taking $\lambda_1 = 1$ as a working assumption) and the AT~2021 continuum-extrapolated lattice $m_{0^{++}}/\sqrt{\sigma}$ over six anchors $N \in \{2,3,4,5,6,\infty\}$ \cite{AT2021}. We make no claim of a universal positive lower bound on $\lambda_1(X_N)$ over all $N$; Sarnak's 1983 paper \cite{Sarnak1983} establishes the Selberg-type bound $\lambda_1 \geq 21/25$ for \emph{specific} arithmetic 3-manifolds, and its applicability to every Bianchi orbifold in the anchor list is an open question. Kim~2003 \cite{Kim2003} would conditionally improve this bound on the cuspidal forms in the image of base change from $\mathrm{GL}_2/\mathbb{Q}$. The empirical match is presented as a numerical observation, not as a theorem of physical identification.
 \end{remark}
 
 \section{Open Problems}
 
 \begin{enumerate}
-\item \textbf{Open: $K_{\mathrm{ASP}}(32)$ existence}. Extensive PARI scan up to $|D| < 2 \times 10^6$ does not produce a field with $h_K = 32$ and $\mathrm{rk}_2 = 5$ (elementary abelian $(\mathbb{Z}/2)^5$ class group). Either $K_{\mathrm{ASP}}(32) > 2 \times 10^6$, or no such field exists (Cohen-Lenstra rarity for elementary abelian class groups of rank $\geq 5$). For applications to physical $SU(N)$ Yang-Mills with $N \leq 30$, this exception is irrelevant.
-\item Prove Selberg's strong conjecture $\lambda_1 = 1$ for the specific Bianchi orbifolds $X_N$, or compute numerical $\lambda_1$ to high precision.
-\item Construct the Transport functor $\Phi : T^3 \to X_N$ (cobordism with Atiyah-Patodi-Singer eta-invariant matching).
-\item Verify $m_{\mathrm{arith}}/\sqrt{\sigma_0}$ matches lattice $m_{0^{++}}/\sqrt{\sigma}$ in continuum extrapolation (testable, AT2021 $RMS = 0.85\%$ on $N=2..6$).
+\item \textbf{$K_{\mathrm{ASP}}(32)$.} Verify whether a fundamental discriminant $|D| \leq 10^9$ satisfies $h_K = 32$ and $\mathrm{rk}_2(\mathrm{Cl}(K)) = 5$, or prove non-existence at all scales. Extensive PARI scan up to $|D| < 2 \times 10^6$ has not produced a candidate.
+\item \textbf{$K_{\mathrm{ASP}}(N)$ general non-emptiness.} Prove (or disprove) that the admissibility set is non-empty for every $N$ compatible with Gauss genus theory. Cohen--Lenstra--Gerth--Smith heuristics motivate, but do not prove, non-emptiness at large $N$.
+\item \textbf{Selberg-type bound.} Does any universal positive lower bound $\lambda_1(X_N) \geq c > 0$ hold uniformly for every Bianchi orbifold in the anchor list, with arbitrary class number $h_K = N$? Sarnak~1983 \cite{Sarnak1983} establishes such a bound for specific arithmetic 3-manifolds. Kim~2003 \cite{Kim2003} would conditionally improve the bound via base change.
+\item \textbf{Empirical scaling note.} Whether the numerical match between $m_{\mathrm{arith}}(N)/\sqrt{\sigma_0}$ (under $\lambda_1 = 1$) and the AT~2021 lattice $m_{0^{++}}/\sqrt{\sigma}$ (RMS $0.85\%$ on six anchors $N \in \{2,\ldots,6,\infty\}$ \cite{AT2021,Remondiere2026PRL}) admits a structural derivation from $4$D pure $\mathrm{SU}(N)$ Yang--Mills is open.
 \end{enumerate}
 
 \section{Acknowledgments}
@@ -167,7 +155,11 @@ The author thanks the PARI/GP development team and the LMFDB.
 \bibitem{Gauss1801} C.F.\ Gauss, \emph{Disquisitiones Arithmeticae}, 1801.
 \bibitem{Humbert1919} G.\ Humbert, \emph{Sur la mesure des classes d'Hermite}, Comptes Rendus Acad.\ Sci.\ Paris (1919).
 \bibitem{Kim2003} H.\ Kim, \emph{Functoriality for the exterior square of $GL_4$ and the symmetric fourth of $GL_2$}, J.\ Amer.\ Math.\ Soc.\ \textbf{16} (2003), 139--183.
-\bibitem{Sarnak1983} P.\ Sarnak, \emph{The arithmetic and geometry of some hyperbolic three-manifolds}, Acta Math.\ \textbf{151} (1983), 253--295.
+\bibitem{Sarnak1983} P.\ Sarnak, \emph{The arithmetic and geometry of some hyperbolic three-manifolds}, Acta Math.\ \textbf{151} (1983), 253--295. (Scope: specific arithmetic 3-manifolds.)
+
+\bibitem{AT2021} A.\ Athenodorou, M.\ Teper, \emph{The glueball spectrum of $\mathrm{SU}(N)$ gauge theories in $3+1$ dimensions}, JHEP \textbf{11} (2021) 172; arXiv:2106.00364 [hep-lat].
+
+\bibitem{Remondiere2026PRL} K.\ R\'emondi\`ere, \emph{An empirical scaling relation between $\mathrm{SU}(N)$ lattice glueball masses and class-number-$N$ imaginary quadratic Bianchi spectra}, companion paper, 2026.
 \bibitem{Stark1975} H.M.\ Stark, \emph{On complex quadratic fields with class number two}, Math.\ Comp.\ \textbf{29} (1975), 289--302.
 \bibitem{MaclachlanReid2003} C.\ Maclachlan, A.W.\ Reid, \emph{The Arithmetic of Hyperbolic 3-Manifolds}, Graduate Texts Math.\ \textbf{219}, Springer, 2003.
 \end{thebibliography}

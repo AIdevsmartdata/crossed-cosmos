@@ -120,6 +120,14 @@ jobs:
             git add "papers/$PAPER/"
             git commit -m "paper($PAPER): ready for review"
           fi
+
+          # If branch == master (no commits ahead), skip PR creation
+          if [ "$(git rev-parse HEAD)" = "$(git rev-parse origin/$BASE_BRANCH)" ]; then
+            echo "::notice::Branch $BRANCH is already in sync with $BASE_BRANCH (no commits to PR). Skipping."
+            echo "pr_number=" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
           git push origin "$BRANCH" --force
 
           REPO="${{ github.repository }}"

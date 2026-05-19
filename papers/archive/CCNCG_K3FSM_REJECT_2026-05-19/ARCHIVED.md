@@ -1,0 +1,1 @@
+Archived 2026-05-19 per DS Pro V4 fact-check: Connes-Chamseddine spectral triple construction conditional on two unresolved gaps (~20% confidence); three axioms only partially closed for 3/6 anchors; foundational status of "ECI v12" is internal-only with no independent recognition; references "Opus et al. (2026)" and "AN4 mass-gap formula" unverifiable.

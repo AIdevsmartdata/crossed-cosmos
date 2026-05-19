@@ -1,0 +1,1 @@
+Archived 2026-05-19 per DS Pro V4 fact-check: Identification of Standard-Model U(1) sector with K-theory of CM K3 surface is completely unsupported; no known physical or mathematical framework derives SM gauge fields from K^0(C(X)) of K3. Three claimed "independent derivations" (NCG, heterotic, F-theory) not presented; prediction Delta_{S08}(mu) lacks first-principles derivation.

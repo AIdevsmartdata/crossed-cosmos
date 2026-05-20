@@ -1,21 +1,23 @@
 #!/usr/bin/env python3
 """
-Transport Conjecture — Entropy Principle Test
-==============================================
-Tests whether the YM vacuum saturates the maximum entropy bound:
+Transport Conjecture — λ₁^eff Diagnostic (NOT an entropy test)
+================================================================
+⚠️ HONEST LABEL: This script computes λ₁^eff(N) = (m/√σ)² / C(N)²
+   NOT the actual YM vacuum entropy (which requires Chroma GPU).
 
-  S_YM(N) ≤ S_max(N) = ½ log(2πe · σ₀ · C(N)²)
+   ΔS computed here is just log(m_obs/m_pred) = ½·log(λ₁^eff).
+   It's exactly EQUIVALENT to the λ₁^eff analysis — not independent.
 
-If S_YM ≈ S_max → vacuum is entropy-maximal → Transport promoted.
-If S_YM ≪ S_max → additional physics constrains the vacuum → Transport needs refinement.
+For a genuine entropy principle test:
+   1. Run Chroma GPU SU(2) lattice MC
+   2. Extract Wilson loop eigenvalue distribution
+   3. Compute Gibbs entropy S = -Σ p_i log p_i
+   4. Compare to S_max = ½ log(2πe · σ₀ · C(N)²)
 
-Method:
-  From the empirical m_{0++}(N)/√σ₀, we infer the entropy deficit.
-  For a Gaussian vacuum (max entropy), m² ∝ (entropy power)².
-  Deviation from Gaussian → S_YM < S_max → m_deviation observable.
+This script is a CONVENIENCE WRAPPER for λ₁^eff. Use with that caveat.
 
 Author: Ξ Research
-Date: 2026-05-20
+Date: 2026-05-20 (corrected 18:20 — SU(12) value + honest framing)
 """
 
 import numpy as np
@@ -46,7 +48,7 @@ ANCHORS = {
     6:  Anchor(6,  3.102, 0.032, 6,  -87),
     8:  Anchor(8,  3.099, 0.026, 8,  -260),
     10: Anchor(10, 3.106, 0.035, 10, -435),
-    12: Anchor(12, 3.225, 0.040, 12, -483),
+    12: Anchor(12, 3.151, 0.033, 12, -483),  # CORRECTED per AT2021 Table 34
     'inf': Anchor(np.inf, 3.070, 0.050, np.inf, None),
 }
 

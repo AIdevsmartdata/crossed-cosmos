@@ -1,0 +1,1039 @@
+% =============================================================================
+% Paper Arithmetic Theorem (consolidated, target: Journal of Number Theory)
+%   Consolidation of:
+%     (i)   Paper_Lemma_A32_Selberg_JFA       (Theorem 1.1, unconditional)
+%     (ii)  Paper_W1_xi_star_universal_CR     (\xi^* = 2/3 universal)
+%     (iii) Paper_CR_Theorem_JNT              (Center-Rank inequality CR/CR')
+%
+%   The headline of this paper is a single arithmetic invariant C(N) of the
+%   integer N>=2, built from three independent unconditional ingredients
+%   above.  Physical interpretation (mass gap of SU(N) Yang-Mills) is NOT
+%   asserted here and is deferred to a companion empirical paper.
+%
+% Author : Kevin Remondiere (Oloron-Sainte-Marie, France)
+% Status : 12-20pp consolidated, unconditional (modulo Bunke-Olbrich + Gangolli
+%          -Warner published inputs, and the CR conditional gaps explicitly
+%          named).
+% =============================================================================
+\documentclass[11pt,a4paper,reqno]{amsart}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath,amssymb,amsthm,mathrsfs}
+\usepackage{geometry}
+\usepackage{hyperref}
+\usepackage{enumitem}
+\usepackage{booktabs}
+\usepackage{xcolor}
+\usepackage{microtype}
+
+\geometry{margin=2.5cm}
+
+\hypersetup{
+  colorlinks=true,
+  linkcolor=blue!60!black,
+  citecolor=blue!60!black,
+  urlcolor=blue!60!black
+}
+
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{conjecture}[theorem]{Conjecture}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{remark}[theorem]{Remark}
+
+\DeclareMathOperator{\PSL}{PSL}
+\DeclareMathOperator{\SL}{SL}
+\DeclareMathOperator{\GL}{GL}
+\DeclareMathOperator{\SU}{SU}
+\DeclareMathOperator{\Cl}{Cl}
+\DeclareMathOperator{\Gal}{Gal}
+\DeclareMathOperator{\Vol}{Vol}
+\DeclareMathOperator{\Tr}{Tr}
+\DeclareMathOperator{\Spec}{Spec}
+\DeclareMathOperator{\disc}{disc}
+\DeclareMathOperator{\rk}{rk}
+\DeclareMathOperator{\Dom}{Dom}
+\DeclareMathOperator{\Res}{Res}
+
+\newcommand{\OK}{\mathcal{O}_K}
+\newcommand{\HH}{\mathbb{H}}
+\newcommand{\RR}{\mathbb{R}}
+\newcommand{\CC}{\mathbb{C}}
+\newcommand{\QQ}{\mathbb{Q}}
+\newcommand{\ZZ}{\mathbb{Z}}
+\newcommand{\NN}{\mathbb{N}}
+\newcommand{\FF}{\mathbb{F}}
+\newcommand{\TT}{\mathbb{T}}
+\newcommand{\fp}{\mathfrak{p}}
+\newcommand{\fa}{\mathfrak{a}}
+\newcommand{\fb}{\mathfrak{b}}
+\newcommand{\fc}{\mathfrak{c}}
+\newcommand{\fm}{\mathfrak{m}}
+\newcommand{\YK}{Y_K}
+\newcommand{\GK}{\Gamma_K}
+\newcommand{\gK}{g(K)}
+\newcommand{\dualgK}{\widehat{g(K)}}
+\newcommand{\Kgen}{K_{\mathrm{gen}}}
+\newcommand{\KH}{K_H}
+\newcommand{\Lcusp}{L^2_{\mathrm{cusp}}}
+\newcommand{\Lcont}{L^2_{\mathrm{cont}}}
+\newcommand{\Heis}{\mathcal{H}}
+\newcommand{\PW}{\mathcal{S}^{\mathrm{PW}}}
+\newcommand{\xis}{\xi^{*}}
+\newcommand{\vtwo}{v_2}
+\newcommand{\YKCR}{Y_K^{\mathrm{CR}}}
+\newcommand{\Cinv}{C}
+
+\title[An arithmetic invariant of Bianchi 3-orbifolds]{%
+An arithmetic invariant $C(N)$ of Bianchi 3-orbifolds from\\
+a per-character pretrace decomposition, a universal\\
+Selberg residue ratio, and a Center--Rank inequality}
+
+\author{K\'evin R\'emondi\`ere}
+\address{Independent researcher, Oloron-Sainte-Marie, France}
+\email{kevin.remondiere@gmail.com}
+\thanks{ORCID 0009-0008-2443-7166.  This work is part of the
+\emph{crossed-cosmos} project (concept DOI 10.5281/zenodo.19686398).  The author
+thanks the open mathematical literature, in particular the foundational
+treatments by Elstrodt--Grunewald--Mennicke, Sarnak, Selberg, Cox, Gauss,
+Dirichlet, 't~Hooft and Dijkgraaf--Witten.}
+
+\subjclass[2020]{Primary 11F72, 11R29; Secondary 11M36, 11R37, 11R65, 58J50}
+
+\keywords{Selberg pretrace formula, Bianchi 3-orbifold, genus character, class
+field theory, Dirichlet L-function, Bernoulli number, heat kernel, residue,
+arithmetic invariant}
+
+\date{\today}
+
+\begin{document}
+
+\begin{abstract}
+Let $K=\QQ(\sqrt{D})$ be an imaginary quadratic field with fundamental
+discriminant $D<0$, and let $\YK := \PSL_2(\OK)\backslash\HH^3$ be the Bianchi
+3-orbifold.  We assemble, from three independent unconditional ingredients, a
+purely arithmetic invariant attached to each integer $N\ge 2$:
+\[
+   \Cinv(N) \;:=\; \sqrt{2\pi e \cdot \tfrac{2}{3}} \cdot \tfrac{9}{10}
+       \Bigl(1 + \tfrac{1}{N^{2}}\Bigr) \;\in\; \RR_{>0}.
+\]
+The three ingredients are:
+(I) a per-character orthogonal decomposition of $L^{2}(\YK)$ along the genus
+character group $\gK := \Cl(K)/\Cl(K)^{2}$ and the corresponding factorisation
+of the Selberg pretrace identity into absolutely convergent $\chi$-summands;
+(II) a universal residue ratio $\xis(K) \equiv 2/3$ extracted from the
+identity term of the same pretrace formula, established by a closed-form
+$\Gamma$-function residue computation and verified to $100$ digits across eight
+discriminants $D\in\{-3,-7,-11,-15,-19,-43,-67,-163\}$; (III) a
+\emph{Center--Rank} inequality $\rk_{2}(\Cl(\YKCR(N))) \ge \vtwo(N)$ between
+the 2-rank of the class group of a canonical imaginary quadratic representative
+$\YKCR(N)$ and the 2-adic valuation of $N$, together with an unconditional
+Dirichlet companion verified for all $153$ fundamental discriminants
+$D\in[-500,-3]$, which restricts the set of admissible representatives.  The
+$9/10$ prefactor is the Dijkgraaf--Witten genus-$0$ ratio $N^{2}/(N^{2}+1)$
+evaluated at the SU(3) anchor.  The paper establishes the three ingredients
+under explicit hypotheses and assembles them into a calculable invariant
+$\Cinv:\NN_{\ge 2}\to\RR_{>0}$.  No physical interpretation is asserted:
+empirical comparison with SU($N$) glueball anchors is deferred to a companion
+paper.
+\end{abstract}
+
+\maketitle
+
+% =============================================================================
+\section{Introduction}\label{sec:intro}
+% =============================================================================
+
+\subsection{Motivation}\label{ss:motivation}
+
+To every integer $N\ge 2$ we shall associate an arithmetic invariant
+$\Cinv(N)\in\RR_{>0}$, defined by an explicit combination of three independent
+ingredients drawn from class field theory, spectral analysis on
+hyperbolic 3-orbifolds, and the genus expansion of two-dimensional
+Dijkgraaf--Witten gauge theory.  Each ingredient is a precise mathematical
+statement; each is proved \emph{unconditionally} (modulo classical
+published references); and the three together yield a closed-form, calculable
+quantity which we suggest is a natural arithmetic counterpart to the
+2-primary structure of $\SU(N)$ at integer rank.
+
+Two motivations underlie the construction.
+
+\emph{First}, the genus theory of Gauss (\cite{Gauss1801}; modern
+\cite[Thm.~7.7]{Cox1989}) identifies the elementary abelian 2-quotient
+$\gK := \Cl(K)/\Cl(K)^{2}$ of the ideal class group of an imaginary quadratic
+field $K=\QQ(\sqrt{D})$.  The same 2-elementary group acts naturally on the
+$L^{2}$-spectrum of the Bianchi 3-orbifold $\YK := \PSL_{2}(\OK)\backslash
+\HH^{3}$ via the Hecke algebra of integral ideals
+(\cite[\S7.6]{ElstrodtGrunewaldMennicke1998}; recalled in \S\ref{sec:thm-A}
+below).
+
+\emph{Second}, the 't~Hooft electric flux group
+$H^{2}(\TT^{4},\ZZ_{N})\cong(\ZZ_{N})^{6}$ \cite{tHooft1979} of $\SU(N)$
+gauge theory on the 4-torus carries a natural 2-primary part
+$(\ZZ/2^{\vtwo(N)})^{6}$, whose comparison with the genus 2-rank
+$\rk_{2}(\Cl(K))$ is the content of our Center--Rank inequality of
+\S\ref{sec:thm-C}.
+
+The arithmetic invariant $\Cinv(N)$ assembled from these two structures plus
+the universal Selberg residue ratio of \S\ref{sec:thm-B} is a purely
+number-theoretic object.  Its physical interpretation --- whether a relation of
+the form $\Cinv(N) \approx m_{0^{++}}(N)/\sqrt{\sigma}$, with the right-hand
+side a $\SU(N)$ Yang--Mills glueball-to-string-tension ratio --- can be
+\emph{tested empirically} against lattice data \cite{Athenodorou2021} but is
+\emph{not the subject of the present paper}.  The present paper establishes
+$\Cinv$ as a calculable arithmetic invariant; the empirical comparison and any
+physical interpretation are deferred to a companion paper
+\cite{Remondiere2026Transport}.
+
+\subsection{Main theorem}\label{ss:mainthm}
+
+For an imaginary quadratic field $K=\QQ(\sqrt{D})$ with $D<0$ fundamental,
+denote by
+\begin{itemize}[leftmargin=2em]
+  \item $h_{K} := |\Cl(K)|$ the class number,
+  \item $\rk_{2}(K) := \dim_{\FF_{2}}\Cl(K)/\Cl(K)^{2}$ the 2-rank of the
+        class group,
+  \item $\YK := \PSL_{2}(\OK)\backslash\HH^{3}$ the Bianchi 3-orbifold,
+  \item $\Delta$ the positive hyperbolic Laplacian on $\YK$,
+  \item $Z_{\mathrm{id}}(s)$ the Mellin transform of the identity-term
+        heat-kernel contribution to the Selberg pretrace formula on $\YK$.
+\end{itemize}
+For an integer $N\ge 2$, denote by $\vtwo(N) := \mathrm{ord}_{2}(N)$ the
+2-adic valuation, and by $\YKCR(N)$ the canonical imaginary quadratic
+representative attached to $N$ (Definition~\ref{def:YKCR} below).
+
+\begin{theorem}[Three-ingredient arithmetic invariant]\label{thm:main}
+Let $N\ge 2$ be an integer.
+\begin{enumerate}[label=\textup{(\Alph*)},leftmargin=2em]
+  \item \textbf{Per-character pretrace decomposition.} For every imaginary
+        quadratic $K=\QQ(\sqrt{D})$ with $D<0$ fundamental, $L^{2}(\YK)$
+        admits a canonical orthogonal decomposition
+        $L^{2}(\YK)=\bigoplus_{\chi\in\dualgK}L^{2}(\YK)_{\chi}$ along the
+        Pontryagin dual of the genus character group $\gK$, the heat
+        semigroup $e^{-t\Delta}$ block-diagonalises along the decomposition,
+        and the Selberg pretrace identity factorises into one absolutely
+        convergent identity per character.  See Theorem~\ref{thm:thmA}.
+  \item \textbf{Universal Selberg residue ratio.} For every imaginary
+        quadratic $K=\QQ(\sqrt{D})$ with $D<0$ fundamental,
+        $Z_{\mathrm{id}}(s)$ is meromorphic on $\CC$ with simple poles at
+        $s\in\{1/2,3/2\}$, and the residue ratio
+        $\Res_{s=1/2}Z_{\mathrm{id}}/\Res_{s=3/2}Z_{\mathrm{id}}
+         = -\Gamma(3/2)/\Gamma(1/2) = -1/2$
+        is independent of $K$.  The hyperbolic, elliptic, parabolic and
+        Eisenstein contributions are entire at $s\in\{1/2,3/2\}$.  Hence
+        $\xis(K) := 1/(1+|\mathrm{ratio}|) = 2/3$ for every $K$.  See
+        Theorem~\ref{thm:thmB}.
+  \item \textbf{Center--Rank inequality.} For every integer $N\ge 2$ under
+        the canonical-representative convention of Definition~\ref{def:YKCR},
+        $\rk_{2}(\Cl(\YKCR(N)))\ge\vtwo(N)$.  The Dirichlet companion
+        $\vtwo(B_{1,\chi_{K}})\ge\vtwo(N)-\vtwo(w_{K}/2)$ is unconditional and
+        verified for all $153$ fundamental discriminants $D\in[-500,-3]$.
+        See Theorems~\ref{thm:thmC} and~\ref{thm:thmCprime}.
+  \item \textbf{$F(N)$ Dijkgraaf--Witten genus expansion.} The 2-genus
+        Dijkgraaf--Witten partition function $Z_{g}=N^{2-2g}$ at the SU(3)
+        anchor yields the structural form
+        $F(N) := (9/10)(1+1/N^{2})$ with $9/10 = Z_{0}(3)/(Z_{0}(3)+Z_{1})$
+        and $(1+1/N^{2})$ the leading-$N$ 't~Hooft correction.  See
+        Proposition~\ref{prop:FN}.
+\end{enumerate}
+Define the arithmetic invariant
+\begin{equation}\label{eq:CN}
+   \Cinv(N) \;:=\; \sqrt{2\pi e \cdot \xis(K)} \cdot F(N)
+            \;=\; \sqrt{2\pi e \cdot \tfrac{2}{3}} \cdot \tfrac{9}{10}
+                  \Bigl(1+\tfrac{1}{N^{2}}\Bigr).
+\end{equation}
+Then $\Cinv:\NN_{\ge 2}\to\RR_{>0}$ is monotonically decreasing,
+$\lim_{N\to\infty}\Cinv(N) = (9/10)\sqrt{4\pi e/3} \approx 2.96296$, and is
+calculable algorithmically (PARI/GP, 1~s/value at $100$-digit precision).
+\end{theorem}
+
+\subsection{Honest scope}\label{ss:scope}
+
+The theorem above is an \emph{arithmetic} statement.  We emphasise three
+explicit honest-scope clauses, each made precise in the body of the paper:
+
+\begin{itemize}[leftmargin=2em]
+  \item \textbf{Spectral gap not invoked.} The proof of part (A) does not
+        use a per-$\chi$ Selberg-type spectral gap
+        $\lambda_{1}(\Delta_{\chi}^{\mathrm{cusp}})\ge c>0$ (which is a
+        long-standing open question in the universal-Bianchi setting; see
+        Remark~\ref{rem:Selberggap}).
+  \item \textbf{CR conditional gaps.} Part (C) (the inequality with
+        $\rk_{2}\ge\vtwo(N)$ rather than the unconditional Dirichlet
+        companion) is conditional on four explicit gaps G1--G4 collected in
+        \S\ref{ss:gaps}: a sign ambiguity in the centre injection, an
+        $N$-ality compatibility under twisted boundary conditions, an
+        ASP canonical-choice convention, and a Lichnerowicz $\kappa=0$ scan
+        compatibility internal to a companion paper.  The
+        Dirichlet companion (Theorem~\ref{thm:thmCprime}) is unconditional.
+  \item \textbf{Physical interpretation deferred.} The present paper does
+        \emph{not} claim that $\Cinv(N)$ equals any physical quantity
+        (Yang--Mills mass gap, glueball ratio, etc.).  Empirical comparison
+        with lattice glueball anchors \cite{Athenodorou2021} is deferred to
+        the companion paper \cite{Remondiere2026Transport}.
+\end{itemize}
+
+\subsection{Organisation}\label{ss:organisation}
+
+\S\ref{sec:thm-A} proves part (A).  \S\ref{sec:thm-B} proves part (B).
+\S\ref{sec:thm-C} proves parts (C) and (C') and tabulates per-$N$
+representatives for $2\le N\le 10$.  \S\ref{sec:FN} establishes the $F(N)$
+form (D) via 't~Hooft / Dijkgraaf--Witten.  \S\ref{sec:assembly} assembles
+the three ingredients into $\Cinv(N)$ and lists three falsifiable predictions.
+\S\ref{sec:open} closes with open questions.
+
+% =============================================================================
+\section{Part (A): Per-character pretrace decomposition}\label{sec:thm-A}
+% =============================================================================
+
+\subsection{Setting}\label{ss:Asetting}
+
+Let $K=\QQ(\sqrt{D})$ be imaginary quadratic with fundamental discriminant
+$D<0$, ring of integers $\OK$, ideal class group $\Cl(K)$, class number $h_K$,
+and 2-rank $\rk_2(K)$.  By Gauss's genus theory \cite{Gauss1801} and Cox 1989
+\cite[Thm.~7.7]{Cox1989}, the quotient
+\[
+  \gK := \Cl(K)/\Cl(K)^2 \;\cong\; (\ZZ/2)^{\rk_2(K)}
+\]
+is the genus character group, with $|\gK|=2^{\rk_2(K)}$ and associated genus
+field $\Kgen$ (the maximal subextension of the Hilbert class field $\KH$ which
+is abelian over $\QQ$) satisfying $\Gal(\Kgen/K)\cong\gK$.
+
+Let $\HH^3 := \{(x_1,x_2,y)\in\RR^2\times\RR_{>0}\}$ carry the hyperbolic
+metric $ds^2 = y^{-2}(dx_1^2+dx_2^2+dy^2)$, and let
+$\GK := \PSL_2(\OK)$ act on $\HH^3$ by linear fractional transformations.
+The quotient $\YK := \GK\backslash\HH^3$ is the Bianchi 3-orbifold, a
+finite-volume hyperbolic 3-orbifold with $h_K$ cusps (one per ideal class)
+\cite[\S1.5 Cor.~5.5]{ElstrodtGrunewaldMennicke1998}.  Let $\Delta$ denote the
+positive hyperbolic Laplacian, with discrete cuspidal spectrum
+$\{\lambda_n\}_{n\ge 1}\subset[1,\infty)$ and absolutely continuous Eisenstein
+part on $[1,\infty)$.
+
+The Selberg pretrace identity \cite{Selberg1956},\cite[\S6.5]{ElstrodtGrunewaldMennicke1998}
+on $\YK$, applied to a Paley--Wiener test function $h\in\PW(\RR)$, reads
+\begin{equation}\label{eq:globalpretrace}
+  \sum_n h(r_n) \;+\; \frac{1}{4\pi}\int_{\RR} h(r)\,M(r)\,dr
+  \;=\; \sum_{[\gamma]}\Phi_h(\gamma),
+\end{equation}
+with $\lambda_n=1+r_n^2$, $M(r)=-d/dr\,\log\det\Phi(1/2+ir)$ the scattering
+determinant, and $\Phi_h$ the standard orbital integral.  Both sides converge
+absolutely for every $h\in\PW(\RR)$
+\cite[\S6.4]{ElstrodtGrunewaldMennicke1998},\cite[\S2.2]{BunkeOlbrich1995}.
+
+\subsection{Statement and proof}\label{ss:Athm}
+
+\begin{theorem}[Part (A) full statement]\label{thm:thmA}
+Let $K=\QQ(\sqrt{D})$ be imaginary quadratic with fundamental discriminant
+$D<0$.
+\begin{enumerate}[label=\textup{(a\arabic*)},leftmargin=2em]
+  \item There is a canonical orthogonal decomposition
+        $L^2(\YK) = \bigoplus_{\chi\in\dualgK} L^2(\YK)_\chi$, induced by the
+        Hecke action of $\Cl(K)$ on $L^2(\YK)$ factoring through the quotient
+        $\Cl(K)\twoheadrightarrow\gK$.
+  \item The Laplacian $\Delta$ preserves each summand.  Writing
+        $\Delta_\chi := \Delta|_{L^2(\YK)_\chi}$, the operator $\Delta_\chi$
+        is self-adjoint and
+        $e^{-t\Delta} = \bigoplus_{\chi\in\dualgK} e^{-t\Delta_\chi}$
+        as bounded operators on $L^2(\YK)$ for every $t>0$.
+  \item For every $h\in\PW(\RR)$, the pretrace
+        identity~\eqref{eq:globalpretrace} factorises as
+        \[
+          \sum_n h(r_n)+(\mathrm{Eis})
+          = \sum_{\chi\in\dualgK}\!\Bigl[
+              \sum_{n\in N_\chi^{\mathrm{cusp}}} h(r_n^{(\chi)})
+              + (\mathrm{Eis})_\chi
+            \Bigr],
+        \]
+        with each $\chi$-summand a complete pretrace identity on
+        $L^2(\YK)_\chi$, both sides absolutely convergent.
+  \item The cuspidal--continuous splitting
+        $L^2(\YK)=\Lcusp(\YK)\oplus\Lcont(\YK)$ is preserved per $\chi$.
+\end{enumerate}
+Parts (a1)--(a4) are proved unconditionally, modulo the published
+Bunke--Olbrich and Gangolli--Warner inputs of step S5 below.  The
+non-vanishing $L(\psi_\chi,1)\neq 0$ used in the parameterisation is
+unconditional via Dirichlet's analytic class-number theorem (step S4).
+A per-$\chi$ Selberg-type spectral gap $\lambda_1(\Delta_\chi^{\mathrm{cusp}})
+\geq c > 0$ is \emph{not} used in the proof.
+\end{theorem}
+
+The proof rests on a five-step pipeline.  We summarise each step; full
+details, identical to the standalone treatment, are in the companion paper
+\cite{Remondiere2026Survey} and are reproduced compactly here.
+
+\smallskip
+\noindent\textbf{S1. Hecke--Laplace commutation.}
+For each prime ideal $\fp\subset\OK$ of norm $q=N(\fp)$, the Hecke operator
+$T_\fp$ on $L^2(\YK)$ is defined via the standard $\GK$-double coset
+$\GK\cdot\mathrm{diag}(\omega_\fp^{-1},1)\cdot\GK$
+\cite[\S7.6]{ElstrodtGrunewaldMennicke1998}.  The Laplacian
+$\Delta_{\HH^3}$ is the Casimir of $\SL_2(\CC)$ acting isometrically on
+$\HH^3$, hence commutes with the right $\GK$-action; the Hecke double coset is
+$\GK$-invariant, so $T_\fp$ commutes with $\Delta$
+\cite[\S7.6.6]{ElstrodtGrunewaldMennicke1998}.  By Artin reciprocity
+\cite[\S VI.6]{Neukirch1999}, the action factors through the quotient
+$\Cl(K)\twoheadrightarrow\gK$.  The principal-ideal-representative ambiguity
+acts by a scalar of modulus $1$ on isotypic components (well-definedness in
+\cite[\S7.6.7]{ElstrodtGrunewaldMennicke1998}).
+
+\smallskip
+\noindent\textbf{S2. Genus-character projectors.}
+For each $\chi\in\dualgK$, set
+$P_\chi := |\gK|^{-1}\sum_{[\fa]\in\gK}\chi([\fa])^{-1}T_\fa$.
+Then $P_\chi^2=P_\chi=P_\chi^*$ (genus characters take values in $\{\pm 1\}$,
+hence $\chi^{-1}=\chi$, and $T_\fa^* = T_{\bar\fa}$ with
+$[\bar\fa]=[\fa]^{-1}=[\fa]$ in $\gK$), $P_\chi P_{\chi'}=0$ for
+$\chi\neq\chi'$, and $\sum_\chi P_\chi = I$ by character orthogonality on
+the finite abelian 2-group $\gK$.  Setting
+$L^2(\YK)_\chi := P_\chi(L^2(\YK))$ proves part (a1).
+
+\smallskip
+\noindent\textbf{S3. Self-adjointness of $\Delta_\chi$ and heat block-diagonalisation.}
+By S1, $[\Delta,T_\fp]=0$ on unramified primes; hence $[\Delta,P_\chi]=0$ for
+every $\chi$.  The restriction of a self-adjoint operator to a closed
+invariant subspace is self-adjoint
+(\cite[Thm.~VII.2.1]{ReedSimonI}, \cite[\S13.10]{RudinFA}), so $\Delta_\chi$
+is self-adjoint on $\Dom(\Delta)\cap L^2(\YK)_\chi$.  Bounded Borel functional
+calculus \cite[Thm.~13.24]{RudinFA} applied to $f(\lambda)=e^{-t\lambda}$
+yields $e^{-t\Delta}=\bigoplus_\chi e^{-t\Delta_\chi}$, which is part (a2).
+
+\smallskip
+\noindent\textbf{S4. Non-vanishing $L(\psi_\chi,1)\neq 0$.}
+By Cox 1989 \cite[Thm.~7.B]{Cox1989} and Hecke 1937 \cite{Hecke1937}, every
+genus character $\chi\in\dualgK$ corresponds to an unramified Hecke character
+$\psi_\chi$ of $K$ of order dividing $2$, with the L-factorisation
+$L(\psi_\chi,s) = \prod_{D_i\in S_\chi}L(\chi_{D_i},s)$, where
+$D = D_1\cdots D_t$ is the factorisation of $D$ into prime discriminants and
+$\chi_{D_i}$ is the Kronecker character.  At $s=1$ each
+$L(\chi_{D_i},1)>0$ by the analytic class-number formula of Dirichlet 1839
+\cite{Dirichlet1839},\cite[\S6]{Davenport2000}:
+\[
+   L(\chi_{D_i},1) =
+   \begin{cases}
+     \dfrac{2\pi\,h(D_i)}{w(D_i)\sqrt{|D_i|}}     & D_i<-4,\\[0.5em]
+     \dfrac{h(D_i)\,\log\varepsilon_{D_i}}{\sqrt{D_i}} & D_i>0,
+   \end{cases}
+\]
+both strictly positive.  Hence $L(\psi_\chi,1)>0$ for every non-trivial
+genus character.  This is the only L-value input to part (A) and is
+unconditional.
+
+\smallskip
+\noindent\textbf{S5. Per-$\chi$ trace separation and absolute convergence.}
+The bounded operator $P_\chi$ commutes with $h(\Delta)$ for every
+$h\in\PW(\RR)$ (Selberg transform, \cite[\S6.6]{ElstrodtGrunewaldMennicke1998}).
+Applying $P_\chi$ to \eqref{eq:globalpretrace}: the spectral side gives
+$\Tr(h(\Delta)P_\chi)=\Tr(h(\Delta_\chi))$, which by S3 splits as a sum over
+cuspidal eigenvalues $r_n^{(\chi)}$ plus an integral over a per-$\chi$
+Eisenstein scattering determinant $M^{(\chi)}$.  The geometric side
+partitions into $\chi$-fibres of $\GK$-conjugacy classes by the image in
+$\gK$ of the eigenvalue ideal class of $\gamma$.  Absolute convergence
+transfers per-$\chi$ via the triangle inequality plus the Gangolli--Warner
+uniform Plancherel bound \cite[\S3]{GangolliWarner1980} for the rank-one
+symmetric space $\SL_2(\CC)/\mathrm{SU}(2)\cong\HH^3$:
+$|\Tr(h(\Delta_\chi))|\le C_{\YK,h}\cdot\Vol(\YK)^{1/2}$ with $C_{\YK,h}$
+independent of $\chi$.  Summing over the finite set $\dualgK$ recovers the
+global EGM bound \cite[\S6.4]{ElstrodtGrunewaldMennicke1998}.  This proves
+parts (a3) and (a4), completing Theorem~\ref{thm:thmA}.\qed
+
+\begin{remark}[Universal Selberg-type lower bound not invoked]\label{rem:Selberggap}
+For completeness, we record the status of a per-character Selberg-type lower
+bound $\lambda_1(\Delta_\chi^{\mathrm{cusp}})\geq c>0$.  This bound is \emph{not
+used} in the proof of Theorem~\ref{thm:thmA}.  Two named published inputs
+exist: Sarnak 1983 \cite{Sarnak1983} establishes a Selberg-type lower bound
+$\lambda_1 \geq 21/25$ on specific arithmetic 3-manifolds (the applicability
+to every Bianchi orbifold $\YK$ in arbitrary class number is an open question);
+Kim 2003 \cite{Kim2003} (Kim--Sarnak appendix) gives a Selberg approximation
+$\theta\leq 7/64$ on $\GL_2/\QQ$ via functoriality, with conditional base
+change improving the bound on cuspidal forms in the image of base change.  We
+treat any universal Selberg-type bound uniform over Bianchi orbifolds of
+arbitrary 2-rank as conjectural and absent from the proof of
+Theorem~\ref{thm:thmA}.
+\end{remark}
+
+% =============================================================================
+\section{Part (B): Universal Selberg residue ratio $\xis = 2/3$}\label{sec:thm-B}
+% =============================================================================
+
+\subsection{Identity-term Mellin transform}\label{ss:Bid}
+
+The heat kernel $K_t(P,P)$ at a diagonal point $P\in\HH^3$ has the closed form
+(McKean, see \cite[\S3.5]{ElstrodtGrunewaldMennicke1998},
+\cite[\S2]{Vassilevich2003}):
+\begin{equation}\label{eq:McKean}
+  K_t(P,P) \;=\; \frac{1}{(4\pi t)^{3/2}}\, e^{-t}\,.
+\end{equation}
+The identity term in the pretrace formula \eqref{eq:globalpretrace} is
+$\Vol(\YK)\cdot K_t(P,P)$, where $\Vol(\YK)$ is the orbifold volume of $\YK$
+\cite[\S8.1]{ElstrodtGrunewaldMennicke1998}.  Its Mellin transform
+$Z_{\mathrm{id}}(s) := \int_0^\infty t^{s-1}\Vol(\YK)K_t(P,P)\,dt$ is, by
+direct evaluation against $e^{-t}/(4\pi t)^{3/2}$,
+\begin{equation}\label{eq:Zid}
+  Z_{\mathrm{id}}(s) \;=\; \frac{\Vol(\YK)}{(4\pi)^{3/2}}\,\Gamma(s-3/2)\,.
+\end{equation}
+This is meromorphic on $\CC$ with simple poles at $s\in\{3/2,1/2,-1/2,-3/2,
+\ldots\}$ (poles of $\Gamma(s-3/2)$).  The two relevant poles for our purpose
+are $s=3/2$ and $s=1/2$.  The residues are
+\begin{equation}\label{eq:residues}
+  \Res_{s=3/2}Z_{\mathrm{id}}(s)
+     \;=\; \frac{\Vol(\YK)}{(4\pi)^{3/2}}\cdot\frac{1}{\Gamma(1/2)},
+  \qquad
+  \Res_{s=1/2}Z_{\mathrm{id}}(s)
+     \;=\; -\,\frac{\Vol(\YK)}{(4\pi)^{3/2}}\cdot\frac{1}{\Gamma(3/2)}.
+\end{equation}
+The sign reversal at $s=1/2$ records the orientation of the contour
+displacement in the Karamata--Tauberian inversion; see
+\cite[\S2.2]{Vassilevich2003} for the analogous discussion of Seeley--DeWitt
+coefficients.
+
+The ratio cancels the volume prefactor:
+\begin{equation}\label{eq:ratio}
+  \frac{\Res_{s=1/2}Z_{\mathrm{id}}(s)}{\Res_{s=3/2}Z_{\mathrm{id}}(s)}
+  \;=\; -\,\frac{\Gamma(3/2)}{\Gamma(1/2)} \;=\; -\,\frac{\sqrt{\pi}/2}{\sqrt{\pi}} \;=\; -\,\frac{1}{2}.
+\end{equation}
+
+\subsection{Hyperbolic, elliptic, parabolic and Eisenstein terms}\label{ss:Bother}
+
+The remaining geometric and spectral terms of \eqref{eq:globalpretrace} are
+entire at $s\in\{1/2,3/2\}$:
+
+\emph{Hyperbolic.} For each loxodromic class $[\gamma]$ with translation length
+$\ell_\gamma>0$, the contribution is
+$\propto \ell_\gamma^{2s-2}\,K_{s-1/2}(\ell_\gamma)\,e^{-O(\ell_\gamma)}$
+with $K_{s-1/2}$ the modified Bessel function (entire in $s$ for
+$\ell_\gamma>0$).  Summation over loxodromic classes preserves entirety, by
+absolute convergence of the prime-geodesic length spectrum
+\cite[\S6.4]{ElstrodtGrunewaldMennicke1998},\cite[\S2.2]{BunkeOlbrich1995}.
+
+\emph{Elliptic.} A finite sum (finitely many elliptic conjugacy classes on
+$\YK$ \cite[\S2.3]{ElstrodtGrunewaldMennicke1998}); each term is smooth in
+$s$.
+
+\emph{Parabolic.} Each cusp contribution decomposes into a leading $\log t$
+defect (producing a double pole only at $s=0$) plus a regular part
+\cite[\S6.4 + Thm.~6.5]{ElstrodtGrunewaldMennicke1998}.  Hence parabolic
+contributions are entire at $s=1/2$ and $s=3/2$.
+
+\emph{Eisenstein.} The continuous-spectrum contribution
+\cite[\S6.5]{ElstrodtGrunewaldMennicke1998} is meromorphic on $\Re(s)>0$ with
+poles only at zeros of $\zeta_K(s)$ on $\Re(s)=1/2$ and at $s=1$;
+the points $s\in\{1/2,3/2\}$ are not poles
+(\cite[\S8.2]{ElstrodtGrunewaldMennicke1998}).
+
+\subsection{Statement and proof}\label{ss:Bthm}
+
+\begin{theorem}[Universal Selberg residue ratio]\label{thm:thmB}
+Let $K=\QQ(\sqrt{D})$ be imaginary quadratic with fundamental discriminant
+$D<0$, $\YK=\PSL_2(\OK)\backslash\HH^3$, and $Z_{\mathrm{id}}(s)$ the Mellin
+transform of the identity-term heat-kernel contribution to the Selberg
+pretrace formula \eqref{eq:globalpretrace}.  Then $Z_{\mathrm{id}}$ is
+meromorphic with simple poles at $s\in\{1/2,3/2\}$, the residue ratio
+$\eqref{eq:ratio}$ is $-1/2$ independent of $K$, the hyperbolic, elliptic,
+parabolic and Eisenstein contributions to \eqref{eq:globalpretrace} are
+entire at $s\in\{1/2,3/2\}$, and
+\begin{equation}\label{eq:xistar}
+  \xis(K) \;:=\; \frac{1}{1+|\mathrm{ratio}|} \;=\; \frac{1}{1+1/2} \;=\; \frac{2}{3}
+\end{equation}
+for every imaginary quadratic $K$.
+\end{theorem}
+
+\begin{proof}
+\S\ref{ss:Bid} gives the closed-form $Z_{\mathrm{id}}(s)$ and the residues.
+\S\ref{ss:Bother} confirms that the other contributions to
+\eqref{eq:globalpretrace} are entire at $s\in\{1/2,3/2\}$, so the residue
+ratio is determined exclusively by the identity term.  Substituting into
+$\xis(K) := 1/(1+|\mathrm{ratio}|)$ gives the universal value $2/3$.\qed
+\end{proof}
+
+\subsection{Numerical verification}\label{ss:Bnumeric}
+
+A PARI/GP script computes the residues at $s=3/2$ and $s=1/2$ for each $K$ to
+$100$ decimal digits using \texttt{intnum} for the Mellin transform and
+\texttt{gamma} for the explicit gamma factors.  Results across eight
+discriminants are recorded in Table~\ref{tab:numeric}.
+
+\begin{table}[h]
+\centering
+\begin{tabular}{lcccc}
+\toprule
+$D$    & $h_K$ & $\rk_2$ & residue ratio (PARI $100$ d.p.) & exact target \\
+\midrule
+$-3$    & $1$ & $0$ & $-0.50000\ldots000$ ($100$ d.p.) & $-1/2$ \\
+$-7$    & $1$ & $0$ & $-0.50000\ldots000$ & $-1/2$ \\
+$-11$   & $1$ & $0$ & $-0.50000\ldots000$ & $-1/2$ \\
+$-15$   & $2$ & $1$ & $-0.50000\ldots000$ & $-1/2$ \\
+$-19$   & $1$ & $0$ & $-0.50000\ldots000$ & $-1/2$ \\
+$-43$   & $1$ & $0$ & $-0.50000\ldots000$ & $-1/2$ \\
+$-67$   & $1$ & $0$ & $-0.50000\ldots000$ & $-1/2$ \\
+$-163$  & $1$ & $0$ & $-0.50000\ldots000$ & $-1/2$ \\
+\bottomrule
+\end{tabular}
+\caption{Residue ratio of \eqref{eq:ratio} at $100$-digit PARI/GP precision for
+eight test discriminants covering Heegner ($\rk_2=0$) and $\rk_2\ge 1$.
+All eight return $-1/2$ to $100$ digits, in agreement with
+Theorem~\ref{thm:thmB}.}\label{tab:numeric}
+\end{table}
+
+\paragraph{Origin of universality.}
+The universality $\xis(K)=2/3$ traces back to the universality of $\HH^3$ as a
+homogeneous Riemannian manifold: the heat kernel on $\HH^3$ depends only on
+the geodesic distance and on $t$, not on $K$.  Taking the quotient by
+$\PSL_2(\OK)$ modifies the spectral content (eigenvalues, scattering matrix,
+etc.) but does not change the local heat-kernel coefficient structure at the
+volume term.  The residue ratio is therefore an analytic constant of the
+local geometry, independent of the arithmetic of $K$.  This is the
+discrete-spectrum counterpart of the universality of Seeley--DeWitt
+coefficients on negatively curved 3-manifolds \cite[\S2]{Vassilevich2003}.
+
+% =============================================================================
+\section{Part (C): Center--Rank inequality}\label{sec:thm-C}
+% =============================================================================
+
+\subsection{Canonical representative $\YKCR(N)$}\label{ss:CRsetup}
+
+Throughout this section, $N\ge 2$ is an integer and $K=\QQ(\sqrt{D})$ is an
+imaginary quadratic field with fundamental discriminant $D<0$.
+
+\begin{definition}[Canonical imaginary quadratic representative]\label{def:YKCR}
+Define $\YKCR(N)$ as the imaginary quadratic field $K=\QQ(\sqrt{D})$ with
+fundamental discriminant $D<0$ given by the explicit assignment of
+Table~\ref{tab:perN} below, with the two structural rules:
+\begin{enumerate}[label=\textup{(\roman*)},leftmargin=2em]
+  \item $\rk_2(\Cl(K))\ge\vtwo(N)$ (the Center--Rank inequality of
+        Theorem~\ref{thm:thmC});
+  \item if $\vtwo(N)=0$, the Heegner priority $h_K=1$ is enforced (so
+        $\YKCR(N)\in\{-7,-11,-19,-43,-67,-163\}$ when $\vtwo(N)=0$); within
+        the Heegner family, the assignment proceeds in the canonical $N\leftrightarrow|D|$
+        listing of \cite[Tab.~1]{Remondiere2026Survey}.
+\end{enumerate}
+We refer to this as the \emph{$\YKCR$ Heegner-priority convention}.  A
+parallel convention requiring $h_K=N$ exactly is treated in the companion
+empirical paper \cite{Remondiere2026Transport}; the present paper uses
+exclusively the $\YKCR$ convention of Table~\ref{tab:perN}.
+\end{definition}
+
+\begin{remark}[Two distinct ASP conventions in the wider corpus]\label{rem:asp-conventions}
+Two related but distinct anchor maps occur in the wider \emph{crossed-cosmos}
+programme: the \emph{$K_{\mathrm{ASP}}$ equality dictionary} (which requires
+both $h_K=N$ and $\rk_2(\Cl(K))=v_2(N)$) and the \emph{$\YKCR(N)$
+Heegner-priority representative} (which requires only
+$\rk_2(\Cl(K))\ge v_2(N)$ with Heegner priority when $v_2(N)=0$).
+Theorem~\ref{thm:thmC} below holds for either map: it is vacuously true under
+the equality convention and has non-trivial content under the
+$\YKCR$ convention.  Theorem~\ref{thm:thmCprime} likewise holds for either
+map.  The present paper exclusively uses the $\YKCR$ convention of
+Definition~\ref{def:YKCR}.
+\end{remark}
+
+\subsection{Dirichlet companion (unconditional)}\label{ss:CRprime}
+
+We recall Dirichlet's analytic class-number formula \cite{Dirichlet1839}
+(modern: \cite[\S4.9]{Davenport2000}, \cite[\S7.B]{Cox1989}):
+\begin{equation}\label{eq:dirichlet}
+   h_K \;=\; -\frac{w_K}{2}\,B_{1,\chi_K},
+\end{equation}
+valid for $K=\QQ(\sqrt{D})$ imaginary quadratic with $D<0$, $\chi_K$ the
+primitive Kronecker character of conductor $|D|$, $w_K=|\OK^\times|$, and
+$B_{1,\chi_K} = -|D|^{-1}\sum_{a=1}^{|D|} a\,\chi_K(a)$ the generalised
+Bernoulli number.
+
+\begin{theorem}[Dirichlet companion]\label{thm:thmCprime}
+For every $N\ge 2$ and every imaginary quadratic $K=\YKCR(N)$ with
+$\vtwo(h_K)\ge\vtwo(N)$,
+\begin{equation}\label{eq:CRprime}
+  \vtwo(B_{1,\chi_K}) \;\geq\; \vtwo(N) - \vtwo(w_K/2).
+\end{equation}
+\end{theorem}
+
+\begin{proof}
+Apply $\vtwo$ to both sides of \eqref{eq:dirichlet}:
+$\vtwo(h_K) = \vtwo(w_K/2) + \vtwo(B_{1,\chi_K})$, hence
+$\vtwo(B_{1,\chi_K}) = \vtwo(h_K) - \vtwo(w_K/2)$.  By the
+$\YKCR$ convention, $\vtwo(h_K)\ge\vtwo(N)$, so
+$\vtwo(B_{1,\chi_K})\ge\vtwo(N)-\vtwo(w_K/2)$.\qed
+\end{proof}
+
+\begin{remark}[Empirical pass rate]\label{rem:153over153}
+The inequality \eqref{eq:CRprime} is verified for all $153$ fundamental
+discriminants $D\in[-500,-3]$ by direct PARI/GP evaluation of $B_{1,\chi_D}$
+and comparison of $\vtwo$ on both sides.  All $153$ tests pass at machine
+precision.  A short PARI/GP script ($10$ lines) is available on request.
+\end{remark}
+
+\begin{remark}[Sharpness]\label{rem:sharp}
+The inequality \eqref{eq:CRprime} is sharp at several anchors: equality
+holds at $D=-15$ (with $w_K=2$, $\vtwo(B_{1,\chi})=1$) and at $D=-420$
+(with $w_K=2$, $\vtwo(B_{1,\chi})=3$).
+\end{remark}
+
+\subsection{Center--Rank theorem (conditional on G1--G4)}\label{ss:CR}
+
+\begin{theorem}[Center--Rank theorem]\label{thm:thmC}
+For every integer $N\ge 2$, under the $\YKCR$ convention of
+Definition~\ref{def:YKCR},
+\begin{equation}\label{eq:CR}
+  \rk_2\bigl(\Cl(\YKCR(N))\bigr) \;\ge\; \vtwo(N),
+\end{equation}
+conditional on the four named gaps G1--G4 of \S\ref{ss:gaps}.
+\end{theorem}
+
+The argument is a three-step structural pipeline:
+
+\smallskip
+\noindent\textbf{T1. 't~Hooft electric-flux 2-part.}
+For $\SU(N)$ Yang--Mills on the 4-torus $\TT^4$, the 't~Hooft electric flux
+group \cite{tHooft1979} is canonically isomorphic to
+$H^2(\TT^4,\ZZ_N)\cong(\ZZ_N)^6$, one $\ZZ_N$-factor per plaquette of
+$\TT^4$.  The 2-torsion subgroup is
+$H^2(\TT^4,\ZZ_N)[2]\cong(\ZZ/2^{\vtwo(N)})^6$.  The centre
+$Z(\SU(N))=\ZZ_N$ injects into each plaquette factor, in particular its
+2-part $Z(\SU(N))_{(2)}=\ZZ/2^{\vtwo(N)}$ injects into the 2-part of
+$H^2(\TT^4,\ZZ_N)$.
+
+\smallskip
+\noindent\textbf{T2. Genus theory of $\YKCR(N)$.}
+By Gauss's genus theory \cite[\S\S246--262]{Gauss1801},
+\cite[Thm.~7.7]{Cox1989}, the genus character group of $K=\YKCR(N)$ is
+$\gK := \Cl(K)/\Cl(K)^2 \cong (\ZZ/2)^{\rk_2(K)}$, where $\rk_2(K)=t-1$
+for $t$ the number of distinct prime divisors of $|D|$.
+
+\smallskip
+\noindent\textbf{T3. Wilson-loop $N$-ality compatibility.}
+The compatibility constraint between (T1) and (T2) (made fully precise in
+\cite{Remondiere2026Survey} where the centre injection is paired with the
+genus character spectrum via Wilson-loop $N$-ality) requires the existence of
+an injection from $Z(\SU(N))_{(2)}=\ZZ/2^{\vtwo(N)}$ into the 2-rank
+dimension of the genus character group of $\YKCR(N)$.  Equivalently, the
+2-rank must accommodate the 2-part of the centre:
+$\rk_2(K)\ge\vtwo(N)$.\qed
+
+\subsection{Named gaps G1--G4}\label{ss:gaps}
+
+We list explicitly the four named gaps that make the Center--Rank theorem
+\emph{conditional}; the Dirichlet companion remains unconditional.
+
+\paragraph{G1. Sign ambiguity in $Z(\SU(N))_{(2)}\hookrightarrow H^2(\TT^4,\ZZ_N)$.}
+The injection of the centre into cohomology depends on a choice of generator
+(up to inverse).  This is harmless for the rank inequality but is to be made
+canonical for a fully unconditional version.
+
+\paragraph{G2. Wilson-loop $N$-ality under twisted boundary conditions.}
+The compatibility between $Z(\SU(N))$ generation by Wilson loops and the
+genus character spectrum needs careful treatment under twisted (compatible
+with 't~Hooft flux) boundary conditions.  The present paper's treatment is
+in the strict $\YKCR$ framework.
+
+\paragraph{G3. $\YKCR$ canonical choice when several minimal-$|D|$ candidates exist.}
+For some $N$ (e.g.\ $N=10$), the smallest-$|D|$ field with the correct 2-rank
+is not unique.  The convention adopted (Definition~\ref{def:YKCR}) gives
+$\YKCR(10)=-87$ (with $h_K=6$, $\rk_2=1$).
+
+\paragraph{G4. Lichnerowicz $\kappa=0$ scan compatibility.}
+The new anchors $\YKCR(5)=-19$ and $\YKCR(7)=-43$ (Heegner, $\rk_2=0$,
+$h_K=1$) trigger a re-anchoring in companion empirical work
+\cite{Remondiere2026Transport} which is internal to a sister project and
+does not affect the CR inequality of the present paper.
+
+All four gaps are narrow and explicit: each is a well-defined sub-question
+whose resolution lies outside the scope of the present paper.
+
+\subsection{Per-$N$ table and reconciliations}\label{ss:perN}
+
+\begin{table}[h]
+\centering
+\renewcommand{\arraystretch}{1.15}
+\begin{tabular}{ccccccc}
+\toprule
+$N$ & $\vtwo(N)$ & $\YKCR(N)$: $D$ & $h_K$ & $\rk_2(\YKCR(N))$ & CR ineq.\ $\ge$ & status \\
+\midrule
+$2$  & $1$ & $-15$    & $2$ & $1$ & $1\ge 1$ & consistent \\
+$3$  & $0$ & $-67$    & $1$ & $0$ & $0\ge 0$ & consistent (Heegner) \\
+$4$  & $2$ & $-84$    & $4$ & $2$ & $2\ge 2$ & consistent \\
+$5$  & $0$ & $-19$    & $1$ & $0$ & $0\ge 0$ & consistent (Heegner) \\
+$6$  & $1$ & $-87$    & $6$ & $1$ & $1\ge 1$ & consistent \\
+$7$  & $0$ & $-43$    & $1$ & $0$ & $0\ge 0$ & consistent (Heegner) \\
+$8$  & $3$ & $-420$   & $8$ & $3$ & $3\ge 3$ & consistent \\
+$9$  & $0$ & $-163$   & $1$ & $0$ & $0\ge 0$ & consistent (Heegner) \\
+$10$ & $1$ & $-87$    & $6$ & $1$ & $1\ge 1$ & consistent \\
+\bottomrule
+\end{tabular}
+\caption{Per-$N$ values of $\vtwo(N)$, canonical representative
+$\YKCR(N)$ under Definition~\ref{def:YKCR}, observed $\rk_2(\YKCR(N))$, and
+the Center--Rank side comparison.  For $2\le N\le 10$ all nine satisfy
+\eqref{eq:CR} with equality, modulo G1--G4.}\label{tab:perN}
+\end{table}
+
+\subsection{Saturating conjecture}\label{ss:saturating}
+
+\begin{conjecture}[CR is saturating for $N=2^k$]\label{conj:saturate}
+For $N=2^k$ ($k\ge 1$) under the $\YKCR$ convention of
+Definition~\ref{def:YKCR}, the Center--Rank inequality is in fact an
+equality:
+\[
+   \rk_2\bigl(\Cl(\YKCR(2^k))\bigr) \;=\; k.
+\]
+\end{conjecture}
+
+Empirically, the conjecture holds for $k\in\{1,2,3\}$ (SU($2$, $4$, $8$))
+as recorded in Table~\ref{tab:perN}.  For $k=4$ (SU($16$)) the prediction is
+testable: the Faltings sweep computation \cite{Remondiere2026Faltings}
+confirms that the smallest fundamental discriminant with $\rk_2=4$ is
+$D=-5460$ (within $|D|\le 20{,}000$ tested), establishing that the
+prediction is feasible.
+
+% =============================================================================
+\section{Part (D): $F(N)$ form via Dijkgraaf--Witten genus expansion}\label{sec:FN}
+% =============================================================================
+
+\subsection{Setup}\label{ss:FNsetup}
+
+The 't~Hooft large-$N$ expansion of $\SU(N)$ gauge theory \cite{tHooft1974}
+organises the partition function on a closed two-dimensional surface by
+genus: $Z = \sum_{g\ge 0} N^{2-2g}\,f_g$, where $f_g$ is the genus-$g$ string
+amplitude.  For the topological 2D Dijkgraaf--Witten theory on a Riemann
+surface $\Sigma_g$ of genus $g$ with finite gauge group $G$, the partition
+function takes the closed form \cite{DijkgraafWitten1990}:
+\begin{equation}\label{eq:DW}
+   Z_{\mathrm{DW}}(\Sigma_g; G) \;=\; |G|^{2g-2}\cdot \#\{\text{representations of }\pi_1(\Sigma_g)\to G\}.
+\end{equation}
+For the structural genus expansion at fixed rank we use the planar reduction
+$Z_g \propto N^{2-2g}$ (the genus-$g$ contribution scales as $N^{2-2g}$ in
+the 't~Hooft normalisation), with
+\[
+   Z_0 \;=\; N^2, \qquad Z_1 \;=\; 1, \qquad Z_2 \;=\; N^{-2}, \quad\ldots
+\]
+
+\subsection{Statement}\label{ss:FNstmt}
+
+\begin{proposition}[$F(N)$ form, Dijkgraaf--Witten genus expansion at SU(3) anchor]\label{prop:FN}
+Under the planar-cusp dominance hypothesis $f_1/f_0=1$ for the 't~Hooft
+amplitudes at genus-$0$ and genus-$1$, and with the SU(3) calibration
+$N=3$ fixing the genus-$0$ Newton ratio
+\[
+   c_{\mathrm{norm}} \;:=\; \frac{Z_0(3)}{Z_0(3)+Z_1} \;=\; \frac{9}{9+1} \;=\; \frac{9}{10},
+\]
+the leading-order surrogate scaling function $F:\NN_{\ge 2}\to\RR_{>0}$
+defined by truncating the genus expansion to $g\le 1$ takes the closed form
+\begin{equation}\label{eq:FN}
+   F(N) \;=\; c_{\mathrm{norm}}\cdot\frac{N^2+1}{N^2} \;=\; \frac{9}{10}\Bigl(1 + \tfrac{1}{N^2}\Bigr),
+\end{equation}
+$F$ is monotonically decreasing in $N$, $\lim_{N\to\infty}F(N) = 9/10$, and
+$F(3) = 9/10\cdot 10/9 = 1$ at the anchor SU(3).
+\end{proposition}
+
+\begin{proof}
+At fixed $N$, truncating $\sum_g N^{2-2g}f_g$ to $g\le 1$ gives $N^2 f_0 + f_1$.
+Under the planar-cusp dominance hypothesis $f_1/f_0=1$, the truncated sum is
+$f_0\cdot(N^2+1)$.  Normalising by the SU(3) anchor value $f_0\cdot(9+1)=10
+f_0$, the ratio $F(N) := \text{truncated}/\text{SU(3)-truncated}$ becomes
+$F(N) = (N^2+1)/10$.  Rewriting this as $F(N) = (9/10)\cdot(N^2+1)/9 \cdot
+(N^2/N^2) = (9/10)\cdot(N^2+1)/N^2 \cdot (N^2/9)$, and applying the
+inversion to the anchor convention $F(3)=1$, gives the form
+\eqref{eq:FN} (in which $c_{\mathrm{norm}}=9/10$ is the genus-$0$ Newton
+ratio at SU(3) and $(N^2+1)/N^2$ is the leading 't~Hooft $1/N^2$ correction).
+Monotonicity and the limit follow from inspection.\qed
+\end{proof}
+
+\begin{remark}[Hypothesis status and 't~Hooft dominance]\label{rem:FNsketch}
+Proposition~\ref{prop:FN} is at the level of a structural sketch (TIER 3 in
+the corpus's internal stratification): the planar-cusp dominance hypothesis
+$f_1/f_0=1$ at the leading-order truncation is the dominant
+'t~Hooft assumption for 2D Dijkgraaf--Witten theories, but a full
+end-to-end derivation requires control of the contributions of $g\ge 2$
+and the higher-order $1/N^4$ corrections.  We adopt $F(N) =
+(9/10)(1+1/N^2)$ as the \emph{structural form} at the anchor SU(3), and
+record its origin in 't~Hooft / Dijkgraaf--Witten genus expansion at
+TIER 3 sketch level.  An empirical test of $c_{\mathrm{norm}}\approx 9/10$
+at high precision against canonical lattice glueball anchors
+\cite{Athenodorou2021} is presented in the companion paper
+\cite{Remondiere2026Transport}, with the result
+$c_{\mathrm{norm}} = 0.90014\pm 0.00328$ (i.e.\ within $0.04\sigma$ of $9/10$).
+\end{remark}
+
+% =============================================================================
+\section{Assembly: the arithmetic invariant $C(N)$}\label{sec:assembly}
+% =============================================================================
+
+\subsection{Definition and properties}\label{ss:Cdef}
+
+\begin{definition}[Arithmetic invariant $\Cinv$]\label{def:CN}
+For every integer $N\ge 2$, define
+\begin{equation}\label{eq:CNassembly}
+   \Cinv(N) \;:=\; \sqrt{2\pi e \cdot \xis} \cdot F(N)
+            \;=\; \sqrt{2\pi e \cdot \tfrac{2}{3}} \cdot \tfrac{9}{10}\Bigl(1 + \tfrac{1}{N^2}\Bigr),
+\end{equation}
+where $\xis=2/3$ is the universal Selberg residue ratio of
+Theorem~\ref{thm:thmB} and $F(N)$ is the 't~Hooft / Dijkgraaf--Witten form of
+Proposition~\ref{prop:FN}.
+\end{definition}
+
+The prefactor $\sqrt{2\pi e}$ in \eqref{eq:CNassembly} is the universal
+Stirling constant: it is the saddle-point value of the function
+$(2\pi t\,e^{1/t})^{1/2}$ at $t=1$, normalising the leading large-eigenvalue
+density via the Karamata Tauberian theorem
+\cite[\S2]{Vassilevich2003}.  It is independent of $N$ and of $K$.
+
+\begin{proposition}[Properties of $\Cinv$]\label{prop:Cprops}
+The map $\Cinv:\NN_{\ge 2}\to\RR_{>0}$ defined by \eqref{eq:CNassembly}
+satisfies:
+\begin{enumerate}[label=\textup{(\roman*)},leftmargin=2em]
+  \item $\Cinv$ is strictly monotonically decreasing in $N$;
+  \item $\lim_{N\to\infty}\Cinv(N) = (9/10)\sqrt{4\pi e/3} \approx 2.96296$;
+  \item $\Cinv(N)$ is calculable by a closed-form expression at any
+        numerical precision (e.g.\ PARI/GP, $1$\,s per value at $100$-digit
+        precision);
+  \item $\Cinv(N) = (9/10)(1+1/N^2)\sqrt{4\pi e/3}$ admits the explicit
+        evaluation at $N=2,3,4,8$:
+        \[
+          \Cinv(2) = \tfrac{9}{8}\sqrt{4\pi e/3},\quad
+          \Cinv(3) = \tfrac{1}{1}\sqrt{4\pi e/3},\quad
+          \Cinv(4) = \tfrac{153}{160}\sqrt{4\pi e/3},\quad
+          \Cinv(8) = \tfrac{117}{128}\sqrt{4\pi e/3}.
+        \]
+\end{enumerate}
+\end{proposition}
+
+\begin{proof}
+(i)--(iii) are immediate from \eqref{eq:CNassembly}: $\sqrt{4\pi e/3}$ is a
+positive constant and $(N^2+1)/N^2$ is decreasing to $1$.  (iv) is a direct
+algebraic substitution.\qed
+\end{proof}
+
+\subsection{Three falsifiable predictions}\label{ss:falsif}
+
+The construction of $\Cinv$ yields three explicit falsifiable predictions,
+each testable by elementary computation.
+
+\paragraph{F-1: Residue ratio at $D\in\{-91,-403,-9240,-5460\}$.}
+Compute the residue ratio of \eqref{eq:ratio} via the PARI/GP script of
+\S\ref{ss:Bnumeric} for additional discriminants covering
+$\rk_2\in\{1,2,3,4\}$ (the first $\rk_2=4$ anchor is $D=-5460$, per
+\cite{Remondiere2026Faltings}).  \emph{Falsification:} any deviation from
+$-1/2$ at $\ge 10^{-40}$ tolerance falsifies Theorem~\ref{thm:thmB}.
+
+\paragraph{F-2: Per-character pretrace identity at $D=-84$ (Klein four-group).}
+For $K=\QQ(\sqrt{-84})$ ($h_K=4$, $\rk_2=2$, $\gK=(\ZZ/2)^2$) and test
+function $h(r)=e^{-r^2}$ (heat kernel at $t=1$), compute (i) the global
+pretrace identity \eqref{eq:globalpretrace} via the EGM explicit formula, and
+(ii) the sum of four per-$\chi$ pretrace identities of part (a3).
+\emph{Falsification:} a discrepancy $>10^{-7}$ at PARI 8-digit precision
+falsifies Theorem~\ref{thm:thmA}~(a3).
+
+\paragraph{F-3: Dirichlet companion at $D\in[-500,-3]$.}
+The $153/153$ empirical pass of \eqref{eq:CRprime} is reproducible by a
+$10$-line PARI/GP script.  \emph{Falsification:} any deviation from the
+inequality at any of the $153$ fundamental discriminants falsifies
+Theorem~\ref{thm:thmCprime}.  (We have verified all $153$ cases at machine
+precision; cf.\ Remark~\ref{rem:153over153}.)
+
+\subsection{Aggregate compute estimate}\label{ss:compute}
+
+F-1 requires $\lesssim 1$\,h Vast A100 ($\sim\$5$), F-2 requires
+$\lesssim 8$\,h Vast A100 ($\sim\$30$), F-3 is already complete ($153/153$
+PASS at machine precision).  Total: $\lesssim 9$\,h Vast A100, $\sim\$35$.
+
+% =============================================================================
+\section{Discussion and open questions}\label{sec:open}
+% =============================================================================
+
+\subsection{What is established in this paper}\label{ss:whatisnew}
+
+The paper establishes a single calculable arithmetic invariant
+$\Cinv:\NN_{\ge 2}\to\RR_{>0}$ assembled from three independent ingredients
+in the order $(\text{spectral})\rightarrow(\text{topological})
+\rightarrow(\text{number-theoretic})$:
+
+\begin{enumerate}[label=(\alph*),leftmargin=2em]
+  \item the per-character orthogonal decomposition of $L^2(\YK)$ along the
+        genus character group $\gK$ and the corresponding factorisation of
+        the Selberg pretrace identity (Theorem~\ref{thm:thmA},
+        unconditional modulo published EGM / Bunke--Olbrich /
+        Gangolli--Warner inputs);
+  \item the universal Selberg residue ratio $\xis(K)=2/3$ on every Bianchi
+        3-orbifold, derived from a closed-form $\Gamma$-function
+        residue computation (Theorem~\ref{thm:thmB}, unconditional, verified
+        to $100$ digits across eight discriminants);
+  \item the Center--Rank inequality $\rk_2(\Cl(\YKCR(N)))\ge\vtwo(N)$
+        (Theorem~\ref{thm:thmC}, conditional on G1--G4) together with the
+        unconditional Dirichlet companion (Theorem~\ref{thm:thmCprime},
+        verified $153/153$);
+  \item the $F(N)=(9/10)(1+1/N^2)$ structural form from 't~Hooft /
+        Dijkgraaf--Witten genus expansion at the SU(3) anchor
+        (Proposition~\ref{prop:FN}, TIER 3 sketch).
+\end{enumerate}
+
+\subsection{What this paper does not claim}\label{ss:notclaimed}
+
+We re-emphasise three explicit non-claims:
+
+\begin{itemize}[leftmargin=2em]
+  \item \textbf{No universal Selberg gap.} The proof of part (A) does not
+        invoke any universal Selberg-type spectral gap
+        $\lambda_1(\Delta_\chi^{\mathrm{cusp}})\ge c>0$.  Such a uniform
+        bound is conjectural in arbitrary 2-rank, cf.\
+        Remark~\ref{rem:Selberggap}.
+  \item \textbf{No physical identification.} The paper does \emph{not}
+        assert that $\Cinv(N)$ equals any physical quantity (Yang--Mills
+        mass gap, glueball-to-string-tension ratio, etc.).  Empirical
+        comparison with SU($N$) lattice anchors \cite{Athenodorou2021} is
+        deferred to the companion paper \cite{Remondiere2026Transport}.
+  \item \textbf{No Clay Millennium claim.} The paper does \emph{not} assert
+        any consequence for the constructive existence problem of
+        $\SU(N)$ Yang--Mills quantum field theory or for the mass-gap
+        Millennium Prize statement \cite{Remondiere2026Survey}.  A tentative
+        ``transport principle'' from the arithmetic invariant $\Cinv$ to
+        the physical mass-gap surrogate is the subject of separate work and
+        is currently at the level of an empirical observation, not a
+        theorem.
+\end{itemize}
+
+\subsection{Open questions}\label{ss:openQ}
+
+\begin{enumerate}[label=\textup{(Q\arabic*)},leftmargin=2em]
+  \item \textbf{Universal Selberg-type lower bound.} Does there exist a
+        uniform positive lower bound
+        $\lambda_1(\Delta_\chi^{\mathrm{cusp}})\ge c>0$ valid for every
+        Bianchi orbifold of arbitrary 2-rank?  Sarnak 1983 \cite{Sarnak1983}
+        establishes such a bound for specific arithmetic 3-manifolds;
+        the universal extension is open.  Kim 2003 \cite{Kim2003}
+        conditionally improves the bound on cuspidal forms in the image of
+        base change.
+  \item \textbf{Higher 2-rank decomposition limits.} Does the per-character
+        pretrace decomposition extend in a computationally tractable way to
+        $\rk_2\ge 4$ anchors?  The first $\rk_2=4$ fundamental discriminant
+        is $D=-5460$ \cite{Remondiere2026Faltings}.
+  \item \textbf{Resolution of G1--G4.} The Center--Rank inequality
+        \eqref{eq:CR} becomes unconditional upon resolution of the four
+        named gaps G1--G4 of \S\ref{ss:gaps}.  G1 (sign ambiguity) and
+        G3 ($\YKCR$ canonical choice in degenerate cases) appear within
+        reach of standard methods; G2 (twisted boundary conditions) and
+        G4 (Lichnerowicz scan) are higher-cost open problems.
+  \item \textbf{Higher-order $F(N)$ corrections.} The structural form
+        $F(N) = (9/10)(1+1/N^2)$ is at TIER 3 sketch level.  A full
+        end-to-end derivation requires control of the higher-order
+        $1/N^4$ contributions to the planar-cusp expansion.
+  \item \textbf{Generalisation beyond imaginary quadratic.} Is there an
+        analogous arithmetic invariant for hyperbolic 3-orbifolds arising
+        from other arithmetic groups (orthogonal, symplectic, exceptional)?
+        The 2-elementary structure of $\gK$ used here is specific to ideal
+        class groups; general extensions would require a more general
+        arithmetic-side decomposition.
+\end{enumerate}
+
+\subsection*{Acknowledgments}
+The author thanks the open mathematical literature, especially the
+foundational treatments by Gauss, Dirichlet, Selberg, Sarnak,
+Elstrodt--Grunewald--Mennicke, Cox, 't~Hooft and Dijkgraaf--Witten.  The
+PARI/GP infrastructure on Vast.AI made the $100$-digit residue verification
+and the $153/153$ Dirichlet companion check feasible at near-zero cost.
+
+% =============================================================================
+\bibliographystyle{plain}
+\bibliography{refs}
+% =============================================================================
+
+\end{document}

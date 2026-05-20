@@ -1,3 +1,6 @@
 -- This module serves as the root of the `Crossed` library.
 -- Import modules here that should be built as part of the library.
 import Crossed.Basic
+import Crossed.BasicMathlib
+import Crossed.G3
+import Crossed.CRTheorem

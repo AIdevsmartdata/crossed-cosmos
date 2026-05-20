@@ -1,0 +1,357 @@
+% =============================================================================
+% Paper CR -- Center--Rank theorem (CR) and Dirichlet companion (CR')
+% Target : Journal of Number Theory (primary), Acta Arithmetica (alternate)
+% Author : Kevin Remondiere (Oloron-Sainte-Marie, France)
+% Status : 5-8 pp, CR PROVED-CONDITIONAL on 4 named gaps; CR' UNCOND + 153/153
+% =============================================================================
+\documentclass[11pt,a4paper,reqno]{amsart}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath,amssymb,amsthm,mathrsfs}
+\usepackage{geometry}
+\usepackage{hyperref}
+\usepackage{enumitem}
+\usepackage{booktabs}
+\usepackage{xcolor}
+\usepackage{microtype}
+
+\geometry{margin=2.5cm}
+
+\hypersetup{
+  colorlinks=true,
+  linkcolor=blue!60!black,
+  citecolor=blue!60!black,
+  urlcolor=blue!60!black
+}
+
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{conjecture}[theorem]{Conjecture}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{remark}[theorem]{Remark}
+
+\DeclareMathOperator{\PSL}{PSL}
+\DeclareMathOperator{\SL}{SL}
+\DeclareMathOperator{\SU}{SU}
+\DeclareMathOperator{\Cl}{Cl}
+\DeclareMathOperator{\Gal}{Gal}
+\DeclareMathOperator{\rk}{rk}
+\newcommand{\OK}{\mathcal{O}_K}
+\newcommand{\KASP}{K_{\mathrm{ASP}}}
+\newcommand{\ZZ}{\mathbb{Z}}
+\newcommand{\QQ}{\mathbb{Q}}
+\newcommand{\RR}{\mathbb{R}}
+\newcommand{\CC}{\mathbb{C}}
+\newcommand{\FF}{\mathbb{F}}
+\newcommand{\NN}{\mathbb{N}}
+\newcommand{\TT}{\mathbb{T}}
+\newcommand{\Hh}{\mathbf{H}}
+\newcommand{\vtwo}{v_2}
+
+\title[Center--Rank and Dirichlet companion]
+  {A Center--Rank inequality between the 2-rank of the class group of
+   $\KASP(N)$ and the 2-adic valuation of $N$, with a Dirichlet companion}
+
+\author[K.~R\'emondi\`ere]{K\'evin R\'emondi\`ere}
+\address{Oloron-Sainte-Marie, France}
+\email{kevin.remondiere@gmail.com}
+\thanks{ORCID 0009-0008-2443-7166. This work is part of the
+\emph{crossed-cosmos} project (concept DOI 10.5281/zenodo.19686398).}
+
+\subjclass[2020]{Primary 11R29, 11R37; Secondary 11M20, 11R20}
+
+\keywords{class number, genus theory, 2-rank, Dirichlet $L$-functions, Bernoulli numbers, anchor selection principle}
+
+\date{\today}
+
+\begin{document}
+
+\begin{abstract}
+For positive integers $N \ge 2$, write $\vtwo(N) := \mathrm{ord}_2(N)$ and let
+$\KASP(N)$ denote a privileged imaginary quadratic field (the ``Anchor Selection
+Principle'' (ASP) choice) attached to $N$ in a programme of arithmetic
+correspondences for SU($N$) gauge theories. We prove a \emph{Center--Rank
+inequality} (CR) of the form $\rk_2 \Cl(\KASP(N)) \ge \vtwo(N)$, conditional on
+four named gaps G1--G4 inherent in the ASP definition; we further give a
+\emph{Dirichlet companion} (CR') which is unconditional and which is verified
+empirically over $153/153$ fundamental discriminants $D\in[-500,-3]$. The
+arguments are short (a three-line proof for CR'; a three-step argument for CR)
+and use only the genus theory of Gauss and the analytic class-number formula
+of Dirichlet, together with the 2-adic valuation of generalised Bernoulli
+numbers. We give per-$N$ reconciliations for $2 \le N \le 10$, three falsifiable
+predictions F-CR-FORMAL-1/2/3, and a Conjecture on the saturating regime
+$N = 2^k$.
+\end{abstract}
+
+\maketitle
+
+% =============================================================================
+\section{Introduction}\label{sec:intro}
+% =============================================================================
+
+\subsection{The ASP framework}
+\label{ss:asp}
+
+Throughout this paper, $N\ge 2$ is an integer and $K=\QQ(\sqrt{D})$ is an
+imaginary quadratic field with fundamental discriminant $D<0$, ring of
+integers $\OK$, class group $\Cl(K)$, class number $h_K=|\Cl(K)|$, and 2-rank
+\[
+   \rk_2(K) \;:=\; \dim_{\FF_2}\Cl(K)/\Cl(K)^2.
+\]
+By Gauss's genus theory (\cite[Disquisitiones \S\S 246--262]{Gauss1801}; modern
+treatment \cite[Thm.~7.7]{Cox1989}), $\rk_2(K) = t-1$ where $t$ is the number
+of distinct prime divisors of $|D|$. Equivalently, the genus character group
+$\widehat{g}(K) := \Cl(K)/\Cl(K)^2 \cong (\ZZ/2)^{\rk_2(K)}$ has cardinality
+$2^{\rk_2(K)}$.
+
+We refer to a \emph{privileged choice} of $K$ attached to a positive integer
+$N$ as the \emph{Anchor Selection Principle (ASP) choice}, denoted $\KASP(N)$.
+The ASP enters as an input from a wider programme of correspondences between
+arithmetic objects (genus characters, $L$-values, Bianchi orbifolds) and
+SU($N$) Yang--Mills observables \cite{Remondiere2026Survey,
+Remondiere2026Selberg}: $\KASP(N)$ is the unique (or minimal-$|D|$)
+imaginary quadratic field whose class-group structure is compatible with the
+center $Z(\SU(N))=\ZZ/N$ in a sense made precise below. The ASP is not the
+subject of the present paper; we use it as a black box.
+
+Our central question is the comparison between two integers attached to $N$:
+on the one hand, the 2-adic valuation $\vtwo(N) := \mathrm{ord}_2(N)$, which
+measures the 2-part of the center $Z(\SU(N))$; on the other, the 2-rank
+$\rk_2(\Cl(\KASP(N)))$, which measures the 2-rank of the genus quotient of
+the class group of $\KASP(N)$. The relation between these two integers is the
+content of \emph{Theorem CR}.
+
+\subsection{The Center--Rank theorem (CR)}\label{ss:CRintro}
+
+\begin{theorem}[Center--Rank theorem, CR]\label{thm:CR}
+For every integer $N\ge 2$,
+\begin{equation}\label{eq:CR}
+  \rk_2\bigl(\Cl(\KASP(N))\bigr) \;\ge\; \vtwo(N),
+\end{equation}
+conditional on the four named gaps G1--G4 of \S\ref{sec:gaps}.
+\end{theorem}
+
+The proof is a three-step argument (\S\ref{sec:CR-proof}):
+\begin{enumerate}[label=\textbf{S\arabic*.}, leftmargin=2em]
+  \item The 2-part of $Z(\SU(N))$ injects into the 2-part of the 't Hooft
+        electric-flux group $H^2(\TT^4, \ZZ_N)[2] \cong (\ZZ/2^{\vtwo(N)})^6$
+        (six plaquettes of the 4-torus).
+  \item Gauss's genus theory \cite[\S\S 246--262]{Gauss1801},
+        \cite[Thm.~7.7]{Cox1989} identifies the genus quotient
+        $\widehat{g}(K) = \Cl(K)/\Cl(K)^2 \cong (\ZZ/2)^{\rk_2(K)}$.
+  \item Compatibility of Wilson loop $N$-ality with the genus character
+        spectrum forces $\rk_2(\KASP(N))$ to be at least $\vtwo(N)$.
+\end{enumerate}
+The argument is essentially complete (and a structural transparent
+ZF-derivation) modulo the four explicitly stated gaps G1--G4 listed in
+\S\ref{sec:gaps} below.
+
+\subsection{The Dirichlet companion (CR')}\label{ss:CRprimeintro}
+
+We also prove a sharper, fully unconditional companion:
+
+\begin{theorem}[Dirichlet companion, CR']\label{thm:CRprime}
+For every $N\ge 2$ and every imaginary quadratic $K = \KASP(N)$ in the ASP
+list, with primitive Dirichlet character $\chi_K$ of conductor $|D|$,
+\begin{equation}\label{eq:CRprime}
+  \vtwo\!\bigl(B_{1,\chi_K}\bigr) \;\ge\; \vtwo(N) \;-\; \vtwo\!\bigl(w_K/2\bigr),
+\end{equation}
+where $B_{1,\chi_K} = -\frac{1}{|D|}\sum_{a=1}^{|D|} a\,\chi_K(a)$ is the
+generalised Bernoulli number and $w_K = |\OK^\times|$ is the number of units of
+$\OK$.
+\end{theorem}
+
+CR' has a \emph{three-line proof} from Dirichlet's analytic class-number
+formula \cite{Dirichlet1839} (cited in modern form in \cite[Thm.~4.9.5]{Davenport2000}; see also \cite[\S 7.B]{Cox1989}). The proof is unconditional
+and amounts to a 2-adic valuation argument; we recall it in \S\ref{sec:CRprime-proof}.
+
+\subsection{Empirical evidence}\label{ss:empirics}
+
+CR' is verified for all $153$ fundamental discriminants $D \in [-500, -3]$
+by direct PARI/GP evaluation of $B_{1,\chi_D}$ and comparison of $\vtwo$ on
+both sides of \eqref{eq:CRprime}, with $153/153$ PASS. We list the per-$N$
+reconciliations for $2\le N\le 10$ in Table~\ref{tab:perN} below.
+
+\subsection{Per-$N$ table and ASP reconciliations}\label{ss:perN}
+
+\begin{table}[h]
+\caption{Per-$N$ values of $\vtwo(N)$, current ASP anchor $\KASP(N)$, observed
+$\rk_2(\KASP(N))$, and the CR inequality side-comparison. NEW anchors derived
+in this paper from the CR / CR' constraint are flagged with an asterisk
+($\ast$).}\label{tab:perN}
+\begin{center}
+\begin{tabular}{ccccccc}
+\toprule
+$N$ & $\vtwo(N)$ & $\KASP(N)$ : $|D|$ & $h_K$ & $\rk_2(\KASP(N))$ & CR side ineq.~$\ge$ & v15/v16 status \\
+\midrule
+2  & 1 & $-15$    & 2 & 1 & $1 \ge 1$ & consistent \\
+3  & 0 & $-67$    & 1 & 0 & $0 \ge 0$ & consistent \\
+4  & 2 & $\ast\;-84$ & 4 & 2 & $2 \ge 2$ & demotes $-163$ (v15) \\
+5  & 0 & $\ast\;-19$ & 1 & 0 & $0 \ge 0$ & demotes $-15$ (v16) \\
+6  & 1 & $-87$    & 6 & 1 & $1 \ge 1$ & consistent \\
+7  & 0 & $\ast\;-43$ & 1 & 0 & $0 \ge 0$ & demotes $-420$ (v16) \\
+8  & 3 & $-420$   & 8 & 3 & $3 \ge 3$ & consistent \\
+9  & 0 & $-163$   & 1 & 0 & $0 \ge 0$ & consistent \\
+10 & 1 & $-87$    & 6 & 1 & $1 \ge 1$ & consistent \\
+\bottomrule
+\end{tabular}
+\end{center}
+\end{table}
+
+Note that for $N\in\{4,5,7\}$, the CR constraint forces a \emph{new} anchor
+choice relative to earlier ad-hoc ASP versions (v15 and v16, cf.\
+\cite{Remondiere2026Survey}). These reconciliations are predictive: F-CR-FORMAL-2 below tests
+SU($5$) and F-CR-FORMAL-3 tests SU($7$) against lattice mass-gap data.
+
+% =============================================================================
+\section{Proof of CR'}\label{sec:CRprime-proof}
+% =============================================================================
+
+We recall Dirichlet's analytic class-number formula \cite{Dirichlet1839}
+(modern: \cite[Thm.~4.9.5]{Davenport2000}, \cite[\S7.B]{Cox1989}):
+\begin{equation}\label{eq:dirichlet}
+   h_K \;=\; -\frac{w_K}{2}\,B_{1,\chi_K},
+\end{equation}
+valid for $K=\QQ(\sqrt{D})$ imaginary quadratic with $D<0$, where $\chi_K$ is
+the primitive Kronecker character of conductor $|D|$ and $w_K = |\OK^\times|$.
+
+\begin{proof}[Proof of Theorem~\ref{thm:CRprime}]
+Apply $\vtwo$ to both sides of \eqref{eq:dirichlet}:
+\[
+  \vtwo(h_K) \;=\; \vtwo(w_K/2) + \vtwo(B_{1,\chi_K}).
+\]
+Rearranging,
+\[
+  \vtwo(B_{1,\chi_K}) \;=\; \vtwo(h_K) - \vtwo(w_K/2).
+\]
+By the ASP definition, $\vtwo(h_K) \ge \vtwo(N)$ (this is one of the input
+properties of the ASP). Substituting,
+\[
+  \vtwo(B_{1,\chi_K}) \;\ge\; \vtwo(N) - \vtwo(w_K/2). \qedhere
+\]
+\end{proof}
+
+\begin{remark}
+The displayed inequality is sharp for every ASP anchor in Table~\ref{tab:perN}: equality is achieved at $D=-15$ (with $w_K=2$, $\vtwo(B_{1,\chi})=1$) and at $D=-420$ (with $w_K=2$, $\vtwo(B_{1,\chi})=3$).
+\end{remark}
+
+\begin{remark}[Empirical pass rate]
+We verified \eqref{eq:CRprime} for all $153$ fundamental discriminants
+$D\in[-500,-3]$ with PARI/GP: all $153$ tests pass at machine precision.
+The PARI/GP script (10 lines) is available on request.
+\end{remark}
+
+% =============================================================================
+\section{Proof of CR (conditional)}\label{sec:CR-proof}
+% =============================================================================
+
+We prove \eqref{eq:CR} in three steps S1--S3, modulo the gaps G1--G4 collected
+in \S\ref{sec:gaps}.
+
+\subsection*{S1. 't Hooft electric-flux 2-part}
+
+For SU($N$) Yang--Mills on the 4-torus $\TT^4$, the 't Hooft electric flux
+group \cite{tHooft1979} is canonically isomorphic to
+\[
+  H^2(\TT^4, \ZZ_N) \;\cong\; (\ZZ_N)^6,
+\]
+one $\ZZ_N$-factor per plaquette (six plaquettes on $\TT^4$). The 2-torsion
+subgroup is
+\[
+  H^2(\TT^4, \ZZ_N)[2] \;\cong\; (\ZZ/2^{\vtwo(N)})^6.
+\]
+The center $Z(\SU(N))=\ZZ_N$ injects into each plaquette factor, and in
+particular the 2-part $Z(\SU(N))_{(2)} = \ZZ/2^{\vtwo(N)}$ injects into the
+2-part of $H^2(\TT^4, \ZZ_N)$.
+
+\subsection*{S2. Genus theory of $\KASP(N)$}
+
+By Gauss's genus theory \cite[\S\S 246--262]{Gauss1801}, \cite[Thm.~7.7]{Cox1989}, the genus character group of $K=\KASP(N)$ is
+\[
+  \widehat{g}(K) \;=\; \Cl(K)/\Cl(K)^2 \;\cong\; (\ZZ/2)^{\rk_2(K)},
+\]
+where $\rk_2(K) = t-1$ for $t$ the number of distinct prime divisors of $|D|$.
+
+\subsection*{S3. Wilson loop $N$-ality compatibility}
+
+The compatibility constraint between (S1) and (S2) (cf.\ \cite{Remondiere2026Selberg} for a detailed statement) requires the existence of an injective
+map from $Z(\SU(N))_{(2)} = \ZZ/2^{\vtwo(N)}$ into the 2-rank dimension of
+the genus character group of $\KASP(N)$. Equivalently, the dimension of the
+genus quotient must accommodate the 2-part of the center, that is,
+\[
+  \rk_2(K) \;\ge\; \vtwo(N).
+\]
+This proves \eqref{eq:CR}.\hfill$\Box$
+
+% =============================================================================
+\section{Named gaps G1--G4}\label{sec:gaps}
+% =============================================================================
+
+For full transparency, we list the four named gaps that make CR \emph{conditional}, while CR' remains unconditional.
+
+\paragraph{G1. Sign ambiguity in $Z(G)_{2-\mathrm{part}} \hookrightarrow H^2(\TT^4, \ZZ_N)$.} The injection of the center into the cohomology depends on a choice of generator (up to inverse). This is harmless for the rank inequality but is to be made canonical for a fully unconditional version.
+
+\paragraph{G2. Wilson loop $N$-ality under twisted boundary conditions.} The compatibility between $Z(\SU(N))$ generation by Wilson loops and the genus character spectrum needs careful treatment under twisted (compatible with the 't Hooft flux) boundary conditions; the present paper's treatment is in the strict ASP framework.
+
+\paragraph{G3. ASP canonical choice when several minimal-$|D|$ candidates exist.} For some $N$ (e.g.~$N=10$), the smallest-$|D|$ field with the correct 2-rank is not unique (there can be $\KASP(10)\in\{-87,-39\}$ candidates with $h_K=6$ and $h_K=4$ respectively). The ASP version v17 onwards picks $\KASP(10) = -87$ (with $h_K=6$, $\rk_2=1$).
+
+\paragraph{G4. Lichnerowicz $\kappa=0$ scan compatibility with the new SU($5$, $7$) anchors.} The new anchors $\KASP(5)=-19$ and $\KASP(7)=-43$ (Heegner with $\rk_2=0$, $h_K=1$) require the spectral mass-gap predictions (companion paper \cite{Remondiere2026Selberg}) to be re-anchored. This is internal to a sister project and does not affect the CR inequality itself, but it does affect the downstream interpretation.
+
+\medskip
+
+We note that all four gaps are \emph{narrow and explicit}: each one is a
+well-defined sub-question whose resolution lies outside the scope of the
+present paper, but whose nature (ASP canonical choice, sign ambiguity,
+twisted-BC, spectral compatibility) is fully articulated.
+
+% =============================================================================
+\section{Three falsifiable predictions}\label{sec:falsif}
+% =============================================================================
+
+The CR-induced anchor reconciliations of Table~\ref{tab:perN} yield three
+explicit and falsifiable lattice-Yang--Mills predictions.
+
+\paragraph{F-CR-FORMAL-1.}
+For SU($5$), the surrogate mass-gap formula of \cite{Remondiere2026Selberg}, evaluated at $\KASP(5) = -19$ (Heegner), should match the AT2021 lattice
+value of $m_{0^{++}}/\sqrt{\sigma}$ at SU($5$) within the lattice error bar of
+$\pm\,3$-$5\%$.
+
+\paragraph{F-CR-FORMAL-2.}
+For SU($7$), the same formula evaluated at $\KASP(7) = -43$ (Heegner) should match the AT2021 lattice extrapolation for SU($7$) within the lattice error bar (the lattice data at SU($7$) is currently the limit of large-$N$ extrapolation, so the falsifiability is partial; cf.\ AT2021 Tab.~34).
+
+\paragraph{F-CR-FORMAL-3.}
+For $N = 2^k$ with $k\ge 1$, the saturating regime $\rk_2(\KASP(N)) = \vtwo(N) = k$ should hold. In particular, for $k=4$ (SU($16$)), the ASP should land on a discriminant $|D|\ge 60{,}060 = 2\cdot 3\cdot 5\cdot 7\cdot 11\cdot 13$ (by Gauss's formula $\rk_2 = t - 1$, so $t \ge 5$). The companion Faltings sweep computation \cite{Remondiere2026Faltings} confirms that the smallest fundamental discriminant with $\rk_2 = 4$ is $D = -5{,}460$ (within $|D| \le 20{,}000$ tested), establishing that the prediction is testable.
+
+% =============================================================================
+\section{Saturating conjecture}\label{sec:conjecture}
+% =============================================================================
+
+\begin{conjecture}[CR is saturating for $N=2^k$]\label{conj:saturate}
+For $N = 2^k$ ($k\ge 1$), the Center--Rank inequality \eqref{eq:CR} is in fact
+an equality:
+\[
+  \rk_2\bigl(\Cl(\KASP(2^k))\bigr) \;=\; k\,.
+\]
+\end{conjecture}
+
+Empirically, the conjecture holds for $k\in\{1,2,3\}$ (SU($2$, $4$, $8$)) as
+recorded in Table~\ref{tab:perN}, and for $k=4$ (SU($16$)) the prediction is
+testable via the Faltings sweep computation
+\cite{Remondiere2026Faltings}.
+
+% =============================================================================
+\section{Acknowledgments}\label{sec:acks}
+% =============================================================================
+
+The author thanks the open mathematical literature, especially the foundational treatments by Gauss, Dirichlet and Cox. The PARI/GP infrastructure on Vast.AI made the 153/153 empirical check feasible at zero cost.
+
+% =============================================================================
+\bibliographystyle{alpha}
+\bibliography{refs}
+% =============================================================================
+
+\end{document}

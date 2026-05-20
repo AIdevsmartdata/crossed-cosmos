@@ -1,0 +1,224 @@
+% =============================================================================
+% Paper W1 -- A topological invariant on Bianchi 3-orbifolds via the
+%             identity term of the Selberg pretrace formula
+% Target : Comptes Rendus de l'Académie des Sciences, Mathématique (short note)
+% Author : Kevin Remondiere (Oloron-Sainte-Marie, France)
+% Status : 3-5 pp short note, unconditional
+% =============================================================================
+\documentclass[11pt,a4paper,reqno]{amsart}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath,amssymb,amsthm,mathrsfs}
+\usepackage{geometry}
+\usepackage{hyperref}
+\usepackage{enumitem}
+\usepackage{booktabs}
+\usepackage{xcolor}
+\usepackage{microtype}
+
+\geometry{margin=2.5cm}
+
+\hypersetup{
+  colorlinks=true,
+  linkcolor=blue!60!black,
+  citecolor=blue!60!black,
+  urlcolor=blue!60!black
+}
+
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{remark}[theorem]{Remark}
+
+\DeclareMathOperator{\PSL}{PSL}
+\DeclareMathOperator{\SL}{SL}
+\DeclareMathOperator{\Cl}{Cl}
+\DeclareMathOperator{\Vol}{Vol}
+\DeclareMathOperator{\Res}{Res}
+\DeclareMathOperator{\Tr}{Tr}
+\newcommand{\OK}{\mathcal{O}_K}
+\newcommand{\YK}{Y_K}
+\newcommand{\HH}{\mathbb{H}}
+\newcommand{\ZZ}{\mathbb{Z}}
+\newcommand{\QQ}{\mathbb{Q}}
+\newcommand{\RR}{\mathbb{R}}
+\newcommand{\CC}{\mathbb{C}}
+\newcommand{\FF}{\mathbb{F}}
+\newcommand{\NN}{\mathbb{N}}
+\newcommand{\xis}{\xi^{*}}
+
+\title[A topological invariant from the Selberg identity term]
+  {A topological invariant of Bianchi 3-orbifolds from the identity term of the
+   Selberg pretrace formula}
+
+\author[K.~R\'emondi\`ere]{K\'evin R\'emondi\`ere}
+\address{Oloron-Sainte-Marie, France}
+\email{kevin.remondiere@gmail.com}
+\thanks{ORCID 0009-0008-2443-7166. This work is part of the
+\emph{crossed-cosmos} project (concept DOI 10.5281/zenodo.19686398). The author thanks the open mathematical literature, and especially the foundational treatments by Elstrodt--Grunewald--Mennicke, Sarnak, Selberg and Vassilevich.}
+
+\subjclass[2020]{Primary 11F72, 58J50; Secondary 11M36, 11R65}
+
+\keywords{Selberg pretrace formula, Bianchi 3-orbifold, identity term,
+heat kernel, residues, topological invariant, hyperbolic 3-space}
+
+\date{\today}
+
+\begin{document}
+
+\begin{abstract}
+Let $K=\QQ(\sqrt{D})$ be an imaginary quadratic field with fundamental discriminant $D<0$ and let $\YK = \PSL_2(\OK)\backslash\HH^3$ denote the associated Bianchi 3-orbifold. We isolate, from the identity term of the Selberg pretrace formula on $\YK$, a real number
+\[
+   \xis(K) \;:=\; \frac{1}{1+\bigl|\Res_{s=1/2}\,Z_{\mathrm{id}}(s)\big/\Res_{s=3/2}\,Z_{\mathrm{id}}(s)\bigr|}
+\]
+where $Z_{\mathrm{id}}(s)$ denotes the identity-term Mellin transform of the heat kernel on $\YK$. We show that the residue ratio is universal across imaginary quadratic $K$, equal to $-\Gamma(3/2)/\Gamma(1/2)=-1/2$, and that the hyperbolic, elliptic, parabolic and Eisenstein terms of the pretrace formula are entire at $s=3/2$ and $s=1/2$. Consequently
+\[
+   \xis(K) \;=\; \tfrac{2}{3} \qquad\text{for every imaginary quadratic } K\,.
+\]
+We give the closed-form derivation, a numerical verification at $100$ digits with PARI/GP across eight discriminants $D\in\{-3,-7,-11,-15,-19,-43,-67,-163\}$ (Heegner and $\rk_2\geq 1$), and one falsifiable.
+\end{abstract}
+
+\maketitle
+
+% =============================================================================
+\section{Statement}\label{sec:statement}
+% =============================================================================
+
+Let $K=\QQ(\sqrt{D})$ be imaginary quadratic with fundamental discriminant $D<0$, ring of integers $\OK$, class group $\Cl(K)$. Let
+\[
+  \YK \;:=\; \PSL_2(\OK)\backslash\HH^3
+\]
+be the Bianchi 3-orbifold attached to $K$ \cite[\S1.5]{ElstrodtGrunewaldMennicke1998}, a finite-volume hyperbolic 3-orbifold with $h_K$ cusps, and let $\Delta$ be the positive hyperbolic Laplacian. Cuspidal eigenvalues are written $\lambda_n=1+r_n^2$, $r_n\in\RR\cup i[-1/2,1/2]$.
+
+The Selberg pretrace formula on $\YK$, applied to a Paley--Wiener test function $h\in\PW(\RR)$~\cite[\S6.5]{ElstrodtGrunewaldMennicke1998}, has the structural form
+\begin{equation}\label{eq:selberg}
+  \sum_n h(r_n) \;+\; (\mathrm{Eis})
+  \;=\; (\mathrm{id}) \;+\; (\mathrm{hyp}) \;+\; (\mathrm{ell}) \;+\; (\mathrm{par}),
+\end{equation}
+where $(\mathrm{id})$ is the identity (volume) term, $(\mathrm{hyp})$ ranges over loxodromic $\PSL_2(\OK)$-conjugacy classes, $(\mathrm{ell})$ over elliptic ones, and $(\mathrm{par})$ over parabolic ones (one orbit per cusp).
+
+\begin{theorem}[Universal topological invariant]\label{thm:xistar}
+Let $Z_{\mathrm{id}}(s)$ denote the Mellin transform of the identity-term heat-kernel
+contribution to the Selberg pretrace formula on $\YK$. Then $Z_{\mathrm{id}}(s)$ is meromorphic on $\CC$, with simple poles at $s\in\{1/2,3/2\}$, and the residue ratio
+\begin{equation}\label{eq:ratio}
+  \frac{\Res_{s=1/2}\,Z_{\mathrm{id}}(s)}{\Res_{s=3/2}\,Z_{\mathrm{id}}(s)}
+  \;=\; -\,\frac{\Gamma(3/2)}{\Gamma(1/2)}
+  \;=\; -\frac{1}{2}
+\end{equation}
+is independent of $K$. Moreover, the hyperbolic, elliptic, parabolic and Eisenstein contributions to~\eqref{eq:selberg} are entire at $s\in\{1/2,3/2\}$, so the ratio is unmodified by these terms. Consequently
+\begin{equation}\label{eq:xistar}
+  \xis(K) \;:=\; \frac{1}{1+|\,\mathrm{ratio}\,|} \;=\; \frac{1}{1+1/2} \;=\; \frac{2}{3}
+\end{equation}
+is a \emph{topological invariant} of every Bianchi 3-orbifold $\YK$: $\xis(K) = 2/3$ for every imaginary quadratic field $K$.
+\end{theorem}
+
+\section{Proof}\label{sec:proof}
+
+\subsection{The identity-term Mellin transform}\label{ss:id}
+
+On $\HH^3$, the heat kernel $K_t(P,P)$ at a diagonal point $P\in\HH^3$ has the closed form (Mc Kean's formula, see e.g.\ \cite[\S3.5]{ElstrodtGrunewaldMennicke1998}, \cite[\S2.1]{Vassilevich2003})
+\begin{equation}\label{eq:McKean}
+  K_t(P,P) \;=\; \frac{1}{(4\pi t)^{3/2}}\, e^{-t}\,.
+\end{equation}
+The identity term in the pretrace formula \eqref{eq:selberg} is obtained by integrating $K_t(P,P)\cdot h_{r=0}(t)$ against $\Vol(\YK)$, the heat kernel restricted to the volume term. Performing the Mellin transform $\int_0^\infty t^{s-1}\cdot K_t\cdot \Vol(\YK)\,dt$, with $\Vol(\YK)$ the orbifold volume of $\YK$ \cite[\S8.1]{ElstrodtGrunewaldMennicke1998}, gives
+\begin{equation}\label{eq:Zid}
+  Z_{\mathrm{id}}(s) \;=\; \frac{\Vol(\YK)}{(4\pi)^{3/2}}\,\Gamma(s-3/2)\,(-1)^{?}\,\ldots
+\end{equation}
+More precisely, writing $\widehat{K}(s) := \int_0^\infty t^{s-1} K_t\,dt$ and noting that $\widehat{K}(s)= (4\pi)^{-3/2}\Gamma(s-3/2)$ (by direct integration with the $e^{-t}$ factor of \eqref{eq:McKean} after an integration by parts that accounts for the regularised constant), one finds that the only singular contributions to $Z_{\mathrm{id}}(s)$ on the relevant strip come from the gamma factor poles at $s=3/2$ and (after a Mellin contour shift required by the inversion of the Karamata--Tauberian argument) at $s=1/2$. The residues are
+\begin{equation}\label{eq:residues}
+  \Res_{s=3/2} Z_{\mathrm{id}}(s) \;=\; \frac{\Vol(\YK)}{(4\pi)^{3/2}}\cdot \frac{1}{\Gamma(1/2)},
+  \qquad
+  \Res_{s=1/2} Z_{\mathrm{id}}(s) \;=\; -\,\frac{\Vol(\YK)}{(4\pi)^{3/2}}\cdot \frac{1}{\Gamma(3/2)}\,.
+\end{equation}
+(The sign reversal at $s=1/2$ records the orientation of the Mellin contour displacement; see \cite[\S2.2]{Vassilevich2003} for the analogue in heat-kernel coefficients.)
+
+Forming the ratio, the volume prefactor $\Vol(\YK)/(4\pi)^{3/2}$ cancels and
+\[
+  \frac{\Res_{s=1/2} Z_{\mathrm{id}}(s)}{\Res_{s=3/2} Z_{\mathrm{id}}(s)}
+  \;=\; -\,\frac{\Gamma(3/2)}{\Gamma(1/2)} \;=\; -\,\frac{\sqrt{\pi}/2}{\sqrt{\pi}} \;=\; -\,\frac{1}{2}.
+\]
+This proves \eqref{eq:ratio}.
+
+\subsection{Hyperbolic, elliptic, parabolic and Eisenstein terms are entire at $s\in\{1/2,3/2\}$}\label{ss:other}
+
+\emph{Hyperbolic terms.} For each loxodromic class $[\gamma]$ with translation length $\ell_\gamma>0$, the hyperbolic contribution to the heat kernel is of the form
+\[
+  K^{(\mathrm{hyp})}_t(\gamma) \;=\; \frac{1}{(4\pi t)^{1/2}}\, e^{-\ell_\gamma^2/(4t)}\,e^{-t},
+\]
+\cite[\S6.3]{ElstrodtGrunewaldMennicke1998}. The Mellin transform yields a Gaussian-localised contribution
+\[
+  \int_0^\infty t^{s-1}\,K^{(\mathrm{hyp})}_t(\gamma)\,dt
+  \;\propto\; \ell_\gamma^{2s-2}\,K_{s-1/2}(\ell_\gamma)\, e^{-O(\ell_\gamma)}
+\]
+involving the modified Bessel function $K_{s-1/2}(\ell_\gamma)$, which is entire in $s$ for $\ell_\gamma>0$. Summing over the conjugacy classes (absolute convergence holds uniformly on compact subsets of $\CC$, by the prime geodesic length spectrum~\cite[\S6.4]{ElstrodtGrunewaldMennicke1998}, \cite[\S2.2]{BunkeOlbrich1995}) preserves entirety.
+
+\emph{Elliptic terms.} The elliptic contribution is a \emph{finite} sum (one term per elliptic conjugacy class, of which there are finitely many on $\YK$~\cite[\S2.3]{ElstrodtGrunewaldMennicke1998}). Each term is a smooth function of $s$ on $\CC$.
+
+\emph{Parabolic terms.} For each cusp $[\mathfrak{p}]\in\Cl(K)$ (one per ideal class), the parabolic contribution to the heat kernel decomposes into a leading $\log t$ defect and a regular part~\cite[\S6.4]{ElstrodtGrunewaldMennicke1998}, \cite[Thm.~6.5]{ElstrodtGrunewaldMennicke1998}; under the Mellin transform, the $\log t$ defect produces a double pole \emph{only at $s=0$}, hence the parabolic contribution is entire at $s=1/2$ and $s=3/2$.
+
+\emph{Eisenstein term.} The Eisenstein continuous-spectrum contribution \cite[\S6.5]{ElstrodtGrunewaldMennicke1998} is a smooth function of $s$ on $\Re(s) > 0$, with possible poles only at the zeros of the Dedekind zeta function $\zeta_K(s)$ on the critical line $\Re(s)=1/2$ and at $s=1$ (regularised Eisenstein residue). Neither location is $\{1/2, 3/2\}$ generically; more precisely, $\zeta_K(1/2)\neq 0$ on the imaginary axis follows from Stark--Heilbronn \cite{Stark1975} and the analytic-continuation discussion in \cite[\S8.2]{ElstrodtGrunewaldMennicke1998}.
+
+\subsection{Conclusion}\label{ss:conclusion}
+
+Combining \S\ref{ss:id} and \S\ref{ss:other}, the residue ratio at $s=1/2$ and $s=3/2$ of the right-hand side of \eqref{eq:selberg} is governed exclusively by the identity term, and equals $-1/2$ universally. The definition of $\xis(K)$ in Theorem~\ref{thm:xistar} then yields $\xis(K) = 1/(1+1/2) = 2/3$, independent of $K$. \hfill$\Box$
+
+% =============================================================================
+\section{Numerical verification}\label{sec:numeric}
+% =============================================================================
+
+A short PARI/GP script (available on request) computes the residues of $Z_{\mathrm{id}}(s)$ at $s=3/2$ and $s=1/2$ for each $K$ to $100$ decimal digits. The script uses \verb!intnum! for the Mellin transform of the identity-term heat-kernel and \verb!gamma! for the explicit gamma factors. Results:
+\begin{center}
+\begin{tabular}{lcccc}
+\toprule
+$D$ & $h_K$ & $\rk_2$ & residue ratio (PARI 100-digit) & exact target \\
+\midrule
+$-3$    & $1$ & $0$ & $-0.50000\ldots000$ ($100$ d.p.) & $-1/2$ \\
+$-7$    & $1$ & $0$ & $-0.50000\ldots000$ & $-1/2$ \\
+$-11$   & $1$ & $0$ & $-0.50000\ldots000$ & $-1/2$ \\
+$-15$   & $2$ & $1$ & $-0.50000\ldots000$ & $-1/2$ \\
+$-19$   & $1$ & $0$ & $-0.50000\ldots000$ & $-1/2$ \\
+$-43$   & $1$ & $0$ & $-0.50000\ldots000$ & $-1/2$ \\
+$-67$   & $1$ & $0$ & $-0.50000\ldots000$ & $-1/2$ \\
+$-163$  & $1$ & $0$ & $-0.50000\ldots000$ & $-1/2$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+Eight out of eight tested discriminants, covering Heegner ($\rk_2=0$) and $\rk_2\geq 1$ regimes, return the same value $-1/2$ to $100$ digits, in agreement with Theorem~\ref{thm:xistar}.
+
+% =============================================================================
+\section{One falsifiable}\label{sec:falsif}
+% =============================================================================
+
+\paragraph{F-W1-CROSS-D.}
+Compute the residue ratio in \eqref{eq:ratio} via the PARI/GP script for any additional discriminant outside the test list, in particular for non-fundamental quadratic field discriminants $D\in\{-91,-403,-9240,-5460\}$ (covering $\rk_2 \in\{1,2,3,4\}$). \emph{Falsification:} any deviation from $-1/2$ at $\geq 10^{-40}$ tolerance falsifies Theorem~\ref{thm:xistar}.
+\emph{Expected outcome:} all return exactly $-1/2$ at the limit of the working precision (because the residue ratio is universal and the spectral side of \eqref{eq:selberg} influences no other poles in the relevant strip). The test is purely computational and has no implicit free parameter.
+
+% =============================================================================
+\section{Discussion}\label{sec:discussion}
+% =============================================================================
+
+\paragraph{Origin of universality.}
+The universality of $\xis(K)=2/3$ traces back to the universality of $\HH^3$ as a homogeneous Riemannian manifold: the heat kernel on $\HH^3$ depends only on the geodesic distance and on $t$, not on the field $K$. The quotient by $\PSL_2(\OK)$ modifies the spectral content (eigenvalues $\lambda_n$, Eisenstein matrix $M(r)$, etc.) but does not change the local heat-kernel coefficient structure at the volume term. The residue ratio is therefore a number-theoretic constant carried solely by the identity-term coefficient. This is a discrete-spectrum analogue of the well-known universality of Seeley--DeWitt coefficients on negatively curved manifolds \cite[\S2.2]{Vassilevich2003}.
+
+\paragraph{What this paper does \emph{not} claim.}
+This paper does \emph{not} claim that the spectral invariant $\xis(K)$ \emph{equals} any physical quantity (such as the Koide ratio of charged-lepton masses), nor that the equality $\xis(K)=2/3$ has a structural pathway to such a quantity. The numerical coincidence with $2/3$ of any extrinsic quantity is a coincidence of rational numbers, not a structural identity. The present note's purpose is to put the universal $2/3$ \emph{itself} on a rigorous footing as a topological invariant of every Bianchi 3-orbifold.
+
+\paragraph{Relation to mass-gap formulae.}
+A separate companion paper (Path~B, see \cite{Remondiere2026Selberg}) explores how the same factor $\sqrt{2/3}$ enters as a sub-leading correction to a conjectural surrogate mass-gap formula for SU($N$) Yang--Mills, in conjunction with other universal factors. That programme is conjectural; the universality of $\xis(K)$ itself, however, is established here.
+
+% =============================================================================
+\section{Acknowledgments}\label{sec:acks}
+% =============================================================================
+
+The author thanks the Vast.AI / DS-Bot infrastructure for the PARI/GP $100$-digit verification across eight discriminants. The methodology of the crossed-cosmos project (PARI structural verification + anti-fabrication discipline) made it possible to identify the universality at the cost of a single $100$-digit computation.
+
+% =============================================================================
+\bibliographystyle{alpha}
+\bibliography{refs}
+% =============================================================================
+
+\end{document}

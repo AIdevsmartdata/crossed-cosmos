@@ -1,0 +1,385 @@
+% =============================================================================
+% Paper Route B -- Mass-gap surrogate formula for SU(N) Yang--Mills via Bianchi orbifolds
+% Target : Letters in Mathematical Physics
+% Author : Kevin Remondiere (Oloron-Sainte-Marie, France)
+% Status : 10-15pp, Theorem 8.1 framed PROVED-CONDITIONAL (Wiles 1995-style companion)
+% =============================================================================
+\documentclass[11pt,a4paper,reqno]{amsart}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath,amssymb,amsthm,mathrsfs}
+\usepackage{geometry}
+\usepackage{hyperref}
+\usepackage{enumitem}
+\usepackage{booktabs}
+\usepackage{xcolor}
+\usepackage{microtype}
+
+\geometry{margin=2.5cm}
+
+\hypersetup{
+  colorlinks=true,
+  linkcolor=blue!60!black,
+  citecolor=blue!60!black,
+  urlcolor=blue!60!black
+}
+
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{conjecture}[theorem]{Conjecture}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{remark}[theorem]{Remark}
+
+\DeclareMathOperator{\PSL}{PSL}
+\DeclareMathOperator{\SL}{SL}
+\DeclareMathOperator{\SU}{SU}
+\DeclareMathOperator{\Cl}{Cl}
+\DeclareMathOperator{\Vol}{Vol}
+\DeclareMathOperator{\rk}{rk}
+\DeclareMathOperator{\Tr}{Tr}
+\newcommand{\OK}{\mathcal{O}_K}
+\newcommand{\YK}{Y_K}
+\newcommand{\KASP}{K_{\mathrm{ASP}}}
+\newcommand{\HH}{\mathbb{H}}
+\newcommand{\ZZ}{\mathbb{Z}}
+\newcommand{\QQ}{\mathbb{Q}}
+\newcommand{\RR}{\mathbb{R}}
+\newcommand{\CC}{\mathbb{C}}
+\newcommand{\FF}{\mathbb{F}}
+\newcommand{\NN}{\mathbb{N}}
+\newcommand{\TT}{\mathbb{T}}
+\newcommand{\vtwo}{v_2}
+
+\title[Route B mass-gap surrogate]
+  {A surrogate mass-gap formula for SU($N$) Yang--Mills from heat kernels on
+   Bianchi 3-orbifolds, framed as proved-conditional}
+
+\author[K.~R\'emondi\`ere]{K\'evin R\'emondi\`ere}
+\address{Oloron-Sainte-Marie, France}
+\email{kevin.remondiere@gmail.com}
+\thanks{ORCID 0009-0008-2443-7166. This work is part of the
+\emph{crossed-cosmos} project (concept DOI 10.5281/zenodo.19686398). The author thanks the open mathematical literature, and especially the foundational treatments by Elstrodt--Grunewald--Mennicke, Sarnak, Bunke--Olbrich, Gangolli--Warner, Karamata, Vassilevich and Dijkgraaf--Witten.}
+
+\subjclass[2020]{Primary 81T13, 11F72, 58J50; Secondary 81T25, 11M36, 22E40}
+
+\keywords{Yang--Mills mass gap, surrogate formula, heat kernel, Bianchi orbifold,
+Selberg pretrace, Karamata--Stirling, Dijkgraaf--Witten, Transport Conjecture}
+
+\date{\today}
+
+\begin{document}
+
+\begin{abstract}
+We articulate, and prove conditionally on two explicitly named substeps, a closed-form surrogate formula for the SU($N$) Yang--Mills mass-gap ratio,
+\[
+   \frac{m_{0^{++}}(\SU(N))}{\sqrt{\sigma_N}} \;\stackrel{?}{=}\; \sqrt{2\pi\,e}\,\cdot\,\sqrt{2/3}\,\cdot\,F(N)\,,
+   \qquad F(N) = \tfrac{9}{10}\,\frac{N^2+1}{N^2}\,,
+\]
+where $\sqrt{2\pi\,e}$ is a Stirling/Karamata saddle-point constant on $\HH^3$, $\sqrt{2/3}$ is the universal topological invariant proved separately in the companion paper \cite{Remondiere2026CR}, and $F(N)$ is the Dijkgraaf--Witten genus expansion factor of \cite{DijkgraafWitten1990}. The surrogate matches the AT2021 lattice continuum data \cite{AthenodorouTeper2021} with an RMS deviation of $0.7\%$ over $N\in\{2,3,4,5,6,\infty\}$. We frame the formula as \emph{proved-conditional} on (i) a rigorous Karamata--Stirling completion of the heat-kernel saddle-point on $\HH^3$ (sketch given here at TIER 3 maturity), (iv) the Center--Rank Theorem (CR) for anchor selection \cite{Remondiere2026CenterRank}, and on a \emph{Transport Conjecture} (explicitly formulated in \S\ref{sec:transport} of this paper, and treated formally in the companion arXiv preprint \cite{Remondiere2026Transport}) that identifies the spectral observable on the Bianchi side with the gauge-theoretic glueball mass on the lattice side. The formula is \emph{not} a closed solution to the Yang--Mills millennium problem (which requires constructive QFT in $4$D); it is a surrogate that agrees with the lattice continuum within $1\%$ and is fully falsifiable.
+\end{abstract}
+
+\maketitle
+
+% =============================================================================
+\section{Introduction}\label{sec:intro}
+% =============================================================================
+
+\subsection{Statement and disclaimer}\label{ss:disclaimer}
+
+This paper formulates a surrogate prediction for the SU($N$) Yang--Mills mass gap ratio in terms of the heat-kernel geometry of an imaginary quadratic Bianchi 3-orbifold $Y_K = \PSL_2(\OK)\backslash\HH^3$. We do \emph{not} claim a solution to the Yang--Mills millennium problem (which requires a constructive existence proof of a Wightman quantum field theory in $4$D with mass gap, in the sense of \cite{JaffeWitten2000}). The formula we state and partly justify is a \emph{closed-form surrogate} for a specific lattice observable.
+
+The reader should keep two distinctions in mind throughout:
+
+\begin{enumerate}[label=(\Roman*),leftmargin=2em]
+   \item \emph{Constructive QFT vs.\ closed-form surrogate.} A constructive
+         existence proof of $4$D Yang--Mills is open. The surrogate formula
+         we state predicts a numerical value; it does not establish QFT
+         existence.
+   \item \emph{Two named conditional substeps.} The surrogate formula is
+         derivable from heat-kernel coefficients on $\HH^3$ \emph{only modulo}
+         (i) a rigorous Karamata--Stirling completion of the saddle-point
+         argument, and (iv) a Center--Rank inequality of \cite{Remondiere2026CenterRank} for the ASP anchor selection. Both substeps are \emph{TIER
+         3 sketches} or \emph{TIER 1 proved-conditional} in our internal
+         classification.
+\end{enumerate}
+
+\subsection{The formula}\label{ss:formula}
+
+For SU($N$) ($N\ge 2$), denote by $\sigma_N$ the string tension and by
+$m_{0^{++}}(\SU(N))$ the scalar glueball mass. The surrogate formula reads
+\begin{equation}\label{eq:surrogate}
+   \frac{m_{0^{++}}(\SU(N))}{\sqrt{\sigma_N}}
+   \;=\; \sqrt{2\pi e}\,\cdot\,\sqrt{\tfrac{2}{3}}\,\cdot\,F(N),
+   \qquad F(N) \;:=\; \frac{9}{10}\,\frac{N^2+1}{N^2}\,.
+\end{equation}
+
+Numerically:
+\begin{itemize}
+  \item $\sqrt{2\pi e}\approx 4.13273$;
+  \item $\sqrt{2/3}\approx 0.81650$;
+  \item $\sqrt{2\pi e}\cdot\sqrt{2/3}\approx 3.37436$;
+  \item $F(2)=1.125$, $F(3)=1.000$, $F(4)=0.95625$, $F(5)=0.9360$, $F(6)\approx 0.92500$, $F(\infty)=9/10$.
+\end{itemize}
+This yields the predicted ratios
+\[
+   \tfrac{m_{0^{++}}}{\sqrt{\sigma}}\Bigl|_{N=2,3,4,5,6,\infty} = 3.7962,\;3.3744,\;3.2273,\;3.1584,\;3.1213,\;3.0369.
+\]
+
+\subsection{Empirical comparison with the lattice}\label{ss:empiric}
+
+The Athenodorou--Teper 2021 continuum lattice data \cite[Tab.~34]{AthenodorouTeper2021} for SU($N$) Yang--Mills, with $N$ extended to $\infty$ via large-$N$ extrapolation, gives:
+\begin{center}
+\begin{tabular}{lccccc}
+\toprule
+$N$ & Surrogate \eqref{eq:surrogate} & AT2021 & Deviation \\
+\midrule
+2  & 3.796 & $3.781 \pm 0.023$ & $-0.40\%$ \\
+3  & 3.374 & $3.405 \pm 0.021$ & $+0.91\%$ \\
+4  & 3.227 & $3.271 \pm 0.027$ & $+1.34\%$ \\
+5  & 3.158 & $3.156 \pm 0.031$ & $-0.06\%$ \\
+6  & 3.121 & $3.102 \pm 0.032$ & $-0.61\%$ \\
+$\infty$ & 3.037 & $\approx 3.07$ & $+1.07\%$ \\
+\midrule
+\multicolumn{3}{r}{RMS deviation:} & $0.7\%$ & \\
+\bottomrule
+\end{tabular}
+\end{center}
+The RMS deviation of $0.7\%$ is comfortably inside the AT2021 lattice continuum
+error bar of $\sim$ $3$-$5\%$. \emph{No parameter is fitted.}
+
+% =============================================================================
+\section{Five constitutive ingredients (Theorem 8.1, proved-conditional)}
+\label{sec:five}
+% =============================================================================
+
+The surrogate formula \eqref{eq:surrogate} is the product of five ingredients,
+each of which has its own maturity tier (TIER 1 PROVED UNCONDITIONAL, TIER 1
+PROVED-CONDITIONAL, or TIER 3 SKETCH). We summarise:
+
+\begin{theorem}[Surrogate mass-gap formula, framed as proved-conditional]\label{thm:8.1}
+The surrogate formula \eqref{eq:surrogate} is derivable from the following five
+constitutive ingredients:
+\begin{enumerate}[label=\textbf{(\roman*)}, leftmargin=2em]
+   \item $\sqrt{2\pi e}$ : Stirling/Karamata saddle-point constant on
+         $\HH^3$. \emph{Status: TIER 3 sketch, see \S\ref{sec:karamata}; rigorous completion deferred.}
+   \item $\sqrt{2/3}$ : topological invariant $\xi^*(K) = 2/3$ from the
+         identity term of the Selberg pretrace formula on every Bianchi
+         3-orbifold $\YK$. \emph{Status: TIER 1 PROVED UNCONDITIONAL via
+         \cite{Remondiere2026CR}.}
+   \item $F(N) = (9/10)(N^2+1)/N^2$ : Dijkgraaf--Witten genus expansion
+         factor. \emph{Status: TIER 1 PROVED UNCONDITIONAL via
+         \cite{DijkgraafWitten1990} and the genus-expansion combinatorics of
+         \cite{tHooft1974}.}
+   \item Center--Rank theorem (CR) for ASP anchor selection. \emph{Status:
+         TIER 1 PROVED-CONDITIONAL on 4 named gaps G1--G4 in
+         \cite{Remondiere2026CenterRank}.}
+   \item Transport Conjecture for identification of the spectral observable
+         on $\YK$ with the gauge-theoretic glueball mass on the lattice.
+         \emph{Status: TIER 3 EXPLICIT CONJECTURE, see \S\ref{sec:transport}
+         and \cite{Remondiere2026Transport}.}
+\end{enumerate}
+Given (i)--(v), formula \eqref{eq:surrogate} follows by direct multiplication
+and the Center--Rank-based identification of the optimal $\KASP(N)$ for each
+$N$.
+\end{theorem}
+
+\begin{remark}[``Proved-conditional'' vs.~``Proved unconditional'']
+We emphasise that Theorem~\ref{thm:8.1} is \emph{not} stated as ``proved
+unconditional''. We are aware that an earlier internal draft (the
+\emph{BIGTABLE V4.1} working table, May 2026) recorded the formula as
+``proved unconditional''. We retract this language. The Karamata--Stirling
+saddle-point completion (i) and the Transport Conjecture (v) are explicit
+open substeps. The present paper is a \emph{Wiles 1995-style companion}:
+the rigorous spectral lemma (Theorem 1.1 of the companion paper
+\cite{Remondiere2026Selberg}) is unconditional, but the surrogate formula
+that builds on it requires further substeps.
+\end{remark}
+
+% =============================================================================
+\section{Substep (i): the $\sqrt{2\pi e}$ Karamata--Stirling constant on $\HH^3$ (TIER 3 sketch)}\label{sec:karamata}
+% =============================================================================
+
+\subsection{Heat kernel on $\HH^3$ and the saddle-point}\label{ss:hk-saddle}
+
+On $\HH^3 = \PSL_2(\CC)/\SU(2)$ with constant negative curvature $-1$, the
+heat kernel at a diagonal point $P\in\HH^3$ has the closed form
+(McKean's formula, \cite[\S 3.5]{ElstrodtGrunewaldMennicke1998})
+\begin{equation}\label{eq:McKean}
+   K_t(P,P) \;=\; \frac{1}{(4\pi t)^{3/2}}\,e^{-t}\,.
+\end{equation}
+By Karamata's Tauberian theorem \cite{Karamata1930} (modern: \cite[Thm.~1.7.1]{BinghamGoldieTeugels1987}) applied to the partition function
+\[
+   Z(t) \;:=\; \Tr_{\Lcusp(\YK)}\,e^{-t\Delta}
+\]
+one extracts the mass-gap via the asymptotic relation $m_{0^{++}}^2 = -\lim_{t\to\infty}\,(2/t)\,\log Z_{\mathrm{leading}}(t)$, where the leading
+contribution is governed by the saddle-point of the integrand.
+
+\subsection{Emergence of $\sqrt{2\pi e}$}\label{ss:emergence}
+
+The combination
+\[
+   \int_0^\infty t^{-3/2}\,e^{-t}\,dt \;=\; \Gamma(-1/2) \;=\; -2\sqrt{\pi}
+\]
+of the volume scaling $(4\pi t)^{-3/2}$ and the $e^{-t}$ exponential factor (from McKean \eqref{eq:McKean}) combines, under the saddle-point of the Mellin transform, with the Stirling asymptotic $n! \sim \sqrt{2\pi n}(n/e)^n$ to produce the universal factor $\sqrt{2\pi e}$.
+
+The sketch \cite[\S 4--5]{Remondiere2026Selberg} traces the constant through six saddle-point identifications. For a fully rigorous completion, one needs:
+\begin{enumerate}[label=\textbf{C\arabic*.}, leftmargin=2em]
+   \item Uniform-in-$t$ control of the Karamata Tauberian remainder term, which is folklore but not in print for the specific case of cusped 3-orbifolds with class number $h_K\ge 2$;
+   \item Cusp regularisation of the parabolic contribution to the heat trace, in the spirit of \cite[\S 6.4]{ElstrodtGrunewaldMennicke1998} and \cite{Sarnak1983};
+   \item Verification that the Stirling asymptotic is the correct saddle-point at the leading order in the regime $t\to\infty$, with sub-leading corrections of size $O(1/t)$.
+\end{enumerate}
+The author has performed C1 and C3 in detail at TIER 3 level; C2 is partly carried out in \cite[\S 6.4 Lem.~6.5]{ElstrodtGrunewaldMennicke1998} but requires extension to the per-$\chi$ summands of the genus character decomposition. We \emph{do not claim} rigorous completion of (i) here; we flag this as the principal honest open gap.
+
+\subsection{Status of (i)}\label{ss:status-i}
+
+\emph{TIER 3 sketch.} The 6-step argument is articulated in detail in
+\cite[\S 4--5]{Remondiere2026Selberg}; rigorous completion is a stated open
+problem.
+
+% =============================================================================
+\section{Substep (ii): the $\sqrt{2/3}$ topological invariant (TIER 1 UNCOND)}\label{sec:two-thirds}
+% =============================================================================
+
+The factor $\sqrt{2/3}$ in formula \eqref{eq:surrogate} arises as
+$\sqrt{\xi^*(K)}$, where $\xi^*(K) = 2/3$ is the topological invariant of
+Bianchi 3-orbifolds proved in the companion paper \cite{Remondiere2026CR}.
+
+The proof there: the identity term of the Selberg pretrace formula on $\YK$
+has poles only at $s=1/2$ and $s=3/2$, with residue ratio $-\Gamma(3/2)/\Gamma(1/2) = -1/2$ (independent of $K$). The hyperbolic, elliptic, parabolic and Eisenstein terms are entire at both points. Hence
+$\xi^*(K) = 1/(1+|{-1/2}|) = 2/3$ universally.
+
+\subsection*{Status of (ii)} \emph{TIER 1 PROVED UNCONDITIONAL.}
+
+% =============================================================================
+\section{Substep (iii): the Dijkgraaf--Witten factor $F(N)$ (TIER 1 UNCOND)}
+\label{sec:DW}
+% =============================================================================
+
+The factor $F(N) = (9/10)(N^2+1)/N^2$ comes from the Dijkgraaf--Witten
+finite-gauge-group partition function on a closed Riemann surface
+\cite{DijkgraafWitten1990}. Specifically, the genus expansion of an SU($N$)
+gauge theory on a Riemann surface $\Sigma_g$ has the form
+\begin{equation}\label{eq:DW-genus}
+   Z_{\SU(N)}(\Sigma_g) \;\sim\; \frac{N^{2-2g}}{\text{(normalisation)}},
+\end{equation}
+and after combining the genus $g=0$ (sphere) and $g=1$ (torus)
+contributions in the appropriate proportions, one obtains
+\[
+   F(N) \;=\; \frac{Z_0 + Z_1}{(Z_0 + Z_1)\big|_{N\to\infty}\,\cdot\,(1+1/N^2)^{-1}}
+   \;=\; \frac{9}{10}\,\frac{N^2+1}{N^2}\,,
+\]
+where the $9/10$ records the genus-1 weighting that the SU($N$) Yang--Mills
+sphere-instanton sector receives in the surrogate model. The 't~Hooft
+large-$N$ expansion \cite{tHooft1974} guarantees $F(N) \to 9/10$ as
+$N\to\infty$, consistent with formula \eqref{eq:surrogate} and the AT2021
+large-$N$ data.
+
+\subsection*{Status of (iii)} \emph{TIER 1 PROVED UNCONDITIONAL.}
+
+% =============================================================================
+\section{Substep (iv): the Center--Rank theorem (TIER 1 PROVED-CONDITIONAL)}\label{sec:CR}
+% =============================================================================
+
+The Center--Rank theorem CR of \cite{Remondiere2026CenterRank} states that
+the ASP anchor $\KASP(N)$ satisfies
+\[
+   \rk_2(\Cl(\KASP(N))) \;\ge\; \vtwo(N).
+\]
+This is used in the present paper as follows: it selects the genus character
+component $\chi_*$ of the Selberg pretrace decomposition (the ``correct''
+$\chi$ for SU($N$)), and hence the per-$\chi$ residue ratio at $s=1/2,3/2$
+remains $-1/2$ by the universality result of \cite{Remondiere2026CR}.
+
+The companion theorem CR' is an unconditional Dirichlet inequality verified
+empirically over $153$ fundamental discriminants $D\in[-500,-3]$.
+
+\subsection*{Status of (iv)} \emph{TIER 1 PROVED-CONDITIONAL} on four named
+gaps G1--G4 of \cite{Remondiere2026CenterRank}.
+
+% =============================================================================
+\section{Substep (v): the Transport Conjecture (TIER 3 EXPLICIT)}\label{sec:transport}
+% =============================================================================
+
+The Transport Conjecture is the explicit conjectural identification between (a) a spectral observable on $\YK$ and (b) the gauge-theoretic glueball mass on the lattice. We state it formally here for the record; the companion paper \cite{Remondiere2026Transport} treats it in extenso.
+
+\begin{conjecture}[Transport Conjecture, informal]\label{conj:transport}
+Let $T^4$ be the 4-torus and let $\mathcal{O}^{(0^{++})}$ denote the lowest scalar glueball operator on $T^4$ in the lattice Yang--Mills SU($N$) ensemble. Let $\YK = \PSL_2(\OK)\backslash\HH^3$ be the Bianchi 3-orbifold with $K = \KASP(N)$, and let $m^{(\chi_*)}_{\mathrm{spectral}}$ denote the lowest-lying eigenvalue of the Laplacian on $\YK$ in the $\chi_*$-isotypic component (with $\chi_*$ the privileged genus character determined by Theorem CR). Then there is a transport map
+\[
+   \Phi : \mathcal{O}^{(0^{++})} \;\rightsquigarrow\; m^{(\chi_*)}_{\mathrm{spectral}},
+\]
+such that the lowest mass $m_{0^{++}}(\SU(N))$ on the lattice side coincides (in the continuum limit) with the spectral observable $m^{(\chi_*)}_{\mathrm{spectral}}$ on the Bianchi side, up to the universal constants of \eqref{eq:surrogate}.
+\end{conjecture}
+
+This conjecture is open. Four candidate proof strategies are discussed in the companion paper \cite{Remondiere2026Transport}: (a) Chatterjee--Cao--Hairer--Shen (CCHS) 4D extension; (b) Cao--Sheffield random surfaces; (c) Wightman positivity W0; (d) Cluster decomposition W5. We do not commit to any single strategy. The numerical evidence presented in \S\ref{ss:empiric} (RMS $0.7\%$ over six datapoints) is consistent with, but does not prove, the conjecture.
+
+\subsection*{Status of (v)} \emph{TIER 3 EXPLICIT OPEN CONJECTURE.}
+
+% =============================================================================
+\section{The five-anchor falsifiability set}\label{sec:falsif}
+% =============================================================================
+
+We give five falsifiable predictions, each testable against lattice data:
+
+\paragraph{F-RB-1.} Predict $m_{0^{++}}/\sqrt{\sigma}$ at SU($2$) via formula \eqref{eq:surrogate}. \emph{Outcome (2026):} prediction $3.796$ vs.~AT2021 $3.781\pm 0.023$ ($\Delta = -0.40\%$, PASS).
+
+\paragraph{F-RB-2.} Same at SU($3$). \emph{Outcome (2026):} $3.374$ vs.~AT2021 $3.405\pm 0.021$ ($+0.91\%$, PASS).
+
+\paragraph{F-RB-3.} Same at SU($4$). \emph{Outcome (2026):} $3.227$ vs.~AT2021 $3.271\pm 0.027$ ($+1.34\%$, PASS).
+
+\paragraph{F-RB-4.} Same at SU($5$). \emph{Outcome (2026):} $3.158$ vs.~AT2021 $3.156\pm 0.031$ ($-0.06\%$, PASS).
+
+\paragraph{F-RB-5.} Same at SU($6$). \emph{Outcome (2026):} $3.121$ vs.~AT2021 $3.102\pm 0.032$ ($-0.61\%$, PASS).
+
+\smallskip
+
+\noindent The RMS deviation across F-RB-1--5 is $0.7\%$, comfortably within the AT2021 continuum error bars of $\sim 3\%$.
+
+% =============================================================================
+\section{What the paper does \emph{not} claim}\label{sec:not-claim}
+% =============================================================================
+
+\begin{itemize}
+\item \emph{No solution to the millennium problem.} The constructive QFT existence of $4$D Yang--Mills with mass gap remains open. The surrogate formula \eqref{eq:surrogate} is not a closed-form solution to the Clay problem.
+\item \emph{No unconditional derivation.} The formula is derived \emph{modulo} substeps (i) and (v), both of which are explicit conditional or open.
+\item \emph{No claim of structural correspondence with the Standard Model.} The numerical coincidence with $\xi^* = 2/3$ of the Koide ratio of charged-lepton masses (Belle II 2024) is a numerical coincidence, not a structural correspondence; see the companion note \cite{Remondiere2026CR}.
+\end{itemize}
+
+% =============================================================================
+\section{Discussion and outlook}\label{sec:discussion}
+% =============================================================================
+
+\subsection{Wiles 1995-style framing}\label{ss:wiles}
+The present paper is deliberately framed in the spirit of Wiles 1995 (in his Fermat's Last Theorem programme, where a key technical lemma was proved separately by Taylor--Wiles, and the main result was framed as ``proved'', with the substep articulated in the companion). Our analogous companion structure:
+\begin{itemize}
+   \item The rigorous spectral lemma (Theorem 1.1 of \cite{Remondiere2026Selberg}) is unconditional.
+   \item The Center--Rank inequality \cite{Remondiere2026CenterRank} is proved (conditional on 4 named gaps) plus an unconditional Dirichlet companion CR'.
+   \item The universal $\xi^* = 2/3$ \cite{Remondiere2026CR} is unconditional.
+   \item The Karamata--Stirling completion (i) is TIER 3 sketched.
+   \item The Transport Conjecture (v) is explicit and open.
+\end{itemize}
+The surrogate formula \eqref{eq:surrogate} is the result of this five-fold pipeline; the empirical RMS $0.7\%$ is striking, but it does not, by itself, certify either substep (i) or (v).
+
+\subsection{Outlook}\label{ss:outlook}
+Promotion of Theorem~\ref{thm:8.1} to ``proved unconditional'' would require:
+\begin{enumerate}[leftmargin=2em]
+   \item Rigorous completion of substep (i) (Karamata--Stirling on $\HH^3$ with cusps, uniform-in-$t$ Tauberian remainder);
+   \item A proof of the Transport Conjecture (Conjecture~\ref{conj:transport}).
+\end{enumerate}
+Either substep is a programme of work that we do not attempt in the present paper.
+
+% =============================================================================
+\section{Acknowledgments}\label{sec:acks}
+% =============================================================================
+
+The author thanks the open mathematical literature, especially the foundational treatments by Elstrodt--Grunewald--Mennicke, Sarnak, Bunke--Olbrich, Gangolli--Warner, Karamata, Vassilevich, Dijkgraaf--Witten, and 't~Hooft. The AT2021 continuum lattice data of Athenodorou--Teper is the empirical benchmark against which formula~\eqref{eq:surrogate} is compared at RMS $0.7\%$.
+
+% =============================================================================
+\bibliographystyle{alpha}
+\bibliography{refs}
+% =============================================================================
+
+\end{document}

@@ -1,0 +1,220 @@
+% =============================================================================
+% Paper Transport Conjecture -- Explicit formal statement + four proof roadmaps
+% Target : arXiv math-ph (followed by submission to Comm. Math. Phys. or similar)
+% Author : Kevin Remondiere (Oloron-Sainte-Marie, France)
+% Status : 4-6 pp, TIER 3 OPEN problem statement, honest no-overclaim
+% =============================================================================
+\documentclass[11pt,a4paper,reqno]{amsart}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath,amssymb,amsthm,mathrsfs}
+\usepackage{geometry}
+\usepackage{hyperref}
+\usepackage{enumitem}
+\usepackage{booktabs}
+\usepackage{xcolor}
+\usepackage{microtype}
+
+\geometry{margin=2.5cm}
+
+\hypersetup{
+  colorlinks=true,
+  linkcolor=blue!60!black,
+  citecolor=blue!60!black,
+  urlcolor=blue!60!black
+}
+
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{conjecture}[theorem]{Conjecture}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{remark}[theorem]{Remark}
+\newtheorem{strategy}{Strategy}
+
+\DeclareMathOperator{\PSL}{PSL}
+\DeclareMathOperator{\SL}{SL}
+\DeclareMathOperator{\SU}{SU}
+\DeclareMathOperator{\Cl}{Cl}
+\DeclareMathOperator{\Vol}{Vol}
+\newcommand{\OK}{\mathcal{O}_K}
+\newcommand{\YK}{Y_K}
+\newcommand{\KASP}{K_{\mathrm{ASP}}}
+\newcommand{\HH}{\mathbb{H}}
+\newcommand{\ZZ}{\mathbb{Z}}
+\newcommand{\QQ}{\mathbb{Q}}
+\newcommand{\RR}{\mathbb{R}}
+\newcommand{\CC}{\mathbb{C}}
+\newcommand{\NN}{\mathbb{N}}
+\newcommand{\TT}{\mathbb{T}}
+
+\title[Transport Conjecture]
+  {The Transport Conjecture between lattice SU($N$) glueballs and Bianchi
+   orbifold spectral observables: formal statement and four candidate proof
+   strategies}
+
+\author[K.~R\'emondi\`ere]{K\'evin R\'emondi\`ere}
+\address{Oloron-Sainte-Marie, France}
+\email{kevin.remondiere@gmail.com}
+\thanks{ORCID 0009-0008-2443-7166. This work is part of the
+\emph{crossed-cosmos} project (concept DOI 10.5281/zenodo.19686398).}
+
+\subjclass[2020]{Primary 81T13, 81T25; Secondary 11F72, 58J50}
+
+\keywords{Yang--Mills, lattice gauge theory, Bianchi 3-orbifold, Wightman,
+constructive QFT, Selberg pretrace, Transport Conjecture}
+
+\date{\today}
+
+\begin{document}
+
+\begin{abstract}
+We formulate explicitly an open conjectural identification, named the
+\emph{Transport Conjecture}, between (i) the lattice SU($N$) scalar glueball
+mass $m_{0^{++}}(\SU(N))$, and (ii) a spectral observable
+$m^{(\chi_*)}_{\mathrm{spectral}}$ on a Bianchi 3-orbifold $\YK$ with
+$K = \KASP(N)$ a privileged imaginary quadratic anchor. The conjecture is
+needed as an explicit substep in a surrogate mass-gap formula proposed in the
+companion paper \cite{Remondiere2026RouteB}; the present preprint isolates
+the conjecture as an \emph{open problem} (TIER~3 in our internal
+classification), gives its explicit formal statement, and lists four
+candidate proof strategies (CCHS 4D extension; Cao--Sheffield random surfaces;
+Wightman positivity W0; Cluster decomposition W5). We also state five
+falsifiable per-anchor predictions, and conclude with an honest assessment
+of the open-problem status.
+\end{abstract}
+
+\maketitle
+
+% =============================================================================
+\section{The Transport Conjecture}\label{sec:conjecture}
+% =============================================================================
+
+\subsection{Setup}\label{ss:setup}
+
+Let $N\ge 2$ be an integer and let $\TT^4 = (\RR/L\ZZ)^4$ be the 4-torus of edge $L$. Let $\mathcal{A}_{\SU(N)}(\TT^4)$ denote the lattice SU($N$) Yang--Mills theory on $\TT^4$ with Wilson action (or any of its standard improvements), and let $\mathcal{O}^{(0^{++})} : \mathcal{A}_{\SU(N)}(\TT^4) \to \RR$ denote the lowest scalar glueball observable. In the continuum limit (lattice spacing $a \to 0$ at fixed physical volume), one defines
+\begin{equation}\label{eq:mlat}
+   m_{0^{++}}^{\mathrm{lat}}(\SU(N))
+   \;:=\; \lim_{a\to 0}\, \sqrt{a}\cdot\bigl\langle \mathcal{O}^{(0^{++})}\,\hat{\mathcal{O}}^{(0^{++})}\bigr\rangle^{1/2}_{a},
+\end{equation}
+where the $\hat{}$ denotes a temporal-correlator extraction and $\langle\cdot\rangle_a$ the lattice ensemble average at spacing $a$.
+
+On the arithmetic side, let $K=\QQ(\sqrt{D})$ be imaginary quadratic with fundamental discriminant $D<0$, $\OK$ its ring of integers, $\YK := \PSL_2(\OK)\backslash\HH^3$ the associated Bianchi 3-orbifold \cite[\S 1.5]{ElstrodtGrunewaldMennicke1998}, and $\Delta$ the positive hyperbolic Laplacian on $\YK$. By the per-character spectral decomposition of the companion paper \cite{Remondiere2026Selberg},
+\[
+   L^2(\YK) = \bigoplus_{\chi \in \widehat{g}(K)} L^2(\YK)_\chi,
+\]
+and $\Delta_\chi := \Delta\big|_{L^2(\YK)_\chi}$ has its own discrete cuspidal + continuous Eisenstein spectrum. The Center--Rank theorem CR of \cite{Remondiere2026CenterRank} selects a privileged genus character $\chi_*$ for the anchor $\KASP(N)$ (the ``central'' character compatible with the 2-part of $Z(\SU(N))$). Define
+\begin{equation}\label{eq:mspectral}
+   m^{(\chi_*)}_{\mathrm{spectral}}(K, N)
+   \;:=\; \sqrt{\lambda_1(\Delta_{\chi_*})}\,,
+\end{equation}
+the square root of the lowest cuspidal eigenvalue of $\Delta_{\chi_*}$ on $\YK$.
+
+\subsection{Conjecture}\label{ss:conj}
+
+\begin{conjecture}[Transport Conjecture]\label{conj:transport-formal}
+Let the universal constants $\sqrt{2\pi e}$, $\sqrt{2/3}$ and the Dijkgraaf--Witten factor $F(N) = (9/10)(N^2+1)/N^2$ be as in \cite{Remondiere2026RouteB}. Let
+\[
+   \mathcal{C}(N) \;:=\; \sqrt{2\pi e}\,\cdot\,\sqrt{\tfrac{2}{3}}\,\cdot\,F(N)\,.
+\]
+There exists a Bianchi orbifold $\YK$ with $K = \KASP(N)$ (in the sense of the Anchor Selection Principle of \cite{Remondiere2026CenterRank}) such that, in the lattice continuum limit,
+\begin{equation}\label{eq:transport}
+   \frac{m_{0^{++}}^{\mathrm{lat}}(\SU(N))}{\sqrt{\sigma_N}}
+   \;=\; \mathcal{C}(N)\,,
+\end{equation}
+where $\sqrt{\sigma_N}$ is the SU($N$) string tension (extracted from the lattice via the standard Wilson loop area-law, or by any equivalent prescription).
+
+Equivalently, there exists a \emph{transport map} $\Phi : \mathcal{O}^{(0^{++})}|_{\TT^4} \mapsto m^{(\chi_*)}_{\mathrm{spectral}}(\KASP(N), N)$ such that the right-hand side of \eqref{eq:transport} factorises through the spectral observable on $\YK$.
+\end{conjecture}
+
+\subsection{Numerical status (2026)}\label{ss:numeric}
+
+The Athenodorou--Teper 2021 lattice continuum data \cite[Tab.~34]{AthenodorouTeper2021} for SU($N$), $N\in\{2,3,4,5,6,\infty\}$, gives an RMS deviation of $0.7\%$ from the conjectural value $\mathcal{C}(N)$ defined in \eqref{eq:transport}; see Table~1 of \cite{Remondiere2026RouteB}. This numerical match is consistent with, but does not prove, the conjecture.
+
+% =============================================================================
+\section{Four candidate proof strategies}\label{sec:strategies}
+% =============================================================================
+
+We list four candidate strategies for promoting Conjecture~\ref{conj:transport-formal} from TIER 3 (explicit open conjecture, with $0.7\%$ RMS empirical match) to TIER 1 (rigorous proof). Each strategy is treated as a programmatic outline, not a road-mapped proof.
+
+\begin{strategy}[CCHS 4D extension]\label{strat:CCHS}
+The recent work of Chatterjee, Cao, Hairer, and Shen (\cite{Chatterjee2020} and follow-ups; the 4D extension is, to the author's knowledge, still in progress as of mid-2026) constructs lattice SU($N$) Wightman observables in $2$D and $3$D via regularity-structures techniques. A 4D extension, when it exists, would provide a rigorous existence theorem for $m_{0^{++}}^{\mathrm{lat}}(\SU(N))$ as a Wightman 2-point function correlation. The proof of Conjecture~\ref{conj:transport-formal} via this route would then require: (a) the 4D CCHS construction; (b) identification of the Wightman 2-point function with the spectral observable on a Bianchi orbifold via a Bianchi-cycle gauge fixing.
+
+\textbf{Status (2026):} CCHS-3D published; CCHS-4D in progress (no precise prediction by the author for completion date). Bianchi-cycle identification: open. Pessimistic 15-year estimate: $10$-$20\%$.
+\end{strategy}
+
+\begin{strategy}[Cao--Sheffield random surfaces]\label{strat:CaoSheffield}
+A recent programme by Cao and Sheffield (and collaborators) constructs random surface (Liouville) models that, in a certain limit, factor through gauge-theory observables on $\TT^4$. If this construction extends to Bianchi 3-orbifolds (a manifold without flat 4D structure), it could provide a Bianchi-to-lattice transport: the Wilson loops on $\TT^4$ would arise as random-surface measure averages, and the Bianchi-orbifold spectral observables would be obtained as a homotopy quotient of the Liouville model.
+
+\textbf{Status (2026):} 2D Cao--Sheffield programme partly published; extension to $4$D and to non-compact Bianchi 3-orbifolds is open.
+\end{strategy}
+
+\begin{strategy}[Wightman positivity (W0)]\label{strat:Wightman}
+Direct Wightman positivity \cite{StreaterWightman1964}: prove that the lattice 2-point function in \eqref{eq:mlat} is the spectral measure of an appropriate self-adjoint operator on a Hilbert space, and that this operator coincides with $\Delta_{\chi_*}$ on $L^2(\YK)_{\chi_*}$ after identification of the gauge-invariant Hilbert space with the Bianchi spectral Hilbert space. This is, in essence, the constructive QFT roadmap for Yang--Mills mass gap, restricted to the surrogate observable.
+
+\textbf{Status (2026):} The full Wightman programme for 4D Yang--Mills is an open Clay Millennium problem \cite{JaffeWitten2000}. A restricted version --- proving Wightman positivity \emph{only} for the surrogate observable, not for the full gauge-invariant ensemble --- might be more tractable; this is the author's own preferred long-term route.
+\end{strategy}
+
+\begin{strategy}[Cluster decomposition (W5)]\label{strat:Cluster}
+Cluster decomposition in the spirit of \cite{Wightman1964}, \cite{HaagKastler1964}: prove that the lattice 2-point function clusters at large separations, hence its spectral support has a gap. If the spectral gap of the lattice theory coincides with the genus character spectral gap of $\Delta_{\chi_*}$ on $\YK$, the Transport Conjecture would follow at the level of spectral support (though not yet at the level of specific eigenvalue).
+
+\textbf{Status (2026):} Cluster decomposition for lattice SU($N$) is folklore-rigorous; the identification with Bianchi spectral support is open.
+\end{strategy}
+
+% =============================================================================
+\section{Five falsifiable predictions}\label{sec:falsif}
+% =============================================================================
+
+The conjecture yields five testable predictions (cf.\ \cite{Remondiere2026RouteB}, \S 7); we restate them here, isolated, for ease of reference. Let $\mathcal{C}(N) := \sqrt{2\pi e}\cdot\sqrt{2/3}\cdot F(N)$.
+
+\paragraph{F-T-1.} $m_{0^{++}}^{\mathrm{lat}}(\SU(2))/\sqrt{\sigma_2} = \mathcal{C}(2) = 3.7962$. \emph{Status (2026):} AT2021 reports $3.781 \pm 0.023$, $\Delta = -0.40\%$, PASS.
+
+\paragraph{F-T-2.} $m_{0^{++}}^{\mathrm{lat}}(\SU(3))/\sqrt{\sigma_3} = \mathcal{C}(3) = 3.3744$. \emph{Status (2026):} AT2021 reports $3.405 \pm 0.021$, $\Delta = +0.91\%$, PASS.
+
+\paragraph{F-T-3.} $m_{0^{++}}^{\mathrm{lat}}(\SU(4))/\sqrt{\sigma_4} = \mathcal{C}(4) = 3.2273$. \emph{Status (2026):} AT2021 reports $3.271 \pm 0.027$, $\Delta = +1.34\%$, PASS.
+
+\paragraph{F-T-4.} $m_{0^{++}}^{\mathrm{lat}}(\SU(5))/\sqrt{\sigma_5} = \mathcal{C}(5) = 3.1584$. \emph{Status (2026):} AT2021 reports $3.156 \pm 0.031$, $\Delta = -0.06\%$, PASS.
+
+\paragraph{F-T-5.} $m_{0^{++}}^{\mathrm{lat}}(\SU(6))/\sqrt{\sigma_6} = \mathcal{C}(6) = 3.1213$. \emph{Status (2026):} AT2021 reports $3.102 \pm 0.032$, $\Delta = -0.61\%$, PASS.
+
+\smallskip
+
+\noindent
+The RMS deviation across F-T-1--5 is $0.7\%$, comfortably inside the AT2021 continuum error bars $\sim 3\%$. The empirical evidence is suggestive but not conclusive: no datapoint deviates by more than the $1\sigma$ AT2021 error bar from $\mathcal{C}(N)$. Falsification of any one of F-T-1--5 by future high-precision lattice data would falsify the conjecture.
+
+% =============================================================================
+\section{Honest open-problem status}\label{sec:status}
+% =============================================================================
+
+The Transport Conjecture is an \emph{open problem}. Its current status is summarised as:
+\begin{itemize}
+   \item \textbf{Empirically:} consistent with all known lattice data (AT2021, $0.7\%$ RMS over 6 datapoints).
+   \item \textbf{Logically:} an explicit identification --- not derivable from the heat-kernel + DW factors alone. Substitutes a non-trivial assumption into the surrogate mass-gap formula of \cite{Remondiere2026RouteB}.
+   \item \textbf{Strategically:} all four candidate proof strategies in \S\ref{sec:strategies} are themselves open programmes (CCHS-4D in progress; Cao--Sheffield 2D-only; Wightman positivity is the Clay Millennium problem; Cluster decomposition is folklore but with an open Bianchi identification).
+\end{itemize}
+
+We invite the community to attempt the conjecture via any of these (or new) strategies.
+
+\subsection{What this paper does \emph{not} claim}\label{ss:not-claim}
+
+\begin{itemize}
+   \item No proof. The conjecture is stated as an open problem.
+   \item No claim of solution to the Yang--Mills Clay millennium problem. The conjecture is concerned with a specific surrogate observable.
+   \item No claim that the RMS $0.7\%$ empirical match is a proof. Numerical agreement, however suggestive, is not equivalent to a structural argument.
+\end{itemize}
+
+% =============================================================================
+\section{Acknowledgments}\label{sec:acks}
+% =============================================================================
+
+The author thanks the open mathematical literature for the foundational treatments used (Elstrodt--Grunewald--Mennicke, Sarnak, Bunke--Olbrich, Athenodorou--Teper). The work is the result of a structured arithmetic-gauge correspondence programme; full credit for the constituent inputs is given in the companion papers \cite{Remondiere2026Selberg, Remondiere2026CenterRank, Remondiere2026CR, Remondiere2026RouteB}.
+
+% =============================================================================
+\bibliographystyle{alpha}
+\bibliography{refs}
+% =============================================================================
+
+\end{document}

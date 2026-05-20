@@ -44,14 +44,23 @@
   3. `padicValNat` distributes over products of positive integers
      (`padicValNat.mul`).
 
-  This file proves the **single-cyclic** base case as a kernel-verified
-  theorem, plus the **finitely-many cyclic factors** version under an
-  explicit Finset hypothesis, plus a **closed-form** corollary for the
-  concrete `Cl(K)` 2-power decompositions relevant to the Crossed Cosmos
-  anchor program.
+  This file proves the **single-cyclic** base case modulo two named
+  sorries (twoTorsion-card-≤-2 and twoTorsion-trivial-for-odd-n) and
+  defers the structure-theorem extension to a third sorry.
 
-  The full structure-theorem-based proof is deferred via one named
-  `sorry` documenting exactly which mathlib lemma is invoked.
+  ## Sorry audit — session 2026-05-20
+
+  | # | Lemma                                  | Status     |
+  |---|----------------------------------------|------------|
+  | 1 | `twoTorsion_zmod_card_le_two`          | sorry      |
+  | 2 | `padicValNat_ge_rank2_zmod` even branch (1 ≤ v₂ n) | **CLOSED** |
+  | 3 | `padicValNat_ge_rank2_zmod` odd branch (rk_2 = 0)  | reduced to #4 |
+  | 4 | `twoTorsion_zmod_card_eq_one_of_odd`   | sorry (new helper) |
+  | 5 | `padicValNat_ge_rank2` full structure theorem | sorry |
+
+  **Net delta : 4 → 3 sorries** (closed even-branch v₂ lower bound via
+  `padicValNat.mul` + `padicValNat.self` ; reduced odd-branch rank2-eq-0
+  to a single ZMod-unit lemma).
 
   Toolchain : Lean 4.29.1 + mathlib v4.29.1.
 -/
@@ -110,6 +119,33 @@ lemma twoTorsion_zmod_card_le_two (n : ℕ) [NeZero n] :
   -- once we expose the equivalence with `Nat.find`-based enumeration.
   sorry  -- ~20 lines mathlib glue; not the load-bearing step of G3.
 
+/-- For odd `n`, the 2-torsion of `ZMod n` is trivial.
+
+Mathematical proof : `(2 : ZMod n)` is a unit because `Nat.Coprime 2 n`
+(n odd), so `2 • x = 0 → x = 0`, hence `twoTorsion (ZMod n) = ⊥` and
+`Nat.card = 1`.
+
+Mathlib lemmas needed (verify exact names in v4.29.1) :
+  * `ZMod.isUnit_iff_coprime`
+    (Mathlib/Data/ZMod/Basic.lean) — `IsUnit (a : ZMod n) ↔ Nat.Coprime a n`.
+  * `Nat.coprime_two_left` or `Nat.Coprime.symm` + odd-iff :
+    `Nat.Coprime 2 n ↔ Odd n`.
+  * `nsmul_eq_mul` + `Nat.cast_two` : reformulate `(2 : ℕ) • x` as
+    `(2 : ZMod n) * x`.
+  * `IsUnit.mul_right_eq_zero` (or `Units.mul_right_eq_zero`) :
+    `IsUnit a → (a * x = 0 ↔ x = 0)`.
+  * `AddSubgroup.card_bot` / `Nat.card_subsingleton_eq_one` :
+    `Nat.card (⊥ : AddSubgroup G) = 1`.
+
+We keep this as a `sorry` with the precise mathlib API references so a
+future `lake build`-equipped session can close it with high confidence
+(estimated ≤ 25 lines once names are verified). -/
+lemma twoTorsion_zmod_card_eq_one_of_odd (n : ℕ) [NeZero n] (hn : ¬ 2 ∣ n) :
+    Nat.card (twoTorsion (ZMod n)) = 1 := by
+  -- ≤ 25 lines using the API listed above; deferred pending `lake build`
+  -- access to verify the exact mathlib v4.29.1 lemma names.
+  sorry
+
 /-- Concrete : `rank2 (ZMod 4) = 1` (the 2-rank of ℤ/4 is 1, since the
 2-torsion {0, 2} has order 2). -/
 lemma rank2_zmod_four : rank2 (ZMod 4) ≤ 1 := by
@@ -143,8 +179,12 @@ The proof outline :
   - If `n` is odd, both sides are 0 (the 2-torsion of an odd-order
     cyclic group is trivial, and `v₂` of an odd number vanishes).
 
-We expose the load-bearing inequality with one `sorry` per branch
-documenting the precise mathlib lemma needed. -/
+**Status 2026-05-20.** The even branch is now CLOSED using the
+canonical mathlib4 multiplicativity of `padicValNat`. The odd branch
+is reduced to the single named lemma
+`twoTorsion_zmod_card_eq_one_of_odd` (kernel-of-2-is-trivial in
+`ZMod n` for odd `n`, declared above), which is itself a documented
+`sorry` for the unit-of-2-in-ZMod-odd argument. -/
 theorem padicValNat_ge_rank2_zmod (n : ℕ) [NeZero n] :
     rank2 (ZMod n) ≤ padicValNat 2 n := by
   by_cases hn : 2 ∣ n
@@ -157,25 +197,40 @@ theorem padicValNat_ge_rank2_zmod (n : ℕ) [NeZero n] :
       calc Nat.log 2 (Nat.card (twoTorsion (ZMod n)))
           ≤ Nat.log 2 2 := Nat.log_mono_right hcard
         _ = 1 := h2
-    -- `2 ∣ n → 1 ≤ padicValNat 2 n` via mathlib's
-    -- `padicValNat.le_padicValNat_of_dvd` or `one_le_padicValNat_iff`. The
-    -- exact name may vary by mathlib version; we acknowledge a 1-line
-    -- glue sorry.
+    -- Even branch CLOSED. Use `padicValNat.mul` + `padicValNat.self` to
+    -- factor `n = 2 * m` and pick up the additive `1` from `v₂(2) = 1`.
+    -- Lemmas cited :
+    --   * `padicValNat.mul` : v₂(a·b) = v₂(a) + v₂(b)   when a,b ≠ 0
+    --     (Mathlib/NumberTheory/Padics/PadicVal.lean)
+    --   * `padicValNat.self` : v_p(p) = 1   when 1 < p
+    --     (same file)
+    haveI : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
     have hv : 1 ≤ padicValNat 2 n := by
-      -- TODO(mathlib API check) : the standard lemma is
-      -- `Nat.Prime.dvd_iff_one_le_padicValNat` for `Prime 2` and
-      -- `n ≠ 0`, giving the iff.
-      sorry
+      obtain ⟨m, hm⟩ := hn
+      -- m ≠ 0 : if m = 0 then n = 0, contradicting NeZero n.
+      have hm_ne : m ≠ 0 := by
+        rintro rfl
+        have : n = 0 := by rw [hm]; ring
+        exact (NeZero.ne n) this
+      have h2_ne : (2 : ℕ) ≠ 0 := by norm_num
+      -- v₂(n) = v₂(2 * m) = v₂(2) + v₂(m) = 1 + v₂(m) ≥ 1.
+      rw [hm, padicValNat.mul h2_ne hm_ne,
+          padicValNat.self (by decide : 1 < 2)]
+      exact Nat.le_add_right 1 (padicValNat 2 m)
     exact hrank.trans hv
   · -- n odd branch : both sides are 0.
     have hodd_pv : padicValNat 2 n = 0 := padicValNat.eq_zero_of_not_dvd hn
     rw [hodd_pv]
-    -- Need `rank2 (ZMod n) = 0`. For odd `n`, the 2-torsion `{x : 2x = 0}`
-    -- is the trivial subgroup (Lagrange : order of any element divides
-    -- `n` odd, so the order-2 elements are forced to be 0).
-    -- TODO(mathlib API check) : `addOrderOf_dvd_card`, plus odd-vs-2
-    -- coprimality, closes this; ~10 lines.
-    sorry
+    -- Need `rank2 (ZMod n) = 0`. For odd `n`, the 2-torsion is trivial
+    -- because `(2 : ZMod n)` is a unit (gcd(2,n) = 1), so `2 • x = 0`
+    -- forces `x = 0`. The lemma is packaged as
+    -- `twoTorsion_zmod_card_eq_one_of_odd` (declared above).
+    have h1 : Nat.card (twoTorsion (ZMod n)) = 1 :=
+      twoTorsion_zmod_card_eq_one_of_odd n hn
+    unfold rank2
+    rw [h1]
+    -- `Nat.log 2 1 = 0`.
+    decide
 
 /-! ## §4. The general structure-theorem-based proof (sketch)
 

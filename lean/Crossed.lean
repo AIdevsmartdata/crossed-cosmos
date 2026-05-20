@@ -7,3 +7,5 @@ import Crossed.CRTheorem
 import Crossed.HSH
 import Crossed.G3Small
 import Crossed.G3MultiFactor
+import Crossed.LemmaA32Pipeline
+import Crossed.Hypotheses

@@ -11,11 +11,14 @@
   | Lemma                                              | Legacy | This port |
   |----------------------------------------------------|:------:|:---------:|
   | `IsImaginaryQuadratic.nrComplexPlaces_eq_one`      | sorry  | **PROVED**|
-  | `padicValNat_classNumber_ge_classGroupRank2_general` | sorry  | **REDUCED** to `Crossed.G3.padicValNat_ge_rank2` |
+  | `padicValNat_classNumber_ge_classGroupRank2_general` | sorry  | **PROVED** modulo `Crossed.G3.padicValNat_ge_rank2` (Nat.card/Fintype.card bridge closed step 4) |
   | `padicValNat_ge_rank2`                              | sorry  | re-exported from G3 |
-  | `kroneckerCharℂ`                                    | sorry  | unchanged (deep mathlib API) |
+  | `kroneckerCharℂ`                                    | sorry  | unchanged (deep mathlib API, multi-week PR) |
 
-  Net `sorry` delta in this file : 4 → 2 (closed 2 of the 4 helpers).
+  Net `sorry` delta in this file : 4 → 1 (closed 3 of the 4 helpers).
+  Step-4 closure (2026-05-20) : the `Nat.card`/`Fintype.card` bridge
+  sorry has been closed via `Nat.card_eq_fintype_card` from mathlib4
+  `Mathlib/SetTheory/Cardinal/Finite.lean`.
 
   ## Anti-fab posture
 
@@ -92,15 +95,20 @@ theorem padicValNat_classNumber_ge_classGroupRank2_general
     _ = padicValNat 2 (NumberField.classNumber K) := by
         -- `NumberField.classNumber K` is defined as
         -- `Fintype.card (ClassGroup (𝓞 K))` (mathlib4 path
-        -- `Mathlib/NumberTheory/NumberField/ClassNumber.lean`). The bridge
-        -- to `Nat.card` is `Nat.card_eq_fintype_card`. We acknowledge a
-        -- 1-line bridge sorry here pending exact mathlib API check.
+        -- `Mathlib/NumberTheory/NumberField/ClassNumber.lean`, v4.29.1:
+        -- `noncomputable def classNumber : ℕ := Fintype.card (ClassGroup (𝓞 K))`).
+        -- The bridge to `Nat.card` is `Nat.card_eq_fintype_card`
+        -- (`Mathlib/SetTheory/Cardinal/Finite.lean`, statement
+        -- `theorem card_eq_fintype_card [Fintype α] : Nat.card α = Fintype.card α`).
+        -- The `Fintype (ClassGroup (𝓞 K))` instance is supplied by
+        -- `NumberField.RingOfIntegers.instFintypeClassGroup` in
+        -- `Mathlib/NumberTheory/NumberField/ClassNumber.lean`.
         congr 1
         -- Goal after `congr` :
         --   Nat.card (ClassGroup (𝓞 K)) = NumberField.classNumber K
-        -- Both sides are equal up to `Nat.card_eq_fintype_card`-style
-        -- unfolding. In mathlib master this is a simp-rfl pair.
-        sorry
+        -- The RHS def-reduces to `Fintype.card (ClassGroup (𝓞 K))`, and
+        -- `Nat.card_eq_fintype_card` provides exactly this equation.
+        exact Nat.card_eq_fintype_card
 
 /-! ## §2. The `IsImaginaryQuadratic` typeclass -/
 
@@ -161,10 +169,29 @@ def kroneckerSymInt (D : ℤ) (n : ℕ) : ℤ :=
 
 /-- The Kronecker character `χ_D : ZMod |D| → ℂ` for a fundamental
 discriminant `D`. Still stub — turning this into a genuine
-`DirichletCharacter` requires verifying multiplicativity of
-`kroneckerSymInt` mod `|D|`. -/
+`DirichletCharacter` requires verifying:
+
+1. Multiplicativity of `kroneckerSymInt` mod `|D|` (i.e.
+   `kroneckerSymInt D (m * n) ≡ kroneckerSymInt D m · kroneckerSymInt D n (mod |D|)`).
+2. Periodicity mod `|D|`.
+
+Both follow from the quadratic-reciprocity package
+(`Mathlib/NumberTheory/LegendreSymbol/QuadraticReciprocity.lean`) +
+`jacobiSym_mul_left`/`jacobiSym_mul_right` (already in mathlib4) +
+the prime-2 case `(D / 2)` extension. Wrapping into a `MulChar (ZMod n) ℂ`
+then uses the `MulChar.ofUnitHom` constructor
+(`Mathlib/NumberTheory/MulChar/Basic.lean`) once we lift the integer
+symbol to a `(ZMod |D|)ˣ →* ℂˣ`.
+
+Status: **defensive sorry remains**. We do NOT replace it with
+`MulChar.trivial` (which would type-check but propagate the wrong
+character downstream), nor with any non-Kronecker placeholder. The
+correct construction is a multi-week mathlib PR-scale effort.
+
+TODO(mathlib): submit a PR `Mathlib/NumberTheory/LegendreSymbol/KroneckerCharacter.lean`. -/
 noncomputable def kroneckerCharℂ (D : ℤ) : DirichletCharacter ℂ (Int.natAbs D) := by
-  -- TODO(mathlib): wire `kroneckerSymInt` to `DirichletCharacter.ofMul`.
+  -- TODO(mathlib): wire `kroneckerSymInt` to `MulChar.ofUnitHom` once
+  -- multiplicativity mod `|D|` is proved. See docstring above.
   exact sorry
 
 /-- Specialised Kronecker character for an imaginary quadratic field `K`. -/
@@ -213,10 +240,16 @@ theorem classGroupRank2_le_padicValNat_classNumber
 |  counted here)                                           |       |
 
 Net : **1 sorry in this file**, vs. **4 sorrys** in the legacy
-`CRtheorem_helpers.lean`. Three closed :
-- `nrComplexPlaces_eq_one` (PROVED via mathlib identity).
-- `padicValNat_classNumber_ge_classGroupRank2_general` (REDUCED to G3).
+`CRtheorem_helpers.lean`. Three closed in the original port :
+- `nrComplexPlaces_eq_one` (PROVED via mathlib identity
+  `NumberField.InfinitePlace.card_add_two_mul_card_eq_rank`).
+- `padicValNat_classNumber_ge_classGroupRank2_general` (REDUCED to G3,
+  bridge sorry **now CLOSED** via `Nat.card_eq_fintype_card`).
 - `padicValNat_ge_rank2` (re-exported from G3, sorry counted in G3).
+
+Step-4 update (2026-05-20) : the `Nat.card`/`Fintype.card` bridge sorry
+in `padicValNat_classNumber_ge_classGroupRank2_general` has been closed.
+Count delta in this file : 2 → 1.
 -/
 
 end Crossed.CRTheorem

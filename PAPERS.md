@@ -6,7 +6,7 @@
 **License**: CC-BY-4.0
 **Concept DOI**: [10.5281/zenodo.19686398](https://doi.org/10.5281/zenodo.19686398)
 
-Total active papers: **26** organized in three corpora.
+Total active papers: **27** organized in three corpora.
 
 ---
 
@@ -19,7 +19,7 @@ Empirical observations on the SU(N) Yang-Mills mass gap, with the $K_{\mathrm{AS
 2. **Empirical observation**: $m_{\rm arith}(N)$ matches AT2021 lattice $m_{0^{++}}/\sqrt{\sigma}$ at RMS 0.85\% across 6 anchors $N\in\{2,3,4,5,6,\infty\}$ under saturation $\lambda_1=1$.
 3. **Open questions**: universal $\lambda_1$ lower bound on Bianchi orbifolds, existence of $K_{\rm ASP}(32)$, physical derivation of $F(N)$ from 4D YM, transport principle from arithmetic to physical spectrum.
 
-### Index — 11 papers
+### Index — 12 papers
 
 | # | Title | Folder | Pages | Target |
 |---|---|---|---:|---|
@@ -27,13 +27,14 @@ Empirical observations on the SU(N) Yang-Mills mass gap, with the $K_{\mathrm{AS
 | 2 | A Holographic Reading of the Schutt-Hecke $h_K \le 2$ Dichotomy for CM Newforms | [`Paper_Holographic_SchuttHecke_JHEP`](papers/Paper_Holographic_SchuttHecke_JHEP/) | 10 | JHEP |
 | 3 | The empirical $K_{\mathrm{ASP}}(N)$ dictionary: a numerically verified correspon… | [`Paper_K_ASP_Mini_JNT`](papers/Paper_K_ASP_Mini_JNT/) | 5 | J. Number Theory |
 | 4 | series Lee—Yang strip width for SU(2) lattice Yang—Mills at beta in [0.5, 2.5]: … | [`Paper_LeeYang_SU2`](papers/Paper_LeeYang_SU2/) | 15 | TBD |
-| 5 | An empirical nine-invariant $\Q$-rational lattice for CM newforms over imaginary… | [`Paper_NINE_INVARIANT_LATTICE`](papers/Paper_NINE_INVARIANT_LATTICE/) | 15 | TBD |
-| 6 | A Newton—Dickson recursion for Hecke eigenvalues of CM newforms over imaginary q… | [`Paper_NewtonDickson_Note`](papers/Paper_NewtonDickson_Note/) | 5 | TBD |
-| 7 | No-Go Theorems for the Arithmetic Determination of the Yang—Mills Mass Gap Absol… | [`Paper_NoGo_PRL`](papers/Paper_NoGo_PRL/) | 7 | Phys. Rev. Lett. |
-| 8 | Rational cross-orbit ratios for weight-$3$ CM newforms at imaginary quadratic an… | [`Paper_P4W3_MathAnn`](papers/Paper_P4W3_MathAnn/) | 17 | Math. Ann. |
-| 9 | An empirical scaling relation between SU($N$) lattice glueball masses and class-… | [`Paper_PRL_Theoreme_A_LMP`](papers/Paper_PRL_Theoreme_A_LMP/) | 9 | Phys. Rev. Lett. |
-| 10 | A one-parameter $Sp(2N)$ glueball mass formula from lattice data | [`Paper_Sp2N_mini`](papers/Paper_Sp2N_mini/) | 4 | TBD |
-| 11 | A twisted Eguchi—Kawai spectral curve at $\SU(3)$ and the modular form $\mathbf{… | [`Paper_TEK_X024_Note`](papers/Paper_TEK_X024_Note/) | 8 | TBD |
+| 5 | **Per-character spectral decomposition of the Selberg pretrace formula on Bianchi 3-orbifolds via genus-character action** (TIER 1, PROVED UNCONDITIONAL, Path Beta scope restricted) | [`Paper_Lemma_A32_Selberg_JFA`](papers/Paper_Lemma_A32_Selberg_JFA/) | 10 | J. Functional Analysis |
+| 6 | An empirical nine-invariant $\Q$-rational lattice for CM newforms over imaginary… | [`Paper_NINE_INVARIANT_LATTICE`](papers/Paper_NINE_INVARIANT_LATTICE/) | 15 | TBD |
+| 7 | A Newton—Dickson recursion for Hecke eigenvalues of CM newforms over imaginary q… | [`Paper_NewtonDickson_Note`](papers/Paper_NewtonDickson_Note/) | 5 | TBD |
+| 8 | No-Go Theorems for the Arithmetic Determination of the Yang—Mills Mass Gap Absol… | [`Paper_NoGo_PRL`](papers/Paper_NoGo_PRL/) | 7 | Phys. Rev. Lett. |
+| 9 | Rational cross-orbit ratios for weight-$3$ CM newforms at imaginary quadratic an… | [`Paper_P4W3_MathAnn`](papers/Paper_P4W3_MathAnn/) | 17 | Math. Ann. |
+| 10 | An empirical scaling relation between SU($N$) lattice glueball masses and class-… | [`Paper_PRL_Theoreme_A_LMP`](papers/Paper_PRL_Theoreme_A_LMP/) | 9 | Phys. Rev. Lett. |
+| 11 | A one-parameter $Sp(2N)$ glueball mass formula from lattice data | [`Paper_Sp2N_mini`](papers/Paper_Sp2N_mini/) | 4 | TBD |
+| 12 | A twisted Eguchi—Kawai spectral curve at $\SU(3)$ and the modular form $\mathbf{… | [`Paper_TEK_X024_Note`](papers/Paper_TEK_X024_Note/) | 8 | TBD |
 
 If `morn39/KleinSigma_LMP` exists, it belongs here.
 

@@ -1,3 +1,7 @@
+import Mathlib.Tactic.NormNum
+import Mathlib.Data.Rat.Defs
+import Mathlib.Data.Nat.Log
+
 /-!
   # Crossed Cosmos — BasicMathlib (Lean 4 + Mathlib)
 
@@ -27,8 +31,6 @@
   Toolchain : Lean 4.29.1 + mathlib v4.29.1 (pinned in lakefile.toml).
 -/
 
-import Mathlib.Tactic.NormNum
-import Mathlib.Data.Rat.Defs
 
 namespace Crossed
 

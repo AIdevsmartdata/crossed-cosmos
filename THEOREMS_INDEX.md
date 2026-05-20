@@ -28,7 +28,8 @@ Quick lookup of all proved theorems with tier classification, paper reference, a
 |---|---|---|---|---|
 | TH1 | **Theorem D'** — Universal Q-rational orbit count `N_w(K) = 2^r` if `e ∣ (w-1)` | [P4W3 Math.Ann.](papers/Paper_P4W3_MathAnn/) | §3 | Hecke/Shimura/Schütt/Gauss 4-input chain |
 | TH2 | **Lemma C universal** — cup-product Br genus subgroup vanishes | [HSH v3 JNT](papers/Paper_HSH_v3_letter_JNT_v2/) | §4 | Mackey + character orthog. |
-| TH3 | **F(N) = (9/10)(N²+1)/N²** Dijkgraaf-Witten genus expansion | [PRL Théorème A](papers/Paper_PRL_Theoreme_A_LMP/) + [Survey](papers/Paper_ECI_Survey_Clay_BullAMS/) | §3 | DW 1990 + 't Hooft genus |
+| TH3a | **F(N) form `1 + c/N²`** STRUCTURAL via Dijkgraaf-Witten genus expansion | [PRL Théorème A](papers/Paper_PRL_Theoreme_A_LMP/) + [Survey](papers/Paper_ECI_Survey_Clay_BullAMS/) | §3 | DW 1990 + 't Hooft genus (Z_g = N^{2-2g}) |
+| TH-Arith | **M(D) arithmetic surrogate** `M(D) = √(2πe·2/3)·(9/10)·(h_K²+1)/h_K²·√σ₀` — definition + monotonie + limite + calculabilité | [Théorème A LMP](papers/Paper_PRL_Theoreme_A_LMP/) | new §A | Pure algebra + analysis élémentaire (publishable J.NT NOW) |
 | TH4 | **Borel + Genus Field K₃ decomposition** | [Schütt Hecke JHEP](papers/Paper_Holographic_SchuttHecke_JHEP/) | §5 | Borel 1977 + Cox 1989 |
 | TH5 | **Wilson loop bijection γ ↔ 𝔞** at h_K = 2 | [P4W3 Math.Ann.](papers/Paper_P4W3_MathAnn/) | §6 | Heegner-Birch + Atkin-Lehner |
 | TH7 | **HSH r(D) = 2^{rk_2}** for Cl(K) a 2-group (TIER 0 promoted, McCallum-Sharifi dependency removed) | [HSH v3 JNT](papers/Paper_HSH_v3_letter_JNT_v2/) | §3 | Gauss 1801 genus + Hecke-Shimura-Ribet |
@@ -44,7 +45,8 @@ Quick lookup of all proved theorems with tier classification, paper reference, a
 | TH6 | **Arrow A3 Lichnerowicz** — Conjecture F v3 (cup product vanishing) | Burns-Flach + Brunault-Chida + Castella 2024 | [P4W3](papers/Paper_P4W3_MathAnn/) §7 |
 | TH8 | **P4-W3 Theorem 14 precise** — `r(D) = (A/B)·√d_gen^e` | (KS) + (BC-NC) + (CAST-EXT) + (TAM-PRIM) | [P4W3](papers/Paper_P4W3_MathAnn/) §8 |
 | TH11 | **Center-Rank theorem CR** — `rk_2(Cl K_ASP(N)) ≥ v_2(N)` | Gauss genus + 't Hooft (Z/2^{v_2(N)})⁶ | [CR Theorem JNT](papers/Paper_CR_Theorem_JNT/) §3 |
-| TH-8.1 | **Route B mass-gap closure** — `m_0⁺⁺/√σ = √(2πe)·√(2/3)·F(N)` | (i) Karamata-Stirling rigorous completion + (T1)(T2) Transport Conjecture | [Route B LMP](papers/Paper_RouteB_Mass_Gap_LMP/) §3 |
+| TH-8.1 | **Route B mass-gap physical claim** — `m_0⁺⁺(SU(N))/√σ = M(D_min^{(N)})/√λ₁(Y_K)` | (i) Karamata-Stirling + (T1)(T2) Transport + **(iii) H20/H21 9/10 = SU(3) calibration** | [Route B LMP](papers/Paper_RouteB_Mass_Gap_LMP/) §3 |
+| TH3b | **F(N) coefficient `c = 9/10 = 3²/(3²+1)`** = SU(3) anchor calibration F(3)=1 (H20 verdict 20-hypothesis test eliminates all alternatives) | [PRL Théorème A](papers/Paper_PRL_Theoreme_A_LMP/) | §3 | Empirical CONVENTION, NOT structural derivation. Tier 2 CALIBRATION. |
 
 ---
 

@@ -6,7 +6,7 @@
 **License**: CC-BY-4.0
 **Concept DOI**: [10.5281/zenodo.19686398](https://doi.org/10.5281/zenodo.19686398)
 
-Total active papers: **27** organized in three corpora.
+Total active papers: **31** organized in three corpora.
 
 ---
 
@@ -19,7 +19,7 @@ Empirical observations on the SU(N) Yang-Mills mass gap, with the $K_{\mathrm{AS
 2. **Empirical observation**: $m_{\rm arith}(N)$ matches AT2021 lattice $m_{0^{++}}/\sqrt{\sigma}$ at RMS 0.85\% across 6 anchors $N\in\{2,3,4,5,6,\infty\}$ under saturation $\lambda_1=1$.
 3. **Open questions**: universal $\lambda_1$ lower bound on Bianchi orbifolds, existence of $K_{\rm ASP}(32)$, physical derivation of $F(N)$ from 4D YM, transport principle from arithmetic to physical spectrum.
 
-### Index — 12 papers
+### Index — 16 papers
 
 | # | Title | Folder | Pages | Target |
 |---|---|---|---:|---|
@@ -35,8 +35,12 @@ Empirical observations on the SU(N) Yang-Mills mass gap, with the $K_{\mathrm{AS
 | 10 | An empirical scaling relation between SU($N$) lattice glueball masses and class-… | [`Paper_PRL_Theoreme_A_LMP`](papers/Paper_PRL_Theoreme_A_LMP/) | 9 | Phys. Rev. Lett. |
 | 11 | A one-parameter $Sp(2N)$ glueball mass formula from lattice data | [`Paper_Sp2N_mini`](papers/Paper_Sp2N_mini/) | 4 | TBD |
 | 12 | A twisted Eguchi—Kawai spectral curve at $\SU(3)$ and the modular form $\mathbf{… | [`Paper_TEK_X024_Note`](papers/Paper_TEK_X024_Note/) | 8 | TBD |
+| 13 | **A topological invariant of Bianchi 3-orbifolds from the identity term of the Selberg pretrace formula** (TIER 1 PROVED UNCOND, ξ\* = 2/3 universal) | [`Paper_W1_xi_star_universal_CR`](papers/Paper_W1_xi_star_universal_CR/) | 4 | Comptes Rendus |
+| 14 | **A Center–Rank inequality with Dirichlet companion** (TIER 1 PROVED-COND CR + TIER 1 UNCOND CR' + 153/153 empirical) | [`Paper_CR_Theorem_JNT`](papers/Paper_CR_Theorem_JNT/) | 5 | J. Number Theory |
+| 15 | **A surrogate mass-gap formula for SU(N) Yang–Mills via Bianchi 3-orbifolds, framed as proved-conditional** (TIER 1 PROVED-COND on Karamata-Stirling + Transport, Wiles 1995-style companion) | [`Paper_RouteB_Mass_Gap_LMP`](papers/Paper_RouteB_Mass_Gap_LMP/) | 6 | Lett. Math. Phys. |
+| 16 | **The Transport Conjecture: formal statement and four candidate proof strategies** (TIER 3 OPEN explicit conjecture) | [`Paper_Transport_Conjecture_arXiv`](papers/Paper_Transport_Conjecture_arXiv/) | 4 | arXiv math-ph |
 
-If `morn39/KleinSigma_LMP` exists, it belongs here.
+Papers 13-16 (Wave B, 2026-05-20) close the YM programme post-Path-Beta with tier-honest framing; see [notes/YM_CLOSURE_V2_2026-05-20.md](notes/YM_CLOSURE_V2_2026-05-20.md) for the full audit. If `morn39/KleinSigma_LMP` exists, it belongs here.
 
 
 

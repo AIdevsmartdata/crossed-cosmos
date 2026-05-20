@@ -4,3 +4,6 @@ import Crossed.Basic
 import Crossed.BasicMathlib
 import Crossed.G3
 import Crossed.CRTheorem
+import Crossed.HSH
+import Crossed.G3Small
+import Crossed.G3MultiFactor

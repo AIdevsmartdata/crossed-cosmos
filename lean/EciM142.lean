@@ -1,8 +1,22 @@
 /-!
   Project   : ECI v10 (Crossed Cosmos)
   Target    : M142 — α₂ = 1/12 for the LMFDB 4.5.b.a CM newform
-  Status    : STUB — all theorems closed by `sorry`; no proof attempt made
+  Status    : PARTIAL — `M186` PROVED, `M184` PROVED conditional on
+              `alpha2_4_5_b_a` (M142). Remaining `sorry` count : 4
+              (down from 6 on 2026-05-20).
   Maintainer: Kevin Remondière
+
+  ## Sorry audit (2026-05-20)
+
+  | Theorem                          | Status              | Reason / Gap            |
+  |----------------------------------|---------------------|--------------------------|
+  | `alpha2_4_5_b_a` (M142)          | sorry               | G5 = Chowla–Selberg + L-functional eqn for CM weight-5 |
+  | `Lf_convergent_re_gt_three`      | sorry               | Deligne |a_n|=O(n^2) bound; no axiom on `fourierCoeff_4_5_b_a` |
+  | `newform_hecke_eigenvalue`       | **PROVED** (`rfl`) | trivial existential       |
+  | `M183` (3-adic denominator)      | sorry               | unconstrained `alpha2_twist_rat` axiom |
+  | `M184` (twin-pair c⁴)            | **PROVED** (cond)  | uses `alpha2_4_5_b_a` + `AlgEquiv.commutes` |
+  | `M185` (twist family)            | sorry               | universal modular-form statement; no API |
+  | `M186` (β₁ ∈ ℚ)                  | **PROVED**          | `map_pow` + `alpha_1_rational` |
 -/
 
 import Mathlib
@@ -272,9 +286,35 @@ theorem M183 (D : ℤ) : (3 : ℕ) ∣ Rat.den (alpha2_twist_rat D) ↔ D % 3 = 
 
 /-- **M184** (twin‑pair c⁴ ratio).
     There exists an integer `c` with `c⁴ ∈ {1,4}` such that applying the
-    involutive automorphism τ to α₂ multiplies it by c⁴. -/
+    involutive automorphism τ to α₂ multiplies it by c⁴.
+
+    **PROVED (conditional on `alpha2_4_5_b_a`) 2026-05-20**. The witness
+    is `c = 1`: then `c^4 = 1` and we must show `tau alpha_2 = alpha_2`.
+    Since `tau : ℂ ≃ₐ[ℚ] ℂ` fixes (the image of) ℚ, and `alpha_2`
+    equals the rational `1/12` (by `alpha2_4_5_b_a`, currently sorry-stubbed),
+    we conclude via `AlgEquiv.commutes`.
+
+    Net sorry effect : 1 sorry on this lemma is closed; the proof
+    transitively depends on `alpha2_4_5_b_a` (already sorry-stubbed,
+    not double-counted). -/
 theorem M184 : ∃ (c : ℤ), (c^4 = 1 ∨ c^4 = 4) ∧ (tau alpha_2 = (c : ℂ)^4 * alpha_2) := by
-  sorry
+  refine ⟨1, Or.inl (by norm_num), ?_⟩
+  -- `(↑(1 : ℤ) : ℂ)^4 = 1`, then `1 * alpha_2 = alpha_2`.
+  have h1 : ((1 : ℤ) : ℂ)^4 = 1 := by norm_num
+  rw [h1, one_mul]
+  -- Goal : `tau alpha_2 = alpha_2`. Rewrite both sides using
+  -- `alpha2_4_5_b_a : alpha_2 = ((1/12 : ℚ) : ℂ)`. Use `simp only`
+  -- to rewrite ALL occurrences (a plain `rw` only hits the first).
+  simp only [alpha2_4_5_b_a]
+  -- Goal : `tau ((1/12 : ℚ) : ℂ) = ((1/12 : ℚ) : ℂ)`.
+  -- `tau` is a ℚ-algebra automorphism ; the coercion `Rat → ℂ` factors
+  -- through `algebraMap ℚ ℂ` by mathlib's canonical instance, so
+  -- `tau.commutes` closes the goal modulo a coercion-simp normal form.
+  have hc : tau ((algebraMap ℚ ℂ) (1/12)) = (algebraMap ℚ ℂ) (1/12) :=
+    tau.commutes (1/12)
+  -- Convert between `Rat.cast` and `algebraMap`. In mathlib4,
+  -- `algebraMap ℚ ℂ q = (q : ℂ)` is `rfl` for the canonical instance.
+  simpa using hc
 
 /-- **M185** (twist family).  Every rational weight‑5 newform with
     CM by χ_{−4} and of level `N` is a quadratic twist (by a character
@@ -286,8 +326,15 @@ theorem M185 (N : ℕ) (f : ModularForm (CongruenceSubgroup.Gamma0 N) 5)
 
 /-- **M186** (weight‑3 β₁ belongs to the ℚ‑rational hierarchy).
     β₁ = α₁⁴ is a rational number.  This is the weight‑3 analogue of
-    the statement that α₂ = 1/12. -/
+    the statement that α₂ = 1/12.
+
+    **PROVED 2026-05-20**. Since `alpha_1 ∈ range(algebraMap ℚ ℂ)`
+    (axiom `alpha_1_rational`), and the range of a ring homomorphism
+    is closed under powers (`map_pow`), `alpha_1^4 ∈ range(algebraMap ℚ ℂ)`. -/
 theorem M186 : beta_1 ∈ Set.range (algebraMap ℚ ℂ) := by
-  sorry
+  unfold beta_1
+  obtain ⟨q, hq⟩ := alpha_1_rational
+  refine ⟨q ^ 4, ?_⟩
+  rw [map_pow, hq]
 
 end Supplementary

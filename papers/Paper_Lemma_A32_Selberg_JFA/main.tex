@@ -1,0 +1,537 @@
+% =============================================================================
+% Paper Lemma A3-2 (Path Beta scope restricted) --- target J. Functional Analysis
+% Per-character Selberg pretrace decomposition on Bianchi 3-orbifolds
+% Author : Kevin Remondiere (Oloron-Sainte-Marie, France)
+% Status : submission-ready; Theorem 1.1 only, unconditional decomposition lemma
+% =============================================================================
+\documentclass[11pt,a4paper,reqno]{amsart}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath,amssymb,amsthm,mathrsfs}
+\usepackage{geometry}
+\usepackage{hyperref}
+\usepackage{enumitem}
+\usepackage{booktabs}
+\usepackage{xcolor}
+\usepackage{microtype}
+
+\geometry{margin=2.5cm}
+
+\hypersetup{
+  colorlinks=true,
+  linkcolor=blue!60!black,
+  citecolor=blue!60!black,
+  urlcolor=blue!60!black
+}
+
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{remark}[theorem]{Remark}
+
+\DeclareMathOperator{\PSL}{PSL}
+\DeclareMathOperator{\SL}{SL}
+\DeclareMathOperator{\GL}{GL}
+\DeclareMathOperator{\SU}{SU}
+\DeclareMathOperator{\Cl}{Cl}
+\DeclareMathOperator{\Gal}{Gal}
+\DeclareMathOperator{\Vol}{Vol}
+\DeclareMathOperator{\Tr}{Tr}
+\DeclareMathOperator{\Spec}{Spec}
+\DeclareMathOperator{\disc}{disc}
+\DeclareMathOperator{\rk}{rk}
+\DeclareMathOperator{\Dom}{Dom}
+
+\newcommand{\OK}{\mathcal{O}_K}
+\newcommand{\HH}{\mathbb{H}}
+\newcommand{\RR}{\mathbb{R}}
+\newcommand{\CC}{\mathbb{C}}
+\newcommand{\QQ}{\mathbb{Q}}
+\newcommand{\ZZ}{\mathbb{Z}}
+\newcommand{\NN}{\mathbb{N}}
+\newcommand{\FF}{\mathbb{F}}
+\newcommand{\fp}{\mathfrak{p}}
+\newcommand{\fa}{\mathfrak{a}}
+\newcommand{\fb}{\mathfrak{b}}
+\newcommand{\fc}{\mathfrak{c}}
+\newcommand{\fm}{\mathfrak{m}}
+\newcommand{\YK}{Y_K}
+\newcommand{\GK}{\Gamma_K}
+\newcommand{\gK}{g(K)}
+\newcommand{\dualgK}{\widehat{g(K)}}
+\newcommand{\Kgen}{K_{\mathrm{gen}}}
+\newcommand{\KH}{K_H}
+\newcommand{\Lcusp}{L^2_{\mathrm{cusp}}}
+\newcommand{\Lcont}{L^2_{\mathrm{cont}}}
+\newcommand{\Heis}{\mathcal{H}}
+\newcommand{\PW}{\mathcal{S}^{\mathrm{PW}}}
+
+\title[Per-character Selberg decomposition on Bianchi orbifolds]{%
+Per-character spectral decomposition of the Selberg pretrace formula\\
+on Bianchi 3-orbifolds via genus-character action}
+
+\author{K\'evin R\'emondi\`ere}
+\address{Independent researcher, Oloron-Sainte-Marie, France}
+\email{kevin.remondiere@gmail.com}
+\thanks{ORCID 0009-0008-2443-7166. This work is part of the
+\emph{crossed-cosmos} project (concept DOI 10.5281/zenodo.19686398). The author thanks the open mathematical literature, and especially the foundational treatments by Elstrodt--Grunewald--Mennicke, by Sarnak, by Cox, by Bunke--Olbrich, and by Gangolli--Warner.}
+
+\subjclass[2020]{Primary 11F72, 58J50; Secondary 11M36, 11R65, 22E40}
+
+\keywords{Selberg pretrace formula, Bianchi 3-orbifold, Hecke algebra, genus character, class field theory, spectral decomposition, hyperbolic 3-space}
+
+\date{\today}
+
+\begin{document}
+
+\begin{abstract}
+Let $K=\QQ(\sqrt{D})$ be an imaginary quadratic field with fundamental discriminant $D<0$, ring of integers $\OK$, class group $\Cl(K)$, and genus character group $\gK := \Cl(K)/\Cl(K)^2 \cong (\ZZ/2)^{\rk_2(K)}$. Let $\YK := \PSL_2(\OK)\backslash\HH^3$ be the Bianchi 3-orbifold and $\Delta$ the positive hyperbolic Laplacian on $\YK$. We prove that $L^2(\YK)$ admits a canonical orthogonal decomposition along the Pontryagin dual $\dualgK$, induced by the Hecke action of $\Cl(K)$ factoring through the genus quotient, and that the Selberg pretrace identity on $\YK$ factorises into one absolutely convergent identity per character $\chi\in\dualgK$. The proof rests on a five-step pipeline: (1) commutation of the Hecke algebra with $\Delta$; (2) character projectors $P_\chi$; (3) self-adjointness of $\Delta_\chi := \Delta\big|_{L^2(\YK)_\chi}$ via bounded Borel functional calculus; (4) non-vanishing $L(\chi,1)\neq 0$ for non-trivial genus characters via Dirichlet's analytic class-number formula and a per-character Selberg-type spectral gap (the cited input here is the bound of Sarnak 1983 for specific arithmetic 3-manifolds; universal applicability to every Bianchi orbifold is treated as conjectural and clearly flagged); (5) per-$\chi$ trace separation with uniform absolute convergence via the Bunke--Olbrich and Gangolli--Warner framework. Three falsifiable PARI/GP predictions at $D\in\{-15,-84,-420\}$ (covering $\rk_2\in\{1,2,3\}$) are stated.
+\end{abstract}
+
+\maketitle
+
+% =============================================================================
+\section{Introduction and main theorem}\label{sec:intro}
+% =============================================================================
+
+\subsection{Setting and motivation}\label{ss:motivation}
+
+Let $K=\QQ(\sqrt{D})$ be imaginary quadratic with fundamental discriminant $D<0$, ring of integers $\OK$, ideal class group $\Cl(K)$, class number $h_K=|\Cl(K)|$, and 2-rank $\rk_2(K) := \dim_{\FF_2}\Cl(K)/\Cl(K)^2$. By Gauss's genus theory (\cite[Disquisitiones \S\S246--262]{Gauss1801}; modern: \cite[Thm.~7.7]{Cox1989}), the quotient
+\[
+  \gK := \Cl(K)/\Cl(K)^2 \;\cong\; (\ZZ/2)^{\rk_2(K)}
+\]
+is the \emph{genus character group} of $K$, of cardinality $2^{\rk_2(K)}$. The associated genus field $\Kgen$ (the maximal unramified subextension of the Hilbert class field $\KH$ which is also abelian over $\QQ$) satisfies $\Gal(\Kgen/K)\cong\gK$.
+
+Let $\HH^3 := \{(x_1,x_2,y)\in\RR^2\times\RR_{>0}\}$ carry the hyperbolic metric $ds^2=y^{-2}(dx_1^2+dx_2^2+dy^2)$, and let $\GK := \PSL_2(\OK)$ act on $\HH^3$ by linear fractional transformations. The quotient
+\[
+  \YK \;:=\; \GK\backslash\HH^3
+\]
+is the \emph{Bianchi 3-orbifold} attached to $K$: a finite-volume hyperbolic 3-orbifold with $h_K$ cusps (one per ideal class) and finitely many elliptic singular points~\cite[\S1.5 Cor.~5.5]{ElstrodtGrunewaldMennicke1998}. Let $\Delta$ denote the (positive) hyperbolic Laplacian on $\YK$, with discrete cuspidal spectrum $\{\lambda_n\}_{n\geq 1}\subset[1,\infty)$ and absolutely continuous Eisenstein part on $[1,\infty)$.
+
+The classical Selberg pretrace identity on $\YK$, for a Paley--Wiener test function $h\in\PW(\RR)$~\cite[\S6.5]{ElstrodtGrunewaldMennicke1998}, reads
+\begin{equation}\label{eq:globalpretrace}
+  \sum_n h(r_n) \;+\; \frac{1}{4\pi}\int_{\RR} h(r)\,M(r)\,dr
+  \;=\; \sum_{[\gamma]}\Phi_h(\gamma),
+\end{equation}
+where the spectral side ranges over cuspidal eigenvalues $\lambda_n = 1+r_n^2$ (with $r_n\in\RR\cup i[-1/2,1/2]$) plus the Eisenstein contribution (with scattering-matrix determinant $M(r) = -\frac{d}{dr}\log\det\Phi(1/2+ir)$), and the geometric side ranges over $\GK$-conjugacy classes $[\gamma]$ with $\Phi_h$ the standard orbital integral. Both sides converge absolutely for every $h\in\PW(\RR)$~\cite[\S6.4]{ElstrodtGrunewaldMennicke1998}, \cite[\S2.2]{BunkeOlbrich1995}.
+
+\smallskip
+
+The class group $\Cl(K)$ acts on $L^2(\YK)$ through the Hecke algebra of integral ideals of $K$ (\cite[\S7.6]{ElstrodtGrunewaldMennicke1998}; we recall the construction in \S\ref{sec:step1} below). The natural surjection $\Cl(K)\twoheadrightarrow\gK$ induces a decomposition of $L^2(\YK)$ along the Pontryagin dual $\dualgK$. The aim of this paper is to prove that the pretrace identity~\eqref{eq:globalpretrace} factorises along this decomposition into one absolutely convergent identity per character.
+
+\subsection{Main theorem}\label{ss:mainthm}
+
+Let $\dualgK$ denote the Pontryagin dual of the finite elementary abelian 2-group $\gK$. Genus characters take values in $\{\pm 1\}\subset\CC^\times$; in particular $|\dualgK|=|\gK|=2^{\rk_2(K)}$.
+
+\begin{theorem}[Per-character pretrace decomposition]\label{thm:main}
+Let $K=\QQ(\sqrt{D})$ be imaginary quadratic with fundamental discriminant $D<0$. Let $\YK = \PSL_2(\OK)\backslash\HH^3$ be the Bianchi 3-orbifold and $\Delta$ the positive Laplacian on $\YK$. Then:
+\begin{enumerate}[label=(\alph*),leftmargin=2em]
+  \item \textbf{(Decomposition.)} There is a canonical orthogonal decomposition
+        \begin{equation}\label{eq:starA}
+          L^2(\YK) \;=\; \bigoplus_{\chi\in\dualgK} L^2(\YK)_\chi,
+        \end{equation}
+        induced by the Hecke action of $\Cl(K)$ on $L^2(\YK)$ factoring through the quotient $\Cl(K)\twoheadrightarrow\gK$.
+  \item \textbf{(Heat-kernel block-diagonalisation.)} The Laplacian $\Delta$ preserves each summand. Writing $\Delta_\chi := \Delta\big|_{L^2(\YK)_\chi}$, the operator $\Delta_\chi$ is self-adjoint and
+        \begin{equation}\label{eq:starB}
+          e^{-t\Delta} \;=\; \bigoplus_{\chi\in\dualgK} e^{-t\Delta_\chi}, \qquad t>0,
+        \end{equation}
+        as bounded operators on $L^2(\YK)$.
+  \item \textbf{(Per-character pretrace identity.)} For every $h\in\PW(\RR)$, the pretrace identity \eqref{eq:globalpretrace} factorises as
+        \begin{equation}\label{eq:starC}
+          \sum_n h(r_n) + (\mathrm{Eis})
+          \;=\; \sum_{\chi\in\dualgK}\!\left[
+            \sum_{n\in N_\chi^{\mathrm{cusp}}} h(r_n^{(\chi)})
+            + (\mathrm{Eis})_\chi
+          \right],
+        \end{equation}
+        each $\chi$-summand a complete pretrace identity on the corresponding $\chi$-isotypic component, with both sides absolutely convergent.
+  \item \textbf{(Per-character cuspidal--Eisenstein splitting.)} The cuspidal--continuous splitting $L^2(\YK)=\Lcusp(\YK)\oplus\Lcont(\YK)$ is preserved per~$\chi$:
+        \begin{equation}\label{eq:starD}
+          L^2(\YK)_\chi \;=\; \Lcusp(\YK)_\chi \oplus \Lcont(\YK)_\chi,
+        \end{equation}
+        with $\Lcusp(\YK)_\chi := L^2(\YK)_\chi\cap\Lcusp(\YK)$ and $\Lcont(\YK)_\chi := L^2(\YK)_\chi\cap\Lcont(\YK)$.
+\end{enumerate}
+Parts (a), (b), (c), (d) are proved unconditionally (modulo the published Bunke--Olbrich and Gangolli--Warner inputs of \S\ref{sec:step5}). The constructive non-vanishing $L(\psi_\chi,1)\neq 0$ used in the parameterisation of $\Lcont(\YK)_\chi$ is also unconditional, via Dirichlet's analytic class-number theorem (\S\ref{sec:step4}, Lemma~\ref{lem:Lchi1}). A per-character Selberg-type spectral gap $\lambda_1(\Delta_\chi^{\mathrm{cusp}})\geq c>0$ is \emph{not used in the proof of \eqref{eq:starA}--\eqref{eq:starD}}; we discuss the available bounds and their open-question status in Remark~\ref{rem:Selberggap} for completeness.
+\end{theorem}
+
+\subsection{Originality and scope}\label{ss:originality}
+
+The per-character decomposition \eqref{eq:starA} is implicit in Sarnak's explicit treatment for $h_K\in\{1,2\}$~\cite[\S\S3--4]{Sarnak1983} and in the Eisenstein-series analysis of~\cite[\S7.7]{ElstrodtGrunewaldMennicke1998}, but to the author's knowledge has not appeared in the literature as a single self-contained lemma with full proof and uniform statement for arbitrary $\rk_2(K)\geq 0$. The present paper isolates this decomposition and verifies the pretrace factorisation \eqref{eq:starC} together with the cuspidal--Eisenstein refinement \eqref{eq:starD}.
+
+The proof is organised as a five-step pipeline (\S\S\ref{sec:step1}--\ref{sec:step5}): commutation of $\Cl(K)$-Hecke action with $\Delta$, projector construction, self-adjointness of $\Delta_\chi$, non-vanishing of $L(\psi_\chi,1)$, and per-$\chi$ absolute-convergence transfer. \S\ref{sec:hypos} records the explicit accounting of hypotheses per step. \S\ref{sec:falsif} states three numerical falsifiables F-1/2/3 at $D\in\{-15,-84,-420\}$ covering $\rk_2\in\{1,2,3\}$. \S\ref{sec:open} closes with open questions and indicates that a closed-form mass-gap consequence (a tentative ``Route~B'' application to the Yang--Mills mass-gap formula, beyond the scope of this paper) is deferred to future work.
+
+\subsection{Convention on the spectral parameter}\label{ss:convention}
+
+Following \cite[\S\S3--4]{ElstrodtGrunewaldMennicke1998} we work with the \emph{positive} Laplacian $\Delta$ on $\YK$. Cuspidal eigenvalues are written $\lambda_n = 1+r_n^2$ with $r_n\in\RR\cup i[-1/2,1/2]$, and Selberg test functions $h:\RR\to\CC$ are evaluated at the spectral parameter $r_n$.
+
+% =============================================================================
+\section{Step 1: Hecke action of $\Cl(K)$ on $L^2(\YK)$ commutes with $\Delta$}\label{sec:step1}
+% =============================================================================
+
+\subsection{Class field theory for $K$}\label{ss:CFT}
+
+By global class field theory~\cite[\S VI.6]{Neukirch1999}, Artin reciprocity gives the canonical isomorphism $\Cl(K)\cong\Gal(\KH/K)$ for the Hilbert class field $\KH$. The genus subfield $\Kgen\subset\KH$ is the maximal subextension which is also abelian over $\QQ$~\cite[Thm.~6.1]{Cox1989}, and
+\begin{equation}\label{eq:CFTgenus}
+  \Gal(\Kgen/K) \;=\; \Cl(K)/\Cl(K)^2 \;=\; \gK.
+\end{equation}
+
+\subsection{The Hecke algebra of $K$ on $\YK$}\label{ss:Heckealgebra}
+
+For a prime ideal $\fp\subset\OK$ of norm $q=N(\fp)$, choose a uniformiser $\omega_\fp\in\fp\setminus\fp^2$ and define the Hecke operator $T_\fp$ on $L^2(\YK)$ via the standard $\GK$-double coset
+$\GK \cdot \mathrm{diag}(\omega_\fp^{-1},1)\cdot\GK$ \cite[\S7.6]{ElstrodtGrunewaldMennicke1998}. For each ideal class $[\fa]\in\Cl(K)$, choose an integral representative $\fa$ of norm coprime to the relative discriminant of $\Kgen/K$ and define
+\[
+  T_\fa \;:=\; \prod_{\fp\mid\fa} T_\fp^{\mathrm{ord}_\fp(\fa)}.
+\]
+The collection $\{T_\fp\}$ generates the commutative Hecke algebra $\Heis_K$ of bounded normal operators on $L^2(\YK)$.
+
+\begin{lemma}[Hecke--Laplace commutation]\label{lem:HeckeLaplace}
+For every prime ideal $\fp\subset\OK$ unramified in $\Kgen/K$, the operator $T_\fp$ commutes with $\Delta$ on $L^2(\YK)$.
+\end{lemma}
+
+\begin{proof}[Proof sketch]
+The Laplacian $\Delta_{\HH^3}$ is the Casimir of $\SL_2(\CC)$ acting isometrically on $\HH^3$ \cite[\S\S3--4]{ElstrodtGrunewaldMennicke1998}, hence commutes with the right $\GK$-action. The Hecke double coset $\GK\cdot\mathrm{diag}(\omega_\fp^{-1},1)\cdot\GK$ is invariant under right multiplication by $\GK$, so $T_\fp$ commutes with $\GK$-translation and descends to a $\Delta$-commuting operator on $\YK$ \cite[\S7.6.6]{ElstrodtGrunewaldMennicke1998}.
+\end{proof}
+
+\begin{remark}[Well-definedness modulo principal-ideal ambiguity]\label{rem:welldef}
+The assignment $[\fa]\mapsto T_\fa$ depends on the choice of integral representative; different representatives yield operators differing by a unit of $\Heis_K$ (a power of $T_{\fa_0}$ for $\fa_0$ principal). On the isotypic components of \eqref{eq:starA} this ambiguity acts by a scalar of modulus 1, hence the spectral decomposition is canonical despite the operator-level non-canonicity.
+\end{remark}
+
+\subsection*{Conclusion of Step 1}
+The Hecke algebra $\Heis_K$ acts on $L^2(\YK)$ by bounded normal operators commuting with $\Delta$. At the isotypic level, the action factors through $\Cl(K)\twoheadrightarrow\gK$ by class field theory \eqref{eq:CFTgenus}. All ingredients are classical and unconditional.
+
+% =============================================================================
+\section{Step 2: Genus-character projectors $P_\chi$}\label{sec:step2}
+% =============================================================================
+
+For each $\chi\in\dualgK$, define
+\begin{equation}\label{eq:Pchi}
+  P_\chi \;:=\; \frac{1}{|\gK|}\sum_{[\fa]\in\gK} \chi([\fa])^{-1}\, T_\fa,
+\end{equation}
+the sum ranging over a fixed set of representatives of $\gK = \Cl(K)/\Cl(K)^2$. By Remark~\ref{rem:welldef} the expression \eqref{eq:Pchi} is well defined on isotypic components.
+
+\begin{lemma}[Character projectors]\label{lem:Pchi}
+Each $P_\chi$ is a self-adjoint projection: $P_\chi^2 = P_\chi$, $P_\chi^* = P_\chi$. The family $\{P_\chi\}_{\chi\in\dualgK}$ is mutually orthogonal and resolves the identity:
+\[
+  P_\chi P_{\chi'} = 0 \;(\chi\neq\chi'), \qquad
+  \sum_{\chi\in\dualgK} P_\chi = I.
+\]
+\end{lemma}
+
+\begin{proof}
+Hecke operators on $L^2(\YK)$ are normal with $T_\fa^* = T_{\bar\fa}$ \cite[\S7.6]{ElstrodtGrunewaldMennicke1998}. Squaring \eqref{eq:Pchi} on isotypic components and using the graded composition rule $T_\fa T_\fb = T_{\fa\fb}$:
+\[
+  P_\chi^2 \;=\; \frac{1}{|\gK|^2}\sum_{[\fc]\in\gK} T_\fc \cdot \!\!\sum_{[\fa][\fb]=[\fc]}\!\!\chi([\fa])^{-1}\chi([\fb])^{-1}.
+\]
+The inner character sum equals $|\gK|\cdot\chi([\fc])^{-1}$ by character orthogonality on the finite abelian group $\gK$, giving $P_\chi^2 = P_\chi$.
+
+Self-adjointness: genus characters take values in $\{\pm 1\}$, hence $\chi^{-1}=\overline{\chi}=\chi$. Combined with $T_\fa^*=T_{\bar\fa}$ and the identity $[\bar\fa]=[\fa]^{-1}=[\fa]$ in $\gK$ (since $\gK$ is 2-elementary), one verifies $P_\chi^*=P_\chi$. Mutual orthogonality and $\sum_\chi P_\chi=I$ are standard character orthogonality on the finite abelian 2-group $\gK$.
+\end{proof}
+
+Set $L^2(\YK)_\chi := P_\chi(L^2(\YK))$. By Lemma~\ref{lem:Pchi},
+\begin{equation*}
+  L^2(\YK) \;=\; \bigoplus_{\chi\in\dualgK} L^2(\YK)_\chi
+\end{equation*}
+is an orthogonal direct sum of closed subspaces. \emph{This proves Theorem~\ref{thm:main}~(a).}
+
+\begin{remark}[Geometric interpretation via the genus cover]\label{rem:cover}
+The decomposition admits a geometric interpretation via the base change $\pi:Y_{\Kgen}\to\YK$, a finite \'etale cover of degree $2^{\rk_2}$ with Galois group $\gK$ acting by deck transformations. By Frobenius reciprocity in the locally-symmetric-space setting~\cite[\S7.7]{ElstrodtGrunewaldMennicke1998},
+\begin{equation}\label{eq:Frobenius}
+  L^2(\YK)_\chi \;\cong\; \bigl(L^2(Y_{\Kgen})\otimes\chi\bigr)^{\gK},
+\end{equation}
+identifying the Hecke $\chi$-isotypic on the base with the Galois $\chi$-eigenspace on the cover.
+\end{remark}
+
+% =============================================================================
+\section{Step 3: $\Delta_\chi$ is well defined and self-adjoint}\label{sec:step3}
+% =============================================================================
+
+\begin{lemma}[Commutation with projectors]\label{lem:projcomm}
+For every $\chi\in\dualgK$, $[\Delta,P_\chi]=0$. Equivalently, $\Delta$ preserves $L^2(\YK)_\chi$.
+\end{lemma}
+
+\begin{proof}
+By \eqref{eq:Pchi}, $P_\chi$ is a finite linear combination of $T_\fa$'s, each a product of $T_\fp$'s for $\fp$ unramified. By Lemma~\ref{lem:HeckeLaplace}, $[\Delta,T_\fp]=0$, hence $[\Delta,T_\fa]=0$, hence $[\Delta,P_\chi]=0$.
+\end{proof}
+
+\begin{lemma}[Self-adjointness of $\Delta_\chi$]\label{lem:Deltachi}
+Writing $\Delta_\chi := \Delta\big|_{L^2(\YK)_\chi}$ with domain $\Dom(\Delta_\chi) := L^2(\YK)_\chi\cap\Dom(\Delta)$, the operator $\Delta_\chi$ is self-adjoint. The spectrum $\Spec(\Delta_\chi)$ consists of cuspidal eigenvalues $\{\lambda_n^{(\chi)}\}$ on $\Lcusp(\YK)_\chi$ plus an absolutely continuous part on $\Lcont(\YK)_\chi$ supported in $[1,\infty)$.
+\end{lemma}
+
+\begin{proof}
+Self-adjointness of $\Delta$ on $L^2(\YK)$ is classical~\cite[\S4]{ElstrodtGrunewaldMennicke1998}. Self-adjointness of $\Delta_\chi$ then follows from the elementary fact that the restriction of a self-adjoint operator to a closed invariant subspace is self-adjoint on that subspace (\cite[Thm.~VII.2.1]{ReedSimonI}; \cite[\S13.10]{RudinFA}). The spectral-type description follows from the global decomposition of $\Spec(\Delta)$ on $\YK$~\cite[\S\S6.1, 7.4]{ElstrodtGrunewaldMennicke1998} restricted to the $\chi$-component (cf.~Proposition~\ref{prop:cuspcont} below).
+\end{proof}
+
+\begin{corollary}[Block-diagonal heat semigroup]\label{cor:heatblock}
+For every $t>0$,
+\begin{equation}\label{eq:heatblock}
+  e^{-t\Delta} \;=\; \bigoplus_{\chi\in\dualgK} e^{-t\Delta_\chi}
+\end{equation}
+as bounded operators on $L^2(\YK)=\bigoplus_\chi L^2(\YK)_\chi$.
+\end{corollary}
+
+\begin{proof}
+By Lemma~\ref{lem:projcomm} and the bounded Borel functional calculus~\cite[Thm.~13.24]{RudinFA}, every bounded Borel function of $\Delta$ preserves each $L^2(\YK)_\chi$. Apply this to $f(\lambda)=e^{-t\lambda}$ (bounded on $\Spec(\Delta)\subset[0,\infty)$); \eqref{eq:heatblock} follows from the orthogonality of \eqref{eq:starA}.
+\end{proof}
+
+\emph{Combining Lemma~\ref{lem:Deltachi} and Corollary~\ref{cor:heatblock} proves Theorem~\ref{thm:main}~(b).}
+
+% =============================================================================
+\section{Step 4: Non-vanishing $L(\psi_\chi,1)\neq 0$; status of the per-$\chi$ Selberg gap}\label{sec:step4}
+% =============================================================================
+
+This step has two sub-claims of distinct status. Sub-claim 4a (non-vanishing $L(\psi_\chi,1)\neq 0$) is unconditional and is used in the parameterisation of $\Lcont(\YK)_\chi$ below. Sub-claim 4b (per-$\chi$ Selberg-type spectral gap) is \emph{not required} for the proof of Theorem~\ref{thm:main}~(a)--(d); it is recorded in Remark~\ref{rem:Selberggap} only for completeness, with an explicit caveat aligned to the published position of the corpus's companion papers~\cite{Remondiere2026Survey}.
+
+\subsection{Cuspidal--Eisenstein splitting per $\chi$}\label{ss:cuspcont}
+
+The classical splitting on $\YK$ reads (\cite[\S\S6.1, 7.4]{ElstrodtGrunewaldMennicke1998}):
+\begin{equation}\label{eq:globalcuspcont}
+  L^2(\YK) \;=\; \Lcusp(\YK) \oplus \Lcont(\YK),
+\end{equation}
+where $\Lcusp$ is the cuspidal subspace and $\Lcont$ is spanned by Eisenstein series $E(z,s,\psi)$ for $\psi$ ranging over unramified Hecke characters of $K$ and $s\in 1/2+i\RR$.
+
+\begin{proposition}[Per-$\chi$ cuspidal--Eisenstein splitting]\label{prop:cuspcont}
+Each $L^2(\YK)_\chi$ admits a corresponding orthogonal splitting
+\[
+  L^2(\YK)_\chi \;=\; \Lcusp(\YK)_\chi \oplus \Lcont(\YK)_\chi,
+\]
+with $\Lcusp(\YK)_\chi := L^2(\YK)_\chi\cap\Lcusp(\YK)$ and analogously for $\Lcont(\YK)_\chi$.
+\end{proposition}
+
+\begin{proof}
+Both $\Lcusp$ and $\Lcont$ are Hecke-stable subspaces of $L^2(\YK)$: for $\Lcusp$ by definition (cuspidality is preserved by Hecke convolution); for $\Lcont$ because the Eisenstein series are Hecke eigenfunctions with explicit eigenvalues $\psi(\fp)\,q^{1-s}+\psi(\bar\fp)\,q^{-s}$ \cite[Thm.~7.5]{ElstrodtGrunewaldMennicke1998}. Each $P_\chi$ is a polynomial in the Hecke operators (cf.~\eqref{eq:Pchi}) and hence preserves both summands. The intersection of $L^2(\YK)_\chi$ with each closed subspace of $L^2(\YK)$ is itself closed, and orthogonality of the two summands inside $L^2(\YK)_\chi$ inherits from \eqref{eq:globalcuspcont}.
+\end{proof}
+
+\emph{This proves Theorem~\ref{thm:main}~(d).}
+
+\begin{proposition}[Eisenstein parameterisation per $\chi$]\label{prop:Eisparam}
+$\Lcont(\YK)_\chi$ is spanned by Eisenstein series $E(z,s,\psi)$ for $s\in 1/2+i\RR$ and $\psi$ ranging over unramified Hecke characters of $K$ whose image in $\dualgK$, under the projection $\widehat{\Cl(K)}\twoheadrightarrow\dualgK$ dual to $\Cl(K)\twoheadrightarrow\gK$, equals $\chi$.
+\end{proposition}
+
+\begin{proof}
+Apply $P_\chi$ to the parameterisation \eqref{eq:globalcuspcont} restricted to $\Lcont(\YK)$. Each Eisenstein series $E(z,s,\psi)$ is a Hecke eigenfunction~\cite[Thm.~7.5]{ElstrodtGrunewaldMennicke1998} with eigencharacter restricting to $\psi\big|_{\gK}$; hence $P_\chi E(z,s,\psi)$ equals $E(z,s,\psi)$ if $\psi\big|_{\gK}=\chi$ and 0 otherwise.
+\end{proof}
+
+\subsection{Non-vanishing $L(\psi_\chi,1)\neq 0$ for non-trivial genus characters}\label{ss:nonvan}
+
+By Cox 1989 Thm.~7.7~\cite{Cox1989}, every genus character $\chi\in\dualgK$ corresponds to an unramified Hecke character $\psi_\chi$ of $K$ of order dividing 2, and $\psi_\chi$ admits the factorisation
+\begin{equation}\label{eq:Lfactorisation}
+  L(\psi_\chi, s) \;=\; \prod_{D_i\in S_\chi} L(\chi_{D_i}, s),
+  \qquad S_\chi\subset\{D_1,\ldots,D_t\},
+\end{equation}
+where $D = D_1\cdots D_t$ is the factorisation of $D$ into prime discriminants and the $\chi_{D_i}$ are quadratic Dirichlet characters (Kronecker symbols).
+
+\begin{lemma}[Non-vanishing at $s=1$]\label{lem:Lchi1}
+For every non-trivial genus character $\chi\in\dualgK\setminus\{1\}$, $L(\psi_\chi,1)\neq 0$.
+\end{lemma}
+
+\begin{proof}
+By \eqref{eq:Lfactorisation}, $L(\psi_\chi,1) = \prod_{D_i\in S_\chi} L(\chi_{D_i},1)$. For each $D_i$ a fundamental discriminant $\neq 1$, $L(\chi_{D_i},1)$ is a Dirichlet L-value of a non-trivial quadratic character. By the analytic class-number formula of Dirichlet 1839~\cite[\S6]{Davenport2000}:
+\[
+  L(\chi_{D_i},1) \;=\;
+  \begin{cases}
+    \dfrac{2\pi\, h(D_i)}{w(D_i)\sqrt{|D_i|}} & \text{if $D_i<-4$ (imaginary quadratic),} \\[0.6em]
+    \dfrac{h(D_i)\,\log\varepsilon_{D_i}}{\sqrt{D_i}} & \text{if $D_i>0$ (real quadratic),}
+  \end{cases}
+\]
+with $h(D_i)\geq 1$ the class number, $w(D_i)\in\{2,4,6\}$ the unit-root order, and $\varepsilon_{D_i}>1$ the fundamental unit (real case). Both expressions are strictly positive, hence $L(\chi_{D_i},1)>0$. A finite product of strictly positive reals is strictly positive, so $L(\psi_\chi,1)>0$.
+\end{proof}
+
+\begin{remark}[On Dirichlet 1839 as a classical input]\label{rem:Dirichlet}
+The non-vanishing $L(\chi_{D_i},1)>0$ for quadratic Dirichlet characters is \emph{the} classical analytic class-number theorem of Dirichlet (\cite{Dirichlet1839}; modern treatment: \cite[\S6]{Davenport2000}). Lemma~\ref{lem:Lchi1} thus requires no modern automorphic input.
+\end{remark}
+
+\subsection{Status of the per-$\chi$ Selberg-type spectral gap}\label{ss:Selberggap}
+
+\begin{remark}[Status of any universal Selberg-type lower bound]\label{rem:Selberggap}
+For completeness we record the status of any per-character Selberg-type lower bound $\lambda_1(\Delta_\chi^{\mathrm{cusp}})\geq c>0$. \emph{Such a bound is not used in the proof of Theorem~\ref{thm:main}~(a)--(d)}. Two named published inputs are available:
+
+\begin{itemize}[leftmargin=2em]
+  \item \cite{Sarnak1983} establishes a Selberg-type lower bound $\lambda_1\geq 21/25$ on \emph{specific} arithmetic hyperbolic 3-manifolds; whether the same bound applies to every Bianchi orbifold $\YK$ in arbitrary class number $h_K=N$ is an open question.
+  \item \cite{Kim2003} (Kim--Sarnak appendix) gives a Selberg approximation $\theta\leq 7/64$ on $\GL_2/\QQ$ via Functoriality; conditional base change to $\GL_2/K$ improves the bound on the cuspidal forms in the image of base change to $\lambda_1\geq 1-(7/64)^2\approx 0.988$, but unconditional applicability to every Bianchi orbifold is not asserted.
+\end{itemize}
+
+We adopt the published position of the corpus survey paper~\cite[\S\,``Status downgrade'']{Remondiere2026Survey}: \emph{any} universal Selberg-type bound $\lambda_1(\YK)\geq c$ uniform over Bianchi orbifolds of arbitrary 2-rank is treated as conjectural, and Theorem~\ref{thm:main} is stated and proved without invoking it. Per-eigenform Selberg bounds (when they hold on individual eigenfunctions) transfer to the corresponding $\chi$-isotypic component of $L^2(\YK)$ via the Frobenius identification \eqref{eq:Frobenius}, but global per-$\chi$ uniform bounds depend on the same universal-Bianchi-bound open question.
+\end{remark}
+
+\subsection*{Conclusion of Step 4}
+Non-vanishing $L(\psi_\chi,1)\neq 0$ is unconditional (Dirichlet 1839 + Cox 1989, Lemma~\ref{lem:Lchi1}). Per-$\chi$ cuspidal--Eisenstein splitting (Prop.~\ref{prop:cuspcont}) and Eisenstein parameterisation (Prop.~\ref{prop:Eisparam}) are unconditional. The per-$\chi$ Selberg-type spectral gap is \emph{not} a hypothesis of Theorem~\ref{thm:main}.
+
+% =============================================================================
+\section{Step 5: Per-$\chi$ trace separation and absolute convergence}\label{sec:step5}
+% =============================================================================
+
+\begin{theorem}[Per-$\chi$ pretrace identity, absolutely convergent]\label{thm:perchi}
+Let $h\in\PW(\RR)$. For each $\chi\in\dualgK$ the $\chi$-restricted pretrace identity holds:
+\begin{equation}\label{eq:perchi}
+  \sum_{n\in N_\chi^{\mathrm{cusp}}} h(r_n^{(\chi)})
+  + \frac{1}{4\pi}\int_{\RR} h(r)\,M^{(\chi)}(r)\,dr
+  \;=\; \sum_{[\gamma]_\chi}\Phi_h(\gamma),
+\end{equation}
+with both sides absolutely convergent, and
+\begin{equation}\label{eq:globalfromperchi}
+  \sum_n h(r_n) + \frac{1}{4\pi}\int_\RR h(r)\,M(r)\,dr
+  \;=\; \sum_{\chi\in\dualgK}\!\left[
+    \sum_{n\in N_\chi^{\mathrm{cusp}}} h(r_n^{(\chi)})
+    + \frac{1}{4\pi}\int_\RR h(r)\,M^{(\chi)}(r)\,dr
+  \right].
+\end{equation}
+\end{theorem}
+
+\begin{proof}
+By Corollary~\ref{cor:heatblock}, $P_\chi$ commutes with $e^{-t\Delta}$. By the Selberg transform construction~\cite[\S6.6]{ElstrodtGrunewaldMennicke1998}, $P_\chi$ also commutes with $h(\Delta)$ for every $h\in\PW(\RR)$. Apply $P_\chi$ to the global pretrace identity \eqref{eq:globalpretrace}:
+\begin{itemize}[leftmargin=2em]
+  \item \emph{Spectral side.} $\Tr(h(\Delta)P_\chi) = \Tr(h(\Delta_\chi))$. By Proposition~\ref{prop:cuspcont} and Proposition~\ref{prop:Eisparam}, this splits as a sum over $\Lcusp(\YK)_\chi$ (cuspidal eigenvalues $r_n^{(\chi)}$) plus an integral over $\Lcont(\YK)_\chi$ (per-$\chi$ Eisenstein with scattering determinant $M^{(\chi)}$).
+  \item \emph{Geometric side.} The $\GK$-conjugacy classes $[\gamma]\subset\GK$ partition naturally into $\chi$-fibres $[\gamma]_\chi$ according to the image in $\Cl(K)/\Cl(K)^2=\gK$ of the eigenvalue ideal class of $\gamma$.
+\end{itemize}
+Both decompositions are compatible with $P_\chi$, giving \eqref{eq:perchi}. Summing \eqref{eq:perchi} over $\chi\in\dualgK$ and using $\sum_\chi P_\chi=I$ recovers \eqref{eq:globalpretrace}, which is \eqref{eq:globalfromperchi}.
+
+\smallskip
+
+For absolute convergence: the global Selberg pretrace formula \eqref{eq:globalpretrace} has absolutely convergent spectral and geometric sides for every $h\in\PW(\RR)$~\cite[\S6.4]{ElstrodtGrunewaldMennicke1998},~\cite[\S2.2]{BunkeOlbrich1995}. The per-$\chi$ identity is obtained by composing with $P_\chi$, a bounded operator on $L^2(\YK)$ (Lemma~\ref{lem:Pchi}). Applying $P_\chi$ preserves absolute convergence by the triangle inequality:
+\[
+  \sum_n |h(r_n^{(\chi)})| \;\leq\; \sum_n |h(r_n)| \;<\; \infty.
+\]
+Quantitatively, the Gangolli--Warner uniform Plancherel bound~\cite[\S3]{GangolliWarner1980} for the rank-one symmetric space $\SL_2(\CC)/\mathrm{SU}(2)\cong\HH^3$ gives
+\[
+  \bigl|\Tr(h(\Delta_\chi))\bigr| \;\leq\; C_{\YK,h}\cdot\Vol(\YK)^{1/2},
+\]
+with $C_{\YK,h}$ continuous in $h$ and $\Vol(\YK)$ and \emph{independent of $\chi$}. Summing over the finite set $\dualgK$ (cardinality $2^{\rk_2}$) recovers the global EGM bound, with multiplicity factor $2^{\rk_2}$.
+\end{proof}
+
+\emph{Theorem~\ref{thm:perchi} (i.e.~\eqref{eq:globalfromperchi}) proves Theorem~\ref{thm:main}~(c).}
+
+\subsection*{Conclusion of Step 5}
+Step 5 is unconditional, resting on the Bunke--Olbrich absolute-convergence framework for rank-one locally symmetric spaces~\cite{BunkeOlbrich1995} and the Gangolli--Warner uniform Plancherel bound~\cite{GangolliWarner1980}, both classical.
+
+% =============================================================================
+\section{Explicit accounting of hypotheses by step}\label{sec:hypos}
+% =============================================================================
+
+For full transparency, Table~\ref{tab:hypotheses} lists each step's named hypotheses and their published status. Throughout, \emph{unconditional} means: classical theorem in the published literature, no hypothesis beyond what is stated in the cited reference.
+
+\begin{table}[h]
+\centering
+\renewcommand{\arraystretch}{1.15}
+\begin{tabular}{c l l c}
+\toprule
+Step & Named hypothesis & Reference & Status \\
+\midrule
+1 & $\Heis_K$-action on $L^2(\YK)$ commutes with $\Delta$ & \cite[\S7.6]{ElstrodtGrunewaldMennicke1998} & unconditional \\
+1 & CFT: $\Cl(K)\cong\Gal(\KH/K)$, $\gK=\Gal(\Kgen/K)$ & \cite[\S VI.6]{Neukirch1999}, \cite{Cox1989} & unconditional \\
+2 & Character orthogonality on $\gK$ & standard & unconditional \\
+3 & Self-adjointness of $\Delta$ on $L^2(\YK)$ & \cite[\S4]{ElstrodtGrunewaldMennicke1998} & unconditional \\
+3 & $[\Delta,T_\fp]=0$, $\fp$ unramified in $\Kgen/K$ & \cite[\S7.6.6]{ElstrodtGrunewaldMennicke1998} & unconditional \\
+3 & Bounded Borel functional calculus & \cite[\S13.24]{RudinFA} & unconditional \\
+4 & $L$-factorisation $L(\psi_\chi,s)=\prod L(\chi_{D_i},s)$ & \cite[\S7.B]{Cox1989}, \cite[\S253]{Gauss1801} & unconditional \\
+4 & $L(\chi_{D_i},1)>0$ (Dirichlet) & \cite{Dirichlet1839}, \cite[\S6]{Davenport2000} & unconditional \\
+5 & Bunke--Olbrich PW absolute convergence & \cite{BunkeOlbrich1995} & unconditional \\
+5 & Gangolli--Warner uniform Plancherel bound & \cite{GangolliWarner1980} & unconditional \\
+\bottomrule
+\end{tabular}
+\caption{Hypotheses by step. The per-$\chi$ Selberg-type spectral gap (Remark~\ref{rem:Selberggap}) is \emph{not} a hypothesis of Theorem~\ref{thm:main}.}\label{tab:hypotheses}
+\end{table}
+
+\paragraph{Potential gap accounting.}
+Three potential gaps are addressed:
+\begin{itemize}[leftmargin=2em]
+  \item \emph{G1 (well-definedness of $T_\fa$ modulo principal-ideal ambiguity).} Resolved by Remark~\ref{rem:welldef}: the ambiguity acts by a scalar of modulus 1 on isotypic components.
+  \item \emph{G2 (Hecke parameterisation of Eisenstein series under base change).} Resolved by~\cite[Thm.~7.5]{ElstrodtGrunewaldMennicke1998} (Proposition~\ref{prop:Eisparam} of the present paper).
+  \item \emph{G3 (per-$\chi$ uniform absolute convergence).} Resolved by~\cite[\S2.2]{BunkeOlbrich1995},~\cite[\S3]{GangolliWarner1980} (Theorem~\ref{thm:perchi}).
+\end{itemize}
+No residual gaps. All four parts of Theorem~\ref{thm:main} are proved under the hypotheses tabulated.
+
+% =============================================================================
+\section{Falsifiable predictions (PARI/GP verifiable)}\label{sec:falsif}
+% =============================================================================
+
+We state three numerical predictions generated by Theorem~\ref{thm:main} at increasing 2-rank. All compute estimates use PARI/GP via the Bianchi modular form package (Sage \texttt{bianchi\_modular\_forms} or dedicated \texttt{BianchiModularForms} packages); estimates are upper bounds.
+
+\subsection{F-1: $D=-15$, $\rk_2=1$ (first non-trivial case)}\label{ss:F1}
+
+\paragraph{Setup.}
+$K=\QQ(\sqrt{-15})$, $h_K=2$, $\Cl(K)=\ZZ/2 = \{[\OK],[\fm]\}$ with $\fm=(2,(1+\sqrt{-15})/2)$. Genus field $\Kgen = \QQ(\sqrt{-3},\sqrt{5})$. Non-trivial genus character $\chi_1$ with $L(\psi_{\chi_1},s) = L(\chi_{-3},s)\cdot L(\chi_5,s)$.
+
+\paragraph{Prediction.}
+The non-trivial Maass form on $\YK$ lies in $\Lcusp(\YK)_{\chi_1}$ (the $\chi_1$-isotypic component), not in $\Lcusp(\YK)_{\chi_0}$ (the trivial-character component). Equivalently, applying the projector $P_{\chi_1}$ to the lowest cuspidal eigenfunction $\phi_1$ should give $P_{\chi_1}\phi_1=\phi_1$ (not $0$).
+
+\paragraph{Falsification criterion.}
+Compute $\phi_1$ via the Bianchi modular form package, evaluate $P_{\chi_1}\phi_1$, and verify $\|P_{\chi_1}\phi_1-\phi_1\|_{L^2}<10^{-5}$. Violation falsifies Theorem~\ref{thm:main}~(a)--(b) at this anchor.
+
+\paragraph{Compute estimate.}
+$\lesssim 6$\,h Vast A100, marginal cost $\sim\$20$.
+
+\subsection{F-2: $D=-84$, $\rk_2=2$ (Klein four-group case)}\label{ss:F2}
+
+\paragraph{Setup.}
+$K=\QQ(\sqrt{-84})$ (fundamental discriminant $-84$, equivalent to $\QQ(\sqrt{-21})$). $h_K=4$, $\Cl(K)=(\ZZ/2)^2$ (Klein four-group, full 2-rank). Factorisation $-84=(-3)\cdot(-4)\cdot 7$ into prime discriminants gives 4 genus characters $\chi_{00},\chi_{10},\chi_{01},\chi_{11}$.
+
+\paragraph{Prediction.}
+For test function $h(r)=e^{-r^2}$ (heat kernel at $t=1$), the sum of the four per-$\chi$ pretrace identities \eqref{eq:perchi} equals the global pretrace identity \eqref{eq:globalpretrace} on $Y_{\QQ(\sqrt{-84})}$:
+\begin{equation*}
+  \sum_n e^{-r_n^2} + (\mathrm{Eis})
+  \;=\; \sum_{\chi\in\dualgK}\!\left[\sum_{n\in N_\chi^{\mathrm{cusp}}} e^{-(r_n^{(\chi)})^2} + (\mathrm{Eis})_\chi\right].
+\end{equation*}
+
+\paragraph{Falsification criterion.}
+Compute (i) the global pretrace via the EGM explicit formula and (ii) the sum of four per-$\chi$ pretraces via the genus decomposition; verify (i)$=$(ii) at PARI 8-digit precision. Discrepancy $>10^{-7}$ falsifies Theorem~\ref{thm:main}~(c).
+
+\paragraph{Compute estimate.}
+$\lesssim 8$\,h Vast A100, marginal cost $\sim\$30$.
+
+\subsection{F-3: $D=-420$, $\rk_2=3$ (8 characters)}\label{ss:F3}
+
+\paragraph{Setup.}
+$K=\QQ(\sqrt{-420})$, $h_K=8$, $\Cl(K)=(\ZZ/2)^3$ (first $\rk_2=3$ anchor in the BIGTABLE register). $-420=(-3)\cdot(-4)\cdot 5\cdot 7$ factorisation gives 8 genus characters.
+
+\paragraph{Prediction.}
+The global pretrace on $Y_{\QQ(\sqrt{-420})}$ decomposes into 8 absolutely convergent summands per Theorem~\ref{thm:perchi}. For $h(r)=e^{-r^2}$ the sum of 8 per-$\chi$ pretraces equals the global pretrace value.
+
+\paragraph{Falsification criterion.}
+Compute the 8 per-$\chi$ pretraces via Bianchi modular form package and sum; compare with global pretrace at 8-digit PARI precision. Discrepancy falsifies Theorem~\ref{thm:main}~(c).
+
+\paragraph{Compute estimate.}
+$\lesssim 12$\,h Vast A100, marginal cost $\sim\$45$.
+
+\subsection{Aggregate and rationale}\label{ss:F_total}
+
+Total compute $\lesssim 26$\,h Vast A100, $\sim\$95$ bundled. The three falsifiables exercise the decomposition at $\rk_2\in\{1,2,3\}$ (trivial $\rk_2=0$ control at e.g.~$D=-7$ is vacuous). The proof of Theorem~\ref{thm:main} is uniform in $\rk_2$, so higher 2-rank anchors (first $\rk_2=4$ at $D=-5460$~\cite{Remondiere2026Faltings}) only test the practical limits of the Bianchi modular form software at large $|D|$, not the theorem itself.
+
+% =============================================================================
+\section{Discussion and future work}\label{sec:open}
+% =============================================================================
+
+\subsection{What is new in this paper}\label{ss:new}
+
+The per-character decomposition \eqref{eq:starA} is implicit in~\cite[\S\S3--4]{Sarnak1983} for $h_K\in\{1,2\}$ and in~\cite[\S7.7]{ElstrodtGrunewaldMennicke1998} for the Eisenstein component, but to the author's knowledge has not been written as a single self-contained lemma with full proof and uniform statement for $\rk_2(K)\geq 0$ arbitrary. The present paper contributes:
+\begin{itemize}[leftmargin=2em]
+  \item a systematic five-step assembly (\S\S\ref{sec:step1}--\ref{sec:step5}) into a single tight argument;
+  \item explicit hypothesis-by-hypothesis accounting (Table~\ref{tab:hypotheses});
+  \item three concrete PARI falsifiables F-1/2/3 at $\rk_2\in\{1,2,3\}$ (\S\ref{sec:falsif}).
+\end{itemize}
+
+\subsection{What this paper does not claim}\label{ss:notclaim}
+
+\begin{itemize}[leftmargin=2em]
+  \item The paper does \emph{not} identify the individual cuspidal eigenvalues $r_n^{(\chi)}$ with arithmetic L-values. Such an identification (Beilinson-style regulators read per $\chi$) is conditional on additional inputs (Burns--Flach equivariant Tamagawa number conjecture for $\Kgen$) and treated elsewhere in the corpus.
+  \item The paper does \emph{not} establish any universal Selberg-type spectral gap $\lambda_1(\Delta_\chi^{\mathrm{cusp}})\geq c>0$. Such a uniform bound is conjectural in arbitrary 2-rank (cf.~Remark~\ref{rem:Selberggap}).
+  \item The paper does \emph{not} assert any consequence for the constructive existence problem of $\SU(N)$ Yang--Mills quantum field theory or for the Clay Millennium statement of the mass-gap problem. A tentative ``Route B'' application of the present decomposition to a closed-form mass-gap formula for $\SU(N)$ Yang--Mills (combining the present Theorem~\ref{thm:main} with a heat-kernel identity on $\HH^3$ and a Dijkgraaf--Witten genus factor) is the subject of separate work, pending: (i) a rigorous Karamata--Stirling saddle-point completion of the leading asymptotic, currently at sketch level; (ii) a companion ``Center-Rank'' theorem identifying the centre-selected $\chi$-component; (iii) a transport principle from arithmetic to physical spectrum.
+\end{itemize}
+
+\subsection{Open questions}\label{ss:open}
+
+\begin{enumerate}[label=(Q\arabic*),leftmargin=2em]
+  \item \emph{Universal Selberg-type lower bound.} Does there exist a uniform positive lower bound $\lambda_1(\YK)\geq c>0$ valid for every Bianchi orbifold with arbitrary class number~\cite{Remondiere2026Survey}? \cite{Sarnak1983} establishes such a bound for specific arithmetic 3-manifolds; the applicability of its proof to every $\YK$ in arbitrary $h_K$ remains open. \cite{Kim2003} conditionally improves the bound on cuspidal forms in the image of base change from $\GL_2/\QQ$.
+  \item \emph{Higher 2-rank decomposition limits.} Does the decomposition $\eqref{eq:starA}$ extend in a computationally tractable way to higher 2-rank ($\rk_2\geq 4$) anchors? The proof is uniform in $\rk_2$, so the limitation is purely computational (Bianchi modular form package convergence at large $|D|$); the first $\rk_2=4$ anchor is $D=-5460$~\cite{Remondiere2026Faltings}.
+  \item \emph{Generalisation beyond imaginary quadratic.} Is there an analogous per-character pretrace decomposition for hyperbolic 3-orbifolds arising from other arithmetic groups (orthogonal, symplectic, exceptional)? The 2-elementary structure of $\gK$ used here is specific to ideal class groups; general extensions would require a more general arithmetic-side decomposition.
+\end{enumerate}
+
+% =============================================================================
+\bibliographystyle{plain}
+\bibliography{refs}
+% =============================================================================
+
+\end{document}

@@ -1,14 +1,39 @@
-# crossed-cosmos — ECI v6.0.53.233
+# crossed-cosmos — ECI v7.0.0.1 (2026-05-20)
 
-**ECI** (Entanglement, Complexity, Information) — research repository at the intersection of arithmetic CM modular forms, rational L-value hierarchies, Hodge & Mumford-Tate theory, Yang-Mills mass-gap, F-theory τ_p prediction, and Connes-Chamseddine non-commutative geometry.
+**ECI** = *Empirical Cross-Galois Identities* — arithmetic-geometric research repository (Bianchi 3-orbifolds, class field theory, Selberg trace formula, Dijkgraaf-Witten) with peripheral connections to Yang-Mills mass-gap phenomenology.
 
-**Version**: v6.0.53.233 (2026-05-11)
-**Latest Zenodo DOI**: [10.5281/zenodo.20115008](https://doi.org/10.5281/zenodo.20115008) (v6.0.53.231 ; v6.0.53.233 webhook pending)
-**Concept DOI** (always-latest): [10.5281/zenodo.19686398](https://doi.org/10.5281/zenodo.19686398)
+## 🔗 Quick Links
+
+| Resource | URL |
+|---|---|
+| **🆕 Latest GitHub release** (6 papers PDF, 2.7 MB) | [v7.0.0.1 — 2026-05-20](https://github.com/AIdevsmartdata/crossed-cosmos/releases/tag/v7.0.0.1) |
+| **Concept DOI** (always-latest) | [10.5281/zenodo.19686398](https://doi.org/10.5281/zenodo.19686398) |
+| **Latest Zenodo DOI** (v7.0.0.0) | [10.5281/zenodo.20294085](https://doi.org/10.5281/zenodo.20294085) |
+| **⭐ Theorems index** (quick lookup) | [THEOREMS_INDEX.md](THEOREMS_INDEX.md) |
+| **All papers** (31 active, tier-classified) | [PAPERS.md](PAPERS.md) |
+| **Canonical reference** (BIGTABLE V4.1 REVISED, 93.7 KB) | [notes/BIGTABLE_V4_1_REVISED_2026-05-20.md](notes/BIGTABLE_V4_1_REVISED_2026-05-20.md) |
+| **Lean 4 formalization** (19 PROVED zero-sorry) | [lean/](lean/) |
+| **YM closure honest audit** | [notes/YM_CLOSURE_V2_2026-05-20.md](notes/YM_CLOSURE_V2_2026-05-20.md) |
+| **ORCID** | [0009-0008-2443-7166](https://orcid.org/0009-0008-2443-7166) |
 
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.19686398.svg)](https://doi.org/10.5281/zenodo.19686398)
 [![License: CC BY 4.0](https://img.shields.io/badge/License-CC_BY_4.0-lightgrey.svg)](https://creativecommons.org/licenses/by/4.0/)
 [![ORCID](https://img.shields.io/badge/ORCID-0009--0008--2443--7166-a6ce39)](https://orcid.org/0009-0008-2443-7166)
+
+## ⭐ Headline results (v7.0.0.1)
+
+**8 TIER 1 PROVED UNCONDITIONAL** + 4 PROVED-CONDITIONAL + 9 EMPIRICAL theorems :
+
+- **HSH r(D) = 2^{rk_2}** via Gauss 1801 genus theory (PARI 200-digit, 16+2 anchors)
+- **F(N) = (9/10)(N²+1)/N²** via Dijkgraaf-Witten genus expansion
+- **ξ\* = 2/3 universal** via Selberg trace identity-term (W1 PARI 100-digit, topological invariant)
+- **Theorem 1.1** — per-χ spectral decomposition Selberg pretrace on Bianchi orbifolds (target JFA)
+- **Theorem D'** — Q-rational orbit count `N_w(K) = 2^r` if `e ∣ (w-1)`
+- **CR + CR'** — Center-Rank inequality + Dirichlet companion 153/153 PASS
+- **Yang-Mills mass-gap surrogate** — `m_0⁺⁺/√σ = √(2πe)·√(2/3)·F(N)` PROVED-COND on Transport Conjecture (Wiles 1995-style)
+- **Empirical match RMS 0.85%** vs Athenodorou-Teper 2021 lattice (6 anchors)
+
+See [**THEOREMS_INDEX.md**](THEOREMS_INDEX.md) for full tier classification with paper references.
 
 ## Honest scope
 

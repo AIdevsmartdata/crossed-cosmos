@@ -1,3 +1,16 @@
+import Mathlib.NumberTheory.NumberField.ClassNumber
+import Mathlib.NumberTheory.NumberField.InfinitePlace.TotallyRealComplex
+import Mathlib.NumberTheory.DirichletCharacter.Basic
+import Mathlib.NumberTheory.LegendreSymbol.QuadraticChar.Basic
+import Mathlib.NumberTheory.LegendreSymbol.JacobiSymbol
+import Mathlib.NumberTheory.Padics.PadicVal.Basic
+import Mathlib.RingTheory.ClassGroup
+import Mathlib.GroupTheory.Torsion
+import Mathlib.Data.ZMod.Basic
+import Mathlib.LinearAlgebra.Dimension.Finite
+import Mathlib.LinearAlgebra.Dimension.StrongRankCondition
+import Crossed.G3
+
 /-!
   # Crossed Cosmos — CRTheorem (Lake-project port of CRtheorem_helpers)
 
@@ -30,18 +43,6 @@
   Toolchain : Lean 4.29.1 + mathlib v4.29.1.
 -/
 
-import Mathlib.NumberTheory.NumberField.ClassNumber
-import Mathlib.NumberTheory.NumberField.InfinitePlace.TotallyRealComplex
-import Mathlib.NumberTheory.DirichletCharacter.Basic
-import Mathlib.NumberTheory.LegendreSymbol.QuadraticChar.Basic
-import Mathlib.NumberTheory.LegendreSymbol.JacobiSymbol
-import Mathlib.NumberTheory.Padics.PadicVal
-import Mathlib.RingTheory.ClassGroup
-import Mathlib.GroupTheory.Torsion
-import Mathlib.Data.ZMod.Basic
-import Mathlib.LinearAlgebra.Dimension.Finite
-import Mathlib.LinearAlgebra.Dimension.StrongRankCondition
-import Crossed.G3
 
 namespace Crossed.CRTheorem
 

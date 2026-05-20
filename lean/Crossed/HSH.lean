@@ -1,3 +1,12 @@
+import Mathlib.NumberTheory.NumberField.ClassNumber
+import Mathlib.NumberTheory.NumberField.InfinitePlace.TotallyRealComplex
+import Mathlib.RingTheory.ClassGroup
+import Mathlib.Data.Nat.Factorization.Basic
+import Mathlib.Data.Nat.Factorization.Defs
+import Mathlib.NumberTheory.Padics.PadicVal.Basic
+import Crossed.G3
+import Crossed.CRTheorem
+
 /-!
   # Crossed Cosmos — HSH (Hecke–Shimura–Hodge) r(D) = 2^{rk_2 Cl(K)}
 
@@ -70,14 +79,6 @@
   Toolchain : Lean 4.29.1 + mathlib v4.29.1.
 -/
 
-import Mathlib.NumberTheory.NumberField.ClassNumber
-import Mathlib.NumberTheory.NumberField.InfinitePlace.TotallyRealComplex
-import Mathlib.RingTheory.ClassGroup
-import Mathlib.Data.Nat.Factorization.Basic
-import Mathlib.Data.Nat.Factorization.PrimeFactors
-import Mathlib.NumberTheory.Padics.PadicVal
-import Crossed.G3
-import Crossed.CRTheorem
 
 namespace Crossed.HSH
 
@@ -117,7 +118,7 @@ def gaussCountConcrete (omega_val : ℕ) : ℕ :=
 For each of the 7 Crossed Cosmos HSH anchors, we record the value of
 `gaussCount (|D|)` and verify it matches the observed `r(D)`. -/
 
-/-- Anchor table for the 7 HSH anchors. The value `omega(|D|)` is the
+/-! Anchor table for the 7 HSH anchors. The value `omega(|D|)` is the
 number of distinct prime divisors of `|D|`; we use the concrete pre-computed
 values directly (verified by hand & PARI sweep,
 `notes/HSH_v3_Gauss_reframe_2026-05-15.md` §2). -/

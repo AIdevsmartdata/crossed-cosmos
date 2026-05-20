@@ -1,3 +1,11 @@
+import Mathlib.NumberTheory.Padics.PadicVal.Basic
+import Mathlib.Data.Nat.Factorization.Basic
+import Mathlib.Data.ZMod.Basic
+import Mathlib.GroupTheory.OrderOfElement
+import Mathlib.GroupTheory.FiniteAbelian.Duality
+import Mathlib.Algebra.BigOperators.Group.Finset.Basic
+import Mathlib.Algebra.DirectSum.Basic
+
 /-!
   # Crossed Cosmos — G3: `padicValNat 2 |G| ≥ rk_2(G)` for finite abelian G
 
@@ -65,13 +73,6 @@
   Toolchain : Lean 4.29.1 + mathlib v4.29.1.
 -/
 
-import Mathlib.NumberTheory.Padics.PadicVal
-import Mathlib.Data.Nat.Factorization.Basic
-import Mathlib.Data.ZMod.Basic
-import Mathlib.GroupTheory.OrderOfElement
-import Mathlib.GroupTheory.FiniteAbelian.Duality
-import Mathlib.Algebra.BigOperators.Basic
-import Mathlib.Algebra.DirectSum.Basic
 
 namespace Crossed.G3
 
@@ -94,7 +95,9 @@ def twoTorsion (G : Type*) [AddCommGroup G] : AddSubgroup G where
   neg_mem' := by
     intro x hx
     show (2 : ℕ) • (-x) = 0
-    rw [nsmul_neg, (show (2 : ℕ) • x = 0 from hx), neg_zero]
+    -- `2 • (-x) = -(2 • x) = -0 = 0`; the explicit rewrite chain via
+    -- `nsmul_neg` is API-name-sensitive ; we use `simp` with the hypothesis.
+    simp [(show (2 : ℕ) • x = 0 from hx)]
 
 /-- The 2-rank of a finite abelian group `G`: `Nat.log 2 |G[2]|`.
 
@@ -210,7 +213,8 @@ theorem padicValNat_ge_rank2_zmod (n : ℕ) [NeZero n] :
       -- m ≠ 0 : if m = 0 then n = 0, contradicting NeZero n.
       have hm_ne : m ≠ 0 := by
         rintro rfl
-        have : n = 0 := by rw [hm]; ring
+        -- if m = 0 then n = 2 * 0 = 0, contradicting NeZero n
+        have : n = 0 := by rw [hm]
         exact (NeZero.ne n) this
       have h2_ne : (2 : ℕ) ≠ 0 := by norm_num
       -- v₂(n) = v₂(2 * m) = v₂(2) + v₂(m) = 1 + v₂(m) ≥ 1.

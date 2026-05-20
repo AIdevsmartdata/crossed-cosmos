@@ -77,7 +77,7 @@ For `K = ℚ(√D)` imaginary quadratic, `Cl(K)` is a finite commutative
 group, so every subgroup is automatically normal (via
 `Subgroup.normal_of_comm`). This makes the quotient `Cl(K)/Cl(K)²`
 well-defined as a `CommGroup`. -/
-def principalGenus (K : Type*) [Field K] [NumberField K] :
+noncomputable def principalGenus (K : Type*) [Field K] [NumberField K] :
     Subgroup (ClassGroup (𝓞 K)) :=
   (powMonoidHom 2 : ClassGroup (𝓞 K) →* ClassGroup (𝓞 K)).range
 
@@ -110,7 +110,7 @@ def genusGroup (K : Type*) [Field K] [NumberField K] : Type _ :=
 `Mathlib/GroupTheory/QuotientGroup/Defs.lean:153`) applies
 unconditionally when the ambient group is a `CommGroup` — no
 normality hypothesis is needed in the commutative case. -/
-instance (K : Type*) [Field K] [NumberField K] :
+noncomputable instance (K : Type*) [Field K] [NumberField K] :
     CommGroup (genusGroup K) := by
   unfold genusGroup
   infer_instance

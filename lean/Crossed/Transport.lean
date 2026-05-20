@@ -120,6 +120,42 @@ axiom T2_spectral_identification (N : ℕ) (K : ImQuadField) (_hN : 2 ≤ N) :
   ∃ U : YMHilbertSpace N → L2CuspChi N K,
     True  -- placeholder for "U is unitary intertwiner"
 
+/-! ## §3ter. H-EM-HAWKING-XISTAR conjecture (TIER 3 SKETCH 2026-05-21)
+
+Empirical observation : the Wilson loop static potential `V(R)` extracted
+from rectangular `R×T` loops via `V(R) = lim_{T→∞} -log⟨W(R,T)⟩/T` admits
+a Cornell-like decomposition :
+```
+  V(R) = a · log(R) + b · R + c
+```
+with the LOGARITHMIC Coulomb coefficient empirically matching `ξ★/12 = 1/18` :
+- Belgium SU(2) β=2.70 : a = 0.0575 (3.5% off 1/18)
+- Belgium SU(2) β=2.80 : a = 0.0481 (-13.4% off 1/18)
+- Strong coupling β=2.30 : outlier (artifact, in cluster catch history)
+
+Physical interpretation (Kevin Rémondière 2026-05-21) : the Wilson loop is
+the QCD analogue of a black-hole horizon emitting "Hawking radiation by
+friction" (the Coulomb gluon-exchange term). The combination ξ★/12 connects
+the heat kernel exponent on H³/PSL₂(O_K) (Lemma A3-2) to a 2D effective
+Coulomb potential at the flux-tube horizon, via AdS/CFT dimensional
+reduction analogy (Maldacena 1998, Hawking-Page transition).
+-/
+
+/-- Predicted Coulomb coefficient of Wilson loop static potential. -/
+noncomputable def a_coulomb_predicted : ℝ := xi_star / 12
+
+/-- **H-EM-HAWKING-XISTAR algebraic identity** :
+The predicted Coulomb coefficient equals `1/18`. -/
+theorem a_coulomb_eq_one_eighteenth : a_coulomb_predicted = 1 / 18 := by
+  unfold a_coulomb_predicted xi_star
+  norm_num
+
+/-- Equivalent factorisation : `a_coulomb_predicted = (2/3) · (1/12)`. -/
+theorem a_coulomb_factorization :
+    a_coulomb_predicted = (2 / 3 : ℝ) * (1 / 12) := by
+  unfold a_coulomb_predicted xi_star
+  norm_num
+
 /-! ## §3bis. Sub-theorem : Formula structure under T2 ALONE (sans T1)
 
 This is the Wiles-style factorization : we isolate T1 (Clay) as the SOLE

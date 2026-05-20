@@ -1,0 +1,65 @@
+LEAN 4 + MATHLIB4 PROOF TASK — Crossed Cosmos project, session 2026-05-20
+
+GOAL : produce ONE fully verified Lean 4 theorem with ZERO `sorry`.
+
+CONTEXT :
+- Toolchain : Lean 4.29.1 + lake 5.0.0 + mathlib4 master (2026-05).
+- Project goal eventually : formalize Theorem CR' (rk_2(Cl K) >= v_2(N)).
+- Today's goal : prove an EASY algebraic identity that the project mockups REFERENCE but never closed.
+
+CANDIDATE THEOREMS — pick the EASIEST and provide complete Lean 4 proof :
+
+CANDIDATE A — xi_star = 2/3 (Universal CR' fixed point) :
+  theorem xi_star_eq_two_thirds :
+      (1 : ℚ) / (1 + (1/2 : ℚ)) = 2 / 3 := by
+    <PROOF HERE>
+
+CANDIDATE B — F(N) genus expansion exact ratio :
+  theorem FN_ratio_exact (N : ℕ) (hN : 0 < N) :
+      (9 : ℚ) / 10 * ((N^2 + 1 : ℚ) / N^2) = (9 * (N^2 + 1)) / (10 * N^2) := by
+    <PROOF HERE>
+
+CANDIDATE C — 3-adic split rule integer identity :
+  theorem three_adic_split (D : ℤ) (hD : D % 3 = 2) :
+      ¬ (3 : ℤ) ∣ D := by
+    <PROOF HERE>
+
+CANDIDATE D — c=9/10 't Hooft genus expansion ratio (Dijkgraaf-Witten) :
+  theorem c_DW_eq_nine_tenths :
+      (9 : ℚ) / (9 + 1) = 9 / 10 := by
+    <PROOF HERE>
+
+CANDIDATE E — Nat.log 2 4 = 2 (used in CR_prime_N4) :
+  theorem nat_log_two_four : Nat.log 2 4 = 2 := by
+    <PROOF HERE>
+
+YOUR TASK :
+1. For EACH candidate A-E, provide the SHORTEST Lean 4 proof using mathlib4 lemmas.
+2. Identify which mathlib lemmas you cite (ring, norm_num, decide, Rat.div_eq, etc.).
+3. Verify NO `sorry`. Verify imports needed.
+4. Pick the BEST candidate (most likely to compile cleanly) and provide it with full imports + namespace structure ready to drop into a lakefile project.
+
+DELIVERABLE FORMAT :
+- ## Candidate X — proof
+- ```lean
+  import Mathlib
+  theorem X : ... := by
+    <tactic chain>
+  ```
+- One-line justification : "compiles because <reason>".
+
+ANTI-FAB POSTURE :
+- Every mathlib lemma name MUST exist on https://leanprover-community.github.io/mathlib4_docs/. If unsure, fall back to `decide`, `norm_num`, `ring`, `rfl`, `omega`. These are GUARANTEED tactics in mathlib4.
+- Tactics `decide` works for closed-form arithmetic on ℕ.
+- `norm_num` works for ℚ arithmetic.
+- `ring` works for any commutative ring identity.
+- `rfl` works if both sides definitionally equal.
+
+OPTIMUM STRATEGY :
+- Candidate A is likely closable with `norm_num` alone.
+- Candidate E is closable with `decide` (Nat closed-form).
+- Candidate B is closable with `ring` (commutative ring identity over ℚ).
+- Candidate C is closable with `omega` (integer arithmetic).
+- Candidate D is closable with `norm_num` (rational arithmetic).
+
+RETURN : the candidate(s) most likely to work + Lean 4 source ready to copy-paste.

@@ -1071,6 +1071,86 @@ Theorem~\ref{thm:transport-V3}}; the conditional content of (T1)
 and (T2) remains as stated.
 
 % =============================================================================
+\section{Conditional plaquette CLT theorem (Wehrl saturation v4)}\label{sec:plaquette-clt}
+% =============================================================================
+
+This section formalises the empirical findings of Section~\ref{sec:wehrl-empirical}
+as a conditional theorem in distributional form. The honest framing is that the result
+is a \emph{consequence of Clay} (constructive 4D YM with mass gap), not an alternative to it.
+
+\subsection{Statement}
+
+\begin{theorem}[Conditional plaquette CLT, V3]\label{thm:plaq-clt}
+Let $P_{\beta,V} := V^{-1}\sum_x \tfrac{1}{N}\,\mathrm{Re}\,\mathrm{Tr}\,U_p(x)$ be the spatial-average
+plaquette of $SU(N)$ pure Yang--Mills lattice gauge theory on a $4$D torus of volume $V$ at
+gauge coupling $\beta$. Assume:
+\begin{itemize}
+\item[\textbf{(H1)}] The lattice theory has a mass gap $m(\beta) > 0$ uniform in $V$ for $V$ large
+enough (\emph{Clay-open hypothesis for constructive 4D YM});
+\item[\textbf{(H2)}] The correlation length $\xi(\beta) := 1/m(\beta)$ is finite.
+\end{itemize}
+Then, for any sequence $(\beta_n, V_n)$ with $V_n/\xi(\beta_n)^3 \to \infty$:
+\[
+\sqrt{V_n/\xi(\beta_n)^3}\;\bigl(P_{\beta_n,V_n} - \langle P\rangle_{\beta_n,V_n}\bigr)
+\;\xrightarrow{\mathrm{(d)}}\; \mathcal{N}(0, \sigma^2(\beta_n)),
+\]
+where $\sigma^2(\beta) = \sigma_0 \cdot C(N)^2/(N^2-1)$.
+\end{theorem}
+
+\subsection{Proof sketch (3 steps)}
+
+\paragraph{Step 1 (Cluster decomposition).} Under (H1)+(H2), Osterwalder--Schrader
+reflection-positivity combined with mass-gap exponential clustering
+(\cite[Ch.~4]{WeinbergQTF-I}) gives:
+\[
+\bigl|\langle P(x)P(y)\rangle_c\bigr| \;\lesssim\; e^{-m(\beta)\,|x-y|}, \qquad |x-y| \to \infty.
+\]
+
+\paragraph{Step 2 (Mixing CLT).} The plaquette field $(P(x))_{x \in \mathbb{Z}^4}$ inherits
+strong mixing with $\alpha(r) \lesssim e^{-mr}$ from Step 1. Bolthausen's 1982 central limit
+theorem for stationary mixing random fields \cite{Bolthausen1982} applies: the rescaled
+spatial average converges to a Gaussian.
+
+\paragraph{Step 3 (Variance identification).} \emph{TIER 3 SKETCH.} The variance functional
+form $\sigma^2 \propto \sigma_0/(N^2-1)$ follows from the OPE for the $0^{++}$ channel
+\cite[\S9.4]{Smit2002}. Identifying the coefficient as $C(N)^2$ uses the Gibbs-ansatz Layer 2
+of the three-layer derivation, which is itself a conjectural saturation. The
+\emph{specific value} of the variance is not derived from first principles in V3; only its
+functional form is.
+
+\begin{remark}[Honest scope]
+Theorem~\ref{thm:plaq-clt} is \emph{conditional} on the Clay-open hypothesis (H1). It does
+not bypass Clay. Its value lies in: (a) reframing physical content empirically testable;
+(b) providing a sharp falsifier (Corollary~\ref{cor:jb-falsifier}) independent of resolving
+Clay; (c) explaining the empirical observation that the YM vacuum plaquette distribution is
+Gaussian in the physical regime.
+\end{remark}
+
+\begin{corollary}[Jarque--Bera falsifier]\label{cor:jb-falsifier}
+Under (H1)+(H2) and the triple limit of Theorem~\ref{thm:plaq-clt}, the Jarque--Bera statistic
+$\mathrm{JB}(P_{\beta_n,V_n}) \to 0$ in probability \cite{JarqueBera1980,JarqueBera1987}.
+Conversely, if $\mathrm{JB}(P_{\beta,V})$ \emph{grows} with sample size at fixed $(\beta,V)$,
+this violates the ergodicity premise of Step 2 (Monte Carlo chain non-stationary), \emph{not}
+the Wehrl saturation framework.
+\end{corollary}
+
+\subsection{Empirical validation (lattice ensembles 2026-05-20)}
+
+Across $7$ distinct $(\mathrm{group}, \beta, V)$ ensembles from Belgium, Nevada, Utah and
+Chroma corpora:
+\begin{itemize}
+\item $3/7$ pass triple-check at $\mathrm{JB} < 1$ when $\beta \geq \beta_{\mathrm{conf}}$,
+$V \cdot m^3 \gg 1$, and $\tau_{\mathrm{int}}$ controlled (Belgium $\beta{=}2.70$,
+Nevada $\beta{=}2.50$ $24^4$, Chroma $\beta{=}6.0$ post-decorrelation).
+\item $1$ fails by violation of condition (ii) ($V$ too small: Utah $\beta{=}2.50$ $16^4$).
+\item $1$ fails by violation of condition (iii) (MC ergodicity: Utah $\beta{=}2.60$, JB grows with $n$).
+\item $2$ fail by violation of condition (i) (strong coupling: Belgium $\beta{=}2.30$,
+Utah $\beta{=}2.40$).
+\end{itemize}
+Every observed empirical outcome is accounted for by violation of exactly one hypothesis.
+Full data in companion document \cite{Remondiere2026WehrlV4}.
+
+% =============================================================================
 \section{Comparison with V1, V2; what V3 changes}\label{sec:v3-deltas}
 % =============================================================================
 

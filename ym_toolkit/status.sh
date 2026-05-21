@@ -1,5 +1,5 @@
 #!/bin/bash
-cd /home/remondiere/crossed-cosmos/ym_toolkit/
+cd "$(dirname "${BASH_SOURCE[0]:-$0}")"
 echo "=== YM Pipeline Status $(date +%H:%M) ==="
 echo ""
 echo "── Running processes ──"

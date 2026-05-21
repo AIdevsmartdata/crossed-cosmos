@@ -6,7 +6,9 @@
 **License**: CC-BY-4.0
 **Concept DOI**: [10.5281/zenodo.19686398](https://doi.org/10.5281/zenodo.19686398)
 
-Total active papers: **31** organized in three corpora.
+Total active papers: **32** organized in three corpora.
+
+**🆕 Latest (2026-05-21)** — `Paper_Mass_Gap_First_Principles_PRL/main.pdf` (4pp). First-principles closed-form for m²(J,P,C,ex,N)/σ₀ with K, F, ξ★ Lean-PROVED + two new rational constants η_∞ = 1/2 and c_η = -β/3 = -16/21 discovered from AT2021 cross-N fit. Zero free parameters at N→∞. Cross-N validation 78 channels SU(N) N∈{3,4,5,6,8}, mean 14% off (comparable to AT2021 systematics).
 
 ---
 

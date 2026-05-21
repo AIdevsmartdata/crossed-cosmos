@@ -1,4 +1,4 @@
-# crossed-cosmos — ECI v7.0.0.1 (2026-05-20)
+# crossed-cosmos — ECI v7.0.1.0 (2026-05-21)
 
 **ECI** = *Empirical Cross-Galois Identities* — arithmetic-geometric research repository (Bianchi 3-orbifolds, class field theory, Selberg trace formula, Dijkgraaf-Witten) with peripheral connections to Yang-Mills mass-gap phenomenology.
 
@@ -20,9 +20,25 @@
 [![License: CC BY 4.0](https://img.shields.io/badge/License-CC_BY_4.0-lightgrey.svg)](https://creativecommons.org/licenses/by/4.0/)
 [![ORCID](https://img.shields.io/badge/ORCID-0009--0008--2443--7166-a6ce39)](https://orcid.org/0009-0008-2443-7166)
 
-## ⭐ Headline results (v7.0.0.1)
+## ⭐ Headline results (v7.0.1.0 — 2026-05-21)
 
-**8 TIER 1 PROVED UNCONDITIONAL** + 4 PROVED-CONDITIONAL + 9 EMPIRICAL theorems :
+**🆕 First-Principles Mass Gap Formula** ([`Paper_Mass_Gap_First_Principles_PRL/main.pdf`](papers/Paper_Mass_Gap_First_Principles_PRL/main.pdf), 4pp PRL Letter draft) :
+
+```
+m²(J,P,C,ex,N)/σ₀ = (2π·e·ξ★) · (9/10)²(1+1/N²)² ·
+                     [ξ★·(J(J+1)/3 + 2·δ_{J=1}) + (16/7-P)·(ex+ξ★)] ·
+                     [1 + (1/2 − β/(3N²))·(1−C)/2]
+```
+
+with β = 16/7, ξ★ = 2/3, and δ_{J=1}=1 if J=1 else 0. Two new rational constants discovered :
+- **η_∞ = 1/2** (C-splitting universal large-N limit, fitted within 2.8%)
+- **c_η = -β/3 = -16/21** (1/N² correction coefficient, fitted within 0.2%)
+
+Zero free parameters in the N→∞ limit. Mean off cross-N : 14% on 78 channels SU(3-8) (excluding 2⁺⁻ ditorelon scattering states). Lean 4.29.1 formalization of K-uniqueness extended to 31 PROVED theorems (added `K_squared_eq_2pi_e_xi_star` + `K_unicity_via_2pi_e_xi_star`).
+
+---
+
+**Previous headline results (v7.0.0.1)** — **8 TIER 1 PROVED UNCONDITIONAL** + 4 PROVED-CONDITIONAL + 9 EMPIRICAL theorems :
 
 - **HSH r(D) = 2^{rk_2}** via Gauss 1801 genus theory (PARI 200-digit, 16+2 anchors)
 - **F(N) = (9/10)(N²+1)/N²** via Dijkgraaf-Witten genus expansion

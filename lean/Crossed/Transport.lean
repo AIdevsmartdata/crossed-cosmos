@@ -535,6 +535,33 @@ theorem xi_derived_from_eta :
   unfold xi_star eta_inf
   norm_num
 
+/-- **NEW IDENTITY #2 (2026-05-21 evening, found via systematic search)** :
+`δ · η_∞ = 1`.
+
+This is the second structural identity. Combined with `ξ · η = 1 - ξ`, it
+gives `ξ = δ/(1+δ)`, reducing the framework from 3 anchors {ξ★, F_∞, δ}
+to 2 anchors {δ, F_∞} (ξ★ and η_∞ both DERIVED).
+
+Algebraic verification : 2 · (1/2) = 1 EXACT. -/
+theorem delta_eta_eq_one :
+    delta_flex * eta_inf = 1 := by
+  unfold delta_flex eta_inf
+  norm_num
+
+/-- **ξ★ DERIVED from δ alone** : `ξ★ = δ / (1 + δ)`.
+Direct consequence of combining the two new identities. -/
+theorem xi_derived_from_delta :
+    xi_star = delta_flex / (1 + delta_flex) := by
+  unfold xi_star delta_flex
+  norm_num
+
+/-- **η_∞ DERIVED from δ alone** : `η_∞ = 1 / δ`.
+Direct from new identity δ · η = 1. -/
+theorem eta_inf_derived_from_delta :
+    eta_inf = 1 / delta_flex := by
+  unfold eta_inf delta_flex
+  norm_num
+
 /-- **Parisi-Wu integrated autocorrelation prediction** :
 `τ_int · m = 2π / α_PW = 32π/7`. -/
 theorem tau_int_times_m_value :

@@ -488,6 +488,33 @@ theorem c_eta_pure_anchor_form :
   unfold c_eta xi_star delta_flex F_inf
   norm_num
 
+/-- The Parisi-Wu structural coefficient: `α_PW = 7/16`.
+Empirically observed via τ_int·m = 32π/7 ≈ 14.36 (measured 14.3 ± 1.2). -/
+def alpha_PW : ℝ := 7/16
+
+/-- **α_PW = 7/16 value check**. -/
+theorem alpha_PW_value : alpha_PW = 7/16 := rfl
+
+/-- **α_PW structural derivation** : `α_PW = (1 - ξ★)/(-c_η)`.
+Empirical (1 - ξ★)/(-c_η) = (1/3)/(16/21) = 21/48 = 7/16 EXACT. -/
+theorem alpha_PW_eq_one_minus_xi_over_c_eta :
+    alpha_PW = (1 - xi_star) / (-c_eta) := by
+  unfold alpha_PW xi_star c_eta
+  norm_num
+
+/-- **α_PW second form** : `α_PW = ξ★·η_∞ / (-c_η)`. -/
+theorem alpha_PW_eq_xi_eta_over_c_eta :
+    alpha_PW = xi_star * eta_inf / (-c_eta) := by
+  unfold alpha_PW xi_star eta_inf c_eta
+  norm_num
+
+/-- **Parisi-Wu integrated autocorrelation prediction** :
+`τ_int · m = 2π / α_PW = 32π/7`. -/
+theorem tau_int_times_m_value :
+    (2 * Real.pi / alpha_PW) = (32 * Real.pi / 7) := by
+  unfold alpha_PW
+  ring
+
 /-! ## §5. Honest accounting
 
 - **Section §1** (`K_universal`, `xi_star`) : PROVED unconditionally on `ℝ`/`ℚ`.

@@ -1,6 +1,6 @@
 #!/bin/bash
 # YM ML Pipeline — PC gamer orchestrator
-cd /home/remondiere/crossed-cosmos/ym_toolkit/
+cd "$(dirname "${BASH_SOURCE[0]:-$0}")"
 mkdir -p logs results
 
 start_job() {

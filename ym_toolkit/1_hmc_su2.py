@@ -54,7 +54,7 @@ def metropolis_link(links, x, mu, beta, L, eps=0.3):
     U_new = su2_mult(R, U)
     
     # Action change
-    dS = -beta/2 * (su2_mult(U_new, stp)[0] - su2_mult(U, stp)[0])
+    dS = -beta * (su2_mult(U_new, stp)[0] - su2_mult(U, stp)[0])  # FIX 2026-05-21 : factor 2
     if dS < 0 or np.random.rand() < np.exp(-dS):
         links[tuple(x) + (mu,)] = U_new
         return 1

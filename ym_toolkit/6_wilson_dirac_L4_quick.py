@@ -119,7 +119,7 @@ for beta in [2.3, 2.5, 2.7]:
     DdD = (D.conj().T @ D).tocsr()
     print(f"  Matrix : {DdD.shape}, NNZ={DdD.nnz}")
     
-    eigs = eigsh(DdD, k=5, which='SM', tol=1e-3, maxiter=2000, return_eigenvectors=False)
+    DdD_dense = DdD.toarray().astype(complex); eigs_all = np.linalg.eigvalsh((DdD_dense + DdD_dense.conj().T)/2); eigs = np.sort(np.abs(eigs_all))[:5]
     eigs_abs = np.sqrt(np.abs(np.real(eigs)))
     eigs_sorted = np.sort(eigs_abs)
     

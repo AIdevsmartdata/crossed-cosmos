@@ -562,6 +562,16 @@ theorem eta_inf_derived_from_delta :
   unfold eta_inf delta_flex
   norm_num
 
+/-- **Spacetime dimension** : `D = 4` (physical input for D=4 Yang-Mills). -/
+def D_spacetime : ℕ := 4
+
+/-- **δ DERIVED from spacetime dimension** : `δ = D - 2`.
+For D=4 : δ = 2 (Lüscher-Weisz transverse mode count). -/
+theorem delta_eq_D_minus_2 :
+    delta_flex = (D_spacetime : ℝ) - 2 := by
+  unfold delta_flex D_spacetime
+  norm_num
+
 /-- **Reference gauge group integer** : `N₀ = 3` (for QCD-like normalization). -/
 def N0_ref : ℕ := 3
 

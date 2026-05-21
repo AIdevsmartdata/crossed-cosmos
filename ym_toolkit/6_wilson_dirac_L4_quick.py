@@ -10,8 +10,6 @@ from scipy.sparse.linalg import eigsh
 import sys, json, time, math
 sys.path.insert(0, '.')
 # Import HMC
-from importlib import import_module
-hmc = import_module('1_hmc_su2'.replace('1_', 'hmc_'))  # Not quite — just inline
 
 # Inline mini-HMC + Wilson-Dirac
 def su2_mult(u, v):

@@ -1,4 +1,4 @@
-# crossed-cosmos — ECI v7.0.1.0 (2026-05-21)
+# crossed-cosmos — ECI v7.0.2.0 (2026-05-21)
 
 **ECI** = *Empirical Cross-Galois Identities* — arithmetic-geometric research repository (Bianchi 3-orbifolds, class field theory, Selberg trace formula, Dijkgraaf-Witten) with peripheral connections to Yang-Mills mass-gap phenomenology.
 

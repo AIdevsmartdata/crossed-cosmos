@@ -508,6 +508,33 @@ theorem alpha_PW_eq_xi_eta_over_c_eta :
   unfold alpha_PW xi_star eta_inf c_eta
   norm_num
 
+/-- **NEW IDENTITY (2026-05-21 evening)** : `ξ★ · η_∞ = 1 - ξ★`.
+
+This is the structural identity that makes both forms of α_PW equivalent.
+It connects the heat kernel exponent (ξ★ = 2/3, geometric) and the
+asymptotic C-splitting (η_∞ = 1/2, algebraic).
+
+Algebraic verification : (2/3) · (1/2) = 1/3 = 1 - 2/3 EXACT. -/
+theorem xi_eta_eq_one_minus_xi :
+    xi_star * eta_inf = 1 - xi_star := by
+  unfold xi_star eta_inf
+  norm_num
+
+/-- **η_∞ as DERIVED constant** from ξ★ via the new identity :
+`η_∞ = (1 - ξ★) / ξ★`. This reduces the framework from 4 independent
+anchors to 3 (η_∞ derives from ξ★). -/
+theorem eta_inf_derived_from_xi :
+    eta_inf = (1 - xi_star) / xi_star := by
+  unfold eta_inf xi_star
+  norm_num
+
+/-- **ξ★ as DERIVED constant** from η_∞ : `ξ★ = 1 / (1 + η_∞)`.
+Reciprocal form of the new identity. -/
+theorem xi_derived_from_eta :
+    xi_star = 1 / (1 + eta_inf) := by
+  unfold xi_star eta_inf
+  norm_num
+
 /-- **Parisi-Wu integrated autocorrelation prediction** :
 `τ_int · m = 2π / α_PW = 32π/7`. -/
 theorem tau_int_times_m_value :

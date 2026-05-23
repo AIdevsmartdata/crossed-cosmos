@@ -10,3 +10,7 @@ import Crossed.G3MultiFactor
 import Crossed.GaussGenus
 import Crossed.LemmaA32Pipeline
 import Crossed.Hypotheses
+import Crossed.Pillar1Johnson
+import Crossed.Pillar2BCH
+import Crossed.KappaOneSixth
+import Crossed.TheoremCLattice

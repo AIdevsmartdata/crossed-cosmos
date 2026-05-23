@@ -506,7 +506,39 @@ directly compatible with the `induction k` proof of
 the same level `n` but for `k`-iterations starting one level up).
 
 It is the unique piece of analytic content we still need beyond the
-single-scale Bałaban bound. -/
+single-scale Bałaban bound.
+
+## A3 sketch correction (anti-misdirection, 2026-05-24)
+
+An informal sketch occasionally suggests the contraction factor here
+is `λ = e^{-c·β}` (a *strict* mixing-rate factor that becomes
+*stronger* as `β` grows). **That direction is wrong** for our setting.
+
+The actual contraction inside `pullback_contraction_iter` is the
+*data-processing inequality* for the Markov kernel `blockspin_pullback`:
+  `TV(K·x, K·y) ≤ TV(x, y)`
+for any Markov kernel `K`. This is a *non-strict* contraction (factor
+`≤ 1`, with equality possible). It is **independent of `β`** —
+the kernel `K = blockspin_pullback` only depends on the geometric
+2-to-1 block structure, not on the inverse coupling.
+
+The convergence of the iterated chain to a Cauchy sequence then comes
+from a *different* mechanism : the per-step error `ε_k = C'(β)/L_k^γ`
+itself decays geometrically (because `γ > 1` and `L_k = 2^k · L_0`),
+and the summable tail `Σ ε_k = O(L_n^{1-γ}) → 0` follows by
+`geometric_tail_constant` (the elementary `Σ_{j≥0} 2^{-j·(γ-1)}` for
+the dyadic AF trajectory).
+
+In particular, at large `β` the Markov kernel becomes *closer to the
+identity* (long mixing time, near-stationary block-spin step), not
+more strictly contractive. The convergence argument is robust to this
+because it does not require any strict mixing at all — only the
+data-processing inequality plus a summable error sequence.
+
+Reference for data-processing inequality : Cover & Thomas 2006,
+*Elements of Information Theory*, Thm 2.8.1 (and TV version standard
+in Levin-Peres-Wilmer 2009, *Markov Chains and Mixing Times*, §4).
+-/
 axiom pullback_contraction_iter
     (D N L_0 : ℕ) (_hL : 0 < L_0) (β : ℝ) (hβ : 10 ≤ β)
     (μ : AFTrajectory D N L_0) (n k : ℕ) :

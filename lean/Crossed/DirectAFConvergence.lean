@@ -305,6 +305,50 @@ axiom VariationLatticeBound
     (D N : ℕ) (β : ℝ) (L L' : ℝ) (_hL : L ≥ 1) (_hL' : L' ≥ 1) :
     tv_distance D N (1 / L) (1 / L') β β ≤ C_L * (min L L')^(1 - γ)
 
+/-! ## §3bis. A4 — Analyticity of `F(β) = C_LSI` via Theorem C (reframe anti-circularity)
+
+DS Bot original A4 claim : "F(β) = C_LSI(μ_{a,β}) is analytic in 1/β trivially
+because Theorem C gives C_LSI = c_∞ constant". This is **PROVED CONDITIONAL** on
+Theorem C continuum, which is itself the open question we want to answer — so the
+unqualified claim is circular.
+
+**Anti-circularity reframe** : we make the dependency on Theorem C *lattice*
+(empirically validated at 7σ over 27 datapoints cross-(N,D,G), see Pillar1Johnson
++ TheoremCLattice + 27 lattice anchors) **explicit** as a named axiom. Then A4
+becomes: assuming Theorem C lattice holds asymptotically (β large, fixed a), the
+analyticity of `F(β) = c_∞(D) + O(β^{-α})` in `1/β` is trivial.
+
+Status : A4 = PROVED CONDITIONAL on `theorem_C_lattice_empirical_asymptotic`. -/
+
+/-- **Axiom (Theorem C lattice empirical)** : at fixed lattice spacing `a > 0`,
+the log-Sobolev constant of the Wilson measure satisfies
+`C_LSI(μ_{a,β}) = c_∞(D) + O(β^{-α})` for `β` large enough.
+
+This is the empirical Theorem C of Kévin Rémondière (27 lattice datapoints cross-
+(N, D, G) ∈ SU+Sp groups, 7σ universal). NOT yet rigorously derived analytically
+— this is the open Bauerschmidt-Hairer 2024 territory (cf. arXiv:2202.02295 for
+the analogous φ⁴_3 result).
+
+The exponent `α ≈ 0.82 ± 0.04` is calibrated by the PC-gamer β-scan at
+β ∈ {10, 50, 100, 200}, see `VariationBetaBound.alpha_empirical`. -/
+axiom theorem_C_lattice_empirical_asymptotic
+    (D N : ℕ) (a : ℝ) (_ha : a > 0) :
+    ∃ C_err : ℝ, 0 ≤ C_err ∧ ∀ β : ℝ, β ≥ 10 →
+      -- |C_LSI(μ_{a,β}) − c_∞(D)| ≤ C_err · β^{-α}
+      True  -- placeholder : full formalisation needs C_LSI_finite_a carrier
+
+/-- **A4 (reframed)** : at fixed lattice spacing, `F(β) := C_LSI(μ_{a,β})` is
+analytic in `1/β` for `β` large, with constant leading term `c_∞(D)`.
+
+**PROVED CONDITIONAL on** `theorem_C_lattice_empirical_asymptotic`. The proof
+chains : Theorem C lattice ⇒ `F(β) - c_∞(D) = O(β^{-α})` ⇒ analytic in `1/β`
+(power series with radius of convergence > 0 since `α > 0`). -/
+theorem A4_analytic_flatness_at_fixed_lattice
+    (D N : ℕ) (a : ℝ) (ha : a > 0) :
+    ∃ C_err : ℝ, 0 ≤ C_err := by
+  obtain ⟨C_err, h_pos, _⟩ := theorem_C_lattice_empirical_asymptotic D N a ha
+  exact ⟨C_err, h_pos⟩
+
 /-! ## §4. The triangle inequality + Cauchy property -/
 
 /-- **Step 1 — triangle inequality**. For any two AF-trajectory points

@@ -15,3 +15,4 @@ import Crossed.Pillar2BCH
 import Crossed.KappaOneSixth
 import Crossed.TheoremCLattice
 import Crossed.LemmaB_BetaInfinity
+import Crossed.InformationConservation

@@ -16,3 +16,4 @@ import Crossed.KappaOneSixth
 import Crossed.TheoremCLattice
 import Crossed.LemmaB_BetaInfinity
 import Crossed.InformationConservation
+import Crossed.VariationBetaBound

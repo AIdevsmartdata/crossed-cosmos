@@ -14,3 +14,4 @@ import Crossed.Pillar1Johnson
 import Crossed.Pillar2BCH
 import Crossed.KappaOneSixth
 import Crossed.TheoremCLattice
+import Crossed.LemmaB_BetaInfinity

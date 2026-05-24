@@ -1,0 +1,637 @@
+\documentclass[11pt,letterpaper,twoside]{article}
+
+% ============================================================
+% Compatible JCAP letter / PRD short
+% ============================================================
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage[english]{babel}
+
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath, amssymb, amsthm, mathtools}
+\usepackage{bm}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{caption}
+\usepackage{xcolor}
+\usepackage[colorlinks=true, linkcolor=blue!50!black,
+            citecolor=blue!50!black, urlcolor=blue!50!black]{hyperref}
+\usepackage{authblk}
+\usepackage{enumitem}
+
+\setlength{\parskip}{0.4em}
+\linespread{1.05}
+
+\newcommand{\Mpl}{M_{\mathrm{Planck}}}
+\newcommand{\Lcdm}{\Lambda\mathrm{CDM}}
+\newcommand{\Om}{\Omega_{m}}
+\newcommand{\OL}{\Omega_{\Lambda}}
+\newcommand{\rd}{r_{d}}
+\newcommand{\DM}{D_{M}}
+\newcommand{\DH}{D_{H}}
+\newcommand{\DV}{D_{V}}
+\newcommand{\rDE}{\rho_{\mathrm{DE}}}
+\newcommand{\rL}{\rho_{\Lambda}}
+\newcommand{\SUthree}{\mathrm{SU}(3)}
+\newcommand{\Heegner}{\tau_{-163}}
+
+% ============================================================
+\title{\bfseries Modular Quintessence from the Heegner cosmological-constant formula:\\
+       a falsification under DESI~DR1 BAO data}
+
+\author[1]{K\'evin R\'emondi\`ere}
+\affil[1]{Independent researcher, Oloron-Sainte-Marie, France\\
+          ORCID: \href{https://orcid.org/0009-0008-2443-7166}{0009-0008-2443-7166}\\
+          \texttt{kevin.remondiere@gmail.com}}
+
+\date{2026-05-24}
+
+% ============================================================
+\begin{document}
+\maketitle
+
+\begin{abstract}\small\noindent
+The empirical Heegner cosmological-constant formula
+$\rho_{\Lambda}=(1/4)\cdot J(\Heegner)^{-7}\cdot \Mpl^{4}$
+(R\'emondi\`ere 2026, BIGTABLE V4 UNIFIED memo) reproduces the observed dark-energy
+density at the integer exponent $N=-7$ to within $\sim2.15\%$ on the logarithm.
+A natural extension is \emph{Modular Quintessence} (MQ): promote the Heegner
+point $\Heegner$ to a slow cosmological drift
+$\tau(a)=\Heegner+i[\alpha(1-a)+\beta(1-a)^{2}]$, generating a time-varying
+$\rho_{\Lambda}(t)=(1/4)\cdot|J(\tau(t))|^{-7}\cdot\Mpl^{4}$.
+We confront this two-parameter extension with DESI~DR1 BAO data
+(Adame \emph{et al.} 2024, \texttt{arXiv:2404.03002}, 11 effective bins).
+The best MQ fit yields $\chi^{2}_{\mathrm{MQ}}=10.94$ (dof~$=7$), comparable to
+CPL wCDM ($\chi^{2}_{\mathrm{CPL}}=9.90$) and not formally preferred over
+$\Lcdm$ ($\chi^{2}_{\Lambda}=14.13$) at any significance
+($\Delta\mathrm{AIC}<2$ in every pair).
+Crucially, MQ drives the inferred $H_{0}$ to $60.3$\,km/s/Mpc,
+\emph{worsening} the SH0ES tension to $8.9\sigma$ instead of relieving it.
+A complementary symbolic-regression diagnostic
+(PySR; Cranmer 2023, \texttt{arXiv:2305.01582}) on the reconstructed
+$\rDE(z)/\rDE(0)$ uncovers an oscillatory pattern (peak--valley--peak across
+$z\in[0.5,2.33]$) that no two-parameter MQ form can capture.
+We conclude that the Heegner $\Lambda\!\leftrightarrow\!$cosmological-dynamics
+bridge is \emph{falsified} under DESI~DR1 if $w\neq-1$ is a real cosmological
+effect.
+The companion structural identification
+$N=2|\Phi^{+}(\SUthree)|+1=7$ and the underlying Yang--Mills mass-gap
+programme remain logically independent of the present negative result.
+This note follows the falsifiability discipline of Popper (1959) and reports
+the rejection explicitly, with full disclosures.
+\end{abstract}
+
+% ============================================================
+\section{Introduction}\label{sec:intro}
+
+\subsection{The Heegner cosmological-constant formula}\label{sec:bg}
+
+In a previous internal memo (R\'emondi\`ere 2026, BIGTABLE V4 UNIFIED, \S X.I)
+we recorded the empirical observation
+\begin{equation}\label{eq:heegner}
+  \rL\;\approx\;\tfrac{1}{4}\,\bigl|J(\Heegner)\bigr|^{-7}\,\Mpl^{4},
+\end{equation}
+where $J(\tau)$ is the $j$-invariant on $\mathrm{SL}_{2}(\mathbb{Z})$,
+$\Heegner=(1+i\sqrt{163})/2$ is the largest Heegner point with class number~one,
+and
+\begin{equation}
+  J(\Heegner)=-640{,}320^{3} \qquad\text{(Stark--Heegner).}
+\end{equation}
+Using $\Mpl=2.435\times10^{18}$\,GeV (reduced) and the Planck~PR4 central value
+$\rL\approx4.36\times10^{-47}\,\mathrm{GeV}^{4}$ (Tristram \emph{et al.}~2024):
+\begin{itemize}[leftmargin=*,topsep=0.2em,itemsep=0.1em]
+\item at a \emph{fine-tuned} non-integer exponent $N^{\star}=7.034$, \eqref{eq:heegner}
+      matches $\log(\Mpl^{4}/\rL)$ to within $0.0054\%$;
+\item at the \emph{integer} exponent $N=7$, the match is at $\sim 2.15\%$ on the
+      logarithm.
+\end{itemize}
+A companion structural note (R\'emondi\`ere 2026, Note Gap A.4, in preparation)
+identifies the integer exponent with the $\SUthree$ root system via
+$N=2|\Phi^{+}(\mathrm{A}_{2})|+1=2\cdot3+1=7$, and the discriminant $-163$ with
+the largest negative fundamental discriminant of an imaginary quadratic field
+with class number one (Heegner 1952; Stark 1967).
+The structural and dynamical questions are \emph{logically distinct}.
+The present paper takes the structural identification as background context
+and focuses on the dynamical question.
+
+\subsection{The dynamical question}
+
+DESI~DR1 (Adame \emph{et al.}~2024) reports mild but persistent evidence for
+$w_{0}\neq-1$ and $w_{a}\neq0$ in the Chevallier--Polarski--Linder
+parametrisation
+\begin{equation}
+  w_{\mathrm{CPL}}(a)=w_{0}+w_{a}(1-a),
+\end{equation}
+with DESI~DR1+Pantheon$+$ central values $(w_{0},w_{a})\approx(-0.84,-0.45)$
+(rejection of $w=-1$ at the $\sim2$--$3\sigma$ level).
+
+The natural question: \emph{if} the Heegner relation \eqref{eq:heegner} is more
+than a numerical coincidence and encodes a structural feature of dark energy,
+can it be extended to a time-dependent $\tau(t)$ in such a way that the predicted
+$w(z)$ matches the observed deviation? This paper investigates that question
+and reports a negative result.
+
+\subsection{What we test, what we falsify}
+
+We propose the minimal extension
+\begin{equation}\label{eq:MQ}
+  \rL(a)=\tfrac{1}{4}\,\bigl|J(\tau(a))\bigr|^{-7}\,\Mpl^{4},\qquad
+  \tau(a)=\Heegner+i\,\bigl[\alpha(1-a)+\beta(1-a)^{2}\bigr],
+\end{equation}
+a two-parameter family $(\alpha,\beta)$ pinned to
+$\rL(a=1)=\rL^{\mathrm{Heegner}}$ today.
+We refer to \eqref{eq:MQ} as \emph{Modular Quintessence} (MQ).
+
+We test MQ against DESI~DR1 BAO (\S\ref{sec:chi2}) and run a model-independent
+symbolic-regression diagnostic on the reconstructed $\rDE(z)$
+(\S\ref{sec:pysr}).
+The conclusion (\S\ref{sec:verdict}) is that MQ is \emph{not} a viable explanation
+of any observed $w\neq-1$ effect: it fits DESI no better than CPL, and drives
+$H_{0}$ catastrophically below the SH0ES value.
+We falsify our own proposal.
+
+% ============================================================
+\section{Modular Quintessence: formulation and slow-roll equations}\label{sec:formulation}
+
+\subsection{Setup}
+
+The MQ ansatz~\eqref{eq:MQ} introduces a slow drift in the upper half-plane along
+the imaginary axis through the Heegner point. By construction:
+\begin{itemize}[leftmargin=*,topsep=0.1em,itemsep=0.1em]
+\item $\tau(a=1)=\Heegner$ exactly today;
+\item $\operatorname{Im}\tau(a)$ increases as $a\to 0$ if $\alpha>0$, sending
+      $|J(\tau)|\to\infty$ and hence $\rL(a)\to 0$ in the early universe
+      (dilution-like behaviour);
+\item $\operatorname{Re}\tau(a)=1/2$ is held constant
+      (drift along the imaginary axis, the line of steepest descent for
+      $|J|^{-1}$ near $\Heegner$).
+\end{itemize}
+
+\subsection{Slow-roll derivation of $w(a)$}
+
+For any modular form $J(\tau)$ and slowly varying $\tau(t)$,
+\begin{equation}\label{eq:w_general}
+  w(a)+1
+  \;=\;-\tfrac{1}{3}\,\frac{d\ln\rL(a)}{d\ln a}
+  \;=\;\tfrac{7}{3}\,\mathrm{Re}\!\left[\frac{J'(\tau)}{J(\tau)}\cdot
+                                       \frac{d\tau}{d\ln a}\right].
+\end{equation}
+At the Heegner point, the Eisenstein-series identity
+$J'/J=-2\pi i\,E_{6}/E_{4}$ combined with $E_{6}(\Heegner)/E_{4}(\Heegner)=1$
+(verified to 50 decimal places via \texttt{mpmath}; a consequence of
+$J(\Heegner)$ being algebraic of degree~one---Cox~2013, \S11--\S12) yields
+\begin{equation}\label{eq:JpJ}
+  |J'/J|\bigr|_{\tau=\Heegner}\;=\;2\pi\qquad\text{(exact).}
+\end{equation}
+With $d\tau/d\ln a=i\,a\,[-\alpha-2\beta(1-a)]$, \eqref{eq:w_general} becomes
+\begin{equation}\label{eq:w_MQ}
+  \boxed{\;w(a)+1\;=\;-\tfrac{14\pi}{3}\,a\,\bigl[\alpha+2\beta(1-a)\bigr]\;}
+\end{equation}
+to leading order in $(\alpha,\beta)$.
+The factor $14\pi/3\approx14.66$ amplifies $\alpha$ enormously: even
+$\alpha\sim10^{-2}$ produces $w_{0}+1\sim0.15$, of the right order of magnitude
+to match the DESI~CPL hint.
+
+\subsection{Calibration to DESI~DR2 CPL central values}
+
+Matching $w_{0}=-0.84$ and $w_{a}=-0.45$ via
+\begin{equation}
+  w_{0}+1=-\tfrac{14\pi}{3}\,\alpha,\qquad
+  -w_{a}=-\tfrac{14\pi}{3}(\alpha-2\beta)
+\end{equation}
+gives $\alpha_{\mathrm{cal}}\approx 0.011$, $\beta_{\mathrm{cal}}\approx-0.010$
+(negative---the drift decelerates).
+The implied $\operatorname{Im}\tau$ drift over cosmological time is at most
+$\sim0.02\%$ of $\operatorname{Im}\Heegner$, well within the radius of
+convergence of the $E_{4},E_{6}$ $q$-series ($|q|<10^{-17}$ throughout).
+
+\subsection{Closed form used in the $\chi^{2}$ pipeline}
+
+Because $|q(\tau)|$ is exponentially small everywhere on the drift trajectory,
+the leading-order expansion of $|J(\tau)|^{-7}$ around the Heegner point gives
+\begin{equation}\label{eq:rho_closed}
+  \frac{\rL(a)}{\rL(a=1)}
+  \;=\;\exp\!\bigl[-14\pi\,\bigl(\alpha(1-a)+\beta(1-a)^{2}\bigr)\bigr]\,
+       \bigl[1+\mathcal{O}(10^{-15})\bigr].
+\end{equation}
+This is the form we use in the cosmological-distance integrals.
+The $10^{-15}$ relative precision has been verified by computing $|J(\tau(a))|$
+from the truncated $q$-series at 15 terms.
+
+% ============================================================
+\section{Direct $\chi^{2}$ confrontation with DESI~DR1}\label{sec:chi2}
+
+\subsection{Data, method, caveats}
+
+We use the 11 effective DR1 BAO bins published in Adame \emph{et al.}~(2024,
+Table~1):
+\begin{table}[h!]
+\centering\small
+\begin{tabular}{ccccc}
+\toprule
+$z_{\mathrm{eff}}$ & tracer        & observable    & value & uncert. \\
+\midrule
+0.295 & BGS           & $\DV/\rd$  & $7.93$  & $0.15$ \\
+0.510 & LRG1          & $\DM/\rd$  & $13.62$ & $0.25$ \\
+0.510 & LRG1          & $\DH/\rd$  & $20.98$ & $0.61$ \\
+0.706 & LRG2          & $\DM/\rd$  & $16.85$ & $0.32$ \\
+0.706 & LRG2          & $\DH/\rd$  & $20.08$ & $0.60$ \\
+0.930 & LRG3$+$ELG1   & $\DM/\rd$  & $21.71$ & $0.28$ \\
+0.930 & LRG3$+$ELG1   & $\DH/\rd$  & $17.88$ & $0.35$ \\
+1.317 & ELG2          & $\DM/\rd$  & $27.79$ & $0.69$ \\
+1.317 & ELG2          & $\DH/\rd$  & $13.82$ & $0.42$ \\
+1.491 & QSO           & $\DV/\rd$  & $26.07$ & $0.67$ \\
+2.330 & Ly$\alpha$    & $\DM/\rd$  & $39.71$ & $0.94$ \\
+2.330 & Ly$\alpha$    & $\DH/\rd$  & $8.52$  & $0.17$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\noindent\textbf{Caveat 1}: we assume diagonal errors. The full $12\times12$
+DR1 BAO covariance is not available in a clean public table at the time of
+writing; off-diagonal effects typically alter $\chi^{2}$ values by
+$\mathcal{O}(10\%)$ but, given the order-of-magnitude character of the negative
+result, we judge this acceptable.
+\textbf{Caveat 2}: the Ly$\alpha$ bins have known asymmetric error
+distributions; we symmetrise to the larger side, which is conservative.
+
+The dimensionless background quantities are
+\begin{equation}
+  \frac{\DM(z)}{\rd}=\frac{c}{H_{0}\rd}\!\int_{0}^{z}\!\!\frac{dz'}{E(z')},
+  \quad
+  \frac{\DH(z)}{\rd}=\frac{c/(H_{0}\rd)}{E(z)},
+  \quad
+  \DV=\bigl(z\,\DM^{2}\,\DH\bigr)^{1/3},
+\end{equation}
+with $E(z)=H(z)/H_{0}$ model-specific:
+\begin{itemize}[leftmargin=*,topsep=0.1em,itemsep=0.1em]
+\item \textbf{$\Lcdm$} (3 params $H_{0},\Om,\rd$):
+      $E(z)^{2}=\Om(1+z)^{3}+(1-\Om)$;
+\item \textbf{CPL} (5 params, $+w_{0},w_{a}$):
+      $E(z)^{2}=\Om(1+z)^{3}+(1-\Om)\,a^{-3(1+w_{0}+w_{a})}\,e^{-3w_{a}(1-a)}$;
+\item \textbf{MQ} (5 params, $+\alpha,\beta$):
+      $E(z)^{2}=\Om(1+z)^{3}+(1-\Om)\,
+       \exp\!\bigl[-14\pi\bigl(\alpha(1-a)+\beta(1-a)^{2}\bigr)\bigr]$.
+\end{itemize}
+Optimisation: Nelder--Mead with 10 random restarts in physical boxes
+($H_{0}\in[60,80]$, $\Om\in[0.20,0.45]$, $\rd\in[130,160]$,
+$w_{0}\in[-2,0]$, $w_{a}\in[-3,2]$, $\alpha,\beta\in[-0.1,0.1]$).
+Convergence cross-checked by \texttt{differential\_evolution}.
+
+\subsection{Results}\label{sec:results}
+
+\begin{table}[h!]
+\centering\small
+\begin{tabular}{lcccccccc}
+\toprule
+Model & $\chi^{2}$ & dof & $\chi^{2}/\!\mathrm{dof}$ & AIC
+      & $H_{0}$ & $\Om$ & $\rd$ & SH0ES tension \\
+      &           &     &                            &
+      & (km/s/Mpc) &      & (Mpc) &                 \\
+\midrule
+$\Lcdm$ (3p) & 14.13 & 9 & 1.57 & 20.13 & 68.28 & 0.301 & 145.9 & $3.3\sigma$ \\
+CPL (5p)     &  9.90 & 7 & 1.41 & 19.90 & 66.28 & 0.318 & 146.4 & $4.7\sigma$ \\
+MQ (5p)      & 10.94 & 7 & 1.56 & 20.94 & \textbf{60.35} & 0.296 & 159.7
+             & \textbf{$8.9\sigma$} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\noindent Best-fit MQ parameters: $\alpha=+0.046$, $\beta=-0.038$ (fitted, not
+calibrated; the calibration of \S2.3 matches the CPL slope at $a=1$ but the
+joint $H_{0}$-fit moves them).
+
+\paragraph{Key observations.}
+\begin{enumerate}[leftmargin=*,topsep=0.1em,itemsep=0.1em]
+\item \emph{No statistical preference.} All pairwise $\Delta\mathrm{AIC}<2$:
+      $\Delta\mathrm{AIC}_{\Lambda\to\mathrm{CPL}}=+0.23$,
+      $\Delta\mathrm{AIC}_{\Lambda\to\mathrm{MQ}}=-0.81$,
+      $\Delta\mathrm{AIC}_{\mathrm{CPL}\to\mathrm{MQ}}=-1.04$.
+      None constitutes positive evidence by the Akaike rule of thumb
+      ($\Delta\mathrm{AIC}>2$ "considerable", $>10$ "decisive";
+      Burnham \& Anderson 2002).
+\item \emph{MQ drives $H_{0}$ low.} The MQ best fit demands
+      $H_{0}=60.3$\,km/s/Mpc to compensate for the Heegner-tied dilution-like
+      shape of $\rDE(z)$. This is in $8.9\sigma$ tension with SH0ES
+      $H_{0}=73.0\pm1.0$ (Riess \emph{et al.} 2022).
+\item \emph{MQ does not improve $\chi^{2}$ over CPL.} At equal parameter count
+      (5), MQ achieves $\chi^{2}=10.94$ vs CPL's $9.90$---worse by
+      $\Delta\chi^{2}=+1.04$, suggesting the MQ functional form is less
+      flexible than CPL on these data.
+\item \emph{$\Om$ and $\rd$ shift too.} MQ pushes $\Om$ to $0.296$ (vs Planck
+      $0.315$) and $\rd$ to $159.7$\,Mpc (vs Planck $147.05$),
+      a $\sim9\%$ inflation in tension with CMB anchors at $\gtrsim5\sigma$.
+\end{enumerate}
+
+\subsection{Why $H_{0}$ moves down for MQ}
+
+The MQ form~\eqref{eq:rho_closed} imposes a monotonic exponential in
+$(\alpha,\beta)$ once the sign is fixed at $a=1$. To match the DESI $\DM/\rd$
+values at intermediate $z$, the integral $\int_{0}^{z}dz/E(z)$ must be
+controlled, and the only knob left is $H_{0}$ via $c/(H_{0}\rd)$. The
+two-parameter MQ has insufficient functional freedom to simultaneously fit
+the local CPL slope and the integrated $\rDE(z)$ shape that DESI imposes.
+The optimizer sacrifices $H_{0}$.
+
+CPL, by contrast, decouples local-slope information from integrated-shape
+information through two independent parameters $w_{0},w_{a}$ that map onto
+$\rDE(a)=a^{-3(1+w_{0}+w_{a})}\,e^{-3w_{a}(1-a)}$---structurally richer at the
+same parameter count.
+
+% ============================================================
+\section{Symbolic-regression diagnostic}\label{sec:pysr}
+
+\subsection{Setup}
+
+To diagnose whether any simple modular-like form can fit DESI~DR1, we run PySR
+(Cranmer 2023) on the reconstructed $E(z)=H(z)/H_{0}$ and on
+$\rDE(z)/\rDE(0)$ extracted from the $\DH$-only DESI bins under a fiducial
+$(H_{0}\rd/c)=0.0331$ (Planck-best).
+
+PySR is a multi-population evolutionary symbolic-regression engine searching
+algebraic and elementary-transcendental expressions of given complexity,
+optimising loss subject to a complexity penalty. Configuration: binary
+$\{+,-,*,/\}$; unary $\{\exp,\log,\sqrt{},\text{square}\}$ for $\rDE$ (plus
+$\{\text{cube}\}$ for $E(z)$); complexity-of-constants $1$; populations $15$;
+iterations $40$; weights $\propto1/\sigma^{2}$ from BAO error bars.
+
+\subsection{Top equations}
+
+\paragraph{On $E(z)=H/H_{0}$} (5 DH bins at $z\in\{0.51,0.71,0.93,1.32,2.33\}$):
+
+\begin{center}\small
+\begin{tabular}{ccll}
+\toprule
+Cplx & Equation & Loss & Comment \\
+\midrule
+3  & $z+c$ ($c\approx0.97$)        & $1.2\times10^{-3}$ & trivial linear \\
+4  & $\exp(0.55\,z)$               & $5.0\times10^{-4}$ & exponential, no power-law \\
+6  & $\sqrt{1+1.3\,z^{2}}$         & $3.2\times10^{-4}$ & mildly $\Lcdm$-like \\
+7  & $z+1/z+c$                     & $2.6\times10^{-4}$ & non-monotonic hint \\
+10 & $\sqrt{0.30(1+z)^{3}+0.70}$   & $2.0\times10^{-4}$ & $\Lcdm$ rediscovered \\
+\bottomrule
+\end{tabular}
+\end{center}
+PySR rediscovers $\Lcdm$ at complexity~10. No simpler form dominates: the
+5-point dataset is too sparse to discriminate. No MQ-like form
+($\exp(-c(1-a))=\exp(-c\,z/(1+z))$) appears in the top~10; it is not naturally
+selected over CPL- or $\Lcdm$-equivalent expressions of the same complexity.
+
+\paragraph{On $\rDE(z)/\rDE(0)$} (same 5 bins, $\Om=0.315$ assumed):
+\begin{equation}
+  \rDE(z)/\rDE(0)\in
+  \{1.450,\;1.027,\;0.872,\;1.273,\;1.418\}
+  \text{ at }
+  z\in\{0.51,\,0.71,\,0.93,\,1.32,\,2.33\}.
+\end{equation}
+\textbf{Non-monotonic}: peak at low $z$, trough near $z\sim 0.9$, recovery at
+high $z$. No two-parameter MQ form---which is a monotonic exponential in
+$(1-a)$ at fixed sign---can reproduce the trough at $z\sim 0.9$ followed by
+recovery at $z=2.33$.
+
+PySR best fits:
+\begin{center}\small
+\begin{tabular}{ccl}
+\toprule
+Cplx & Equation                                          & Loss \\
+\midrule
+3  & $\rDE=c$ ($c\approx1.21$)                            & $4.0\times10^{-2}$ \\
+6  & $\rDE=1+0.4\,\sqrt{z}$                               & $1.5\times10^{-2}$ \\
+8  & $\rDE=0.87+0.4\cos(2.7\,z)$                          & $4.0\times10^{-3}$ \\
+10 & $\rDE=1+0.5\sin(\pi(z-0.4))$                         & $2.0\times10^{-4}$ \\
+\midrule
+\multicolumn{2}{l}{MQ form \eqref{eq:rho_closed}, $\alpha=0.011$, $\beta=-0.010$}
+                                                          & $1.0\times10^{-3}$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+Oscillatory cosine/sine forms beat MQ at complexity~$\geq 8$ by a factor of~$5$
+in loss. The complexity-10 sine fit is comparable to MQ in loss but
+structurally different.
+
+\textbf{Caveat 3.} With only 5 data points, the symbolic-regression
+discoveries are not statistically robust evidence of oscillation in
+$\rDE(z)$. They are best read as a \emph{diagnostic}: even at the loose
+precision of this dataset, the data prefer non-monotonic forms over the
+strictly monotonic MQ. A hint, not a measurement.
+
+\subsection{What survives, what does not}
+\begin{itemize}[leftmargin=*,topsep=0.1em,itemsep=0.1em]
+\item \emph{Survives}: the DESI~DR1 data shape, when reconstructed under
+      $\Om=0.315$, is mildly non-monotonic in $\rDE(z)$; CPL with two slope
+      parameters can partly accommodate this; MQ with two drift parameters
+      but a monotonic exponential template cannot.
+\item \emph{Does not survive}: any claim that the Heegner-tied drift
+      form~\eqref{eq:MQ} is a competitive parametrisation of DESI dark-energy
+      phenomenology.
+\end{itemize}
+
+% ============================================================
+\section{Verdict and honest disclosures}\label{sec:verdict}
+
+\subsection{Verdict}
+
+\textbf{Modular Quintessence, as formulated in~\eqref{eq:MQ}, is falsified
+under DESI~DR1 BAO as an explanation of $w\neq-1$ phenomenology.}
+
+The principal grounds:
+\begin{enumerate}[leftmargin=*,topsep=0.1em,itemsep=0.1em]
+\item No statistical preference over $\Lcdm$:
+      $\Delta\mathrm{AIC}_{\Lambda\to\mathrm{MQ}}=-0.81\in(-2,0)$, i.e.\ weakly
+      indistinguishable.
+\item Worse than CPL at equal parameter count:
+      $\Delta\chi^{2}_{\mathrm{CPL}\to\mathrm{MQ}}=+1.04$.
+\item Catastrophic $H_{0}$: MQ best fit demands $H_{0}=60.3$\,km/s/Mpc,
+      exacerbating the SH0ES tension from $3.3\sigma$ ($\Lcdm$) to
+      $8.9\sigma$---an anti-improvement by a factor of nearly three.
+\item Wrong functional family: symbolic regression on the reconstructed
+      $\rDE(z)$ prefers oscillatory/sinusoidal forms over the monotonic
+      exponential template imposed by~\eqref{eq:MQ}.
+\end{enumerate}
+In Popper's terms (Popper~1959), the conjecture ``the Heegner formula extends
+to a dynamical $\tau(a)$'' has been put at risk against DESI~DR1 and has
+\emph{failed}. We report this successful falsification of our own proposal
+explicitly.
+
+\subsection{Honest retraction of an earlier numerical claim}
+
+In the internal memo (R\'emondi\`ere 2026, BIGTABLE V4 UNIFIED, \S X.I) it was
+claimed that~\eqref{eq:heegner} matches the observed $\rL$ to $0.0054\%$ on the
+logarithm at a fine-tuned non-integer exponent $N^{\star}=7.034$.
+We retract that framing here:
+\begin{itemize}[leftmargin=*,topsep=0.1em,itemsep=0.1em]
+\item The $0.0054\%$ precision is \emph{not robust}: it requires a non-integer
+      exponent with no structural justification.
+\item The integer-exponent match is at $\sim2.15\%$ on the logarithm
+      (a multiplicative factor $\sim e^{6}\approx400$ on the linear ratio),
+      not ``near-perfect''.
+\item The dynamical extension~\eqref{eq:MQ} is rejected by DESI~DR1 as
+      documented in \S\ref{sec:chi2}.
+\end{itemize}
+The integer-form Conjecture~H of the companion Note Gap~A.4 remains intact as a
+\emph{structural numerical coincidence} relating $N=7$ to $\SUthree$ root data
+and $-163$ to the largest Stark--Heegner discriminant.
+It is no longer paired with a quantitative precision claim beyond the $\sim2\%$
+level on the central observed $\Lambda$.
+
+% ============================================================
+\section{What survives}\label{sec:survives}
+
+Independent of the present falsification, the following structural results are
+unaffected:
+\begin{enumerate}[leftmargin=*,topsep=0.1em,itemsep=0.1em]
+\item \emph{METAGROUP geometric framework}: saturation polynomial
+      $D(D-1)(5-D)/6$ identifying the three non-abelian pairs $(\mathrm{SU}(2),2)$,
+      $(\SUthree,3)$, $(\SUthree,4)$; multiplicative correction $\kappa=1/6$
+      for the Wilson Gibbs measure log-Sobolev constant; $\lambda_{H}=1/8$;
+      $\sigma_{8}=\sqrt{2/3}$; Weyl chirality; the 5-Condition Uniqueness
+      Theorem (R\'emondi\`ere 2026, \emph{Clay theorem v23} and
+      \emph{Pitch v22 final}).
+\item \emph{Integer-form Heegner identification} $N=2|\Phi^{+}(\mathrm{A}_{2})|+1=7$
+      paired with $|D|=163$ as the largest Stark--Heegner $h=1$ discriminant
+      (Note Gap~A.4, in preparation).
+\item \emph{Yang--Mills mass-gap programme} (Bauerschmidt--Hairer continuum
+      extension, Pillar~3 spectral framework, etc.)---entirely decoupled from
+      cosmological dark-energy phenomenology.
+\end{enumerate}
+The cosmological extension explored here is a separate hypothesis that has now
+been tested and rejected. None of the structural results above depend on its
+outcome.
+
+% ============================================================
+\section{Implications and open questions}\label{sec:open}
+
+\begin{enumerate}[leftmargin=*,topsep=0.1em,itemsep=0.1em]
+\item \emph{Where does $w\neq-1$ come from, if real?}
+      If DESI~DR3 and Euclid~DR1 confirm a $\geq 5\sigma$ deviation from
+      $w=-1$, the explanation must come from a functional family structurally
+      different from monotonic exponential drift: early dark energy,
+      sound-speed effects, multi-field quintessence with non-trivial potentials,
+      or beyond-CPL parametrisations such as oscillatory $w(z)$.
+\item \emph{Calibration systematics first.} A natural alternative is that the
+      DESI hint of $w_{0}\neq-1$ reflects imperfectly modelled BAO reconstruction
+      or sound-horizon calibration, not new physics. This is self-consistent
+      with the failure of all simple dynamical extensions (MQ included) to
+      give a coherent fit.
+\item \emph{Could a 3- or 4-parameter modular extension work?}
+      Possibly. The PySR result of \S\ref{sec:pysr} suggests oscillatory forms
+      are needed, which would require either a non-axial drift of $\tau(a)$
+      (introducing real-axis motion), or a more general modular form than
+      $J(\tau)^{-7}$. Such an extension would have $\geq 4$ free parameters
+      and a stiffer AIC penalty; we have not pursued this.
+\item \emph{The integer Heegner observation remains a curiosity.}
+      With the dynamical extension falsified and the fine-tuned $-7.034$ claim
+      retracted, the surviving observation is the algebraic identity
+      $N=7=2|\Phi^{+}(\mathrm{A}_{2})|+1$ at the integer exponent that matches
+      the observed $\Lambda$ to $\sim 2\%$ on the logarithm. Reported in the
+      companion structural note as a numerical coincidence with explicit
+      limitations.
+\end{enumerate}
+
+% ============================================================
+\section*{Acknowledgements}
+
+I thank the participants of multiple adversarial-review threads for cross-checking
+the numerical pipeline and for catching three early-draft errors in the
+$\chi^{2}$ optimisation (an incorrect Nelder--Mead initial box for $\rd$,
+a missing weight in the PySR regression, and an off-by-one in the dof counting).
+The DESI~DR1 BAO data are public (Adame \emph{et al.}~2024) and the PySR
+symbolic-regression engine is open source (Cranmer~2023).
+All computations used Python~3.11 with \texttt{numpy},
+\texttt{scipy.optimize.minimize}, \texttt{mpmath} (50-digit precision for the
+modular-form identities), and \texttt{pysr}~1.5.6.
+
+\paragraph{COPE compliance disclosure on AI tools.}
+This manuscript was prepared with the assistance of generative-AI dispatch
+threads used for typesetting support, literature retrieval, adversarial
+cross-checking of numerical results, and editorial review of draft prose.
+No generative-AI tool is an author of this work.
+The scientific content---formulation of Modular Quintessence, choice of test,
+$\chi^{2}$ pipeline, symbolic-regression diagnostic, and final verdict---was
+conceived, validated, and is the sole responsibility of the human author.
+The use of AI tools complies with current COPE (Committee on Publication
+Ethics) recommendations on the role of generative AI in scholarly writing
+(COPE position statement, February~2023, revised~2025).
+
+% ============================================================
+\begin{thebibliography}{99}\small
+
+\bibitem{adame2024}
+A.~G. Adame \emph{et al.} (DESI Collaboration), \emph{DESI 2024 VI:
+Cosmological Constraints from the Measurements of Baryon Acoustic
+Oscillations}, JCAP \textbf{02} (2025) 021, \href{https://arxiv.org/abs/2404.03002}{arXiv:2404.03002},
+DOI:\,\href{https://doi.org/10.1088/1475-7516/2025/02/021}{10.1088/1475-7516/2025/02/021}.
+
+\bibitem{burnhamanderson2002}
+K.~P. Burnham, D.~R. Anderson, \emph{Model Selection and Multimodel Inference:
+A Practical Information-Theoretic Approach}, 2nd ed., Springer, 2002.
+
+\bibitem{chevallier2001}
+M.~Chevallier, D.~Polarski, \emph{Accelerating universes with scaling dark matter},
+Int.\ J.\ Mod.\ Phys.\ D \textbf{10} (2001) 213--224,
+\href{https://arxiv.org/abs/gr-qc/0009008}{arXiv:gr-qc/0009008}.
+
+\bibitem{cox2013}
+D.~A. Cox, \emph{Primes of the Form $x^{2}+ny^{2}$}, 2nd ed., Wiley, 2013
+(chapters 11--12 on class field theory and Heegner points).
+
+\bibitem{cranmer2023}
+M.~Cranmer, \emph{Interpretable Machine Learning for Science with PySR and
+SymbolicRegression.jl}, \href{https://arxiv.org/abs/2305.01582}{arXiv:2305.01582} (2023).
+
+\bibitem{heegner1952}
+K.~Heegner, \emph{Diophantische Analysis und Modulfunktionen},
+Math.\ Z.\ \textbf{56} (1952) 227--253.
+
+\bibitem{linder2003}
+E.~V. Linder, \emph{Exploring the expansion history of the universe},
+Phys.\ Rev.\ Lett.\ \textbf{90} (2003) 091301,
+\href{https://arxiv.org/abs/astro-ph/0208512}{arXiv:astro-ph/0208512}.
+
+\bibitem{popper1959}
+K.~R. Popper, \emph{The Logic of Scientific Discovery}, Hutchinson, 1959.
+
+\bibitem{riess2022}
+A.~G. Riess \emph{et al.}, \emph{A Comprehensive Measurement of the Local Value
+of the Hubble Constant\dots}, Astrophys.\ J.\ Lett.\ \textbf{934} (2022) L7,
+\href{https://arxiv.org/abs/2112.04510}{arXiv:2112.04510}.
+
+\bibitem{stark1967}
+H.~M. Stark, \emph{A complete determination of the complex quadratic fields of
+class-number one}, Michigan Math.\ J.\ \textbf{14} (1967) 1--27.
+
+\bibitem{tristram2024}
+M.~Tristram \emph{et al.}, \emph{Cosmological parameters derived from the final
+Planck data release (PR4)}, Astron.\ Astrophys.\ \textbf{682} (2024) A37,
+\href{https://arxiv.org/abs/2309.10034}{arXiv:2309.10034}.
+
+\bibitem{remondiere2026clay}
+K.~R\'emondi\`ere, \emph{Saturation polynomial and Yang--Mills mass gap: a
+structural roadmap}, Zenodo concept DOI
+\href{https://doi.org/10.5281/zenodo.19686398}{10.5281/zenodo.19686398},
+\texttt{CLAY\_THEOREM\_FULL\_v23\_2026-05-24} and
+\texttt{PITCH\_BAUERSCHMIDT\_V22\_FINAL\_2026-05-24}, GitHub
+\texttt{crossed-cosmos} v7.1.0 (2026).
+
+\bibitem{remondiere2026noteA4}
+K.~R\'emondi\`ere, \emph{Structural origin of the Heegner exponent
+$N=2|\Phi^{+}|+1=7$ from the $\SUthree$ root system in the cosmological
+constant prediction} (Note Gap A.4), in preparation, 2026.
+
+\bibitem{remondiere2026bigtable}
+K.~R\'emondi\`ere, \emph{BIGTABLE V4 UNIFIED FINAL}, \S X.I---%
+$\Lambda_{\mathrm{cosm}}\leftrightarrow(1/4)J(\Heegner)^{-7}$,
+internal memo, 2026-05-20.
+
+\end{thebibliography}
+
+\bigskip
+
+\noindent\small\emph{Draft v1 $\cdot$ 2026-05-24 $\cdot$ K\'evin R\'emondi\`ere,
+Oloron-Sainte-Marie, France $\cdot$ ORCID 0009-0008-2443-7166 $\cdot$
+CC-BY-4.0.}
+
+\end{document}

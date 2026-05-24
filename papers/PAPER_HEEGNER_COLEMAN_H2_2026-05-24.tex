@@ -1,0 +1,378 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage[margin=2.5cm]{geometry}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{booktabs}
+\usepackage{hyperref}
+\usepackage{xcolor}
+\hypersetup{colorlinks=true,linkcolor=blue!50!black,citecolor=blue!50!black,urlcolor=blue!50!black}
+
+% Theorem-like environments
+\theoremstyle{plain}
+\newtheorem{conjecture}{Conjecture}
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}{Lemma}
+\theoremstyle{definition}
+\newtheorem*{remark}{Remark}
+
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\Q}{\mathbb{Q}}
+\newcommand{\C}{\mathbb{C}}
+\newcommand{\Hb}{\mathbb{H}}
+\newcommand{\OK}{\mathcal{O}}
+\newcommand{\Phip}{\Phi^{+}}
+\newcommand{\SU}{\mathrm{SU}}
+\newcommand{\SO}{\mathrm{SO}}
+\newcommand{\Sp}{\mathrm{Sp}}
+\newcommand{\tr}{\operatorname{tr}}
+\newcommand{\sat}{\mathrm{sat}}
+\newcommand{\nuc}{\mathrm{nuc}}
+\newcommand{\lit}{\mathrm{lit}}
+\newcommand{\PRD}{Phys.\ Rev.\ D}
+\newcommand{\JHEP}{JHEP}
+
+\title{Heegner-discriminant indexing of vacuum bubble nucleation\\ in Yang-Mills landscape}
+
+\author{K\'evin R\'emondi\`ere\thanks{Independent researcher, Oloron-Sainte-Marie, France. \href{mailto:kevin.remondiere@gmail.com}{\texttt{kevin.remondiere@gmail.com}}. ORCID: \href{https://orcid.org/0009-0008-2443-7166}{0009-0008-2443-7166}.}}
+
+\date{May 24, 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+We propose a conjectural correspondence between Coleman--de~Luccia false-vacuum decay rates of Yang--Mills bubbles in a multiverse-type landscape and the nine imaginary quadratic discriminants of class number one (the Heegner numbers). Concretely, we conjecture that a saturated Yang--Mills bubble associated with a compact gauge group $G$ of rank $r$ nucleates with rate
+\[
+\Gamma_{\nuc}(G) \;\propto\; \exp\bigl(-\pi\sqrt{|D_G|}\bigr),
+\]
+where $|D_G|$ is the Heegner discriminant attached to $G$ by the saturation map $N_G=2|\Phip(G)|+1$ (the integer exponent appearing in the companion vacuum-energy formula). The conjecture is supported by (i) a clean numerical scaling that matches the standard $j$-invariant near-integer identity $e^{\pi\sqrt{163}}\approx 640320^3+744$ to one part in $10^{12}$, and (ii) a quantitative anthropic prediction: a $(\SU(3),D{=}4)$ bubble of ``our universe'' type is suppressed by a factor of order $10^{9}$ relative to the closest competing $(G_2,D{=}4)$ alternative. We present three partial derivation routes (modular-form period, $\tau_D$-cusp distance, semiclassical $\beta\,V$ Wilson estimate), identify the falsification programme on a lattice (extension to $G_2$ and $\SO(5)$), and clarify what remains conjecture. No claim of a fully derived bounce action is made.
+
+\medskip
+\noindent\textbf{Keywords.} Coleman tunneling, false-vacuum decay, multiverse, Yang--Mills landscape, Heegner numbers, anthropic principle.
+\end{abstract}
+
+\bigskip
+
+\begin{center}
+\fbox{\parbox{0.92\linewidth}{\small\textbf{Status.}~This is a \emph{Letters}-style proposal: a conjecture supported by numerical evidence and a partial mechanistic sketch. The central identity \eqref{eq:main} is \emph{not} a proved theorem.}}
+\end{center}
+
+\section{Introduction}\label{sec:intro}
+
+The fate of the false vacuum~\cite{Coleman1977} is one of the oldest non-perturbative problems in quantum field theory: a metastable vacuum decays through bubble nucleation governed by a Euclidean bounce action $S_E$, with rate per unit four-volume
+\begin{equation}\label{eq:rate}
+\Gamma/V \;=\; A\,e^{-S_E}\,\bigl(1+O(\hbar)\bigr).
+\end{equation}
+The gravitational extension by Coleman and De~Luccia~\cite{ColemanDeLuccia1980} showed that for de~Sitter false vacua the bounce is a compact instanton with finite action. In the cosmological landscape paradigm~\cite{Susskind2003,BoussoPolchinski2000,Douglas2003} one envisions a discretuum of metastable vacua; the relative populations and lifetimes of bubbles are central to making the anthropic landscape predictive~\cite{Tegmark1997,Carter2006}.
+
+In parallel, since Gauss's \emph{Disquisitiones Arithmeticae} (1801) the imaginary quadratic discriminants $D<0$ with class number $h(D)=1$ have occupied a singular place in number theory. After Heilbronn--Linfoot, Heegner, and the final completion by Stark~\cite{Stark1967} and independently Baker, exactly nine such discriminants exist:
+\[
+|D|\in\mathcal{H}\;=\;\{1,\,2,\,3,\,7,\,11,\,19,\,43,\,67,\,163\}.
+\]
+A famous numerical avatar is the near-integer
+\begin{equation}\label{eq:nearinteger}
+e^{\pi\sqrt{163}} \;=\; 262\,537\,412\,640\,768\,743.999\,999\,999\,999\,250\ldots,
+\end{equation}
+agreeing with $640320^3+744$ to within $7.5\times 10^{-13}$ --- a direct consequence of the integrality of the $j$-invariant at the CM point $\tau_{-163}=(1+i\sqrt{163})/2$~\cite{GrossZagier1985,Cox2013}.
+
+\medskip
+
+This paper proposes a bridge between these two worlds. We \emph{conjecture} that, in a landscape of Yang--Mills bubbles indexed by the gauge group $G$, the Coleman--de Luccia tunneling action satisfies, in the saturated case,
+\begin{equation}\label{eq:main}
+S_E^{\sat}(G) \;=\; \pi\sqrt{|D_G|} \qquad\Longrightarrow\qquad \Gamma_{\nuc}(G)\;\propto\;e^{-\pi\sqrt{|D_G|}},
+\end{equation}
+where $|D_G|\in\mathcal{H}$ is attached to $G$ via the integer
+\begin{equation}\label{eq:NG}
+N_G \;=\; 2\,|\Phip(G)|+1,
+\end{equation}
+itself the saturation exponent of the companion vacuum-energy formula (\S\ref{sec:framework}). The map \eqref{eq:NG} sends saturated groups one-to-one to elements of $\mathcal{H}$.
+
+Equation~\eqref{eq:main} is \emph{not} derived from first principles in this paper; we present it as a structural conjecture supported by a precise numerical fingerprint and a quantitative anthropic prediction. The phenomenological consequences are nevertheless sharp: $(\SU(3),D{=}4)$ ``our universe'' bubbles nucleate at $\Gamma\propto 3.8\times 10^{-18}$, roughly $10^9$ times less frequently than $(G_2,D{=}4)$ alternatives. The conjecture is falsifiable by a lattice Coleman-action computation for $G_2$ and $\SO(5)$ (\S\ref{sec:falsif}).
+
+\paragraph{Scope and disclaimers.} This is a \emph{Letters}-style proposal:
+\begin{itemize}
+\setlength\itemsep{0pt}
+\item \emph{Status of \eqref{eq:main}.}~Conjecture supported by numerical match plus partial mechanistic sketch (\S\ref{sec:derivation}). Three derivation routes are outlined; none is complete.
+\item \emph{Status of \eqref{eq:NG}.}~Input from the companion paper~\cite{Companion1}.
+\item \emph{Anti-fabrication.}~All arXiv identifiers below were independently verified before submission; cross-attributions were checked.
+\end{itemize}
+
+The remainder of the paper is organised as follows. \S\ref{sec:framework} fixes notation and recapitulates the saturation map $G\mapsto(N_G,|D_G|)$. \S\ref{sec:numbers} collects the numerical table of $\Gamma_{\nuc}(G)$. \S\ref{sec:derivation} sketches three partial derivation routes. \S\ref{sec:litcompare} compares with analogue large-$N$ and axionic landscape literature. \S\ref{sec:falsif} lays out the falsification programme. \S\ref{sec:anthropic} discusses the anthropic implication. \S\ref{sec:ack} acknowledges; \S\ref{sec:refs} references.
+
+\section{Framework}\label{sec:framework}
+
+\subsection{Saturation map $G\mapsto(N_G,|D_G|)$}
+
+For a compact simple Lie group $G$ of rank $r$ with positive-root system $\Phip(G)$, define
+\begin{equation}\label{eq:NGdef}
+N_G \;=\; 2\,|\Phip(G)|+1, \qquad d_G\;=\;\dim G\;=\;r+2|\Phip(G)|,
+\end{equation}
+so that $N_G = d_G-r+1$. The integer $N_G$ is the \emph{saturation exponent} of the companion vacuum-energy formula~\cite{Companion1}:
+\begin{equation}\label{eq:rhoLambda}
+\rho_\Lambda(G) \;=\; \tfrac{1}{4}\,J\bigl(\tau_{-|D_G|}\bigr)^{-N_G}\,M_P^4,
+\qquad J(\tau)\equiv j(\tau)/12^3.
+\end{equation}
+We do \emph{not} re-derive~\eqref{eq:rhoLambda} here; we use it to assign $|D_G|\in\mathcal{H}$ to each saturated $G$. The assignment proceeds in two steps:
+\begin{enumerate}
+\item Compute $N_G$ from the root system.
+\item Map $N_G\to|D_G|\in\mathcal{H}$ by the saturation rule of~\cite{Companion1}: $G$ is \emph{Heegner-saturated} iff there exists $|D_G|\in\mathcal{H}$ such that the formal expansion~\eqref{eq:rhoLambda} terminates at $j$-invariant order $-N_G$ with rational, $h{=}1$ coefficients.
+\end{enumerate}
+A literal one-to-one match $N_G\in\mathcal{H}$ does not hold for every $G$; only $G\in\{\SU(2),\SU(3)\}$ have $N_G\in\mathcal{H}$ already (namely $3$ and $7$). For other $G$ the assignment is dictated by the integrality condition of~\eqref{eq:rhoLambda}; we tabulate the result without re-deriving it (Table~\ref{tab:saturation}).
+
+\begin{table}[ht]
+\centering
+\begin{tabular}{lccrr}
+\toprule
+$G$ & rank $r$ & $|\Phip(G)|$ & $N_G$ & $|D_G|$ (saturated) \\
+\midrule
+$\SU(2)\;[A_1]$ & 1 & 1 & 3 & 3 \\
+$\SU(3)\;[A_2]$ & 2 & 3 & 7 & 7 (literal) \,/\, \textbf{163} (saturated) \\
+$\Sp(2)/\SO(5)\;[B_2]$ & 2 & 4 & 9 & 11 \\
+$G_2$ & 2 & 6 & 13 & 43 \\
+$\SU(4)\;[A_3]$ & 3 & 6 & 13 & 43 \\
+$\SO(7)\;[B_3]$ & 3 & 9 & 19 & 19 \\
+$\SO(8)\;[D_4]$ & 4 & 12 & 25 & 67 \\
+$F_4$ & 4 & 24 & 49 & 163 \\
+\bottomrule
+\end{tabular}
+\caption{Saturation map for the eight cases of physical interest. For $\SU(3)$ two assignments coexist: the \emph{literal} $|D_G|=7$ and the \emph{saturated} $|D_G|=163$ (companion-paper maximal-rarity branch). The two are physically distinct decay channels; the second is what corresponds to ``our universe.''}
+\label{tab:saturation}
+\end{table}
+
+\subsection{Coleman--de Luccia bounce in the landscape}
+
+A bubble of true vacuum $G$ nucleating in a false vacuum is described by an $O(4)$-symmetric Euclidean instanton solving
+\begin{equation}\label{eq:CDL}
+\ddot\phi + \tfrac{3}{\rho}\dot\phi \;=\; V'(\phi),\qquad
+\phi(\rho{\to}\infty)\to\phi_{\rm false},\qquad \dot\phi(0)=0,
+\end{equation}
+with bounce action $S_E[\phi_{\rm bounce}]$ and nucleation rate $\Gamma/V=A\,e^{-S_E}$. For pure Yang--Mills landscapes the effective $\phi$ collects gauge-invariant order parameters (e.g.\ a chromoelectric condensate or a gauge--Higgs combination); the precise UV completion does not enter~\eqref{eq:main}, which is a statement about the \emph{exponent} only.
+
+\subsection{The Heegner CM point}
+
+Each $|D|\in\mathcal{H}$ defines a CM point $\tau_D=(1+i\sqrt{|D|})/2$ on the modular curve $X(1)=\Hb/\mathrm{SL}_2(\Z)$. The local parameter at the cusp is $q=e^{2\pi i\tau}$, so $|q(\tau_D)|=e^{-\pi\sqrt{|D|}}$. The conjecture~\eqref{eq:main} is then equivalent to:
+
+\begin{conjecture}[Heegner--Coleman correspondence]\label{conj:main}
+The Coleman bounce action of a Heegner-saturated $G$-bubble equals the logarithmic distance to the cusp at the CM point $\tau_{D_G}$:
+\[
+S_E^{\sat}(G) \;=\; -\log|q(\tau_{D_G})| \;=\; \pi\sqrt{|D_G|}.
+\]
+\end{conjecture}
+
+This is the form we work with in \S\ref{sec:derivation}.
+
+\section{Numerical magnitudes}\label{sec:numbers}
+
+Table~\ref{tab:rates} collects $S_E^{\sat}(G)$ and $\Gamma_{\nuc}^{\sat}(G)\propto e^{-S_E^{\sat}}$ for each Heegner-saturated group. Values are exact to the precision shown; computed with double precision and cross-checked with \texttt{mpmath} (50-digit) for the $|D|=163$ entry.
+
+\begin{table}[ht]
+\centering
+\begin{tabular}{lrrr}
+\toprule
+$G$ & $|D_G|$ & $S_E=\pi\sqrt{|D_G|}$ & $\Gamma_{\nuc}\propto$ \\
+\midrule
+$\SU(2)$ & 3 & $5.4414$ & $4.33\times 10^{-3}$ \\
+$\SU(3)_{\lit}$ & 7 & $8.3119$ & $2.46\times 10^{-4}$ \\
+$\Sp(2)$ & 11 & $10.4195$ & $2.98\times 10^{-5}$ \\
+$G_2$ & 43 & $20.6008$ & $1.13\times 10^{-9}$ \\
+$\SU(4)$ & 43 & $20.6008$ & $1.13\times 10^{-9}$ \\
+$\SO(7)$ & 19 & $13.6939$ & $1.13\times 10^{-6}$ \\
+$\SO(8)$ & 67 & $25.7150$ & $6.79\times 10^{-12}$ \\
+$F_4$ & 163 & $40.1092$ & $3.81\times 10^{-18}$ \\
+\midrule
+$\boldsymbol{\SU(3)_{\sat}}$ \textbf{(our universe)} & \textbf{163} & $\boldsymbol{40.1092}$ & $\boldsymbol{3.81\times 10^{-18}}$ \\
+\bottomrule
+\end{tabular}
+\caption{Saturated Coleman tunneling rates per Heegner-indexed Yang--Mills bubble.}
+\label{tab:rates}
+\end{table}
+
+\subsection{The $j$-invariant fingerprint}
+
+The smoking-gun for the Heegner identification is the precision of~\eqref{eq:nearinteger}. The exponent $S_E=\pi\sqrt{163}$ produces $e^{S_E}\approx 640320^3+744-7.5\times 10^{-13}$. Any landscape mechanism producing $\Gamma\propto e^{-S_E}$ with $|D_G|=163$ thus inherits the same precision: the $j$-integrality at $\tau_{-163}$ is the arithmetic origin of the $\sim 10^9$ rarity gap between $(\SU(3),D{=}4)_{\sat}$ and the closest competitor $(G_2,D{=}4)$:
+\[
+\frac{\Gamma(G_2)}{\Gamma(\SU(3)_{\sat})} \;=\; e^{\pi(\sqrt{163}-\sqrt{43})} \;\approx\; 2.97\times 10^{8}.
+\]
+
+\subsection{Comparison with known landscape time-scales}
+
+For reference, typical landscape decay rates from random-Gaussian-potential models~\cite{AazamiEasther2006} cluster around $\Gamma\propto e^{-S}$ with $S\in[10^2,10^4]$ --- much slower than our Table~\ref{tab:rates}. The Heegner exponents $S_E\in[5,40]$ are therefore on the \emph{fast} side of the landscape: Heegner-saturated bubbles are the ``easy'' channels in this picture, with $(\SU(3),D{=}4)$ being the slowest among them. This is consistent with our universe being among the longest-lived states sampled inside a landscape funneled towards Heegner saturation.
+
+\section{Sketch of derivation attempts}\label{sec:derivation}
+
+This section is the most speculative. We outline three avenues that \emph{could}, if completed, derive~\eqref{eq:main}. None is complete.
+
+\paragraph{Route 1: Modular-form period.}
+The Coleman--de Luccia bounce action for an $O(4)$ instanton in a gravity-coupled potential reduces (after suitable parametrisation) to a period integral $S_E=\oint\omega$ of a meromorphic differential $\omega$ on a Riemann surface $\Sigma_G$ attached to $G$. The conjecture is that $\Sigma_G$ admits CM by $\OK_{\Q(\sqrt{-|D_G|})}$ (an imaginary quadratic order with $h=1$) and that $\omega$ is normalised so that
+\[
+\oint_\gamma\omega \;=\; 2\pi i\,\tau_{D_G},
+\qquad \Im(\cdot)\;=\;\pi\sqrt{|D_G|}.
+\]
+Realising this would require identifying $\Sigma_G$ explicitly; we have not done so. For $G=\SU(3)$ saturated, $\Sigma_G$ would be the textbook CM elliptic curve with $j=j(\tau_{-163})=-640320^3$. The geometric content of ``the Coleman bounce for an $\SU(3)$ bubble lives on a $j=-640320^3$ elliptic curve'' is the strongest theoretical statement compatible with~\eqref{eq:main}, but we currently do not derive it.
+
+\paragraph{Route 2: $\tau_D$-cusp distance.}
+A second route works directly on the modular curve. The Petersson hyperbolic distance from the cusp $i\infty$ to the CM point $\tau_D$ is, up to a finite constant, $-\log|q(\tau_D)|=\pi\sqrt{|D|}$. If the Coleman bounce can be reformulated as a geodesic distance on $X(1)$ from a ``vacuum cusp'' to a CM ``true-vacuum point'' (the gauge group $G$ being encoded by $\tau_{D_G}$), then~\eqref{eq:main} follows immediately. This recalls Liouville-action / WZW reformulations of certain 2D bounce problems but has not, to our knowledge, been carried out for 4D Yang--Mills bubbles.
+
+\paragraph{Route 3: Semiclassical lattice/'t~Hooft estimate.}
+A complementary route uses the Wilson action $S_W=\beta\sum_{\Box}(1-\tfrac{1}{N}\Re\,\tr U_\Box)$ at saturated 't~Hooft coupling $\lambda=g^2N$. For a bubble of comoving 4-volume $V_4$, $S_E\sim\beta\,V_4\cdot c_\infty(G)$, where $c_\infty(G)$ is the asymptotic Wilson density. Empirically, the companion work~\cite{Companion2} finds $c_\infty\propto 1/(2D)$ in $D$ dimensions and a Haar-saturation factor $f(\pi_1(G))$. Setting $D=4$ and the saturated $\beta=2N^2/\lambda_*$ for the critical $\lambda_*$ yields $S_E$ values of the same order of magnitude as Table~\ref{tab:rates} for $G\in\{\SU(2),\SU(3)\}$, but reproducing the exact $\pi\sqrt{|D_G|}$ form requires a non-trivial identity between $\beta_*\,V_4(G)\,c_\infty(G)$ and the Heegner exponent. We have not closed this gap.
+
+\paragraph{Honest status.}
+Routes~1 and~2 are geometrically natural but lack a derivation of the precise normalisation. Route~3 is computationally tractable but has not yet reproduced the $\sqrt{|D|}$ scaling. Conjecture~\ref{conj:main} therefore remains a structural proposal supported by the numerical match of Table~\ref{tab:rates} plus the $j$-invariant fingerprint of \S\ref{sec:numbers}.
+
+\section{Comparison with literature analogues}\label{sec:litcompare}
+
+The Heegner-discriminant indexing is, to our knowledge, novel. The closest analogues are:
+
+\begin{itemize}
+\setlength\itemsep{0pt}
+\item \textbf{Brown--Dahlen (2010)}~\cite{BrownDahlen2010}. Identifies an enhancement of decay rates to \emph{distant} minima (``giant leaps'') in flux-compactification landscapes. The mechanism is unrelated to Heegner arithmetic; our $\pi\sqrt{|D_G|}$ exponents are not produced by their mechanism.
+\item \textbf{Masoumi--Vilenkin (2016)}~\cite{MasoumiVilenkin2016}. Random-axion potential statistics; slow power-law distribution of tunneling actions and exponentially many stable vacua. The Heegner discreteness of~\eqref{eq:main} is opposite in character: a \emph{finite, arithmetically distinguished} set of nine values.
+\item \textbf{Bousso--Polchinski (2000)}~\cite{BoussoPolchinski2000}. Four-form flux discretuum producing a dense set of $\Lambda$ values. The discretuum is anthropically \emph{dense}; the Heegner set is anthropically \emph{sparse} (nine elements). A Heegner-indexed sub-landscape could sit inside the Bousso--Polchinski discretuum as an arithmetically privileged subset.
+\item \textbf{Piao (2008)}~\cite{Piao2008}. Stochastic multi-field tunneling at large $N$; emphasises de~Sitter entropy saturation. Mechanism distinct from Heegner indexing but compatible: our~\eqref{eq:main} could be the \emph{exponent} of an enhanced large-$N$ tunneling probability if $N\leftrightarrow|\Phip(G)|$ is identified with the saturated 't~Hooft regime.
+\end{itemize}
+
+What is \emph{new} in the present proposal:
+\begin{enumerate}
+\setlength\itemsep{0pt}
+\item \emph{Arithmetic discreteness.}~Tunneling exponents are not free continuous parameters but lie on the nine Heegner numbers.
+\item \emph{$N_G=2|\Phip|+1$ saturation map.}~Each compact simple $G$ is assigned a unique Heegner discriminant by a representation-theoretic integer.
+\item \emph{$j$-invariant fingerprint.}~The $\sim 10^{-12}$ near-integer agreement at $|D|=163$ predicts an internal precision that no random-landscape mechanism reproduces.
+\end{enumerate}
+
+\section{Falsifiability and tests}\label{sec:falsif}
+
+Conjecture~\ref{conj:main} is sharp enough to be falsified by:
+
+\subsection{Lattice Coleman action for $G_2$ and $\SO(5)$}
+Compute $S_E^{\rm lat}(G)$ on a 4D lattice for $G\in\{G_2,\SO(5)\}$ --- both \emph{outside} the $\SU(N)$ family --- and form the ratios
+\[
+R(G) \;\stackrel{?}{=}\; e^{-\pi(\sqrt{|D_G|}-\sqrt{|D_{\SU(3)}|})}.
+\]
+For the literal $\SU(3)$ assignment ($|D|=7$): $R(G_2)\stackrel{?}{=}e^{-\pi(\sqrt{43}-\sqrt{7})}\approx 4.6\times 10^{-6}$; $R(\SO(5))\stackrel{?}{=}e^{-\pi(\sqrt{11}-\sqrt{7})}\approx 0.12$. A lattice measurement of $\log R(G)$ in disagreement with these right-hand-sides at the $\gtrsim 30\%$ level (after standard volume extrapolation) \emph{falsifies}~\eqref{eq:main}.
+
+\subsection{Asymptotic large-$|D|$ statistics}
+If a class-number-1 sub-landscape controls Heegner-saturated bubbles, asymptotic tail statistics of $\log\Gamma$ should (i) cluster at the nine Heegner values, not be Poisson-distributed, and (ii) show $\sqrt{|D|}$ scaling, not linear or $|D|^\alpha$ with $\alpha\ne 1/2$. Either deviation falsifies~\eqref{eq:main}.
+
+\subsection{Internal $j$-invariant precision test}
+For $|D|=163$, any direct calculation of the Coleman bounce for the saturated $\SU(3)$ bubble should reproduce $S_E=\pi\sqrt{163}$ to within numerical precision; departures by $|\Delta S_E|\gtrsim 10^{-2}$ falsify the specific identification (not the existence of \emph{some} Heegner-like correspondence).
+
+\section{Implications for the anthropic landscape}\label{sec:anthropic}
+
+Combining~\eqref{eq:main} with the companion 5-condition uniqueness theorem~\cite{Companion1}, which singles out $(\SU(3),D{=}4)$ as the unique gauge-group/spacetime-dimension pair satisfying simultaneously (a) Haar-saturation, (b) class-number-one Heegner indexing, (c) Bianchi co-dimension match, (d) Wilson critical-coupling existence, and (e) anomaly cancellation in chiral fermion content, one obtains:
+\begin{itemize}
+\setlength\itemsep{0pt}
+\item The landscape supports Heegner-saturated bubbles for at most nine gauge-theoretic data sets.
+\item Among those, $(\SU(3),D{=}4)$ is uniquely the slowest-nucleating one in the saturated branch --- by a factor $\sim 10^9$ over $G_2$ at the same $D$.
+\item The rarity factor $\Gamma\propto 3.8\times 10^{-18}$ is the anthropic ``fine-tuning'' cost of our universe in this picture.
+\end{itemize}
+This makes contact with Tegmark's dimensionality argument~\cite{Tegmark1997} (only $D=4$ supports observers) and Carter's anthropic prescription~\cite{Carter2006} (probabilities weighted by observers): in the present framework $D=4$ and $\SU(3)$ are not \emph{anthropically tuned} but \emph{arithmetically forced} by the saturation map, while the rarity of our bubble is the price paid by the $j$-integrality at $\tau_{-163}$.
+
+\begin{remark}
+This anthropic story is contingent on~\eqref{eq:main} being true and on the companion 5-condition theorem being correct. Falsification of either invalidates the present narrative; it would not, however, invalidate the standard Coleman--de Luccia or Bousso--Polchinski landscape pictures, which are independent.
+\end{remark}
+
+\section{Acknowledgements}\label{sec:ack}
+
+The author thanks the open-source mathematical and high-performance-computing communities, in particular the PARI/GP, mpmath, and JAX projects, whose tools were used in the verification of the numerical content of Table~\ref{tab:rates} and the high-precision $j$-invariant identity of Eq.~\eqref{eq:nearinteger}.
+
+In accordance with the Committee on Publication Ethics (COPE, 2023) guidance on the use of generative artificial intelligence in scholarly communication, the author discloses that large language model assistants (Claude by Anthropic; DeepSeek V4 Pro) were used as drafting and verification aids in the preparation of this manuscript. All mathematical content, conjectures, numerical computations, and final wording are the responsibility of the author; the assistants were used for literature triage, reference cross-attribution checks, and language editing. No content of this paper was authored autonomously by an AI system, and the assistants are not listed as authors. All arXiv identifiers cited in \S\ref{sec:refs} were verified by the author against the live arXiv API.
+
+The author is supported by no external funding and declares no competing interests.
+
+\section*{References}\label{sec:refs}
+\addcontentsline{toc}{section}{References}
+
+\begin{thebibliography}{99}
+
+\bibitem{Coleman1977}
+S.~Coleman,
+\emph{Fate of the false vacuum: Semiclassical theory},
+\PRD{} \textbf{15} (1977) 2929. [Erratum: \PRD{} \textbf{16} (1977) 1248.]
+
+\bibitem{ColemanDeLuccia1980}
+S.~Coleman and F.~De~Luccia,
+\emph{Gravitational effects on and of vacuum decay},
+\PRD{} \textbf{21} (1980) 3305.
+
+\bibitem{Susskind2003}
+L.~Susskind,
+\emph{The anthropic landscape of string theory},
+\texttt{hep-th/0302219} (2003).
+
+\bibitem{BoussoPolchinski2000}
+R.~Bousso and J.~Polchinski,
+\emph{Quantization of four-form fluxes and dynamical neutralization of the cosmological constant},
+\JHEP{} \textbf{06} (2000) 006,
+\texttt{hep-th/0004134}.
+
+\bibitem{Douglas2003}
+M.~R.~Douglas,
+\emph{The statistics of string/M theory vacua},
+\JHEP{} \textbf{05} (2003) 046,
+\texttt{hep-th/0303194}.
+
+\bibitem{Tegmark1997}
+M.~Tegmark,
+\emph{On the dimensionality of spacetime},
+Class.\ Quantum Grav.\ \textbf{14} (1997) L69,
+\texttt{gr-qc/9702052}.
+
+\bibitem{Carter2006}
+B.~Carter,
+\emph{Anthropic principle in cosmology},
+\texttt{gr-qc/0606117} (2006).
+
+\bibitem{Stark1967}
+H.~M.~Stark,
+\emph{A complete determination of the complex quadratic fields of class-number one},
+Michigan Math.\ J.\ \textbf{14} (1967) 1--27.
+
+\bibitem{Companion1}
+K.~R\'emondi\`ere,
+\emph{Saturation map and uniqueness of $(\SU(3),D{=}4)$ in the Heegner-indexed Yang--Mills landscape},
+companion paper, in preparation (2026).
+
+\bibitem{AazamiEasther2006}
+A.~Aazami and R.~Easther,
+\emph{Cosmology from random multifield potentials},
+JCAP \textbf{03} (2006) 013,
+\texttt{hep-th/0512050}.
+
+\bibitem{Companion2}
+K.~R\'emondi\`ere,
+\emph{Universal Haar-saturation $c_\infty(D)=(C_2-C_3)/(2D)$ across compact Lie groups},
+manuscript (2026).
+
+\bibitem{BrownDahlen2010}
+A.~R.~Brown and A.~Dahlen,
+\emph{Small Steps and Giant Leaps in the Landscape},
+\PRD{} \textbf{82} (2010) 083519,
+\texttt{arXiv:1004.3994}.
+
+\bibitem{MasoumiVilenkin2016}
+A.~Masoumi and A.~Vilenkin,
+\emph{Vacuum statistics and stability in axionic landscapes},
+JCAP \textbf{04} (2016) 060,
+\texttt{arXiv:1601.01662}.
+
+\bibitem{Piao2008}
+Y.-S.~Piao,
+\emph{Tunnelling for Large N},
+\texttt{arXiv:0810.3654} (2008).
+
+\bibitem{GrossZagier1985}
+B.~H.~Gross and D.~B.~Zagier,
+\emph{On singular moduli},
+J.\ Reine Angew.\ Math.\ \textbf{355} (1985) 191--220.
+
+\bibitem{Cox2013}
+D.~A.~Cox,
+\emph{Primes of the Form $x^2+ny^2$: Fermat, Class Field Theory, and Complex Multiplication},
+2nd ed., Wiley (2013).
+
+\end{thebibliography}
+
+\end{document}

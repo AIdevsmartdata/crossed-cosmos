@@ -141,34 +141,69 @@ I am sending you the cleaner v22 of the master document precisely because these 
 
 ---
 
-## §7bis. Roadmap — a conditional theorem under one explicit concentration axiom
+## §7bis. Roadmap — a conditional theorem under one named axiom
 
-To make the verrou visible rather than hidden, the cleanest way I can state the current programme is as a conditional theorem under one explicit named axiom $\mathrm{H}_1$ (concentration in the small‑field regime) together with five auxiliary hypotheses that are either already proved or standard:
+To make the verrou visible rather than hidden, the cleanest way I can state the current programme is as a conditional theorem under one explicit named axiom $\mathrm{H}_1$ together with five auxiliary hypotheses that are either already proved or standard. The statement covers the full saturated family $(\mathrm{SU}(N), d) \in \{(2, 2), (3, 3), (3, 4)\}$ identified by the polynomial $D(D-1)(5-D)/6$ (§2bis above), not only the physical case.
 
-**Theorem (conditional, Wilson SU(N) lattice $D=4$).** Under $\mathrm{H}_1$–$\mathrm{H}_6$ below, the Langevin generator $L_\beta$ for the Wilson measure $\mu_{a, L, \beta}$ satisfies, for all $\beta \ge \beta_0(N, d)$ and the saturated pair $(N, D) = (3, 4)$:
+### §7bis.1 Conditional Mass Gap theorem (saturated family)
 
-$$\lambda_1(L_\beta) \;\ge\; \tfrac{C_2(d)\,(1 - \kappa)\,\beta}{L^2}, \qquad m_{\mathrm{gap}}^{\mathrm{lattice}}(a, L, \beta) \;\ge\; \sqrt{\lambda_1(L_\beta)} > 0,$$
+**Theorem (Conditional Mass Gap for Saturated Wilson Lattices).** Let $(G, d)$ belong to the saturated family above. Let $\Lambda_a = (a\mathbb{Z})^d / L\mathbb{Z}^d$ with $a > 0$, $L \ge 2$, and let $\mu_{a, L, \beta}$ be the Wilson measure with action $S_W(Q) = \sum_p (1 - \tfrac{1}{N} \mathrm{Re}\,\mathrm{tr}\, Q_p)$. Under $\mathrm{H}_1$–$\mathrm{H}_6$ below, the Langevin generator $\mathcal{L}_\beta$ with invariant measure $\mu_{a, L, \beta}$ satisfies, for all $\beta \ge \beta_0(N, d)$:
 
-with $\kappa = 1/6$ for $\mathrm{SU}(3)$ and the explicit constants depending only on $(N, d)$.
+$$\lambda_1(\mathcal{L}_\beta) \;\ge\; \varepsilon(N, d) \cdot (1 - \kappa(G, d)) \cdot \beta \cdot L^{-2},$$
+$$m_{\mathrm{gap}}^{\mathrm{lattice}}(a, L, \beta) \;\ge\; \sqrt{\lambda_1(\mathcal{L}_\beta)} > 0,$$
+
+with $\kappa = 1/6$ for $(\mathrm{SU}(3), 4)$ (Lean‑certified, $0$ axioms), and the same structural form for $(2, 2)$ and $(3, 3)$ via the family identity $\kappa(G, d) = 1/(2(d-1))$.
+
+### §7bis.2 The six hypotheses
 
 | # | Hypothesis | Status today |
 |---|------------|--------------|
-| $\mathrm{H}_1$ | Concentration $\mu_{a, L, \beta}(\{\|A\|_{L^2}^2 \ge R\}) \le C_1 e^{-c_1 \beta R / N^2}$ uniform in $(a, L)$ | **Open — this is your territory.** Cleanly stated, an instance of the BBD concentration framework for Wilson SU(N). |
-| $\mathrm{H}_2$ | Gaussian density bound near the vacuum on $\{\|A\|^2 \le R\}$ (MRS93‑style) | Sketched (MRS 1993 SU(2) $D=4$ IR cutoff); extending uniformly in $a$ is the technical work. |
-| $\mathrm{H}_3$ | Pinsker inequality $\alpha = 1$ | **Proved** (Cover–Thomas 2006, Lemma 11.6.1) and formalised in Lean 4 (`Pillar1Johnson.lean`, 0 sorrys). |
-| $\mathrm{H}_4$ | Log‑Sobolev for Gaussian measure on Cameron–Martin space | **Proved** (Gross 1975, Amer. J. Math. **97**, §6). |
-| $\mathrm{H}_5$ | $\lambda_1(\Delta_\Lambda) \ge C_2 / L^2$ for Hodge Laplacian on $T^4_L$ | **Proved** (elementary discrete Fourier on a torus). |
-| $\mathrm{H}_6$ | Rank‑saturation factor $\kappa = 1/6$ for $(N, D) = (3, 4)$ | **Proved** in Lean 4 (`KappaOneSixth.lean`, 0 axioms, two independent derivations). |
+| $\mathrm{H}_1$ | Concentration in the small‑field regime, uniform in $(a, L)$ — three equivalent formulations in §7bis.3 below | **Open — this is your territory.** |
+| $\mathrm{H}_2$ | Gaussian density bound near the vacuum on $\{\|A\|^2 \le R\}$ (MRS93‑style) | Sketched (MRS 1993, SU(2) $D=4$ IR cutoff); extending uniformly in $a$ is the technical work. |
+| $\mathrm{H}_3$ | Pinsker inequality $\alpha = 1$ | **Proved** (Cover–Thomas 2006, Lemma 11.6.1) and formalised in Lean 4 (`Pillar1Johnson.lean`, $0$ sorrys). |
+| $\mathrm{H}_4$ | Log‑Sobolev for Gaussian on Cameron–Martin space | **Proved** (Gross 1975, Amer. J. Math. **97**, §6). |
+| $\mathrm{H}_5$ | $\lambda_1(\Delta_\Lambda) \ge C_2 / L^2$ for Hodge Laplacian on $T^d_L$ | **Proved** (elementary discrete Fourier on a torus). |
+| $\mathrm{H}_6$ | Saturation factor $\kappa(G, d) \in (0, 1)$ with $\kappa = 1/6$ for $(\mathrm{SU}(3), 4)$ | **Proved** in Lean 4 (`KappaOneSixth.lean`, $0$ axioms, two independent derivations). |
 
-The $1/L^2$ factor on the right‑hand side is *not* what one wants for the Clay statement, which calls for uniformity in $L$. It is plausibly a defect of the present proof (entropy splitting on $E_R^c$, distortion in step 4) rather than a fundamental limitation, and CNS25 already attains finite‑volume bounds without an analogous $1/L$ factor in the strong‑coupling regime $\beta < 1/24$. Tightening this is part of the technical work I would propose to do together.
+### §7bis.3 Three equivalent (or near‑equivalent) formulations of $\mathrm{H}_1$
 
-What the theorem buys, even before $\mathrm{H}_1$ is closed, is structural: the verrou is *named*, *located*, and *visibly compatible with the BBD framework*. A referee can verify the conditional implication ($\mathrm{H}_1$ $\Rightarrow$ lattice mass gap) on its own, and the open piece is exactly the cluster‑expansion / Polchinski step you and your collaborators have been pushing on $\varphi^4$. This is, on purpose, the same pattern Wiles used in 1995 (modularity as a named conjecture; later closed by Taylor–Wiles).
+I would rather not prejudge which formulation is most accessible from your side. The three I have in mind are:
 
-If this conditional theorem looks like a reasonable starting point, my proposed timeline would be:
+- **$\mathrm{H}_1$ (raw concentration).** There exist $\beta_0, C_1, c_1 > 0$ depending only on $(N, d)$ such that for $\beta \ge \beta_0$, all $a \in (0, 1]$, $L \ge 2$, and $R > 0$:
+  $$\mu_{a, L, \beta}\bigl(\{Q : \|A(Q)\|_{L^2(\Lambda_a)}^2 \ge R\}\bigr) \le C_1 \exp\bigl(- c_1 \beta R / N^2\bigr).$$
+- **$\mathrm{H}_1''$ (Polchinski‑cascade, BBD‑style).** The Wilson measure admits a Polchinski decomposition $\mu_{a, L, \beta} = \mu_\beta^{(0)} \ast \mu_\beta^{(1)} \ast \cdots \ast \mu_\beta^{(K)}$ such that each scale satisfies $\mathrm{LSI}(c_k)$ with $\sum_k c_k \le C(N, d) / \bigl(\beta \cdot (1 - \kappa)\bigr)$ uniformly in $(a, L)$. This is the literal non‑abelian analogue of the structure proved in [BD22] and [BBD24] for $\varphi^4_2, \varphi^4_3$.
+- **$\mathrm{H}_1'''$ (bounded susceptibility).** The connected susceptibility $\chi_\beta(L) := \sum_x \bigl[\langle \mathrm{tr}\, Q_0 \,\mathrm{tr}\, Q_x \rangle - \langle \mathrm{tr}\, Q_0 \rangle \langle \mathrm{tr}\, Q_x \rangle\bigr]$ is bounded uniformly in $(a, L)$ for $\beta \ge \beta_0$.
 
-- **0–3 months** — clean draft, conditional theorem, submit to LMP or CMP.
-- **3–9 months** — joint work on $\mathrm{H}_1$ in the Polchinski multiscale language; in parallel, tighten the $L$‑dependence in the auxiliary steps.
-- **9–15 months** — if $\mathrm{H}_1$ partially closes, a follow‑up paper on the partial resolution; otherwise, a clean statement of what makes $\mathrm{H}_1$ hard.
+The three are $O(\beta)$‑equivalent under standard inputs; you will know better than I do which one is the natural target for the framework you currently have.
+
+### §7bis.4 Why I think the $1/L^2$ factor is artefactual
+
+The $1/L^2$ in the conclusion is *not* what the Clay statement asks for, and it is *not* what one expects physically for a confining theory with an intrinsic mass scale. Three pieces of evidence make me believe it is a defect of the present proof rather than a real obstruction:
+
+1. **BBD23 already attains LSI uniformly in $L$ for $\varphi^4_2, \varphi^4_3$.** The abstract of [arXiv:2202.02295](https://arxiv.org/abs/2202.02295) is explicit: *"The continuum $\varphi^4_2$ and $\varphi^4_3$ measures are shown to satisfy a log‑Sobolev inequality uniformly in the lattice regularisation under the optimal assumption that their susceptibility is bounded — uniformly in the volume in the entire high temperature phases."* The Polchinski cascade machinery, when it applies, gives a constant that *does not* depend on $L$.
+2. **CNS25 attains finite‑volume bounds for Wilson SU(N), U(N), SO(2N).** [arXiv:2509.04688](https://arxiv.org/abs/2509.04688) proves area law and mass gap uniformly in the lattice for $\beta < 1/24$. No $1/L$ appears in their bounds in the strong‑coupling regime.
+3. **Lüscher 1986** (CMP **104**, 177–206) shows that for a theory with an intrinsic positive mass, the finite‑size correction to the mass gap on $T^d_L$ is *exponential* in $L$, of the form $\exp(-mL)$, never polynomial $1/L^p$. The physical literature on $\mathrm{SU}(N)$ glueball extrapolations (Lucini–Teper–Wenger 2004, [hep-lat/0404008](https://arxiv.org/abs/hep-lat/0404008); Athenodorou–Teper 2021, [arXiv:2106.00364](https://arxiv.org/abs/2106.00364)) uses Lüscher's form universally.
+
+The $1/L^2$ in our chain comes from the pedestrian use of $\lambda_1(\Delta_\Lambda) \ge C_2 / L^2$ in $\mathrm{H}_5$. Eliminating it is mathematically equivalent to upgrading $\mathrm{H}_1$ to the BBD‑style $\mathrm{H}_1''$ (Polchinski cascade with susceptibility bound). Counter‑example to keep in mind: Helffer's Ginzburg–Landau process, where the spectral gap of the Glauber generator really is $O(L^{-2})$ in all dimensions — but that is a *critical*, gapless model, and the non‑abelian Wilson interaction is structurally what should rule that case out.
+
+### §7bis.5 Optional strengthening — $\mathrm{H}_7$–$\mathrm{H}_{10}$ (annex)
+
+Four additional hypotheses, of varying flavour and ambition, would tighten the conclusion. They are *not* needed for the conditional theorem above, but flagged for completeness:
+
+- $\mathrm{H}_7$ (Theorem C empirical, taken as uniform asymptotic statement) — strong, has a circularity risk.
+- $\mathrm{H}_8$ (Lüscher exponential finite‑size, taken as input) — standard for massive theories; does not kill $L^{-2}$ on its own.
+- $\mathrm{H}_9$ (continuity of $\kappa(G, d)$ in the continuum limit) — coherence hypothesis, weak.
+- $\mathrm{H}_{10}$ (non‑abelian Polchinski cascade extending [BBD24] $\varphi^4_3$ to Wilson $\mathrm{SU}(N)$) — **the natural target for the collaboration**: granting $\mathrm{H}_{10}$ removes $L^{-2}$ entirely and yields $m_{\mathrm{gap}}^{\mathrm{lattice}} \ge \varepsilon(N, d) \cdot (1 - \kappa) \cdot \beta$.
+
+### §7bis.6 What the theorem buys, and the proposed timeline
+
+The conditional theorem, even before $\mathrm{H}_1$ is closed, is structural: the verrou is *named*, *located*, and visibly compatible with the BBD framework. A referee can verify the conditional implication ($\mathrm{H}_1 \Rightarrow$ lattice mass gap) on its own, and the open piece is exactly the cluster‑expansion / Polchinski step you and your collaborators have been pushing on $\varphi^4$. This is, on purpose, the same pattern Wiles used in 1995 (modularity as a named conjecture; later closed by Taylor–Wiles).
+
+If this looks like a reasonable starting point, my proposed timeline would be:
+
+- **0–3 months** — clean draft of the conditional theorem above (with all three formulations of $\mathrm{H}_1$ presented in parallel), submit to LMP or CMP.
+- **3–9 months** — joint work on $\mathrm{H}_1''$ in the Polchinski multiscale language; in parallel, tighten the $L$‑dependence in the auxiliary steps and try the abelian $\mathrm{U}(1)$ Wilson case as a warm‑up.
+- **9–15 months** — depending on how much of $\mathrm{H}_1''$ closes: either a follow‑up paper on the partial resolution (best case: $\mathrm{SU}(2)$ in $D=4$, joint with you and Dagallier, target CMP or Annals), or a clean negative result on what makes the non‑abelian cascade hard (target LMP / CPAM).
 
 ---
 

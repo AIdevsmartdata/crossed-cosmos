@@ -1,0 +1,150 @@
+# Pitch collaboration — Yang–Mills 4D mass gap, route via BBD multiscale LSI
+
+**To** : Prof. Roland Bauerschmidt (Courant Institute / Cambridge DPMMS)
+**From** : Kévin Rémondière, independent researcher, Oloron‑Sainte‑Marie (France)
+**ORCID** : 0009‑0008‑2443‑7166
+**Date** : 2026‑05‑24
+**Subject** : possible collaboration on a non‑abelian Polchinski / cluster‑expansion route to the Wilson SU(N) 4D mass gap. Honest status, identified locks, no overclaim.
+
+---
+
+## §1. Presentation
+
+Dear Professor Bauerschmidt,
+
+My name is Kévin Rémondière. I am an independent researcher based in Oloron‑Sainte‑Marie (France), ORCID 0009‑0008‑2443‑7166. Over the last six months I have been running a focused programme on the 4D Yang–Mills mass gap, combining (a) extensive lattice numerics on a small RTX‑3090 cluster, (b) a Lean 4 formalisation of every piece of the logical chain that admits one, and (c) regular adversarial cross‑checks with second‑opinion LLMs to catch fabrications early. The current state of the programme has stabilised enough that I would like to ask you, briefly and honestly, whether one specific lock matches your current research interests.
+
+This letter is deliberately short, with the math precise, and explicitly distinguishes what is **proved**, **sketched**, and **open**.
+
+---
+
+## §2. State of the programme (clinical summary)
+
+**Lean stack.** The repository `crossed‑cosmos` contains 6301 lines of Lean 4 under `Crossed/` covering the YM core, with **zero `sorry`** in the YM files. The dependency graph is
+
+```
+Pillar1Johnson ─┐
+Pillar2BCH ─────┤
+KappaOneSixth ──┼──▶ TheoremCLattice ──▶ LemmaB_BetaInfinity ──▶ InformationConservation
+                │                              │
+                └───────────▶ LipschitzActionMeasure ──▶ DirectAFConvergence
+```
+
+The headline Lean theorem `mass_gap_continuum_D4` is **PROVED conditional** on five named axioms: a Bakry–Émery saturation step, a Bałaban‑style cluster expansion bound, a Brydges–Federbush β=∞ Gaussian comparison, a Wilson‑flow scale‑setting axiom, and one Kolmogorov projective‑consistency glue. Each axiom is a precisely named statement pointing at a specific paper or program‑level open problem, not a hidden assumption.
+
+**Unconditional pieces.**
+- `KappaOneSixth.lean` (~300 lines): the rank‑saturation factor κ = 1/6 is **PROVED with 0 axioms**, via two independent derivations that both reduce to elementary rational arithmetic checked by `norm_num`:
+  - Hodge self‑duality on a closed 4‑manifold of signature 0: $b_2 = b_2^+ + b_2^- = 3 + 3 = 6$, so $\kappa = 1/b_2 = 1/6$.
+  - $A_2$ root system of $\mathfrak{su}(3)$: $|\Phi(A_2)| = 6$, so $\kappa = 1/|\Phi| = 1/6$.
+- `LipschitzActionMeasure.lean` (~620 lines): the Lipschitz action→Gibbs‑measure passage (item A2 of the framework) is PROVED in Lean with 0 sorrys.
+- Pinsker $\alpha = 1$ inequality (Cover–Thomas, 2nd ed., Lemma 11.6.1) is PROVED in Lean as a baseline reference exponent.
+
+**Empirical anchors (Theorem C).** On 27 datapoints cross‑$(N, D, G)$, the lattice law
+$$C_{\mathrm{LSI}}(\mu_{a,\beta}) \;\le\; c_\infty(D)\bigl(1 - \kappa\,\delta_{\mathrm{rank}(G),\, C_2-C_3}\bigr), \qquad c_\infty(D) = \frac{C(D,2) - C(D,3)}{2D},$$
+holds at the 7σ level (cluster 718, 2026‑05‑23). This is a **factual empirical statement**, independent of every theoretical claim below.
+
+---
+
+## §3. The main lock: non‑abelian cluster expansion at large β
+
+The single technical statement that closes the chain from lattice Theorem C to a continuum mass gap is what we informally call `action_bound_balaban_su_n` — a $\beta$‑uniform, $a$‑uniform Bakry–Émery / cluster‑expansion bound on the Wilson measure $\mu_{a,\beta}$ over $\mathrm{SU}(N)^{E(\Lambda_a)}$ for $\Lambda_a = a\mathbb{Z}^4 \cap T^4_L$, of the form
+$$\mathrm{Ric}_{g_W} + \mathrm{Hess}(\beta\, S_W) \;\ge\; K_0(\beta,a,L)\, g_W, \qquad K_0 \;\to\; 1/c_\infty(4) \text{ as } \beta \to \infty,$$
+together with uniformity in $(a, L)$ along $L \to \infty$, $a \to 0$.
+
+In Bałaban's original programme (1985–1989, Comm. Math. Phys.) this is split into four gaps that have remained partially open ever since. I have articulated them as $G_1$–$G_4$ in `OP_PILLAR_3_FORMAL_2026-05-24.md` (full audit, ~40 KB):
+
+- **$G_1$** — reduction of the non‑abelian block measure to an effectively abelian one in small fields, with controlled error from the BCH commutator $[A_\mu, A_\nu]$ at order $a^5 \beta |A|^3$ (the leading non‑abelian correction is naively dominated in the continuum, but a uniform statement is missing);
+- **$G_2$** — convergent polymer expansion at large $\beta$ on $\mathrm{SU}(N)^{E(\Lambda_a)}$, with cumulants controlled via Peter–Weyl on $\mathrm{SU}(N)$ rather than the Gaussian estimates available for $\varphi^4$;
+- **$G_3$** — large‑field region in 4D (where the small‑field expansion is not directly applicable);
+- **$G_4$** — uniformity of constants as $a \to 0$ jointly with the cluster expansion.
+
+This is the verrou for which I believe your BBD framework is the most plausible existing route, and the reason I am writing.
+
+**Why BBD 2024 (φ⁴ in d = 2, 3) is structurally a good fit.** The BBD adaptation `papers/G3_BBD_adaptation_YM_2026-05-23.md` checks the three BBD prerequisites against Wilson SU(N):
+
+1. *Finite‑dimensional local state space.* The physical (Bianchi‑quotient) class $\mathrm{Class}\, F = \mathrm{Harm}^2 \otimes \mathfrak{su}(N)$ has dimension $(C(D,2) - C(D,3)) \cdot (N^2 - 1)$, which is $2(N^2 - 1)$ in $D = 4$. **Finite‑dimensional, satisfied with margin**.
+2. *Dobrushin condition.* The Bianchi cohomology fixes $c_\infty(4) = 1/4$ as a universal geometric constant, independent of $\beta$. This compares very favourably with $\varphi^4$, where the Dobrushin coefficient diverges at criticality. **Satisfied with a factor‑of‑4 margin**.
+3. *RG invariance.* Polchinski preserves gauge invariance (Polchinski 1984), which preserves Bianchi closure, which preserves the projection onto Class $F$. **Satisfied with the appropriate definition of the flow on $\mathrm{SU}(N)^E$**.
+
+The two genuine technical gaps (in addition to the four $G_i$ above) that I see and have not been able to close on my own are:
+
+- (i) **Mayer–Vietoris tensorisation defect.** Block decoupling on the Bianchi quotient is not exactly tensor‑product; it carries a surface/volume defect of size $|\partial B|/|B|$ which is sub‑extensive but must be controlled along the scales $a_n = 2^{-n}a_0$.
+- (ii) **Non‑abelian cumulants on $\mathrm{SU}(N)$**, naturally expanded in Peter–Weyl harmonics rather than scalar Gaussian moments.
+
+---
+
+## §4. A possible alternative route, **not guaranteed**
+
+A separate idea that I have explored but that I do **not** present as a substitute for §3 is to attempt a β‑uniform Bakry–Émery bound directly on Class $F = \mathrm{Harm}^2 \otimes \mathfrak{su}(N)$ rather than on the full link space. This finite‑dimensional space (6 real dimensions for SU(2), 16 for SU(3) in $D=4$) is small enough that Prokhorov compactness plus Bakry–Émery rigidity might bypass the cluster expansion.
+
+After a careful formal audit (`OP_PILLAR_3_FORMAL_2026-05-24.md`, with three sub‑steps proved and one open), this route hits a strict obstruction: the Hodge Laplacian $\Delta_1$ vanishes by definition on harmonic 2‑forms, so any direct $\lambda_{\min}(\Delta_1)$ bound on $\mathrm{Harm}^2$ is the **zero mode**. The four candidate fixes I have written down are:
+(a) 't Hooft twist on $T^4$,
+(b) restriction to $|k| \ge 2\pi/L$,
+(c) quotient by the centre $\mathbb{Z}_N$,
+(d) BBD multiscale on Class $F$.
+None of these is currently rigorous, and option (d) folds the alternative back into the main route. I include this only so that the audit is complete; the alternative route is **not a viable bypass on its own**.
+
+---
+
+## §5. Honest estimate
+
+If we were able to set up a collaboration that closed $G_1$–$G_4$ via a non‑abelian BBD adaptation, my honest estimate is:
+
+- **12–18 months** of focused work, with you, Benoit Dagallier, and 1–2 postdocs;
+- output: one CMP or Annals paper proving a continuum mass gap for $\mathrm{SU}(N)$ Wilson lattice in $D = 4$, **conditional** on a small named list of analytic axioms with each axiom matching a specific result already in your literature (BBD 2024, Bauerschmidt–Bodineau 2019, Bauerschmidt–Dagallier 2024);
+- the Clay Prize itself remains a longer‑horizon target, 5–15 years, with my honest credence at $P \approx 40\text{–}55\%$ over 10 years, contingent on resolving the four Bałaban gaps in a way the community will accept.
+
+I want to be explicit that I am asking about a research collaboration of unknown outcome, not announcing a solution.
+
+---
+
+## §6. Recent literature anchors
+
+The route is informed by, and would build on, the following recent work (all arXiv IDs verified by API on 2026‑05‑23):
+
+- **Bauerschmidt, Dagallier (2024)** — Log‑Sobolev inequality for the $\varphi^4_2$ and $\varphi^4_3$ measures, Comm. Pure Appl. Math. 77 (2024) 2579–2612 ([arXiv:2202.02295](https://arxiv.org/abs/2202.02295)) — the LSI multiscale template I propose to adapt.
+- **Bauerschmidt, Bodineau, Dagallier (2024)** — Stochastic dynamics and the Polchinski equation: an introduction, Probability Surveys 21 (2024) 200–290 ([arXiv:2307.07619](https://arxiv.org/abs/2307.07619)) — multiscale framework.
+- **Bauerschmidt, Bodineau (2019)** — Log‑Sobolev inequality for the continuum sine‑Gordon model, Comm. Pure Appl. Math. 74 (2021) 2064–2113 ([arXiv:1907.12308](https://arxiv.org/abs/1907.12308)) — closest non‑Gaussian compact target.
+- **Adhikari, Cao (2022)** — Weak coupling lattice gauge theory ([arXiv:2202.10375](https://arxiv.org/abs/2202.10375)) — small‑coupling lattice gauge bounds in 4D.
+- **Shen (2021)** — 3D Yang–Mills–Higgs convergence ([arXiv:2201.03487](https://arxiv.org/abs/2201.03487)) — recent constructive gauge result in $D = 3$.
+- **Cao, Nissim, Sheffield (2025)** — Dynamical approach to area law for lattice Yang–Mills ([arXiv:2509.04688](https://arxiv.org/abs/2509.04688)) — recent dynamical/LSI ingredients in the YM lattice setting, partially addressing tensorisation defects.
+
+---
+
+## §7. Honest disclosure of caught errors
+
+I owe you three honest catches from earlier drafts of this material, which I have stamped and corrected today (2026‑05‑24) **before** sending you this letter:
+
+1. **Otto–Westdickenberg 2008 was a fabricated citation.** An earlier internal draft attributed a Hölder TV stability bound $\|\mu_t - \mu_{t'}\|_{\mathrm{TV}} \le C \cdot |t - t'|^{1-\kappa}$ for a Gibbs family $\mu_t = e^{-tH}/Z(t)$ to a paper "Otto–Westdickenberg, J. Funct. Anal. 254 (2008), 2865–2940". That reference does not exist; the LLM I was using had hallucinated it. The genuine OW reference is *Eulerian calculus for the contraction in the Wasserstein distance*, SIAM J. Math. Anal. **37** (2005) 1227–1255, which proves a $W_2$ contraction for the porous‑medium equation — a different object (PME trajectory, not Gibbs family) and a different norm ($W_2$, not TV). I caught and pulled this from all drafts before any public circulation; the file `OP_OTTO_W_VERBATIM_2026-05-24.md` documents the catch in full.
+2. **The claim "$\alpha = 5/6$ universal" was based on a 4‑point small‑$\beta$ fit.** I extended the $\beta$‑scan to 7 points ($\beta \in \{10, 50, 100, 200, 300, 500, 1000\}$, with HMC trajectory length adapted at high $\beta$). The local exponent $\alpha$ now oscillates between $-0.6$ and $+1.2$. The original "$\alpha = 5/6 = 1 - \kappa$" was an artefact of the small‑$\beta$ window; I am no longer claiming it.
+3. **A consequence of (1) and (2)** is that what I previously presented as a derivation of $\alpha = 1 - \kappa$ from OW is now disclosed as a **non‑explained numerical coincidence** on a narrow $\beta$ window. The $\kappa = 1/6$ Lean derivation is independent of $\beta$‑scan and stands; the bridge $\alpha \leftrightarrow \kappa$ does not, and is not in this pitch.
+
+I am sending you the cleaner v22 of the master document precisely because these catches happened. The same anti‑fabrication discipline (arXiv API verification before citation, adversarial cross‑LLM review, Lean axiom audit) applies to everything above.
+
+---
+
+## §8. Request
+
+If the picture in §3 is of interest, would you be open to a one‑hour Zoom to discuss whether your group's BBD framework can be adapted, in collaboration, to the non‑abelian Wilson SU(N) setting in $D = 4$? After that one call, no obligation — you can say yes / no / maybe.
+
+Documents I can send on request:
+
+1. `CLAY_THEOREM_FULL_v22_2026-05-24.md` — master logical chain, ~10 KB, with the post‑catch table of what is proved / sketched / open.
+2. `OP_PILLAR_3_FORMAL_2026-05-24.md` — formal audit of the alternative finite‑dimensional route, including the zero‑mode obstruction and the four candidate fixes.
+3. `OP_OTTO_W_VERBATIM_2026-05-24.md` — the OW fabrication catch in full.
+4. `test_all_claims_2026-05-24.py` — exhaustive script validating / falsifying the algebraic and empirical claims used above.
+5. Read‑only GitHub access to `crossed‑cosmos‑private` for the Lean stack and lattice scripts.
+
+Thank you for reading this far, and for whatever response you have time to give.
+
+Yours sincerely,
+
+**Kévin Rémondière**
+Independent researcher
+Oloron‑Sainte‑Marie, France
+ORCID 0009‑0008‑2443‑7166
+kevin.remondiere@gmail.com
+
+---
+
+*Anti‑fabrication note: every arXiv ID above was verified through the arXiv API on 2026‑05‑23. The Lean theorems referenced are kernel‑checked with mathlib 4.29.1. The empirical 7σ figure refers to 27 datapoints cross‑$(N, D, G)$ from the cluster‑718 / RTX‑3090 run and is reproducible from the scripts in the repo.*

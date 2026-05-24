@@ -59,6 +59,8 @@ For $D \ge 5$, $C(D,2) - C(D,3) \le 0$, so no non‑abelian gauge group is satur
 
 The structural consequence is that the geometric mechanism is confined to $D \in \{2, 3, 4\}$, with $D = 4$ as the last non‑trivial dimension. This is not a chosen feature of the framework; it is forced by the polynomial $D(D-1)(5-D)/6$ having exactly three positive integer values compatible with $\mathrm{SU}(N)$ ranks. The two non‑physical pairs supply independent test cases for any proposed proof technique: a successful non‑abelian BBD adaptation would, by the same mechanism, predict $\alpha = 1/2$ for 2D Yang–Mills (where the answer is independently known) and $\alpha = 3/4$ for 3D SU(3) (where lattice tests are inexpensive).
 
+A short calculation on Bianchi I anisotropic spatial slices ($T^3_{\gamma_{ij}}$ with $\gamma_{ij} = \mathrm{diag}(a_1^2, a_2^2, a_3^2)$) confirms that the four building blocks $b_2(T^4)$, $b_2^+$, $\mathrm{rank}(\mathrm{SU}(3))$, $|\Phi(A_2)|$ are all topological/algebraic invariants. The correction factor $\kappa = 1/6$ is therefore **topologically invariant under metric deformation**. What varies is the Bianchi constant $c_\infty(\gamma) \propto (C(D,2)-C(D,3)) / (2 \sum_i a_i^{-2})$. Honest framing: $\kappa$ is topologically invariant; the existence of a positive mass gap remains conditional on the unproved cluster expansion bound (the principal $\mathrm{verrou}$ of §3), but the *structure* of the correction does not depend on the background metric.
+
 ---
 
 ## §3. The main lock: non‑abelian cluster expansion at large β

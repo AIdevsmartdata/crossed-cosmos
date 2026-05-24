@@ -9,24 +9,45 @@ import Crossed.TheoremCLattice
 import Crossed.VariationBetaBound
 
 /-!
-  # Crossed Cosmos — Otto-Westdickenberg 2008 Hölder TV stability via LSI + saturation
+  # Crossed Cosmos — Hölder TV stability α = 1 − κ = 5/6 (empirical conjecture)
   Author: Kévin Rémondière
   Affiliation: Independent researcher, Oloron-Sainte-Marie, France
   ORCID: 0009-0008-2443-7166
-  Date: 2026-05-23
+  Date: 2026-05-23 (CATCH PATCH 2026-05-24)
 
-  ## Mission
+  ## ⚠️ CATCH 2026-05-24 — Citation Otto-Westdickenberg 2008 J.Funct.Anal. INVALIDE
+
+  Le mission brief initial citait "Otto-Westdickenberg 2008, J. Funct. Anal.
+  254(11):2865-2940, Theorem 2.1" comme support théorique. **Cette citation
+  est une FABRICATION LLM** (Opus 1 verbatim verify 2026-05-24) :
+  - Vraie référence : Otto-Westdickenberg, SIAM J. Math. Anal. 37 (2005) 1227-1255
+  - OW 2005 traite **porous medium equation**, pas Gibbs e^{-tH}/Z
+  - Distance utilisée : **W₂** (Wasserstein-2), pas TV
+  - Contraction : **exponentielle e^{-λt}**, pas Hölder |t-t'|^{1-κ}
+  - **Aucun coefficient κ de saturation**
+
+  Voir `papers/OP_OTTO_W_VERBATIM_2026-05-24.md` pour l'audit complet.
+
+  **Conséquence** : la chaîne `α = 1 - κ` n'a PAS de support théorique direct
+  via Otto-Westdickenberg. C'est une **COÏNCIDENCE EMPIRIQUE** entre :
+  - κ = 1/6 (Hodge SU(3) D=4, PROUVÉ Lean `KappaOneSixth`)
+  - α ≈ 0.834 (PySR fit sur 4 datapoints β-scan, écart 0.06% vs 5/6)
+
+  Une dérivation théorique formelle via Ledoux 1999 ch.6 ou autre route LSI
+  reste à établir. L'axiome `otto_westdickenberg_2008_TV_bound` ci-dessous
+  doit être lu comme `alpha_5over6_empirical_conjecture` — conjecture
+  empirique sans démonstration théorique formelle à ce jour.
+
+  ## Mission originale (mathématique pure inchangée)
 
   **Mission** : OP-LEAN-OTTO-WESTDICKENBERG-ALPHA-1-KAPPA (2026-05-23).
 
-  Lean 4 formalisation of the **Otto-Westdickenberg 2008** theorem
-  ```
-        Otto F., Westdickenberg M., "Eulerian calculus for the contraction
-        in the Wasserstein distance", J. Funct. Anal. 254(11):2865-2940, 2008,
-        Theorem 2.1
-  ```
-  adapted to the Wilson SU(N) lattice Gibbs measure, and the derivation of
-  the **Hölder exponent**
+  Lean 4 formalisation du raisonnement empirique reliant κ (PROUVÉ) et
+  α (empirique) via la conjecture α = 1 − κ. La valeur algébrique exacte
+  `α = 5/6` est PROUVÉE en `ℚ` et `ℝ` (norm_num, sans axiomes), seule la
+  borne TV elle-même reste conjecturale (axiome ouvert renommé).
+
+  ## Mathematical content (conjectural form Hölder via LSI + saturation)
   ```
         α = 1 − κ = 1 − 1/6 = 5/6 ≈ 0.8333
   ```

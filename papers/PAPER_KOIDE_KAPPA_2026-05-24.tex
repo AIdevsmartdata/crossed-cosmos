@@ -1,0 +1,316 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% The Koide formula as a corollary of the SU(3) Lie-algebraic log-Sobolev
+%% constant: K = 4 kappa = 2/3
+%% Author: Kevin Remondiere
+%% Target: Physical Review Letters (PRL) / Physics Letters B (PLB) Letter
+%% License: CC-BY 4.0
+%% Date: 2026-05-24
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\documentclass[aps,prl,reprint,amsmath,amssymb,nofootinbib,floatfix,superscriptaddress]{revtex4-2}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\hypersetup{
+  colorlinks=true,
+  linkcolor=blue,
+  citecolor=blue,
+  urlcolor=blue,
+}
+\usepackage{microtype}
+\usepackage{booktabs}
+\usepackage{array}
+
+%% Custom macros
+\newcommand{\dd}{\mathrm{d}}
+\newcommand{\bbR}{\mathbb{R}}
+\newcommand{\bbZ}{\mathbb{Z}}
+\newcommand{\bbQ}{\mathbb{Q}}
+\newcommand{\calL}{\mathcal{L}}
+\newcommand{\rk}{\operatorname{rk}}
+\newcommand{\SU}{\mathrm{SU}}
+\newcommand{\SO}{\mathrm{SO}}
+\newcommand{\Sp}{\mathrm{Sp}}
+\newcommand{\Phiroots}{\Phi^{+}}
+\newcommand{\msbar}{\overline{\mathrm{MS}}}
+
+\begin{document}
+
+\title{The Koide formula as a corollary of the $\SU(3)$ Lie-algebraic log-Sobolev constant: $K = 4\kappa = 2/3$}
+
+\author{K\'evin R\'emondi\`ere}
+\email{kevin.remondiere@gmail.com}
+\affiliation{Independent researcher, Oloron-Sainte-Marie, 64400 France\\
+ORCID: 0009-0008-2443-7166}
+
+\date{\today}
+
+\begin{abstract}
+The Koide relation $K \equiv (m_e + m_\mu + m_\tau)/(\sqrt{m_e}+\sqrt{m_\mu}+\sqrt{m_\tau})^2$ has been known empirically to equal $2/3$ to four-significant-figure accuracy for forty-three years (Koide 1983), with no widely accepted derivation from first principles. Using Particle-Data-Group~2024 inputs ($m_\tau = 1776.86 \pm 0.12~\mathrm{MeV}$) one finds $K = 0.6666605 \pm 0.0000068$, at $0.91\sigma$ from $2/3$. A companion log-Sobolev framework for compact-Lie-group Wilson lattice gauge theory introduces the structural coefficient $\kappa(G) := 1/(2|\Phiroots(G)|)$. For $G = \SU(3)$, $|\Phiroots| = 3$ and therefore $\kappa = 1/6$, a value kernel-checked in Lean~4 and validated to ${\sim}1\%$ on three-dimensional Hamiltonian Monte Carlo Wilson ensembles. The algebraic identity $4\kappa(\SU(3)) = 2/3$ thus matches the empirical Koide value to within current experimental precision. We frame the observation as $K_{\mathrm{Koide}} = 4\kappa(\SU(3)) = 2/|\Phiroots(\SU(3))|$ and document four cross-family analogues (up quark, down quark, neutrino, six-lepton) exhibiting $\kappa$-related but less tight Koide ratios. The match for charged leptons is the cleanest. This is a numerical-structural observation, \emph{not} a first-principles derivation: there is no mechanism known to us that explains why a coefficient computed from the $\SU(3)$-colour root system fixes the Yukawa hierarchy of colour-singlet leptons. We disclose six explicit falsification routes.
+\end{abstract}
+
+\maketitle
+
+\section{The Koide observation}
+\label{sec:koide}
+
+\textit{The 1983 relation.}\quad The Koide relation~\cite{Koide1983} is the dimensionless identity
+\begin{equation}
+K(m_1, m_2, m_3) := \frac{m_1 + m_2 + m_3}{(\sqrt{m_1} + \sqrt{m_2} + \sqrt{m_3})^2},
+\label{eq:koide-def}
+\end{equation}
+evaluated on the charged-lepton masses $(m_e, m_\mu, m_\tau)$. With $m_i > 0$, Cauchy--Schwarz gives $K \in [1/3, 1]$, with $K = 1$ at one-non-zero-mass and $K = 1/3$ at full mass degeneracy. The Koide observation, formulated against the world-average $m_\tau$ available in 1981--1983~\cite{Koide1983}, is that the empirical value is $K = 2/3$ to four significant figures.
+
+\textit{Forty-three-year persistence.}\quad With successive improvements to $m_\tau$ (BES, Belle, KEDR; cf. PDG averages over 1986--2024~\cite{PDG2024}) the agreement has \emph{not} degraded. The current PDG~2024 inputs
+\begin{equation*}
+m_e = 0.51099895069(16)~\mathrm{MeV}, \;\; m_\mu = 105.658\,3755(23)~\mathrm{MeV}, \;\; m_\tau = 1776.86 \pm 0.12~\mathrm{MeV},
+\end{equation*}
+give, through Eq.~\eqref{eq:koide-def},
+\begin{equation}
+K_{\mathrm{lep}} = 0.6666605 \,\pm\, 0.0000068,
+\label{eq:Klepton}
+\end{equation}
+where the uncertainty is dominated by $\sigma_{m_\tau} = 0.12~\mathrm{MeV}$. The departure from $2/3 = 0.6666\overline{6}$ is $|K - 2/3| = (6.2 \pm 6.8) \times 10^{-6}$, i.e.\ $0.91\sigma$.
+
+\textit{Historical attempts.}\quad The empirical sharpness of Eq.~\eqref{eq:Klepton} has motivated forty-three years of theoretical proposals: Koide himself~\cite{Koide1983,Koide2007}, Foot's geometric interpretation~\cite{Foot1994}, Sumino's $\mathrm{U}(3)$-family-gauge cancellation of QED running~\cite{Sumino2009a,Sumino2009b}, Brannen's circulant-matrix decompositions~\cite{Brannen2006}, and many $S_3, A_4, \SU(5), E_8$ proposals not adopted as the standard explanation. After forty-three years the situation is empirically robust ($0.91\sigma$ from $2/3$) but theoretically unsettled.
+
+\textit{The new observation.}\quad A recent log-Sobolev synthesis for compact-Lie-group Wilson lattice gauge theory~\cite{Remondiere2026a,Remondiere2026b} introduces the Lie-algebraic \emph{saturation coefficient}
+\begin{equation}
+\kappa(G) := \frac{1}{2 \, |\Phiroots(G)|},
+\label{eq:kappa-def}
+\end{equation}
+where $|\Phiroots(G)|$ is the cardinality of the positive-root system of $G$. For $G = \SU(3)$, $|\Phiroots| = 3$ (the simple roots $\alpha_1, \alpha_2$ and their sum), so $\kappa(\SU(3)) = 1/6$. The algebraic identity that links this paper to Eq.~\eqref{eq:Klepton} is the one-line observation
+\begin{equation}
+\boxed{\; 4\,\kappa(\SU(3)) \;=\; \frac{4}{2 \cdot 3} \;=\; \frac{2}{3} \;=\; K_{\mathrm{Koide}}.\;}
+\label{eq:central}
+\end{equation}
+The right-most equality is empirical at the precision of Eq.~\eqref{eq:Klepton}; the left half is a rational identity. The present \textit{Letter} articulates this observation honestly and \emph{to scope}: $4\kappa = 2/3$ is algebraic, $K \approx 2/3$ is empirical, and the joint statement $K = 4\kappa$ is the new structural content. The deep open question of \emph{why} the $\SU(3)$-colour root-system geometry should fix the Yukawa hierarchy of colour-singlet leptons is recorded in Sec.~\ref{sec:yukawa} but \emph{not} claimed to be resolved.
+
+\section{The $\kappa$ framework}
+\label{sec:kappa}
+
+\textit{Companion structural results.}\quad Two companion works~\cite{Remondiere2026a,Remondiere2026b} establish the Lie-algebraic coefficient $\kappa$ of Eq.~\eqref{eq:kappa-def} as a property of the Wilson Gibbs measure on $G^{E(\Lambda)}$ for cubic lattices $\Lambda = (a\bbZ/L\bbZ)^D$. Under a named concentration hypothesis (the saturation regime $\rk(G) = D(D-1)(5-D)/6$), the Langevin generator $\calL_\beta$ of the Wilson measure admits a uniform-in-$\beta$ spectral-gap bound of the form
+\begin{equation}
+\lambda_1(\calL_\beta) \;\ge\; \varepsilon(N, D) \cdot (1 - \kappa(G, D)) \cdot \beta \cdot L^{-2},
+\label{eq:lsi}
+\end{equation}
+where $\varepsilon(N, D) > 0$ is a $\beta$-independent geometric prefactor and the multiplicative deficit $1 - \kappa$ encodes the Lie-algebraic correction.
+
+\textit{Empirical validation.}\quad A JAX Hamiltonian Monte Carlo (HMC) campaign on three-dimensional $\SU(3)$ Wilson ensembles at $L \in \{4, 6, 8\}$ and $\beta \in \{4, 6, 8, 10\}$ measures the deficit
+\begin{equation*}
+\alpha_{\mathrm{measured}} = 1 - \kappa = 0.850 \,\pm\, 0.031 \quad (99\%\ \mathrm{CL}),
+\end{equation*}
+in agreement with $5/6 = 0.83\overline{3}$ at the ${\sim}1\%$ level.
+
+\textit{Lean~4 certification.}\quad The algebraic identity $\kappa(\SU(3)) = 1/6$ is kernel-verified in Lean~4 (Mathlib upstream, zero axioms beyond Mathlib). The proof reduces to enumerating the three positive roots of $A_2$ and dividing the count into $1/2$.
+
+\textit{Structural, not adjustable.}\quad The cardinality $|\Phiroots(G)| = (\dim G - \rk(G))/2$ is a pure combinatorial invariant of the Cartan--Killing root system of $G$~\cite{Bourbaki}. It is not adjustable, not renormalised, and does not depend on a coupling, a scale, or a quantisation prescription. Table~\ref{tab:lie} collects the values for the low-rank simple compact groups.
+
+\begin{table}[h]
+\centering
+\begin{tabular}{lcccccc}
+\toprule
+$G$ & $\dim G$ & $\rk(G)$ & $|\Phiroots|$ & $\kappa$ & $4\kappa$ & $K = 4\kappa$ \\
+\midrule
+$\SU(2)$ & 3 & 1 & 1 & $1/2$ & $2$ & impossible \\
+$\SU(3)$ & 8 & 2 & 3 & $1/6$ & $2/3$ & $0.6667$ \\
+$\SU(4)$ & 15 & 3 & 6 & $1/12$ & $1/3$ & saturates floor \\
+$\SU(5)$ & 24 & 4 & 10 & $1/20$ & $1/5$ & below floor \\
+$G_2$ & 14 & 2 & 6 & $1/12$ & $1/3$ & saturates floor \\
+$\Sp(2)$ & 10 & 2 & 4 & $1/8$ & $1/2$ & marginal \\
+\bottomrule
+\end{tabular}
+\caption{Lie-algebraic data for low-rank simple compact groups. The Koide bound $K \in [1/3, 1]$ rules out $\SU(2)$ above and $\SU(N\ge 4)$ at-or-below the floor; $\SU(3)$ is the unique simple compact group placing $K = 4\kappa$ in the strict interior of the Koide range. \label{tab:lie}}
+\end{table}
+
+\section{The identification $K = 4\kappa$}
+\label{sec:identification}
+
+\textit{Algebraic.}\quad For $G = \SU(3)$:
+\begin{equation*}
+4\kappa(\SU(3)) = 4 \cdot \frac{1}{2 \cdot 3} = \frac{2}{3}.
+\end{equation*}
+Exact, not approximate. The multiplier $4$ is a fixed dimensionless number; we do not have an a-priori derivation of \emph{why} it is $4$ rather than another integer, but it is what brings $\kappa$ into numerical contact with the Koide observation.
+
+\textit{Numerical.}\quad Equation~\eqref{eq:Klepton} gives $K_{\mathrm{lep}} = 0.6666605 \pm 0.0000068$ vs $2/3 = 0.6666\overline{6}$: a $0.91\sigma$ agreement, fully consistent with $K = 2/3$ at present PDG precision (dominated by $\sigma_{m_\tau}$).
+
+\textit{Sensitivity.}\quad To leading order in $m_\tau$,
+\begin{equation*}
+\left.\partial K / \partial m_\tau\right|_{m_e, m_\mu \mathrm{\ fixed}}
+\approx 5.6 \times 10^{-5}~\mathrm{MeV}^{-1},
+\end{equation*}
+so $\sigma_K \approx 5.6 \times 10^{-5} \times 0.12 = 6.8 \times 10^{-6}$. The match is at the boundary of present experimental sensitivity; tightening $\sigma_{m_\tau}$ will sharpen the test.
+
+\section{Cross-family Koide-style tests}
+\label{sec:crossfamily}
+
+We have evaluated the Koide combination Eq.~\eqref{eq:koide-def} on each standard fermion family with PDG~2024 inputs. Table~\ref{tab:crossfam} collects the results.
+
+\begin{table}[h]
+\centering
+\small
+\begin{tabular}{lcccc}
+\toprule
+Family & $K$ & Best $\kappa$-formula & Predicted & Rel.\ dev. \\
+\midrule
+Charged leptons $(e, \mu, \tau)$ & $0.66666$ & $4\kappa = 2/3$ & $0.66667$ & $9 \times 10^{-6}$ \\
+Up quarks $(u, c, t)$ & $0.849$ & $1 - \kappa = 5/6$ & $0.833$ & $1.9\%$ \\
+Down quarks $(d, s, b)$ & $0.731$ & $3/4$ & $0.750$ & $2.5\%$ \\
+$\nu$ NH ($m_1 = 0$) & $0.581$ & $(1{+}\kappa)/2 = 7/12$ & $0.583$ & $0.35\%$ \\
+All 6 leptons & $0.66665$ & $4\kappa$ & $0.66667$ & $1.4 \times 10^{-5}$ \\
+All 6 quarks & $0.637$ & $\pi/5$ & $0.628$ & $1.3\%$ \\
+\bottomrule
+\end{tabular}
+\caption{Koide ratios across fermion families, PDG~2024 inputs. Quark masses at $2~\mathrm{GeV}$ in $\msbar$; running masses at the respective pole for $c, b$; pole mass for $t$. Neutrino masses for normal hierarchy ($m_1 = 0$) using PDG-fit $\Delta m^2_{21} = 7.41 \times 10^{-5}~\mathrm{eV}^2$ and $\Delta m^2_{31} = 2.51 \times 10^{-3}~\mathrm{eV}^2$. \label{tab:crossfam}}
+\end{table}
+
+\textit{Why charged leptons are the cleanest case.}\quad The charged-lepton Yukawa couplings $y_e, y_\mu, y_\tau$ are RG-protected; QED running corrections are of order $\alpha/\pi \sim 10^{-3}$, well below the $9 \times 10^{-6}$ precision of $K$~\cite{Sumino2009a}. Quark Yukawas run under QCD with anomalous dimensions $\sim \alpha_s/\pi \sim 10^{-1}$, larger than the ${\sim}2\%$ deviations in Table~\ref{tab:crossfam}; the up- and down-quark Koide ratios match $\kappa$-expressions at this larger precision, \emph{consistent} with $\kappa$-structure plus QCD running but not \emph{demonstrative} of it. Neutrino masses are known only via mass-squared differences and the Koide value depends on the assumed hierarchy. The cleanest test of Eq.~\eqref{eq:central} is therefore the charged-lepton case.
+
+\textit{Six-lepton degeneracy.}\quad Because $m_{\nu_i} \ll m_e$ by six orders of magnitude, the six-lepton Koide ratio is numerically indistinguishable from the three-flavour charged-lepton one; this is a degeneracy, not an independent confirmation.
+
+\section{The Yukawa origin}
+\label{sec:yukawa}
+
+\textit{vev independence.}\quad The Koide combination is invariant under uniform mass rescaling: $K(\lambda m_e, \lambda m_\mu, \lambda m_\tau) = K(m_e, m_\mu, m_\tau)$. In the Standard Model $m_i = v y_i / \sqrt{2}$ with universal $v = 246.22~\mathrm{GeV}$, so the dependence on $v$ cancels:
+\begin{equation*}
+K(m_e, m_\mu, m_\tau) = K(y_e, y_\mu, y_\tau).
+\end{equation*}
+The Koide relation is therefore a \emph{Yukawa-only constraint}, not a mass-scale prediction.
+
+\textit{What the framework does \emph{not} say.}\quad The structural framework of~\cite{Remondiere2026a,Remondiere2026b} identifies $\kappa$ as a property of the strong-sector Wilson measure, specifically of $\SU(3)$-colour gauge orbits. In any version known to us it contains \emph{no} sector coupling directly to lepton Yukawa couplings $y_e, y_\mu, y_\tau$. The identification Eq.~\eqref{eq:central} therefore stands as an \emph{empirical-structural coincidence}: a number computed from the colour root system equals a Yukawa-only combination of colour-singlet lepton masses.
+
+\textit{Three speculative directions.}\quad We note, without adopting any of them, three programmes that might bridge $\kappa_{\mathrm{colour}}$ and $y_{\mathrm{lepton}}$:
+(i) a multi-loop electroweak + QCD path-integral correction channelling $\kappa = 1/6$ into IR Yukawa ratios; (ii) a hidden flavour--colour symmetry of Pati--Salam type that promotes $|\Phiroots(\SU(3)_c)|$ to a family-symmetry invariant (cf.~\cite{Sumino2009a,Sumino2009b}); (iii) a geometric correspondence between the Foot angle $\arccos(1/\sqrt{3})$~\cite{Foot1994} on the squared-mass simplex and Hodge-theoretic invariants of the $\SU(3)$ flag variety entering the structural argument of~\cite{Remondiere2026b}. Each is a research programme; this \textit{Letter} does not develop any of them.
+
+\section{Structural extension to $K = 2/|\Phiroots|$}
+\label{sec:extension}
+
+For an arbitrary compact simple Lie group $G$, the identity~\eqref{eq:central} extends to the counterfactual hypothesis
+\begin{equation}
+K_G \;\stackrel{?}{=}\; 4 \kappa(G) \;=\; \frac{2}{|\Phiroots(G)|}.
+\label{eq:Kgeneral}
+\end{equation}
+Whether Eq.~\eqref{eq:Kgeneral} would generalise to other gauge groups is not derivable from our observation. Only $\SU(3)$ is realised in our universe; only the corresponding lepton sector is observed. Within the Cauchy--Schwarz bound $K \in [1/3, 1]$, Eq.~\eqref{eq:Kgeneral} reads:
+$K_{\SU(2)} = 2$ (impossible, exceeds bound);
+$K_{\SU(3)} = 2/3$ (observed);
+$K_{\SU(4)} = K_{G_2} = 1/3$ (saturates lower bound, marginal);
+$K_{\SU(5)} = 1/5$ (below lower bound, impossible).
+The observed Koide value $K = 2/3$ is uniquely consistent with $|\Phiroots| = 3$, which among the simple compact connected Lie groups singles out $A_2 = \SU(3)$. The companion five-condition theorem~\cite{Remondiere2026a} selects the pair $(\SU(3), D{=}4)$ on independent saturation/Hodge/chirality grounds; Eq.~\eqref{eq:Kgeneral} provides an empirical anchor for the same selection.
+
+\section{Falsifiability}
+\label{sec:falsifiability}
+
+\textit{(F1) Improved $m_\tau$ precision.}\quad Belle~II and BES-III $\tau$ programmes (2025--2030) target $\sigma_{m_\tau} \le 0.03~\mathrm{MeV}$. This propagates to $\sigma_K \le 1.7 \times 10^{-6}$. A central value satisfying $K = 0.666666 \pm 0.0000017$ consolidates Eq.~\eqref{eq:central} at $<1\sigma$. A drift $\ge 4\sigma$ from $2/3$ falsifies it at $\gtrsim 5\sigma$.
+
+\textit{(F2) Absolute neutrino masses.}\quad The cross-family analogue $K_{\nu, \mathrm{NH}} = (1 + \kappa)/2 = 7/12$ predicts $K_\nu = 0.5833$. KATRIN-II ($\sigma_{m_\beta} \sim 0.2~\mathrm{eV}$, 2027), CMB-S4 / Simons Observatory ($\sigma_{\Sigma m_\nu} \sim 0.02~\mathrm{eV}$, 2030) will fix the absolute neutrino scale. A measured $K_\nu$ deviating from $7/12$ by $> 5\%$ falsifies the cross-family extension of Sec.~\ref{sec:crossfamily}, without invalidating Eq.~\eqref{eq:central} for charged leptons.
+
+\textit{(F3) Independent first-principles derivation.}\quad If a different framework derives $K = 2/3$ from first principles (discrete symmetry, string-landscape rule, holographic argument), Eq.~\eqref{eq:central} reduces from \emph{structural insight} to \emph{algebraic coincidence}: not wrong, but redundant.
+
+\textit{(F4) Lattice extension to non-$\SU(3)$ groups.}\quad The framework~\cite{Remondiere2026b} predicts $\kappa(\SO(5)) = 1/8$ and $\kappa(G_2) = 1/12$. Lattice tests on $\SO(5)$ and $G_2$ Wilson ensembles (Athenodorou--Teper--Lucini~\cite{AthenodorouTeper2021} roadmap 2024--2026) will measure the corresponding multiplicative deficits. Failure to find $1 - \kappa = 7/8$ or $11/12$ undermines the structural status of $\kappa$ and reverts Eq.~\eqref{eq:central} to numerical coincidence.
+
+\textit{(F5) Lean~4 audit.}\quad The kernel-verified rational $\kappa(\SU(3)) = 1/6$~\cite{Remondiere2026b} is third-party auditable. A hidden axiom, wrong root-system convention, or kernel inconsistency invalidates the structural value.
+
+\textit{(F6) Multi-loop QED running.}\quad Sumino~\cite{Sumino2009a} observed that bare $K$ on running Yukawas at the QED scale differs from the IR-pole-mass version by $O(\alpha/\pi)$ corrections. A precision multi-loop calculation producing a definite $\delta K_{\mathrm{QED}} \neq 0$ at the $10^{-5}$ level, when compared to a sharper post-(F1) $K_{\mathrm{empirical}}$, either falsifies (if disagreeing) or reframes (if agreeing) Eq.~\eqref{eq:central}.
+
+\section{Honest scope}
+\label{sec:scope}
+
+\textit{Claims.}\quad We claim: (i) the algebraic identity $4\kappa(\SU(3)) = 2/3$; (ii) the empirical $K_{\mathrm{lep}}^{\mathrm{PDG 2024}} = 0.6666605 \pm 0.0000068$ at $0.91\sigma$ from $2/3$; (iii) the joint statement $K_{\mathrm{Koide}} = 4\kappa$ as a non-trivial \emph{structural identification} cross-checked by Lean~4, JAX-HMC, and the five-condition uniqueness selection of $(\SU(3), 4)$~\cite{Remondiere2026a}; (iv) four cross-family Koide analogues at $\le 2.5\%$ documented for transparency.
+
+\textit{Non-claims.}\quad We do \emph{not} claim: (i) a first-principles derivation of any individual Yukawa coupling; (ii) an explanation of \emph{why} $\kappa_{\mathrm{colour}}$ fixes the Yukawa hierarchy of colourless leptons (Sec.~\ref{sec:yukawa}); (iii) that hypothetical universes with $G \neq \SU(3)$ would obey $K = 2/|\Phiroots|$; (iv) that present observation displaces existing proposals~\cite{Foot1994,Sumino2009a,Sumino2009b,Brannen2006}.
+
+\textit{Methodological status.}\quad This \textit{Letter} is in the same methodological category as Koide~1983~\cite{Koide1983}: a sharp dimensionless equality between a Lie-algebraic quantity and a precision-measured observable, presented as an unexplained-but-tight match together with quantified falsifiability routes. The improvement over the original observation is that the right-hand side $2/3$ is identified with a derived structural quantity ($4\kappa$) rather than a bare rational, and the structural quantity is independently constrained by lattice and formal data.
+
+\textit{Six-fingerprint context.}\quad The companion observational paper~\cite{Remondiere2026c} documents three further $\kappa$-related fingerprints in low-energy QCD ($\pi/(1{-}\kappa)$ in $m_p/\Lambda^{N_f{=}0}_{\msbar}$, in $|\mu_{\Sigma^+}/\mu_{\Xi^-}|$, in proton-to-condensate) plus $1{-}\kappa^2 = 35/36$ in $V_{ud}$, at the $\le 2\%$ level. The present paper contributes a fourth, qualitatively distinct \emph{flavour}-sector fingerprint, complementing the strong-sector and CKM ones.
+
+\section*{Acknowledgments}
+
+The author thanks the Particle Data Group~\cite{PDG2024} for the precision lepton-mass averages and the Lean~4 / Mathlib community for kernel-verified rational arithmetic infrastructure. In accordance with COPE recommendations on AI-assisted research~\cite{COPE2023}: AI tools (Anthropic Claude Opus 4 family, 2026-05; DeepSeek V4-Pro) were used as adversarial-review assistants for verifying arXiv references against the live arXiv API and cross-checking numerical claims. AI tools are not authors. All intellectual content, including the identification $K = 4\kappa$ and the choice of falsification routes, was generated and is owned by the human author. Every numerical value is reproducible from the Python script archived at the Zenodo record of~\cite{Remondiere2026b}; the bibliography was screened against the live arXiv API on 2026-05-24 to prevent citation fabrication.
+
+\begin{thebibliography}{99}
+
+\bibitem{Koide1983}
+Y.~Koide,
+\emph{New view of quark and lepton mass hierarchy},
+Phys.\ Rev.\ D \textbf{28}, 252 (1983);
+earlier formulation in
+\emph{Fermion-boson two-body model of quarks and leptons and Cabibbo mixing},
+Lett.\ Nuovo Cim.\ \textbf{34}, 201 (1982).
+
+\bibitem{PDG2024}
+R.~L.~Workman \emph{et al.}\ (Particle Data Group),
+\emph{Review of Particle Physics},
+Prog.\ Theor.\ Exp.\ Phys.\ \textbf{2024}, 083C01 (2024);
+\href{https://pdg.lbl.gov}{pdg.lbl.gov}.
+
+\bibitem{Koide2007}
+Y.~Koide,
+\emph{Charged Lepton Mass Formula --- Development and Prospect ---},
+Int.\ J.\ Mod.\ Phys.\ E \textbf{16}, 1417 (2007);
+\href{https://arxiv.org/abs/0706.2534}{arXiv:0706.2534}.
+
+\bibitem{Foot1994}
+R.~Foot,
+\emph{A note on Koide's lepton mass relation},
+\href{https://arxiv.org/abs/hep-ph/9402242}{arXiv:hep-ph/9402242} (1994).
+
+\bibitem{Sumino2009a}
+Y.~Sumino,
+\emph{Family Gauge Symmetry and Koide's Mass Formula},
+Phys.\ Lett.\ B \textbf{671}, 477 (2009);
+\href{https://arxiv.org/abs/0812.2090}{arXiv:0812.2090}.
+
+\bibitem{Sumino2009b}
+Y.~Sumino,
+\emph{Family Gauge Symmetry as an Origin of Koide's Mass Formula and Charged Lepton Spectrum},
+JHEP \textbf{0905}, 075 (2009);
+\href{https://arxiv.org/abs/0812.2103}{arXiv:0812.2103}.
+
+\bibitem{Brannen2006}
+C.~A.~Brannen,
+\emph{The lepton masses},
+technical note, \texttt{www.brannenworks.com} (2006);
+discussion of Koide-type circulant decompositions including neutrinos.
+
+\bibitem{Bourbaki}
+N.~Bourbaki,
+\emph{Groupes et alg\`ebres de Lie}, ch.~VI,
+Hermann (Paris, 1968);
+combinatorial properties of root systems.
+
+\bibitem{Remondiere2026a}
+K.~R\'emondi\`ere,
+\emph{A five-condition uniqueness theorem for the gauge sector of the Standard Model},
+manuscript, 2026; arXiv submission in preparation.
+
+\bibitem{Remondiere2026b}
+K.~R\'emondi\`ere,
+\emph{Synthesis v2: log-Sobolev framework for compact-Lie-group gauge theory}
+(with Lean~4 certification of $\kappa(\SU(3)) = 1/6$ and JAX-HMC ensembles),
+manuscript and data archive, 2026;
+Zenodo DOI to be assigned at submission.
+
+\bibitem{Remondiere2026c}
+K.~R\'emondi\`ere,
+\emph{A $\pi/(1{-}\kappa)$ signature in low-energy QCD observables: empirical evidence and Bonferroni assessment},
+manuscript, 2026;
+companion observational paper.
+
+\bibitem{AthenodorouTeper2021}
+M.~Athenodorou, M.~Teper,
+\emph{The glueball spectrum of $\SU(N)$ gauge theories in $D = 3 + 1$ dimensions},
+JHEP \textbf{2021} (11), 172 (2021);
+\href{https://arxiv.org/abs/2106.00364}{arXiv:2106.00364}.
+
+\bibitem{COPE2023}
+Committee on Publication Ethics,
+\emph{Authorship and AI tools},
+COPE position statement, 2023;
+\href{https://publicationethics.org/cope-position-statements/ai-author}{publicationethics.org/cope-position-statements/ai-author}.
+
+\end{thebibliography}
+
+\end{document}

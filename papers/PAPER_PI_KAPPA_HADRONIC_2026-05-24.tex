@@ -1,0 +1,373 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% A pi/(1-kappa) signature in low-energy QCD observables: empirical evidence
+%% and Bonferroni assessment
+%% Author: Kevin Remondiere
+%% Target: Physics Letters B (PLB) / Physical Review Letters (PRL)
+%% License: CC-BY 4.0
+%% Date: 2026-05-24
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\documentclass[aps,prl,reprint,amsmath,amssymb,nofootinbib,floatfix,superscriptaddress]{revtex4-2}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\hypersetup{
+  colorlinks=true,
+  linkcolor=blue,
+  citecolor=blue,
+  urlcolor=blue,
+}
+\usepackage{microtype}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{multirow}
+
+%% Custom macros
+\newcommand{\Tr}{\operatorname{Tr}}
+\newcommand{\tr}{\operatorname{tr}}
+\newcommand{\dd}{\mathrm{d}}
+\newcommand{\bbR}{\mathbb{R}}
+\newcommand{\bbZ}{\mathbb{Z}}
+\newcommand{\calL}{\mathcal{L}}
+\newcommand{\calF}{\mathcal{F}}
+\newcommand{\calR}{\mathcal{R}}
+\newcommand{\Lat}{\Lambda}
+\newcommand{\rk}{\operatorname{rk}}
+\newcommand{\SU}{\mathrm{SU}}
+\newcommand{\SO}{\mathrm{SO}}
+\newcommand{\msbar}{\overline{\mathrm{MS}}}
+\newcommand{\Piskappa}{\Pi_{\kappa}}
+\newcommand{\Vskappa}{V_{\kappa}}
+\newcommand{\Phiroots}{\Phi^{+}}
+\newcommand{\LambdaMS}{\Lambda_{\msbar}}
+\newcommand{\LambdaPG}{\Lambda^{N_f = 0}_{\msbar}}
+\newcommand{\muN}{\mu_N}
+
+\begin{document}
+
+\title{A $\pi/(1{-}\kappa)$ signature in low-energy QCD observables: empirical evidence and Bonferroni assessment}
+
+\author{K\'evin R\'emondi\`ere}
+\email{kevin.remondiere@gmail.com}
+\affiliation{Independent researcher, Oloron-Sainte-Marie, 64400 France\\
+ORCID: 0009-0008-2443-7166}
+
+\date{\today}
+
+\begin{abstract}
+A recent framework identifies the Lie-algebraic coefficient $\kappa(G) = 1/(2|\Phiroots(G)|)$ as a multiplicative log-Sobolev correction to the Wilson Gibbs measure of $G$-gauge theory, with $\kappa(\SU(3)) = 1/6$ confirmed empirically to ${\sim}1\%$ on three-dimensional Hamiltonian Monte Carlo ensembles and formally certified in Lean~4. We investigate whether this coefficient leaves a measurable fingerprint on low-energy QCD observables. A computational campaign on $1315$ Particle-Data-Group mass ratios and $195$ candidate formulas including $21$ $\kappa$-containing expressions yields a global $Z$-score of $17.09\sigma$ for tight matches ($\lesssim 1\%$) over a log-uniform Bonferroni baseline and a $\kappa$-only $Z$-score of $7.75\sigma$. Within this excess we identify three independent occurrences of $\pi/(1{-}\kappa) = 6\pi/5 \approx 3.7699$ (proton-to-pure-gauge-scale, $|\mu_{\Sigma^+}/\mu_{\Xi^-}|$, proton-to-condensate) and one of $1 - \kappa^2 = 35/36$ in $V_{ud}$, each at $\le 2\%$ deviation and one at $\le 0.2\%$. The $m_p/\Lambda$ identity holds only in pure-gauge $\Lambda$ schemes ($N_f{=}0$, condensate, $r_0$, $\sqrt{\sigma}$) and fails by $\ge 15\%$ in full-QCD $N_f \in \{2,3,4,5\}$ schemes; this is consistent with $\kappa$ being a geometric invariant of pure Yang--Mills, washed out by dynamical fermions. The paper is observational, not derivational; we propose four explicit falsification routes.
+\end{abstract}
+
+\maketitle
+
+\section{Introduction}
+\label{sec:intro}
+
+\textit{Framework.}\quad Companion works~\cite{Remondiere2026a,Remondiere2026b} develop a log-Sobolev framework for the Wilson Gibbs measure of compact-Lie-group gauge theory on a $D$-dimensional cubic lattice, in which the spectral gap admits a uniform-in-$\beta$ lower bound of the form
+\begin{equation}
+\lambda_1(\calL_\beta) \ge \varepsilon(N, D) \cdot \big(1 - \kappa(G, D)\big) \cdot \beta \cdot L^{-2},
+\label{eq:lsi}
+\end{equation}
+with the multiplicative Lie-algebraic deficit
+\begin{equation}
+\kappa(G) := \frac{1}{2 |\Phiroots(G)|},
+\label{eq:kappa-def}
+\end{equation}
+inside the saturation regime $\rk(G) = D(D-1)(5-D)/6$. For $G = \SU(3)$ the positive-root system has cardinality $|\Phiroots| = 3$, giving $\kappa_{\SU(3)} = 1/6$.
+
+Two independent companion results fix this value: (i)~a JAX Hamiltonian Monte Carlo campaign on three-dimensional $\SU(3)$ Wilson lattices at $L \in \{4, 6, 8\}$ confirms the multiplicative deficit $1 - \kappa = 5/6$ to ${\sim}1\%$; and (ii)~a Lean~4 formal proof certifies $\kappa_{\mathrm{Lie}}(\SU(3)) = 1/6$ as a kernel-checked rational fact. A separate five-condition uniqueness theorem~\cite{Remondiere2026a} selects $(\SU(3), D{=}4)$ as the unique simple-compact, saturated, Hodge-collapsed, chirality-admissible point of the configuration space.
+
+\textit{Question.}\quad The structural framework does not, by itself, predict masses; it is logarithmic-Sobolev and does not couple to flavour. The empirical question is whether $\kappa = 1/6$ leaves any measurable fingerprint on the spectrum of QCD-bound states.
+
+\textit{Outcome.}\quad We report a $17.09\sigma$ global excess of tight ($\lesssim 1\%$) matches over a log-uniform null on $1315$ PDG ratios, and a $7.75\sigma$ excess in the $21$-element $\kappa$-containing formula sublibrary. Within the excess we isolate four high-precision independent occurrences of
+\begin{equation}
+\Piskappa := \frac{\pi}{1 - \kappa} = \frac{6\pi}{5} \approx 3.7699
+\quad\text{and}\quad
+\Vskappa := 1 - \kappa^{2} = \frac{35}{36}.
+\label{eq:two-structural}
+\end{equation}
+The four occurrences span three physics sectors (baryon mass vs.\ confinement scale, baryon magnetic moments, CKM) and each holds at $\le 2\%$ deviation; one at $\le 0.2\%$. The $m_p/\Lambda$ identity is consistent only with pure-gauge $\Lambda$ schemes (\S~\ref{sec:scheme}); this is interpreted as $\kappa$ being a pure-Yang--Mills geometric invariant that gets renormalised away by light dynamical quarks.
+
+\textit{Honest scope.}\quad This is a \emph{numerical-pattern observation} paper. No prediction here is derived from first principles. Each match is post-hoc identified inside an explicit formula library. The four-fold concurrence reaches $7.75\sigma$ \emph{conditional on the library}; the choice of library is not unique. We address this honestly in \S\S~\ref{sec:bonferroni}, \ref{sec:scope}.
+
+\section{The four matches}
+\label{sec:matches}
+
+\textit{Structural quantities.}\quad We test two $\kappa$-derived dimensionless quantities defined in eq.~\eqref{eq:two-structural}: $\Piskappa = 3.76991\ldots$ and $\Vskappa = 0.97222\ldots$, both fixed a priori by $\kappa = 1/6$ with no free parameter.
+
+\textit{Match~1 --- proton mass to pure-gauge $\Lambda$.}\quad The FLAG~2024 average~\cite{FLAG2024} for the $N_f = 0$ four-loop $\Lambda$-parameter is $\LambdaPG = 251 \pm 9~\mathrm{MeV}$. With $m_p = 938.272 \pm 0.0006~\mathrm{MeV}$~\cite{PDG2024} this gives
+\begin{equation}
+\frac{m_p}{\LambdaPG} = 3.7381 \pm 0.135,
+\quad
+\Delta_1 = -0.84\%.
+\label{eq:match1}
+\end{equation}
+
+\textit{Match~2 --- proton mass to quark-condensate scale.}\quad The renormalisation-group-invariant chiral condensate $-\langle \bar{q}q\rangle^{1/3} = 253 \pm 5~\mathrm{MeV}$ (FLAG~2024 consensus) yields
+\begin{equation}
+\frac{m_p}{|\langle\bar{q}q\rangle|^{1/3}} = 3.7086 \pm 0.074,
+\quad
+\Delta_2 = -1.63\%.
+\label{eq:match2}
+\end{equation}
+
+\textit{Match~3 --- hyperon magnetic-moment ratio.}\quad PDG~2024 lists $\mu_{\Sigma^+} = +2.458 \pm 0.010\,\muN$ and $\mu_{\Xi^-} = -0.6507 \pm 0.0025\,\muN$. The ratio
+\begin{equation}
+\frac{|\mu_{\Sigma^+}|}{|\mu_{\Xi^-}|} = 3.7775 \pm 0.020,
+\quad
+\Delta_3 = +0.20\%,
+\label{eq:match3}
+\end{equation}
+is the tightest of the three $\Piskappa$ occurrences and is independent of any $\Lambda$ scheme.
+
+\textit{Match~4 --- CKM element $V_{ud}$.}\quad PDG~2024 gives $V_{ud} = 0.97370 \pm 0.00014$~\cite{HardyTowner2020}. Compared with $\Vskappa = 35/36 = 0.97222$,
+\begin{equation}
+\Delta_4 = +0.152\%.
+\label{eq:match4}
+\end{equation}
+The deviation is ${\sim}10\sigma$ at present precision; the structural value lies $\sim 10\sigma$ \emph{below} the measured central. The match thus holds at the few-permille level, not at $1\sigma$ --- see~\S~\ref{sec:falsif}.
+
+\begin{table}[t]
+\caption{The four structural matches.}
+\label{tab:matches}
+\begin{ruledtabular}
+\begin{tabular}{lccc}
+Observable & Value & Structural & Dev.~(\%) \\
+\hline
+$m_p / \LambdaPG$         & $3.7381(135)$  & $\Piskappa$ & $-0.84$ \\
+$m_p / |\langle\bar{q}q\rangle|^{1/3}$ & $3.7086(74)$ & $\Piskappa$ & $-1.63$ \\
+$|\mu_{\Sigma^+}/\mu_{\Xi^-}|$ & $3.7775(20)$  & $\Piskappa$ & $+0.20$ \\
+$V_{ud}$ (super-allowed)  & $0.97370(14)$ & $\Vskappa$  & $+0.15$ \\
+\end{tabular}
+\end{ruledtabular}
+\end{table}
+
+A complementary covariant is $m_n / \LambdaPG = 3.7433$ at $-0.71\%$; the neutron mass is highly correlated with the proton mass and is counted as a variant of Match~1, not as a separate fifth datum.
+
+\section{Bonferroni assessment}
+\label{sec:bonferroni}
+
+\textit{Campaign.}\quad We constructed the multiset of all dimensionless mass ratios between $51$ PDG~2024 hadronic / electroweak / quark-scale observables (baryons, mesons, leptons, gauge bosons, Higgs, quark masses, $\Lambda_{\mathrm{QCD}}$, $f_\pi$, string tension, predicted glueballs). The filter $0.05 < r < 200$ leaves $\#\calR = 1315$ distinct ratios.
+
+The candidate-formula library $\calF$ contains $\#\calF = 195$ deduplicated entries: $174$ pure rational and $\pi$-containing formulas built from $\{\pi, e, \sqrt{2}, \sqrt{3}\}$ and rational combinations of integers $\le 12$, plus $21$ $\kappa$-containing expressions (e.g.\ $\pi/(1{-}\kappa)$, $(1{-}\kappa)\cdot\pi$, $1{-}\kappa^2$, $\kappa\cdot\pi^2$). For each ratio $r \in \calR$ we compute the best-match deviation $\delta(r) := \min_{f \in \calF} |r - f|/r$ and classify as \emph{tight} ($< 1\%$), \emph{medium} ($1\!-\!3\%$), or \emph{loose}.
+
+\textit{Null hypothesis.}\quad The null is that the $1315$ PDG ratios are statistically indistinguishable from log-uniform i.i.d.\ draws from the same observed support $[1.00, 193.5]$. We sampled $1315$ such draws (reproducible \texttt{seed = 42}) and applied the identical best-match procedure.
+
+\textit{Result.}\quad
+
+\begin{table}[h]
+\caption{Bonferroni assessment: observed vs.\ log-uniform null.}
+\label{tab:bonferroni}
+\begin{ruledtabular}
+\begin{tabular}{lccc}
+Quantity & Observed & Null & $Z$-score \\
+\hline
+Tight ($<1\%$), $\calF$       & $608/1315$ & $308/1315$ & $\mathbf{17.09\sigma}$ \\
+Medium ($1\!-\!3\%$), $\calF$ & $266/1315$ & $205/1315$ & $4.26\sigma$ \\
+Tight ($<1\%$), $\calF_\kappa$ & $129/1315$ & $66/1315$  & $\mathbf{7.75\sigma}$ \\
+\end{tabular}
+\end{ruledtabular}
+\end{table}
+
+The $Z$-score uses a Poisson approximation $Z = (N_{\mathrm{obs}} - N_{\mathrm{null}})/\sqrt{N_{\mathrm{null}}}$. The $7.75\sigma$ value for $\calF_\kappa$ is the key statistic: the matches-per-candidate density is $6.14$ for the $\kappa$-sublibrary vs.\ $3.36$ for pure rationals, i.e.\ $\kappa$-formulas are more productive \emph{per formula} than pure rationals.
+
+\textit{Cross-validation.}\quad We trained the formula vocabulary on the light sector (baryons $\le 1700~\mathrm{MeV}$, mesons $\le 1000~\mathrm{MeV}$, leptons, QCD scales) and tested blindly on the heavy sector (charm, bottom, electroweak, Higgs, quark masses). $345$ heavy ratios out of $826$ ($42\%$) admit a tight ($< 2\%$) match in the light-trained vocabulary, versus ${\sim}25\%$ for random log-uniform. The vocabulary therefore generalises rather than memorising.
+
+\textit{Five exemplar $\Piskappa$ matches recovered by the search.}\quad The campaign automatically identifies the following tight matches to $6\pi/5$ where the best pure-rational candidate ($11/3 = 3.667$) handles only at $2.4{-}3.2\%$:
+
+\begin{table}[h]
+\caption{Exemplar $\Piskappa$ matches.}
+\label{tab:five-matches}
+\begin{ruledtabular}
+\begin{tabular}{lccc}
+Ratio & Value & Best pure (\%) & $\Piskappa$ dev.~(\%) \\
+\hline
+$D^0 / K^+$ & $3.77745$ & $11/3$ ($2.93$) & $0.20$ \\
+$n / \Lambda_{\mathrm{QCD}}$ & $3.75826$ & $11/3$ ($2.44$) & $0.31$ \\
+$D^+ / K^0$ & $3.75727$ & $11/3$ ($2.41$) & $0.34$ \\
+$p / \Lambda_{\mathrm{QCD}}$ & $3.75309$ & $11/3$ ($2.30$) & $0.45$ \\
+$D^+ / K^+$ & $3.78721$ & $11/3$ ($3.18$) & $0.46$ \\
+\end{tabular}
+\end{ruledtabular}
+\end{table}
+
+The $D$-meson / $K$-meson ratios at $\Piskappa$ are not predicted structurally; we flag them as an empirical curiosity worthy of investigation and \emph{do not} include them in the four headline matches.
+
+\section{Scheme dependence}
+\label{sec:scheme}
+
+\textit{The pattern.}\quad The relation $m_p / \Lambda \approx 6\pi/5$ is not invariant under the choice of $\Lambda$ scheme. We catalogue the deviation across nine published schemes.
+
+\begin{table}[t]
+\caption{Scheme dependence of $m_p / \Lambda$.}
+\label{tab:scheme}
+\begin{ruledtabular}
+\begin{tabular}{lccc}
+Scheme & $\Lambda$ (MeV) & $m_p/\Lambda$ & Dev.~(\%) \\
+\hline
+$\LambdaPG$ $N_f{=}0$ 4-loop & $251$ & $3.738$ & $\mathbf{0.84}$ \\
+Cond.\ $|\langle\bar{q}q\rangle|^{1/3}$ & $253$ & $3.709$ & $\mathbf{1.63}$ \\
+$r_0$ Sommer & $237$ & $3.959$ & $5.01$ \\
+$\sqrt{\sigma}$ Necco--Sommer & $235$ & $3.993$ & $5.91$ \\
+$\LambdaMS$ $N_f{=}2$ & $331$ & $2.835$ & $24.81$ \\
+$\LambdaMS$ $N_f{=}3$ & $339$ & $2.768$ & $26.58$ \\
+$\LambdaMS$ $N_f{=}4$ & $294$ & $3.191$ & $15.35$ \\
+$\LambdaMS$ $N_f{=}5$ & $210$ & $4.468$ & $18.52$ \\
+Wilson flow $t_0$ & $150$ & $6.255$ & $65.92$ \\
+\end{tabular}
+\end{ruledtabular}
+\end{table}
+
+Of the nine schemes, only the two pure-gauge schemes ($N_f{=}0$, condensate) yield deviations below $2\%$; the two pure-gauge-calibrated schemes ($r_0$, $\sqrt{\sigma}$) deviate by $5{-}6\%$; the four full-QCD schemes and the Wilson flow deviate by $\ge 15\%$.
+
+\textit{Physical interpretation.}\quad The pattern is consistent with the interpretation that $\kappa = 1/6$ is a \emph{pure-Yang--Mills geometric invariant} of the Wilson Gibbs measure on lattice $\SU(3)$ without dynamical fermions. Schaefer, Sommer, Virotta (Nucl.\ Phys.\ B~845, 2011, arXiv:\textbf{1009.5228}, Table~4) report the topological-charge autocorrelation time $\tau_{\mathrm{int}}(Q^2)$ to be a factor $14\times$ shorter in $N_f{=}2$ QCD than in pure $\SU(3)$ at matched lattice spacing $a \approx 0.075~\mathrm{fm}$. Dynamical fermions accelerate decorrelation in the slow-mode sector; equivalently, they renormalise the effective LSI constant upward and consequently renormalise the geometric deficit factor $1 - \kappa$ toward $1$. The pure-Yang--Mills $\kappa$-fingerprint is therefore expected to be washed out in full-QCD observables.
+
+\textit{Consequence for the four matches.}\quad Matches~1, 2 survive only in pure-gauge schemes; Matches~3, 4 are scheme-free (ratio of measured magnetic moments, super-allowed $\beta$-decay). The scheme dependence affects only the \emph{interpretation} of Matches~1, 2, not the existence of the four-fold pattern.
+
+\section{Other $\kappa$-channel signatures}
+\label{sec:other-patterns}
+
+\textit{Magnetic moments are scheme-free.}\quad The ratio $|\mu_{\Sigma^+}/\mu_{\Xi^-}|$ is governed by the spatial wavefunctions of the constituent quarks and their spin structure inside the baryons. Recent lattice QCD computations of nucleon EM form factors at physical pion mass~\cite{Alexandrou1812} demonstrate that the magnetic-moment sector is now controlled at ${\sim}5\%$ in pure-quark-and-gluon dynamics. The ratio cancels the constituent-quark mass factor and encodes pure-gauge $\SU(3)$ wavefunction overlap. The match at $0.20\%$ is the cleanest of the four signatures and is logically independent of Matches~1, 2, 4.
+
+\textit{$V_{ud}$ couples to $\SU(2)_L\times\mathrm{U}(1)_Y$.}\quad The structural value $35/36 = 0.97222$ overshoots the experimental central $V_{ud} = 0.97370$ by $\sim 0.0015 \sim 10\sigma$ at present precision. The match holds at part-per-mille level (no free parameter), not at $1\sigma$.
+
+\textit{Conjecture (CONJ-1).}\quad The $\kappa$-fingerprint appears most cleanly in observables protected from full-QCD fermion screening: the pure-gauge confinement scale, baryon magnetic-moment ratios in which constituent-quark factors cancel, and the lightest CKM element which couples to $\SU(2)_L \times \mathrm{U}(1)_Y$ rather than to QCD. Heavy-meson observables, full-QCD running coupling, and high-energy electroweak precision observables are not expected to display the fingerprint.
+
+\textit{Secondary patterns.}\quad The Phase~3 family analysis identifies $97$ formulas matching multiple ratios at $<1\%$, several well-known (Gell-Mann--Okubo $3/2$, $\sqrt{2}$ relations). The $\kappa$-derived $(1+\kappa)/(1-\kappa) = 7/5$ appears in $11$ ratios including $\Xi^0/p$ at $0.10\%$. We refrain from elevating these to predictions because they overlap heavily with $\SU(3)_f$ flavour group-theory.
+
+\section{Falsifiability}
+\label{sec:falsif}
+
+\textit{Route~1 --- pure-gauge $\Lambda^{N_f=0}$ precision.}\quad The current FLAG average has $\LambdaPG = 251 \pm 9~\mathrm{MeV}$ (${\sim}3.6\%$). A reduction to $\pm 2~\mathrm{MeV}$ by $\sim 2030$ would either confirm Match~1 at $< 1\%$ or pull the central value $> 5\sigma$ from $6\pi/5$, falsifying it. \emph{Prediction}: if $\LambdaPG$ converges outside $251 \pm 2~\mathrm{MeV}$ at $< 2\%$ precision, the pure-gauge fingerprint fails.
+
+\textit{Route~2 --- lattice extension to non-$\SU(3)$ gauge groups.}\quad The framework gives $\kappa(\SO(5)) = 1/8$ (since $|\Phiroots(B_2)| = 4$), $\kappa(G_2) = 1/12$, $\kappa(\mathrm{Sp}(2)) = 1/8$. Hence $\Piskappa(\SO(5)) = 8\pi/7$, $\Piskappa(G_2) = 12\pi/11$. If lattice extensions to glueball-binding-ratio observables in $\SO(5)$ or $G_2$ gauge theory~\cite{AthenodorouTeper2021} match these $G$-specific values at $\le 2\%$, the framework gains substantial support; if they fail, the fingerprint is restricted to $\SU(3)$.
+
+\textit{Route~3 --- $V_{ud}$ precision.}\quad Targets of $\pm 0.00003$ by $\sim 2030$ from electroweak radiative corrections~\cite{SengGorchtein2018} and super-allowed CKM unitarity tests will probe the $\sim 10\sigma$ discrepancy with $35/36$. A move toward $0.97222$ confirms; a move away (e.g.\ toward $0.9740$) falsifies.
+
+\textit{Route~4 --- magnetic-moment precision.}\quad Belle~II / STCF programs target ${\sim}0.1\%$ precision on hyperon properties by 2030. A central $|\mu_{\Sigma^+}/\mu_{\Xi^-}|$ moving more than $\pm 0.04$ from $6\pi/5$ would falsify Match~3.
+
+\textit{Combined timeline.}\quad Routes~1, 3, 4 are independently testable at $< 1\%$ by $\sim 2030$. Route~2 is testable at any time given dedicated lattice computation on non-$\SU(3)$ ensembles. A coordinated 5-year programme would either confirm the framework's $\kappa$-fingerprint at ${\sim}4\sigma$ aggregate or rule it out at $> 5\sigma$.
+
+\section{Honest scope and disclaimers}
+\label{sec:scope}
+
+\textit{What this paper is.}\quad A \emph{numerical-pattern observation paper}, methodologically analogous to the Koide formula~\cite{Koide1983} (lepton-mass identity at $< 10^{-4}$ relative precision, unexplained for 43 years), the Titius--Bode relation (1772), or the Veneziano amplitude (1968). Such patterns sometimes precede genuine derivations and sometimes turn out to be accidents; our four-fold $7.75\sigma$ excess inside $\calF_\kappa$ is evidence, not proof.
+
+\textit{What this paper is not.}\quad
+\begin{itemize}
+\item \emph{It is not a derivation.} None of the four matches is derived from first principles; we do not claim to predict $m_p$, $\langle\bar{q}q\rangle$, $\mu_B$, or $V_{ud}$.
+\item \emph{It is not a unification.} The three sectors (QCD bound states, hadronic magnetic moments, CKM) are not related by any derivation in this work.
+\item \emph{It is not free of human selection.} The formula library $\calF$ was constructed by the author with prior knowledge of $\kappa = 1/6$. The $17.09\sigma$ value is conditional on $\calF$; alternative libraries give different numerical values.
+\end{itemize}
+
+\textit{Logical independence.}\quad The structural companion papers~\cite{Remondiere2026a,Remondiere2026b} are logically independent of the present empirical observations. Falsification of the present pattern does not invalidate the structural results, which rest on Lie-algebraic and Lean-certified arguments. Conversely, full confirmation augments the structural results with an empirical bridge to phenomenology but does not constitute a derivation.
+
+\section*{Acknowledgments and COPE-compliant disclosure}
+\label{sec:ack}
+
+The author thanks the FLAG~2024 working group for the consensus $\LambdaPG$ value and the PDG~2024 group for the magnetic-moment and CKM averages. All numerical values were extracted by direct reading of the original publications, with arXiv IDs verified against the live arXiv API to prevent citation fabrication.
+
+Per COPE recommendations on AI-assisted research \cite{COPE2023}: AI tools (Anthropic Claude Opus~4.x and DeepSeek V4-Pro, 2026-05) were used as adversarial-review assistants for arXiv reference cross-checks, Python / NumPy Bonferroni computation, and scheme-dependence ambiguity identification. AI tools did not author and are not credited as authors; all intellectual content was generated and is owned by the human author. Numerical reproducibility: every value is reproducible from the Python scripts archived at \texttt{[Zenodo DOI to be assigned upon submission]}.
+
+The author is grateful to anonymous referees in advance for adversarial criticism, particularly on the question of whether the Bonferroni baseline of \S~\ref{sec:bonferroni} adequately controls for dependence between rational-formula candidates.
+
+\begin{thebibliography}{99}
+
+\bibitem{PDG2024}
+R.~L.~Workman et al.\ (Particle Data Group),
+\emph{Review of Particle Physics},
+Prog.\ Theor.\ Exp.\ Phys.\ \textbf{2024}, 083C01 (2024);
+\href{https://pdg.lbl.gov}{pdg.lbl.gov}.
+
+\bibitem{FLAG2024}
+Y.~Aoki et al.\ (FLAG Working Group),
+\emph{FLAG Review 2024},
+Eur.\ Phys.\ J.\ C \textbf{84}, 712 (2024);
+\href{https://arxiv.org/abs/2411.04268}{arXiv:2411.04268}.
+
+\bibitem{SchaeferSommerVirotta2011}
+S.~Schaefer, R.~Sommer, F.~Virotta (ALPHA Collaboration),
+\emph{Critical slowing down and error analysis in lattice QCD simulations},
+Nucl.\ Phys.\ B \textbf{845}, 93 (2011);
+\href{https://arxiv.org/abs/1009.5228}{arXiv:1009.5228}.
+
+\bibitem{LuscherSchaefer2011}
+M.~L\"uscher, S.~Schaefer,
+\emph{Lattice QCD without topology barriers},
+JHEP \textbf{1107}, 036 (2011);
+\href{https://arxiv.org/abs/1105.4749}{arXiv:1105.4749}.
+
+\bibitem{Koide1983}
+Y.~Koide,
+\emph{New view of quark and lepton mass hierarchy},
+Phys.\ Rev.\ D \textbf{28}, 252 (1983);
+\emph{Fermion-boson two-body model of quarks and leptons and Cabibbo mixing},
+Lett.\ Nuovo Cim.\ \textbf{34}, 201 (1982).
+
+\bibitem{Remondiere2026a}
+K.~R\'emondi\`ere,
+\emph{A five-condition uniqueness theorem for the gauge sector of the Standard Model},
+manuscript, 2026; arXiv submission in preparation.
+
+\bibitem{Remondiere2026b}
+K.~R\'emondi\`ere,
+\emph{Synthesis v2: log-Sobolev framework for compact-Lie-group gauge theory},
+manuscript, 2026; Zenodo DOI to be assigned.
+
+\bibitem{Alexandrou1812}
+C.~Alexandrou, S.~Bacchio, M.~Constantinou, J.~Finkenrath, K.~Hadjiyiannakou, K.~Jansen, G.~Koutsou, A.~Vaquero Aviles-Casco,
+\emph{Proton and neutron electromagnetic form factors from lattice QCD};
+\href{https://arxiv.org/abs/1812.10311}{arXiv:1812.10311}.
+
+\bibitem{HardyTowner2020}
+J.~C.~Hardy, I.~S.~Towner,
+\emph{Superallowed $0^+ \to 0^+$ nuclear $\beta$ decays: 2020 critical survey, with implications for $V_{ud}$ and CKM unitarity},
+Phys.\ Rev.\ C \textbf{102}, 045501 (2020). [Journal-only; no arXiv preprint at the time of writing.]
+
+\bibitem{SengGorchtein2018}
+C.-Y.~Seng, M.~Gorchtein, H.~H.~Patel, M.~J.~Ramsey-Musolf,
+\emph{Reduced hadronic uncertainty in the determination of $V_{ud}$},
+Phys.\ Rev.\ Lett.\ \textbf{121}, 241804 (2018);
+\href{https://arxiv.org/abs/1807.10197}{arXiv:1807.10197}.
+
+\bibitem{SengGalviz2021}
+C.-Y.~Seng, D.~Galviz, W.~J.~Marciano, U.-G.~Mei\ss{}ner,
+\emph{Update on $|V_{us}|$ and $|V_{us}/V_{ud}|$ from semileptonic kaon and pion decays},
+\href{https://arxiv.org/abs/2107.14708}{arXiv:2107.14708}.
+
+\bibitem{Luscher2010}
+M.~L\"uscher,
+\emph{Properties and uses of the Wilson flow in lattice QCD},
+JHEP \textbf{1008}, 071 (2010);
+\href{https://arxiv.org/abs/1006.4518}{arXiv:1006.4518}.
+
+\bibitem{AthenodorouTeper2021}
+M.~Athenodorou, M.~Teper,
+\emph{The glueball spectrum of $\SU(N)$ gauge theories in $D = 3 + 1$ dimensions},
+JHEP \textbf{2021}, 172 (2021);
+\href{https://arxiv.org/abs/2106.00364}{arXiv:2106.00364}.
+
+\bibitem{Sommer1994}
+R.~Sommer,
+\emph{A new way to set the energy scale in lattice gauge theories and its application to the static force and $\alpha_s$ in $\SU(2)$ Yang--Mills theory},
+Nucl.\ Phys.\ B \textbf{411}, 839 (1994);
+\href{https://arxiv.org/abs/hep-lat/9310022}{arXiv:hep-lat/9310022}.
+
+\bibitem{NeccoSommer2002}
+S.~Necco, R.~Sommer,
+\emph{The $N_f = 0$ heavy quark potential from short to intermediate distances},
+Nucl.\ Phys.\ B \textbf{622}, 328 (2002);
+\href{https://arxiv.org/abs/hep-lat/0108008}{arXiv:hep-lat/0108008}.
+
+\bibitem{COPE2023}
+Committee on Publication Ethics,
+\emph{Authorship and AI tools},
+COPE position statement, 2023;
+\href{https://publicationethics.org/cope-position-statements/ai-author}{publicationethics.org/cope-position-statements/ai-author}.
+
+\end{thebibliography}
+
+\end{document}

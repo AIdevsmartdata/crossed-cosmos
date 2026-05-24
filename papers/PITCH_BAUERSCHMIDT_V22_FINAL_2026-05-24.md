@@ -141,6 +141,37 @@ I am sending you the cleaner v22 of the master document precisely because these 
 
 ---
 
+## §7bis. Roadmap — a conditional theorem under one explicit concentration axiom
+
+To make the verrou visible rather than hidden, the cleanest way I can state the current programme is as a conditional theorem under one explicit named axiom $\mathrm{H}_1$ (concentration in the small‑field regime) together with five auxiliary hypotheses that are either already proved or standard:
+
+**Theorem (conditional, Wilson SU(N) lattice $D=4$).** Under $\mathrm{H}_1$–$\mathrm{H}_6$ below, the Langevin generator $L_\beta$ for the Wilson measure $\mu_{a, L, \beta}$ satisfies, for all $\beta \ge \beta_0(N, d)$ and the saturated pair $(N, D) = (3, 4)$:
+
+$$\lambda_1(L_\beta) \;\ge\; \tfrac{C_2(d)\,(1 - \kappa)\,\beta}{L^2}, \qquad m_{\mathrm{gap}}^{\mathrm{lattice}}(a, L, \beta) \;\ge\; \sqrt{\lambda_1(L_\beta)} > 0,$$
+
+with $\kappa = 1/6$ for $\mathrm{SU}(3)$ and the explicit constants depending only on $(N, d)$.
+
+| # | Hypothesis | Status today |
+|---|------------|--------------|
+| $\mathrm{H}_1$ | Concentration $\mu_{a, L, \beta}(\{\|A\|_{L^2}^2 \ge R\}) \le C_1 e^{-c_1 \beta R / N^2}$ uniform in $(a, L)$ | **Open — this is your territory.** Cleanly stated, an instance of the BBD concentration framework for Wilson SU(N). |
+| $\mathrm{H}_2$ | Gaussian density bound near the vacuum on $\{\|A\|^2 \le R\}$ (MRS93‑style) | Sketched (MRS 1993 SU(2) $D=4$ IR cutoff); extending uniformly in $a$ is the technical work. |
+| $\mathrm{H}_3$ | Pinsker inequality $\alpha = 1$ | **Proved** (Cover–Thomas 2006, Lemma 11.6.1) and formalised in Lean 4 (`Pillar1Johnson.lean`, 0 sorrys). |
+| $\mathrm{H}_4$ | Log‑Sobolev for Gaussian measure on Cameron–Martin space | **Proved** (Gross 1975, Amer. J. Math. **97**, §6). |
+| $\mathrm{H}_5$ | $\lambda_1(\Delta_\Lambda) \ge C_2 / L^2$ for Hodge Laplacian on $T^4_L$ | **Proved** (elementary discrete Fourier on a torus). |
+| $\mathrm{H}_6$ | Rank‑saturation factor $\kappa = 1/6$ for $(N, D) = (3, 4)$ | **Proved** in Lean 4 (`KappaOneSixth.lean`, 0 axioms, two independent derivations). |
+
+The $1/L^2$ factor on the right‑hand side is *not* what one wants for the Clay statement, which calls for uniformity in $L$. It is plausibly a defect of the present proof (entropy splitting on $E_R^c$, distortion in step 4) rather than a fundamental limitation, and CNS25 already attains finite‑volume bounds without an analogous $1/L$ factor in the strong‑coupling regime $\beta < 1/24$. Tightening this is part of the technical work I would propose to do together.
+
+What the theorem buys, even before $\mathrm{H}_1$ is closed, is structural: the verrou is *named*, *located*, and *visibly compatible with the BBD framework*. A referee can verify the conditional implication ($\mathrm{H}_1$ $\Rightarrow$ lattice mass gap) on its own, and the open piece is exactly the cluster‑expansion / Polchinski step you and your collaborators have been pushing on $\varphi^4$. This is, on purpose, the same pattern Wiles used in 1995 (modularity as a named conjecture; later closed by Taylor–Wiles).
+
+If this conditional theorem looks like a reasonable starting point, my proposed timeline would be:
+
+- **0–3 months** — clean draft, conditional theorem, submit to LMP or CMP.
+- **3–9 months** — joint work on $\mathrm{H}_1$ in the Polchinski multiscale language; in parallel, tighten the $L$‑dependence in the auxiliary steps.
+- **9–15 months** — if $\mathrm{H}_1$ partially closes, a follow‑up paper on the partial resolution; otherwise, a clean statement of what makes $\mathrm{H}_1$ hard.
+
+---
+
 ## §8. Request
 
 If the picture in §3 is of interest, would you be open to a one‑hour Zoom to discuss whether your group's BBD framework can be adapted, in collaboration, to the non‑abelian Wilson SU(N) setting in $D = 4$? After that one call, no obligation — you can say yes / no / maybe.

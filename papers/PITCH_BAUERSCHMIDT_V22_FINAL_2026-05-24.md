@@ -45,6 +45,22 @@ holds at the 7σ level (cluster 718, 2026‑05‑23). This is a **factual empiri
 
 ---
 
+## §2bis. Saturation polynomial: a rare phenomenon
+
+The rank‑saturation condition $\mathrm{rank}(G) = C(D,2) - C(D,3)$ that triggers the $(1-\kappa)$ correction in Theorem C has a closed‑form structure. Using $C(D,2) - C(D,3) = D(D-1)(5-D)/6$, the integer pairs $(N, D)$ compatible with a non‑abelian $\mathrm{SU}(N)$ (rank $= N-1$) are exactly three:
+
+| $(N, D)$ | $C(D,2)-C(D,3)$ | $\kappa = \tfrac{1}{2(D-1)}$ | $\alpha = 1-\kappa$ | Status |
+|----------|------------------|------------------------------|----------------------|--------|
+| $(2, 2)$ | $1$              | $1/2$                        | $1/2$                | 2D YM (exactly soluble: heat kernel on $G$) |
+| $(3, 3)$ | $2$              | $1/4$                        | $3/4$                | 3D SU(3) (numerically accessible, Karabali–Kogan handle) |
+| $(3, 4)$ | $2$              | $1/6$                        | $5/6$                | the physical case |
+
+For $D \ge 5$, $C(D,2) - C(D,3) \le 0$, so no non‑abelian gauge group is saturated. Manifestation 9, $\kappa \cdot 2(D-1) = 1$, holds across all three pairs by elementary rational arithmetic, verified in `KappaOneSixth.lean` (`norm_num`).
+
+The structural consequence is that the geometric mechanism is confined to $D \in \{2, 3, 4\}$, with $D = 4$ as the last non‑trivial dimension. This is not a chosen feature of the framework; it is forced by the polynomial $D(D-1)(5-D)/6$ having exactly three positive integer values compatible with $\mathrm{SU}(N)$ ranks. The two non‑physical pairs supply independent test cases for any proposed proof technique: a successful non‑abelian BBD adaptation would, by the same mechanism, predict $\alpha = 1/2$ for 2D Yang–Mills (where the answer is independently known) and $\alpha = 3/4$ for 3D SU(3) (where lattice tests are inexpensive).
+
+---
+
 ## §3. The main lock: non‑abelian cluster expansion at large β
 
 The single technical statement that closes the chain from lattice Theorem C to a continuum mass gap is what we informally call `action_bound_balaban_su_n` — a $\beta$‑uniform, $a$‑uniform Bakry–Émery / cluster‑expansion bound on the Wilson measure $\mu_{a,\beta}$ over $\mathrm{SU}(N)^{E(\Lambda_a)}$ for $\Lambda_a = a\mathbb{Z}^4 \cap T^4_L$, of the form

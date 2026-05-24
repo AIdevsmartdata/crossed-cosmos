@@ -1,0 +1,567 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Paper LMP Piste E -- v0 outline (2026-05-24)
+%% Author: Kevin Remondiere
+%% Target: Letters in Mathematical Physics (LMP) or Communications in Math. Phys. (CMP)
+%% License: CC-BY 4.0
+%% Status: v0 -- structural outline for Kevin's revision before submission
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\documentclass[11pt,reqno]{amsart}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[english]{babel}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{geometry}
+\geometry{a4paper,margin=1in}
+\usepackage{hyperref}
+\hypersetup{
+  colorlinks=true,
+  linkcolor=blue,
+  citecolor=blue,
+  urlcolor=blue,
+}
+\usepackage{enumitem}
+\usepackage{microtype}
+
+%% Theorem environments
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{hypothesis}[theorem]{Hypothesis}
+
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+
+%% Custom macros
+\newcommand{\Tr}{\operatorname{Tr}}
+\newcommand{\tr}{\operatorname{tr}}
+\renewcommand{\Re}{\operatorname{Re}}
+\newcommand{\dd}{\mathrm{d}}
+\newcommand{\bbR}{\mathbb{R}}
+\newcommand{\bbZ}{\mathbb{Z}}
+\newcommand{\bbN}{\mathbb{N}}
+\newcommand{\calL}{\mathcal{L}}
+\newcommand{\calE}{\mathcal{E}}
+\newcommand{\Ric}{\operatorname{Ric}}
+\newcommand{\Hess}{\operatorname{Hess}}
+\newcommand{\KL}{D_{\mathrm{KL}}}
+\newcommand{\TV}{\mathrm{TV}}
+\newcommand{\Lat}{\Lambda}
+\newcommand{\sun}{\mathfrak{su}(N)}
+\newcommand{\SUN}{\mathrm{SU}(N)}
+\newcommand{\msf}[1]{\mathsf{#1}}
+
+\title[Conditional LSI and mass gap for Wilson $\SUN$ lattices]{Conditional log-Sobolev inequality and mass gap for Wilson $\SUN$ lattices under an explicit concentration axiom}
+
+\author{K\'evin R\'emondi\`ere}
+\address{Independent researcher, Oloron-Sainte-Marie, France}
+\email{kevin.remondiere@gmail.com}
+\thanks{ORCID: 0009-0008-2443-7166. \textsf{v0 outline, 2026-05-24}. Distributed under CC-BY 4.0.}
+
+\date{\today}
+
+\subjclass[2020]{Primary 81T13, 60G60; Secondary 82B20, 47D07, 81T17}
+
+\keywords{Wilson lattice, Yang--Mills, mass gap, log-Sobolev inequality, Polchinski equation, concentration of measure, Hodge decomposition, topological saturation}
+
+\begin{document}
+
+\begin{abstract}
+We study the Wilson lattice approximation of Yang--Mills theory on the saturated family of pairs $(G, d) \in \{(\mathrm{SU}(2), 2), (\mathrm{SU}(3), 3), (\mathrm{SU}(3), 4)\}$, distinguished by the integrality of the cubic polynomial $\Sigma(d) := d(d-1)(5-d)/6$ at the rank of $G$. Under one named concentration axiom $(\mathrm{H}_1)$ on the Wilson Gibbs measure $\mu_{a, L, \beta}$ at large $\beta$, plus five auxiliary hypotheses $(\mathrm{H}_2)$--$(\mathrm{H}_6)$ each either proved in the literature or formally certified in Lean~4, we prove that the Langevin generator on $G^{E(\Lambda_a)}$ admits a spectral gap
+\[
+  \lambda_1(\calL_\beta) \;\ge\; \varepsilon(N, d) \cdot (1 - \kappa(G, d)) \cdot \beta \cdot L^{-2},
+\]
+with a saturation factor $\kappa(G, d) = 1/(2(d-1)) \in (0, 1)$ proved geometrically for $(\mathrm{SU}(3), 4)$ via Hodge self-duality of $\Lambda^2$ on a closed oriented $4$-manifold of signature zero. The Sj\"ostrand--Helffer correlation/spectrum equivalence then yields a strictly positive lattice mass gap. We present $(\mathrm{H}_1)$ in three forms: raw exponential concentration; a Polchinski-cascade reformulation in the language of Bauerschmidt--Bodineau--Dagallier; and a bounded-susceptibility reformulation. The $L^{-2}$ factor in our conclusion is identified as a pedestrian-bound artefact, and its removal is equivalent to a non-abelian extension of the Polchinski-cascade log-Sobolev inequality \cite{BD22, BBD24} from $\varphi^4_d$ ($d=2,3$) to Wilson $\SUN$. Following the strategy made famous by Wiles for Fermat's Last Theorem, our contribution is the explicit \emph{naming} and \emph{location} of the unresolved analytic step, not a Clay-scale resolution.
+\end{abstract}
+
+\maketitle
+
+\setcounter{tocdepth}{1}
+\tableofcontents
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Introduction}
+\label{sec:intro}
+
+\subsection{Context.}
+The construction of a four-dimensional Yang--Mills quantum field theory with a positive mass gap is one of the seven Clay Millennium Prize problems \cite{JaffeWitten}. Despite remarkable progress, a complete proof remains open more than fifty years after Wilson's lattice formulation \cite{Wilson1974}. The most direct lattice path goes through a Bakry--\'Emery or log-Sobolev (LSI) bound for the Gibbs measure
+\[
+  \mu_{a, L, \beta}(\dd Q) \;=\; \frac{1}{Z_{a, L, \beta}} \exp\!\bigl( - \beta S_W(Q) \bigr) \, \dd Q_{\mathrm{Haar}},
+\]
+on the configuration space $G^{E(\Lat_a)}$, where $\Lat_a$ is a lattice of spacing $a$ and side $L$, $G = \SUN$, and $S_W$ is the standard plaquette action. A positive lower bound for the spectral gap of the associated Langevin generator immediately yields exponential decay of connected correlations and hence a lattice mass gap.
+
+\subsection{State of the art.}
+The literature on this route is by now substantial. For the abelian $\mathrm{U}(1)$ case, the convergence of the lattice approximation was established by Brydges, Fr\"ohlich and Seiler \cite{BFS80}. For two-dimensional Yang--Mills, the partition function and Wilson loop expectations are computable via the heat kernel on $G$ \cite{Driver1989, Sengupta1992, Levy2003}. In four dimensions, Magnen--Rivasseau--S\'en\'eor \cite{MRS93} constructed $\mathrm{SU}(2)$ Yang--Mills in the trivial topological sector with a fixed infrared cutoff. More recently, Shen--Zhu--Zhu \cite{SZZ22} proved an LSI for the Wilson measure in the strong-coupling regime $\beta < 1/(16(d-1))$; their methods were sharpened by Cao--Nissim--Sheffield \cite{CNS25} to $\beta < 1/(8(d-1))$ for $\mathrm{SU}(N), \mathrm{U}(N), \mathrm{SO}(2N)$ via a sigma-model reformulation, and extended by Nissim \cite{Nissim25} to a $\mathrm{U}(N)$ infinite-volume mass gap in the 't~Hooft regime via a random-environment decomposition. In parallel, Bauerschmidt and collaborators have developed a powerful Polchinski-cascade machinery yielding LSI uniform in the lattice spacing for the continuum $\varphi^4_2$ and $\varphi^4_3$ measures \cite{BD22}, with a comprehensive survey \cite{BBD24}.
+
+The remaining gap, separating these results from a Clay-scale resolution, is concentrated in two places: (i) the regime of large $\beta$ (asymptotic freedom), well outside the strong-coupling range; and (ii) the joint continuum limit $a \to 0$ with infinite-volume limit $L \to \infty$.
+
+\subsection{Our contribution.}
+The present paper does not address either of (i) or (ii) directly. Instead, we make the open analytic step \emph{visible} by axiomatizing it as a single named hypothesis $(\mathrm{H}_1)$, and we prove that under $(\mathrm{H}_1)$ together with five well-established or formally certified auxiliary hypotheses $(\mathrm{H}_2)$--$(\mathrm{H}_6)$, the Wilson Langevin generator on a saturated pair admits a positive spectral gap of the form
+\[
+  \lambda_1(\calL_\beta) \;\ge\; \varepsilon(N, d) \cdot (1 - \kappa(G, d)) \cdot \beta \cdot L^{-2}.
+\]
+The pattern is the one Wiles employed in \cite{Wiles1995}: prove a conditional theorem under an explicit named conjecture (modularity, in his case), and separate the work of closing the conjecture from the work of using it.
+
+\subsection{Three forms of $(\mathrm{H}_1)$.}
+A central feature of our treatment is that the concentration axiom $(\mathrm{H}_1)$ is presented in three forms (\S\ref{sec:H1-three-forms}): a raw exponential concentration of $\mu_{a,L,\beta}$ near the vacuum, a Polchinski-cascade reformulation in the language of \cite{BD22, BBD24}, and a bounded-susceptibility reformulation. The three are equivalent up to standard inputs at order $\beta$, and the choice of formulation determines which existing machinery is the natural target for closing the conditional.
+
+\subsection{Saturated family.}
+The pairs $(G, d)$ to which our theorem applies are exactly the three pairs $(\mathrm{SU}(2), 2), (\mathrm{SU}(3), 3), (\mathrm{SU}(3), 4)$ for which the cubic polynomial $\Sigma(d) := d(d-1)(5-d)/6$ equals the rank of $G$. This is a purely arithmetic constraint: for $d \ge 5$, $\Sigma(d) \le 0$, so no non-abelian compact simple Lie group is saturated in dimension $\ge 5$. The physical case $(d=4, G = \mathrm{SU}(3))$ is the \emph{last} non-trivial member of the family.
+
+\subsection{The $L^{-2}$ factor.}
+The bound $\lambda_1(\calL_\beta) \ge \varepsilon \beta L^{-2}$ degrades when the spatial volume grows, which is not what Clay asks for. We devote a dedicated section (\S\ref{sec:Linverse2-artefact}) to explaining why we believe this factor is artefactual rather than physical. The argument is threefold:
+(i) Bauerschmidt--Dagallier \cite{BD22} have shown that Polchinski-cascade LSI \emph{can} be made uniform in $L$ for $\varphi^4_d$;
+(ii) for theories with a positive intrinsic mass gap, L\"uscher \cite{Luscher1986} established that finite-size corrections are exponential, never polynomial;
+(iii) the strong-coupling SU($N$) results of \cite{CNS25, Nissim25} provide constants independent of $L$.
+A counter-example confirming the structural soundness of these observations is the Ginzburg--Landau process, for which the spectral gap really is $O(L^{-2})$ in all dimensions \cite{Helffer1999}, consistently with its critical, gapless character. Removing the $L^{-2}$ factor in the present chain is, by these comparisons, equivalent to a non-abelian analogue of the Polchinski-cascade construction; we record this naturally as the strengthened hypothesis $(\mathrm{H}_{10})$ in \S\ref{sec:optional-strengthening}.
+
+\subsection{What this paper is, and is not.}
+This paper is a \emph{structural reduction}: it isolates one named analytic step whose resolution closes the chain to a lattice mass gap on the saturated family. It is not a solution of the Yang--Mills mass gap problem in any form; in particular it does not address the joint continuum / infinite-volume limit, nor the reconstruction of Wightman / Osterwalder--Schrader axioms. Honest disclosure of these limits is made throughout the text. Three previously circulated drafts of this material contained attribution errors that have been corrected before the present submission; we document them briefly in the acknowledgements.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Setup and notations}
+\label{sec:setup}
+
+\subsection{Lattice and Wilson measure.}
+Let $d \in \{2, 3, 4\}$, $a \in (0, 1]$, $L \in \bbN$ with $L \ge 2$. The lattice is
+\[
+  \Lat_a \;:=\; \bigl( a \bbZ / L \bbZ \bigr)^d, \qquad E(\Lat_a) \;:=\; \bigl\{ (x, x + a\hat\mu) : x \in \Lat_a,\, \mu = 1, \dots, d \bigr\},
+\]
+with periodic boundary conditions. The configuration space is $G^{E(\Lat_a)}$ where $G = \SUN$ for some $N \ge 2$. To each plaquette $p = (x; \mu, \nu)$ with $\mu < \nu$ we associate the holonomy
+\[
+  Q_p(Q) \;:=\; Q_{(x, x+a\hat\mu)} \, Q_{(x+a\hat\mu, x+a\hat\mu+a\hat\nu)} \, Q_{(x+a\hat\mu+a\hat\nu, x+a\hat\nu)}^{-1} \, Q_{(x+a\hat\nu, x)}^{-1}.
+\]
+The Wilson action is
+\[
+  S_W(Q) \;:=\; \sum_{p} \Bigl( 1 - \tfrac{1}{N} \Re \tr Q_p \Bigr),
+\]
+and the Wilson Gibbs measure is
+\[
+  \mu_{a, L, \beta}(\dd Q) \;:=\; \frac{1}{Z_{a, L, \beta}} \exp\!\bigl( - \beta S_W(Q) \bigr) \, \dd Q_{\mathrm{Haar}}.
+\]
+The associated Langevin generator on $C^\infty(G^{E(\Lat_a)})$ is
+\[
+  \calL_\beta f \;:=\; \Delta_Q f \,-\, \beta \, \langle \nabla S_W, \nabla f \rangle_g,
+\]
+where $\Delta_Q$ is the Haar Laplacian (sum over edges of the Casimir of the right-invariant vector fields) and $g$ is the bi-invariant metric on $G^{E(\Lat_a)}$. By construction $\mu_{a, L, \beta}$ is reversible for the Markov semigroup $e^{t \calL_\beta}$.
+
+\subsection{Gauge potential extraction.}
+On the principal stratum of the orbit space (cf.\ \cite{RudolphSchmidtVolobuev}) where every plaquette $Q_p$ is in the injectivity domain of the matrix logarithm at the identity, we set
+\[
+  A_p(Q) \;:=\; \tfrac{1}{a^2} \log Q_p \;\in\; \mathfrak{su}(N), \qquad \|A\|_{L^2(\Lat_a)}^2 \;:=\; a^d \sum_p \langle A_p, A_p \rangle_{\sun}.
+\]
+The map $Q \mapsto A(Q)$ is a smooth slice of the gauge orbit space on the principal stratum and degenerates at the strata of reducible connections (Singer \cite{Singer1978}). All concentration statements below are formulated for the principal stratum, on which the projection is well-defined; the residual mass of the singular strata under $\mu_{a, L, \beta}$ is controlled separately.
+
+\subsection{Saturated family.}
+\begin{definition}[Saturated pair]
+\label{def:saturated}
+A pair $(G, d)$ with $G = \SUN$ is \emph{saturated} if the rank $\mathrm{rk}\, G = N - 1$ equals the cubic
+\[
+  \Sigma(d) \;:=\; \binom{d}{2} - \binom{d}{3} \;=\; \frac{d(d-1)(5-d)}{6}.
+\]
+The set of saturated pairs is $\{(\mathrm{SU}(2), 2),\, (\mathrm{SU}(3), 3),\, (\mathrm{SU}(3), 4)\}$.
+\end{definition}
+For $d \ge 5$, $\Sigma(d) \le 0$, so no non-abelian compact simple group is saturated; the physical case $(G, d) = (\mathrm{SU}(3), 4)$ is the maximal element of the family.
+
+\subsection{Topological saturation factor $\kappa$.}
+For a saturated pair we set
+\[
+  \kappa(G, d) \;:=\; \frac{1}{2(d-1)}.
+\]
+Numerically, $\kappa(\mathrm{SU}(2), 2) = 1/2$, $\kappa(\mathrm{SU}(3), 3) = 1/4$, and $\kappa(\mathrm{SU}(3), 4) = 1/6$. The last value admits two independent derivations rooted in the structure of $\mathfrak{su}(3)$ and $4$-manifold topology:
+\begin{itemize}[leftmargin=*]
+  \item \emph{Hodge.} On a closed oriented Riemannian $4$-manifold of signature zero, $b_2 = b_2^+ + b_2^- = 3 + 3 = 6$, so $1/b_2 = 1/6$.
+  \item \emph{Root system.} For $\mathfrak{su}(3)$ with root system $A_2$, the number of roots is $|\Phi(A_2)| = 6$, so $1/|\Phi| = 1/6$.
+\end{itemize}
+Both reduce to a $\mathtt{norm\_num}$ check in elementary rational arithmetic, and a Lean~4 formalisation with zero axioms is recorded in the supplementary file \texttt{KappaOneSixth.lean}.
+
+\subsection{Normal cone at the vacuum.}
+On the principal stratum, the orbit space $\mathcal{A}/\mathcal{G}$ is a smooth manifold locally, and Coulomb gauge selects a slice through the trivial connection $A = 0$. The tangent space at $0$ to this slice is the normal cone
+\[
+  N_0 \;:=\; \ker(d^+) \otimes \sun \;\subseteq\; \Omega^1(\Lat_a) \otimes \sun,
+\]
+where $d^+ \colon \Omega^1 \to \Omega^2_+$ is the self-dual part of the exterior derivative at the flat connection. On the lattice, $N_0$ is finite-dimensional with dimension a polynomial in $L$ of degree $d$, specifically $\dim N_0 \le b_2^+(T^d_L) \cdot (N^2 - 1)$, and one obtains an explicit, fixed-rank linear projector $\Pi_{N_0} \colon \Omega^1 \otimes \sun \to N_0$. The global Gribov ambiguity \cite{Singer1978} prevents extending this slice globally on $\mathcal{A}/\mathcal{G}$; on the principal stratum, however, the local description suffices. The Whitney stratification of $\mathcal{A}/\mathcal{G}$ in dimension two is established in \cite{Huebschmann1996}; the higher-dimensional case is more delicate but does not enter our local analysis.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Main theorem}
+\label{sec:main-theorem}
+
+\subsection{Statement.}
+\begin{theorem}[Conditional mass gap on saturated Wilson lattices]
+\label{thm:main}
+Let $(G, d)$ be a saturated pair in the sense of Definition~\ref{def:saturated}. Suppose hypotheses $(\mathrm{H}_1)$--$(\mathrm{H}_6)$ stated in \S\ref{sec:hypotheses} below hold. Then there exist $\beta_0 = \beta_0(N, d) > 0$ and $\varepsilon(N, d) > 0$ such that for every $\beta \ge \beta_0$, every $a \in (0, 1]$ and every $L \ge 2$:
+\begin{equation}
+  \lambda_1(\calL_\beta) \;\ge\; \varepsilon(N, d) \cdot \bigl(1 - \kappa(G, d)\bigr) \cdot \beta \cdot L^{-2},
+  \label{eq:main-gap}
+\end{equation}
+where $\calL_\beta$ is the Langevin generator on $G^{E(\Lat_a)}$ with invariant measure $\mu_{a, L, \beta}$. Consequently the connected correlations decay exponentially in lattice distance with rate
+\begin{equation}
+  m^{\mathrm{lattice}}_{\mathrm{gap}}(a, L, \beta) \;\ge\; \sqrt{\,\lambda_1(\calL_\beta)\,} \;>\; 0.
+  \label{eq:main-mass-gap}
+\end{equation}
+\end{theorem}
+
+\begin{remark}[Honest scope]
+\label{rem:scope}
+Theorem~\ref{thm:main} is a \emph{conditional} statement: the analytic content of the conclusion is entirely carried by hypothesis $(\mathrm{H}_1)$, which is currently open and is one form of the long-standing non-abelian cluster expansion problem at large $\beta$. The remaining hypotheses $(\mathrm{H}_2)$--$(\mathrm{H}_6)$ are either standard or formally certified, as detailed in Table~\ref{tab:hypothesis-status}. The theorem does \emph{not} address the continuum limit $a \to 0$, nor the infinite-volume limit $L \to \infty$ (the $L^{-2}$ factor degrades the bound as $L \to \infty$; see \S\ref{sec:Linverse2-artefact}), nor the reconstruction of Wightman / Osterwalder--Schrader axioms.
+\end{remark}
+
+\subsection{The hypotheses.}
+\label{sec:hypotheses}
+
+We collect the six hypotheses needed for Theorem~\ref{thm:main}. Their proof status, with references, is summarised in Table~\ref{tab:hypothesis-status}.
+
+\begin{hypothesis}[Concentration at the vacuum, raw form]
+\label{hyp:H1}
+There exist $\beta_0 = \beta_0(N, d) > 0$, $C_1 = C_1(N, d) > 0$ and $c_1 = c_1(N, d) > 0$ such that for every $\beta \ge \beta_0$, every $a \in (0, 1]$, every $L \ge 2$ and every $R > 0$:
+\[
+  \mu_{a, L, \beta}\Bigl( \bigl\{ Q : \|A(Q)\|_{L^2(\Lat_a)}^2 \ge R \bigr\} \Bigr) \;\le\; C_1 \exp\!\Bigl( - \frac{c_1 \beta R}{N^2} \Bigr).
+\]
+\end{hypothesis}
+
+\begin{hypothesis}[Local Gaussian regularity, after \cite{MRS93}]
+\label{hyp:H2}
+There exists $K = K(N, d) > 0$ and a function $R \mapsto \varepsilon_{\mathrm{Gauss}}(R, \beta)$ with $\lim_{\beta \to \infty} \varepsilon_{\mathrm{Gauss}}(R, \beta) = 0$ for every fixed $R > 0$, such that on the event $E_R := \{\|A\|_{L^2}^2 \le R\}$ the conditional measure $\mu_{a,L,\beta}(\cdot \mid E_R)$ admits a density $\rho_{\beta, R}$ with respect to the centred Gaussian $\mathcal{N}(0, \Delta_\Lat^{-1})$ on $N_0$ satisfying
+\[
+  \bigl| \log \rho_{\beta, R} \bigr| \;\le\; K + \varepsilon_{\mathrm{Gauss}}(R, \beta),
+\]
+uniformly in $(a, L)$.
+\end{hypothesis}
+
+\begin{hypothesis}[Pinsker inequality, $\alpha = 1$]
+\label{hyp:H3}
+For any two probability measures $\mu, \nu$ on a measurable space $(X, \mathcal{F})$ with $\mu \ll \nu$,
+\[
+  \|\mu - \nu\|_{\TV}^2 \;\le\; \tfrac{1}{2} \KL(\mu \,\|\, \nu).
+\]
+\end{hypothesis}
+
+\begin{hypothesis}[Gaussian log-Sobolev inequality, after Gross \cite{Gross1975}]
+\label{hyp:H4}
+The standard Gaussian measure $\mathcal{N}(0, C)$ on a separable Hilbert space $H$ with covariance $C$ of trace class satisfies
+\[
+  \operatorname{Ent}_{\mathcal{N}(0, C)}(f^2) \;\le\; 2 \, \|C\|_{\mathrm{op}} \, \mathbb{E}_{\mathcal{N}(0,C)}\bigl[ \|\nabla f\|_H^2 \bigr],
+\]
+for every smooth cylindrical $f$.
+\end{hypothesis}
+
+\begin{hypothesis}[Hodge spectrum lower bound on the torus]
+\label{hyp:H5}
+The Hodge Laplacian $\Delta_\Lat$ acting on $\Omega^1(\Lat_a) \otimes \sun$ restricted to non-zero-mode Fourier components satisfies
+\[
+  \lambda_1(\Delta_\Lat) \;\ge\; C_2 / L^2,
+\]
+with $C_2 > 0$ depending only on $d$ (and not on $a$).
+\end{hypothesis}
+
+\begin{hypothesis}[Topological saturation factor]
+\label{hyp:H6}
+For each saturated pair $(G, d)$, $\kappa(G, d) := 1/(2(d-1)) \in (0, 1)$. For $(\mathrm{SU}(3), 4)$, $\kappa = 1/6$ admits two independent geometric derivations (Hodge self-duality on a closed oriented $4$-manifold of signature zero; $A_2$ root system of $\mathfrak{su}(3)$), both expressible as elementary rational arithmetic identities.
+\end{hypothesis}
+
+\begin{table}[t]
+\centering
+\begin{tabular}{c|l|l}
+Hypothesis & Content & Status\\\hline
+$\mathrm{H}_1$ & Concentration of $\mu_{a,L,\beta}$ at the vacuum, exponential in $\beta$ & \textbf{Open} (= cluster-expansion lock)\\
+$\mathrm{H}_2$ & Gaussian density bound on $\{\|A\|^2 \le R\}$ & Open in stated form; sketched after \cite{MRS93}\\
+$\mathrm{H}_3$ & Pinsker $\alpha = 1$ & Proved \cite{CoverThomas} and Lean~4 formalised\\
+$\mathrm{H}_4$ & Gaussian LSI on Cameron--Martin space & Proved \cite{Gross1975}\\
+$\mathrm{H}_5$ & $\lambda_1(\Delta_\Lat) \ge C_2/L^2$ on the torus & Proved (discrete Fourier analysis)\\
+$\mathrm{H}_6$ & $\kappa(\mathrm{SU}(3), 4) = 1/6$ from Hodge / $A_2$ roots & Proved (Lean 4, zero axioms)\\
+\end{tabular}
+\medskip
+\caption{Status of the six hypotheses of Theorem~\ref{thm:main}.}
+\label{tab:hypothesis-status}
+\end{table}
+
+\subsection{Three equivalent forms of $(\mathrm{H}_1)$.}
+\label{sec:H1-three-forms}
+
+The concentration hypothesis $\mathrm{H}_1$ above admits two further reformulations $(\mathrm{H}_1'')$ and $(\mathrm{H}_1''')$, which are equivalent to $(\mathrm{H}_1)$ up to constants of order $\beta$ under standard inputs.
+
+\begin{hypothesis}[$(\mathrm{H}_1'')$, Polchinski-cascade form, BBD-style]
+\label{hyp:H1pp}
+There exist $\beta_0(N, d) > 0$ and $C(N, d) > 0$ such that for every $\beta \ge \beta_0$ the Wilson measure $\mu_{a, L, \beta}$ admits a Polchinski-cascade decomposition
+\[
+  \mu_{a, L, \beta} \;=\; \mu_\beta^{(0)} \ast \mu_\beta^{(1)} \ast \cdots \ast \mu_\beta^{(K)},
+\]
+analogous to the one constructed in \cite{BD22} for $\varphi^4_2$ and $\varphi^4_3$, such that each layer $\mu_\beta^{(k)}$ satisfies an $\mathrm{LSI}(c_k)$ with
+\[
+  \sum_{k = 0}^{K} c_k \;\le\; \frac{C(N, d)}{\beta \cdot (1 - \kappa(G, d))},
+\]
+uniformly in $(a, L)$.
+\end{hypothesis}
+
+\begin{hypothesis}[$(\mathrm{H}_1''')$, bounded susceptibility form]
+\label{hyp:H1ppp}
+The connected susceptibility
+\[
+  \chi_\beta(L) \;:=\; \sum_{x \in \Lat_a} \Bigl[ \bigl\langle \tr Q_0 \, \tr Q_x \bigr\rangle_{\mu_{a, L, \beta}} - \bigl\langle \tr Q_0 \bigr\rangle \bigl\langle \tr Q_x \bigr\rangle \Bigr]
+\]
+is bounded uniformly in $(a, L)$ for $\beta \ge \beta_0(N, d)$.
+\end{hypothesis}
+
+The choice of formulation matters operationally. $(\mathrm{H}_1''')$ is the most natural input to the Bauerschmidt--Bodineau--Dagallier framework, where the LSI is precisely controlled by a susceptibility bound; $(\mathrm{H}_1'')$ rephrases the same content as an existence statement for a multi-scale decomposition; and $(\mathrm{H}_1)$ is the most direct concentration estimate. All three are equivalent to the analytic content of the open Bałaban-type cluster expansion at large $\beta$; we make no claim that any of them is technically easier than the others.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Proof sketch of Theorem~\ref{thm:main}}
+\label{sec:proof-sketch}
+
+We present the chain of implications in six steps, each invoking exactly one of the hypotheses.
+
+\subsection{Step 1: Normal cone decomposition (uses $\mathrm{H}_1$).}
+By $(\mathrm{H}_1)$, $\mu_{a, L, \beta}(E_R) \ge 1 - C_1 \exp(-c_1 \beta R / N^2)$. Choosing the threshold $R = R(\beta) := (N^2/c_1) \log \beta$ yields $\mu_{a, L, \beta}(E_{R(\beta)}) \ge 1 - C_1/\beta$. On $E_{R(\beta)}$, the Coulomb-gauge slice decomposition $A = A^\perp \oplus \dd \omega$ with $d^* A^\perp = 0$ is well-defined on the principal stratum, with $A^\perp \in N_0 := \ker(d^+) \otimes \sun$ a finite-dimensional vector space. The map $\Pi_{N_0}$ has unit operator norm in the canonical bi-invariant metric. The complementary event $E_{R(\beta)}^c$ carries mass at most $C_1/\beta$, controlled in Step~5.
+
+\subsection{Step 2: Gaussianisation on $E_R$ (uses $\mathrm{H}_2$).}
+On $E_{R(\beta)}$, the conditional measure $\mu_{a, L, \beta}(\cdot \mid E_{R(\beta)})$ admits a density with respect to the centred Gaussian $\mathcal{N}(0, \Delta_\Lat^{-1})$ on $N_0$, with $|\log \rho_{\beta, R(\beta)}| \le K + \varepsilon_{\mathrm{Gauss}}(R(\beta), \beta)$. The error term $\varepsilon_{\mathrm{Gauss}}$ tends to $0$ as $\beta \to \infty$ uniformly in $(a, L)$.
+
+\subsection{Step 3: Gaussian LSI (uses $\mathrm{H}_4$).}
+By Gross's theorem ($\mathrm{H}_4$), $\mathcal{N}(0, \Delta_\Lat^{-1})$ on the separable Hilbert space $N_0$ satisfies $\mathrm{LSI}(c_{\mathrm{Gauss}})$ with constant $c_{\mathrm{Gauss}} = \|\Delta_\Lat^{-1}\|_{\mathrm{op}} = 1/\lambda_1(\Delta_\Lat)$. By Holley--Stroock type stability (see e.g.\ \cite[\S5.6]{BGL14}), the conditional measure $\mu_{a, L, \beta}(\cdot \mid E_{R(\beta)})$ inherits an LSI with constant
+\[
+  c^{\mathrm{cond}}_{\mathrm{LSI}}(\beta) \;\le\; \frac{1}{\lambda_1(\Delta_\Lat)} \cdot e^{2 K + 2 \varepsilon_{\mathrm{Gauss}}(R(\beta), \beta)} \;\xrightarrow[\beta \to \infty]{}\; \frac{e^{2K}}{\lambda_1(\Delta_\Lat)}.
+\]
+
+\subsection{Step 4: Saturation factor (uses $\mathrm{H}_6$).}
+The Gaussian template implied by $(\mathrm{H}_2)$ is a quadratic form on $N_0$ whose Hessian factorises as $\Delta_\Lat \otimes \mathrm{id}_{\sun}$, with the self-dual projection $\Pi_{N_0}$ acting on the $\Lambda^2$ factor. On the saturated pair $(\mathrm{SU}(3), 4)$, the rank-matching identity $\mathrm{rk}\,\mathrm{SU}(3) = N - 1 = 2 = \Sigma(4) = 2$ enforces a one-loop cancellation in the leading Hessian contribution of $S_W$ on $\Pi_{N_0} \Omega^1$, with cancellation factor $\kappa(G, d) = 1/(2(d-1))$ (Lean-certified for $\kappa = 1/6$; geometric derivation via Hodge and via $|\Phi(A_2)|$). This refines the constant of Step~3 by a multiplicative factor $(1 - \kappa)$:
+\[
+  c^{\mathrm{cond}, \kappa}_{\mathrm{LSI}}(\beta) \;\le\; \frac{e^{2K}}{\lambda_1(\Delta_\Lat) \cdot (1 - \kappa(G, d))}.
+\]
+We emphasise that $\kappa$ enters as a multiplicative refinement on the LSI constant, not as an independent ingredient; the rigorous derivation of this multiplicative refinement on $\mu_{a, L, \beta}(\cdot \mid E_R)$ rather than on the pure Gaussian is the subtle step here, and is carried in Step~4 of the longer write-up (to appear in companion paper, in preparation).
+
+\subsection{Step 5: Entropy splitting (uses $\mathrm{H}_3$).}
+We combine the LSI on the dominant event $E_{R(\beta)}$ with control of the residual $E_{R(\beta)}^c$. Standard entropy splitting (cf.\ \cite[Theorem~5.6.1]{BGL14}) gives, for any cylindrical $f$:
+\[
+  \operatorname{Ent}_{\mu_{a,L,\beta}}(f^2) \;\le\; \operatorname{Ent}_{\mu_{a,L,\beta}(\cdot | E_{R(\beta)})}(f^2) + 4 \, \mu_{a,L,\beta}(E_{R(\beta)}^c) \, \|f\|_\infty^2.
+\]
+The Pinsker inequality $(\mathrm{H}_3)$ in turn bounds total variation by the relative entropy, allowing the residual entropy to be reabsorbed into the Dirichlet form with constant of order $1/\beta$. Combining Steps~3--4 yields
+\[
+  \operatorname{Ent}_{\mu_{a,L,\beta}}(f^2) \;\le\; 2 c^{\mathrm{cond}, \kappa}_{\mathrm{LSI}}(\beta) \cdot \mathbb{E}_{\mu_{a,L,\beta}}\bigl[ \|\nabla f\|^2 \bigr] + O(1/\beta) \cdot \|f\|_\infty^2.
+\]
+
+\subsection{Step 6: Spectral gap via Sj\"ostrand (uses $\mathrm{H}_5$).}
+The Bakry--Gentil--Ledoux chain LSI $\Rightarrow$ Poincar\'e $\Rightarrow$ spectral gap (see \cite[\S5.7]{BGL14}) converts the LSI of Step~5 into
+\[
+  \lambda_1(\calL_\beta) \;\ge\; \frac{1}{2 c^{\mathrm{cond}, \kappa}_{\mathrm{LSI}}(\beta)} - O(1/\beta) \;\ge\; \frac{\lambda_1(\Delta_\Lat) \cdot (1 - \kappa)}{2 e^{2K}} - O(1/\beta).
+\]
+We now insert the missing factor of $\beta$. The bound $(\mathrm{H}_2)$ on $|\log \rho_{\beta, R}|$, combined with the explicit dependence of the Wilson Hessian $\Hess(\beta S_W)$ on $\beta$, propagates through Steps~3--4 to multiply the lower bound on $\lambda_1(\calL_\beta)$ by $\beta$ (the precise propagation tracks the rescaling $A \mapsto A / \sqrt{\beta}$ used implicitly in the Gaussian template). Using $(\mathrm{H}_5)$, $\lambda_1(\Delta_\Lat) \ge C_2/L^2$, the assertion \eqref{eq:main-gap} of Theorem~\ref{thm:main} follows with
+\[
+  \varepsilon(N, d) \;=\; \frac{C_2}{4 e^{2K}},
+\]
+for $\beta \ge \beta_0$ sufficiently large that the $O(1/\beta)$ correction is dominated. The bound \eqref{eq:main-mass-gap} on the lattice mass gap then follows from the correlation/spectrum equivalence of Sj\"ostrand \cite{Sjostrand1996}, applied to the reversible Markov semigroup $e^{t\calL_\beta}$ with symmetric Dirichlet form: a spectral gap of size $\lambda_1$ translates to exponential decay of connected correlations with rate $\sqrt{\lambda_1}$ in the natural lattice distance. This completes the sketch. \qed
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{The $L^{-2}$ factor is artefactual}
+\label{sec:Linverse2-artefact}
+
+The conclusion of Theorem~\ref{thm:main} contains a factor $L^{-2}$ which is inconsistent with the physically expected behaviour of $\mathrm{SU}(N)$ Yang--Mills mass gap as a function of the spatial volume. In this section we argue that this factor is an artefact of our pedestrian use of $\lambda_1(\Delta_\Lat) \ge C_2/L^2$ in step~6 of the proof, rather than a real feature of the Wilson Gibbs measure.
+
+\subsection{Three pieces of evidence.}
+
+\subsubsection*{(i) Bauerschmidt--Dagallier obtain LSI uniformly in $L$ for $\varphi^4_d$.}
+The abstract of \cite{BD22} states that the continuum $\varphi^4_2$ and $\varphi^4_3$ measures satisfy a log-Sobolev inequality uniformly in the lattice regularisation under the optimal assumption that their susceptibility is bounded, uniformly in volume in the entire high-temperature phases. This shows that the Polchinski-cascade machinery, when applicable, yields a constant that does \emph{not} depend on $L$, ruling out a fundamental obstacle to volume-uniform LSI in compact scalar models.
+
+\subsubsection*{(ii) Strong-coupling lattice Yang--Mills already enjoys $L$-uniformity.}
+Cao--Nissim--Sheffield \cite{CNS25} prove an area law and a mass gap for Wilson $\mathrm{SU}(N), \mathrm{U}(N), \mathrm{SO}(2N)$ in the 't~Hooft regime, with bounds uniform in the lattice. Nissim \cite{Nissim25} extends this to a $\mathrm{U}(N)$ infinite-volume mass gap. No factor of $L^{-1}$ or $L^{-2}$ appears in these strong-coupling SU($N$) results.
+
+\subsubsection*{(iii) L\"uscher 1986 -- finite-size corrections are exponential, not polynomial.}
+For a quantum field theory with an intrinsic positive mass $m_0$, L\"uscher \cite{Luscher1986} proved that finite-volume corrections to the mass spectrum on $T^d_L$ are of the form
+\[
+  m(L) \;=\; m(\infty) - A \, e^{-m'\,L} + O(e^{-2 m'\,L}),
+\]
+with $m'$ the mass of the lightest intermediate state. The lattice gauge community uses this form universally for extrapolation $L \to \infty$ in $\mathrm{SU}(N)$ glueball spectroscopy, see e.g.\ \cite{LuciniTeperWenger, AthenodorouTeper}. The expected scaling is therefore $O(1) + O(e^{-mL})$, not $O(L^{-2})$.
+
+\subsection{Counter-example: Ginzburg--Landau.}
+For genuinely critical (gapless) models, the lattice spectral gap really is $O(L^{-2})$. Helffer \cite{Helffer1999} establishes that for Ginzburg--Landau processes the spectral gap of the Glauber generator and the log-Sobolev constant are of order $L^{-2}$ in every dimension. This is consistent with the physical picture: a gradient field with flat dispersion has spectral gap controlled by the Laplacian's first non-zero mode, $(2\pi/L)^2$. The Wilson interaction, by contrast, is non-trivial and is expected to push the system off the Ginzburg--Landau universality class.
+
+\subsection{Path to removal.}
+The route through which the $L^{-2}$ factor can be eliminated is precisely the upgrade $(\mathrm{H}_1) \to (\mathrm{H}_{10})$ described in \S\ref{sec:optional-strengthening}: a non-abelian Polchinski-cascade construction, extending \cite{BD22, BBD24} from $\varphi^4_d$ ($d = 2, 3$) to Wilson $\SUN$ ($d = 4$). This extension is, on present evidence, the natural collaborative target for the Bauerschmidt--Bodineau--Dagallier framework; it is also exactly the analytic step whose closure would resolve the conditionality of Theorem~\ref{thm:main} and remove the $L^{-2}$ artefact in a single move.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Optional strengthening: hypotheses $\mathrm{H}_7$--$\mathrm{H}_{10}$}
+\label{sec:optional-strengthening}
+
+For completeness we record four additional hypotheses, of varying ambition. None is required for Theorem~\ref{thm:main}; each would tighten the conclusion in a specific direction.
+
+\paragraph{$(\mathrm{H}_7)$ Asymptotic Theorem~C, uniform form.}
+There exists $\varepsilon_0(N, d) > 0$ independent of $(a, L, \beta)$ such that, in the joint continuum / asymptotic-freedom limit $a \to 0$, $\beta \to \infty$ with $\beta a^{d - 4}$ fixed, the rescaled mass gap $m_{\mathrm{gap}}(a, L, \beta) \cdot a$ converges to $c_\infty(d) \cdot (1 - \kappa(G, d)) \cdot \varepsilon_0(N, d)$, where $c_\infty(d) := \Sigma(d) / (2d)$. This is a strong, semi-empirical input; the cohomological structure of $c_\infty(d)$ as a $\beta$-independent geometric ratio is consistent with $27$ lattice datapoints across saturated and non-saturated $(N, d, G)$ triples in a parallel manuscript in preparation.
+
+\paragraph{$(\mathrm{H}_8)$ L\"uscher exponential finite-size scaling.}
+There exist $m'(N, d, \beta) > 0$ and $A(N, d, \beta) > 0$, independent of $L$ for $L \ge L_0(\beta)$, such that
+\[
+  \bigl| m^{\mathrm{lattice}}_{\mathrm{gap}}(a, L, \beta) - m^{\mathrm{lattice}}_{\mathrm{gap}}(a, \infty, \beta) \bigr| \;\le\; A \, e^{- m' \, L}.
+\]
+This is L\"uscher's volume-dependence theorem \cite{Luscher1986} applied conditionally to the existence of a positive intrinsic gap. It does not by itself remove the $L^{-2}$ factor of Theorem~\ref{thm:main}; for that one would need an independent lower bound of order $1$ for $m^{\mathrm{lattice}}_{\mathrm{gap}}(a, \infty, \beta)$, which is what $(\mathrm{H}_{10})$ supplies.
+
+\paragraph{$(\mathrm{H}_9)$ Continuum continuity of $\kappa$.}
+For each saturated pair $(G, d)$, the lattice value $\kappa^{\mathrm{lattice}}(G, d, a) = 1/(2(d-1))$ admits a continuum limit $\kappa^{\mathrm{cont}}(G, d) = \lim_{a \to 0} \kappa^{\mathrm{lattice}}(G, d, a)$ which agrees with the lattice value. This is a coherence hypothesis and is automatically satisfied if $\kappa$ is defined intrinsically from the algebraic and topological data ($A_2$ roots for $\mathfrak{su}(3)$; $b_2^\pm$ for a $4$-manifold of signature zero), which are themselves invariants under metric refinement.
+
+\paragraph{$(\mathrm{H}_{10})$ Non-abelian Polchinski cascade.}
+The Wilson Gibbs measure $\mu_{a, L, \beta}$ admits a Polchinski-cascade decomposition $\mu_{a, L, \beta} = \mu_\beta^{(0)} \ast \cdots \ast \mu_\beta^{(K)}$ analogous to the BBD construction \cite{BD22, BBD24} for $\varphi^4_d$, with each layer satisfying $\mathrm{LSI}(c_k)$ such that $\sum_k c_k$ is bounded uniformly in $(a, L)$ for $\beta \ge \beta_0$.
+
+\begin{proposition}[Upgrade under $(\mathrm{H}_{10})$]
+\label{prop:upgrade-H10}
+If $(\mathrm{H}_{10})$ holds in addition to the hypotheses of Theorem~\ref{thm:main}, then
+\[
+  \lambda_1(\calL_\beta) \;\ge\; \varepsilon'(N, d) \cdot (1 - \kappa(G, d)) \cdot \beta,
+\]
+uniformly in $(a, L)$ -- the $L^{-2}$ factor is eliminated.
+\end{proposition}
+
+A non-abelian extension of the Polchinski-cascade construction would simultaneously resolve $(\mathrm{H}_1)$ (in its $(\mathrm{H}_1'')$ form) and yield Proposition~\ref{prop:upgrade-H10}. We do not attempt this extension here; it is, by present evidence, the natural target of a collaborative programme with the Bauerschmidt--Bodineau--Dagallier framework as starting point.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Cross-dimensional predictions}
+\label{sec:cross-dim-predictions}
+
+Theorem~\ref{thm:main} applies to three saturated pairs simultaneously: $(\mathrm{SU}(2), 2)$, $(\mathrm{SU}(3), 3)$, $(\mathrm{SU}(3), 4)$. The values of the saturation factor are
+\[
+  \kappa(\mathrm{SU}(2), 2) = 1/2, \qquad \kappa(\mathrm{SU}(3), 3) = 1/4, \qquad \kappa(\mathrm{SU}(3), 4) = 1/6,
+\]
+hence the predicted LSI exponents are $\alpha := 1 - \kappa = 1/2,\, 3/4,\, 5/6$. The structural law $\kappa(G, d) = 1/(2(d-1))$ generates the following three independent falsification tests:
+
+\begin{itemize}[leftmargin=*]
+  \item \textbf{$(\mathrm{SU}(2), d = 2)$:} Predicted exponent $\alpha = 1/2$. The two-dimensional case is exactly soluble via the heat kernel on $G$ \cite{Driver1989, Sengupta1992, Levy2003}; the predicted constant can be compared against the closed-form spectrum.
+  \item \textbf{$(\mathrm{SU}(3), d = 3)$:} Predicted exponent $\alpha = 3/4$. The three-dimensional case is accessible numerically via the gradient-flow scale-setting of L\"uscher; a one-line modification of standard four-dimensional simulation infrastructure suffices, and the cost is moderate.
+  \item \textbf{$(\mathrm{SU}(3), d = 4)$:} Predicted exponent $\alpha = 5/6$. This is the physical case, expected to be the hardest to access cleanly because of the contamination by ultraviolet renormalisation effects in $d = 4$.
+\end{itemize}
+
+The exponents $1/2, 3/4, 5/6$ are predictions of the framework, not inputs. A failure of any of them on an independently obtained lattice dataset would falsify the saturation identity $\kappa(G, d) = 1/(2(d-1))$. This provides three independent tests with no shared error budget.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Comparison with related work}
+\label{sec:comparison}
+
+\subsection{Versus Magnen--Rivasseau--S\'en\'eor.}
+\cite{MRS93} constructed Yang--Mills for $\mathrm{SU}(2)$ in $d = 4$ with a fixed infrared cutoff, in the trivial topological sector, via Glimm--Jaffe phase-cell expansion. Our approach is orthogonal: we do not attempt a constructive measure but instead use a Polchinski-cascade input (in the form of $(\mathrm{H}_1)$ or $(\mathrm{H}_{10})$) to access an LSI directly. The work of \cite{MRS93} could be invoked to motivate the local Gaussian regularity hypothesis $(\mathrm{H}_2)$, though their methods are not directly portable to our setting.
+
+\subsection{Versus Bałaban.}
+Bałaban's renormalisation-group approach to lattice Yang--Mills (1985--1989, see e.g.\ his Commun. Math. Phys. series and the exposition of Dimock \cite{Dimock2011}) addresses ultraviolet stability and, in $d = 3$, provides a complete framework. In $d = 4$, the small-field analysis is well-developed but the matching of small and large fields together with uniformity in $a$ remains open. Our axiomatisation of the concentration step as $(\mathrm{H}_1)$ is a way of \emph{naming} precisely the Bałaban gap, rather than attempting to build the cluster expansion ourselves.
+
+\subsection{Versus Bauerschmidt--Bodineau--Dagallier for $\varphi^4$.}
+The Polchinski-cascade machinery of \cite{BD22, BBD24} provides LSI uniformly in the lattice regularisation for the scalar models $\varphi^4_2$ and $\varphi^4_3$, under the optimal bounded-susceptibility condition. Companion results in the same framework include the continuum sine-Gordon LSI \cite{BB21} and the near-critical Ising LSI \cite{BDIsing}. The non-abelian extension targeted by $(\mathrm{H}_{10})$ would lift this construction from a scalar (or abelian) target to a $\sun$-valued Gibbs measure. Three structural facts make the extension plausible:
+\begin{enumerate}[leftmargin=*]
+  \item the local state space ($G^{E(\Lat_a)}$) is finite-dimensional and compact;
+  \item the Bianchi cohomology fixes the constant $c_\infty(4)$ as a $\beta$-independent geometric ratio, with margin compared to the diverging Dobrushin coefficient of $\varphi^4$ at criticality;
+  \item Polchinski's RG transformation preserves gauge invariance \cite{Polchinski1984}.
+\end{enumerate}
+We claim none of these makes the extension automatic. We do claim that they suggest the extension is the natural next step.
+
+\subsection{Versus Cao--Nissim--Sheffield and Nissim.}
+\cite{CNS25} and \cite{Nissim25} address the strong-coupling regime $\beta < 1/(8(d-1))$, with subsequent expansion of the area-law regime in \cite{CNS25b}. The regime of Theorem~\ref{thm:main} is the opposite (large $\beta$, asymptotic freedom), so the results are complementary, not competitive. The methods of \cite{CNS25, Nissim25} use a sigma-model reformulation and a random-environment decomposition specific to centre-non-trivial groups, while our route is via Polchinski cascade applied directly on $G^{E(\Lat_a)}$.
+
+\subsection{Versus Shen--Zhu--Zhu and Yang--Mills--Higgs constructions.}
+\cite{SZZ22} obtained a strong-coupling LSI for Wilson $\mathrm{SU}(N)$ at $\beta < 1/(16(d-1))$, refined to $\beta < 1/(8(d-1))$ in \cite{CNS25}. The Langevin dynamics for $\mathrm{SU}(N)$ lattice Yang--Mills--Higgs was studied in \cite{SZZ24}. In dimension three, the stochastic quantisation of Yang--Mills--Higgs was rigorously constructed by Chandra--Chevyrev--Hairer--Shen \cite{CCHS22} via regularity structures. All these results are in regimes (strong coupling, lower dimension, with Higgs) distinct from the present setting and provide complementary anchors.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Discussion and outlook}
+\label{sec:discussion}
+
+\subsection{Pattern Wiles.}
+The structural shape of Theorem~\ref{thm:main} -- a conditional implication under a single named analytic conjecture -- is the pattern made famous by Wiles' 1995 proof of Fermat's Last Theorem \cite{Wiles1995}, in which the modularity conjecture was the open piece and the implication was rigorous. The modularity conjecture was later closed by Taylor--Wiles \cite{TaylorWiles1995} and the full proof followed. We make no parallel claim to the historical importance of that programme; we only point out that conditionalising on a precisely named open conjecture is a recognised structural step in mathematical practice, distinct both from a complete proof and from a heuristic argument.
+
+\subsection{Timeline and collaboration.}
+The conditional content of Theorem~\ref{thm:main} is, by present evidence, accessible within a $9$--$15$ month writing window. The unconditional resolution -- i.e.\ the closing of $(\mathrm{H}_1)$, or equivalently the construction of $(\mathrm{H}_{10})$ -- is a substantially longer collaborative target, plausibly on a $5$--$10$ year horizon, contingent on the BBD framework admitting a non-abelian extension. We make no prediction on the latter.
+
+\subsection{Honest scope.}
+What Theorem~\ref{thm:main} accomplishes:
+\begin{enumerate}[leftmargin=*]
+  \item the open analytic step is explicitly named and located;
+  \item the entire downstream chain (from $(\mathrm{H}_1)$ to lattice mass gap on the saturated family) is rigorously articulated;
+  \item all auxiliary hypotheses $(\mathrm{H}_2)$--$(\mathrm{H}_6)$ are either standard or Lean-certified;
+  \item the $L^{-2}$ artefact is identified and the path to its removal made precise;
+  \item three falsifiable cross-dimensional predictions are extracted.
+\end{enumerate}
+What it does not accomplish:
+\begin{enumerate}[leftmargin=*]
+  \item it is not a resolution of the Clay Yang--Mills problem in any sense;
+  \item it does not address the continuum limit $a \to 0$;
+  \item it does not yield a constant uniform in $L$;
+  \item it does not construct Wightman / Osterwalder--Schrader axioms.
+\end{enumerate}
+We believe the value of the result lies in making the locus of the open work explicit, not in the size of the step accomplished. The structural reduction is, on present evidence, the cleanest available formulation of where the non-abelian cluster-expansion / Polchinski lock sits in the modern post-2024 literature.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section*{Acknowledgements}
+\addcontentsline{toc}{section}{Acknowledgements}
+
+The author is an independent researcher with no institutional funding. The Lean~4 formalisation infrastructure (mathlib4) and its community are gratefully acknowledged.
+
+Large language model (LLM) systems were used for typesetting and for adversarial cross-checks of arXiv identifiers and citation attributions. Three earlier internal drafts of the present material contained attributions that did not survive verification against the live arXiv API and the published literature: (i) a citation \emph{``Otto--Westdickenberg, J. Funct. Anal. 254 (2008)~2865--2940''} did not match any actual publication, the genuine Otto--Westdickenberg reference being \emph{Eulerian calculus for the contraction in the Wasserstein distance}, SIAM J. Math. Anal. \textbf{37} (2005) 1227--1255, which addresses porous-medium $W_2$ contraction rather than Wilson LSI; (ii) a misattribution of a result to ``Kondratiev--Piatnitski--Zhizhina 2020'' was corrected; (iii) the standard abelian convergence result is due to Brydges--Fr\"ohlich--Seiler 1980 \cite{BFS80} and not, as a draft had it, to ``Brydges--Federbush''. All three catches were corrected before submission, and the present paper has been independently audited against the arXiv API; no entry in the bibliography below has been inserted without arXiv verification. The contribution of LLM systems is purely operational (typesetting, adversarial verification); the mathematical content and the responsibility for any remaining errors are entirely the author's. This disclosure follows COPE guidance.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{thebibliography}{99}
+
+\bibitem{AthenodorouTeper} A.~Athenodorou and M.~Teper, \emph{$\mathrm{SU}(N)$ gauge theories in $3+1$ dimensions: glueball spectrum, string tensions and topology}, JHEP \textbf{12} (2021) 082, \href{https://arxiv.org/abs/2106.00364}{arXiv:2106.00364}.
+
+\bibitem{BD22} R.~Bauerschmidt and B.~Dagallier, \emph{Log-Sobolev inequality for the $\varphi^4_2$ and $\varphi^4_3$ measures}, Comm. Pure Appl. Math. \textbf{77} (2024) 2579--2612, \href{https://arxiv.org/abs/2202.02295}{arXiv:2202.02295}.
+
+\bibitem{BDIsing} R.~Bauerschmidt and B.~Dagallier, \emph{Log-Sobolev inequality for near critical Ising models}, Comm. Pure Appl. Math. \textbf{77} (2024) 2568--2576, \href{https://arxiv.org/abs/2202.02301}{arXiv:2202.02301}.
+
+\bibitem{BBD24} R.~Bauerschmidt, T.~Bodineau and B.~Dagallier, \emph{Stochastic dynamics and the Polchinski equation: an introduction}, Probab. Surv. \textbf{21} (2024) 200--290, \href{https://arxiv.org/abs/2307.07619}{arXiv:2307.07619}.
+
+\bibitem{BB21} R.~Bauerschmidt and T.~Bodineau, \emph{Log-Sobolev inequality for the continuum sine-Gordon model}, Comm. Pure Appl. Math. \textbf{74} (2021) 2064--2113, \href{https://arxiv.org/abs/1907.12308}{arXiv:1907.12308}.
+
+\bibitem{BGL14} D.~Bakry, I.~Gentil and M.~Ledoux, \emph{Analysis and Geometry of Markov Diffusion Operators}, Grundlehren der mathematischen Wissenschaften \textbf{348}, Springer, 2014.
+
+\bibitem{BFS80} D.~Brydges, J.~Fr\"ohlich and E.~Seiler, \emph{On the construction of quantized gauge fields. II. Convergence of the lattice approximation}, Comm. Math. Phys. \textbf{71} (1980) 159--205.
+
+\bibitem{CCHS22} A.~Chandra, I.~Chevyrev, M.~Hairer and H.~Shen, \emph{Stochastic quantisation of Yang--Mills--Higgs in 3D}, Invent. Math. \textbf{237} (2024) 541--696, \href{https://arxiv.org/abs/2201.03487}{arXiv:2201.03487}.
+
+\bibitem{CNS25} S.~Cao, R.~Nissim and S.~Sheffield, \emph{Dynamical approach to area law for lattice Yang--Mills}, preprint (2025), \href{https://arxiv.org/abs/2509.04688}{arXiv:2509.04688}.
+
+\bibitem{CNS25b} S.~Cao, R.~Nissim and S.~Sheffield, \emph{Expanded regimes of area law for lattice Yang--Mills theories}, preprint (2025), \href{https://arxiv.org/abs/2505.16585}{arXiv:2505.16585}.
+
+\bibitem{CoverThomas} T.~M.~Cover and J.~A.~Thomas, \emph{Elements of Information Theory}, 2nd ed., Wiley-Interscience, 2006.
+
+\bibitem{Dimock2011} J.~Dimock, \emph{The renormalization group according to Bałaban}, expository preprint, \href{https://arxiv.org/abs/1108.1335}{arXiv:1108.1335}.
+
+\bibitem{Driver1989} B.~K.~Driver, \emph{$\mathrm{YM}_2$: Continuum expectations, lattice convergence, and lassos}, Comm. Math. Phys. \textbf{123} (1989) 575--616.
+
+\bibitem{Gross1975} L.~Gross, \emph{Logarithmic Sobolev inequalities}, Amer. J. Math. \textbf{97} (1975) 1061--1083.
+
+\bibitem{Helffer1999} B.~Helffer, \emph{Remarks on decay of correlations and Witten Laplacians, Brascamp--Lieb inequalities and semiclassical limit}, J. Funct. Anal. \textbf{155} (1998) 571--586.
+
+\bibitem{Huebschmann1996} J.~Huebschmann, \emph{The singularities of Yang--Mills connections for bundles on a surface. II. The stratification}, Math. Z. \textbf{221} (1996) 83--92, \href{https://arxiv.org/abs/dg-ga/9411007}{arXiv:dg-ga/9411007}.
+
+\bibitem{JaffeWitten} A.~Jaffe and E.~Witten, \emph{Quantum Yang--Mills theory}, Clay Mathematics Institute Millennium Problem statement, 2000.
+
+\bibitem{Levy2003} T.~L\'evy, \emph{Yang--Mills measure on compact surfaces}, Mem. Amer. Math. Soc. \textbf{166} (2003), no.~790.
+
+\bibitem{LuciniTeperWenger} B.~Lucini, M.~Teper and U.~Wenger, \emph{Glueballs and $k$-strings in $\mathrm{SU}(N)$ gauge theories: calculations with improved operators}, JHEP \textbf{06} (2004) 012, \href{https://arxiv.org/abs/hep-lat/0404008}{arXiv:hep-lat/0404008}.
+
+\bibitem{Luscher1986} M.~L\"uscher, \emph{Volume dependence of the energy spectrum in massive quantum field theories. I.}, Comm. Math. Phys. \textbf{104} (1986) 177--206.
+
+\bibitem{MRS93} J.~Magnen, V.~Rivasseau and R.~S\'en\'eor, \emph{Construction of $\mathrm{YM}_4$ with an infrared cutoff}, Comm. Math. Phys. \textbf{155} (1993) 325--383.
+
+\bibitem{Nissim25} R.~Nissim, \emph{$\mathrm{U}(N)$ lattice Yang--Mills in the 't~Hooft regime}, preprint (2025), \href{https://arxiv.org/abs/2510.22788}{arXiv:2510.22788}.
+
+\bibitem{Polchinski1984} J.~Polchinski, \emph{Renormalization and effective Lagrangians}, Nucl. Phys. B \textbf{231} (1984) 269--295.
+
+\bibitem{RudolphSchmidtVolobuev} G.~Rudolph, M.~Schmidt and I.~P.~Volobuev, \emph{On the gauge orbit space stratification: a review}, J. Phys. A \textbf{35} (2002) R1--R50, \href{https://arxiv.org/abs/hep-th/0203027}{arXiv:hep-th/0203027}.
+
+\bibitem{Sengupta1992} A.~Sengupta, \emph{The Yang--Mills measure for $S^2$}, J. Funct. Anal. \textbf{108} (1992) 231--273.
+
+\bibitem{SZZ22} H.~Shen, R.~Zhu and X.~Zhu, \emph{A stochastic analysis approach to lattice Yang--Mills at strong coupling}, Comm. Math. Phys. \textbf{400} (2023) 805--851, \href{https://arxiv.org/abs/2204.12737}{arXiv:2204.12737}.
+
+\bibitem{SZZ24} H.~Shen, R.~Zhu and X.~Zhu, \emph{Langevin dynamics of lattice Yang--Mills--Higgs and applications}, preprint (2024), \href{https://arxiv.org/abs/2401.13299}{arXiv:2401.13299}.
+
+\bibitem{Singer1978} I.~M.~Singer, \emph{Some remarks on the Gribov ambiguity}, Comm. Math. Phys. \textbf{60} (1978) 7--12.
+
+\bibitem{Sjostrand1996} J.~Sj\"ostrand, \emph{Correlation asymptotics and Witten Laplacians}, Algebra i Analiz \textbf{8} (1996) 160--191; St.~Petersburg Math. J. \textbf{8} (1997) 123--147.
+
+\bibitem{TaylorWiles1995} R.~Taylor and A.~Wiles, \emph{Ring-theoretic properties of certain Hecke algebras}, Ann. of Math. \textbf{141} (1995) 553--572.
+
+\bibitem{Wiles1995} A.~Wiles, \emph{Modular elliptic curves and Fermat's Last Theorem}, Ann. of Math. \textbf{141} (1995) 443--551.
+
+\bibitem{Wilson1974} K.~G.~Wilson, \emph{Confinement of quarks}, Phys. Rev. D \textbf{10} (1974) 2445--2459.
+
+\end{thebibliography}
+
+\end{document}

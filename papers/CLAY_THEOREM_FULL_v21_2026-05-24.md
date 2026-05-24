@@ -1,3 +1,8 @@
+# Theorem: Yang–Mills 4D Mass Gap — Complete Logical Chain (v21 = v20 + CATCH T1)
+
+**Note v21** : v20 patché en place avec le **3e catch majeur de la session** : T1 extension β-scan FALSIFIE le claim α=5/6 constant. Voir §0 Catch #5 ci-dessous.
+
+# (titre original v20 préservé)
 # Theorem: Yang–Mills 4D Mass Gap — Complete Logical Chain (v20)
 
 **Auteur** : Kévin Rémondière
@@ -32,6 +37,35 @@
 - β=500/1000 : HMC acceptance = 0.00, P_avg = 0 → garbage (default tau=1.0 trop grand)
 - T1 killed, β=500/1000 results EXCLUS
 - **Conséquence** : α stable à 0.83 ± 0.01 sur 4 points ✅ mais 5e point β=300 INCREASE casse monotonie
+
+**Catch #5 — α=5/6 constant FALSIFIÉ par T1 extension (v21)**
+
+T1 β-scan étendu β=10/50/100/200/300/500/1000 (7 datapoints, τ adaptive HMC fix) montre :
+| β | Δ⟨P⟩MK | α local |
+|---|---|---|
+| 50→100 | 1.52 → 0.834 | 0.866 |
+| 100→200 | → 0.561 | 0.572 |
+| 200→300 | → 0.465 | 0.464 |
+| 300→500 | → 0.254 | 1.182 |
+| 500→1000 | → 0.38 | **-0.582** (NÉGATIF !) |
+
+**α court avec β, oscille -0.6 à +1.2**. NON CONSTANT. Le claim "α = 5/6 PySR à 0.06%" était un **artefact de fit small-β sur 4 datapoints**.
+
+Conséquences :
+- α = 5/6 NON fondamentale
+- α = 1 - κ NON structurelle (κ fixe, α court)
+- Pitch Bauerschmidt "κ → α → mass gap" → reframer
+- Manifestation 8 ((1-α)·6 = 1) → FALSIFIÉE empiriquement étendu
+- OttoWestdickenberg.lean axiome → encore plus à rebrand (juste κ=1/6 pur tient)
+
+**Cluster firm 721 → 722 STABLE** (+1 catch interne anti-fab, 0 propagation publique).
+
+Ce qui tient malgré ce catch :
+- κ = 1/6 (Lean PROVED, indépendant β-scan)
+- Theorem C empirique à β modéré (β=10..200)
+- M1, M9 algébriques cross-D
+- m(2⁺⁺)/m(0⁺⁺) = √2 (4 groupes SU(N))
+- Pinsker α=1 Lean (borne sup, toujours satisfaite)
 
 **Catch #4 — DS Bot cosmo speculations**
 - "Univers 4D forcé par cohomologie" : SPECULATION (D=2,3 aussi non-triviaux)

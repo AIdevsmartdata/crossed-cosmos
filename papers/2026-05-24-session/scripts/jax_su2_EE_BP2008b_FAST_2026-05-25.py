@@ -143,71 +143,70 @@ def compute_staples_K_T_K_2T(U, mu, L_x, L_y, L_z, T_half):
             # K_T_fwd = U_ν(x, t) · U_μ(x, next_t_T)^† · U_ν(x+μ, t)^†
             #   where U_ν(x+μ, t) = roll of U_ν by -1 on mu axis
             U_nu_at_xpmu_real = jnp.roll(U_nu, -1, axis=mu)
+            # FIX 2026-05-25 SECOND BUG : standard forward staple = U_ν(x+μ̂)·U_μ(x+ν̂)†·U_ν(x)†
+            # Avant : U_ν(x) en premier (wrong order). Now : U_ν(x+μ̂) en premier.
             K_T_fwd = jnp.einsum('...ij,...kj,...lk->...il',
-                                  U_nu, jnp.conjugate(U_mu_at_xpnu_T),
-                                  jnp.conjugate(U_nu_at_xpmu_real))
+                                  U_nu_at_xpmu_real, jnp.conjugate(U_mu_at_xpnu_T),
+                                  jnp.conjugate(U_nu))
             K_2T_fwd = jnp.einsum('...ij,...kj,...lk->...il',
-                                   U_nu, jnp.conjugate(U_mu_at_xpnu_2T),
-                                   jnp.conjugate(U_nu_at_xpmu_real))
+                                   U_nu_at_xpmu_real, jnp.conjugate(U_mu_at_xpnu_2T),
+                                   jnp.conjugate(U_nu))
             K_T += K_T_fwd
             K_2T += K_2T_fwd
-            # Backward staple : U_ν(x-ν)^† · U_μ(x-ν)^† · U_ν(x-ν+μ)
+            # Backward staple : U_ν(x-ν̂+μ̂)†·U_μ(x-ν̂)†·U_ν(x-ν̂)
             U_nu_at_xmnu_T = gather_link_at_t(U_nu, prev_t_T)
             U_nu_at_xmnu_2T = gather_link_at_t(U_nu, prev_t_2T)
             U_mu_at_xmnu_T = gather_link_at_t(U_mu, prev_t_T)
             U_mu_at_xmnu_2T = gather_link_at_t(U_mu, prev_t_2T)
             U_nu_at_xmnu_pmu_T = jnp.roll(U_nu_at_xmnu_T, -1, axis=mu)
             U_nu_at_xmnu_pmu_2T = jnp.roll(U_nu_at_xmnu_2T, -1, axis=mu)
+            # FIX 2026-05-25 : swap first and third arg (était U_nu_at_xmnu_T first)
             K_T_bwd = jnp.einsum('...ji,...kj,...kl->...il',
-                                  jnp.conjugate(U_nu_at_xmnu_T),
+                                  jnp.conjugate(U_nu_at_xmnu_pmu_T),
                                   jnp.conjugate(U_mu_at_xmnu_T),
-                                  U_nu_at_xmnu_pmu_T)
+                                  U_nu_at_xmnu_T)
             K_2T_bwd = jnp.einsum('...ji,...kj,...kl->...il',
-                                   jnp.conjugate(U_nu_at_xmnu_2T),
+                                   jnp.conjugate(U_nu_at_xmnu_pmu_2T),
                                    jnp.conjugate(U_mu_at_xmnu_2T),
-                                   U_nu_at_xmnu_pmu_2T)
+                                   U_nu_at_xmnu_2T)
             K_T += K_T_bwd
             K_2T += K_2T_bwd
         else:
             # nu is spatial — standard shifts on mu axis and nu axis
-            # U_nu_at_xpmu = roll(U_nu, -1, mu)
-            # U_mu_at_xpnu depends only on (x+nu) in spatial → standard roll
             U_nu_at_xpmu = jnp.roll(U_nu, -1, axis=mu)
             if mu == 3:  # mu is temporal
-                # U_μ(x+ν, t) = roll(U_μ, -1, ν=spatial)  no t change
                 U_mu_at_xpnu = jnp.roll(U_mu, -1, axis=nu)
-                # For forward staple, no T vs 2T difference here (mu temporal, but shift is in ν spatial)
-                # Wait — μ is temporal, so U_μ is temporal link. (x+ν) shifts spatial. No t change.
+                # FIX 2026-05-25 SECOND BUG : standard order
                 K_fwd = jnp.einsum('...ij,...kj,...lk->...il',
-                                    U_nu, jnp.conjugate(U_mu_at_xpnu),
-                                    jnp.conjugate(U_nu_at_xpmu))
+                                    U_nu_at_xpmu, jnp.conjugate(U_mu_at_xpnu),
+                                    jnp.conjugate(U_nu))
                 K_T += K_fwd
                 K_2T += K_fwd  # same (no t-direction shift)
-                # Backward staple : U_ν(x-ν, t)^† · U_μ(x-ν, t)^† · U_ν(x-ν+μ, t)
                 U_nu_at_xmnu = jnp.roll(U_nu, 1, axis=nu)
                 U_mu_at_xmnu = jnp.roll(U_mu, 1, axis=nu)
                 U_nu_at_xmnu_pmu = jnp.roll(U_nu_at_xmnu, -1, axis=mu)
                 K_bwd = jnp.einsum('...ji,...kj,...kl->...il',
-                                    jnp.conjugate(U_nu_at_xmnu),
+                                    jnp.conjugate(U_nu_at_xmnu_pmu),
                                     jnp.conjugate(U_mu_at_xmnu),
-                                    U_nu_at_xmnu_pmu)
+                                    U_nu_at_xmnu)
                 K_T += K_bwd
                 K_2T += K_bwd
             else:
                 # both nu and mu are spatial. No t shift. K_T = K_2T.
                 U_mu_at_xpnu = jnp.roll(U_mu, -1, axis=nu)
+                # FIX 2026-05-25 SECOND BUG : standard order
                 K_fwd = jnp.einsum('...ij,...kj,...lk->...il',
-                                    U_nu, jnp.conjugate(U_mu_at_xpnu),
-                                    jnp.conjugate(U_nu_at_xpmu))
+                                    U_nu_at_xpmu, jnp.conjugate(U_mu_at_xpnu),
+                                    jnp.conjugate(U_nu))
                 K_T += K_fwd
                 K_2T += K_fwd
                 U_nu_at_xmnu = jnp.roll(U_nu, 1, axis=nu)
                 U_mu_at_xmnu = jnp.roll(U_mu, 1, axis=nu)
                 U_nu_at_xmnu_pmu = jnp.roll(U_nu_at_xmnu, -1, axis=mu)
                 K_bwd = jnp.einsum('...ji,...kj,...kl->...il',
-                                    jnp.conjugate(U_nu_at_xmnu),
+                                    jnp.conjugate(U_nu_at_xmnu_pmu),
                                     jnp.conjugate(U_mu_at_xmnu),
-                                    U_nu_at_xmnu_pmu)
+                                    U_nu_at_xmnu)
                 K_T += K_bwd
                 K_2T += K_bwd
     return K_T, K_2T

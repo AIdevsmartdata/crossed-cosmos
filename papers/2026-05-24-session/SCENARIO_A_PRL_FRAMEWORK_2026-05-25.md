@@ -1,5 +1,18 @@
 # Framework PRL Scenario A — κ²(SU(2)) = 1/4 lattice confirmation
 
+**STATUS 2026-05-25 (end of day) : SCENARIO C CONFIRMÉ — DRAFT SUSPENDU.**
+
+MH β-scan production (PID 1590250) terminé : κ = 9.4e-10 ± 6.9e-9 ≈ ZÉRO.
+K_diff(β) ne varie pas avec β (1/a² varie ×5.7) → leading cancellé par vacuum
+subtraction, comme BP α-integration. 4ème méthode testée → 4ème cancellation.
+
+Le draft ci-dessous est CONSERVÉ pour réutilisation si jamais l'interface
+tension (Lucini-Teper-Wenger) donne κ leading clean dans une future itération.
+Pour l'instant, paper companion "Why bulk-subtracted EE observables cancel
+leading area-law in SU(2) 4D lattice" est la voie publiable honnête.
+
+---
+
 **Pre-draft prepared while MH production runs (PID 1586888).**
 
 ## Title options

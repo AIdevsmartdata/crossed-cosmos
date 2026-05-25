@@ -154,10 +154,10 @@ def metropolis_link_update(U_link, K_link, beta_eff, key, eps=0.3):
     key1, key2 = random.split(key)
     X = random_su2_near_identity(key1, U_link.shape[:-2], eps=eps)
     U_proposed = jnp.einsum('...ij,...jk->...ik', X, U_link)
-    K_dag = jnp.conjugate(jnp.swapaxes(K_link, -1, -2))
-    new_term = jnp.real(jnp.trace(jnp.einsum('...ij,...jk->...ik', U_proposed, K_dag),
+    # FIX 2026-05-25: K_link bug removed (Re Tr(U·K) ≠ Re Tr(U·K†) for SU(2))
+    new_term = jnp.real(jnp.trace(jnp.einsum('...ij,...jk->...ik', U_proposed, K_link),
                                     axis1=-2, axis2=-1))
-    old_term = jnp.real(jnp.trace(jnp.einsum('...ij,...jk->...ik', U_link, K_dag),
+    old_term = jnp.real(jnp.trace(jnp.einsum('...ij,...jk->...ik', U_link, K_link),
                                     axis1=-2, axis2=-1))
     dS = -beta_eff * 0.5 * (new_term - old_term)
     rand_u = random.uniform(key2, dS.shape)

@@ -285,16 +285,20 @@ def compute_staple_sum(U, mu, L):
 
 @partial(jit, static_argnames=('L',))
 def metropolis_sweep_standard(U, beta, key, L, eps=0.3):
-    """Standard per-link Metropolis on Wilson SU(2)."""
+    """Standard per-link Metropolis on Wilson SU(2).
+
+    FIX 2026-05-25 : utilise K_mu directement (PAS K_dag). Le bug K_dag donnait
+    ⟨P⟩ = -0.18 au lieu de +0.62 attendu à β=2.3 car Re Tr(U·K) ≠ Re Tr(U·K†)
+    pour SU(2) (terme u·K change de signe).
+    """
     for mu in range(4):
         K_mu = compute_staple_sum(U, mu, L)
         key, k_prop, k_acc = random.split(key, 3)
         X = random_su2_near_identity(k_prop, U[..., mu, :, :].shape[:-2], eps=eps)
         U_proposed_mu = jnp.einsum('...ij,...jk->...ik', X, U[..., mu, :, :])
-        K_dag = jnp.conjugate(jnp.swapaxes(K_mu, -1, -2))
-        new_term = jnp.real(jnp.trace(jnp.einsum('...ij,...jk->...ik', U_proposed_mu, K_dag),
+        new_term = jnp.real(jnp.trace(jnp.einsum('...ij,...jk->...ik', U_proposed_mu, K_mu),
                                         axis1=-2, axis2=-1))
-        old_term = jnp.real(jnp.trace(jnp.einsum('...ij,...jk->...ik', U[..., mu, :, :], K_dag),
+        old_term = jnp.real(jnp.trace(jnp.einsum('...ij,...jk->...ik', U[..., mu, :, :], K_mu),
                                         axis1=-2, axis2=-1))
         dS = -beta * 0.5 * (new_term - old_term)
         rand_u = random.uniform(k_acc, dS.shape)

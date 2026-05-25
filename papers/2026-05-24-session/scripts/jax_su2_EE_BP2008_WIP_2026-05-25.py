@@ -225,10 +225,10 @@ def metropolis_sweep_with_tying(U, beta, h, key, L, L_tau, site_in_A, eps=0.3):
         U_proposed_mu = jnp.einsum('...ij,...jk->...ik', X_pert, U[..., mu, :, :])
 
         # Wilson action change per link
-        K_dag = jnp.conjugate(jnp.swapaxes(K_mu, -1, -2))
-        new_w = jnp.real(jnp.trace(jnp.einsum('...ij,...jk->...ik', U_proposed_mu, K_dag),
+        # FIX 2026-05-25: K_mu bug removed (Re Tr(U·K) ≠ Re Tr(U·K†) for SU(2))
+        new_w = jnp.real(jnp.trace(jnp.einsum('...ij,...jk->...ik', U_proposed_mu, K_mu),
                                     axis1=-2, axis2=-1))
-        old_w = jnp.real(jnp.trace(jnp.einsum('...ij,...jk->...ik', U[..., mu, :, :], K_dag),
+        old_w = jnp.real(jnp.trace(jnp.einsum('...ij,...jk->...ik', U[..., mu, :, :], K_mu),
                                     axis1=-2, axis2=-1))
         dS_wilson = -beta * 0.5 * (new_w - old_w)
 

@@ -217,10 +217,10 @@ def metropolis_link_update(U_link, K_link, beta, key, eps=0.3):
     key1, key2 = random.split(key)
     X = random_su2_near_identity(key1, U_link.shape[:-2], eps=eps)
     U_proposed = jnp.einsum('...ij,...jk->...ik', X, U_link)
-    K_dag = jnp.conjugate(jnp.swapaxes(K_link, -1, -2))
-    new_term = jnp.real(jnp.trace(jnp.einsum('...ij,...jk->...ik', U_proposed, K_dag),
+    # FIX 2026-05-25: K_link bug removed (Re Tr(U·K) ≠ Re Tr(U·K†) for SU(2))
+    new_term = jnp.real(jnp.trace(jnp.einsum('...ij,...jk->...ik', U_proposed, K_link),
                                     axis1=-2, axis2=-1))
-    old_term = jnp.real(jnp.trace(jnp.einsum('...ij,...jk->...ik', U_link, K_dag),
+    old_term = jnp.real(jnp.trace(jnp.einsum('...ij,...jk->...ik', U_link, K_link),
                                     axis1=-2, axis2=-1))
     dS = -beta * 0.5 * (new_term - old_term)
     rand_u = random.uniform(key2, dS.shape)
@@ -259,10 +259,10 @@ def metropolis_sweep_coupled(U1, U2, beta, h, key, L, boundary_mask, eps=0.3):
         X = random_su2_near_identity(k_prop, U1[..., mu, :, :].shape[:-2], eps=eps)
         U1_proposed_mu = jnp.einsum('...ij,...jk->...ik', X, U1[..., mu, :, :])
         # Standard Wilson dS
-        K_dag = jnp.conjugate(jnp.swapaxes(K_mu, -1, -2))
-        new_w = jnp.real(jnp.trace(jnp.einsum('...ij,...jk->...ik', U1_proposed_mu, K_dag),
+        # FIX 2026-05-25: K_link bug removed (Re Tr(U·K) ≠ Re Tr(U·K†) for SU(2))
+        new_w = jnp.real(jnp.trace(jnp.einsum('...ij,...jk->...ik', U1_proposed_mu, K_link),
                                     axis1=-2, axis2=-1))
-        old_w = jnp.real(jnp.trace(jnp.einsum('...ij,...jk->...ik', U1[..., mu, :, :], K_dag),
+        old_w = jnp.real(jnp.trace(jnp.einsum('...ij,...jk->...ik', U1[..., mu, :, :], K_link),
                                     axis1=-2, axis2=-1))
         dS_wilson = -beta * 0.5 * (new_w - old_w)
         # Coupling dX: full re-evaluation (cheap since boundary is small)
@@ -288,10 +288,10 @@ def metropolis_sweep_coupled(U1, U2, beta, h, key, L, boundary_mask, eps=0.3):
         key, k_prop, k_acc = random.split(key, 3)
         X = random_su2_near_identity(k_prop, U2[..., mu, :, :].shape[:-2], eps=eps)
         U2_proposed_mu = jnp.einsum('...ij,...jk->...ik', X, U2[..., mu, :, :])
-        K_dag = jnp.conjugate(jnp.swapaxes(K_mu, -1, -2))
-        new_w = jnp.real(jnp.trace(jnp.einsum('...ij,...jk->...ik', U2_proposed_mu, K_dag),
+        # FIX 2026-05-25: K_link bug removed (Re Tr(U·K) ≠ Re Tr(U·K†) for SU(2))
+        new_w = jnp.real(jnp.trace(jnp.einsum('...ij,...jk->...ik', U2_proposed_mu, K_link),
                                     axis1=-2, axis2=-1))
-        old_w = jnp.real(jnp.trace(jnp.einsum('...ij,...jk->...ik', U2[..., mu, :, :], K_dag),
+        old_w = jnp.real(jnp.trace(jnp.einsum('...ij,...jk->...ik', U2[..., mu, :, :], K_link),
                                     axis1=-2, axis2=-1))
         dS_wilson = -beta * 0.5 * (new_w - old_w)
         rand_u = random.uniform(k_acc, dS_wilson.shape)
@@ -321,10 +321,10 @@ def metropolis_sweep_with_coupling(U1, U2, beta, h, key, L, boundary_mask, eps=0
         key, k_prop, k_acc = random.split(key, 3)
         X_pert = random_su2_near_identity(k_prop, U1[..., mu, :, :].shape[:-2], eps=eps)
         U1_proposed_mu = jnp.einsum('...ij,...jk->...ik', X_pert, U1[..., mu, :, :])
-        K_dag = jnp.conjugate(jnp.swapaxes(K_mu, -1, -2))
-        new_w = jnp.real(jnp.trace(jnp.einsum('...ij,...jk->...ik', U1_proposed_mu, K_dag),
+        # FIX 2026-05-25: K_link bug removed (Re Tr(U·K) ≠ Re Tr(U·K†) for SU(2))
+        new_w = jnp.real(jnp.trace(jnp.einsum('...ij,...jk->...ik', U1_proposed_mu, K_link),
                                     axis1=-2, axis2=-1))
-        old_w = jnp.real(jnp.trace(jnp.einsum('...ij,...jk->...ik', U1[..., mu, :, :], K_dag),
+        old_w = jnp.real(jnp.trace(jnp.einsum('...ij,...jk->...ik', U1[..., mu, :, :], K_link),
                                     axis1=-2, axis2=-1))
         dS_wilson = -beta * 0.5 * (new_w - old_w)
 
@@ -358,10 +358,10 @@ def metropolis_sweep_with_coupling(U1, U2, beta, h, key, L, boundary_mask, eps=0
         key, k_prop, k_acc = random.split(key, 3)
         X_pert = random_su2_near_identity(k_prop, U2[..., mu, :, :].shape[:-2], eps=eps)
         U2_proposed_mu = jnp.einsum('...ij,...jk->...ik', X_pert, U2[..., mu, :, :])
-        K_dag = jnp.conjugate(jnp.swapaxes(K_mu, -1, -2))
-        new_w = jnp.real(jnp.trace(jnp.einsum('...ij,...jk->...ik', U2_proposed_mu, K_dag),
+        # FIX 2026-05-25: K_link bug removed (Re Tr(U·K) ≠ Re Tr(U·K†) for SU(2))
+        new_w = jnp.real(jnp.trace(jnp.einsum('...ij,...jk->...ik', U2_proposed_mu, K_link),
                                     axis1=-2, axis2=-1))
-        old_w = jnp.real(jnp.trace(jnp.einsum('...ij,...jk->...ik', U2[..., mu, :, :], K_dag),
+        old_w = jnp.real(jnp.trace(jnp.einsum('...ij,...jk->...ik', U2[..., mu, :, :], K_link),
                                     axis1=-2, axis2=-1))
         dS_wilson = -beta * 0.5 * (new_w - old_w)
 

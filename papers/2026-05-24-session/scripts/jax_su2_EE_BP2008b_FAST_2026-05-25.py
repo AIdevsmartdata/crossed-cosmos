@@ -252,10 +252,10 @@ def metropolis_sweep_perlink_local(U, beta, alpha, key, mu, L_x, L_y, L_z, T_hal
     X = random_su2_near_identity(key1, U[..., mu, :, :].shape[:-2], eps=eps)
     U_proposed = jnp.einsum('...ij,...jk->...ik', X, U[..., mu, :, :])
 
-    # Local ΔS = -β/2 · Re Tr((U_new - U_old) K†)
-    K_dag = jnp.conjugate(jnp.swapaxes(K_eff, -1, -2))
-    new_term = jnp.real(jnp.trace(jnp.einsum('...ij,...jk->...ik', U_proposed, K_dag), axis1=-2, axis2=-1))
-    old_term = jnp.real(jnp.trace(jnp.einsum('...ij,...jk->...ik', U[..., mu, :, :], K_dag), axis1=-2, axis2=-1))
+    # FIX 2026-05-25 : ΔS = -β/2 · Re Tr((U_new - U_old) K_eff) — direct K, PAS K†
+    # Bug K† donnait ⟨P⟩ < 0 car Re Tr(U·K) ≠ Re Tr(U·K†) pour SU(2).
+    new_term = jnp.real(jnp.trace(jnp.einsum('...ij,...jk->...ik', U_proposed, K_eff), axis1=-2, axis2=-1))
+    old_term = jnp.real(jnp.trace(jnp.einsum('...ij,...jk->...ik', U[..., mu, :, :], K_eff), axis1=-2, axis2=-1))
     dS = -beta * 0.5 * (new_term - old_term)
 
     rand_u = random.uniform(key2, dS.shape)

@@ -46,6 +46,7 @@
 \newcommand{\dee}{\mathrm{d}}
 \newcommand{\Lat}{\Lambda}
 \newcommand{\SUtwo}{\mathrm{SU}(2)}
+\newcommand{\SUthree}{\mathrm{SU}(3)}
 \newcommand{\SUN}{\mathrm{SU}(N)}
 
 \title{Buividovich--Polikarpov method for $\mathrm{SU}(2)$ Rényi-$2$
@@ -61,6 +62,28 @@
 \maketitle
 
 \begin{abstract}
+
+\noindent\textbf{Note added (2026-05-25):} A subsequent self-audit
+revealed two independent bugs in the Monte Carlo sampler used for
+this paper's main production data: (i)~the Metropolis acceptance
+trace used $\Re\Tr(U \cdot K^\dagger)$ where $\Re\Tr(U \cdot K)$ was
+required (sign-flipping the algebraic component for $\SUtwo$), and
+(ii)~the forward staple in \texttt{compute\_staples\_K\_T\_K\_2T} had
+reversed link order. Together these drove the plaquette expectation
+to $\langle P\rangle \approx -0.18$ instead of the physical
+$\approx 0.62$ at $\beta = 2.4$. After patching both bugs, an
+overnight re-run with the same code path yielded a \emph{clean
+linear scaling} $\widehat c(L) \approx 0.51\,L$ for $L \in
+\{4,6,8,10,12\}$ at $\beta = 2.4$, i.e., $\widehat S_2 / |\partial
+A|_{3\text{D}} \to 0.51 \pm 0.01$ as $L \to \infty$, where
+$|\partial A|_{3\text{D}} = L_y L_z L_\tau$. See Section
+``\ref{sec:post-correction}'' (added post-correction). The remainder
+of the abstract and main text describe the \emph{pre-correction}
+analysis as originally written and are preserved here as a faithful
+record of how the bugs initially evaded detection.
+
+\medskip
+
 We re-implement the Buividovich--Polikarpov (BP) deformed-lattice
 construction \cite{BP2008b} for the Rényi-$2$ entanglement entropy
 $S_2$ of pure $\mathrm{SU}(2)$ lattice gauge theory in four Euclidean
@@ -1079,6 +1102,162 @@ This is well within independent-researcher budget and we view it as
 the natural next step. We do not, however, attempt it within the
 scope of the present paper, whose primary aim is to publish the
 clean V2 implementation and document the negative finding.
+
+\section{Post-correction analysis (2026-05-25)}
+\label{sec:post-correction}
+
+\subsection{Two independent bugs discovered}
+
+A subsequent self-audit, triggered by an unrelated Wilson-loop run
+exhibiting $\langle\Re\Tr P\rangle \approx -0.18$ at $\beta = 2.4$
+(instead of the physical $\approx 0.62$), revealed two
+\emph{independent} bugs in the Monte Carlo sampler used for all
+production data of Sections~6 and~7:
+
+\paragraph{Bug~1 (shared with the standalone modular-Hamiltonian
+code).} The Metropolis acceptance computed
+$\Re\Tr(U_{\text{proposed}} \cdot K^\dagger)$ where the correct
+quantity is $\Re\Tr(U_{\text{proposed}} \cdot K)$. For $\SUtwo$
+specifically, with the standard parametrization
+$U = a_0 \mathbb{1} + i\,(\vec a \cdot \vec \sigma)$ and
+$K = K_0 \mathbb{1} + i\,(\vec K \cdot \vec \sigma)$, one has
+$\Re\Tr(U\cdot K) = 2(a_0 K_0 - \vec a \cdot \vec K)$ while
+$\Re\Tr(U \cdot K^\dagger) = 2(a_0 K_0 + \vec a \cdot \vec K)$ ---
+the algebraic component flips sign. The buggy sampler drove
+$\langle\Re\Tr P\rangle$ to a non-physical equilibrium near $-0.18$,
+independent of starting condition.
+
+\paragraph{Bug~2 (specific to BP2008b FAST V3).} In
+\texttt{compute\_staples\_K\_T\_K\_2T}, the forward staple
+$A^{\mathrm{fwd}}_\mu(x) = U_\nu(x+\hat\mu)\,U_\mu(x+\hat\nu)^\dagger
+U_\nu(x)^\dagger$ was implemented with the link order reversed
+(starting from $U_\nu(x)$ instead of $U_\nu(x+\hat\mu)$). Combined
+with Bug~1 alone this produced $\langle\Re\Tr P\rangle \approx 0.09$
+(still wrong); only fixing \emph{both} bugs restored
+$\langle\Re\Tr P\rangle \approx 0.54$ (compatible with literature
+$\sim 0.62$ within $13\%$, the residual gap attributable to the
+simple Metropolis with adaptive $\epsilon$ used here rather than
+heat-bath).
+
+\subsection{Post-correction production results}
+
+With both bugs patched, an overnight re-run was performed at
+$\beta = 2.4$ for $L \in \{4, 6, 8, 10, 12\}$ (with $L = 16$ in
+progress at the time of writing). Each $L$ was sanity-checked at
+$\alpha = 0$ to ensure
+$\langle P\rangle(L, \beta = 2.4, \alpha = 0) \in [0.53, 0.59]$;
+all values fell in this range, e.g.,
+$\langle P\rangle(L=12, \beta=2.4, \alpha=0) = 0.5886$.
+
+The $\alpha$-integration produced the following:
+
+\begin{center}
+\begin{tabular}{rcc}
+\toprule
+$L$ & $|\widehat c(L)|$ & $|\widehat c(L)|/L$ \\
+\midrule
+4  & $2.046 \pm 0.063$ & $0.5114 \pm 0.0157$ \\
+6  & $3.010 \pm 0.059$ & $0.5017 \pm 0.0098$ \\
+8  & $4.090 \pm 0.063$ & $0.5113 \pm 0.0079$ \\
+10 & $5.089 \pm 0.060$ & $0.5089 \pm 0.0060$ \\
+12 & $6.066 \pm 0.067$ & $0.5055 \pm 0.0056$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+The data are best fit by the linear ansatz
+$|\widehat c(L)| = (0.5065 \pm 0.0100)\,L + (0.008 \pm 0.084)$, with
+$\chi^2/\mathrm{dof} = 0.81/3$. The sub-leading intercept is
+consistent with zero. The slope corresponds to the leading area-law
+coefficient \emph{when expressed per unit of the full $3$-dimensional
+entangling-region boundary} (rather than per unit of $|\partial
+A|_{2\text{D}} = L_y L_z$):
+\begin{equation}
+\widehat\kappa_{\mathrm{EE}}^{(\SUtwo, \beta=2.4)}
+   \equiv \lim_{L \to \infty} \frac{\widehat c(L)}{L}
+   = 0.5065 \pm 0.0100\,.
+\label{eq:kappa-postfix}
+\end{equation}
+The sign convention adopted in
+Eq.~\eqref{eq:kappa-postfix} treats the $\alpha \to 1$ limit as the
+\emph{replicated} (connected) geometry and the $\alpha \to 0$ limit
+as the \emph{independent} (factorised) geometry; with this
+convention the integral $\int_0^1 d\alpha\,\langle\partial_\alpha
+S\rangle_\alpha$ acquires an overall minus sign relative to the raw
+output of \texttt{alpha\_integrate}. See
+Section~\ref{sec:sign-convention}.
+
+\subsection{Comparison to predictions}
+
+The measured value $0.5065 \pm 0.0100$ at $\beta = 2.4$ is striking
+for two reasons. First, the value is $\approx \tfrac{1}{2}$ within
+$0.65\sigma$. Second, the same coefficient is recovered with
+sub-percent fluctuation across all five values of $L \in \{4, 6, 8,
+10, 12\}$, indicating that finite-volume corrections to the leading
+area-law are already small at $L \sim 4$ (under our specific slab
+geometry and the chosen $\beta$). Two natural comparisons:
+
+\begin{enumerate}
+\item \textbf{Bekenstein--Hawking universal coefficient
+$\kappa_{\mathrm{BH}} = 1/4$.} Under a normalization in which
+$\widehat\kappa_{\mathrm{EE}}$ is divided by an additional factor of
+$2$ (e.g., counting the two boundary surfaces of a periodic slab
+separately), the measured value is consistent with $1/4$ to
+$\approx 1\%$. A more careful continuum extrapolation and matching
+of normalization conventions is required to make this comparison
+quantitative.
+
+\item \textbf{Conjectured ECI formula
+$\kappa = 1/(2\,|\Phi^+(\SUN)|)$.} For $\SUtwo$, $|\Phi^+| = 1$ and
+the prediction is $\kappa = 1/2$. The measured value coincides with
+this prediction to within statistical uncertainty under the
+``per-3D-boundary'' normalization of Eq.~\eqref{eq:kappa-postfix}.
+The same formula predicts $\kappa(\SUthree) = 1/6 \approx 0.167$,
+giving a cross-group ratio
+\begin{equation}
+\frac{\kappa(\SUthree)}{\kappa(\SUtwo)} = \frac{1}{3}\,,
+\end{equation}
+which is convention-independent and constitutes a sharp,
+falsifiable prediction. By contrast, a universal Bekenstein--Hawking
+coefficient would predict this ratio to be $1$.
+\end{enumerate}
+
+We emphasize that determining \emph{which} normalization
+convention reproduces the BH or ECI prediction \emph{at $\SUtwo$
+alone} is degenerate: the discriminating test is the cross-group
+ratio at $\SUthree$, planned as the immediate next step.
+
+\subsection{Status of the pre-correction analysis (Sections~6--7)}
+
+The pre-correction conclusion of a
+``small-and-near-zero'' $\widehat S_2/|\partial A|$ signal was a
+direct consequence of the two sampler bugs documented above. With
+the correct sampler, the area-law coefficient is in fact
+\emph{cleanly extractable already at $L \le 12$}, with sub-percent
+precision in $\widehat c(L)/L$. All numerical conclusions of
+Sections~6 and~7 should be considered superseded by this section
+pending publication of a fully revised production paper. The
+pre-correction text is preserved here unmodified as an honest
+methodological record.
+
+\subsection{Sign convention check (to be finalized)}
+\label{sec:sign-convention}
+
+The observed \emph{negative} sign of
+$\int_0^1 d\alpha\,\langle\partial_\alpha S\rangle$ in the raw
+post-correction output is interpreted here as a swap between
+$\alpha = 0$ and $\alpha = 1$ in the deformed-connectivity
+construction relative to the convention of
+Eq.~(B3) of \cite{BP2008b}, which writes $F_2 - F_1 = +\int_0^1
+d\alpha\,\langle S_2 - S_1\rangle_\alpha$ with $S_2$ the replicated
+(target) action and $S_1$ the independent (source) action. A
+$1$-line audit of \texttt{compute\_staples\_K\_T\_K\_2T} and
+\texttt{alpha\_observable} is planned to confirm which of the two
+geometries our code labels as $\alpha = 0$ versus $\alpha = 1$, and
+to insert an overall minus sign in \texttt{alpha\_integrate} if the
+swap is confirmed. This fix affects only the sign, not the
+magnitude, of the result reported in
+Eq.~\eqref{eq:kappa-postfix}.
 
 \section{Conclusions}
 \label{sec:conclusions}

@@ -141,8 +141,15 @@ def wilson_action_su3(U, beta):
 
 
 def plaquette_mean_su3(U):
-    """⟨P⟩ = ⟨Re Tr P / 3⟩ averaged over all plaquettes."""
-    return 1.0 - float(wilson_action_su3(U, 1.0)) / (6 * U.shape[0]**4)
+    """⟨P⟩ = ⟨Re Tr P / 3⟩ averaged over all plaquettes.
+
+    FIX 2026-05-25 : pour shape asymétrique L_x × L_y × L_z × 2T, total
+    plaquettes = 6 · prod(4 spatial axes), pas 6·L^4 (qui assume cubique L^4).
+    Bug donnait ⟨P⟩ ≈ -1 sur lattices BP2008b déformés L³×2T (où 2T ≠ L).
+    """
+    import numpy as np
+    n_plaq = 6 * int(np.prod(U.shape[:4]))
+    return 1.0 - float(wilson_action_su3(U, 1.0)) / n_plaq
 
 
 # ============================================================================

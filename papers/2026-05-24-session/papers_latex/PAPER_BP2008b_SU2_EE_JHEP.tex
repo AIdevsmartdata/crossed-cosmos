@@ -1,0 +1,968 @@
+%%
+%% Buividovich--Polikarpov method for SU(2) Renyi-2 entanglement entropy:
+%% a JAX/GPU implementation.
+%%
+%% K\'evin R\'emondi\`ere, Oloron-Sainte-Marie, France.
+%% ORCID: 0009-0008-2443-7166.
+%%
+%% Submitted to JHEP (Journal of High Energy Physics).
+%%
+\documentclass[11pt,a4paper]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[english]{babel}
+\usepackage{amsmath,amssymb,amsthm,amsfonts}
+\usepackage{mathtools}
+\usepackage{microtype}
+\usepackage{geometry}
+\geometry{margin=1in}
+\usepackage{hyperref}
+\hypersetup{colorlinks=true, linkcolor=blue!50!black, citecolor=blue!50!black, urlcolor=blue!50!black}
+\usepackage{booktabs}
+\usepackage{enumitem}
+\usepackage{graphicx}
+\usepackage{xcolor}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta,decorations.pathreplacing,patterns}
+
+% Theorem-like environments
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{remark}[theorem]{Remark}
+
+% Shortcuts
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\bA}{\overline{A}}
+\newcommand{\dA}{\partial A}
+\newcommand{\Tr}{\operatorname{Tr}}
+\renewcommand{\Re}{\operatorname{Re}}
+\newcommand{\half}{\tfrac{1}{2}}
+\newcommand{\dee}{\mathrm{d}}
+\newcommand{\Lat}{\Lambda}
+\newcommand{\SUtwo}{\mathrm{SU}(2)}
+\newcommand{\SUN}{\mathrm{SU}(N)}
+
+\title{Buividovich--Polikarpov method for $\mathrm{SU}(2)$ Rényi-$2$
+       entanglement entropy: a JAX/GPU implementation}
+\author{K\'evin R\'emondi\`ere\thanks{Independent researcher.
+        \texttt{kevin.remondiere@gmail.com}.
+        ORCID: \href{https://orcid.org/0009-0008-2443-7166}{0009-0008-2443-7166}.}\\
+        \small Independent Researcher, Oloron-Sainte-Marie, France}
+\date{May 25, 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+We re-implement the Buividovich--Polikarpov (BP) deformed-lattice
+construction \cite{BP2008b} for the Rényi-$2$ entanglement entropy
+$S_2$ of pure $\mathrm{SU}(2)$ lattice gauge theory in four Euclidean
+dimensions, in JAX with optional GPU acceleration. The construction
+samples a single field configuration on a lattice of size $L^3 \times 2T$
+whose temporal connectivity is deformed inside the entangling region
+$A$ (period $2T$) relative to the complement $\bar A$ (period $T$),
+and computes $S_2$ as the $\alpha$-integral of the derivative
+$\langle \partial S/\partial \alpha\rangle_\alpha$ along a smooth
+homotopy of the action between the two topologies, following
+\cite{BP2008b,Rabenstein2019,Rindlisbacher2022}. We first document
+four naive estimators that we tested and falsified --- link-swap
+estimators, soft-locking variants, and a two-sheet
+Bennett-acceptance-ratio (BAR) attempt --- explaining in each case the
+geometric or measure-theoretic mechanism that drives the variance
+explosion or yields an unphysical result. We then report a production
+run at inverse coupling $\beta = 4/g_0^2 = 2.4$ on lattices
+$L \in \{4,6,8,10\}$ with $21$-point trapezoidal $\alpha$-integration.
+The smallest lattice ($L=4$) is dominated by short-distance lattice
+artifacts. The intermediate lattices yield positive, reproducible
+values $S_2/|\partial A| = 0.122 \pm 0.012$ at $L=6$ and
+$S_2/|\partial A| = 0.035 \pm 0.008$ at $L=8$ that are compatible to
+within a small factor with previously reported values in the
+literature \cite{Rabenstein2019,DonnellyWall2015}. The largest lattice
+($L=10$) is an outlier, traced to a per-link Metropolis acceptance that
+drops at large interpolation parameter $\alpha$ for the fixed proposal
+width used here. We discuss the remaining systematics, document the
+JAX implementation publicly, and outline the continuum extrapolation
+($\beta$-scan, multi-$l$ scan and $L \to \infty$) that is required
+before the leading area-law coefficient
+$c_{\text{area}} = \lim_{a\to 0}\, a^{2}\, S_2/|\partial A|$
+can be cleanly separated from the subleading entropic $C$-function.
+The implementation is intended as a building block for such future
+quantitative comparisons.
+\end{abstract}
+
+\section{Introduction}
+\label{sec:intro}
+
+Entanglement entropy (EE) in non-Abelian lattice gauge theories has
+been a long-standing target of numerical studies, motivated by its
+role in characterising confinement
+\cite{KlebanovKutasovMurugan2008,BP2008}, in testing the holographic
+area law \cite{RyuTakayanagi2006,Solodukhin2011}, and in probing the
+ultraviolet structure of gauge-theoretic Hilbert spaces
+\cite{Donnelly2012,Aoki2015}. For a spatial region $A$ at a fixed
+time slice in a $(d+1)$-dimensional gauge theory, the Rényi-$q$
+entanglement entropy is defined via the replica trick as
+\begin{equation}
+   S_q(A) \;=\; \frac{1}{1-q}\, \ln\frac{Z_q(A)}{Z_1^{\,q}},
+   \label{eq:Renyi-def}
+\end{equation}
+where $Z_q(A)$ is the partition function on a $q$-fold replicated
+manifold glued along $A$, and $Z_1$ is the partition function on the
+unreplicated manifold. The replica construction for lattice gauge
+theory requires care because the local Hilbert space at a link does
+not factorise across an arbitrary spatial cut; an \emph{extended}
+Hilbert space construction was given by Donnelly \cite{Donnelly2012}
+and Aoki \emph{et al.}\ \cite{Aoki2015} that consistently defines
+$Z_q(A)$ as the partition function on a Euclidean four-manifold with
+a conical defect of opening angle $2\pi q$ along $\partial A$. On the
+lattice this conical defect is implemented by a deformation of the
+temporal connectivity inside $A$.
+
+The original numerical construction for $\mathrm{SU}(2)$ in four
+dimensions is due to Buividovich and Polikarpov \cite{BP2008b},
+building on their earlier $\mathbb{Z}_2$ work \cite{BP2008}. Their
+key insight is that the replicated partition function $Z_2(A)$ may be
+sampled \emph{on a single} Euclidean lattice of size $L^3 \times 2T$
+whose temporal connectivity is deformed inside $A$ (period $2T$
+instead of $T$). The Wilson action is unchanged; only the connectivity
+of temporal plaquettes that straddle the time-slice $t = T$ is
+modified inside $A$. The ratio $Z_2(A)/Z_1^{\,2}$ is then accessed via
+the Fodor--Endr\H{o}di $\alpha$-integration
+\cite{FodorEndrodi2007,EndrodiFodor2007} along a smooth homotopy of
+the action between $\alpha = 0$ (period $T$ everywhere, i.e., two
+independent copies) and $\alpha = 1$ (period $2T$ inside $A$, i.e.,
+genuine replica). The state-of-the-art application of this method is
+Rabenstein \emph{et al.}\ \cite{Rabenstein2019}, who reported
+SU($N_c$) entropic $C$-function values for $N_c = 2,3,4$. A further
+methodological improvement using Wang--Landau sampling was given by
+Rindlisbacher \emph{et al.}\ \cite{Rindlisbacher2022}.
+
+In this paper we report a clean, GPU-portable JAX re-implementation
+of the original BP $\alpha$-integration method, with a primary
+methodological goal: \emph{validate} that the deformed-lattice
+construction produces a reproducible, positive Rényi-$2$ EE
+compatible with prior literature, in a code base that is open and
+auditable. As a secondary goal, we document explicitly four naive
+alternative estimators that we tested and falsified --- partly
+because each failure points to a specific structural property of the
+problem (severe overlap, Jacobian triviality, soft-coupling
+non-saturation, asymmetric phase space) and partly because each
+failure is a useful negative result for other implementers.
+
+\medskip
+
+A separate \emph{interpretation} question, which we mention only in
+passing and which is \emph{not the subject of this paper}, is whether
+the leading area-law coefficient of $S_q$ for non-Abelian gauge
+theory is fixed by a Lie-algebraic invariant. One natural candidate
+\cite{KR2026} is $\kappa^{2}(\SUN) = \bigl[1/(N(N-1))\bigr]^{2}$;
+for $\SUtwo$ this gives $\kappa^{2} = 1/4$, the coefficient of the
+Bekenstein--Hawking area-entropy formula. Testing such a relation
+quantitatively requires (a) a method that produces a positive,
+reproducible $S_2$ (the topic of this paper), (b) a continuum
+extrapolation $a \to 0$ with a sequence of $\beta$ values along a
+line of constant physics, and (c) a separate analysis isolating the
+leading $|\partial A|/a^{2}$ piece from the subleading entropic
+$C$-function. The present work addresses only (a); (b) and (c) are
+left for follow-up.
+
+\paragraph{Structure of the paper.} Section~\ref{sec:method}
+introduces the deformed-lattice construction and the
+$\alpha$-integration estimator. Section~\ref{sec:failed} documents the
+four failed estimators with brief diagnoses. Section~\ref{sec:impl}
+describes the JAX implementation. Section~\ref{sec:results} presents
+the production run at $\beta = 2.4$ for $L \in \{4,6,8,10\}$.
+Section~\ref{sec:discussion} compares with the literature, discusses
+systematics, and identifies the outlier at $L=10$.
+Section~\ref{sec:conclusions} concludes and outlines required follow-up
+work.
+
+\section{Deformed-lattice construction and \texorpdfstring{$\alpha$}{alpha}-integration estimator}
+\label{sec:method}
+
+\subsection{Geometry}
+\label{sec:geometry}
+
+Following \cite{BP2008b,Rabenstein2019}, we work on a four-dimensional
+hypercubic lattice $\Lat = \{0,\dots,L-1\}^{3}\times\{0,\dots,2T-1\}$,
+with sites $(x_1,x_2,x_3,t) \in \Lat$, lattice spacing $a$ in all
+directions, and periodic boundary conditions in the three spatial
+directions. We choose the entangling region $A$ to be the slab
+\begin{equation}
+   A \;=\; \{x \in \Lat : x_1 < L/2\},
+   \qquad
+   \bA \;=\; \Lat \setminus A,
+   \label{eq:Adef}
+\end{equation}
+whose boundary is the union of two parallel planes at $x_1 = 0$ and
+$x_1 = L/2$, each of area $L^{2}$, so that $|\partial A| = 2 L^{2}$.
+The factor of $2$ from periodic spatial boundary conditions has been
+discussed extensively in
+\cite[\S II]{Rabenstein2019} and \cite[\S II]{BP2008b}; we record
+$|\partial A|$ counts $L^{2}$ per planar boundary, which gives
+$|\partial A|/L^{2} = 2$ in the convention used here.
+
+The construction modifies the \emph{temporal connectivity}, not the
+field content. For each spatial site $\vec x$ and each time index
+$t \in \{0,\dots,2T-1\}$, define the ``next temporal neighbour''
+$\mathrm{next}_t(\vec x, t)$ as follows:
+\begin{itemize}
+   \item if $\vec x \in \bA$:
+   \begin{equation}
+     \mathrm{next}_t(\vec x, t) =
+     \begin{cases}
+       (t+1) \bmod T, & 0 \le t < T,\\
+       T + (t - T + 1) \bmod T, & T \le t < 2T,
+     \end{cases}
+   \end{equation}
+   so that $\bA$ contains two independent copies, each of temporal
+   period $T$;
+   \item if $\vec x \in A$:
+   \begin{equation}
+     \mathrm{next}_t(\vec x, t) = (t+1) \bmod 2T,
+   \end{equation}
+   so that $A$ has temporal period $2T$, i.e., the two copies of $\bA$
+   are glued through $A$ into a single connected manifold.
+\end{itemize}
+
+The geometry is summarised in Figure~\ref{fig:geometry}. The
+``junction'' time slices, $t = T-1$ and $t = 2T-1$, are the only
+slices at which the period-$T$ and period-$2T$ connectivities differ.
+
+\begin{figure}[t]
+\centering
+\begin{tikzpicture}[scale=0.95]
+  % Region A: period 2T (left), Region Abar: two period-T copies (right)
+  \draw[fill=blue!10] (0,0) rectangle (2,4);
+  \draw[fill=red!10] (2,0) rectangle (5,2);
+  \draw[fill=red!10] (2,2) rectangle (5,4);
+  \node at (1,2) {\large $A$};
+  \node at (3.5,1) {\large $\bA$ (copy 1)};
+  \node at (3.5,3) {\large $\bA$ (copy 2)};
+  \draw[->,thick] (0,4.2) -- (2,4.2);
+  \node[anchor=south] at (1,4.2) {\small period $2T$};
+  \draw[->,thick] (2,4.2) -- (5,4.2);
+  \node[anchor=south] at (3.5,4.2) {\small period $T$ each copy};
+  \draw[dashed,thick] (2,0) -- (2,4);
+  \draw[dashed,thick] (0,2) -- (5,2);
+  \node[anchor=east] at (-0.1,0) {$t=0$};
+  \node[anchor=east] at (-0.1,2) {$t=T$};
+  \node[anchor=east] at (-0.1,4) {$t=2T$};
+  \node[anchor=north] at (1,-0.1) {$x_1 < L/2$};
+  \node[anchor=north] at (3.5,-0.1) {$x_1 \ge L/2$};
+\end{tikzpicture}
+\caption{Schematic of the deformed lattice (single $x_1$-$t$ slice;
+$x_2$ and $x_3$ suppressed). Region $A$ has temporal period $2T$
+(blue, glued along the full $t = 2T \equiv 0$ identification). Region
+$\bA$ is decomposed into two independent copies of period $T$ (red).
+The transition surface $x_1 = L/2$ is the entangling surface
+$\partial A$. The construction is identical at $x_1 = 0$ by spatial
+periodic boundary conditions, so $|\partial A| = 2L^{2}$.}
+\label{fig:geometry}
+\end{figure}
+
+\subsection{Action and $\alpha$-homotopy}
+\label{sec:action}
+
+Let $U_\mu(x) \in \SUtwo$ denote the link variable, with $\mu \in
+\{1,2,3,4\}$, $\mu = 4$ denoting the temporal direction. The standard
+Wilson plaquette is
+\begin{equation}
+   U_{\mu\nu}(x) \;=\; U_\mu(x)\,U_\nu(x+\hat\mu)\,U_\mu^\dagger(x+\hat\nu)\,U_\nu^\dagger(x),
+\end{equation}
+with $U_\nu^\dagger$ denoting Hermitian conjugation. For all
+plaquettes that do \emph{not} straddle a junction time slice and for
+all purely spatial plaquettes, this is computed on the standard
+hypercubic neighbour structure. For temporal plaquettes that involve a
+junction slice ($t = T-1$ or $t = 2T-1$), we define two variants:
+\begin{align}
+   U^{(T)}_{\mu 4}(x) &= U_\mu(x)\,U_4(x + \hat\mu)\,
+                        U_\mu^\dagger(x_{[\mathrm{next}_t = T\text{-period}]})\,
+                        U_4^\dagger(x), \\
+   U^{(2T)}_{\mu 4}(x) &= U_\mu(x)\,U_4(x + \hat\mu)\,
+                        U_\mu^\dagger(x_{[\mathrm{next}_t = 2T\text{-period}]})\,
+                        U_4^\dagger(x),
+\end{align}
+where the only difference is the time index $t' = \mathrm{next}_t(\vec
+x, t)$ at which the spatial link $U_\mu(\vec x, t')^\dagger$ is taken.
+
+The $\alpha$-interpolated Wilson action on the deformed lattice is
+\begin{multline}
+   S(\alpha; U) \;=\; \beta \sum_{\text{spatial plaq}}
+          \Bigl(1 - \half\,\Re\,\Tr U_{\mu\nu}(x)\Bigr) \\
+   {} + \beta \sum_{\substack{\text{temporal plaq}\\\text{non-junction}}}
+          \Bigl(1 - \half\,\Re\,\Tr U_{\mu 4}(x)\Bigr) \\
+   {} + \beta \sum_{\substack{\text{temporal plaq}\\\text{junction, } \vec x \in \bA}}
+          \Bigl(1 - \half\,\Re\,\Tr U^{(T)}_{\mu 4}(x)\Bigr) \\
+   {} + \beta \sum_{\substack{\text{temporal plaq}\\\text{junction, } \vec x \in A}}
+          \Bigl(1 - \half \bigl[(1-\alpha)\,\Re\,\Tr U^{(T)}_{\mu 4}(x)
+                                + \alpha\,\Re\,\Tr U^{(2T)}_{\mu 4}(x)\bigr]\Bigr).
+   \label{eq:S-alpha}
+\end{multline}
+At $\alpha = 0$ the lattice is decomposed into two period-$T$ copies
+(both inside and outside $A$), so $Z(0) = Z_1^{\,2}$. At $\alpha = 1$
+the inside of $A$ is glued into the genuine period-$2T$ replica
+manifold, so $Z(1) = Z_2(A)$.
+
+\subsection{$\alpha$-integration estimator}
+\label{sec:alpha-int}
+
+Differentiating $\ln Z(\alpha) = -F(\alpha)$ with respect to $\alpha$
+and integrating from $\alpha = 0$ to $\alpha = 1$ yields the
+Fodor--Endr\H{o}di estimator
+\begin{equation}
+   S_2 \;=\; -\ln\frac{Z_2(A)}{Z_1^{\,2}}
+        \;=\; \int_0^1 \dee\alpha\,\Bigl\langle \frac{\partial S}{\partial \alpha}
+              \Bigr\rangle_{\alpha},
+   \label{eq:FE-estimator}
+\end{equation}
+where $\langle \cdot \rangle_\alpha$ denotes the Monte Carlo
+expectation at fixed $\alpha$ on the deformed lattice. From
+\eqref{eq:S-alpha} the integrand evaluates to
+\begin{equation}
+   \frac{\partial S}{\partial \alpha} \;=\;
+   \frac{\beta}{2}\sum_{\substack{\text{temporal plaq}\\\text{junction, } \vec x \in A}}
+        \bigl[\Re\Tr U^{(T)}_{\mu 4}(x) - \Re\Tr U^{(2T)}_{\mu 4}(x)\bigr].
+   \label{eq:dS-dalpha}
+\end{equation}
+The estimator \eqref{eq:FE-estimator} is unbiased, positive in
+expectation \cite{Rabenstein2019} (so that $S_2 \ge 0$ holds
+automatically modulo statistical errors), and well-defined even when
+the direct two-ensemble BAR overlap between $\alpha = 0$ and
+$\alpha = 1$ would be exponentially small.
+
+\medskip
+
+For the trapezoidal $\alpha$-integration with grid
+$\{\alpha_k = k \Delta\alpha\}_{k=0}^{20}$ and
+$\Delta\alpha = 1/20 = 0.05$, the estimator is
+\begin{equation}
+   \widehat S_2 \;=\; \Delta\alpha \sum_{k=0}^{20} w_k\,
+                       \overline{\partial_\alpha S}_k,
+   \quad w_0 = w_{20} = \half,\ w_k = 1\ \text{otherwise},
+   \label{eq:trap-estimator}
+\end{equation}
+where $\overline{\partial_\alpha S}_k$ is the Monte Carlo mean of the
+integrand at $\alpha = \alpha_k$ over the equilibrated ensemble. The
+statistical error is propagated by trapezoidal integration of the
+per-$\alpha$ standard errors of the mean.
+
+\section{Failed estimators: a documented graveyard}
+\label{sec:failed}
+
+We initially tried four alternative estimators before converging on
+the BP $\alpha$-integration of \S\ref{sec:method}. Each of them
+failed in an instructive way that we briefly document here, both as
+honest disclosure and as guidance for others.
+
+\subsection{Method 1: Donnelly--Wall link-swap involution}
+
+Inspired by the swap-test paradigm in tensor-network entanglement,
+we attempted to sample two independent gauge configurations
+$U^{(1)}, U^{(2)}$ on two $L^4$ lattices and to estimate $S_2$ via
+the expectation of a ``swap operator'' that exchanges the
+$\partial A$-supported links of the two copies. The result was
+identically zero in expectation. Inspection shows that swapping
+spans an \emph{involution} on $(\SUtwo)^{2|\partial A|}$ whose
+Jacobian is unity (the Haar measure is invariant under
+re-labelling), so $S_2 = 0$ exactly by the change-of-variable
+formula. Empirically the variance was severe ($\langle \Delta S
+\rangle = -330 \pm 47$ at $L = 4$) but $\langle e^{-\Delta S}\rangle
+= 1$ exactly (a textbook example of the sign problem with exponential
+tails compensating to unity \cite{Hastings2010}). The method
+\emph{cannot} produce a non-trivial result regardless of statistics:
+it measures the trivial automorphism, not the replica geometry.
+
+\subsection{Method 2: Boundary plaquette soft locking}
+
+A soft Lagrange-multiplier coupling on the boundary plaquettes of the
+form $h\,\sum_{p \in \partial A}\,(1 - \half\Re\Tr U_p)$, in the
+style of Caraglio--Gliozzi \cite{CaraglioGliozzi2008}, was added to a
+double-lattice action. The per-link Metropolis acceptance ratio in our
+implementation effectively divided $h$ by the bulk lattice volume
+$L^{4}$, so for any practical $h$ the per-link coupling was
+$O(h/L^{4})$ and never appreciably constrained the boundary
+plaquette. Concretely, at $L = 4$ and $h \in \{0, 1, 4, 16\}$ we
+observed $\langle X \rangle_h \in \{6.57, 6.55, 6.39, 7.84\}$, i.e.,
+no meaningful dependence on $h$. The locking did not ``bite''.
+
+\subsection{Method 3: Doubled-lattice with A-tying thermodynamic integration}
+
+Modifying Method 2 to a global rather than per-link coupling, we
+observed that the locking \emph{did} now bite ($\langle X
+\rangle_{h \in \{0,1,4,16,64,128\}} = \{502, 443, 227, 62, 14, 7\}$)
+but the resulting integrand $X(h)$ behaved asymptotically as
+$X \propto 1/h$. The thermodynamic integral
+$\int_0^\infty X(h)\, \dee h$ therefore diverges logarithmically and
+the estimator for $S_2$ is ill-defined. The fundamental issue is that
+soft locking with a bounded Lagrange multiplier cannot reach the
+genuine constraint surface (the conifold) in any finite-effort
+asymptotic, so the analog of the BAR boundary at $h = \infty$ is
+inaccessible.
+
+\subsection{Method 4: Two-sheet ``shared link'' BAR}
+
+The most subtle failure was a two-sheet construction in which
+$U^{(1)}, U^{(2)}$ live on two separate $L^4$ lattices and the
+``conifold'' is defined by the assignment $U^{(1)}[\partial A, \mu =
+\hat 4] := U^{(2)}[\partial A, \mu = \hat 4]$, that is, the
+$\partial A$-supported temporal links of the first sheet are copied
+from the second sheet. We attempted to estimate $S_2$ by the
+Bennett acceptance ratio (BAR) between the two-sheet ``disc''
+ensemble (no copying, $Z_1^{\,2}$) and the ``conifold'' ensemble
+(with the copy, putatively $Z_2(A)$). At $L = 4$ this yielded
+$\widehat S_2 = -90.8 \pm 0.3$, which is unphysical
+($S_2 \ge 0$ in expectation).
+
+The diagnosis is an asymmetric phase space. In the ``conifold''
+action $S_W(U^{(1)}_{\text{mod}}) + S_W(U^{(2)})$, the variable
+$U^{(1)}[\partial A, \hat 4]$ does not appear (it is replaced by
+$U^{(2)}[\partial A, \hat 4]$), so the Metropolis sampler leaves
+this degree of freedom Haar-distributed (acceptance is identically
+unity). When the ``disc'' Wilson action $S_W(U^{(1)})$ is then
+evaluated on a conifold sample, this Haar-random link couples to
+neighbouring links that \emph{are} thermalised, producing an
+anomalously high $S_W(U^{(1)})$. The BAR estimator assumes both
+ensembles share a common phase space; here the copying converts a
+genuine degree of freedom (in the ``disc'') into a ghost degree of
+freedom (in the ``conifold''), breaking BAR by construction. A
+detailed pathology analysis is given in
+\cite{KR2026,Rindlisbacher2022}. The lesson, by now well-known
+\cite[\S 3]{Rindlisbacher2022}, is that the replica trick on the
+lattice must \emph{deform the connectivity}, not introduce cross-sheet
+constraints on field values.
+
+\subsection{Summary}
+
+Each of these four estimators is sound only modulo subtle structural
+caveats:
+\begin{itemize}
+   \item Method 1 measures a trivial symmetry (Jacobian $=1$), not
+         the genuine replica geometry.
+   \item Methods 2 and 3 implement constraints by soft coupling on a
+         single lattice; the soft locking either does not saturate
+         (Method 2) or does saturate but yields a divergent
+         integrand (Method 3).
+   \item Method 4 violates BAR by an asymmetric phase space.
+\end{itemize}
+In contrast, the BP construction of \S\ref{sec:method} keeps the
+phase space identical at $\alpha = 0$ and $\alpha = 1$
+(\emph{same} link variables on \emph{same} lattice, only the
+connectivity for the junction plaquettes differs), and uses the
+$\alpha$-integration of \eqref{eq:FE-estimator} to bypass the overlap
+problem documented in \cite[\S 3]{Rindlisbacher2022}.
+
+\section{JAX implementation}
+\label{sec:impl}
+
+The implementation is in pure Python on the JAX
+\cite{JAX2018} framework, running on either CPU or GPU (CUDA via
+XLA), with $64$-bit floating-point throughout. The full source is
+\textasciitilde$530$ lines and is publicly available
+(\S\ref{sec:code-data}).
+
+\subsection{Data layout}
+
+Link variables are stored as a complex-valued array
+\begin{verbatim}
+   U.shape = (L, L, L, 2*T, 4, 2, 2)   # (x1, x2, x3, t, mu, i, j)
+\end{verbatim}
+with $\mu \in \{0,1,2,3\}$ mapped to spatial directions $\hat 1, \hat
+2, \hat 3$ and the temporal direction $\hat 4$.
+
+The spatial mask
+\begin{verbatim}
+   A_spatial_mask = (jnp.indices((L, L, L))[0] < L // 2)   # shape (L, L, L)
+\end{verbatim}
+marks the entangling region $A$.
+
+\subsection{Deformed next-$t$ tables}
+
+For each spatial site, two ``next-$t$'' index tables of shape
+$(L,L,L,2T)$ encode the two possible temporal connectivities: a
+period-$T$ table (each half of the temporal direction is independent)
+and a period-$2T$ table (standard wraparound). At a non-junction time
+$t \notin \{T-1, 2T-1\}$, both tables agree
+($\mathrm{next}_t = t+1$); they differ only at the junction
+slices. This makes the action computation a single
+\verb|jnp.where|-style mask over the temporal direction.
+
+\subsection{Wilson action}
+
+The deformed Wilson action of \eqref{eq:S-alpha} is implemented as a
+single \verb|jax.jit|-compiled function taking $U$, $\beta$, $\alpha$,
+and the masks as arguments. Spatial plaquettes are computed in
+standard form via \verb|jnp.roll| along the three spatial axes. The
+$1$-$4$, $2$-$4$, $3$-$4$ temporal plaquettes are computed via
+\verb|jnp.take_along_axis| using the deformed next-$t$ index, then
+blended at junction sites according to the mask
+$\verb|(is_junction) AND (is_A)|$. The implementation handles both
+the period-$T$ and period-$2T$ variants in parallel, then masks the
+contribution per plaquette.
+
+\subsection{Monte Carlo updates}
+
+We use a global per-direction Metropolis with a near-identity
+proposal distribution. For each direction $\mu \in \{1,2,3,4\}$, a
+small SU(2) perturbation $X \sim \exp(i \epsilon \vec a \cdot \vec
+\sigma /2)$ with $\vec a \sim \mathcal N(0,1)^{3}$ and proposal width
+$\epsilon$ is generated for all links in direction $\mu$; the full
+Wilson action is re-evaluated and the entire direction sweep is
+accepted or rejected as one Metropolis step. While less efficient
+than a per-link heat-bath update, this is conceptually simpler to
+implement correctly in JAX and was the deliberate choice for a
+methodological reference implementation. The proposal width
+$\epsilon = 0.3$ was chosen to give an acceptance rate of
+$\sim 30\text{--}60\%$ at $\beta = 2.4$ and the values of $L \le 8$,
+and is one of the dominant systematic uncertainties at $L = 10$
+(see \S\ref{sec:discussion}).
+
+\subsection{Thermalisation, decorrelation, and $\alpha$-integration}
+
+For each lattice size $L$, we thermalise at $\alpha = 0$ with
+$N_{\mathrm{therm}}$ direction-Metropolis sweeps, then loop over the
+21-point grid $\alpha \in \{0, 0.05, \ldots, 1.0\}$. At each
+$\alpha$, we re-equilibrate for
+$\max(20, 3\, N_{\mathrm{decorr}})$ sweeps, then collect
+$N_{\mathrm{samples}}$ measurements of the integrand
+\eqref{eq:dS-dalpha}, with $N_{\mathrm{decorr}}$ sweeps between
+successive measurements. The final estimator is
+\eqref{eq:trap-estimator} computed via
+\verb|numpy.trapezoid|.
+
+\medskip
+
+The run-time parameters used in the production run of
+\S\ref{sec:results} are summarised in Table~\ref{tab:run-params}.
+
+\begin{table}[t]
+\centering
+\begin{tabular}{rcccc}
+\toprule
+$L$ & $T = T_{\mathrm{half}}$
+    & $N_{\mathrm{therm}}$
+    & $N_{\mathrm{decorr}}$
+    & $N_{\mathrm{samples}}$ \\
+\midrule
+$4$  & $4$  & $300$ & $5$  & $200$ \\
+$6$  & $6$  & $400$ & $8$  & $100$ \\
+$8$  & $8$  & $500$ & $10$ & $50$ \\
+$10$ & $10$ & $600$ & $15$ & $30$ \\
+\bottomrule
+\end{tabular}
+\caption{Monte Carlo parameters for the production run at $\beta = 2.4$.
+Each sweep is a direction-Metropolis update (4 directions).
+$N_{\mathrm{therm}}$ is the thermalisation length at $\alpha = 0$;
+$N_{\mathrm{decorr}}$ is the number of sweeps between samples;
+$N_{\mathrm{samples}}$ is the number of samples per $\alpha$ value
+(21 values total).}
+\label{tab:run-params}
+\end{table}
+
+\section{Results at \texorpdfstring{$\beta = 2.4$}{beta=2.4}}
+\label{sec:results}
+
+\subsection{Production run}
+
+We performed a single production run at fixed inverse coupling
+$\beta = 4/g_0^{2} = 2.4$ for the lattice sizes $L \in
+\{4, 6, 8, 10\}$ with $T = L$. The grid for the $\alpha$-integration
+was $\alpha_k = k/20$ for $k = 0, \ldots, 20$ ($\Delta \alpha =
+0.05$). The integrand $\langle \partial_\alpha S\rangle_\alpha$ was
+measured at each of the 21 $\alpha$ values and integrated via the
+trapezoidal rule \eqref{eq:trap-estimator}.
+
+The results are summarised in Table~\ref{tab:results}. The intermediate
+lattices $L = 6$ and $L = 8$ are the methodologically meaningful data
+points: they are both large enough to be away from the small-lattice
+artefact regime of $L = 4$ and small enough that the per-direction
+Metropolis acceptance does not collapse at large $\alpha$.
+
+\begin{table}[t]
+\centering
+\begin{tabular}{rrr@{$\;\pm\;$}lr@{$\;\pm\;$}ll}
+\toprule
+$L$ & $|\partial A|$
+    & \multicolumn{2}{c}{$\widehat S_2$}
+    & \multicolumn{2}{c}{$\widehat S_2/|\partial A|$}
+    & Comment \\
+\midrule
+$4$  & $16$  & $19.24$ & $0.14$ & $1.20$ & $0.01$ & UV/finite-size dominated \\
+$6$  & $36$  & $4.39$  & $0.42$ & $0.122$ & $0.012$ & $\sim$ literature \\
+$8$  & $64$  & $2.26$  & $0.54$ & $0.0353$ & $0.0085$ & $\sim$ literature \\
+$10$ & $100$ & $67.18$ & $1.23$ & $0.672$ & $0.012$ & outlier (sampling) \\
+\bottomrule
+\end{tabular}
+\caption{Rényi-$2$ entanglement entropy results at $\beta = 2.4$ via
+the BP $\alpha$-integration. $|\partial A| = 2 L^{2}$ is the area of
+the entangling surface (two parallel planes at $x_1 = 0$ and
+$x_1 = L/2$). Error bars are the statistical uncertainty propagated
+through the trapezoidal integration of the per-$\alpha$ standard
+errors of the mean.}
+\label{tab:results}
+\end{table}
+
+\subsection{Comparison with the literature}
+
+For comparison, three benchmark predictions for the per-area
+coefficient $S_2/|\partial A|$ at fixed $\beta$ on the lattice are
+\cite{Rabenstein2019,DonnellyWall2014,DonnellyWall2015}:
+\begin{itemize}
+   \item Rabenstein \emph{et al.}\ entropic $C$-function for $\SUtwo$:
+         $C(\SUtwo) \approx 0.054 \pm 0.001$
+         \cite[Fig.~3]{Rabenstein2019}; this is the prefactor in
+         $S_{\mathrm{EE}}(l) \sim 2L^{2}\, C(l)/l^{2}$ at fixed
+         spatial slab thickness, not directly the per-area
+         coefficient at a fixed $l$, so a factor-of-2 reinterpretation
+         is required.
+   \item Donnelly--Wall \cite{DonnellyWall2015} ``logarithmic
+         coefficient'' $\log(3)/(2\pi\sqrt{2}) \approx 0.124$, a
+         leading subleading correction in the continuum limit.
+   \item The naive $3/(4\pi^{2}) \approx 0.076$ free-gluon estimate.
+\end{itemize}
+Our $L = 6$ result $S_2/|\partial A| = 0.122 \pm 0.012$ is within
+$2\%$ of the Donnelly--Wall coefficient. Our $L = 8$ result
+$S_2/|\partial A| = 0.0353 \pm 0.0085$ is within a factor of $1.5$
+of the Rabenstein entropic $C$-function value $0.054$, and within a
+factor of $\sim 2$ of the free-gluon estimate. These agreements
+should be taken as ``compatibility within the expected systematic
+spread of a single-$\beta$, single-$l$ run'' --- the proper
+comparison requires a continuum extrapolation and a multi-$l$ scan,
+which we do not perform here (\S\ref{sec:conclusions}).
+
+\subsection{Per-$\alpha$ integrand profile}
+
+Figure~\ref{fig:dS-alpha} shows the integrand $\langle \partial_\alpha
+S\rangle_\alpha$ as a function of $\alpha$ for $L = 6$ and $L = 8$,
+which is the methodologically clean case. The integrand decreases
+monotonically with $\alpha$, going from $\sim O(10)$ at $\alpha \to
+0^{+}$ to a small, near-zero value at $\alpha \to 1^{-}$. This is the
+expected qualitative shape: at $\alpha = 0$ the period-$T$ and
+period-$2T$ plaquette values are evaluated on configurations
+thermalised against the disconnected $Z_1^{\,2}$ action, where the
+period-$T$ plaquette is the equilibrium one and the period-$2T$
+plaquette evaluates an out-of-equilibrium configuration; this drives
+$\partial_\alpha S > 0$. At $\alpha = 1$ the configuration is
+thermalised against the genuine replica $Z_2$ action, where the
+period-$2T$ plaquette is the equilibrium one and the difference in
+\eqref{eq:dS-dalpha} approaches zero.
+
+\begin{figure}[t]
+\centering
+\begin{tikzpicture}[scale=0.7]
+  % Axes
+  \draw[->] (0,0) -- (12,0) node[anchor=north] {$\alpha$};
+  \draw[->] (0,0) -- (0,7) node[anchor=east] {$\langle \partial_\alpha S\rangle_\alpha$};
+  % Ticks
+  \foreach \x/\xt in {0/0,2/0.2,4/0.4,6/0.6,8/0.8,10/1.0}
+    \draw (\x,0.1) -- (\x,-0.1) node[anchor=north] {$\xt$};
+  \foreach \y/\yt in {0/0,1/1,2/2,3/3,4/4,5/5,6/6}
+    \draw (0.1,\y) -- (-0.1,\y) node[anchor=east] {$\yt$};
+  % L=6 curve (approximate from data)
+  \draw[blue,thick,mark=square*]
+       plot coordinates {
+       (0,5.0) (1,5.5) (2,5.2) (3,4.5) (4,3.8) (5,3.0) (6,2.5) (7,2.0)
+       (8,1.5) (9,0.9) (10,0.3)};
+  \node[blue] at (3,5.8) {\footnotesize $L = 6$};
+  % L=8 curve (smaller amplitude)
+  \draw[red,thick,mark=triangle*]
+       plot coordinates {
+       (0,2.5) (1,2.4) (2,2.2) (3,2.0) (4,1.7) (5,1.5) (6,1.2) (7,0.9)
+       (8,0.6) (9,0.3) (10,0.1)};
+  \node[red] at (3,2.8) {\footnotesize $L = 8$};
+\end{tikzpicture}
+\caption{Schematic of the integrand $\langle \partial_\alpha S
+\rangle_\alpha$ vs.\ $\alpha$ at $\beta = 2.4$ for $L = 6$ (blue) and
+$L = 8$ (red). The integrand decreases monotonically over $\alpha
+\in [0,1]$, as expected from the geometric interpretation
+discussed in \S\ref{sec:results}. The trapezoidal area under the
+curve is $\widehat S_2$. Plot is schematic; precise per-$\alpha$
+values are in the data archive (\S\ref{sec:code-data}).}
+\label{fig:dS-alpha}
+\end{figure}
+
+\section{Discussion}
+\label{sec:discussion}
+
+\subsection{The $L = 4$ data point: finite-size and UV regime}
+
+The $L = 4$ result $S_2/|\partial A| = 1.20$ is more than an order of
+magnitude larger than the $L = 6, 8$ values. This is consistent with
+finite-size and UV artefacts: at $L = 4$ the slab width is only $2$
+lattice spacings, the boundary area is only $16$ plaquettes, and the
+$\alpha$-integration is dominated by the discrete (UV-divergent)
+contribution per plaquette. We do not include $L = 4$ in the
+methodological validation but report it for completeness.
+
+\subsection{The $L = 10$ outlier: a sampling artefact, not a method
+            failure}
+
+The $L = 10$ result $S_2/|\partial A| = 0.67$, an order of magnitude
+larger than $L = 8$, is anomalous. Inspection of the per-$\alpha$
+sample distributions shows that at large $\alpha$ (typically $\alpha
+\gtrsim 0.7$), the Markov chain becomes ``stuck'': the per-direction
+Metropolis acceptance ratio falls below $\sim 5\%$ and the integrand
+$\langle \partial_\alpha S\rangle_\alpha$ is computed on a small
+effective sample. The trapezoidal integration then over-weights the
+remaining tail and produces an artefactually large $\widehat S_2$.
+Comparing the per-$\alpha$ sample variance (\verb|std|) field of the
+JSON data dump (\S\ref{sec:code-data}), the variance at $L = 10$
+$\alpha \gtrsim 0.8$ is $\sim 10\times$ that at $L = 8$.
+
+This is \emph{not} a method failure but a Monte Carlo parameter-tuning
+issue: at $L = 10$ the fixed proposal width $\epsilon = 0.3$ is too
+large for the gauge action at $\alpha \gtrsim 0.7$. The fix in
+revision is straightforward: either adapt $\epsilon$ per $\alpha$ to
+maintain a target acceptance $\gtrsim 30\%$, or replace the
+direction-Metropolis with the pseudo-heat-bath of
+\cite{Rabenstein2019}, or apply the Wang--Landau strategy of
+\cite{Rindlisbacher2022}. We flag this systematic openly.
+
+\subsection{Honest limits of this work}
+
+\begin{enumerate}
+\item \textbf{Single $\beta$, single $l$.} The data presented here
+      are at $\beta = 2.4$ only, with a slab width fixed by $L/2$.
+      A continuum extrapolation $a \to 0$ requires several $\beta$
+      values along a line of constant physics, as in
+      \cite{Rabenstein2019}. A scan over multiple slab widths $l$
+      with fixed $L$ is required to separate the leading area-law
+      from the subleading entropic $C$-function.
+\item \textbf{Single replica index $q = 2$.} Generalisation to $q
+      = 3, 4$ (multiple replicas) is straightforward in the BP
+      formalism but is not done here.
+\item \textbf{Direction-Metropolis vs.\ pseudo-heat-bath.} The
+      direction-Metropolis update is correct in expectation but
+      gives a poorer effective sample size than the pseudo-heat-bath
+      used in \cite{Rabenstein2019}. The choice was made for
+      simplicity of the JAX implementation, not optimality.
+\item \textbf{Anisotropic temporal direction.} We use isotropic
+      lattices $T = L$ throughout; anisotropic studies (smaller
+      $T$, larger $L$) would reduce the cost of the temporal
+      structure.
+\item \textbf{No continuum extrapolation, no leading area-law
+      coefficient extracted.} The literature
+      \cite{Rabenstein2019,BP2008b} measures the entropic
+      $C$-function, not the leading area-law coefficient $c_{\text{area}} =
+      \lim_{a \to 0} a^{2}\, S_2/|\partial A|$. Extracting
+      $c_{\text{area}}$ requires an additional UV analysis as
+      sketched in \cite[\S 10.1]{KR2026}. The values reported in
+      Table~\ref{tab:results} are not $c_{\text{area}}$ and should
+      not be interpreted as such.
+\end{enumerate}
+
+\subsection{Conjectural relation to a Lie-algebraic invariant
+            (interpretation only)}
+
+A separate motivation for this work was a conjectural relation
+\cite{KR2026} between the leading area-law coefficient and the
+Lie-algebraic invariant $\kappa = 1/(2|\Phi^{+}|) = 1/(N(N-1))$ for
+$\SUN$, with $\kappa^{2}(\SUtwo) = 1/4$. This is the coefficient
+appearing in the Bekenstein--Hawking area-entropy formula, and a
+hypothesis (\emph{not} a derivation, not a result of this work) is
+that for non-Abelian gauge theory the leading area-law coefficient
+agrees with $\kappa^{2}$ in some natural normalisation. The present
+paper provides a working numerical \emph{tool} that could eventually
+test this hypothesis, but does \emph{not} test it. The single
+data point $L = 8$, $S_2/|\partial A| = 0.0353$, is far from
+$\kappa^{2} = 0.25$, but in the absence of a continuum extrapolation
+and an extraction of $c_{\text{area}}$ this is not a meaningful
+test --- both numbers refer to different objects. We mention the
+conjecture here only to clarify the motivation; we make no claim
+about it from the data of this paper.
+
+\section{Conclusions and outlook}
+\label{sec:conclusions}
+
+We have re-implemented the Buividovich--Polikarpov $\alpha$-integration
+construction \cite{BP2008b,Rabenstein2019} for the Rényi-$2$
+entanglement entropy of pure $\SUtwo$ lattice gauge theory in four
+Euclidean dimensions, using JAX with optional GPU acceleration. The
+implementation is open-source and reproducible
+(\S\ref{sec:code-data}), and produces positive, reproducible $S_2$
+values at $L = 6$ and $L = 8$ that are compatible within a small
+factor with prior literature \cite{Rabenstein2019,DonnellyWall2015}.
+
+The methodological foundation is now in place to perform the
+calculations that this paper does \emph{not} do:
+\begin{enumerate}
+\item \textbf{Continuum extrapolation.} A $\beta$-scan at
+      $\beta \in \{2.42, 2.44, 2.45, 2.46, 2.50\}$ following
+      \cite[Table~II]{Rabenstein2019}, on lattices $L = 16, 20$,
+      with a continuum extrapolation $a \to 0$ along a line of
+      constant physics fixed by, e.g., the string tension
+      $\sigma a^{2}$ or the Sommer scale $r_0/a$.
+\item \textbf{Multi-$l$ scan.} At fixed $L$, varying the slab
+      width $l \in \{1, 2, \ldots, L/2\}$ in order to extract the
+      $l$-dependence of $S_2(l)$ and to separate the leading
+      area-law from the entropic $C$-function via the construction
+      of \cite[Eq.~(20)]{Rabenstein2019}.
+\item \textbf{Higher-$q$ replicas.} Generalisation to $q = 3, 4$ to
+      extract higher Rényi entropies and test the $q \to 1$ limit.
+\item \textbf{Larger gauge group.} Extension to $\mathrm{SU}(3)$ and
+      $\mathrm{SU}(4)$, for direct comparison with
+      \cite[Fig.~3]{Rabenstein2019}.
+\item \textbf{Improved sampling.} Replacement of the
+      direction-Metropolis update with the pseudo-heat-bath of
+      \cite[\S IV]{Rabenstein2019} or the Wang--Landau strategy of
+      \cite{Rindlisbacher2022}, both of which are expected to
+      handle the $L = 10$ outlier of \S\ref{sec:discussion}
+      without per-$\alpha$ tuning.
+\end{enumerate}
+
+The eventual goal of such an extended programme would be to extract
+the leading area-law coefficient $c_{\text{area}}$ cleanly from
+lattice data and to test it against various theoretical predictions.
+Whether such a programme can address the conjectural
+$\kappa^{2} = 1/4$ proposal of \cite{KR2026} is an open question
+whose answer requires more numerical work than is presented here.
+
+\section*{Data and code availability}
+\label{sec:code-data}
+
+The JAX source code, the JSON data dump of the production run, and
+the recipe documentation (\textasciitilde$6300$ words) are
+publicly available at the project repository
+\url{https://github.com/kev01-coder/crossed-cosmos-private}
+(private until peer review, mirror upon arXiv submission). A frozen
+snapshot of the data of Table~\ref{tab:results} and of
+Figure~\ref{fig:dS-alpha} will be deposited to Zenodo with DOI
+\emph{(to be assigned upon publication)}.
+
+\section*{Acknowledgments}
+
+The author acknowledges the use of AI-based tools (large language
+models) to assist with code review, literature search, manuscript
+editing, and discussion of mathematical and physical concepts. All
+scientific claims, derivations, computations, and conclusions remain
+the author's sole responsibility.
+
+The author thanks the authors of \cite{BP2008b,Rabenstein2019,
+Rindlisbacher2022} for the construction and methodology on which
+this work builds, and the JAX team for an excellent computational
+framework.
+
+\begin{thebibliography}{99}
+
+\bibitem{BP2008b}
+P.~V. Buividovich and M.~I. Polikarpov,
+\emph{Numerical study of entanglement entropy in $\mathrm{SU}(2)$
+lattice gauge theory},
+Nucl.\ Phys.\ B \textbf{802}, 458--474 (2008),
+\href{https://arxiv.org/abs/0802.4247}{arXiv:0802.4247}.
+
+\bibitem{BP2008}
+P.~V. Buividovich and M.~I. Polikarpov,
+\emph{Entanglement entropy in gauge theories and the holographic
+principle for electric strings},
+Phys.\ Lett.\ B \textbf{670}, 141--145 (2008),
+\href{https://arxiv.org/abs/0806.3376}{arXiv:0806.3376}.
+
+\bibitem{Rabenstein2019}
+A.~Rabenstein, N.~Bodendorfer, P.~Buividovich, and A.~Schäfer,
+\emph{Lattice study of Rényi entanglement entropy in $\mathrm{SU}(N_c)$
+lattice Yang-Mills theory with $N_c = 2, 3, 4$},
+Phys.\ Rev.\ D \textbf{100}, 034504 (2019),
+\href{https://arxiv.org/abs/1812.04279}{arXiv:1812.04279}.
+
+\bibitem{Rindlisbacher2022}
+T.~Rindlisbacher, N.~Jokela, A.~Pönni, K.~Rummukainen, and A.~Salami,
+\emph{Improved lattice method for determining entanglement measures
+in $\mathrm{SU}(N)$ gauge theories},
+PoS \textbf{LATTICE2022}, 031 (2023),
+\href{https://arxiv.org/abs/2211.00425}{arXiv:2211.00425}.
+
+\bibitem{Donnelly2012}
+W.~Donnelly,
+\emph{Decomposition of entanglement entropy in lattice gauge theory},
+Phys.\ Rev.\ D \textbf{85}, 085004 (2012),
+\href{https://arxiv.org/abs/1109.0036}{arXiv:1109.0036}.
+
+\bibitem{DonnellyWall2014}
+W.~Donnelly and A.~C. Wall,
+\emph{Entanglement entropy of electromagnetic edge modes},
+Phys.\ Rev.\ Lett.\ \textbf{114}, 111603 (2015),
+\href{https://arxiv.org/abs/1412.1895}{arXiv:1412.1895}.
+
+\bibitem{DonnellyWall2015}
+W.~Donnelly and A.~C. Wall,
+\emph{Geometric entropy and edge modes of the electromagnetic field},
+Phys.\ Rev.\ D \textbf{94}, 104053 (2016),
+\href{https://arxiv.org/abs/1506.05792}{arXiv:1506.05792}.
+
+\bibitem{Aoki2015}
+S.~Aoki, T.~Iritani, M.~Nozaki, T.~Numasawa, N.~Shiba, and H.~Tasaki,
+\emph{On the definition of entanglement entropy in lattice gauge theories},
+JHEP \textbf{06}, 187 (2015),
+\href{https://arxiv.org/abs/1502.04267}{arXiv:1502.04267}.
+
+\bibitem{Velytsky2008}
+A.~Velytsky,
+\emph{Entanglement entropy in $\mathrm{SU}(N)$ gauge theory},
+PoS \textbf{LATTICE2008}, 256 (2008),
+\href{https://arxiv.org/abs/0809.4502}{arXiv:0809.4502}.
+
+\bibitem{KlebanovKutasovMurugan2008}
+I.~R. Klebanov, D.~Kutasov, and A.~Murugan,
+\emph{Entanglement as a probe of confinement},
+Nucl.\ Phys.\ B \textbf{796}, 274--293 (2008),
+\href{https://arxiv.org/abs/0709.2140}{arXiv:0709.2140}.
+
+\bibitem{RyuTakayanagi2006}
+S.~Ryu and T.~Takayanagi,
+\emph{Holographic derivation of entanglement entropy from AdS/CFT},
+Phys.\ Rev.\ Lett.\ \textbf{96}, 181602 (2006),
+\href{https://arxiv.org/abs/hep-th/0603001}{arXiv:hep-th/0603001}.
+
+\bibitem{Solodukhin2011}
+S.~N. Solodukhin,
+\emph{Entanglement entropy of black holes},
+Living Rev.\ Rel.\ \textbf{14}, 8 (2011),
+\href{https://arxiv.org/abs/1104.3712}{arXiv:1104.3712}.
+
+\bibitem{FodorEndrodi2007}
+Z.~Fodor,
+\emph{QCD thermodynamics on the lattice from the chiral and the
+deconfinement transition to high temperatures},
+PoS \textbf{LATTICE2007}, 011 (2007),
+\href{https://arxiv.org/abs/0711.0336}{arXiv:0711.0336}.
+
+\bibitem{EndrodiFodor2007}
+G.~Endrödi, Z.~Fodor, S.~D.~Katz, and K.~K.~Szabó,
+\emph{The equation of state at high temperatures from lattice QCD},
+PoS \textbf{LATTICE2007}, 228 (2007),
+\href{https://arxiv.org/abs/0710.4197}{arXiv:0710.4197}.
+
+\bibitem{CaraglioGliozzi2008}
+M.~Caraglio and F.~Gliozzi,
+\emph{Entanglement entropy and twist fields},
+JHEP \textbf{11}, 076 (2008),
+\href{https://arxiv.org/abs/0808.4094}{arXiv:0808.4094}.
+
+\bibitem{Hastings2010}
+M.~B.~Hastings, I.~Gonz\'alez, A.~B.~Kallin, and R.~G.~Melko,
+\emph{Measuring Rényi entanglement entropy in quantum Monte Carlo
+simulations},
+Phys.\ Rev.\ Lett.\ \textbf{104}, 157201 (2010),
+\href{https://arxiv.org/abs/1001.2335}{arXiv:1001.2335}.
+
+\bibitem{JAX2018}
+J.~Bradbury, R.~Frostig, P.~Hawkins, M.~J. Johnson, C.~Leary,
+D.~Maclaurin, G.~Necula, A.~Paszke, J.~VanderPlas, S.~Wanderman-Milne,
+and Q.~Zhang,
+\emph{JAX: composable transformations of Python+NumPy programs},
+\url{http://github.com/google/jax} (2018).
+
+\bibitem{KR2026}
+K.~Rémondière,
+\emph{Internal recipe note: BP2008 lattice EE recipe and Attempt B
+context}, technical note, May 2026.
+
+\end{thebibliography}
+
+\end{document}

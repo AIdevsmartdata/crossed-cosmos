@@ -1,5 +1,5 @@
 /-
-  KostantKappaFP.lean
+  KappaFP_SU3.lean (renamed from KostantKappaFP — see audit decoder_BRIDGES_REJECTED_2026-05-27)
 
   Theorem: κ_FP(SU(3)) = 1/6
   Equivalent forms:
@@ -26,7 +26,7 @@ import Mathlib.Data.Rat.Defs
 import Mathlib.Algebra.Order.Ring.Defs
 import Mathlib.Tactic.NormNum
 
-namespace KostantKappaFP
+namespace KappaFP_SU3
 
 /-- Number of positive roots of the root system A_{N-1} = su(N).
     For SU(N), |Φ⁺| = N(N-1)/2.

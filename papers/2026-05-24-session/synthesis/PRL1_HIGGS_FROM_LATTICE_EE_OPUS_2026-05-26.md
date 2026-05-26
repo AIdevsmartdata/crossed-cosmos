@@ -28,7 +28,7 @@ We report a quantitative connection between the area-law coefficient of vacuum e
 $$
 \kappa(\mathrm{SU}(2)) = 0.5065 \pm 0.010,\;\; \kappa(\mathrm{SU}(3)) = 0.5956 \pm 0.0067,\;\; \kappa(\mathrm{SU}(4)) = 0.6390 \pm 0.0041.
 $$
-A single-parameter cross-$N$ fit confirms $\kappa(\mathrm{SU}(N)) = \kappa_\infty \cdot (1 - 1/N^2)$ with $\chi^2/\mathrm{dof} = 0.91$, excluding $\sqrt{N}$ scaling at $19.4\sigma$ and the Bekenstein--Hawking value $\kappa = 1/4$ at $94.5\sigma$. Three competing rational alternatives are excluded at $\chi^2/\mathrm{dof} > 129$. The inverse-variance weighted asymptote $\kappa_\infty = 0.67844 \pm 0.00364$ matches the transcendental combination $\zeta(3)/\sqrt{\pi} = 0.67819$ at $0.07\sigma$. Using the electroweak vacuum expectation value $v = 246.22$ GeV from the Fermi constant, we obtain the prediction
+A single-parameter cross-$N$ fit confirms $\kappa(\mathrm{SU}(N)) = \kappa_\infty \cdot (1 - 1/N^2)$ with $\chi^2/\mathrm{dof} = 0.91$, excluding $\sqrt{N}$ scaling at $19.4\sigma$ and the Bekenstein--Hawking value $\kappa = 1/4$ at $94.5\sigma$. Three competing rational alternatives are excluded at $\chi^2/\mathrm{dof} > 129$. The inverse-variance weighted asymptote $\kappa_\infty = 0.67844 \pm 0.00364$ is compatible with the transcendental combination $\zeta(3)/\sqrt{\pi} = 0.67819$ at $0.07\sigma$, the rational $17/25 = 0.680$ at $0.43\sigma$, and $27/40 = 0.675$ at $0.95\sigma$; the leading candidate identification is suggestive but not uniquely determined by three datapoints, and SU($5,6$) measurements are required to discriminate at $\geq 3\sigma$. Using the electroweak vacuum expectation value $v = 246.22$ GeV from the Fermi constant, we obtain the prediction
 $m_H = \kappa(\mathrm{SU}(2)) \cdot v = 125.28 \pm 0.67$ GeV,
 in agreement with $m_H^{\mathrm{obs}} = 125.10 \pm 0.14$ GeV (PDG 2024) at $0.27\sigma$. The lattice measurement was performed independently of any electroweak input, constituting a genuine zero-parameter prediction. Falsifiable consequences and a path to first-principles derivation are discussed.
 
@@ -45,7 +45,7 @@ $$
 S_{\mathrm{EE}}(A) = \kappa(G) \cdot \frac{|\partial A|_{3D}}{a^2} + \mathcal{O}(\log a),
 \tag{1}
 $$
-with $\kappa(G)$ a dimensionless coefficient depending only on the gauge group $G$.
+with $\kappa(G)$ a dimensionless coefficient depending only on the gauge group $G$. We refer to this quantity as $\kappa_{\mathrm{EE}}(G)$ throughout; it is distinct from the Faddeev--Popov / Kostant constant $\kappa_{\mathrm{FP}}(G) = 1/(2|\Phi^+(G)|)$ that arises in the companion mass-gap framework [companion paper, PRL Mass Gap], where for $G = \mathrm{SU}(3)$ one obtains $\kappa_{\mathrm{FP}} = 1/6 \neq \kappa_{\mathrm{EE}}(\mathrm{SU}(3))$. The two are independent physical observables (operator-norm bound vs.\ area-law prefactor) sharing only a notational symbol.
 
 This Letter establishes a quantitative bridge between this purely Euclidean observable and an electroweak particle mass. Specifically, using high-precision lattice measurements of $\kappa(G)$ for $G = \mathrm{SU}(2),\mathrm{SU}(3),\mathrm{SU}(4)$, we identify a one-parameter cross-$N$ law (Sect. III), determine its asymptote $\kappa_\infty$ to better than $0.5\%$, and observe that for $N = 2$ — matching the electroweak weak-isospin gauge group $\mathrm{SU}(2)_L$ — the relation
 $$

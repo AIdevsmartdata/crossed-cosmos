@@ -2,6 +2,8 @@
 
 **Note v23** : v22 patché avec **CONFIRMATION EMPIRIQUE** du framework cross-D via HMC SU(3) D=3 (α=0.74±0.06 = 3/4 à 0.1σ sur L=4). **Extension cross-Lie** à 10 paires saturées (au-delà des 3 SU(N)). **Interprétation B (Hodge geometric) gagne** sur A (Lie-theoretic).
 
+**Note κ (disambiguation 2026-05-26)** : dans ce document, toutes les occurrences de `κ` désignent **κ_FP = 1/(2|Φ⁺(G)|)** (Faddeev-Popov / Kostant rank-saturation correction factor), distinct de **κ_EE** (préfacteur area-law entanglement entropy, κ_EE(N) = κ_∞·(1−1/N²) avec κ_∞ ≈ ζ(3)/√π) utilisé dans les papers compagnons PRL1_HIGGS_FROM_LATTICE_EE et PRL2_THEORETICAL_DERIVATIONS. Coïncidence numérique uniquement à SU(2) (κ_FP=κ_EE=1/2). Voir aussi `Crossed/KappaOneSixth.lean` qui prouve κ_FP=1/6 pour SU(3).
+
 # (titre original v22 préservé)
 # Theorem: Yang–Mills 4D Mass Gap — Complete Logical Chain (v22 = v21 + Saturation Polynomial)
 

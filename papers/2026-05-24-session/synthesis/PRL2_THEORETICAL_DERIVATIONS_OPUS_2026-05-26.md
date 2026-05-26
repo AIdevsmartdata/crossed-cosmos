@@ -43,7 +43,7 @@ $$
 \boxed{\;\kappa_\infty \;\stackrel{?}{=}\; \frac{\zeta(3)}{\sqrt{\pi}} = 0.67819\ldots\;}
 \tag{A2}
 $$
-in agreement with the posterior $\kappa_\infty^{\mathrm{lattice}} = 0.6784\pm 0.0036$ at $0.07\sigma$. The combination of Apéry's constant $\zeta(3)$ and the Gaussian normalisation $\sqrt{\pi}$ suggests, respectively, a 3-loop topological invariant and a Gaussian zero-mode contribution.
+in agreement with the posterior $\kappa_\infty^{\mathrm{lattice}} = 0.6784\pm 0.0036$ at $0.07\sigma$. **Caveat (anti-fab):** with only three lattice datapoints, the rational alternatives $17/25 = 0.680$ (compatible at $0.43\sigma$) and $27/40 = 0.675$ (compatible at $0.95\sigma$) are not excluded. The transcendental identification $\zeta(3)/\sqrt{\pi}$ is the *leading* candidate (Bayesian posterior $P \approx 0.42$) but not uniquely determined. Discrimination at $\geq 3\sigma$ requires SU(5) and SU(6) lattice measurements (predicted $\kappa = 0.6511$ and $0.6593$ respectively under (A2)). The combination of Apéry's constant $\zeta(3)$ and the Gaussian normalisation $\sqrt{\pi}$ *suggests*, respectively, a 3-loop topological invariant and a Gaussian zero-mode contribution; the structural derivation is the subject of §III.
 
 **Anchor 3 — Higgs mass identity:**
 $$
@@ -81,6 +81,10 @@ Anchors (A1)--(A2) and the bonus relation (2b) cry out for a theoretical derivat
 We adopt a transparent three-tier rigour classification throughout. **TIER 1 (rigorous)**: a derivation that follows from established theorems (or one-paragraph computations from established theorems) with at most a single standard inputs (e.g. "Donnelly--Wall reduction holds for the lattice EE"). **TIER 2 (partial)**: a derivation that follows from a chain of well-known intermediate results, but where the *combination* of those results requires a non-trivial new theorem or an intermediate identification (e.g. the dictionary between K3 moduli volumes and lattice EE coefficients). **TIER 3 (motivated)**: a derivation that follows from a plausible chain of conjectures, each individually testable but the chain as a whole open (e.g. the Vinberg-discriminant identification of §IV.E). All claims are tagged at the relevant subsection level, and an executive summary is provided in §VII.
 
 We follow the *anti-fab* discipline of [1, App. A]: every numerical claim, every arXiv reference, and every named theorem is checked against an independent primary source (typically the arXiv abstract or the cited paper itself). PARI/GP version 2.15.4 is used for all explicit class-number computations. The convention for the sign of the discriminant is the standard $D<0$ for imaginary quadratic fields.
+
+### D.1 Notation: $\kappa_{\mathrm{EE}}$ vs.\ $\kappa_{\mathrm{FP}}$
+
+Throughout this paper, $\kappa(G)$ and $\kappa_\infty$ refer to the **entanglement-entropy area-law prefactor** $\kappa_{\mathrm{EE}}(G)$ defined by (1). This quantity is to be distinguished from the **Faddeev--Popov / Kostant constant** $\kappa_{\mathrm{FP}}(G) = 1/(2|\Phi^+(G)|)$ that arises in the spectral gap bound $\lambda_{\min}(M[A]) \geq m_0^2(1-\kappa_{\mathrm{FP}})$ for the Faddeev--Popov operator on the fundamental modular domain [companion paper, KR-FP-3 / Mass Gap First Principles]. For $G = \mathrm{SU}(3)$ one finds $\kappa_{\mathrm{FP}} = 1/6 \approx 0.167$, while $\kappa_{\mathrm{EE}}(\mathrm{SU}(3)) = 0.6025 \approx 0.6$. These are two independent physical observables (operator-norm bound on the Cartan subspace vs.\ leading EE area-law prefactor) sharing only the Greek letter $\kappa$ from historical notation. No reconciliation is claimed; each obeys its own scaling law ($1/(2|\Phi^+|)$ vs.\ $\kappa_\infty(1-1/N^2)$) with incompatible large-$N$ asymptotes ($\kappa_{\mathrm{FP}} \to 0$ vs.\ $\kappa_{\mathrm{EE}} \to \kappa_\infty \neq 0$).
 
 ### E. Notational conventions and a calibration note
 

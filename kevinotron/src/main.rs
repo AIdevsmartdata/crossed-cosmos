@@ -22,6 +22,7 @@ use groups::sp4::SP4Group;
 use groups::su2::SU2Group;
 use groups::su3::SU3Group;
 use groups::su4::SU4Group;
+use groups::su5::SU5Group;
 use lattice::Lattice4D;
 use clap::Parser;
 use std::time::Instant;
@@ -29,7 +30,7 @@ use std::time::Instant;
 #[derive(Parser)]
 #[command(name = "kevinotron", about = "Unified Lattice Gauge Theory EE Engine")]
 struct Args {
-    /// Gauge group: g2, su2, su3, su4, sp4, so7
+    /// Gauge group: g2, su2, su3, su4, su5, sp4, so7
     #[arg(long)]
     group: String,
 
@@ -485,10 +486,11 @@ fn main() {
         "su2" => Box::new(SU2Group::new()),
         "su3" => Box::new(SU3Group::new()),
         "su4" => Box::new(SU4Group::new()),
+        "su5" => Box::new(SU5Group::new()),
         "sp4" => Box::new(SP4Group::new()),
         "so7" => Box::new(SO7Group::new()),
         _ => {
-            eprintln!("ERROR: unknown group '{}'. Use: g2, su2, su3, su4, sp4, so7", args.group);
+            eprintln!("ERROR: unknown group '{}'. Use: g2, su2, su3, su4, su5, sp4, so7", args.group);
             std::process::exit(1);
         }
     };

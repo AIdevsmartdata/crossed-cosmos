@@ -14,6 +14,7 @@ pub mod sp4;
 pub mod su2;
 pub mod su3;
 pub mod su4;
+pub mod su5;
 
 use rand::Rng;
 use rand::RngCore;

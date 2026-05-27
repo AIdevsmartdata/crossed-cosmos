@@ -195,22 +195,25 @@ fn update_links(
                         let site = [x0,x1,x2,x3];
                         let u = lat.get(site, mu).to_vec();
                         let p = &momenta[idx];
-                        // exp(dt π) via 2nd order Taylor
+                        // exp(dt π) via Taylor-12 (matching Metropolis precision)
                         let exp_p;
                         if is_complex {
                             let mut s = p.clone();
                             for x in s.iter_mut() { *x *= dt; }
-                            let p2 = crate::groups::cmat_mul(&s, &s, d);
-                            let mut r = crate::groups::cmat_identity(d);
-                            for i in 0..r.len() { r[i] += s[i] + 0.5 * p2[i]; }
-                            exp_p = r;
+                            exp_p = crate::groups::cmat_expm_taylor12(&s, d);
                         } else {
+                            // Real groups: Taylor-12 manually
                             let mut s = p.clone();
                             for x in s.iter_mut() { *x *= dt; }
-                            let p2 = crate::groups::rmat_mul(&s, &s, d);
-                            let mut r = crate::groups::rmat_identity(d);
-                            for i in 0..r.len() { r[i] += s[i] + 0.5 * p2[i]; }
-                            exp_p = r;
+                            let mut sum = crate::groups::rmat_identity(d);
+                            let mut pow = crate::groups::rmat_identity(d);
+                            for k in 1..=12 {
+                                pow = crate::groups::rmat_mul(&pow, &s, d);
+                                let inv_k = 1.0 / k as f64;
+                                for i in 0..pow.len() { pow[i] *= inv_k; }
+                                for i in 0..sum.len() { sum[i] += pow[i]; }
+                            }
+                            exp_p = sum;
                         }
                         let u_new = if is_complex {
                             crate::groups::cmat_mul(&exp_p, &u, d)
@@ -282,6 +285,12 @@ pub fn hmc_trajectory(
     let s_new = gauge_action(lat, group, cfg.beta);
     let h_new = t_new + s_new;
     let delta_h = h_new - h_old;
+
+    // WARNING: HMC is only correct for groups where the full anti-Hermitian
+    // traceless (complex) or antisymmetric (real) space IS the Lie algebra.
+    // This holds for SU(N) and SO(N), but NOT for G₂⊂SO(7), Sp(4)⊂SU(4),
+    // F₄⊂SO(26), E₆⊂SU(27). For these groups, use Metropolis mode instead.
+    // TODO: implement group-specific algebra projection using stored generators.
 
     // Accept/reject
     let mut w = RngWrapper(rng);

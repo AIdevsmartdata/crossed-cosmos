@@ -143,6 +143,89 @@ fn gauge_action(lat: &Lattice4D, group: &dyn GaugeGroup, beta: f64) -> f64 {
     beta * n_plaq as f64 * (1.0 - p)
 }
 
+
+/// Update all momenta: p -= dt × F(U)
+fn update_momenta(
+    lat: &Lattice4D,
+    momenta: &mut [LinkData],
+    group: &dyn GaugeGroup,
+    beta_d: f64,
+    dt: f64,
+) {
+    let ls = lat.ls; let lt = lat.lt;
+    let mut idx = 0;
+    for x0 in 0..ls {
+        for x1 in 0..ls {
+            for x2 in 0..ls {
+                for x3 in 0..lt {
+                    for mu in 0..4 {
+                        let site = [x0,x1,x2,x3];
+                        let u = lat.get(site, mu);
+                        let k = lat.staple_sum(group, site, mu);
+                        let mut v = group.mul(u, &k);
+                        for x in v.iter_mut() { *x *= beta_d; }
+                        let f = project_force(group, &v);
+                        for i in 0..momenta[idx].len() {
+                            momenta[idx][i] -= dt * f[i];
+                        }
+                        idx += 1;
+                    }
+                }
+            }
+        }
+    }
+}
+
+/// Update all links: U = exp(dt × π) × U
+fn update_links(
+    lat: &mut Lattice4D,
+    momenta: &[LinkData],
+    group: &dyn GaugeGroup,
+    dt: f64,
+) {
+    let ls = lat.ls; let lt = lat.lt;
+    let d = group.dim_fund();
+    let is_complex = group.is_complex();
+    let mut idx = 0;
+    for x0 in 0..ls {
+        for x1 in 0..ls {
+            for x2 in 0..ls {
+                for x3 in 0..lt {
+                    for mu in 0..4 {
+                        let site = [x0,x1,x2,x3];
+                        let u = lat.get(site, mu).to_vec();
+                        let p = &momenta[idx];
+                        // exp(dt π) via 2nd order Taylor
+                        let exp_p;
+                        if is_complex {
+                            let mut s = p.clone();
+                            for x in s.iter_mut() { *x *= dt; }
+                            let p2 = crate::groups::cmat_mul(&s, &s, d);
+                            let mut r = crate::groups::cmat_identity(d);
+                            for i in 0..r.len() { r[i] += s[i] + 0.5 * p2[i]; }
+                            exp_p = r;
+                        } else {
+                            let mut s = p.clone();
+                            for x in s.iter_mut() { *x *= dt; }
+                            let p2 = crate::groups::rmat_mul(&s, &s, d);
+                            let mut r = crate::groups::rmat_identity(d);
+                            for i in 0..r.len() { r[i] += s[i] + 0.5 * p2[i]; }
+                            exp_p = r;
+                        }
+                        let u_new = if is_complex {
+                            crate::groups::cmat_mul(&exp_p, &u, d)
+                        } else {
+                            crate::groups::rmat_mul(&exp_p, &u, d)
+                        };
+                        lat.set(site, mu, &group.reproject(&u_new));
+                        idx += 1;
+                    }
+                }
+            }
+        }
+    }
+}
+
 /// One HMC trajectory
 pub fn hmc_trajectory(
     lat: &mut Lattice4D,
@@ -180,83 +263,19 @@ pub fn hmc_trajectory(
     let s_old = gauge_action(lat, group, cfg.beta);
     let h_old = t_old + s_old;
 
-    // Leapfrog
-    for step in 0..cfg.n_steps {
-        let dt_p = if step == 0 || step == cfg.n_steps - 1 { 0.5 * cfg.dt } else { cfg.dt };
-
-        // Update momenta: p += dt_p × F
-        let mut link_idx = 0;
-        for x0 in 0..ls {
-            for x1 in 0..ls {
-                for x2 in 0..ls {
-                    for x3 in 0..lt {
-                        for mu in 0..4 {
-                            let site = [x0, x1, x2, x3];
-                            let u = lat.get(site, mu);
-                            let k = lat.staple_sum(group, site, mu);
-                            let v = group.mul(u, &k); // V = U × staple_sum
-                            // Scale by β/d
-                            let mut v_scaled = v;
-                            for x in v_scaled.iter_mut() { *x *= beta_d; }
-                            let f = project_force(group, &v_scaled);
-                            // p += dt × F (force points toward lower action)
-                            for i in 0..momenta[link_idx].len() {
-                                momenta[link_idx][i] -= dt_p * f[i];
-                            }
-                            link_idx += 1;
-                        }
-                    }
-                }
-            }
-        }
-
-        // Update links: U = exp(dt × π) × U
-        if step < cfg.n_steps - 1 {
-            link_idx = 0;
-            for x0 in 0..ls {
-                for x1 in 0..ls {
-                    for x2 in 0..ls {
-                        for x3 in 0..lt {
-                            for mu in 0..4 {
-                                let site = [x0, x1, x2, x3];
-                                let u = lat.get(site, mu).to_vec();
-                                let p = &momenta[link_idx];
-                                // exp(dt × π) ≈ I + dt×π + (dt×π)²/2 (2nd order)
-                                let d = group.dim_fund();
-                                let exp_p;
-                                if is_complex {
-                                    let mut scaled = p.clone();
-                                    for x in scaled.iter_mut() { *x *= cfg.dt; }
-                                    let p2 = crate::groups::cmat_mul(&scaled, &scaled, d);
-                                    let mut result = crate::groups::cmat_identity(d);
-                                    for i in 0..result.len() {
-                                        result[i] += scaled[i] + 0.5 * p2[i];
-                                    }
-                                    exp_p = result;
-                                } else {
-                                    let mut scaled = p.clone();
-                                    for x in scaled.iter_mut() { *x *= cfg.dt; }
-                                    let p2 = crate::groups::rmat_mul(&scaled, &scaled, d);
-                                    let mut result = crate::groups::rmat_identity(d);
-                                    for i in 0..result.len() {
-                                        result[i] += scaled[i] + 0.5 * p2[i];
-                                    }
-                                    exp_p = result;
-                                }
-                                let u_new = if is_complex {
-                                    crate::groups::cmat_mul(&exp_p, &u, d)
-                                } else {
-                                    crate::groups::rmat_mul(&exp_p, &u, d)
-                                };
-                                lat.set(site, mu, &group.reproject(&u_new));
-                                link_idx += 1;
-                            }
-                        }
-                    }
-                }
-            }
-        }
+    // Leapfrog: proper V-V-T-V-V scheme (Verlet)
+    // Step 0: half-step momenta
+    update_momenta(lat, &mut momenta, group, beta_d, 0.5 * cfg.dt);
+    
+    // Steps 1..n-1: full link + full momenta
+    for _step in 0..cfg.n_steps - 1 {
+        update_links(lat, &momenta, group, cfg.dt);
+        update_momenta(lat, &mut momenta, group, beta_d, cfg.dt);
     }
+    
+    // Final: full link + half momenta
+    update_links(lat, &momenta, group, cfg.dt);
+    update_momenta(lat, &mut momenta, group, beta_d, 0.5 * cfg.dt);
 
     // Final Hamiltonian
     let t_new = kinetic_energy(&momenta, is_complex);

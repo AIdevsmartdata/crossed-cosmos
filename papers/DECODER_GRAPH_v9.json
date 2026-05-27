@@ -1,7 +1,7 @@
 {
-  "date": "2026-05-28 v9.1 (cleaned retracted edges) \u2014 F\u2084+E\u2086 world-firsts, Gribov RETRACTED, 10 groups, Kevinotron v3",
-  "n_nodes": 81,
-  "n_edges": 114,
+  "date": "2026-05-28 v9.2 \u2014 HMC dynamical fermions operational",
+  "n_nodes": 83,
+  "n_edges": 117,
   "nodes": {
     "\u03ba_FP=1/6": {
       "kind": "anchor",
@@ -406,6 +406,18 @@
       "kind": "measurement",
       "value": "Q\u22480 for all groups at L=4",
       "tier": "MEASURED"
+    },
+    "HMC_dynamical_fermions": {
+      "kind": "tool",
+      "value": "JAX/GPU HMC Nf=2 Wilson fermions, 80% acceptance",
+      "tier": "OPERATIONAL",
+      "note": "SU(3) Ls=4 \u03b2=5.6 m=0.5, 17s/trajectory. Float64 required."
+    },
+    "Wilson_Dirac_JAX": {
+      "kind": "tool",
+      "value": "D_W on GPU, \u03b3\u2085-herm 10\u207b\u00b9\u2075",
+      "tier": "VALIDATED",
+      "note": "Chiral basis. CG solver JIT-ready."
     }
   },
   "edges": [
@@ -1092,6 +1104,24 @@
       "dst": "Donnelly_Wall_center",
       "type": "TESTS",
       "label": "First exceptional with Z\u2083 center"
+    },
+    {
+      "src": "HMC_dynamical_fermions",
+      "dst": "Kevinotron_v3",
+      "type": "EXTENDS",
+      "label": "Dynamical fermion HMC on GPU"
+    },
+    {
+      "src": "Wilson_Dirac_JAX",
+      "dst": "HMC_dynamical_fermions",
+      "type": "ENABLES",
+      "label": "CG solver + pseudofermion force"
+    },
+    {
+      "src": "HMC_dynamical_fermions",
+      "dst": "SECTOR_Yukawa",
+      "type": "BRIDGES",
+      "label": "First bridge to matter sector via dynamical quarks"
     }
   ],
   "top_betweenness": [

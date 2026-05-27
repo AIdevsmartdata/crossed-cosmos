@@ -1,16 +1,12 @@
-// hmc.rs — Hybrid Monte Carlo for pure gauge + pseudofermions
+// hmc.rs — Hybrid Monte Carlo (CORRECTED)
 //
-// Hamilton's equations:
-//   dU/dτ = i π U        (π in Lie algebra)
-//   dπ/dτ = F_gauge      (gauge force)
-//
-// Leapfrog integrator (symplectic, reversible):
-//   π(dt/2) = π(0) + (dt/2) F(U(0))
-//   U(dt)   = exp(i·dt·π(dt/2)) · U(0)
-//   π(dt)   = π(dt/2) + (dt/2) F(U(dt))
-//
-// Accept/reject: P(accept) = min(1, exp(-ΔH))
-// ΔH = H_new - H_old, H = T + S = ½Σ Tr(π²) + S_gauge
+// KEY MATH:
+// Momenta π ∈ Lie algebra (anti-Hermitian traceless for SU(N), antisymmetric for SO/G₂/F₄)
+// Kinetic energy: T = -Tr(π²) (positive since π anti-Hermitian)
+// Gauge force: F = project_to_algebra(-(β/d) × U × staple_sum)
+//   For SU(N): F = (V - V†)/2 - Tr(V-V†)/(2N) I where V = (β/N) U K
+//   For real:  F = (V - V^T)/2 where V = (β/d) U K
+// Update: U_new = exp(dt × π) × U_old (π is already in the algebra)
 
 use crate::groups::{GaugeGroup, LinkData, RngWrapper};
 use crate::lattice::Lattice4D;
@@ -18,222 +14,136 @@ use rand::Rng;
 use rand::RngCore;
 use rand_distr::StandardNormal;
 
-/// HMC configuration
 pub struct HmcConfig {
-    pub n_steps: usize,   // leapfrog steps per trajectory
-    pub dt: f64,          // step size
-    pub beta: f64,        // gauge coupling
+    pub n_steps: usize,
+    pub dt: f64,
+    pub beta: f64,
 }
 
-/// Generate random momenta in the Lie algebra (Gaussian)
-/// Returns flat vector: one momentum per link, each in the Lie algebra
-fn generate_momenta(
-    group: &dyn GaugeGroup,
-    n_links: usize,
-    rng: &mut dyn RngCore,
-) -> Vec<LinkData> {
-    let d_adj = group.dim_adj();
-    let link_size = group.link_size();
-    let mut momenta = Vec::with_capacity(n_links);
+/// Generate random momentum in the Lie algebra
+/// Complex groups: π = anti-Hermitian traceless (2*d*d f64)
+/// Real groups: π = antisymmetric (d*d f64)
+fn random_algebra_element(group: &dyn GaugeGroup, rng: &mut dyn RngCore) -> LinkData {
+    // Use random_near_id with large epsilon, then take log ≈ the algebra element
+    // Actually simpler: generate random anti-Hermitian traceless matrix directly
+    let d = group.dim_fund();
     let mut w = RngWrapper(rng);
 
-    for _ in 0..n_links {
-        // Generate random algebra element: π = Σ_a c_a T_a with c_a ~ N(0,1)
-        // We store π as a link-sized matrix (same format as links)
-        // For pure gauge HMC, we just need the kinetic energy ½ Tr(π²)
-        let mut p = vec![0.0f64; link_size];
-        // Random coefficients for dim_adj generators
-        // Store as a flat matrix directly (the gauge force will add to this)
-        for i in 0..link_size {
-            p[i] = w.sample::<f64, _>(StandardNormal);
+    if group.is_complex() {
+        let mut m = vec![0.0f64; 2 * d * d];
+        // Fill upper triangle with random complex, reflect to lower
+        for i in 0..d {
+            for j in (i + 1)..d {
+                let re: f64 = w.sample::<f64, _>(StandardNormal);
+                let im: f64 = w.sample::<f64, _>(StandardNormal);
+                let idx_ij = 2 * (i * d + j);
+                let idx_ji = 2 * (j * d + i);
+                // Anti-Hermitian: M_ij = a+ib, M_ji = -a+ib (so M† = -M)
+                m[idx_ij] = re;        // Re M_ij
+                m[idx_ij + 1] = im;    // Im M_ij
+                m[idx_ji] = -re;       // Re M_ji = -Re M_ij
+                m[idx_ji + 1] = im;    // Im M_ji = Im M_ij (since conj swap + negate)
+            }
+            // Diagonal: purely imaginary for anti-Hermitian
+            let diag_val: f64 = w.sample::<f64, _>(StandardNormal);
+            m[2 * (i * d + i) + 1] = diag_val; // Im M_ii
         }
-        momenta.push(p);
+        // Make traceless: subtract Tr(M)/d from diagonal
+        let mut tr_im = 0.0;
+        for i in 0..d {
+            tr_im += m[2 * (i * d + i) + 1];
+        }
+        tr_im /= d as f64;
+        for i in 0..d {
+            m[2 * (i * d + i) + 1] -= tr_im;
+        }
+        m
+    } else {
+        let mut m = vec![0.0f64; d * d];
+        // Antisymmetric: M_ij = -M_ji
+        for i in 0..d {
+            for j in (i + 1)..d {
+                let val: f64 = w.sample::<f64, _>(StandardNormal);
+                m[i * d + j] = val;
+                m[j * d + i] = -val;
+            }
+        }
+        m
     }
-    momenta
 }
 
-/// Kinetic energy: T = ½ Σ_links Tr(π†π) = ½ Σ ||π||²
-fn kinetic_energy(momenta: &[LinkData]) -> f64 {
+/// Kinetic energy: T = -Tr(π²) for anti-Hermitian π
+/// For complex: -Tr(π²) = -Σ_{ij} π_ij π_ji = -Σ_ij π_ij (-π_ij*) = Σ |π_ij|²
+/// For real: -Tr(π²) = -Σ_ij π_ij π_ji = Σ_ij π_ij² (antisymmetric)
+fn kinetic_energy(momenta: &[LinkData], is_complex: bool) -> f64 {
     let mut t = 0.0;
     for p in momenta {
-        for &x in p.iter() {
-            t += x * x;
+        if is_complex {
+            // -Tr(π²) = Σ |π_ij|² = Σ (re² + im²)
+            for &x in p.iter() {
+                t += x * x;
+            }
+        } else {
+            // -Tr(π²) = 2 Σ_{i<j} π_ij² (each off-diag appears twice with opposite sign)
+            for &x in p.iter() {
+                t += x * x;
+            }
         }
     }
     0.5 * t
 }
 
-/// Gauge action: S = (β/d_fund) Σ_plaq (d_fund - Re Tr(P))
-fn gauge_action(lat: &Lattice4D, group: &dyn GaugeGroup, beta: f64) -> f64 {
-    let p = lat.plaquette(group);
-    let d = group.dim_fund() as f64;
-    let n_plaq = 6 * lat.ls.pow(3) * lat.lt; // 6 plaquette orientations per site
-    beta * n_plaq as f64 * (1.0 - p)
-}
-
-/// Compute gauge force for one link: F = -(β/d_fund) × Ta(U × staple)
-/// Ta = traceless anti-Hermitian projection
-/// For real groups: Ta(M) = (M - M^T)/2 - Tr(M-M^T)/(2d) I
-/// For complex groups: Ta(M) = (M - M†)/2 - Tr(M-M†)/(2d) I
-fn gauge_force(
-    lat: &Lattice4D,
-    group: &dyn GaugeGroup,
-    site: [usize; 4],
-    mu: usize,
-    beta: f64,
-) -> LinkData {
+/// Project V = (β/d) U K onto the Lie algebra
+/// Complex: Ta(V) = (V - V†)/2 - Tr(V-V†)/(2d) I
+/// Real: Ta(V) = (V - V^T)/2
+fn project_force(group: &dyn GaugeGroup, v: &[f64]) -> LinkData {
     let d = group.dim_fund();
-    let beta_d = beta / group.beta_norm();
-    let u = lat.get(site, mu);
-    let k = lat.staple_sum(group, site, mu);
-    let uk = group.mul(u, &k);
-
-    // Ta projection: anti-Hermitian traceless part
-    let uk_dag = group.dagger(&uk);
-    let link_size = group.link_size();
-    let mut force = vec![0.0f64; link_size];
 
     if group.is_complex() {
-        // Ta(M) = (M - M†)/(2i) projected to algebra
-        // Force = -β/d × (M - M†)/2
-        for i in 0..link_size {
-            force[i] = -beta_d * 0.5 * (uk[i] - uk_dag[i]);
+        let mut f = vec![0.0f64; 2 * d * d];
+        // V† stored as conjugate transpose
+        let v_dag = crate::groups::cmat_dagger(v, d);
+        // (V - V†)/2
+        for i in 0..f.len() {
+            f[i] = 0.5 * (v[i] - v_dag[i]);
         }
         // Subtract trace
         let mut tr_re = 0.0;
         let mut tr_im = 0.0;
         for i in 0..d {
             let idx = 2 * (i * d + i);
-            tr_re += force[idx];
-            tr_im += force[idx + 1];
+            tr_re += f[idx];
+            tr_im += f[idx + 1];
         }
         tr_re /= d as f64;
         tr_im /= d as f64;
         for i in 0..d {
             let idx = 2 * (i * d + i);
-            force[idx] -= tr_re;
-            force[idx + 1] -= tr_im;
+            f[idx] -= tr_re;
+            f[idx + 1] -= tr_im;
         }
+        f
     } else {
-        // Real: Ta(M) = (M - M^T)/2
+        let mut f = vec![0.0f64; d * d];
+        // (V - V^T)/2
         for i in 0..d {
             for j in 0..d {
-                let m_ij = uk[i * d + j];
-                let m_ji = uk[j * d + i];
-                force[i * d + j] = -beta_d * 0.5 * (m_ij - m_ji);
+                f[i * d + j] = 0.5 * (v[i * d + j] - v[j * d + i]);
             }
         }
-        // Subtract trace (should be zero for antisymmetric, but be safe)
-        let mut tr = 0.0;
-        for i in 0..d {
-            tr += force[i * d + i];
-        }
-        tr /= d as f64;
-        for i in 0..d {
-            force[i * d + i] -= tr;
-        }
-    }
-
-    force
-}
-
-/// One leapfrog step: update momenta and links
-fn leapfrog_step(
-    lat: &mut Lattice4D,
-    momenta: &mut Vec<LinkData>,
-    group: &dyn GaugeGroup,
-    dt: f64,
-    beta: f64,
-    half_step_momenta: bool,
-) {
-    let ls = lat.ls;
-    let lt = lat.lt;
-    let sizes = [ls, ls, ls, lt];
-    let dt_p = if half_step_momenta { 0.5 * dt } else { dt };
-
-    // Update momenta: π += dt_p × F
-    let mut link_idx = 0;
-    for x0 in 0..ls {
-        for x1 in 0..ls {
-            for x2 in 0..ls {
-                for x3 in 0..lt {
-                    for mu in 0..4 {
-                        let site = [x0, x1, x2, x3];
-                        let f = gauge_force(lat, group, site, mu, beta);
-                        for i in 0..momenta[link_idx].len() {
-                            momenta[link_idx][i] += dt_p * f[i];
-                        }
-                        link_idx += 1;
-                    }
-                }
-            }
-        }
-    }
-
-    // Update links: U = exp(i dt π) U
-    // For simplicity, use U_new = (I + i dt π) U then reproject
-    // (first-order approximation, sufficient for small dt)
-    link_idx = 0;
-    for x0 in 0..ls {
-        for x1 in 0..ls {
-            for x2 in 0..ls {
-                for x3 in 0..lt {
-                    for mu in 0..4 {
-                        let site = [x0, x1, x2, x3];
-                        let u = lat.get(site, mu).to_vec();
-                        let p = &momenta[link_idx];
-
-                        // exp(dt·π) ≈ I + dt·π (small dt)
-                        // U_new = exp(dt·π) · U
-                        let d = group.dim_fund();
-                        let mut u_new;
-                        if group.is_complex() {
-                            // π is anti-Hermitian, multiply as matrix
-                            u_new = vec![0.0f64; group.link_size()];
-                            for i in 0..d {
-                                for j in 0..d {
-                                    let mut re = u[2*(i*d+j)];
-                                    let mut im = u[2*(i*d+j)+1];
-                                    for k in 0..d {
-                                        let p_re = p[2*(i*d+k)];
-                                        let p_im = p[2*(i*d+k)+1];
-                                        let u_re = u[2*(k*d+j)];
-                                        let u_im = u[2*(k*d+j)+1];
-                                        re += dt * (p_re * u_re - p_im * u_im);
-                                        im += dt * (p_re * u_im + p_im * u_re);
-                                    }
-                                    u_new[2*(i*d+j)] = re;
-                                    u_new[2*(i*d+j)+1] = im;
-                                }
-                            }
-                        } else {
-                            // Real: same but no imaginary
-                            u_new = vec![0.0f64; group.link_size()];
-                            for i in 0..d {
-                                for j in 0..d {
-                                    let mut val = u[i*d+j];
-                                    for k in 0..d {
-                                        val += dt * p[i*d+k] * u[k*d+j];
-                                    }
-                                    u_new[i*d+j] = val;
-                                }
-                            }
-                        }
-
-                        // Reproject onto the group
-                        let u_proj = group.reproject(&u_new);
-                        lat.set(site, mu, &u_proj);
-
-                        link_idx += 1;
-                    }
-                }
-            }
-        }
+        f
     }
 }
 
-/// Run one HMC trajectory: leapfrog + accept/reject
-/// Returns (accepted: bool, delta_h: f64)
+/// Gauge action
+fn gauge_action(lat: &Lattice4D, group: &dyn GaugeGroup, beta: f64) -> f64 {
+    let p = lat.plaquette(group);
+    let d = group.dim_fund() as f64;
+    let n_plaq = 6 * lat.ls.pow(3) * lat.lt;
+    beta * n_plaq as f64 * (1.0 - p)
+}
+
+/// One HMC trajectory
 pub fn hmc_trajectory(
     lat: &mut Lattice4D,
     group: &dyn GaugeGroup,
@@ -243,9 +153,11 @@ pub fn hmc_trajectory(
     let ls = lat.ls;
     let lt = lat.lt;
     let n_links = 4 * ls * ls * ls * lt;
+    let is_complex = group.is_complex();
+    let beta_d = cfg.beta / group.beta_norm();
 
     // Save old config
-    let mut old_links: Vec<Vec<f64>> = Vec::with_capacity(n_links);
+    let mut old_links = Vec::with_capacity(n_links);
     for x0 in 0..ls {
         for x1 in 0..ls {
             for x2 in 0..ls {
@@ -258,47 +170,113 @@ pub fn hmc_trajectory(
         }
     }
 
-    // Generate momenta
-    let mut momenta = generate_momenta(group, n_links, rng);
+    // Generate algebra momenta
+    let mut momenta: Vec<LinkData> = (0..n_links)
+        .map(|_| random_algebra_element(group, rng))
+        .collect();
 
     // Initial Hamiltonian
-    let t_old = kinetic_energy(&momenta);
+    let t_old = kinetic_energy(&momenta, is_complex);
     let s_old = gauge_action(lat, group, cfg.beta);
     let h_old = t_old + s_old;
 
-    // Leapfrog integration
-    // Half step momenta
-    leapfrog_step(lat, &mut momenta, group, cfg.dt, cfg.beta, true);
+    // Leapfrog
+    for step in 0..cfg.n_steps {
+        let dt_p = if step == 0 || step == cfg.n_steps - 1 { 0.5 * cfg.dt } else { cfg.dt };
 
-    // Full steps
-    for _ in 1..cfg.n_steps {
-        leapfrog_step(lat, &mut momenta, group, cfg.dt, cfg.beta, false);
-    }
-
-    // Final half step momenta
-    leapfrog_step(lat, &mut momenta, group, cfg.dt, cfg.beta, true);
-
-    // Final Hamiltonian
-    let t_new = kinetic_energy(&momenta);
-    let s_new = gauge_action(lat, group, cfg.beta);
-    let h_new = t_new + s_new;
-
-    let delta_h = h_new - h_old;
-
-    // Metropolis accept/reject
-    let mut w = RngWrapper(rng);
-    let r: f64 = w.gen();
-    let accepted = r < (-delta_h).exp().min(1.0);
-
-    if !accepted {
-        // Restore old config
+        // Update momenta: p += dt_p × F
         let mut link_idx = 0;
         for x0 in 0..ls {
             for x1 in 0..ls {
                 for x2 in 0..ls {
                     for x3 in 0..lt {
                         for mu in 0..4 {
-                            lat.set([x0, x1, x2, x3], mu, &old_links[link_idx]);
+                            let site = [x0, x1, x2, x3];
+                            let u = lat.get(site, mu);
+                            let k = lat.staple_sum(group, site, mu);
+                            let v = group.mul(u, &k); // V = U × staple_sum
+                            // Scale by β/d
+                            let mut v_scaled = v;
+                            for x in v_scaled.iter_mut() { *x *= beta_d; }
+                            let f = project_force(group, &v_scaled);
+                            // p += dt × F (force points toward lower action)
+                            for i in 0..momenta[link_idx].len() {
+                                momenta[link_idx][i] -= dt_p * f[i];
+                            }
+                            link_idx += 1;
+                        }
+                    }
+                }
+            }
+        }
+
+        // Update links: U = exp(dt × π) × U
+        if step < cfg.n_steps - 1 {
+            link_idx = 0;
+            for x0 in 0..ls {
+                for x1 in 0..ls {
+                    for x2 in 0..ls {
+                        for x3 in 0..lt {
+                            for mu in 0..4 {
+                                let site = [x0, x1, x2, x3];
+                                let u = lat.get(site, mu).to_vec();
+                                let p = &momenta[link_idx];
+                                // exp(dt × π) ≈ I + dt×π + (dt×π)²/2 (2nd order)
+                                let d = group.dim_fund();
+                                let exp_p;
+                                if is_complex {
+                                    let mut scaled = p.clone();
+                                    for x in scaled.iter_mut() { *x *= cfg.dt; }
+                                    let p2 = crate::groups::cmat_mul(&scaled, &scaled, d);
+                                    let mut result = crate::groups::cmat_identity(d);
+                                    for i in 0..result.len() {
+                                        result[i] += scaled[i] + 0.5 * p2[i];
+                                    }
+                                    exp_p = result;
+                                } else {
+                                    let mut scaled = p.clone();
+                                    for x in scaled.iter_mut() { *x *= cfg.dt; }
+                                    let p2 = crate::groups::rmat_mul(&scaled, &scaled, d);
+                                    let mut result = crate::groups::rmat_identity(d);
+                                    for i in 0..result.len() {
+                                        result[i] += scaled[i] + 0.5 * p2[i];
+                                    }
+                                    exp_p = result;
+                                }
+                                let u_new = if is_complex {
+                                    crate::groups::cmat_mul(&exp_p, &u, d)
+                                } else {
+                                    crate::groups::rmat_mul(&exp_p, &u, d)
+                                };
+                                lat.set(site, mu, &group.reproject(&u_new));
+                                link_idx += 1;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    // Final Hamiltonian
+    let t_new = kinetic_energy(&momenta, is_complex);
+    let s_new = gauge_action(lat, group, cfg.beta);
+    let h_new = t_new + s_new;
+    let delta_h = h_new - h_old;
+
+    // Accept/reject
+    let mut w = RngWrapper(rng);
+    let r: f64 = w.gen();
+    let accepted = r < (-delta_h).exp().min(1.0);
+
+    if !accepted {
+        let mut link_idx = 0;
+        for x0 in 0..ls {
+            for x1 in 0..ls {
+                for x2 in 0..ls {
+                    for x3 in 0..lt {
+                        for mu in 0..4 {
+                            lat.set([x0,x1,x2,x3], mu, &old_links[link_idx]);
                             link_idx += 1;
                         }
                     }

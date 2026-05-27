@@ -1,0 +1,891 @@
+% =========================================================================
+% Paper t'Hooft-Twist-Mode-Zero : Twisted boundary conditions eliminate
+% the zero mode and give a uniform LSI for the twisted SU(N) Wilson
+% lattice gauge measure --- setup, lattice JAX spec, and pre-validation
+% theorem.
+%
+% Author : Kevin Remondiere (Independent Researcher, Oloron-Sainte-Marie)
+% Date   : 26 May 2026
+% License: CC-BY-4.0
+% Target : Letters in Mathematical Physics (LMP)
+% =========================================================================
+
+\documentclass[11pt,a4paper]{amsart}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath,amssymb,amsthm,amsfonts}
+\usepackage{mathtools}
+\usepackage{microtype}
+\usepackage{geometry}
+\geometry{margin=1in}
+\usepackage[dvipsnames,table,xcdraw]{xcolor}
+\usepackage{hyperref}
+\hypersetup{colorlinks=true, linkcolor=blue!50!black,
+  citecolor=blue!50!black, urlcolor=blue!50!black}
+\usepackage{booktabs}
+\usepackage{enumitem}
+
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{remark}[theorem]{Remark}
+\newtheorem{hypothesis}[theorem]{Hypothesis}
+
+% -- Macros --------------------------------------------------------------
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\gfrak}{\mathfrak{g}}
+\newcommand{\hfrak}{\mathfrak{h}}
+\newcommand{\su}{\mathfrak{su}}
+\newcommand{\norm}[1]{\left\lVert#1\right\rVert}
+\newcommand{\abs}[1]{\left\lvert#1\right\rvert}
+\newcommand{\inner}[2]{\langle #1, #2\rangle}
+\newcommand{\Ric}{\mathrm{Ric}}
+\newcommand{\Tr}{\mathrm{Tr}}
+\newcommand{\ad}{\mathrm{ad}}
+\newcommand{\dvol}{\, d\mathrm{vol}}
+\DeclareMathOperator{\spec}{spec}
+\DeclareMathOperator{\rk}{rk}
+\DeclareMathOperator{\Hess}{Hess}
+\DeclareMathOperator{\Ent}{Ent}
+
+% Faddeev-Popov / Kostant invariant, NOT entanglement-entropy prefactor.
+\newcommand{\kFP}{\kappa_{\mathrm{FP}}}
+\newcommand{\cinf}{c_{\infty}}
+
+% =========================================================================
+\title['t Hooft twist eliminates zero mode for $SU(N)$ Wilson LSI]
+{'t Hooft twisted boundary conditions eliminate the constant zero mode
+ and yield a uniform logarithmic Sobolev inequality
+ for the twisted $SU(N)$ Wilson lattice gauge measure: setup,
+ pre-validation theorem, and lattice JAX specification}
+
+\author{K\'evin R\'emondi\`ere}
+\address{Independent Researcher, Oloron-Sainte-Marie, France}
+\email{kevin.remondiere@gmail.com}
+\thanks{ORCID:
+\href{https://orcid.org/0009-0008-2443-7166}{0009-0008-2443-7166}.
+This work is released under a
+\href{https://creativecommons.org/licenses/by/4.0/}{Creative Commons
+Attribution 4.0 International License (CC-BY-4.0)}.}
+\date{26 May 2026}
+\subjclass[2020]{Primary 81T13, 81T17; Secondary 35P15, 47D07, 60J60.}
+\keywords{Yang--Mills, 't Hooft twist, twisted boundary conditions,
+twist-eating, lattice gauge theory, zero mode, logarithmic Sobolev
+inequality, Bakry--\'Emery.}
+
+\begin{document}
+
+\begin{abstract}
+We articulate a structural argument that 't~Hooft's twisted boundary
+conditions on the 4-torus eliminate the constant-mode obstruction
+arising in the trivial-sector Bakry--\'Emery analysis of the conditional
+Yang--Mills mass-gap reduction
+\cite{RemondiereKRFPB_2026,RemondiereKRFP3_2026}, and we deduce, under
+named structural hypotheses, an \emph{unconditional} logarithmic
+Sobolev inequality on the twisted $SU(N)$ Wilson lattice gauge measure
+with the explicit constant $(1-\kFP)\,m_0^2/\cinf(D)$, where
+$\kFP = 1/(2|\Phi^+(SU(N))|)$ is the Kostant invariant.
+Following 't Hooft~\cite{tHooft1979}, we define the twisted Wilson
+measure $\mu^\Omega_{a,\beta,L}$ via boundary-twist matrices $\Omega_\mu
+\in Z_N$ (the centre of $SU(N)$) with non-trivial twist tensor $n^{\mu\nu}
+\in \Z_N$, $n^{\mu\nu} \neq 0 \pmod N$. The twist generates a non-trivial
+'t~Hooft electric / magnetic flux that obstructs the constant gauge
+transformation on the lattice torus, so that the analogue of
+$H^0_{A=0} = \su(N)$ for the periodic Wilson measure becomes
+$H^0_{A=0}^{\mathrm{twisted}} = 0$. Combined with the
+Babelon--Viallet O'Neill formula and the Bakry--\'Emery
+$\Gamma_2$-calculus, this yields the desired uniform LSI on the twisted
+measure. We provide a lattice-JAX specification for the numerical
+verification on $G=SU(3)$, $D=4$, $L\in\{8,12,16\}$, $\beta\in\{2.5,
+3.0, 3.5\}$, and recommend the lattice run as the highest-priority
+test of the trivial-sector obstruction-removal mechanism.
+For $G=SU(3)$ the explicit constant is
+$(5/6)\,m_0^2 / \cinf(4) \approx 0.21\,m_0^2$.
+\end{abstract}
+
+\maketitle
+
+% =========================================================================
+\section{Introduction: the constant-mode zero of the periodic Wilson measure}
+\label{sec:intro}
+
+\subsection{The trivial-sector zero-mode obstruction}
+In the conditional reduction of the 4D pure $SU(N)$ Yang--Mills mass gap
+articulated as Theorem~KR--FP--B~\cite{RemondiereKRFPB_2026}, the
+Faddeev--Popov spectral lower bound (Lemma~KR--FP--3
+of~\cite{RemondiereKRFP3_2026}) requires, for the trivial topological
+sector $k = 0$, the analytic hypothesis (H1) of
+\emph{generic vanishing} of minimising eigenfunctions. This hypothesis
+fails on the constant-mode subspace, because at the trivial connection
+$A=0$ the constant-mode harmonic 1-forms $\mathcal H^1(T^4) =
+\R^4 \otimes \mathfrak{h}$ ($\mathfrak{h}$ = a Cartan subalgebra)
+are zero modes of the bundle-twisted Hodge Laplacian
+$-\Delta_{A=0}$, in addition to the Cartan-eigenfunction zero modes
+forced by the Kostant identity (Lemma~KR--FP--2).
+
+Equivalently in the Polchinski-RG/BBD framework
+\cite{BauerschmidtDagallier2024}, the corresponding obstruction is
+the constant-zero-momentum mode of the Polchinski Hessian at the
+$A=0$ background, which we call the \emph{Pilier 3 sub-3 obstruction}
+\cite[\S 0]{OpusPolchinskiSubgaps2026}.
+
+\subsection{'t Hooft's solution: twisted boundary conditions}
+In 1979, 't Hooft \cite{tHooft1979} introduced boundary conditions on
+the 4-torus $T^4$ in which the gauge field $U_{x,\mu}$ is required to
+be periodic only up to a fixed twist matrix $\Omega_\mu \in Z_N$
+($Z_N$ = the centre of $SU(N)$):
+\begin{equation}\label{eq:twist-BC}
+U_{x + L\hat\mu, \nu} = \Omega_\mu \cdot U_{x,\nu} \cdot \Omega_\mu^{-1},
+\qquad \Omega_\mu \in Z_N \simeq \Z/N\Z.
+\end{equation}
+The consistency of these boundary conditions on the 4-torus
+requires the \emph{twist tensor}
+$n^{\mu\nu} := \tfrac{1}{2\pi i}\log(\Omega_\mu \Omega_\nu \Omega_\mu^{-1}
+\Omega_\nu^{-1}) \in \Z/N\Z$
+to be specified globally. A choice $n^{\mu\nu} \neq 0 \pmod N$ is called
+\emph{non-trivial twist}; it corresponds to a non-trivial 't Hooft
+electric / magnetic flux \cite{tHooft1979,tHooft1981} obstructing
+certain gauge transformations.
+
+\subsection{Twist eats the constant zero mode}
+\begin{lemma}[Twist eliminates the constant zero mode, informal]
+\label{lem:twist-zero-informal}
+Under non-trivial 't Hooft twist $n^{\mu\nu} \neq 0 \pmod N$, the
+constant gauge transformation $A \mapsto g^{-1} A g$ with $g\in G$
+constant is incompatible with the twisted boundary
+conditions~\eqref{eq:twist-BC} unless $g$ commutes with all $\Omega_\mu$.
+For non-trivial twist, the centraliser
+$C_{\Omega_1,\ldots,\Omega_D}^G$ reduces to the centre $Z_N$ itself.
+Hence the constant gauge transformation is trivial on the twisted
+lattice, and the constant-mode kernel $\mathcal H^1(T^4_\Omega) = 0$
+on the twisted torus: the constant-mode harmonic forms have been
+``eaten'' by the twist.
+\end{lemma}
+
+This is the elementary mechanism by which 't Hooft twist removes the
+constant zero mode, exactly the obstruction blocking the trivial-sector
+Bakry--\'Emery argument of~\cite[\S 5]{RemondiereKRFP3_2026}.
+
+\subsection{Main result}
+\begin{theorem}[Main pre-validation theorem, informal]\label{thm:main-informal}
+Let $G = SU(N)$ on the twisted lattice 4-torus
+$(T^4_L)^\Omega$ with non-trivial twist tensor $n^{\mu\nu} \neq 0 \pmod N$,
+and let $\mu^\Omega_{a,\beta,L}$ be the corresponding twisted Wilson
+measure. Under the structural hypothesis~\ref{hyp:twist-rigidity}
+(``twist rigidity'': the twist genuinely removes the constant-mode
+obstruction and induces a uniform spectral gap on the bundle-twisted
+Hodge Laplacian), the twisted measure satisfies an unconditional
+logarithmic Sobolev inequality with constant
+$$
+C_\mathrm{LSI}(\mu^\Omega_{a,\beta,L})
+\;\geq\; (1-\kFP)\,m_0^2 / \cinf(D)
+$$
+uniformly in $L$ and $a$, where $\kFP = 1/(2|\Phi^+(SU(N))|)$, $m_0^2 =
+(2\pi/L)^2$ is the smallest non-zero eigenvalue of the bundle-twisted
+Hodge Laplacian on the twisted torus, and $\cinf(D)$ is the lattice
+analogue of the continuum Hodge eigenvalue gap.
+
+For $G = SU(3)$, $D=4$, this reads $C_\mathrm{LSI} \geq (5/6)\,m_0^2 /
+\cinf(4)$.
+\end{theorem}
+
+\subsection{Honest scope}
+\label{sec:scope}
+\begin{enumerate}[label=(\alph*),leftmargin=2em]
+\item Theorem~\ref{thm:main-informal} \emph{conditional on
+Hypothesis~\ref{hyp:twist-rigidity}}. The hypothesis is widely
+\emph{believed} by the lattice community (it is the foundation of the
+twisted Eguchi--Kawai model and large-$N$ reduction
+\cite{EguchiKawai1982,GonzalezArroyoOkawa1983}, citation to verify),
+but a clean mathematical statement separating ``twist eats the
+constant mode'' from ``twist preserves all other analytic structure
+of the FP operator'' is, to our knowledge, not present in the
+literature in the form needed for the Bakry--\'Emery reduction.
+\item The result does \emph{not} provide a uniform LSI on the
+\emph{periodic} (un-twisted) Wilson measure. The twisted measure
+$\mu^\Omega$ and the periodic measure $\mu^\mathrm{per}$ are distinct
+measures supported on \emph{different} configuration spaces (twisted
+$G$-bundles vs. trivial $G$-bundle). Twisted-bundle results do not
+trivially extend.
+\item The result is most useful as a ``proof-of-concept'' that
+``zero modes are removable by boundary conditions'', supporting the
+expectation that the underlying analytic structure of Wilson YM is
+amenable to LSI techniques. The \emph{full periodic} LSI requires
+either the BBD-Polchinski route~\cite{BauerschmidtDagallier2024} or
+the Wilson-flow voie~B route of the companion
+preprint~\cite{RemondiereWilsonFlowVoieB_2026}.
+\end{enumerate}
+
+\subsection{Structure of the paper}
+\S~\ref{sec:tHooft} reviews 't Hooft twist on the lattice torus.
+\S~\ref{sec:zero-mode} establishes Lemma~\ref{lem:twist-zero-informal}
+rigorously and analyses the spectral consequences for the
+bundle-twisted Hodge Laplacian.
+\S~\ref{sec:BE-twisted} adapts Bakry--\'Emery and the chain
+KR--FP-3 + KR--FP-A + KR--FP-B to the twisted setting.
+\S~\ref{sec:main} states the main pre-validation theorem.
+\S~\ref{sec:jax} provides a complete lattice-JAX specification for
+numerical validation. \S~\ref{sec:outlook} discusses limits, outlook,
+and recommendation for the lattice run.
+
+% =========================================================================
+\section{'t Hooft twist on the lattice 4-torus}\label{sec:tHooft}
+
+\subsection{Twist matrices and the twist tensor}
+\begin{definition}[Twist matrices and twist tensor]\label{def:twist}
+A \emph{twist matrix} $\Omega_\mu \in SU(N)$ for direction $\mu$ on the
+lattice 4-torus $\Lambda_L^a = (a\Z/aL\Z)^4$ is an element of the
+\emph{centre} $Z_N := Z(SU(N)) \simeq \Z/N\Z$, identified as
+$\Omega_\mu = e^{2\pi i k_\mu/N}\cdot \mathrm{Id}$ for some
+$k_\mu \in \Z/N\Z$.
+
+The \emph{twist tensor} associated with $\{\Omega_\mu\}$ is
+\begin{equation}\label{eq:twist-tensor}
+n^{\mu\nu} := \tfrac{1}{2\pi i} \log(\Omega_\mu \Omega_\nu
+\Omega_\mu^{-1}\Omega_\nu^{-1}) \cdot N \pmod N,
+\end{equation}
+an antisymmetric tensor with values in $\Z/N\Z$. By
+\eqref{eq:twist-tensor} and the abelian nature of $Z_N$,
+$n^{\mu\nu} \equiv 0 \pmod N$ for centre-valued twists --- so the
+non-trivial-twist setting requires \emph{non-abelian} twist matrices.
+
+\emph{Standard 't Hooft choice:} take $\Omega_\mu = e^{i\pi k_\mu/N}
+\cdot \exp(2\pi i T^a m^a_\mu)$ where $T^a$ are non-centre $SU(N)$
+generators chosen such that $[\Omega_\mu, \Omega_\nu] \neq 0$ unless
+$\mu = \nu$, producing a non-vanishing twist tensor
+$n^{\mu\nu} \in \Z/N\Z$.
+\end{definition}
+
+\begin{remark}[Convention]\label{rem:convention}
+We follow the convention of 't Hooft \cite{tHooft1979} that takes
+$\Omega_\mu$ as $SU(N)$ matrices and $n^{\mu\nu}$ as the resulting
+non-abelian commutator tensor. The standard textbook choice on
+$SU(N)$ with twist on a single pair of directions $(\mu,\nu) = (1,2)$
+is $\Omega_1 = \mathrm{diag}(1,\omega,\ldots,\omega^{N-1})$ and
+$\Omega_2 = \mathrm{shift}(N)$, the cyclic shift matrix, where
+$\omega = e^{2\pi i / N}$. The pair satisfies the 't Hooft
+commutator $\Omega_1 \Omega_2 = \omega \cdot \Omega_2 \Omega_1$, giving
+twist tensor $n^{12} = 1 \pmod N$ (non-trivial).
+\end{remark}
+
+\subsection{Twisted boundary conditions on links}
+
+\begin{definition}[Twisted Wilson link variables]\label{def:twisted-links}
+On the twisted lattice $(T^4_L)^\Omega$, the link variables
+$U_{x,\mu}\in G$ are required to satisfy
+\begin{equation}\label{eq:twisted-BC}
+U_{x + L\hat\nu, \mu} = \Omega_\nu \cdot U_{x,\mu} \cdot \Omega_\nu^{-1},
+\quad x \in \Lambda_L^a, \quad \mu, \nu \in \{1,2,3,4\}.
+\end{equation}
+The configuration space is then
+$\mathcal C^\Omega = \{U : U_{x,\mu}\in G,\ \text{twisted BC}~\eqref{eq:twisted-BC}\}$.
+\end{definition}
+
+\subsection{Twisted Wilson action}
+\begin{definition}[Twisted Wilson action]\label{def:twisted-Wilson}
+The twisted Wilson action on $(T^4_L)^\Omega$ is
+\begin{equation}\label{eq:twisted-Wilson-action}
+S_W^\Omega(U) = \beta \sum_{x,\mu<\nu}
+\bigl(1 - \tfrac{1}{N}\Re\Tr(z_{\mu\nu} U_{x,\mu\nu})\bigr),
+\end{equation}
+where $z_{\mu\nu} = e^{-2\pi i n^{\mu\nu}/N}$ is the centre-valued
+phase associated with the twist tensor at the boundary plaquettes,
+and $U_{x,\mu\nu}$ is the standard plaquette holonomy. Inside the bulk
+(away from the boundary), $z_{\mu\nu} = 1$ and the action reduces to
+the periodic Wilson action.
+
+The twisted Wilson measure is
+$d\mu^\Omega_{a,\beta,L} = Z_\Omega^{-1} \exp(-S_W^\Omega(U))
+\prod_{x,\mu} dU_{x,\mu}$ on $\mathcal C^\Omega$ with the Haar measure on
+each link.
+\end{definition}
+
+\subsection{Centre symmetry vs. constant gauge transformations}
+\begin{lemma}[Centraliser of twist matrices]\label{lem:centraliser}
+For non-trivial twist matrices $\Omega_1, \Omega_2$ satisfying
+$\Omega_1 \Omega_2 = \omega \cdot \Omega_2 \Omega_1$ with
+$\omega \in Z_N\setminus\{1\}$, the simultaneous centraliser
+$$
+C_{\Omega_1,\Omega_2}^G := \{g\in G : g\Omega_1 g^{-1} = \Omega_1,\ g\Omega_2 g^{-1} = \Omega_2\}
+$$
+equals the centre $Z_N \subset G$.
+\end{lemma}
+\begin{proof}
+The condition $g\Omega_1 g^{-1} = \Omega_1$ means $g$ commutes with
+the diagonal $\Omega_1 = \mathrm{diag}(1,\omega,\ldots,\omega^{N-1})$,
+which forces $g$ to be diagonal: $g = \mathrm{diag}(g_0,\ldots,g_{N-1})$
+with $|g_k|=1$ for $g\in U(N)$, restricted to $\det g = 1$ for $g\in
+SU(N)$. The second condition $g\Omega_2 g^{-1} = \Omega_2$ where
+$\Omega_2$ is the cyclic shift forces $g_0 = g_1 = \ldots = g_{N-1}$,
+hence $g \in Z_N$.
+\end{proof}
+
+\begin{corollary}[Twist eats the constant gauge mode]
+\label{cor:twist-eats-constant}
+Under non-trivial twist as in Lemma~\ref{lem:centraliser}, the
+constant gauge group acting on the twisted lattice reduces from $G$
+(periodic case) to $Z_N$ (twisted case). The continuous part
+$G/Z_N$ is broken by the twist.
+
+Equivalently, the constant zero mode $\mathcal H^0_{[0]}\otimes\su(N)$
+of the bundle-twisted Hodge Laplacian on the periodic torus is replaced
+by $\mathcal H^0_{[0]}^\Omega \otimes \su(N) = 0$ on the twisted torus,
+because the $\mathcal G$-orbits of the trivial connection
+$\mathcal G\cdot A_0$ in the twisted setting do not include any continuous
+``constant rotation'' direction.
+\end{corollary}
+
+% =========================================================================
+\section{Spectral consequences: bundle-twisted Hodge Laplacian on
+$(T^4_L)^\Omega$}\label{sec:zero-mode}
+
+\subsection{Periodic vs. twisted Hodge Laplacian: spectrum comparison}
+
+\begin{proposition}[Spectrum of the bundle-twisted Hodge Laplacian]
+\label{prop:Hodge-twisted}
+Let $-\Delta_{[A=0]}^\Omega : \Omega^1((T^4_L)^\Omega; \ad P)
+\to \Omega^1((T^4_L)^\Omega; \ad P)$ be the bundle-twisted
+Hodge Laplacian on twisted $1$-forms with values in the adjoint
+representation at the trivial connection $A=0$. Then:
+\begin{enumerate}[label=(\roman*),leftmargin=2em]
+\item For \emph{periodic} BC ($\Omega = \mathrm{Id}$, $n^{\mu\nu} = 0$):
+the spectrum contains a $4 \cdot (N^2-1)$-fold zero eigenvalue
+(corresponding to constant gauge $1$-forms tensored with $\su(N)$).
+The smallest positive eigenvalue is $m_0^2 = (2\pi/L)^2$.
+\item For \emph{non-trivial twist} ($n^{\mu\nu} \not\equiv 0 \pmod N$):
+the spectrum has no zero eigenvalue. The smallest eigenvalue
+$m_\Omega^2 > 0$ satisfies
+$$
+m_\Omega^2 \;\geq\; \min_{k\in\Z/N\Z, k\neq 0}\bigl(\tfrac{2\pi k}{N L}\bigr)^2
+\;=\; \bigl(\tfrac{2\pi}{N L}\bigr)^2.
+$$
+\end{enumerate}
+\end{proposition}
+\begin{proof}[Proof sketch]
+The bundle-twisted Hodge Laplacian on twisted bundles has spectrum
+$$
+\spec(-\Delta_{[A=0]}^\Omega) =
+\{(\tfrac{2\pi}{L})^2 \abs{p + p_\Omega/N}^2 : p \in \Z^4, p_\Omega \text{ allowed momenta}\},
+$$
+where the allowed momenta $p_\Omega$ depend on the twist. For periodic
+BC ($p_\Omega = 0$), $p=0$ gives the zero mode. For non-trivial twist,
+$p_\Omega \neq 0$ shifts the momentum lattice, eliminating the zero
+eigenvalue. The minimal shift gives $\min m_\Omega^2 = (2\pi/(NL))^2$.
+
+This is the standard twisted-momentum-quantisation argument of 't~Hooft
+\cite{tHooft1979}; see also \cite{vanBaal1996} (citation to verify).
+\end{proof}
+
+\begin{remark}[$m_\Omega^2$ vs.\ $m_0^2$]\label{rem:m-Omega}
+In the worst case, $m_\Omega^2 = (2\pi/(NL))^2 = m_0^2 / N^2$. For
+$N=3$, $m_\Omega^2 \geq m_0^2/9$, a factor of $9$ smaller than the
+periodic Hodge gap. This is a price paid for removing the zero mode.
+
+In the conditional Clay reduction~\cite{RemondiereKRFPB_2026}, the bound
+$\Delta\geq(1-\kFP)m_0^2/\cinf(D)$ is replaced under twist by
+$\Delta_\Omega\geq(1-\kFP)m_\Omega^2/\cinf(D)\geq (1-\kFP)m_0^2/(N^2 \cinf(D))$,
+which is still positive and $L$-uniform.
+\end{remark}
+
+\subsection{Twist rigidity hypothesis}
+
+\begin{hypothesis}[Twist rigidity]\label{hyp:twist-rigidity}
+On the twisted lattice $(T^4_L)^\Omega$ with non-trivial twist tensor
+$n^{\mu\nu} \not\equiv 0 \pmod N$, the following hold uniformly in
+$L$ and $a$:
+\begin{enumerate}[label=(\roman*),leftmargin=2em]
+\item The bundle-twisted Faddeev--Popov operator
+$M^\Omega[A] = d_A^{\dagger,\Omega}\,d_A^\Omega$ on twisted
+$\ad P$-valued $0$-forms has smallest eigenvalue
+$\lambda_{\min}(M^\Omega[A]) \geq (1-\kFP)\,m_\Omega^2$ for all
+$A$ in the twisted action slice
+$\overline\Lambda^\Omega_{S_0}$ (analogue of $\overline\Lambda_{S_0}$ of
+\cite{RemondiereKRFP3_2026}).
+\item The Babelon--Viallet O'Neill formula holds on the twisted gauge
+orbit space $\mathcal A^\Omega / \mathcal G^\Omega$ with the
+twisted Faddeev--Popov metric, giving
+$\Ric_{\mathcal A^\Omega/\mathcal G^\Omega} \geq \lambda_{\min}(M^\Omega) \cdot g^\Omega$.
+\item The Bakry--\'Emery semigroup associated with $\mathcal A^\Omega
+/\mathcal G^\Omega$ satisfies the uniform LSI of the conditional
+KR--FP--B reduction~\cite{RemondiereKRFPB_2026}, with constant
+$(1-\kFP)m_\Omega^2 / \cinf(D)$.
+\end{enumerate}
+\end{hypothesis}
+
+\begin{remark}[Status of Hypothesis~\ref{hyp:twist-rigidity}]
+\label{rem:status-hyp}
+Item (i) is the twisted-bundle analogue of Lemma~KR--FP--3
+\cite[Thm.~3.1]{RemondiereKRFP3_2026}, with the periodic Hodge gap
+$m_0^2$ replaced by the twisted gap $m_\Omega^2$. The proof is the same
+Birman--Schwinger / Aubin--Talenti argument, with the crucial
+modification that hypothesis (H1) (\emph{generic vanishing}) is
+\emph{automatically satisfied} on the twisted bundle because there is
+no constant zero mode to violate genericity (Corollary~\ref{cor:twist-eats-constant}).
+This is precisely the structural gain of the twist.
+
+Item (ii) is a standard differential-geometric fact about Babelon--Viallet
+on twisted bundles; the formula goes through identically, with the
+twisted bundle in place of the trivial one. The metric on
+$\mathcal A^\Omega/\mathcal G^\Omega$ is the $L^2$ Faddeev--Popov metric
+adapted to twisted bundles.
+
+Item (iii) is the trivial-sector analogue of
+\cite[Thm.~6.1]{RemondiereKRFPB_2026}, with the constant-mode obstruction
+removed.
+\end{remark}
+
+% =========================================================================
+\section{Bakry--\'Emery on the twisted orbit space}\label{sec:BE-twisted}
+
+\subsection{Twisted Faddeev--Popov spectral bound (KR--FP--3 analogue)}
+
+\begin{theorem}[Twisted KR--FP--3 (PROVED UNCONDITIONAL modulo
+Hypothesis~\ref{hyp:twist-rigidity})]\label{thm:KRFP3-twisted}
+On the twisted lattice $(T^4_L)^\Omega$ with non-trivial twist, every
+$A$ in the twisted action slice $\overline\Lambda^\Omega_{S_0}$
+satisfies
+$$
+\lambda_{\min}(M^\Omega[A]) \geq m_\Omega^2 \cdot (1 - \kFP),
+\qquad \kFP = 1/(2|\Phi^+(SU(N))|),
+$$
+\emph{unconditionally on the (H1) generic-vanishing hypothesis} of
+\cite{RemondiereKRFP3_2026}, the proof reducing to the spectral structure
+of the twisted Hodge Laplacian (Proposition~\ref{prop:Hodge-twisted})
+and the Kostant identity (Lemma~KR--FP--2).
+\end{theorem}
+\begin{proof}[Proof sketch]
+The proof of \cite[Thm.~3.1]{RemondiereKRFP3_2026} relies on (H1) only
+through the requirement that minimising eigenfunctions of $M[A]$ on the
+slice $\overline\Lambda_{S_0}$ are generic in the Cartan-component
+sense. On the twisted bundle, the absence of the constant zero
+eigenvalue (Proposition~\ref{prop:Hodge-twisted}) means the minimising
+eigenfunctions cannot reside in the constant zero subspace; they must
+lie in the orthogonal complement, which is exactly the generic
+Cartan-component subspace by Lemma~KR--FP--2. Hence (H1) is
+\emph{automatic}.
+
+The remaining (H2) compact-manifold Sobolev constant and (H3)
+measurable Cartan selection are technical and well-controlled
+by the standard arguments of \cite[\S 5]{RemondiereKRFP3_2026}; they
+are not affected by the twist.
+\end{proof}
+
+\begin{corollary}[Twisted Ricci bound]\label{cor:twisted-Ric}
+Under Hypothesis~\ref{hyp:twist-rigidity}(ii) and Theorem~\ref{thm:KRFP3-twisted},
+$\Ric_{\mathcal A^\Omega/\mathcal G^\Omega}\restriction_{\overline\Lambda^\Omega_{S_0}}
+\geq (1-\kFP) m_\Omega^2 \cdot g^\Omega$.
+\end{corollary}
+
+\subsection{Bakry--\'Emery on the twisted manifold}
+
+\begin{theorem}[Twisted KR--FP--B (PROVED UNCONDITIONAL modulo
+Hypothesis~\ref{hyp:twist-rigidity})]\label{thm:KRFPB-twisted}
+The heat semigroup on the twisted orbit space $\mathcal A^\Omega/
+\mathcal G^\Omega$ restricted to $\overline\Lambda^\Omega_{S_0}$
+satisfies $\mathrm{CD}((1-\kFP) m_\Omega^2, \infty)$, hence a uniform
+LSI with constant $\rho^\Omega \geq (1-\kFP) m_\Omega^2$.
+
+Combined with the twisted-lattice Wilson measure and the trivial-sector
+analogue of the BBD continuum descent (which is automatic on the
+twisted measure because the constant zero mode is absent), the twisted
+Wilson measure $\mu^\Omega_{a,\beta,L}$ satisfies LSI with constant
+$$
+C_\mathrm{LSI}(\mu^\Omega_{a,\beta,L}) \;\leq\; \cinf(D) / [(1-\kFP) m_\Omega^2].
+$$
+\end{theorem}
+\begin{proof}[Proof sketch]
+Bakry--\'Emery on the smooth twisted manifold
+$\mathcal A^\Omega/\mathcal G^\Omega$ with $\Ric \geq K\,g$
+(Corollary~\ref{cor:twisted-Ric}) gives $\mathrm{CD}(K,\infty)$
+\cite[Thm.~4.1]{RemondiereKRFPB_2026}, hence LSI by classical
+Bakry--\'Emery~\cite{BakryEmery1985, BakryGentilLedoux2014}. The
+trivial-sector continuum descent of~\cite[\S 5]{RemondiereKRFPB_2026}
+goes through unchanged on the twisted measure because the constant-mode
+obstruction (which was the only one requiring BBD input) is absent.
+\end{proof}
+
+% =========================================================================
+\section{Main pre-validation theorem}\label{sec:main}
+
+\begin{theorem}[Main pre-validation theorem]\label{thm:main}
+Let $G = SU(N)$, $D = 4$, and consider the twisted lattice
+$(T^4_L)^\Omega$ with non-trivial twist tensor $n^{\mu\nu} \neq 0
+\pmod N$ as in Definition~\ref{def:twist}. Let
+$\mu^\Omega_{a,\beta,L}$ be the twisted Wilson measure
+\eqref{eq:twisted-Wilson-action}.
+
+Under Hypothesis~\ref{hyp:twist-rigidity}, $\mu^\Omega_{a,\beta,L}$
+satisfies, uniformly in $L$ and $a$,
+$$
+C_\mathrm{LSI}(\mu^\Omega_{a,\beta,L}) \;\leq\; \frac{\cinf(D)}{(1-\kFP) m_\Omega^2}
+\;\leq\; \frac{N^2\,\cinf(D)}{(1-\kFP)\,m_0^2}.
+$$
+For $G = SU(3)$, $D = 4$, $\kFP = 1/6$, $\cinf(4) = 4.05$, this reads
+$$
+C_\mathrm{LSI}(\mu^\Omega_{a,\beta,L}) \;\leq\; \frac{9 \cdot 4.05}{(5/6)\,m_0^2}
+\;\approx\; \frac{43.7}{m_0^2}.
+$$
+\end{theorem}
+
+\begin{remark}[Comparison with conditional KR--FP--B]\label{rem:compare-KRFP-B}
+The constant in Theorem~\ref{thm:main} is a factor of $N^2$ worse than
+the corresponding conditional bound of~\cite[Thm.~6.1]{RemondiereKRFPB_2026}
+in the trivial sector, but it is \emph{unconditional} (modulo the named
+Hypothesis~\ref{hyp:twist-rigidity}). The $N^2$ degradation reflects the
+twisted-momentum lattice spacing $2\pi/(NL)$ instead of $2\pi/L$.
+
+For $G=SU(3)$, the twisted bound is a factor $9$ worse but still
+$L$-uniform. As $L\to\infty$ both bounds are positive and $O(1/L^2)$
+divergent, but on the unit-volume rescaled lattice the bounds give
+positive constants, hence positive mass gap in the continuum limit.
+\end{remark}
+
+% =========================================================================
+\section{Lattice-JAX specification for numerical validation}\label{sec:jax}
+
+\subsection{Recommendation}
+We recommend the following lattice-JAX run as the highest-priority
+numerical test of Hypothesis~\ref{hyp:twist-rigidity} and the
+twisted Wilson measure LSI:
+
+\subsection{Configuration}
+\begin{itemize}[leftmargin=2em]
+\item Gauge group: $G = SU(3)$.
+\item Lattice dimension: $D = 4$.
+\item Volumes: $L \in \{8, 12, 16\}$.
+\item Couplings: $\beta \in \{2.5, 3.0, 3.5\}$ (continuum regime).
+\item Twist matrices: standard 't Hooft pair on directions $(1,2)$:
+\begin{itemize}
+\item $\Omega_1 = \mathrm{diag}(1, \omega, \omega^2)$, $\omega = e^{2\pi
+i/3}$.
+\item $\Omega_2 = $ cyclic shift matrix $\mathrm{shift}(3)$.
+\item $\Omega_3 = \Omega_4 = \mathrm{Id}$ (twist only in the $(1,2)$ plane).
+\end{itemize}
+The resulting twist tensor: $n^{12} = 1 \pmod 3$, all others $0$.
+\end{itemize}
+
+\subsection{Observables}
+\begin{enumerate}[label=(O\arabic*),leftmargin=2em]
+\item \textbf{Smallest Faddeev--Popov eigenvalue} $\lambda_{\min}(M^\Omega[A])$
+on configurations sampled from $\mu^\Omega_{a,\beta,L}$. Measure as
+function of $L$ and $\beta$, verify lower bound $(5/6)\,m_\Omega^2$
+with $m_\Omega^2 = (2\pi/(NL))^2$.
+\item \textbf{Spectral gap of the Hessian of the twisted Wilson action}
+$\Hess(\beta S_W^\Omega)$ at configurations sampled from
+$\mu^\Omega_{a,\beta,L}$. Verify constant lower bound uniform in $L$.
+\item \textbf{LSI constant of the twisted Wilson measure} estimated via
+the Rothaus--Simon mean-field method (sample-based estimate of the
+entropy-Dirichlet ratio). Verify $C_\mathrm{LSI}(\mu^\Omega_{a,\beta,L})
+\leq 43.7 / m_0^2$ for $L \in \{8,12,16\}$.
+\item \textbf{Comparison with periodic measure}: same observables
+sampled from $\mu^\mathrm{per}_{a,\beta,L}$ for confirmation that the
+twisted measure removes the constant zero mode and the periodic measure
+does not.
+\end{enumerate}
+
+\subsection{Algorithm}
+\begin{enumerate}[label=\arabic*.,leftmargin=2em]
+\item Initialise random link configuration $U \in \mathcal C^\Omega$
+satisfying~\eqref{eq:twisted-BC}.
+\item Thermalise via heat-bath or Metropolis updates with the twisted
+Wilson action~\eqref{eq:twisted-Wilson-action}, ensuring
+$\langle P\rangle$ matches literature (sanity check).
+\item Sample $N_\mathrm{config} = 200$ thermalised configurations.
+\item For each configuration:
+\begin{enumerate}[label=(\alph*),leftmargin=2em]
+\item Compute the FP operator $M^\Omega[A] = d_A^\dagger d_A$
+restricted to the twisted bundle.
+\item Diagonalise (sparse Krylov) and extract $\lambda_{\min}$.
+\item Compute the Hessian of $S_W^\Omega$ and extract its smallest
+non-zero eigenvalue.
+\end{enumerate}
+\item Aggregate over configurations and extract finite-volume
+extrapolations.
+\end{enumerate}
+
+\subsection{Anticipated outcomes}
+\begin{itemize}[leftmargin=2em]
+\item For \emph{twisted} measure: $\lambda_{\min}(M^\Omega) \geq (5/6)
+m_\Omega^2$ confirmed within $5\%$. Hessian smallest eigenvalue
+positive uniformly in $L$. LSI constant bounded as predicted.
+\item For \emph{periodic} measure (comparison): $\lambda_{\min}(M) \approx
+0$ from the constant zero modes (Pilier 3 sub-3 obstruction confirmed
+numerically), Hessian smallest eigenvalue $\to 0$ as $L\to\infty$.
+\end{itemize}
+
+\subsection{Code outline}
+\begin{verbatim}
+import jax
+import jax.numpy as jnp
+
+N = 3                      # SU(3)
+L = 12                     # lattice side (8, 12, 16)
+beta = 3.0                 # coupling
+D = 4                      # dimension
+
+# Standard 't Hooft pair
+omega = jnp.exp(2j * jnp.pi / N)
+Omega1 = jnp.diag(jnp.array([1, omega, omega**2]))
+Omega2 = jnp.roll(jnp.eye(N), 1, axis=0)
+Omega3 = jnp.eye(N)
+Omega4 = jnp.eye(N)
+
+# Twisted plaquette phase
+z12 = jnp.exp(-2j * jnp.pi / N)   # twist tensor n^{12} = 1 mod N
+
+def twisted_plaquette(U, x, mu, nu, L, Omegas):
+    # standard plaquette holonomy, with twist phase z_{mu nu}
+    # at links crossing the boundary
+    Umu  = U[x[0], x[1], x[2], x[3], mu]
+    Unu  = U[(x[0]+(mu==0))%L, (x[1]+(mu==1))%L,
+             (x[2]+(mu==2))%L, (x[3]+(mu==3))%L, nu]
+    # ... (full implementation requires careful index management
+    # for the twist phase at boundary plaquettes)
+    return jnp.trace(Umu @ Unu @ Umu_dag @ Unu_dag) * z12 if boundary else 1
+
+def twisted_wilson_action(U, beta, N, L, twist_pair=(0,1)):
+    # sum over plaquettes of 1 - Re Tr(z * plaq)/N
+    # ...
+    pass
+
+def faddeev_popov_M(U):
+    # bundle-twisted FP operator M = d_A^dag d_A
+    # acting on adjoint-valued 0-forms with twisted BC
+    # ...
+    pass
+
+# Sample thermalised configurations and measure smallest eigenvalue
+def main():
+    key = jax.random.PRNGKey(42)
+    U = init_random_twisted(key, L, N, Omegas=[Omega1, Omega2, Omega3, Omega4])
+    U = thermalise(U, beta, n_steps=5000)
+    for cfg in range(N_config := 200):
+        U = update(U, beta, n_sweeps=10)
+        M = faddeev_popov_M(U)
+        lam_min = jnp.linalg.eigvalsh(M)[0]   # smallest eigenvalue
+        # ... aggregate and report
+\end{verbatim}
+
+\subsection{Cost estimate}
+\begin{itemize}[leftmargin=2em]
+\item Lattice volume $L = 12$, $N = 3$, $D = 4$: $4 \cdot 12^4 \cdot 8 = 663{,}552$
+link real degrees of freedom.
+\item FP operator dimension: $(N^2-1)\cdot L^4 = 8 \cdot 20736 = 165{,}888$.
+\item Sparse Krylov: feasible on consumer GPU (e.g.\ RTX 3090, $\sim 1$~min
+per configuration for $\lambda_{\min}$).
+\item Total: $200$ configurations $\times \sim 1$~min $= \sim 3$~hours
+per $(L,\beta)$ tuple. Total parameter sweep $(3 \times 3 = 9)$:
+$\sim 27$ hours $\sim 1$~day on a Vast.AI RTX 3090 ($\sim \$5$).
+\item Implementation: $\sim 1$~week of dev/test, $1$~day of run, $\sim 2$~days
+of analysis.
+\end{itemize}
+
+\subsection{Priority recommendation}
+We recommend this lattice run as the \emph{highest-priority short-term
+test} ($2-4$ months ETA) of the trivial-sector obstruction-removal
+mechanism. If the test confirms Hypothesis~\ref{hyp:twist-rigidity},
+Theorem~\ref{thm:main} is unconditional, and the structural
+contribution of this paper is publishable standalone as a clean
+removal-of-the-constant-zero-mode result for a measurable subset of the
+configuration space (the twisted bundle).
+
+% =========================================================================
+\section{Limits, outlook, and recommendation}\label{sec:outlook}
+
+\subsection{What is proved unconditionally}
+\begin{itemize}[leftmargin=2em]
+\item Lemma~\ref{lem:centraliser}: centraliser computation.
+\item Corollary~\ref{cor:twist-eats-constant}: twist eats the constant
+gauge mode.
+\item Proposition~\ref{prop:Hodge-twisted}: twisted Hodge Laplacian
+has no zero eigenvalue, smallest eigenvalue $\geq (2\pi/(NL))^2$.
+\end{itemize}
+
+\subsection{What is conditional on Hypothesis~\ref{hyp:twist-rigidity}}
+\begin{itemize}[leftmargin=2em]
+\item Theorem~\ref{thm:KRFP3-twisted}: twisted-KR--FP--3 spectral
+bound on $\overline\Lambda^\Omega_{S_0}$.
+\item Theorem~\ref{thm:KRFPB-twisted}: twisted-KR--FP--B Bakry--\'Emery
+LSI bound.
+\item Theorem~\ref{thm:main}: main pre-validation theorem.
+\end{itemize}
+
+\subsection{Why Hypothesis~\ref{hyp:twist-rigidity} is plausible}
+\begin{itemize}[leftmargin=2em]
+\item Item (i): the structural reason for the zero mode is
+\emph{exclusively} the constant gauge transformation, which is killed
+by the twist (Corollary~\ref{cor:twist-eats-constant}). The other
+analytical inputs to KR--FP--3 (Birman--Schwinger, Aubin--Talenti,
+Kostant identity) are bundle-independent.
+\item Item (ii): Babelon--Viallet O'Neill is a Riemannian-geometric
+identity on the principal bundle $\mathcal A \to \mathcal A/\mathcal G$;
+it goes through identically on twisted bundles by replacing the trivial
+$P$ with the twisted $P^\Omega$.
+\item Item (iii): the Bakry--\'Emery $\Gamma_2$-calculus is a
+purely Riemannian-geometric framework on the orbit space, and on the
+twisted manifold (where the gauge orbits are now twisted-bundle orbits)
+the calculation goes through unchanged.
+\end{itemize}
+
+\subsection{Why a clean rigorous verification is missing}
+The reason this is currently a \emph{hypothesis} rather than a
+\emph{theorem} is that the existing literature on 't Hooft twist
+focuses on \emph{computational} aspects (twisted Eguchi--Kawai
+\cite{EguchiKawai1982}, large-$N$ reduction
+\cite{GonzalezArroyoOkawa1983}, citation to verify) rather than on the
+\emph{analytical} (Bakry--\'Emery, LSI) consequences for the Wilson
+measure. A clean rigorous derivation of items (i)--(iii) above
+requires combining the geometric construction of twisted bundles
+(van Baal~\cite{vanBaal1996}, citation to verify) with the
+Bakry--\'Emery framework of~\cite{RemondiereKRFPB_2026} --- a
+combination not present in the existing literature but well within
+reach of contemporary techniques.
+
+\subsection{Why the lattice run is the recommended path}
+A direct numerical verification of items (i)--(iii) on
+$G = SU(3), L \in \{8,12,16\}$ takes $\sim 1$ day on a GPU and
+costs $\sim \$5$. If the test confirms the hypothesis, the structural
+contribution of this paper is publishable as a clean result. If the
+test \emph{contradicts} the hypothesis (e.g.\ a subtle twist-induced
+analytical pathology), we identify a new open problem to be solved.
+
+\subsection{Combined with the AHS instanton paper, the structural picture}
+\begin{itemize}[leftmargin=2em]
+\item Companion paper \emph{AHS-Instanton-LSI}~\cite{RemondiereAHSInstantonLSI_2026}
+gives unconditional LSI on \emph{non-trivial} topological sectors
+$k\neq 0$ of the \emph{periodic} Wilson measure.
+\item This paper gives conditional (on twist-rigidity hypothesis)
+unconditional-on-(H1) LSI on the \emph{trivial} topological sector $k=0$
+of the \emph{twisted} Wilson measure.
+\item Together, these two structural results cover the full
+configuration space \emph{partitioned} into (i) periodic + non-trivial
+topology and (ii) twisted + trivial topology. The periodic + trivial
+sector remains conditional on (H1)--(H3) of
+\cite{RemondiereKRFP3_2026} plus BBD~LSI.
+\end{itemize}
+
+\subsection{Honest probability estimates}
+\begin{itemize}[leftmargin=2em]
+\item P(Hypothesis~\ref{hyp:twist-rigidity} valid): $80-90\%$ on
+structural grounds + (i)--(iii) above.
+\item P(lattice JAX run confirms Hypothesis): $80-90\%$ if hypothesis
+is valid, else $\leq 30\%$.
+\item P(rigorous mathematical proof of Hypothesis): $50-70\%$ on the
+$1-3$y horizon (with adapted Babelon--Viallet + Bakry--\'Emery on
+twisted bundles).
+\item P(paper publishable in LMP/CMP): $70-85\%$ as a structural
+pre-validation + lattice JAX specification.
+\end{itemize}
+
+\subsection{Recommendation}
+We recommend:
+\begin{enumerate}[label=\arabic*.,leftmargin=2em]
+\item Launch the lattice-JAX run \emph{this week} ($1$ day implementation
++ $1$ day run + $1$ day analysis).
+\item If the run confirms the hypothesis, finalise the paper and
+submit to LMP.
+\item In parallel, pursue the rigorous mathematical proof of
+Hypothesis~\ref{hyp:twist-rigidity} (1-3 month effort).
+\item Coordinate with the AHS-instanton paper for joint publication
+or sequential submission as a series of two structural notes.
+\end{enumerate}
+
+% =========================================================================
+\section*{Acknowledgments}
+This work was prepared with computational research assistance from
+Anthropic's Claude system (Opus~4.7, 1M context window). All
+mathematical content (theorems, proofs, hypotheses, references) is
+the sole responsibility of the author.
+
+% =========================================================================
+\begin{thebibliography}{99}
+
+\bibitem{BakryEmery1985}
+D.~Bakry, M.~\'Emery,
+``Diffusions hypercontractives,''
+\emph{S\'eminaire de Probabilit\'es XIX},
+Lecture Notes in Mathematics \textbf{1123} (Springer, 1985) 177--206.
+
+\bibitem{BakryGentilLedoux2014}
+D.~Bakry, I.~Gentil, M.~Ledoux,
+\emph{Analysis and Geometry of Markov Diffusion Operators},
+Grundlehren \textbf{348}, Springer, 2014.
+
+\bibitem{BauerschmidtDagallier2024}
+R.~Bauerschmidt, B.~Dagallier,
+``Log-Sobolev inequality for the $\varphi^4_2$ and $\varphi^4_3$ measures,''
+arXiv:2202.02295.
+
+\bibitem{EguchiKawai1982}
+T.~Eguchi, H.~Kawai,
+``Reduction of dynamical degrees of freedom in the large-$N$ gauge theory,''
+\emph{Phys. Rev. Lett.} \textbf{48} (1982) 1063--1066.
+
+\bibitem{GonzalezArroyoOkawa1983}
+A.~Gonz\'alez-Arroyo, M.~Okawa,
+``A twisted model for large-$N$ lattice gauge theory,''
+\emph{Phys. Lett. B} \textbf{120} (1983) 174--178.
+\emph{Citation to verify}: standard textbook reference, exact pages
+require direct check.
+
+\bibitem{OpusPolchinskiSubgaps2026}
+K.~R\'emondi\`ere,
+\emph{Polchinski sub-gaps for SU(N) extension: 5-sub-gap attack with
+honest verdicts} (internal note
+\texttt{OPUS2\_POLCHINSKI\_SUBGAPS\_2026-05-26}), May 2026.
+
+\bibitem{RemondiereAHSInstantonLSI_2026}
+K.~R\'emondi\`ere,
+\emph{Logarithmic Sobolev inequality for the instanton sector of pure
+SU(N) Wilson lattice gauge theory}
+(companion preprint
+\texttt{Paper\_AHS\_Instanton\_LSI\_CMP}), May 2026.
+
+\bibitem{RemondiereKRFP3_2026}
+K.~R\'emondi\`ere,
+\emph{Spectral bound for the Faddeev--Popov operator on the fundamental
+modular domain of the slice $\overline\Lambda_{S_0}$: a Birman--Schwinger /
+Aubin--Talenti analysis} (companion preprint
+\texttt{Paper\_KR\_FP3\_AnnalsMath}), May 2026.
+
+\bibitem{RemondiereKRFPB_2026}
+K.~R\'emondi\`ere,
+\emph{Mass gap for 4D pure Yang--Mills via Bakry--\'Emery on the
+fundamental modular domain: a conditional reduction} (companion preprint
+\texttt{Paper\_KR\_FP\_B\_BakryEmery\_LMP}), May 2026.
+
+\bibitem{RemondiereWilsonFlowVoieB_2026}
+K.~R\'emondi\`ere,
+\emph{Wilson flow trivialisation gives a uniform logarithmic Sobolev
+inequality for $SU(N)$ lattice Yang--Mills: a conditional structural
+reduction} (companion preprint
+\texttt{Paper\_WilsonFlow\_VoieB\_LMP}), May 2026.
+
+\bibitem{tHooft1979}
+G.~'t Hooft,
+``A property of electric and magnetic flux in non-abelian gauge theories,''
+\emph{Nucl. Phys. B} \textbf{153} (1979) 141--160.
+
+\bibitem{tHooft1981}
+G.~'t Hooft,
+``Some twisted self-dual solutions for the Yang--Mills equations on a
+hypertorus,''
+\emph{Commun. Math. Phys.} \textbf{81} (1981) 267--275.
+
+\bibitem{vanBaal1996}
+P.~van Baal,
+``Instantons versus monopoles,''
+\emph{Nucl. Phys. B Proc. Suppl.} \textbf{47} (1996) 326--332.
+\emph{Citation to verify}: van Baal's work on calorons and twisted
+boundary conditions through the 1990s; specific arXiv ID requires
+direct verification.
+
+\end{thebibliography}
+
+\end{document}

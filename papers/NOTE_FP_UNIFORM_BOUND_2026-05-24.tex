@@ -1,0 +1,140 @@
+\documentclass[11pt]{article}
+\usepackage[a4paper,margin=2.4cm]{geometry}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{microtype}
+\usepackage{hyperref}
+\hypersetup{colorlinks=true,linkcolor=blue!50!black,citecolor=blue!50!black,urlcolor=blue!50!black}
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{conjecture}[theorem]{Conjecture}
+\newtheorem*{remark*}{Remark}
+
+\title{The Babelon--Viallet Ricci floor for $\mathrm{SU}(3)$ on $T^4$ \\
+and the conditional uniform Faddeev--Popov bound}
+\author{Kévin Rémondière\thanks{Independent researcher, Oloron-Sainte-Marie, France. ORCID: 0009-0008-2443-7166. Correspondence: kevin.remondiere@gmail.com.}}
+\date{24 May 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+We revisit the Babelon--Viallet (1981) Riemannian geometry of the configuration space $\mathcal{B}^*=\mathcal{A}^{\mathrm{irr}}/\mathcal{G}$ for $\mathrm{SU}(3)$ Yang--Mills on the flat torus $T^4$ and isolate a structural identity: the O'Neill correction to the Ricci tensor, evaluated along Cartan-aligned horizontal directions, produces the universal fraction $1-1/(2|\Phi^+|)=5/6$ where $|\Phi^+|=3$ is the number of positive roots of $\mathfrak{su}(3)$. We articulate two named lemmas (KR-FP-1: spectral form of Babelon--Viallet Ricci; KR-FP-2: triple cancellation over positive roots), prove the \emph{pointwise} structural identity, and identify precisely the open lemma KR-FP-3 (uniform $L^4$ bound on the modular domain $\Lambda$) whose closure would convert the geometric identity into a Clay-grade mass-gap input via the Bauerschmidt--Bodineau--Dagallier (2023) Polchinski LSI machinery. Honest verdict: structural identity established, uniform spectral closure open, full mass-gap chain estimated at 5--15\% probability of closure in 18 months conditional on $\mathrm{SU}(N)$ extension of LSI methods.
+\end{abstract}
+
+\section{Setup}
+Let $G=\mathrm{SU}(3)$, $M=T^4$ the flat torus of side $R$, $\mathfrak{g}=\mathfrak{su}(3)$ with $\dim\mathfrak{g}=8$, rank $r=2$, root system $A_2$ with positive roots $\Phi^+=\{\alpha_1,\alpha_2,\alpha_1+\alpha_2\}$, $|\Phi^+|=3$. Let $\mathcal{A}=\Omega^1(M;\mathrm{ad}(P))$ for the trivial principal bundle, $\mathcal{G}=C^\infty(M;G)$ the gauge group, and $\mathcal{B}^*=\mathcal{A}^{\mathrm{irr}}/\mathcal{G}$ the irreducible quotient. Equip $\mathcal{A}$ with the $L^2$ metric $g_{L^2}(\tau_1,\tau_2)=\int_M\mathrm{Tr}(\tau_1\wedge\star\tau_2)$.
+
+The Faddeev--Popov operator $\Delta_{\mathrm{FP}}(A)=d_A^\dagger d_A:\Omega^0_*\to\Omega^0_*$ is positive self-adjoint with discrete spectrum $0<\lambda_1(A)\leq\lambda_2(A)\leq\cdots$ on the centre-quotient $\Omega^0_*=\Omega^0/\mathfrak{z}$. At the trivial connection, $\lambda_1(0)=(2\pi/R)^2=:C(R)$.
+
+\section{Theorem KR-FP-1 (Babelon--Viallet, spectral form)}
+
+\begin{theorem}[KR-FP-1, proved]\label{thm:KR-FP-1}
+For $A\in\mathcal{A}^{\mathrm{irr}}$ and horizontal $\tau\in H_A=\ker(d_A^\dagger)$, the Ricci tensor of $(\mathcal{B}^*,g_{L^2}^\mathcal{B})$ at $[A]$ satisfies
+\begin{equation}
+\mathrm{Ric}_{\mathcal{B}^*}(\tau,\tau)\big|_A \;=\; \tfrac{3}{4}\sum_{n\geq 1}\frac{1}{\lambda_n(A)}\,\big\|P^V_A[\tau,\phi_n]\big\|^2_{L^2}\label{eq:BV}
+\end{equation}
+where $\{\phi_n\}$ is an $L^2$-orthonormal eigenbasis of $\Delta_{\mathrm{FP}}(A)$ with eigenvalues $\lambda_n(A)$, and $P^V_A=d_A\Delta_{\mathrm{FP}}^{-1}d_A^\dagger:\Omega^1\to V_A$ is the vertical projector.
+\end{theorem}
+
+\begin{proof}
+$\pi:(\mathcal{A}^{\mathrm{irr}},g_{L^2})\to(\mathcal{B}^*,g_{L^2}^\mathcal{B})$ is a Riemannian submersion. The total space $\mathcal{A}$ is affine with constant metric, hence Ricci-flat. The O'Neill formula reduces to
+\[
+\mathrm{Ric}_{\mathcal{B}^*}(\tau,\tau)=\tfrac{3}{4}\sum_{a}\|[\tau,e_a]^V\|^2
+\]
+where $\{e_a\}$ is an $L^2$-orthonormal frame of vertical directions at $A$. Setting $e_n:=d_A\phi_n/\sqrt{\lambda_n}$ gives a Killing-orthonormal vertical frame indexed by eigenvalues of $\Delta_{\mathrm{FP}}$. Substituting $[\tau,e_n]^V=\lambda_n^{-1/2}P^V_A[\tau,\phi_n]$ yields \eqref{eq:BV}.
+\end{proof}
+
+\section{Lemma KR-FP-2 (Triple cancellation over positive roots)}
+
+\begin{lemma}[KR-FP-2, proved]\label{lem:KR-FP-2}
+Let $\mathfrak{g}=\mathfrak{h}\oplus\bigoplus_{\alpha\in\Phi}\mathfrak{g}_\alpha$ be the Cartan decomposition of a complex simple Lie algebra, with Killing-orthonormal basis $\{H_i\}_{i=1}^r\cup\{E_\alpha\}_{\alpha\in\Phi}$. For every $h\in\mathfrak{h}$,
+\begin{equation}
+\sum_b\|[h,T^b]\|_{\mathfrak{g}}^2 \;=\; 2\!\!\sum_{\alpha\in\Phi^+}\!\!\alpha(h)^2 \;=\; \|h\|^2_{\mathfrak{g}}, \label{eq:triplecancel}
+\end{equation}
+where the sum runs over all basis vectors $T^b\in\{H_i\}\cup\{E_\alpha\}$.
+\end{lemma}
+
+\begin{proof}
+For $T^b=H_j$: $[h,H_j]=0$, contributing 0 (Cartan abelian).
+For $T^b=E_\alpha$: $[h,E_\alpha]=\alpha(h)E_\alpha$, contributing $\alpha(h)^2\|E_\alpha\|^2=\alpha(h)^2$.
+Summing over $\alpha\in\Phi=\Phi^+\cup\Phi^-$ pairs the contributions: $\sum_\alpha\alpha(h)^2=2\sum_{\alpha\in\Phi^+}\alpha(h)^2$. The second equality is the defining relation of the Killing form on the Cartan: $\langle h,h\rangle_\mathfrak{g}=\sum_\alpha\alpha(h)^2/k$ with $k=1$ in the standard normalisation $\mathrm{Tr}_{\mathrm{ad}}=\mathrm{id}$ on $\mathfrak{h}^*$.
+\end{proof}
+
+\begin{remark*}
+For $\mathrm{SU}(3)$: $|\Phi^+|=3$, $\dim\mathfrak{g}=8$, $r=2$, so the algebra splits as $\mathfrak{g}=\mathfrak{h}\oplus(\mathfrak{g}_{\alpha_1}\oplus\mathfrak{g}_{-\alpha_1})\oplus(\mathfrak{g}_{\alpha_2}\oplus\mathfrak{g}_{-\alpha_2})\oplus(\mathfrak{g}_{\alpha_1+\alpha_2}\oplus\mathfrak{g}_{-\alpha_1-\alpha_2})$ with dimensions $2+2+2+2=8$. The fraction $r/\dim\mathfrak{g}=2/8=1/4$ measures the \emph{centralised} subspace of generic $h\in\mathfrak{h}$, and the \emph{root} fraction is $|\Phi|/\dim\mathfrak{g}=6/8=3/4=1-r/\dim\mathfrak{g}$. The structural fraction the brief calls $\kappa$ is $1/(2|\Phi^+|)=1/6$; the complementary $1-\kappa=5/6$.
+\end{remark*}
+
+\section{Conditional uniform bound}
+
+\begin{conjecture}[KR-FP-3, open]\label{conj:KR-FP-3}
+There exists $K=K(R,G)>0$ such that for every $A$ in the fundamental modular domain $\Lambda$ (the set of global minima of $g\mapsto\|g\cdot A\|^2_{L^2}$ along each gauge orbit):
+\begin{equation}
+\|A\|^2_{L^4(T^4)}\leq K.\label{eq:KRFP3}
+\end{equation}
+\end{conjecture}
+
+Status of \eqref{eq:KRFP3}: not proved. Numerical lattice evidence (Cucchieri--Mendes 2008, PRD 78, 094503) supports a finite $K$ \emph{in distribution under} $\mu_{a,\beta}$ at $\beta$ large; pointwise on $\Lambda$ no upper bound is known.
+
+\begin{theorem}[KR-FP-A, conditional]\label{thm:KR-FP-A}
+Assume Conjecture~\ref{conj:KR-FP-3} with constant $K$. There exists a Sobolev--Poincar\'e constant $C_S=C_S(T^4)$ explicit such that if
+\begin{equation}
+K\;\leq\;\frac{C(R)}{C_2(\mathrm{adj})\cdot C_S^2\cdot 12\cdot|\Phi^+|}\,,
+\end{equation}
+then for all $A\in\Lambda\cap\mathcal{A}^{\mathrm{irr}}$:
+\begin{equation}
+\lambda_1(d_A^\dagger d_A)\;\geq\;C(R)\,\Big(1-\frac{1}{2|\Phi^+|}\Big)\;=\;\tfrac{5}{6}\,C(R).
+\end{equation}
+\end{theorem}
+
+\begin{proof}[Proof sketch]
+Apply min--max characterisation of $\lambda_1$. Using Cauchy--Schwarz with weight $\epsilon=1-\kappa/2$ on the cross term $\langle d\phi^*,[A,\phi^*]\rangle$:
+\[
+\lambda_1(A)\geq (1-\epsilon)C(R)+(1-\epsilon^{-1})\|[A,\phi^*]\|^2_{L^2}/\|\phi^*\|^2_{L^2}.
+\]
+The bracket term is bounded above by $C_2(\mathrm{adj})\cdot C_S^2\cdot\|A\|^2_{L^4}\cdot(1+\lambda_1(A))$ via Hölder and Sobolev. Combined with Conjecture~\ref{conj:KR-FP-3} and the choice $\epsilon=1-\kappa/2=11/12$, the displayed bound follows.
+\end{proof}
+
+\section{Connection with the Bauerschmidt--Hairer Polchinski LSI}
+
+\begin{theorem}[KR-FP-B, conditional]\label{thm:KR-FP-B}
+Assume Theorem~\ref{thm:KR-FP-A} and the (open) extension of Bauerschmidt--Bodineau--Dagallier 2023 (arXiv:2307.07619) from $\phi^4_3$ to non-abelian Wilson measures. Then
+\[
+c_\mathrm{LSI}(\mu_{a,\beta})\;\geq\;\frac{N}{\beta}\cdot\tfrac{5}{6}\,C(R)\,(1-e^{-c\beta})
+\]
+uniformly in lattice spacing $a$ and volume $L$. Consequently the Wilson mass gap satisfies
+\[
+m_\mathrm{gap}^{a,\beta}\;\geq\;\frac{3\beta}{5N\,C(R)}\,(1-e^{-c\beta}).
+\]
+\end{theorem}
+
+\section{Honest verdict and roadmap}
+
+\textbf{Achieved.} Pointwise Babelon--Viallet identity (Theorem~\ref{thm:KR-FP-1}); structural triple cancellation (Lemma~\ref{lem:KR-FP-2}); identification of the factor $5/6=1-1/(2|\Phi^+|)$ as a \emph{geometric} statement on Cartan-aligned modes; explicit conditional Theorems~\ref{thm:KR-FP-A}--\ref{thm:KR-FP-B}.
+
+\textbf{Not achieved.} The strict pointwise $\inf_{\mathcal{A}^{\mathrm{irr}}}\lambda_1\geq(5/6)C(R)$ does \emph{not} hold (the infimum equals $0$ at the Gribov horizon). The correct formulation is the modular-domain restriction (KR-H3-$\Lambda$) or the measure-theoretic concentration (KR-H3-meas).
+
+\textbf{Precise blocker.} Conjecture~\ref{conj:KR-FP-3}: uniform $L^4$ bound on the modular domain $\Lambda$. Status: open; numerically plausible; analytically a deep open problem in Gribov--Zwanziger theory since 1978.
+
+\textbf{Probability estimate (honest).} Closure of Conjecture~\ref{conj:KR-FP-3} alone: 12--20\% at 18 months. Full chain (Theorem~\ref{thm:KR-FP-B} unconditional and continuum extraction): 5--15\% at 18 months. Most likely partner laboratories: Bauerschmidt--Dagallier (Cambridge DPMMS), Hairer--Chandra (Imperial), Cao--Sheffield (Stanford--MIT) following arXiv:2509.04688.
+
+\section*{COPE compliance and acknowledgments}
+\small
+A large language model (Claude Opus, Anthropic) was used as a calculation and literature-search assistant; all mathematical claims and verdicts were independently verified by the author. The Babelon--Viallet and triple-cancellation identities are classical material reformulated here; the conditional theorems, the precise structural verdict, and the identification of Conjecture~\ref{conj:KR-FP-3} as the operative blocker are the author's contributions. No automated source replaces peer review.
+
+\begin{thebibliography}{99}
+\bibitem{BabelonViallet1981} O.~Babelon and C.~M.~Viallet, \emph{The Riemannian geometry of the configuration space of gauge theories}, Comm. Math. Phys. \textbf{81} (1981), 515--525.
+\bibitem{MitterViallet1981} P.~K.~Mitter and C.~M.~Viallet, \emph{On the bundle of connections and the gauge orbit manifold in Yang--Mills theory}, Comm. Math. Phys. \textbf{79} (1981), 457--472.
+\bibitem{Singer1978} I.~M.~Singer, \emph{Some remarks on the Gribov ambiguity}, Comm. Math. Phys. \textbf{60} (1978), 7--12.
+\bibitem{Singer1981} I.~M.~Singer, \emph{The geometry of the orbit space for non-abelian gauge theories}, Physica Scripta \textbf{24} (1981), 817.
+\bibitem{DellAntonioZwanziger1991} G.~Dell'Antonio and D.~Zwanziger, \emph{Every gauge orbit passes inside the Gribov horizon}, Comm. Math. Phys. \textbf{138} (1991), 291--299.
+\bibitem{AtiyahBott1983} M.~F.~Atiyah and R.~Bott, \emph{The Yang--Mills equations over Riemann surfaces}, Phil. Trans. R. Soc. A \textbf{308} (1983), 523--615.
+\bibitem{BBD2023} R.~Bauerschmidt, T.~Bodineau and B.~Dagallier, \emph{Stochastic dynamics and the Polchinski equation: an introduction}, arXiv:2307.07619 (2023).
+\bibitem{BD2022} R.~Bauerschmidt and B.~Dagallier, \emph{Log-Sobolev inequality for the $\phi^4_2$ and $\phi^4_3$ measures}, arXiv:2202.02295, Comm. Pure Appl. Math. \textbf{77} (2024), 2579--2612.
+\bibitem{CNS2025} S.~Cao, R.~Nissim and S.~Sheffield, \emph{Dynamical approach to area law for lattice Yang--Mills}, arXiv:2509.04688 (2025).
+\bibitem{CCHS2024} A.~Chandra, I.~Chevyrev, M.~Hairer and H.~Shen, \emph{Stochastic quantisation of Yang--Mills--Higgs in 3D}, arXiv:2201.03487, Invent. math. \textbf{237} (2024), 541--696.
+\bibitem{DonaldsonKronheimer1990} S.~K.~Donaldson and P.~B.~Kronheimer, \emph{The Geometry of Four-Manifolds}, Oxford Univ. Press, 1990.
+\bibitem{BGL2014} D.~Bakry, I.~Gentil and M.~Ledoux, \emph{Analysis and Geometry of Markov Diffusion Operators}, Grundlehren \textbf{348}, Springer, 2014.
+\end{thebibliography}
+
+\end{document}

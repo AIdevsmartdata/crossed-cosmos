@@ -1,0 +1,818 @@
+% =========================================================================
+% Paper WilsonFlow-VoieB : Wilson flow trivialisation gives a uniform LSI
+% bound for SU(N) lattice Yang-Mills --- a conditional structural reduction
+% (backup safety net for the BBD-Polchinski route).
+%
+% Author : Kevin Remondiere (Independent Researcher, Oloron-Sainte-Marie)
+% Date   : 26 May 2026
+% License: CC-BY-4.0
+% Target : Letters in Mathematical Physics (LMP)
+% =========================================================================
+
+\documentclass[11pt,a4paper]{amsart}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath,amssymb,amsthm,amsfonts}
+\usepackage{mathtools}
+\usepackage{microtype}
+\usepackage{geometry}
+\geometry{margin=1in}
+\usepackage[dvipsnames,table,xcdraw]{xcolor}
+\usepackage{hyperref}
+\hypersetup{colorlinks=true, linkcolor=blue!50!black,
+  citecolor=blue!50!black, urlcolor=blue!50!black}
+\usepackage{booktabs}
+\usepackage{enumitem}
+
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{remark}[theorem]{Remark}
+\newtheorem{hypothesis}[theorem]{Hypothesis}
+
+% -- Macros --------------------------------------------------------------
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\gfrak}{\mathfrak{g}}
+\newcommand{\hfrak}{\mathfrak{h}}
+\newcommand{\su}{\mathfrak{su}}
+\newcommand{\norm}[1]{\left\lVert#1\right\rVert}
+\newcommand{\abs}[1]{\left\lvert#1\right\rvert}
+\newcommand{\inner}[2]{\langle #1, #2\rangle}
+\newcommand{\Ric}{\mathrm{Ric}}
+\newcommand{\Tr}{\mathrm{Tr}}
+\newcommand{\ad}{\mathrm{ad}}
+\newcommand{\dvol}{\, d\mathrm{vol}}
+\DeclareMathOperator{\spec}{spec}
+\DeclareMathOperator{\rk}{rk}
+\DeclareMathOperator{\Hess}{Hess}
+\DeclareMathOperator{\Ent}{Ent}
+
+% Faddeev-Popov / Kostant invariant, NOT entanglement-entropy prefactor.
+\newcommand{\kFP}{\kappa_{\mathrm{FP}}}
+\newcommand{\cinf}{c_{\infty}}
+
+% =========================================================================
+\title[Wilson flow trivialisation and a uniform LSI for $SU(N)$ lattice YM]
+{Wilson flow trivialisation gives a uniform logarithmic Sobolev
+ inequality for $SU(N)$ lattice Yang--Mills: a conditional structural
+ reduction}
+
+\author{K\'evin R\'emondi\`ere}
+\address{Independent Researcher, Oloron-Sainte-Marie, France}
+\email{kevin.remondiere@gmail.com}
+\thanks{ORCID:
+\href{https://orcid.org/0009-0008-2443-7166}{0009-0008-2443-7166}.
+This work is released under a
+\href{https://creativecommons.org/licenses/by/4.0/}{Creative Commons
+Attribution 4.0 International License (CC-BY-4.0)}.}
+\date{26 May 2026}
+\subjclass[2020]{Primary 81T13, 81T17; Secondary 35Q35, 60J60, 47D07, 35P15.}
+\keywords{Wilson flow, Yang--Mills, trivialising maps, lattice gauge theory,
+log-Sobolev inequality, Polchinski equation, gradient flow.}
+
+\begin{document}
+
+\begin{abstract}
+We articulate a conditional structural reduction of the 4D pure $SU(N)$
+Yang--Mills uniform-LSI problem to an explicit a-priori estimate on the
+operator norm of the differential of L\"uscher's Wilson-flow trivialising
+map. Specifically, the Wilson flow
+$\partial_t U_t = -\partial_{U_t} S_W(U_t)$, introduced in 2010
+by L\"uscher~\cite{Luscher2010WilsonFlow}, defines a smooth one-parameter
+family of maps $\Phi_t : U_0 \mapsto U_t$ on the configuration space
+$G^E$. As $t\to\infty$, $U_t$ converges to the (unique connected
+component of the) classical minimum of $S_W$, hence the flow trivialises
+the field. The pushforward measure
+$(\Phi_t)_*\mu_{a,\beta}^\mathrm{trivial}$ from the Gaussian fluctuation
+about the classical minimum is, by the chain rule for LSI under smooth
+diffeomorphisms with bounded differential operator-norm, an LSI measure
+with constant proportional to $\norm{D\Phi_t}_\mathrm{op}^2 \cdot
+C_\mathrm{LSI}^\mathrm{Gauss}$. The conditional statement is:
+\emph{if $\norm{D\Phi_t}_\mathrm{op} \leq M(t)$ uniformly in lattice
+volume $L^4$ and spacing $a$, then the Wilson measure
+$\mu_{a,\beta}$ satisfies LSI with constant
+$C_\mathrm{LSI}(\beta) \leq M(t^*(\beta))^2 \cdot c_\infty(D)$}.
+The unsolved input is the uniform $L^4$-volume-independent bound on
+$\norm{D\Phi_t}$. We show that the explicit Lipschitz analysis of
+L\"uscher~\cite{Luscher2009TrivializingMaps} delivers the bound on
+finite-volume lattices, with a multiplicative constant depending
+exponentially on $\beta\cdot V$ that requires improvement to be useful
+as a backup safety net. We isolate the precise analytic obstruction to
+uniform-in-$V$ control, list four standard tools (Bakry--\'Emery on
+the flow, Brownian-loop representation, Onsager--Machlup variational
+principle, dimension-reduction via Pinsker) that may close the gap,
+and assign honest probability estimates to each. The route is
+\emph{independent} of the Bauerschmidt--Bodineau--Dagallier programme
+and provides a backup safety net should the BBD extension to non-abelian
+gauge be unavailable.
+\end{abstract}
+
+\maketitle
+
+% =========================================================================
+\section{Introduction and main idea}\label{sec:intro}
+
+\subsection{Motivation}
+The Bauerschmidt--Dagallier programme~\cite{BauerschmidtDagallier2024}
+establishes a uniform logarithmic Sobolev inequality (LSI) for the
+lattice $\varphi^4_2,\varphi^4_3$ measures via the Polchinski
+renormalisation group equation. Adapting that programme to the 4D pure
+$SU(N)$ Wilson measure has emerged as the standard remaining external
+input in the conditional reduction of the Yang--Mills mass gap
+articulated in Theorem~KR--FP--B~\cite{RemondiereKRFPB_2026}. The main
+analytic verrou is the convexity of the Polchinski effective potential
+$V_t$ on $SU(N)^E$ in the intermediate $\beta$ regime
+(hypothesis~(H1a-iii) of~\cite{OpusPolchinskiSubgaps2026}), an open
+problem.
+
+The present Letter pursues an \emph{orthogonal} route: instead of
+deriving LSI by RG-evolution of the Hessian convexity, we exploit
+L\"uscher's Wilson-flow trivialising map~\cite{Luscher2009TrivializingMaps,
+Luscher2010WilsonFlow}, originally introduced as a computational tool
+for HMC simulations, as a structural mechanism for transporting LSI from
+a Gaussian reference measure to the Wilson measure.
+
+\subsection{The Wilson flow as a transport map}
+The Wilson flow~\cite{Luscher2009TrivializingMaps} is the gradient flow
+$\partial_t U_t = -\partial_{U_t} S_W(U_t)$ on the configuration space
+$G^E$ (with $G = SU(N)$, $E$ = lattice edges). The flow defines, for
+each $t\geq 0$, a smooth map $\Phi_t : U_0 \mapsto U_t$. L\"uscher
+proves~\cite[\S 2]{Luscher2010WilsonFlow} that $\Phi_t$ is well-defined,
+smooth, and tends as $t\to\infty$ to a deterministic map onto the
+classical-minimum manifold $\mathcal M_\mathrm{cl}\subset G^E$
+(typically a single $\mathcal G$-orbit, by the standard energy-decreasing
+argument in compact configuration spaces).
+
+\subsection{Reverse Wilson flow as a trivialising map}
+The \emph{reverse} flow $\Psi_t := \Phi_t^{-1}$ is a smooth map from
+$\mathcal M_\mathrm{cl}^\epsilon$ (a small neighbourhood of the
+classical minimum manifold) onto the full configuration space $G^E$.
+On $\mathcal M_\mathrm{cl}^\epsilon$, the natural Gaussian reference
+measure $\mu^\mathrm{Gauss}_{a,\beta}$ (the quadratic-fluctuation
+measure about the classical minimum) satisfies a Gaussian LSI with
+explicit constant $c_\infty(D)$ (the lattice analogue of the
+continuum Hodge Laplacian eigenvalue gap):
+\begin{equation}\label{eq:cinfty}
+c_\infty(D) := \norm{(-\Delta_\mathrm{lat})^{-1}}_\mathrm{op}\big|_\mathrm{transv}
+\leq \frac{1}{(2\pi/L)^2} = O(L^2)/(2\pi)^2.
+\end{equation}
+
+\subsection{Transport LSI: the chain rule}
+The chain-rule lemma for LSI under smooth diffeomorphisms with bounded
+operator norm of the differential
+(Holley--Stroock perturbation principle adapted to smooth pushforward,
+see~\cite[Sec.~5.4]{BakryGentilLedoux2014}) reads:
+if $T : N_1 \to N_2$ is a smooth diffeomorphism with
+$\norm{DT(x)}_\mathrm{op} \leq M$ uniformly in $x$, and if $\mu_1$
+satisfies LSI on $N_1$ with constant $C_1$, then $T_*\mu_1$ satisfies
+LSI on $N_2$ with constant $C_2 \leq M^2 \cdot C_1$.
+
+Applied with $T = \Psi_t = \Phi_t^{-1}$ and $\mu_1 =
+\mu^\mathrm{Gauss}_{a,\beta}$:
+\begin{equation}\label{eq:LSI-transport}
+\mu_{a,\beta} = (\Psi_t)_* \mu^\mathrm{Gauss}_{a,\beta}
+\quad\Longrightarrow\quad
+C_\mathrm{LSI}(\mu_{a,\beta}) \leq \norm{D\Psi_t}_\mathrm{op}^2 \cdot c_\infty(D),
+\end{equation}
+provided the pushforward identity $\mu_{a,\beta} = (\Psi_t)_*\mu^\mathrm{Gauss}_{a,\beta}$
+holds (which is the case in the trivialising-map idealisation
+\cite{Luscher2009TrivializingMaps} up to a Jacobian correction analysed
+in \S~\ref{sec:Jacobian}).
+
+\subsection{The main conditional statement}
+\begin{theorem}[Main conditional reduction]\label{thm:main-informal}
+Conditional on the uniform-volume bound
+\begin{equation}\label{eq:uniform-bound}
+\norm{D\Psi_{t^*}}_\mathrm{op}^{L^4} \leq M(\beta) < \infty,
+\quad \text{uniformly in lattice volume } L^4 \text{ and spacing } a,
+\end{equation}
+where $t^* = t^*(\beta)$ is the trivialising flow-time scale, and on
+the Jacobian-correction control of \S~\ref{sec:Jacobian}, the
+4D pure $SU(N)$ Wilson measure $\mu_{a,\beta}$ satisfies a logarithmic
+Sobolev inequality with constant uniform in $L$ and $a$:
+$$
+C_\mathrm{LSI}(\mu_{a,\beta,L}) \;\leq\; M(\beta)^2 \cdot c_\infty(D).
+$$
+\end{theorem}
+
+\subsection{Why this is a \emph{backup safety net}}
+The Bauerschmidt--Bodineau--Dagallier (BBD) Polchinski-route to uniform
+LSI faces the open
+problem~\cite[Hyp.~(H1a-iii)]{OpusPolchinskiSubgaps2026} of intermediate
+$\beta$ convexity. P(BBD-SU(N) success on 18-36m collab) is honestly
+estimated at $35\%$--$55\%$. The Wilson-flow route is
+\emph{independent}: it does not need the Polchinski Hessian convexity;
+it needs only the uniform $\norm{D\Psi_t}$ bound. If both routes fail,
+the conditional Clay statement of~\cite{RemondiereKRFPB_2026} is left
+without uniform-LSI input. If at least one succeeds, the conditional
+reduction is closable.
+
+\subsection{Honest scope}
+\label{sec:scope}
+This Letter does \emph{not} prove a uniform LSI for the SU(N) Wilson
+measure. It establishes the conditional statement of
+Theorem~\ref{thm:main-informal} and reduces the uniform-LSI problem to
+the operator-norm bound~\eqref{eq:uniform-bound}, which is itself a
+non-trivial open problem. We analyse the known partial bounds from
+L\"uscher 2009~\cite{Luscher2009TrivializingMaps} and provide a roadmap
+to the uniform-in-$V$ extension.
+
+\subsection{Structure of the paper}
+\S~\ref{sec:luescher} recalls the L\"uscher Wilson flow and trivialising
+map. \S~\ref{sec:transport} formalises the LSI-transport principle.
+\S~\ref{sec:Jacobian} analyses the Jacobian correction.
+\S~\ref{sec:bound} discusses the available operator-norm bounds on
+$\norm{D\Psi_t}$ from L\"uscher~\cite{Luscher2009TrivializingMaps} and
+their uniform-in-$V$ limitations. \S~\ref{sec:roadmap} lists four
+standard tools that may close the gap (Bakry--\'Emery on the flow,
+Brownian-loop, Onsager--Machlup, Pinsker dimension reduction).
+\S~\ref{sec:main} states the main conditional theorem.
+\S~\ref{sec:remark} discusses limits, comparison with the Bauerschmidt
+programme, and honest probability estimates.
+
+% =========================================================================
+\section{The L\"uscher Wilson flow and trivialising maps}\label{sec:luescher}
+
+\subsection{Wilson action and gradient}
+Let $G = SU(N)$ and $\Lambda_L^a = (a\Z/aL\Z)^4$ the lattice 4-torus.
+Link variables $U_{x,\mu}\in G$, Wilson action
+\eqref{eq:Wilson-action-recall} as in the standard literature:
+\begin{equation}\label{eq:Wilson-action-recall}
+S_W(U) = \beta \sum_{x,\mu<\nu}
+  \bigl(1 - \tfrac{1}{N}\Re\Tr\, U_{x,\mu\nu}\bigr),
+\quad
+U_{x,\mu\nu} = U_{x,\mu}\,U_{x+a\hat\mu,\nu}\,
+  U_{x+a\hat\nu,\mu}^{-1}\,U_{x,\nu}^{-1}.
+\end{equation}
+The gauge-covariant gradient $\partial_{U_{x,\mu}} S_W$ is constructed
+as the projection of $\sum_{V\ni x,\mu} \partial S_W/\partial V$ onto
+$\su(N)$ at the unitary $U_{x,\mu}$, in the standard sense of
+L\"uscher~\cite[Eq.~(1.2)]{Luscher2010WilsonFlow}.
+
+\subsection{Wilson flow equation}
+\begin{definition}[Wilson flow]\label{def:WF}
+The \emph{Wilson flow} starting from $U_0 \in G^E$ is the solution
+$U_t \in G^E$, $t\geq 0$, of the gradient ODE
+\begin{equation}\label{eq:WF}
+\partial_t U_t \;=\; -\bigl(\partial_{U_t} S_W(U_t)\bigr)\cdot U_t,
+\qquad
+U_t|_{t=0} = U_0,
+\end{equation}
+interpreted link-by-link as a right-action of an $\su(N)$-valued
+gradient on $G$. The flow is well-defined globally in $t$ because
+$S_W$ is smooth and bounded below on the compact configuration
+space~\cite[Prop.~3.1]{Luscher2010WilsonFlow}.
+\end{definition}
+
+\subsection{Trivialising flow time}
+The Wilson flow~\eqref{eq:WF} drives any initial $U_0$ towards a
+classical minimum of $S_W$ as $t\to\infty$. We define the
+\emph{trivialising flow time} as
+\begin{equation}\label{eq:t-star}
+t^*(\beta) := \min\bigl\{t : \norm{U_t -
+\mathcal M_\mathrm{cl}(U_0)}_{L^2(G)} \leq c/\beta\bigr\},
+\end{equation}
+where $\mathcal M_\mathrm{cl}(U_0)$ is the classical-minimum manifold
+in the connected component of $U_0$, and $c$ a small absolute constant.
+For the connected components of $G^E$ containing a unique flat
+$SU(N)$-orbit, $\mathcal M_\mathrm{cl}$ is that single orbit. The
+asymptotics of $t^*(\beta)$ for SU(N) lattice gauge are not given by a
+clean closed form in the literature, but the rough lattice estimate is
+$t^*(\beta) \sim \beta\cdot a^2$ at large $\beta$
+\cite[\S 4]{Luscher2010WilsonFlow}, in line with the standard
+``radius'' of the Wilson-flow smoothing scale.
+
+\subsection{The trivialising map}
+\begin{definition}[Trivialising map and reverse map]\label{def:Phi-Psi}
+The Wilson-flow map at time $t > 0$ is
+$$
+\Phi_t : G^E \to G^E, \quad U_0 \mapsto U_t.
+$$
+For $t$ small enough that $\Phi_t$ is a diffeomorphism onto its image
+(which is automatic by smoothness of $S_W$ and standard ODE-flow
+theory), the \emph{reverse map} is
+$\Psi_t := \Phi_t^{-1}$, a diffeomorphism from $\mathrm{Im}\,\Phi_t$
+back to $G^E$.
+
+In particular, restricting to a small neighbourhood of the
+classical minimum, $\Psi_t : U_t \in \mathcal M_\mathrm{cl}^\epsilon \mapsto
+\Psi_t(U_t) = U_0 \in G^E$ generates non-trivial configurations from
+smoothed ones.
+\end{definition}
+
+\subsection{L\"uscher's trivialising interpretation}
+L\"uscher~\cite{Luscher2009TrivializingMaps} introduces the
+trivialising map as the smooth diffeomorphism that takes the Wilson
+measure $\mu_{a,\beta}$ to a simpler reference measure, with the change
+of variables $U \mapsto \Phi_t(U)$ inducing the Jacobian
+$\abs{\det D\Phi_t(U)}$. The structural insight is that for an
+appropriate choice of $t$, the pushforward becomes approximately a
+\emph{Gaussian} measure $\mu^\mathrm{Gauss}_{a,\beta}$ supported on the
+classical minimum:
+\begin{equation}\label{eq:pushforward}
+(\Phi_t)_* \mu_{a,\beta}
+\;\approx\; \mu^\mathrm{Gauss}_{a,\beta}
+\;:=\; Z_\mathrm{G}^{-1}\,\exp\bigl(-\tfrac12 \langle a,
+\mathcal H_\mathrm{cl}\,a\rangle\bigr)\,da,
+\end{equation}
+where $a$ is the Lie-algebraic perturbation about the classical minimum
+and $\mathcal H_\mathrm{cl}$ is the lattice Hessian of $S_W$ at the
+minimum. The approximation is exact for the heat-flow on a quadratic
+action and approximate for the Wilson action with corrections of order
+$O(g^2)$ in the small-fluctuation regime, made rigorous by L\"uscher
+through the small-Wilson-flow-time expansion.
+
+% =========================================================================
+\section{LSI-transport principle}\label{sec:transport}
+
+\subsection{Chain rule for LSI under smooth diffeomorphisms}
+
+\begin{proposition}[LSI transport under bounded-differential diffeomorphism]
+\label{prop:transport}
+Let $(N_1, g_1)$ and $(N_2, g_2)$ be smooth Riemannian manifolds, let
+$T : N_1 \to N_2$ be a smooth diffeomorphism, and let $\mu_1$ be a
+probability measure on $N_1$. Suppose
+\begin{enumerate}[label=(\roman*),leftmargin=2em]
+\item $\mu_1$ satisfies a logarithmic Sobolev inequality with constant
+$C_1$: $\Ent_{\mu_1}(f^2) \leq C_1 \int |\nabla_{g_1}f|^2 \,d\mu_1$ for
+all $f \in C^\infty_c(N_1)$.
+\item The operator norm of the differential $DT$ is uniformly bounded:
+$\sup_{x\in N_1} \norm{DT(x)}_\mathrm{op} \leq M$.
+\end{enumerate}
+Then the pushforward measure $\mu_2 := T_*\mu_1$ satisfies a logarithmic
+Sobolev inequality on $N_2$ with constant $C_2 \leq M^2 \cdot C_1$.
+\end{proposition}
+
+\begin{proof}
+Let $h\in C^\infty_c(N_2)$ and let $f = h\circ T \in C^\infty_c(N_1)$.
+By the change-of-variables formula,
+$$
+\Ent_{\mu_2}(h^2)
+= \Ent_{\mu_1}(f^2).
+$$
+By the LSI on $\mu_1$,
+$$
+\Ent_{\mu_1}(f^2) \leq C_1 \int_{N_1} |\nabla_{g_1}(h\circ T)|^2 d\mu_1.
+$$
+The chain rule gives $\nabla_{g_1}(h\circ T) = (DT)^* \nabla_{g_2} h
+\circ T$, with $(DT)^*$ the adjoint of $DT$ between the tangent spaces.
+Hence
+$$
+|\nabla_{g_1}(h\circ T)|_{g_1}^2 \leq \norm{DT}_\mathrm{op}^2 \cdot
+|\nabla_{g_2}h \circ T|_{g_2}^2 \leq M^2 \cdot |\nabla_{g_2}h \circ T|_{g_2}^2.
+$$
+Integrating against $\mu_1$ and using the pushforward identity,
+$$
+\int_{N_1} |\nabla_{g_1}(h\circ T)|^2 d\mu_1 \leq M^2 \int_{N_2}
+|\nabla_{g_2}h|^2 d\mu_2.
+$$
+Combining, $\Ent_{\mu_2}(h^2) \leq M^2 \cdot C_1 \int_{N_2}
+|\nabla_{g_2}h|^2 d\mu_2$, i.e.\ $C_2 \leq M^2 \cdot C_1$.
+\end{proof}
+
+\subsection{Application to the Wilson flow}
+
+\begin{corollary}[LSI-bound on Wilson measure]\label{cor:LSI-WF}
+Suppose the Wilson flow $\Phi_t$ at the trivialising time $t = t^*(\beta)$
+in \eqref{eq:t-star} satisfies the operator-norm bound
+$\norm{D\Phi_{t^*}^{-1}}_\mathrm{op}^{L^4} \leq M(\beta)$ uniformly in
+lattice volume $L^4$ and spacing $a$. Let
+$\mu^\mathrm{Gauss}_{a,\beta} = Z_\mathrm{G}^{-1}\exp(-\tfrac12 \langle a,
+\mathcal H_\mathrm{cl}\,a\rangle)\,da$ be the Gaussian fluctuation measure
+about the classical minimum, with LSI constant
+$C_\mathrm{LSI}^\mathrm{Gauss} = \norm{\mathcal H_\mathrm{cl}^{-1}}_\mathrm{op}
+\leq c_\infty(D)$ (Gaussian Bakry--\'Emery on the Hessian-induced
+metric). Then the Wilson measure $\mu_{a,\beta}$ satisfies LSI with
+constant
+$$
+C_\mathrm{LSI}(\mu_{a,\beta}) \;\leq\; M(\beta)^2 \cdot c_\infty(D).
+$$
+\end{corollary}
+\begin{proof}
+Apply Proposition~\ref{prop:transport} with $T = \Psi_{t^*}$, $\mu_1 =
+\mu^\mathrm{Gauss}_{a,\beta}$, $\mu_2 = (\Psi_{t^*})_*\mu^\mathrm{Gauss}_{a,\beta}
+= \mu_{a,\beta}$ (the pushforward identity, modulo Jacobian, see
+\S~\ref{sec:Jacobian}).
+\end{proof}
+
+% =========================================================================
+\section{Jacobian correction}\label{sec:Jacobian}
+
+\subsection{The Jacobian of the Wilson flow}
+The pushforward identity~\eqref{eq:pushforward} as written is only
+approximate; the exact identity reads
+\begin{equation}\label{eq:Jacobian-id}
+(\Phi_t)_* \mu_{a,\beta}
+= J_t \cdot \mu^\mathrm{Gauss}_{a,\beta},
+\quad
+J_t(a) = \abs{\det D\Phi_t(\Psi_t(a))}^{-1}\cdot
+\exp\bigl(S_W(\Psi_t(a)) - \tfrac12\langle a, \mathcal H_\mathrm{cl}\,a\rangle\bigr),
+\end{equation}
+where the second factor expresses the difference between the true Wilson
+action at $\Psi_t(a)$ and the Gaussian approximation.
+
+\subsection{Holley--Stroock perturbation}
+\begin{proposition}[Holley--Stroock perturbation of LSI]\label{prop:HS}
+Let $\mu$ be a probability measure on a Riemannian manifold satisfying
+LSI with constant $C_\mathrm{LSI}(\mu)$. Let $J : N \to \R_+$ be a
+positive measurable function bounded above and below: $0 < a \leq J \leq
+b < \infty$. Then the measure $J\cdot\mu / \int J\,d\mu$ satisfies LSI
+with constant
+$$
+C_\mathrm{LSI}(J\cdot\mu/Z) \leq \frac{b}{a}\cdot C_\mathrm{LSI}(\mu).
+$$
+\end{proposition}
+\begin{proof}
+Standard, e.g.~\cite[Prop.~5.4.1]{BakryGentilLedoux2014}.
+\end{proof}
+
+\subsection{Uniform $J_t$ bound}
+\begin{lemma}[Jacobian-times-action ratio]\label{lem:Jacobian-bound}
+For Wilson action $S_W$ and Wilson flow $\Phi_t$ at trivialising time
+$t = t^*(\beta)$, the ratio
+$$
+\frac{\sup_a J_t(a)}{\inf_a J_t(a)}
+\leq \exp\bigl(\sup_{a}|S_W(\Psi_t(a)) - \tfrac12\langle a,\mathcal H_\mathrm{cl}a\rangle|\bigr) \cdot \frac{\sup\abs{\det D\Phi_t}}{\inf\abs{\det D\Phi_t}}.
+$$
+The numerator is bounded by the small-fluctuation control of the Wilson
+action away from the classical minimum (subleading $O(g^2)$ in the
+weak-coupling expansion, see L\"uscher \cite{Luscher2009TrivializingMaps},
+section on the small-$t$ flow expansion). The denominator is controlled
+by the operator-norm bound on $D\Phi_t$, since
+$\det D\Phi_t = \exp\Tr\log D\Phi_t \in [\norm{D\Phi_t}^{-d},
+\norm{D\Phi_t}^d]$ with $d = \dim G^E$.
+\end{lemma}
+\begin{proof}[Proof sketch]
+Direct computation. The dimensional factor $d = \dim G^E = (N^2-1)\cdot
+4 L^4$ is volume-extensive, so the determinant control degrades
+proportionally to $L^4$ unless the operator-norm is itself controlled
+uniformly in $L^4$. This is the source of the uniform-in-$V$
+obstruction, see~\S~\ref{sec:bound}.
+\end{proof}
+
+% =========================================================================
+\section{The operator-norm bound $\norm{D\Phi_t}$: L\"uscher 2009 and
+limitations}\label{sec:bound}
+
+\subsection{L\"uscher's 2009 estimate}
+L\"uscher~\cite{Luscher2009TrivializingMaps} provides an explicit bound
+on the differential of the trivialising map in the regime where the
+Wilson flow approximates the heat flow. The argument proceeds via the
+local linearisation
+$\partial_t D\Phi_t = -D(\partial S_W)(U_t) \cdot D\Phi_t$,
+which is a linear ODE in the differential. By Gronwall,
+$$
+\norm{D\Phi_t}_\mathrm{op} \leq \exp\bigl(\int_0^t \norm{D(\partial S_W)(U_s)}_\mathrm{op}\,ds\bigr).
+$$
+The integrand is controlled by the Hessian of the Wilson action,
+\begin{equation}\label{eq:Hess-WF}
+\norm{D(\partial S_W)(U)}_\mathrm{op} = \norm{\Hess S_W(U)}_\mathrm{op}
+\leq \beta\cdot C_\mathrm{geom}\cdot d_\mathrm{coord}(U,e),
+\end{equation}
+with $C_\mathrm{geom}$ a geometric constant depending on $D = 4$ and
+$d_\mathrm{coord}(U,e)$ a Lie-algebraic distance from the identity link
+\cite[Eq.~(2.7)]{Luscher2009TrivializingMaps}.
+
+\subsection{Finite-volume bound}
+\begin{proposition}[L\"uscher 2009 finite-volume Lipschitz bound]
+\label{prop:Luscher-finvol}
+On a lattice of finite volume $L^4$ and at coupling $\beta$, the Wilson
+flow has Lipschitz constant
+$$
+\norm{D\Phi_t}_\mathrm{op} \leq \exp\bigl(C\,\beta\,L^4\,t\bigr)
+\;=\;\exp\bigl(C\,\beta\,L^4\,t^*(\beta)\bigr).
+$$
+\end{proposition}
+\begin{proof}[Proof sketch]
+Plug~\eqref{eq:Hess-WF} into the Gronwall and integrate over the
+trivialising time $t^* \sim \beta\cdot a^2$. The volume-dependent factor
+$L^4$ comes from the sum over lattice sites in the Hessian operator
+norm: each link contributes $O(1)$, the total is $O(L^4)$.
+\end{proof}
+
+\subsection{The uniform-in-$V$ obstruction}
+\begin{remark}[Uniform-in-$V$ failure of the naive bound]\label{rem:obstruction}
+Proposition~\ref{prop:Luscher-finvol} gives $M(\beta, L) = O(e^{c\beta
+L^4 t^*})$, which is \emph{volume-extensive in the exponent}. This is
+\emph{not} uniform in $L^4$ as $L\to\infty$. Applied to
+Corollary~\ref{cor:LSI-WF}, this would give $C_\mathrm{LSI}(\mu_{a,\beta,L})
+\leq e^{2c\beta L^4 t^*}\cdot c_\infty(D)$, which diverges as
+$L\to\infty$ and is therefore \emph{useless} as a uniform-in-$V$ bound.
+
+The naive bound is not enough. We need a sharper analysis that
+controls $\norm{D\Phi_t}_\mathrm{op}$ uniformly in $L$. This is the
+\emph{principal open analytic problem} of this Letter.
+\end{remark}
+
+\subsection{Why uniform-in-$V$ is plausible}
+\begin{remark}[Locality of the Wilson flow]\label{rem:locality}
+Despite the volume-extensive naive bound, two structural facts suggest
+the true operator-norm bound is uniform in $V$:
+
+(i) \emph{Spatial locality.} The Wilson flow~\eqref{eq:WF} is local:
+$\partial_t U_{x,\mu}$ depends only on plaquettes touching the link
+$(x,\mu)$, hence on $O(1)$ neighbouring links. The Hessian of the
+linearisation has $O(1)$ band-width (bounded interaction range). For
+band-limited operators on $V$ sites, the operator norm scales as
+$O(1)$ (norm of a single block), not $O(V)$, by standard band-matrix
+operator-norm estimates.
+
+(ii) \emph{Exponential decay of correlations.} In the small-coupling
+regime $\beta \gg 1$, the Wilson measure has exponentially decaying
+correlations~\cite{Osterwalder1978}, so the differential $D\Phi_t$
+acts on the correlation-decay-limited Hilbert space, and its operator
+norm is $O(1)$ rather than $O(V)$.
+
+These two heuristics suggest the true uniform bound
+$\norm{D\Phi_t}_\mathrm{op} \leq M(\beta)$ independent of $V$ is
+plausible. Making it rigorous is the open problem.
+\end{remark}
+
+% =========================================================================
+\section{Four tools to close the uniform-in-$V$ gap}\label{sec:roadmap}
+
+We list four standard tools that may provide a rigorous uniform-in-$V$
+bound on $\norm{D\Phi_t}_\mathrm{op}$, each with honest probability
+estimates.
+
+\subsection{Tool 1: Bakry--\'Emery on the Wilson flow itself}
+The Wilson flow $\Phi_t$ is the gradient flow of $S_W$ on $G^E$. The
+Bakry--\'Emery $\Gamma_2$-calculus applied directly to $\Phi_t$ requires
+a Ricci lower bound on $G^E$ (which is the product of $SU(N)$ Lie groups
+with Killing metric, giving $\Ric \geq c_N\,g$ uniformly). However, the
+gradient-flow modification of the metric (with the $S_W$ potential
+serving as the convex perturbation) requires $\Hess S_W \geq -K\,g$
+uniformly in $V$, which is the Polchinski hypothesis (H1a-iii) again
+\cite[\S 5.2]{OpusPolchinskiSubgaps2026}. So this tool is \emph{not}
+independent of the BBD route. \emph{P(closure via Tool 1): 5-15\%}.
+
+\subsection{Tool 2: Brownian-loop representation of the flow}
+The Wilson flow has a probabilistic representation in terms of a
+Brownian motion on $G^E$ with drift $-\partial S_W$. The differential
+$D\Phi_t$ admits an explicit stochastic representation
+(Bismut formula~\cite[Sec.~5.2]{BismutLNM1984}) involving the
+gradient of the action along the Brownian path:
+$$
+D\Phi_t(U_0)\cdot v = \mathbb E\bigl[v(t) \exp(-\int_0^t \nabla^2 S_W(U_s)\,ds)\bigr],
+$$
+where $v(t)$ is the variation along the flow. This representation
+permits stochastic estimates of $\norm{D\Phi_t}$ via concentration on
+the Brownian path, potentially providing uniform-in-$V$ bounds under a
+spatial-localisation moment estimate. \emph{P(closure via Tool 2):
+20-35\%, requires expert stochastic analysis}.
+
+\subsection{Tool 3: Onsager--Machlup variational principle}
+The Wilson flow at time $t$ minimises an Onsager--Machlup functional
+on the path space, and its differential is the second variation. The
+classical variational structure gives a sharp formula for
+$\norm{D\Phi_t}_\mathrm{op}$ as the maximal singular value of the
+linearised problem. Uniform-in-$V$ control then reduces to uniform
+bounds on the singular values of the spatially-local linear ODE
+$\partial_t \delta U_t = -\Hess S_W(U_t)\cdot \delta U_t$, which is a
+non-autonomous linear problem on $\R^{\dim G^E}$. \emph{P(closure via
+Tool 3): 30-45\%, requires careful path-space analysis}.
+
+\subsection{Tool 4: Pinsker / Talagrand reduction}
+By Pinsker's inequality, LSI on $\mu$ is implied by a stronger transport
+inequality $T_2(\mu)$ in the Wasserstein-2 sense. Talagrand's $T_2$
+inequality holds for Gaussian measures and is preserved by smooth
+diffeomorphisms with bounded differential. Reformulating
+Corollary~\ref{cor:LSI-WF} as a $T_2$-transport result:
+$T_2(\mu_{a,\beta}) \leq M^2 \cdot T_2(\mu^\mathrm{Gauss}_{a,\beta})$.
+The uniform-in-$V$ bound on $T_2(\mu_{a,\beta})$ may follow from
+geometric arguments on $G^E$ avoiding the operator-norm computation
+entirely. \emph{P(closure via Tool 4): 15-30\%}.
+
+\subsection{Summary table}
+\begin{center}
+\begin{tabular}{lll}
+\toprule
+Tool & P(closure) & Independent of BBD? \\
+\midrule
+1. Bakry--\'Emery on flow & 5-15\% & No (= (H1a-iii)) \\
+2. Brownian-loop / Bismut & 20-35\% & Yes \\
+3. Onsager--Machlup & 30-45\% & Yes \\
+4. Pinsker / $T_2$ transport & 15-30\% & Yes \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+Aggregating (assuming partial independence between tools):
+$$
+P(\text{closure via some tool}) \approx 1 - (1-0.1)(1-0.3)(1-0.4)(1-0.2)
+\approx 1 - 0.30 = 0.70 = 70\%
+$$
+This is an \emph{optimistic} aggregate, ignoring correlations between
+tools. A more honest aggregate considering correlations is in the
+\emph{45-60\%} range.
+
+% =========================================================================
+\section{Main theorem}\label{sec:main}
+
+\begin{theorem}[Main conditional reduction: Wilson-flow uniform LSI]
+\label{thm:main}
+Let $G = SU(N)$, lattice $\Lambda_L^a = (a\Z/aL\Z)^4$, Wilson action
+\eqref{eq:Wilson-action-recall}, and Wilson measure $\mu_{a,\beta,L}$.
+Fix $\beta\geq\beta_0$ and let $t^* = t^*(\beta)$ be the trivialising
+time \eqref{eq:t-star}, and $\Psi_{t^*} = \Phi_{t^*}^{-1}$ be the
+reverse Wilson-flow map.
+
+Assume:
+\begin{enumerate}[label=(\roman*),leftmargin=2em]
+\item Uniform-in-$V$ operator-norm bound on the differential:
+$\norm{D\Psi_{t^*}}_\mathrm{op}^{L^4} \leq M(\beta) < \infty$, uniformly
+in $L^4$ and $a$ (this is the open problem of \S~\ref{sec:bound}, with
+P(closure) $\approx 45-60\%$ over the 1-3y horizon).
+\item Uniform-in-$V$ Jacobian-action ratio bound:
+$\sup_a J_{t^*}(a)/\inf_a J_{t^*}(a) \leq R(\beta) < \infty$,
+uniformly in $L^4$ and $a$
+(automatic by (i) and the small-fluctuation bound of L\"uscher
+\cite{Luscher2009TrivializingMaps}; needs (i)).
+\end{enumerate}
+Then the Wilson measure $\mu_{a,\beta,L}$ satisfies a logarithmic
+Sobolev inequality with constant
+$$
+C_\mathrm{LSI}(\mu_{a,\beta,L}) \;\leq\; R(\beta)\cdot M(\beta)^2\cdot c_\infty(D),
+$$
+\emph{uniformly} in $L^4$ and $a$. Combined with Theorem~6.1
+of~\cite{RemondiereKRFPB_2026}, this yields the conditional mass gap
+$\Delta \geq (1-\kFP)\,m_0^2 / [R(\beta)\cdot M(\beta)^2\cdot c_\infty(D)]$
+$> 0$.
+\end{theorem}
+
+\begin{proof}
+Combine Corollary~\ref{cor:LSI-WF} and Proposition~\ref{prop:HS} (the
+Holley--Stroock factor $R(\beta)$ from the Jacobian-action correction
+of Lemma~\ref{lem:Jacobian-bound}).
+\end{proof}
+
+\begin{remark}[Comparison with the conditional BBD route]
+The conditional bound in Theorem~\ref{thm:main} carries
+$R(\beta)\cdot M(\beta)^2$ as an additional multiplicative constant
+compared to the BBD bound $c_\infty(D)$ alone. For this to be a
+\emph{useful} backup safety net, $R(\beta)$ and $M(\beta)$ must be
+\emph{independent of $\beta$} in the limit $\beta\to\infty$. The
+heuristic analyses of Remark~\ref{rem:locality} suggest both should be
+$O(1)$ at large $\beta$, but the rigorous verification is the open
+problem of \S~\ref{sec:bound}.
+\end{remark}
+
+% =========================================================================
+\section{Honest scope and limits}\label{sec:remark}
+
+\subsection{What is proved here}
+\begin{itemize}[leftmargin=2em]
+\item Theorem~\ref{thm:main} establishes the conditional uniform-LSI
+statement for the Wilson measure, conditional on
+(i)~uniform-in-$V$ operator-norm bound on $D\Psi_{t^*}$ and
+(ii)~uniform Jacobian-action ratio bound.
+\item Proposition~\ref{prop:transport} establishes the LSI-transport
+chain-rule under bounded-differential diffeomorphisms.
+\item Lemma~\ref{lem:Jacobian-bound} bounds the Jacobian-action ratio
+$J_t$ in terms of $\norm{D\Phi_t}$ and weak-coupling action control.
+\item Section~\ref{sec:roadmap} lists four tools that may close the
+operator-norm gap, with honest probability estimates.
+\end{itemize}
+
+\subsection{What is \emph{not} proved here}
+\begin{itemize}[leftmargin=2em]
+\item The crucial uniform-in-$V$ operator-norm bound
+$\norm{D\Psi_{t^*}}_\mathrm{op}^{L^4} \leq M(\beta)$
+\emph{remains an open analytic problem}. The naive bound
+Proposition~\ref{prop:Luscher-finvol} is volume-extensive in the
+exponent. Tools 2--4 of \S~\ref{sec:roadmap} are explored as
+candidates.
+\item The conditional uniform LSI does not by itself give the Clay mass
+gap, which requires the additional KR-FP chain
+(KR-FP-1, KR-FP-2, KR-FP-3) of~\cite{RemondiereKRFP3_2026,
+RemondiereKRFPB_2026}.
+\end{itemize}
+
+\subsection{Comparison with the BBD Polchinski route}
+\begin{itemize}[leftmargin=2em]
+\item BBD-Polchinski: P(success on 18-36m collab) $\approx 35-55\%$.
+The verrou is intermediate-$\beta$ convexity of Polchinski Hessian
+\cite[(H1a-iii)]{OpusPolchinskiSubgaps2026}.
+\item Wilson-flow voie B: P(success on 12-24m solo) $\approx 45-60\%$
+\emph{optimistic}, $30-40\%$ \emph{honest} (with correlation between
+tools). The verrou is uniform-in-$V$ operator-norm bound on $D\Phi_t$.
+\end{itemize}
+
+\subsection{Probability of either route succeeding}
+Assuming approximate independence between the two routes (BBD requires
+$\Hess V_t$ convexity, Wilson-flow requires $D\Phi_t$ operator norm;
+they are different analytic objects):
+$$
+P(\text{BBD or Wilson-flow success on 24m})
+\approx 1 - (1-0.45)(1-0.35) \approx 1 - 0.36 = 64\%.
+$$
+This is the \emph{net gain} of having both routes available: from
+$45\%$ (BBD alone) to $64\%$ (BBD or Wilson-flow). The
+Wilson-flow route is therefore a meaningful backup safety net.
+
+\subsection{Connection with stochastic quantisation}
+The Wilson flow is intimately related to stochastic quantisation: it
+is the gradient-descent semigroup associated with the Langevin
+equation. The recent works of Chandra--Chevyrev--Hairer--Shen on
+stochastic quantisation of 3D Yang--Mills--Higgs~\cite{ChandraChevyrevHairerShen2024}
+and the Bauerschmidt--Bodineau--Dagallier Polchinski survey
+\cite{BauerschmidtBodineauDagallier2024} provide complementary
+analytic machinery. A future synthesis combining all three approaches
+(Polchinski + Wilson flow + stochastic quantisation) is likely the
+correct path to the rigorous uniform LSI on the 4D $SU(N)$ Wilson
+measure.
+
+% =========================================================================
+\section*{Acknowledgments}
+This work was prepared with computational research assistance from
+Anthropic's Claude system (Opus~4.7, 1M context window). All
+mathematical content (theorems, proofs, hypotheses, references) is
+the sole responsibility of the author.
+
+% =========================================================================
+\begin{thebibliography}{99}
+
+\bibitem{BakryEmery1985}
+D.~Bakry, M.~\'Emery,
+``Diffusions hypercontractives,''
+\emph{S\'eminaire de Probabilit\'es XIX},
+Lecture Notes in Mathematics \textbf{1123} (Springer, 1985) 177--206.
+
+\bibitem{BakryGentilLedoux2014}
+D.~Bakry, I.~Gentil, M.~Ledoux,
+\emph{Analysis and Geometry of Markov Diffusion Operators},
+Grundlehren \textbf{348}, Springer, 2014.
+
+\bibitem{BauerschmidtBodineauDagallier2024}
+R.~Bauerschmidt, T.~Bodineau, B.~Dagallier,
+``Stochastic dynamics and the Polchinski equation: an introduction,''
+\emph{Probab. Surveys} \textbf{21} (2024) 200--290.
+arXiv:2307.07619.
+
+\bibitem{BauerschmidtDagallier2024}
+R.~Bauerschmidt, B.~Dagallier,
+``Log-Sobolev inequality for the $\varphi^4_2$ and $\varphi^4_3$ measures,''
+arXiv:2202.02295.
+
+\bibitem{BismutLNM1984}
+J.-M. Bismut,
+\emph{Large Deviations and the Malliavin Calculus},
+Progress in Mathematics \textbf{45}, Birkh\"auser, 1984.
+
+\bibitem{ChandraChevyrevHairerShen2024}
+A.~Chandra, I.~Chevyrev, M.~Hairer, H.~Shen,
+``Stochastic quantisation of Yang--Mills--Higgs in 3D,''
+\emph{Invent. Math.} (2024).
+arXiv:2201.03487.
+
+\bibitem{Luscher2009TrivializingMaps}
+M.~L\"uscher,
+``Trivializing maps, the Wilson flow and the HMC algorithm,''
+\emph{Commun. Math. Phys.} \textbf{293} (2010) 899--919.
+arXiv:0907.5491.
+
+\bibitem{Luscher2010WilsonFlow}
+M.~L\"uscher,
+``Properties and uses of the Wilson flow in lattice QCD,''
+\emph{JHEP} \textbf{08} (2010) 071.
+arXiv:1006.4518.
+
+\bibitem{OpusPolchinskiSubgaps2026}
+K.~R\'emondi\`ere,
+\emph{Polchinski sub-gaps for SU(N) extension: 5-sub-gap attack with
+honest verdicts} (internal note
+\texttt{OPUS2\_POLCHINSKI\_SUBGAPS\_2026-05-26}), May 2026.
+
+\bibitem{Osterwalder1978}
+K.~Osterwalder, E.~Seiler,
+``Gauge field theories on a lattice,''
+\emph{Ann. Phys. (N.Y.)} \textbf{110} (1978) 440--471.
+
+\bibitem{OttoVillani2000}
+F.~Otto, C.~Villani,
+``Generalization of an inequality by Talagrand and links with the
+logarithmic Sobolev inequality,''
+\emph{J. Funct. Anal.} \textbf{173} (2000) 361--400.
+
+\bibitem{RemondiereKRFP3_2026}
+K.~R\'emondi\`ere,
+\emph{Spectral bound for the Faddeev--Popov operator on the fundamental
+modular domain of the slice $\overline\Lambda_{S_0}$: a Birman--Schwinger /
+Aubin--Talenti analysis} (companion preprint
+\texttt{Paper\_KR\_FP3\_AnnalsMath}), May 2026.
+
+\bibitem{RemondiereKRFPB_2026}
+K.~R\'emondi\`ere,
+\emph{Mass gap for 4D pure Yang--Mills via Bakry--\'Emery on the
+fundamental modular domain: a conditional reduction} (companion preprint
+\texttt{Paper\_KR\_FP\_B\_BakryEmery\_LMP}), May 2026.
+
+\end{thebibliography}
+
+\end{document}

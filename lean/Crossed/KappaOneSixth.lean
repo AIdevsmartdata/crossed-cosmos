@@ -4,7 +4,30 @@ import Mathlib.Tactic.Linarith
 import Mathlib.Data.Nat.Choose.Basic
 
 /-!
-  # Crossed Cosmos — κ = 1/6 (rank-saturation correction factor)
+  # Crossed Cosmos — κ_FP = 1/6 (Faddeev-Popov / Kostant rank-saturation correction factor)
+
+  ## NOTATION DISAMBIGUATION (added 2026-05-26)
+
+  Throughout this module, `kappa = 1/6` denotes the
+  **Faddeev-Popov / Kostant constant** `κ_FP = 1/(2|Φ⁺(SU(3))|)`,
+  which controls the rank-saturation correction in the Wilson
+  log-Sobolev cross-group law (Theorem C). Values: `1/2` for SU(2),
+  `1/6` for SU(3), `1/(N(N-1))` for SU(N).
+
+  This is **distinct** from the entanglement-entropy area-law prefactor
+  `κ_EE` appearing in companion lattice-EE preprints (Higgs from
+  Lattice EE, Theoretical Derivations), for which
+  `κ_EE(N) = κ_∞·(1 - 1/N²)` with `κ_∞ ≈ ζ(3)/√π ≈ 0.6782` and
+  numerical values 0.508, 0.603, 0.635 for N = 2, 3, 4.
+
+  The two constants live in disjoint physical contexts (Coulomb-gauge
+  spectral bounds vs. area-law entanglement leading coefficient) and
+  only coincide numerically at SU(2) by accident. The Lean definitions
+  in this module (`kappa`, `kappa_eq_one_sixth`, etc.) all refer to
+  κ_FP exclusively; the names are preserved unchanged to avoid breaking
+  downstream imports in `TheoremCLattice.lean`, `VariationBetaBound.lean`,
+  `InformationConservation.lean`, `OttoWestdickenberg.lean`,
+  `LemmaB_BetaInfinity.lean`, `FaddeevPopovGap.lean`.
 
   ## Mission
 

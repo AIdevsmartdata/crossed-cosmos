@@ -1,14 +1,12 @@
-# crossed-cosmos — Yang–Mills v22 + ECI (2026-05-24)
+# crossed-cosmos — ECI v7.0.2.0 (2026-05-21)
 
-**ECI** = *Empirical Cross-Galois Identities* — arithmetic-geometric research repository (Bianchi 3-orbifolds, class field theory, Selberg trace formula, Dijkgraaf-Witten) with peripheral connections to Yang–Mills mass-gap phenomenology.
-
-**🆕 2026-05-24 milestone** — *Saturation polynomial discovery*: the rank-saturation condition that triggers the κ correction in Theorem C reduces to $D(D-1)(5-D)/6$, with exactly three integer pairs $(N,D)$ solving it for some non-abelian $\mathrm{SU}(N)$: $(2,2)$, $(3,3)$, $(3,4)$. For $D \ge 5$ the polynomial is non-positive, so $D=4$ is the last non-trivial dimension. κ is topologically invariant under Bianchi I metric deformation; the existence of a positive mass gap remains conditional on the cluster expansion bound (Bauerschmidt collaboration). See `papers/CLAY_THEOREM_FULL_v22_2026-05-24.md` and `papers/PITCH_BAUERSCHMIDT_V22_FINAL_2026-05-24.{md,tex,pdf}`.
+**ECI** = *Empirical Cross-Galois Identities* — arithmetic-geometric research repository (Bianchi 3-orbifolds, class field theory, Selberg trace formula, Dijkgraaf-Witten) with peripheral connections to Yang-Mills mass-gap phenomenology.
 
 ## 🔗 Quick Links
 
 | Resource | URL |
 |---|---|
-| **🆕 Latest GitHub release** (6 papers PDF, 2.7 MB) | [v7.0.1.0 — 2026-05-21](https://github.com/AIdevsmartdata/crossed-cosmos/releases/tag/v7.0.1.0) |
+| **🆕 Latest GitHub release** (6 papers PDF, 2.7 MB) | [v7.0.0.1 — 2026-05-20](https://github.com/AIdevsmartdata/crossed-cosmos/releases/tag/v7.0.0.1) |
 | **Concept DOI** (always-latest) | [10.5281/zenodo.19686398](https://doi.org/10.5281/zenodo.19686398) |
 | **Latest Zenodo DOI** (v7.0.0.0) | [10.5281/zenodo.20294085](https://doi.org/10.5281/zenodo.20294085) |
 | **⭐ Theorems index** (quick lookup) | [THEOREMS_INDEX.md](THEOREMS_INDEX.md) |
@@ -139,7 +137,7 @@ cd notes/eci_v7_aspiration/M45_BIANCHI_IX_PAPER && pdflatex bianchi_ix_modular_s
 ```bibtex
 @software{crossed_cosmos_2026,
   title  = {crossed-cosmos: ECI v6.0.53.233 — M142 hierarchy + Schütt-Hodge MULTI-D + YM Mille attempt},
-  author = {Remondière, Kevin},
+  author = {R\'emondi\`ere, K\'evin},
   year   = {2026},
   doi    = {10.5281/zenodo.19686398},
   url    = {https://github.com/AIdevsmartdata/crossed-cosmos},
@@ -154,7 +152,7 @@ cd notes/eci_v7_aspiration/M45_BIANCHI_IX_PAPER && pdflatex bianchi_ix_modular_s
 
 ## Author
 
-**Kévin Remondière** — Independent researcher, Tarbes, France
+**Kévin Rémondière** — Independent researcher, Oloron-Sainte-Marie, France
 ORCID: [0009-0008-2443-7166](https://orcid.org/0009-0008-2443-7166)
 Email: kevin.remondiere@gmail.com
 GitHub: [AIdevsmartdata](https://github.com/AIdevsmartdata)

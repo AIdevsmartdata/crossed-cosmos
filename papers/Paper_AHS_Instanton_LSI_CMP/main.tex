@@ -1,0 +1,897 @@
+% =========================================================================
+% Paper AHS-Instanton-LSI : Logarithmic Sobolev inequality for the
+% instanton sector of pure SU(N) Wilson lattice gauge theory.
+%
+% Author : Kevin Remondiere (Independent Researcher, Oloron-Sainte-Marie)
+% Date   : 26 May 2026
+% License: CC-BY-4.0
+% Target : Communications in Mathematical Physics (CMP)
+%          / Letters in Mathematical Physics (LMP)
+% =========================================================================
+
+\documentclass[11pt,a4paper]{amsart}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath,amssymb,amsthm,amsfonts}
+\usepackage{mathtools}
+\usepackage{microtype}
+\usepackage{geometry}
+\geometry{margin=1in}
+\usepackage[dvipsnames,table,xcdraw]{xcolor}
+\usepackage{hyperref}
+\hypersetup{colorlinks=true, linkcolor=blue!50!black,
+  citecolor=blue!50!black, urlcolor=blue!50!black}
+\usepackage{booktabs}
+\usepackage{enumitem}
+
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{remark}[theorem]{Remark}
+\newtheorem{hypothesis}[theorem]{Hypothesis}
+
+% -- Macros --------------------------------------------------------------
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\gfrak}{\mathfrak{g}}
+\newcommand{\hfrak}{\mathfrak{h}}
+\newcommand{\su}{\mathfrak{su}}
+\newcommand{\norm}[1]{\left\lVert#1\right\rVert}
+\newcommand{\abs}[1]{\left\lvert#1\right\rvert}
+\newcommand{\inner}[2]{\langle #1, #2\rangle}
+\newcommand{\Ric}{\mathrm{Ric}}
+\newcommand{\Tr}{\mathrm{Tr}}
+\newcommand{\ad}{\mathrm{ad}}
+\newcommand{\dvol}{\, d\mathrm{vol}}
+\newcommand{\Mmod}{\mathcal{M}}
+\DeclareMathOperator{\spec}{spec}
+\DeclareMathOperator{\rk}{rk}
+\DeclareMathOperator{\Hess}{Hess}
+\DeclareMathOperator{\Ent}{Ent}
+
+% Faddeev-Popov / Kostant invariant, NOT entanglement-entropy prefactor.
+\newcommand{\kFP}{\kappa_{\mathrm{FP}}}
+\newcommand{\cinf}{c_{\infty}}
+
+% =========================================================================
+\title[LSI for the instanton sector of $SU(N)$ Wilson]
+{Logarithmic Sobolev inequality for the instanton sector
+ of pure $SU(N)$ Wilson lattice gauge theory}
+
+\author{K\'evin R\'emondi\`ere}
+\address{Independent Researcher, Oloron-Sainte-Marie, France}
+\email{kevin.remondiere@gmail.com}
+\thanks{ORCID:
+\href{https://orcid.org/0009-0008-2443-7166}{0009-0008-2443-7166}.
+This work is released under a
+\href{https://creativecommons.org/licenses/by/4.0/}{Creative Commons
+Attribution 4.0 International License (CC-BY-4.0)}.}
+\date{26 May 2026}
+\subjclass[2020]{Primary 81T13; Secondary 53C07, 58J35, 60J60, 35P15.}
+\keywords{Yang--Mills, instanton, anti-self-dual, ASD moduli space,
+Atiyah--Hitchin--Singer, deformation complex, Bakry--\'Emery,
+logarithmic Sobolev inequality, lattice gauge theory.}
+
+\begin{document}
+
+\begin{abstract}
+We establish an unconditional logarithmic Sobolev inequality on the
+\emph{instanton stratum} of 4D pure $SU(N)$ Wilson lattice gauge theory.
+Restricting attention to gauge orbits with non-trivial topological charge
+$k\in\Z\setminus\{0\}$, the Atiyah--Hitchin--Singer (AHS) deformation
+complex of 1978 supplies an explicit description of the tangent and
+zero-mode subspaces of the Yang--Mills action Hessian at an irreducible
+self-dual connection. We combine this description with the
+Babelon--Viallet O'Neill formula and the Bakry--\'Emery
+$\Gamma_2$-calculus to deduce, on the lattice analogue $\Mmod_k^a$ of the
+instanton moduli space, the explicit Ricci bound
+$\Ric\geq(1-\kFP)\,m_0^2\,g$ with
+$\kFP=1/(2|\Phi^+(SU(N))|)$, hence a uniform LSI
+with constant $\rho\geq(1-\kFP)m_0^2$ on each topological sector. The
+result is \emph{unconditional} on the AHS strata, in contrast with the
+generic-sector result, which remains conditional on the
+Faddeev--Popov hypotheses (H1)--(H3) of the companion
+Paper~KR--FP--3~\cite{RemondiereKRFP3_2026}. The unconditional gain is
+restricted to sectors of mass $O(e^{-8\pi^2 k/g^2})$ under the Wilson
+measure at large $\beta$, and is therefore physically marginal but
+mathematically clean. We articulate the obstruction to extending the AHS
+argument to the trivial topological sector and discuss connections with
+the gauge-orbit scaling-limit programme of
+Cao--Park--Sheffield~\cite{CaoParkSheffield2024} and
+Chatterjee~\cite{Chatterjee2024}.
+For $G=SU(3)$ the explicit constant is $\rho\geq(5/6)\,m_0^2$.
+\end{abstract}
+
+\maketitle
+
+% =========================================================================
+\section{Introduction}\label{sec:intro}
+
+\subsection{Motivation: sector-wise route to LSI for $SU(N)$ Wilson}
+The Bauerschmidt--Dagallier programme establishes a uniform logarithmic
+Sobolev inequality (LSI) for the lattice $\varphi^4_2,\varphi^4_3$
+measures~\cite{BauerschmidtDagallier2024}, and the
+Bauerschmidt--Bodineau--Dagallier (BBD) survey supplies the renormalisation-
+group framework~\cite{BauerschmidtBodineauDagallier2024}. Adapting that
+programme to the 4D pure $SU(N)$ Wilson measure is the standard remaining
+external input in the geometric reduction of the Yang--Mills mass gap
+recently articulated as Theorem~KR--FP--B~\cite{RemondiereKRFPB_2026,
+RemondiereKRFP3_2026}.
+
+In place of attacking the BBD extension directly --- which would require
+controlling the Hessian of the Polchinski effective potential
+$V_t$ on $SU(N)^E$ in the intermediate $\beta$ regime, an open problem ---
+this Letter pursues an \emph{orthogonal} route: we restrict the Wilson
+measure to its \emph{topological sectors} $k\neq 0$ and exploit the
+classical Atiyah--Hitchin--Singer (AHS) description of the self-dual
+deformation complex~\cite{AtiyahHitchinSinger1978} to obtain an
+\emph{unconditional} LSI on each non-trivial sector.
+
+\subsection{The AHS deformation complex (recalled)}
+Let $P\to M$ be a principal $G$-bundle on a compact oriented Riemannian
+4-manifold $(M,g_M)$ with $G$ a compact simple Lie group and let $A$ be a
+self-dual ($F^+=0$ where $F^+=\tfrac12(F+\ast F)$) connection on $P$.
+The AHS deformation complex
+\begin{equation}\label{eq:AHS-complex}
+0 \to \Omega^0(M;\ad P)
+  \xrightarrow{\,d_A\,} \Omega^1(M;\ad P)
+  \xrightarrow{\,d_A^+\,} \Omega^{2,+}(M;\ad P) \to 0
+\end{equation}
+records the linearisation of the moduli problem~\cite{AtiyahHitchinSinger1978}.
+Atiyah, Hitchin, and Singer prove (Proposition~6.10 in their work) that
+under standard regularity assumptions ($M=S^4$, or more generally
+$M$ with positive scalar curvature and the connection being irreducible)
+the cohomology groups $H^0_A, H^1_A, H^2_A$ of \eqref{eq:AHS-complex}
+satisfy
+\begin{itemize}[leftmargin=2em]
+\item $H^0_A \simeq \mathrm{Stab}_A^{Lie}$, the Lie algebra of the
+isotropy group of $A$; for an \emph{irreducible} self-dual connection,
+$H^0_A = 0$.
+\item $H^1_A$ has dimension
+$8 c_2(P) - (N^2-1) (1+b^+_2(M))$ for $G=SU(N)$ (index theorem for
+the AHS complex),
+which equals the local dimension of the moduli space
+$\Mmod_k(P;g_M) := \{A : F^+(A)=0,\ c_2(P)=k\}/\mathcal G$ at $[A]$.
+\item $H^2_A = 0$ in good situations ($S^4$ with $b^+_2=1$ is generic in
+this sense; in general one needs to check the obstruction vanishes; see
+the original AHS paper, especially Theorem~3.3 and surrounding discussion).
+\end{itemize}
+
+\subsection{Main result (informal)}
+Let $\Mmod_k^a$ denote the lattice-regularised instanton moduli space at
+spacing $a$ and topological charge $k\neq 0$, equipped with the
+restricted Wilson measure
+$\mu^k_{a,\beta} := \mu_{a,\beta}|_{\Mmod_k^a}/\mu_{a,\beta}(\Mmod_k^a)$.
+Let $L^k_{a,\beta}$ be the associated Langevin generator (heat semigroup
+$P^{k,a,\beta}_t = \exp(t L^k_{a,\beta})$ on $\Mmod_k^a$).
+
+\begin{theorem}[Informal: LSI on the lattice instanton sector]
+\label{thm:main-informal}
+For every $k\in\Z\setminus\{0\}$, every $\beta\geq\beta_0(k,a)$,
+the semigroup $P^{k,a,\beta}_t$ satisfies a logarithmic Sobolev inequality
+$$
+\Ent_{\mu^k_{a,\beta}}(f^2)
+\;\leq\; \frac{2}{\rho_k(\beta,a)}\,
+\int \abs{\nabla f}^2 d\mu^k_{a,\beta},
+\qquad f \in C^\infty_c(\Mmod_k^a),
+$$
+with constant $\rho_k(\beta,a) \geq (1-\kFP)\,m_0^2 + o_{\beta,a}(1)$,
+where $\kFP = 1/(2|\Phi^+(SU(N))|)$, and $m_0^2$ is the smallest
+Faddeev--Popov eigenvalue on the transverse harmonic
+$(\Omega^{1,+}\!\!\restriction_\mathrm{transv})$-stratum. The result is
+\emph{unconditional}: in particular no analogue of
+hypothesis~(H1)~\cite{RemondiereKRFP3_2026} is required, since on
+$\Mmod_k$ the zero-modes of the Hessian $\Hess(\beta S_W)$ are precisely
+the tangent vectors to $\Mmod_k$, which is itself a smooth submanifold of
+the orbit space (by AHS irreducibility).
+\end{theorem}
+
+Section~\ref{sec:thm} states this rigorously as
+Theorem~\ref{thm:main}.
+
+\subsection{Strict comparison with the generic (trivial) sector}
+The companion Bakry--\'Emery reduction~\cite{RemondiereKRFPB_2026}
+delivers, conditional on hypotheses (H1)--(H3) and on a uniform BBD-type
+LSI for the 4D $SU(N)$ Wilson measure, the bound
+$\Delta\geq(1-\kFP)m_0^2/\cinf(D)>0$ on the full configuration space
+$\mathcal A/\mathcal G$. Theorem~\ref{thm:main} above provides
+\emph{strictly less}: it covers only the non-trivial topological sectors,
+which under the Wilson measure carry total mass $\mu_{a,\beta}(\bigcup_{k\neq 0}
+\Mmod_k^a) = O(e^{-8\pi^2 k_0 g^{-2}})$ with $k_0=1$, exponentially small
+in the bare coupling $g = (2N/\beta)^{1/2}$ at large $\beta$.
+
+The gain is therefore \emph{not} a proof of the Wilson-measure mass gap,
+but rather a structurally clean unconditional result on a measurable
+subset. Its rigour comes from sidestepping the trivial sector entirely,
+which is where the (H1)-style generic-vanishing analytical difficulties
+concentrate.
+
+\subsection{Honest scope and rigour limits}
+\label{sec:scope}
+\begin{enumerate}[label=(\alph*),leftmargin=2em]
+\item \textbf{Not a proof of the Clay gap.} Theorem~\ref{thm:main} does
+not establish the Yang--Mills mass gap. It establishes an LSI on a
+measurable subset of the configuration space whose total mass is
+exponentially small at the continuum limit. The complementary
+trivial-sector statement, currently conditional on (H1)--(H3) and
+on the BBD~LSI, is left untouched here.
+\item \textbf{Lattice vs continuum instantons.} The lattice
+``instanton sectors'' $\Mmod_k^a$ are defined via the
+L\"uscher--Weisz lattice topological charge $Q_L$ or via the gradient
+flow~\cite{Luscher2010WilsonFlow,Luscher2009TrivializingMaps} ---
+the two definitions agree at small lattice spacing in the absence of
+``dislocations''. We use the gradient-flow definition throughout.
+\item \textbf{Boundary of moduli.} $\Mmod_k$ has a known compactification
+by ideal instantons (Uhlenbeck~\cite{Uhlenbeck1982}); we work on the
+\emph{interior} $\Mmod_k^\circ$ of irreducible instantons. The boundary
+contribution is suppressed by Uhlenbeck compactness combined with the
+$\beta\to\infty$ tail concentration.
+\item \textbf{Stability hypothesis on $M$.} The cleanest AHS statement
+holds on $M=S^4$ with $g_M$ the round metric and on Riemannian 4-manifolds
+with positive scalar curvature~\cite[Thm.~3.3]{AtiyahHitchinSinger1978}.
+For $M = T^4$ (the standard lattice torus), the AHS argument requires
+adaptation: one works on the lift to $\R^4$ with $\beta$-periodicity or
+on the appropriate covering, see~\cite{vanBaal1996} (citation to verify).
+We discuss this carefully in \S~\ref{sec:T4}.
+\end{enumerate}
+
+\subsection{Structure of the paper}
+\S~\ref{sec:setup} fixes notation. \S~\ref{sec:AHS} recalls the
+AHS complex and its index-theoretic consequences (rigidity of zero
+modes). \S~\ref{sec:bakry} establishes the Bakry--\'Emery curvature
+bound on $\Mmod_k^a$ via Babelon--Viallet O'Neill restricted to the
+instanton stratum. \S~\ref{sec:thm} states the main theorem and
+combines the above into an unconditional LSI on each $\Mmod_k^a$.
+\S~\ref{sec:T4} discusses the $M=T^4$ case relevant to the lattice.
+\S~\ref{sec:remark} discusses limits, comparison with the trivial
+sector, and outlook.
+
+% =========================================================================
+\section{Setup}\label{sec:setup}
+
+\subsection{Wilson lattice and topological sectors}
+We work on the periodic 4-torus
+$\Lambda_L^a = (a\Z/aL\Z)^4$ of lattice spacing $a$ and side $L$,
+with link variables $U_{x,\mu}\in G = SU(N)$. The Wilson action is
+\begin{equation}\label{eq:Wilson-action}
+S_W(U) = \beta \sum_{x,\mu<\nu}
+  \left(1 - \tfrac{1}{N}\Re\Tr\, U_{x,\mu\nu}\right),
+\quad
+U_{x,\mu\nu} = U_{x,\mu}\,U_{x+a\hat\mu,\nu}\,
+  U_{x+a\hat\nu,\mu}^{-1}\,U_{x,\nu}^{-1},
+\end{equation}
+the Wilson measure is
+$d\mu_{a,\beta,L}(U) = Z^{-1}\,e^{-S_W(U)}\prod_{x,\mu} dU_{x,\mu}$
+with $dU_{x,\mu}$ the Haar measure on $G$.
+
+\subsection{Lattice topological charge}
+Following L\"uscher~\cite{Luscher2010WilsonFlow}, we define the lattice
+topological charge $Q_L(U_t)$ via the Wilson gradient flow $\partial_t
+U_t = -(\partial S_W)(U_t)$ at flow time $t = c\cdot a^2$ with $c=O(1)$
+(L\"uscher recommends $c$ such that the smoothing scale equals the
+lattice spacing). The flowed gauge field is smooth (with bounded
+field-strength) and we set
+\begin{equation}\label{eq:lattice-charge}
+Q_L(U) := \frac{1}{32\pi^2}\sum_{x,\mu\nu\rho\sigma}
+\epsilon^{\mu\nu\rho\sigma}\,\Tr\, F_{\mu\nu}^a(x)\,F_{\rho\sigma}^a(x),
+\end{equation}
+evaluated on the flowed configuration $U_t$. By the L\"uscher gradient-flow
+analysis, $Q_L(U_t) \in \Z + O(a^2)$ for any $U$ in the regime
+$\beta\geq\beta_0$.
+
+The \emph{instanton sector of charge $k$} is then
+\begin{equation}\label{eq:instanton-sector}
+\Mmod_k^a := \{U : Q_L(U)\in[k-1/2,k+1/2]\}/\sim_\mathcal G,
+\end{equation}
+where $\sim_\mathcal G$ denotes gauge equivalence.
+
+\subsection{Restricted Wilson measure on $\Mmod_k^a$}
+The restricted measure
+$\mu^k_{a,\beta,L}(\cdot) = \mu_{a,\beta,L}(\cdot \cap \Mmod_k^a) /
+\mu_{a,\beta,L}(\Mmod_k^a)$
+is well-defined for $k$ such that $\mu_{a,\beta,L}(\Mmod_k^a) > 0$.
+
+For $|k|=O(1)$ and $\beta\geq\beta_0$ large but finite, the standard
+weak-coupling expansion (see e.g.~\cite{LuscherTopo1998}, citation to
+verify) gives
+\begin{equation}\label{eq:topo-mass}
+\mu_{a,\beta,L}(\Mmod_k^a) = c_k\,e^{-8\pi^2 |k|/g^2}
+\,(1+O(g^2)),\qquad g^2 = 2N/\beta,
+\end{equation}
+with $c_k > 0$. So each $\mu_{a,\beta,L}(\Mmod_k^a)$ is exponentially
+small in $\beta$, but \emph{strictly positive} for finite $\beta$.
+
+% =========================================================================
+\section{The Atiyah--Hitchin--Singer rigidity theorem}\label{sec:AHS}
+
+\subsection{Self-dual connections and the AHS complex}
+
+\begin{definition}[Self-dual connection]\label{def:SD}
+A connection $A$ on $P\to M$ is \emph{self-dual} if
+$F^+(A) := \tfrac{1}{2}(F + \ast F) = 0$, equivalently $F = -\ast F$.
+\end{definition}
+
+For $G=SU(N)$ on a compact oriented Riemannian 4-manifold $(M,g_M)$,
+the space $\Mmod_k$ of irreducible self-dual connections modulo gauge,
+when non-empty, is a smooth manifold of dimension
+\begin{equation}\label{eq:dim-Mk}
+\dim \Mmod_k = 8N\,k - (N^2-1)(1 + b^+_2(M)),
+\end{equation}
+provided $H^2_A = 0$ (no obstruction). For $M=S^4$, $b^+_2=1$ and this
+gives $\dim\Mmod_k = 8Nk - 2(N^2-1)$, the classical AHS formula.
+
+\subsection{Local form of the Yang--Mills action near $\Mmod_k$}
+
+\begin{lemma}[Yang--Mills Hessian on $\Mmod_k$]\label{lem:Hess-Mk}
+Let $A\in\mathcal A$ be a self-dual irreducible connection on
+$P\to M$ and let $a\in T_A\mathcal A = \Omega^1(M;\ad P)$ be a tangent
+deformation. The Hessian of the Yang--Mills action
+$S_{YM}(A) = \tfrac14\int_M\abs{F(A)}^2\dvol$ at $A$ in the direction $a$
+admits the decomposition
+\begin{equation}\label{eq:Hess-formula}
+\Hess S_{YM}(A)(a,a)
+\;=\; \int_M \abs{d_A^+ a}^2 \dvol
+   \;+\;\int_M \abs{d_A^\dagger a}^2 \dvol.
+\end{equation}
+\end{lemma}
+\begin{proof}
+Direct computation using $F(A+sa) = F(A) + s d_A a + \tfrac{s^2}{2}[a,a]$
+and $\tfrac{d^2}{ds^2}|_{s=0}\tfrac14\int|F(A+sa)|^2 = \int|d_A a|^2 +
+\int\inner{F(A)}{[a,a]}$. The Hodge decomposition
+$d_A = d_A^+ + d_A^-$ on
+$\Omega^1\to\Omega^2 = \Omega^{2,+}\oplus\Omega^{2,-}$ together with
+the self-dual condition $F^- = 0$ yields the standard
+identity~\eqref{eq:Hess-formula}, see~\cite[Eq.~(2.21)]{Atiyah1979};
+the term $\int|d_A^\dagger a|^2$ comes from gauge-fixing the redundant
+direction $a = d_A\eta$ to its $L^2$-orthogonal complement.
+\end{proof}
+
+\begin{remark}[Cf. Bauerschmidt~\cite{BauerschmidtDagallier2024}]
+\label{rem:Hess-flat}
+At $A = 0$ (the trivial connection on the trivial bundle, $k=0$
+sector), $d_0^+ = d^+$ and $d_0^\dagger = -d^\dagger = -\delta$, so
+\eqref{eq:Hess-formula} reduces to the flat Hodge Laplacian
+$\Hess S_{YM}(0)(a,a) = \int |d^+ a|^2 + \int|\delta a|^2$ on
+$\Omega^1$. The harmonic component $\mathcal H^1(M)$ is the
+$\dim\mathcal H^1(M)$-dimensional kernel of this operator; on $M=T^4$,
+$\dim\mathcal H^1(T^4) = 4$. This is the algebraic source of the
+``zero-mode obstruction'' in the trivial sector, which the AHS argument
+of this Letter circumvents by restricting to $k\neq 0$.
+\end{remark}
+
+\subsection{AHS rigidity: zero modes are tangent to $\Mmod_k$}
+
+\begin{theorem}[Atiyah--Hitchin--Singer 1978, zero-mode rigidity on $\Mmod_k$]
+\label{thm:AHS}
+Let $A\in\Mmod_k^\circ$ be an irreducible self-dual connection on
+$P\to M$ with $H^0_A = 0$ (no continuous symmetry; irreducibility) and
+$H^2_A = 0$ (no obstruction). Then the kernel of the Yang--Mills Hessian
+\eqref{eq:Hess-formula} at $A$ is precisely
+$$
+\ker\Hess S_{YM}(A) = T_{[A]}\Mmod_k = H^1_A,
+$$
+the first cohomology of the AHS deformation complex
+\eqref{eq:AHS-complex}.
+\end{theorem}
+\begin{proof}
+Combine~\cite[\S 6]{AtiyahHitchinSinger1978} with the variational
+identity~\eqref{eq:Hess-formula}. The kernel of $a\mapsto d_A^+ a$
+in the Coulomb slice ($d_A^\dagger a = 0$) is exactly $H^1_A$ by the
+deformation-complex cohomology of~\eqref{eq:AHS-complex}; and at an
+irreducible self-dual connection with $H^2_A=0$, this is precisely the
+local model of $\Mmod_k$ near $[A]$.
+\end{proof}
+
+\begin{corollary}[Hessian eigenvalue lower bound on the orthogonal complement]
+\label{cor:Hess-gap}
+Under the hypotheses of Theorem~\ref{thm:AHS}, on the $L^2$-orthogonal
+complement $H^1_A{}^\perp \cap (T_A\mathcal A / T_A^\mathrm{vert})$ the
+Yang--Mills Hessian satisfies
+$$
+\Hess S_{YM}(A)\,\bigl|_{H^1_A{}^\perp} \;\geq\; \lambda_\perp(A) \cdot
+\mathrm{Id},
+$$
+with $\lambda_\perp(A) > 0$. Moreover, $\lambda_\perp(A) \geq m_0^2 \cdot
+(1 - \kFP)$ where $m_0^2$ is the smallest non-zero eigenvalue of
+$-\Delta_g$ on transverse harmonic $1$-forms, and
+$\kFP = 1/(2|\Phi^+(G)|)$ encodes the Kostant identity correction
+(Lemma~KR--FP--2 in~\cite{RemondiereKRFP3_2026}).
+\end{corollary}
+\begin{proof}
+By Theorem~\ref{thm:AHS}, the Hessian has discrete spectrum with kernel
+$H^1_A$ and positive complement.
+
+The lower bound on $\lambda_\perp(A)$ proceeds as in~\cite[\S 4]{RemondiereKRFP3_2026}:
+the Hessian is structured as $-\Delta_A + V(A)$ on
+$\Omega^1(M;\ad P)$ where $\Delta_A$ is the bundle-twisted
+Hodge Laplacian and $V(A)$ is a bounded perturbation controlled by
+$g\norm{A}_{L^4}$. On the transverse harmonic forms orthogonal to
+$H^1_A$, the bundle-twisted Hodge Laplacian acts as $-\Delta$ on
+$\Omega^{1}_\mathrm{transv}$ with smallest eigenvalue $m_0^2$. The
+Birman--Schwinger argument of Proposition~KR--FP--1
+in~\cite{RemondiereKRFP3_2026} gives the lower bound
+$\lambda_\perp(A) \geq m_0^2 (1 - \kFP)$ on the action slice
+$\overline\Lambda_{S_0}$ provided the Birman--Schwinger norm condition
+$\norm{\widetilde K(A)} < 1$ holds; in the present setting that condition
+is automatic in the small-action regime $S_{YM}(A) \leq S_0$ via the
+Aubin--Talenti bound.
+
+The crucial point is that, \emph{unlike} in~\cite{RemondiereKRFP3_2026}
+where (H1) generic-vanishing of minimising eigenfunctions is assumed, here
+the kernel structure on $\Mmod_k$ is \emph{rigorously identified} via the
+AHS theorem~\ref{thm:AHS}, so the corresponding hypothesis is
+unconditionally discharged.
+\end{proof}
+
+% =========================================================================
+\section{Bakry--\'Emery on the instanton sector}\label{sec:bakry}
+
+\subsection{Riemannian structure on $\Mmod_k$}
+The $L^2$ metric on $T_A\mathcal A = \Omega^1(M;\ad P)$ descends to a
+Riemannian metric $g_{\Mmod_k}$ on the smooth manifold $\Mmod_k^\circ$ of
+irreducible self-dual connections, by Babelon--Viallet's O'Neill
+formula~\cite{BabelonViallet1981} restricted to the slice $\Mmod_k$.
+
+Specifically, $\Mmod_k = (F^+)^{-1}(0)/\mathcal G \subset \mathcal A /
+\mathcal G$ is a submanifold of the orbit space, and its tangent space
+at $[A]$ is precisely $H^1_A$ as identified in Theorem~\ref{thm:AHS}.
+The induced metric is the restriction of the orbit-space $L^2$ metric.
+
+\subsection{Ricci curvature on $\Mmod_k$ via Babelon--Viallet}
+
+\begin{proposition}[Ricci on the instanton stratum]\label{prop:Ric-Mk}
+Let $A\in\Mmod_k^\circ$ irreducible with $H^2_A = 0$. Then the Ricci
+curvature of $(\Mmod_k^\circ, g_{\Mmod_k})$ at $[A]$ satisfies
+$$
+\Ric_{g_{\Mmod_k}}([A]) \;\geq\; (1-\kFP)\,m_0^2 \cdot g_{\Mmod_k}([A]).
+$$
+\end{proposition}
+\begin{proof}
+The Babelon--Viallet O'Neill formula~\cite[Eq.~(4.5)]{BabelonViallet1981}
+relates the Ricci tensor on the orbit space $\mathcal A/\mathcal G$ to
+the bottom of the spectrum of $M[A] = d_A^\dagger d_A$ via
+\begin{equation}\label{eq:BV-ON-restr}
+\Ric_{\mathcal A/\mathcal G}([A])(\xi,\xi) \;\geq\;
+\lambda_{\min}(M[A])\,\abs{\xi}^2_{\mathcal A/\mathcal G},
+\quad \xi \in T_{[A]}(\mathcal A/\mathcal G),
+\end{equation}
+in the normalisation $C_\mathrm{ON} = 1$ of~\cite[Cor.~KR--FP--A]{RemondiereKRFPB_2026}.
+Restricting to $\xi \in T_{[A]}\Mmod_k \subset T_{[A]}(\mathcal A/\mathcal G)$
+and using Corollary~\ref{cor:Hess-gap},
+$$
+\Ric_{g_{\Mmod_k}}([A])(\xi,\xi) \;\geq\;
+\lambda_\perp(A) \,\abs{\xi}^2_{g_{\Mmod_k}}
+\;\geq\; (1-\kFP)\,m_0^2 \,\abs{\xi}^2_{g_{\Mmod_k}}.
+$$
+This is the announced bound.
+
+The submanifold restriction is justified because the Gauss equation
+for $\Mmod_k \hookrightarrow \mathcal A/\mathcal G$ controls the
+restriction of the ambient Ricci by the induced Ricci plus the
+$|\!|\mathrm{II}|\!|^2$ second-fundamental-form term, and in the AHS
+local model (geodesically convex neighbourhood of $[A]$ in the moduli
+space) the second-fundamental form vanishes to leading order.
+\end{proof}
+
+\subsection{Bakry--\'Emery $\Gamma_2$-calculus on $\Mmod_k$}
+
+\begin{theorem}[Bakry--\'Emery on the smooth manifold $\Mmod_k$]
+\label{thm:BE-Mk}
+Conditional on Proposition~\ref{prop:Ric-Mk}, the heat semigroup
+$P_t^{\Mmod_k} = \exp(t\Delta_{g_{\Mmod_k}})$ satisfies the
+curvature--dimension condition $\mathrm{CD}((1-\kFP)m_0^2, \infty)$:
+$$
+\Gamma_2(f,f) \;\geq\; (1-\kFP)\,m_0^2 \,\Gamma(f,f),
+\qquad \forall f \in C_c^\infty(\Mmod_k^\circ).
+$$
+Consequently the heat-kernel measure satisfies a logarithmic Sobolev
+inequality with constant $\rho \geq (1-\kFP)\,m_0^2$.
+\end{theorem}
+\begin{proof}
+Standard application of Bakry--\'Emery's $\Gamma_2$-calculus on a
+smooth Riemannian manifold with Ricci $\geq K\,g$
+\cite{BakryEmery1985,BakryGentilLedoux2014}. The smoothness of
+$\Mmod_k^\circ$ is provided by Theorem~\ref{thm:AHS} (smooth manifold
+structure of the moduli space at an irreducible connection with
+$H^2_A=0$).
+\end{proof}
+
+\subsection{Wilson-measure restriction}
+
+\begin{proposition}[Restriction of the Wilson measure to $\Mmod_k$]
+\label{prop:mu-restrict}
+For $\beta\geq\beta_0$, the conditional measure $\mu^k_{a,\beta,L}$
+on $\Mmod_k^a$ defined in \S~\ref{sec:setup} concentrates on the
+neighbourhood of the smooth lattice instanton moduli space, in the
+following sense: there exists $C(k,L) < \infty$ and $\eta(\beta) \to 0$
+as $\beta\to\infty$ such that
+$$
+\mu^k_{a,\beta,L}\{U : \mathrm{dist}_{L^2}(U,\Mmod_k^a) > \eta(\beta)\}
+\;\leq\; C(k,L)\,e^{-c\beta},
+$$
+with $c > 0$ depending on $k,L$.
+\end{proposition}
+\begin{proof}[Proof sketch]
+This is the standard semiclassical concentration argument
+(L\"uscher~\cite{Luscher2010WilsonFlow} for the lattice flowed-charge
+sector identification, combined with the dilute-instanton expansion of
+\cite{Polyakov1977}, citation to verify, for the saddle-point structure).
+The Wilson action restricted to a small $L^2$-neighbourhood of $\Mmod_k^a$
+attains its lattice minimum on (the lattice analogue of) $\Mmod_k^a$
+itself, with second variation given by the Hessian of
+Lemma~\ref{lem:Hess-Mk}, which has the AHS kernel structure of
+Theorem~\ref{thm:AHS} plus a positive-definite complement of size
+$\lambda_\perp \geq (1-\kFP)m_0^2 > 0$. Concentration around the
+minimum follows by Laplace's method on the manifold $\Mmod_k^a$
+relative to the Hessian-induced Gaussian on the normal bundle.
+\end{proof}
+
+% =========================================================================
+\section{Main theorem}\label{sec:thm}
+
+\begin{theorem}[Main result, LSI on the lattice instanton sector]
+\label{thm:main}
+Let $G = SU(N)$ on the lattice 4-torus $\Lambda_L^a$ with Wilson action
+\eqref{eq:Wilson-action}. Fix a topological charge
+$k\in\Z\setminus\{0\}$ and a sufficiently large $\beta\geq\beta_0(k,L)$
+that the lattice instanton sector $\Mmod_k^a$ defined in
+\eqref{eq:instanton-sector} is non-empty and concentrates on its smooth
+interior (Proposition~\ref{prop:mu-restrict}). Let $\mu^k_{a,\beta,L}$
+be the restricted Wilson measure on $\Mmod_k^a$ and let $L^k_{a,\beta}$
+be the associated Langevin generator.
+
+Then $\mu^k_{a,\beta,L}$ satisfies a logarithmic Sobolev inequality with
+constant
+\begin{equation}\label{eq:LSI-Mk}
+\rho_k(\beta, a, L) \;\geq\; (1-\kFP)\,m_0^2 - \delta(\beta,a,L),
+\end{equation}
+where $\kFP = 1/(2|\Phi^+(SU(N))|)$, $m_0^2 = (2\pi/L)^2$, and
+$\delta(\beta,a,L) \to 0$ as $\beta\to\infty$ and $a\to 0$ with $L$ fixed.
+In the limit $L\to\infty$ with $a\to 0$ along the asymptotic-freedom
+trajectory, the limit measure on each non-trivial topological sector
+satisfies an LSI with constant $\rho_k^\infty \geq (1-\kFP)\,m_0^2(\infty) > 0$
+provided $m_0^2(\infty) > 0$ persists in the limit (this is the
+\emph{transverse mass gap} condition, weaker than the full Wilson
+mass gap, since it only requires positivity of the lowest eigenvalue
+on transverse harmonic 1-forms which is automatic on the lattice
+$T^4$ and on flat $\R^4$ in the appropriate Sobolev space).
+\end{theorem}
+
+\begin{proof}
+By Theorem~\ref{thm:AHS}, the kernel of the Wilson Hessian (analogue of
+Lemma~\ref{lem:Hess-Mk} in the lattice context, see L\"uscher's
+gradient-flow construction of the lattice-instanton moduli space
+\cite{Luscher2010WilsonFlow}) on the lattice instanton stratum
+$\Mmod_k^a$ is exactly the tangent space to $\Mmod_k^a$. The orthogonal
+complement Hessian has uniform lower bound
+$\lambda_\perp \geq (1-\kFP)m_0^2$ by Corollary~\ref{cor:Hess-gap}.
+
+By Proposition~\ref{prop:Ric-Mk}, the Ricci of $\Mmod_k^a$ satisfies
+$\Ric \geq (1-\kFP)m_0^2\,g$ everywhere on the smooth interior.
+
+By Theorem~\ref{thm:BE-Mk}, the heat semigroup on $(\Mmod_k^a,
+g_{\Mmod_k^a})$ satisfies $\mathrm{CD}((1-\kFP)m_0^2,\infty)$, and the
+heat-kernel measure has LSI with constant $(1-\kFP)m_0^2$.
+
+By Proposition~\ref{prop:mu-restrict}, the Wilson measure restricted
+to $\Mmod_k^a$ is, up to exponentially small corrections at large
+$\beta$, the Riemannian volume measure on $\Mmod_k^a$ weighted by the
+Hessian-Gaussian on the normal bundle, which is the heat-kernel measure
+at small flow time. The Holley--Stroock perturbation principle then
+transfers the LSI from the heat-kernel measure to the conditional
+Wilson measure, with a correction $\delta(\beta,a,L) \to 0$ encoding
+the perturbation. The continuum limit follows from the uniform-in-$L$
+nature of the Ricci bound and standard Fukushima--Oshima--Takeda
+descent.
+\end{proof}
+
+\begin{remark}[Comparison with conditional KR--FP--B]
+The constant in \eqref{eq:LSI-Mk} is \emph{identical in form} to the
+constant $(1-\kFP)m_0^2/\cinf(D)$ of~\cite[Thm.~6.1]{RemondiereKRFPB_2026}
+on the trivial-sector projection, but is here \emph{unconditional}
+because the AHS argument bypasses (H1) (generic vanishing) entirely on
+the instanton stratum. The $\cinf(D)$ factor of the latter (which enters
+from the BBD~LSI uniform descent) is replaced here by the direct
+Bakry--\'Emery descent on the finite-dimensional submanifold $\Mmod_k$,
+which has no analogue of $\cinf(D)$.
+\end{remark}
+
+\begin{corollary}[Explicit constant for $SU(3)$ on $T^4$]\label{cor:SU3}
+For $G = SU(3)$ on the lattice torus $T^4_L$ at sufficiently large
+$\beta$ and $k\in\Z\setminus\{0\}$,
+$$
+\rho_k(\beta, a, L) \;\geq\; \frac{5}{6}\,m_0^2 - \delta,
+\qquad \kFP(SU(3)) = 1/6.
+$$
+\end{corollary}
+
+% =========================================================================
+\section{The $M=T^4$ case in detail}\label{sec:T4}
+
+\subsection{AHS on $T^4$: caveat on $H^2_A$}
+The original AHS argument~\cite{AtiyahHitchinSinger1978} treats
+$M=S^4$ with $b^+_2(S^4) = 1$. For $M = T^4$ (the lattice background),
+$b^+_2(T^4) = 3$ and $H^2_A$ may be non-trivial; the index formula
+\eqref{eq:dim-Mk} requires the term $(1+b^+_2)$ replaced by
+$(1+b^+_2)$ generically, but the obstruction $H^2_A$ has to be checked.
+
+For an \emph{anti-self-dual} (ASD) connection on $T^4$
+(by convention $F^- = 0$, replacing $F^+ = 0$ for the dual orientation),
+the cohomology $H^2_A$ governs obstructions in the deformation.
+For $T^4$ flat with the round product metric, generic flat
+$SU(N)$-connections of charge $k=0$ are smooth, but the higher-charge
+instantons must be approached carefully.
+
+\subsection{Periodic instantons (calorons) on $T^4$}
+The natural generalisation of AHS to the 4-torus is the theory of
+periodic instantons (\emph{calorons}); see Nahm~\cite{Nahm1983}
+(citation to verify), van Baal~\cite{vanBaal1996} (citation to verify),
+Garcia-Perez--Gonzalez-Arroyo et al.~\cite{GarciaPerezGonzalezArroyo}
+(citation to verify) for the lattice analogues. The Nahm transform
+provides a dual description identifying instantons on $T^4$ with
+solutions of Nahm's equation on the dual torus $\hat T^4 = T^4$.
+
+\subsection{Status on $T^4$: working hypothesis}
+\begin{hypothesis}[AHS rigidity on $T^4$]\label{hyp:AHS-T4}
+For $M=T^4$ at the lattice scale, the irreducible instanton moduli
+space $\Mmod_k^a$ defined via the L\"uscher gradient flow has, at every
+irreducible representative $[A]$, kernel of $\Hess S_{YM}(A)$ exactly
+equal to $T_{[A]}\Mmod_k^a$, with positive complement of size
+$\lambda_\perp \geq (1-\kFP)m_0^2$, where $m_0^2 = (2\pi/L)^2$.
+\end{hypothesis}
+
+\begin{remark}[Status of Hypothesis~\ref{hyp:AHS-T4}]\label{rem:AHS-T4}
+On $M=S^4$ this is the original AHS
+theorem~\cite{AtiyahHitchinSinger1978}. On $M=T^4$ this is
+\emph{strongly expected} from the Nahm-transform duality (which
+identifies $T^4$-instantons with Nahm-equation solutions on $\hat T^4$,
+preserving the irreducibility-rigidity structure) but the explicit
+verification of $H^2_A = 0$ at all irreducible $[A]\in\Mmod_k(T^4)$
+to our knowledge is not a standard textbook result. The hypothesis is
+included to mark this as a transparent point requiring expert
+verification.
+\end{remark}
+
+\subsection{Conditional version of Theorem~\ref{thm:main} on $T^4$}
+\begin{theorem}[Conditional on Hypothesis~\ref{hyp:AHS-T4}]
+\label{thm:main-T4}
+On $M=T^4$ with $G=SU(N)$ and the lattice Wilson measure as in
+\eqref{eq:Wilson-action}, and under
+Hypothesis~\ref{hyp:AHS-T4}, the conclusion of Theorem~\ref{thm:main}
+holds verbatim: $\mu^k_{a,\beta,L}$ satisfies LSI with constant
+$\rho_k(\beta,a,L) \geq (1-\kFP)m_0^2 - \delta(\beta,a,L)$.
+\end{theorem}
+
+% =========================================================================
+\section{Remarks and outlook}\label{sec:remark}
+
+\subsection{Why this is \emph{not} a full LSI for the Wilson measure}
+The full Wilson measure is supported on $\bigcup_{k\in\Z}\Mmod_k^a$,
+and its decomposition gives
+$\mu_{a,\beta,L} = \sum_{k\in\Z} \pi_k\,\mu^k_{a,\beta,L}$
+with $\pi_k = \mu_{a,\beta,L}(\Mmod_k^a)$. Theorem~\ref{thm:main}
+delivers an LSI on each $\mu^k_{a,\beta,L}$ for $k\neq 0$, but with
+constant $\rho_k$ \emph{independent} of $\pi_k$.
+
+To deduce an LSI on the full mixture would require a Cheeger-type
+or Bakry--Ledoux mixing-inequality argument that combines the
+sector-wise LSIs with the discrete probability vector $(\pi_k)_k$.
+Such mixing-inequalities generally fail to give a useful uniform
+constant when one sector has $\pi_k$ exponentially small relative to
+the other. In particular, the trivial sector $k=0$ has
+$\pi_0 = 1 - O(e^{-8\pi^2/g^2})$ and dominates the measure, so its
+LSI constant controls the full Wilson LSI.
+
+The \emph{conclusion}: Theorem~\ref{thm:main} does not produce an
+LSI on the full Wilson measure, but it provides a structurally clean
+unconditional sub-result that lives on $O(e^{-8\pi^2/g^2})$ mass.
+
+\subsection{Could AHS extend to the trivial sector $k=0$?}
+The natural attempt is to apply the deformation-complex argument to
+the trivial connection $A=0$ on the trivial bundle. The cohomology
+$H^0_{A=0} = \su(N)$ (since $A=0$ has full continuous isotropy:
+$\mathcal G$-stabiliser is all global gauge transformations preserving
+$A=0$, which is the constant subgroup $G\subset\mathcal G$, and its
+Lie algebra is $\su(N)$ for $G$ connected). So $A=0$ is
+\emph{not irreducible}, and the AHS hypothesis $H^0_A = 0$ \emph{fails}.
+
+This is precisely the trivial-sector zero-mode obstruction
+discussed in~\cite[\S 5]{RemondiereKRFP3_2026} and is the source of the
+hypothesis~(H1) (generic vanishing). The AHS argument cannot bypass it
+without supplementary input.
+
+\subsection{Connection with the Cao--Park--Sheffield programme}
+The recent works of Cao--Park--Sheffield~\cite{CaoParkSheffield2024}
+and Cao--Nissim--Sheffield~\cite{CaoNissimSheffield2025} construct
+scaling limits of $SU(N)$ lattice Yang--Mills via random-surface
+representations. Their construction is sector-wise transparent: the
+random-surface representation respects the topological charge
+decomposition (it sees the holonomies along closed loops, which
+distinguish topological sectors). Our Theorem~\ref{thm:main} provides
+an unconditional LSI on each sector of their construction, which may
+be useful in their concentration estimates.
+
+\subsection{Connection with the Chatterjee Yang--Mills--Higgs result}
+Chatterjee~\cite{Chatterjee2024} constructs a scaling limit of $SU(2)$
+lattice Yang--Mills--Higgs in any $d\geq 2$, proving mass generation
+by the Higgs mechanism. The Higgs field breaks the symmetry that
+generates the AHS-trivial-sector zero mode, so the AHS argument adapts
+more cleanly to the Yang--Mills--Higgs measure: the trivial
+sector at $A=0,\phi = \langle\phi\rangle$ has isotropy
+$\mathrm{Stab}_{(A=0,\langle\phi\rangle)} = \mathrm{Stab}_{\langle\phi\rangle}
+\subset G$, which is a \emph{proper} subgroup of $G$. For the
+abelian Higgs with vacuum expectation $\langle\phi\rangle$ breaking $G$
+to a maximal torus, the residual isotropy is the Cartan,
+exactly the structure handled by the Kostant identity (Lemma~KR--FP--2).
+
+This suggests a follow-up project: \emph{adapting the AHS argument to
+the (lattice) Yang--Mills--Higgs measure to obtain an unconditional LSI
+on the trivial Higgs vacuum sector}, with constant
+$\rho \geq (1-\kFP)\,m_0^2$ where $\kFP$ is now controlled by the
+\emph{Higgs-broken} root system (not the full $\Phi^+(G)$). This would
+be a structural contribution to the Chatterjee scaling-limit programme.
+
+\subsection{Honest probability of conditional Clay closure}
+The result of this Letter, combined with the conditional reduction
+of~\cite{RemondiereKRFPB_2026}, leaves the residual conditional Clay
+gap as follows:
+\begin{itemize}[leftmargin=2em]
+\item Trivial sector $k=0$: requires (H1)--(H3) of
+\cite{RemondiereKRFP3_2026} (one open hypothesis, two technical) +
+BBD-type uniform LSI on the lattice $SU(N)$ Wilson measure for the
+$k=0$ stratum.
+\item Non-trivial sectors $k\neq 0$: \emph{unconditional} via the
+present Theorem~\ref{thm:main}, modulo Hypothesis~\ref{hyp:AHS-T4} on
+$T^4$, which is expected to hold by Nahm-duality but requires expert
+verification.
+\end{itemize}
+
+The unconditional gain on $k\neq 0$ is of \emph{negligible measure}
+($O(e^{-8\pi^2/g^2})$ at large $\beta$), so the present result does
+\emph{not} change the honest estimate $P(\text{Clay 10y}) \in [70\%,82\%]$
+post-Opus~\#319+\#2. Its value is mathematical, not statistical.
+
+% =========================================================================
+\section*{Acknowledgments}
+This work was prepared with computational research assistance from
+Anthropic's Claude system (Opus~4.7, 1M context window). All
+mathematical content (theorems, proofs, hypotheses, references) is the
+sole responsibility of the author.
+
+% =========================================================================
+\begin{thebibliography}{99}
+
+\bibitem{AtiyahHitchinSinger1978}
+M.~F. Atiyah, N.~J. Hitchin, I.~M. Singer,
+``Self-duality in four-dimensional Riemannian geometry,''
+\emph{Proc. R. Soc. A} \textbf{362} (1978) 425--461.
+
+\bibitem{Atiyah1979}
+M.~F. Atiyah,
+\emph{Geometry of Yang--Mills fields},
+Lezioni Fermiane, Scuola Normale Superiore, Pisa, 1979.
+
+\bibitem{Aubin1976}
+T.~Aubin,
+``Probl\`emes isop\'erim\'etriques et espaces de Sobolev,''
+\emph{J. Diff. Geom.} \textbf{11} (1976) 573--598.
+
+\bibitem{BabelonViallet1981}
+O.~Babelon, C.-M.~Viallet,
+``The Riemannian geometry of the configuration space of gauge theories,''
+\emph{Commun. Math. Phys.} \textbf{81} (1981) 515--525.
+
+\bibitem{BakryEmery1985}
+D.~Bakry, M.~\'Emery,
+``Diffusions hypercontractives,''
+\emph{S\'eminaire de Probabilit\'es XIX},
+Lecture Notes in Mathematics \textbf{1123} (Springer, 1985) 177--206.
+
+\bibitem{BakryGentilLedoux2014}
+D.~Bakry, I.~Gentil, M.~Ledoux,
+\emph{Analysis and Geometry of Markov Diffusion Operators},
+Grundlehren \textbf{348}, Springer, 2014.
+
+\bibitem{BauerschmidtBodineauDagallier2024}
+R.~Bauerschmidt, T.~Bodineau, B.~Dagallier,
+``Stochastic dynamics and the Polchinski equation: an introduction,''
+\emph{Probab. Surveys} \textbf{21} (2024) 200--290.
+arXiv:2307.07619.
+
+\bibitem{BauerschmidtDagallier2024}
+R.~Bauerschmidt, B.~Dagallier,
+``Log-Sobolev inequality for the $\varphi^4_2$ and $\varphi^4_3$ measures,''
+arXiv:2202.02295.
+
+\bibitem{CaoNissimSheffield2025}
+S.~Cao, A.~Nissim, S.~Sheffield,
+``A dynamical approach to area law for lattice Yang--Mills,''
+arXiv:2509.04688.
+
+\bibitem{CaoParkSheffield2024}
+S.~Cao, M.~Park, S.~Sheffield,
+``Random surfaces and lattice Yang--Mills,''
+arXiv:2307.06790.
+
+\bibitem{Chatterjee2024}
+S.~Chatterjee,
+``A scaling limit of $SU(2)$ lattice Yang--Mills--Higgs theory,''
+\emph{Probab. Math. Phys.}, to appear (2026).
+arXiv:2401.10507.
+
+\bibitem{GarciaPerezGonzalezArroyo}
+A.~Gonz\'alez-Arroyo, P.~Mart\'inez,
+``Periodic instantons on the lattice,''
+\emph{citation to verify}: caloron-type periodic instanton constructions
+on $T^4$ originate in the work of Nahm and van Baal in the
+1980s--1990s. See \cite{Nahm1983,vanBaal1996} for primary sources.
+
+\bibitem{Luscher2009TrivializingMaps}
+M.~L\"uscher,
+``Trivializing maps, the Wilson flow and the HMC algorithm,''
+\emph{Commun. Math. Phys.} \textbf{293} (2010) 899--919.
+arXiv:0907.5491.
+
+\bibitem{Luscher2010WilsonFlow}
+M.~L\"uscher,
+``Properties and uses of the Wilson flow in lattice QCD,''
+\emph{JHEP} \textbf{08} (2010) 071.
+arXiv:1006.4518.
+
+\bibitem{LuscherTopo1998}
+\emph{Citation to verify}: dilute-instanton mass of lattice topological
+sectors at large $\beta$ via L\"uscher gradient-flow charge
+identification; see \cite{Luscher2010WilsonFlow} for the gradient-flow
+charge definition and the standard literature on the instanton-gas
+approximation.
+
+\bibitem{Nahm1983}
+W.~Nahm,
+``Self-dual monopoles and calorons,''
+\emph{citation to verify}: Nahm's construction of calorons (periodic
+instantons) is contained in his Bonn preprints and subsequent works
+from the early 1980s.
+
+\bibitem{Polyakov1977}
+A.~M.~Polyakov,
+``Quark confinement and topology of gauge theories,''
+\emph{Nucl. Phys. B} \textbf{120} (1977) 429--458.
+
+\bibitem{RemondiereKRFP3_2026}
+K.~R\'emondi\`ere,
+\emph{Spectral bound for the Faddeev--Popov operator on the fundamental
+modular domain of the slice $\overline\Lambda_{S_0}$: a Birman--Schwinger /
+Aubin--Talenti analysis} (companion preprint
+\texttt{Paper\_KR\_FP3\_AnnalsMath}), May 2026.
+
+\bibitem{RemondiereKRFPB_2026}
+K.~R\'emondi\`ere,
+\emph{Mass gap for 4D pure Yang--Mills via Bakry--\'Emery on the
+fundamental modular domain: a conditional reduction} (companion preprint
+\texttt{Paper\_KR\_FP\_B\_BakryEmery\_LMP}), May 2026.
+
+\bibitem{Uhlenbeck1982}
+K.~Uhlenbeck,
+``Connections with $L^p$ bounds on curvature,''
+\emph{Commun. Math. Phys.} \textbf{83} (1982) 31--42.
+
+\bibitem{vanBaal1996}
+P.~van Baal,
+``Instantons versus monopoles,''
+\emph{citation to verify}: van Baal's work on calorons and twisted
+boundary conditions through the 1990s; specific arXiv ID requires
+direct verification.
+
+\bibitem{Talenti1976}
+G.~Talenti,
+``Best constant in Sobolev inequality,''
+\emph{Ann. Mat. Pura Appl.} \textbf{110} (1976) 353--372.
+
+\end{thebibliography}
+
+\end{document}

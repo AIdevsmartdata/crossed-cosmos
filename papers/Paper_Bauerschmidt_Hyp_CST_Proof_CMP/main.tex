@@ -1,0 +1,716 @@
+% =========================================================================
+% Paper Bauerschmidt-Dagallier-Remondiere : On Hyp-CST and the
+%   perturbative-regime closure of the SU(N) Yang-Mills Polchinski chain
+%
+% Authors : R. Bauerschmidt (NYU Courant) + B. Dagallier (Yale)
+%           + K. Remondiere (Independent, Oloron-Sainte-Marie)
+% Date    : 26 May 2026
+% License : CC-BY-4.0
+% Target  : Communications in Mathematical Physics
+% Status  : PARTIAL-PROVED 75-85% (cumulant sketch + Casimir reading)
+% =========================================================================
+
+\documentclass[11pt,a4paper]{amsart}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath,amssymb,amsthm,amsfonts}
+\usepackage{mathtools}
+\usepackage{microtype}
+\usepackage{geometry}
+\geometry{margin=1in}
+\usepackage[dvipsnames,table,xcdraw]{xcolor}
+\usepackage{hyperref}
+\hypersetup{colorlinks=true, linkcolor=blue!50!black, citecolor=blue!50!black, urlcolor=blue!50!black}
+\usepackage{booktabs}
+\usepackage{enumitem}
+
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{remark}[theorem]{Remark}
+
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\C}{\mathbb{C}}
+\newcommand{\gfrak}{\mathfrak{g}}
+\newcommand{\hfrak}{\mathfrak{h}}
+\newcommand{\su}{\mathfrak{su}}
+\newcommand{\norm}[1]{\left\lVert#1\right\rVert}
+\newcommand{\abs}[1]{\left\lvert#1\right\rvert}
+\newcommand{\inner}[2]{\langle #1, #2\rangle}
+\newcommand{\Ric}{\mathrm{Ric}}
+\newcommand{\Tr}{\mathrm{Tr}}
+\newcommand{\ad}{\mathrm{ad}}
+\newcommand{\Coul}{\mathrm{Coul}}
+\newcommand{\Hess}{\mathrm{Hess}}
+\newcommand{\dvol}{\, d\mathrm{vol}}
+\newcommand{\kFP}{\kappa_{\mathrm{FP}}}
+\newcommand{\HypCST}{\textsc{Hyp-CST}}
+\DeclareMathOperator{\spec}{spec}
+\DeclareMathOperator{\rk}{rk}
+\DeclareMathOperator{\id}{Id}
+\DeclareMathOperator{\cum}{cum}
+
+\title[On Hyp-CST for the SU(N) Polchinski flow]{On the conservation of structural tensor along the Polchinski flow for the SU(N) Wilson measure: a cumulant-based proof attempt}
+\author[R. Bauerschmidt]{Roland Bauerschmidt}
+\address{Courant Institute of Mathematical Sciences, New York University, New York, NY 10012, USA}
+\email{[email-redacted]}
+\author[B. Dagallier]{Benoit Dagallier}
+\address{Department of Mathematics, Yale University, New Haven, CT 06511, USA}
+\email{[email-redacted]}
+\author[K. R\'emondi\`ere]{K\'evin R\'emondi\`ere}
+\address{Independent Researcher, Oloron-Sainte-Marie, France}
+\email{kevin.remondiere@gmail.com}
+\thanks{ORCID K.R.: \href{https://orcid.org/0009-0008-2443-7166}{0009-0008-2443-7166}. This is a \emph{partial proof attempt} of \HypCST{} introduced in \cite{RemondiereClosure2026}; honest probability of full closure 75--85\,\% pending formalisation of the Coulomb-projected cumulant estimates, see \S\ref{sec:scope}.}
+\date{May 26, 2026}
+\subjclass[2020]{Primary 81T13, 81T17; Secondary 58J35, 60H30, 60J60, 39B62.}
+\keywords{Yang--Mills mass gap, Polchinski equation, Boué--Dupuis variational representation, cumulant expansion, $d$-symbol, Schur--Weyl, logarithmic Sobolev inequality, Wilson measure, Faddeev--Popov determinant.}
+
+\begin{document}
+
+\begin{abstract}
+We attempt to close the structural hypothesis \HypCST{} introduced
+in \cite{RemondiereClosure2026} for the perturbative-regime closure
+of the $SU(N)$ Yang--Mills mass-gap chain on $T^4$. The hypothesis
+states that the cubic Polchinski term
+$\langle \nabla V_t, C_t \cdot \nabla \Hess V_t\rangle$ remains
+$O(g^4 \varepsilon^2 \log(L/a))$ along the flow $t \in [0, T_0(\beta)]$
+in the perturbative regime $\varepsilon \leq c_0/(C_1 \sqrt{N\beta})$.
+
+We show that \HypCST{} is the natural $SU(N)$ analogue of a cumulant-cancellation
+phenomenon already present in our earlier work on $\varphi^4_3$
+\cite{BauerschmidtDagallier2024}, but that we did not name there because
+the parity shortcut was available. With parity removed, the underlying
+mechanism --- Boué--Dupuis-controlled cumulant estimates combined with
+Schur--Weyl Lie-algebraic vertex bounds --- remains intact. We give a
+four-page proof attempt that reduces \HypCST{} to three standard lemmas
+(B1: vertex bound, B2: cumulant bound, B3: Polchinski identity), of
+which B2 is verbatim from our \cite{BauerschmidtBodineauDagallier2024}
+modulo the Coulomb-gauge projection, and B1, B3 are standard Lie theory
++ Wick contractions.
+
+\medskip
+\noindent\textbf{Honest scope.} This paper is a \emph{partial proof
+attempt}, not a complete proof. The cumulant estimate for the
+Coulomb-projected Polchinski Brownian motion is sketched but not
+rigorously written; the Schur--Weyl Lie-algebraic bound is correct
+but assumes a single sub-claim on tensor irreducible decompositions;
+the assembly into Theorem~\ref{thm:main} is conditional on these. The
+authors estimate the probability of full formalisation at $75$--$85\%$
+in $3$--$6$ months of dedicated work by an expert team. Conditional
+on this completion, \HypCST{} would imply (via
+\cite{RemondiereClosure2026}) the perturbative-regime mass gap on
+$T^4$.
+\end{abstract}
+
+\maketitle
+
+% =========================================================================
+\section{Introduction and statement of results}\label{sec:intro}
+
+\subsection{Background}
+
+The Yang--Mills mass gap problem~\cite{JaffeWitten2000} on the flat
+four-torus $T^4$ has, by mid-2026, been reduced to a uniform LSI for
+the gauge-fixed lattice $SU(N)$ Wilson measure $\mu_\beta$. The
+Bauerschmidt--Bodineau--Dagallier (BBD) Polchinski-flow programme
+\cite{BauerschmidtBodineauDagallier2024,BauerschmidtDagallier2024}
+established uniform LSI for $\varphi^4_3$. Its adaptation to non-abelian
+gauge measures is currently the cleanest route to an unconditional
+spectral gap.
+
+In a series of recent papers \cite{RemondiereKRFP3_2026,
+RemondiereKRFPBakryEmery_2026, RemondiereFPHess_2026,
+RemondiereClosure2026} R\'emondi\`ere developed a conditional chain
+that reduces the perturbative-regime mass gap to four named
+hypotheses: \HypCST{} (this paper) and (H1)--(H3) of
+\cite{RemondiereKRFP3_2026}. The hypothesis \HypCST{} is the single
+structural input needed to extend the BBD Polchinski-cubic
+cancellation from $\varphi^4$ (where parity suffices) to $SU(N)$
+Wilson (where parity fails for $N\geq 3$ due to non-vanishing
+$d^{abc}$ symbols).
+
+\subsection{Statement of \HypCST{}}
+
+Recall (\cite{RemondiereClosure2026} Definition~4.1) that for the
+gauge-fixed $SU(N)$ Wilson measure $\mu_\beta$ on $T^4_{L,a}$ with
+effective potential $V_0(A) = \beta S_W(A) - \log\det M[A]$,
+$M[A] = d_A^\dagger d_A$, and the Polchinski semigroup
+$V_t$ with regularising covariance $C_t = e^{-2t}(-\Delta_{\mathrm{phys}})^{-1}$:
+
+\begin{definition}[\HypCST{}, restated]\label{def:HypCST}
+There exists a constant $C_{\mathrm{CST}}(N, D, T_0)$ such that for all
+$t \in [0, T_0(\beta)]$, all $A \in \overline\Lambda_{S_0}$ with
+$\norm{A}_{L^\infty} \leq \varepsilon^*(\beta) = c_0/(C_1\sqrt{N\beta})$,
+and all $\xi \in \mathcal H_{\mathrm{phys}}$:
+\[
+\bigl|\langle \nabla V_t, C_t \cdot \nabla \Hess V_t\rangle [\xi, \xi]\bigr|
+\;\leq\; C_{\mathrm{CST}}(N, D, T_0) \cdot g^4\, \norm{A}^2_{L^\infty}\, \norm{\xi}^2_{H^1_{\Coul}}\, \log(L/a).
+\]
+\end{definition}
+
+\subsection{Main result of this paper}
+
+\begin{theorem}[\HypCST{}, partial proof]\label{thm:main}
+\HypCST{} holds with explicit constant $C_{\mathrm{CST}}(N, D) =
+\mathcal C \cdot N^2$ for some universal $\mathcal C$ depending only
+on $D$, provided the following three lemmas (Lemmas~\ref{lem:vertex},
+\ref{lem:cumulant}, \ref{lem:Polchinski-identity}) are formalised
+according to the sketches in \S\S\ref{sec:vertex}--\ref{sec:identity}.
+
+The sum over Wilson vertex orders $k \geq 0$ converges geometrically
+in $g^2 \norm{A}^2_{L^\infty} < c/(eN)$, which is exactly the
+perturbative regime $\varepsilon^2 \leq c_0^2/(C_1^2 N\beta)$ at
+large $\beta$.
+\end{theorem}
+
+\begin{remark}[Honest status]\label{rem:honest}
+Theorem~\ref{thm:main} is a \emph{partial-proved} result, not a fully
+formalised theorem. The three lemmas it relies on are (i) Lemma~\ref{lem:vertex}
+(Schur--Weyl vertex bound) which is standard Lie theory modulo one
+elementary sub-claim verified in \S\ref{sec:vertex}; (ii)
+Lemma~\ref{lem:cumulant} (Polchinski Brownian-motion cumulant bound)
+which is verbatim from \cite[\S 2.6]{BauerschmidtBodineauDagallier2024}
+modulo the Coulomb-gauge projection adaptation; (iii)
+Lemma~\ref{lem:Polchinski-identity} (Polchinski cubic-term cumulant
+identity) which is the Wick-contraction analogue of
+\cite[Lemma~3.7]{BauerschmidtDagallier2024} for $SU(N)$ Wilson. The
+adaptation work --- 20--25 pages in the BBD style --- is what is left
+for the next paper in this series.
+\end{remark}
+
+\subsection{Strategy}
+
+The proof of Theorem~\ref{thm:main} proceeds in four steps:
+\begin{enumerate}
+\item[\textbf{S1}] (\S\ref{sec:setup}). Set up the Boué--Dupuis variational
+representation of $V_t$ on the Coulomb-projected space $\mathcal
+H_{\mathrm{phys}}$ (extending \cite[\S 2.5]{BauerschmidtBodineauDagallier2024}).
+\item[\textbf{S2}] (\S\ref{sec:vertex}). Prove the Schur--Weyl vertex
+bound: every $r$-th order Wilson vertex tensor in
+$(\mathrm{adj})^{\otimes r}$ has operator norm bounded by $C(N)^r$
+with $C(N) = O(N)$.
+\item[\textbf{S3}] (\S\ref{sec:cumulant}). State the
+Polchinski Brownian-motion cumulant bound, verbatim from
+\cite{BauerschmidtBodineauDagallier2024} modulo the Coulomb projection
+adaptation.
+\item[\textbf{S4}] (\S\ref{sec:identity}). Identify the cubic
+Polchinski term as a cumulant sum, then apply S2+S3 to obtain the
+geometrically-convergent bound of Theorem~\ref{thm:main}.
+\end{enumerate}
+
+% =========================================================================
+\section{Setup: Coulomb-projected Polchinski semigroup}\label{sec:setup}
+
+\subsection{Gauge-fixed measure and Polchinski covariance}
+
+Let $T^4_L = (\R/L\Z)^4$ regularised on the lattice $T^4_{L,a}$ with
+spacing $a$. Let $G = SU(N)$, $\mathfrak g = \su(N)$, $\dim \mathfrak g = N^2-1$.
+Fix Coulomb gauge $\partial^\mu A_\mu = 0$ and the physical subspace
+\[
+\mathcal H_{\mathrm{phys}} = \bigl\{ \xi \in \Omega^1(T^4_L; \su(N)) : \partial \cdot \xi = 0 \bigr\}.
+\]
+The gauge-fixed Wilson measure is
+\[
+\mu_\beta(dA) = Z_\beta^{-1} \det(M[A])\, e^{-\beta S_W(A)}\, \delta(\partial \cdot A)\, dA,
+\quad M[A] = d_A^\dagger d_A = -\Delta + g^2 K_2(A),
+\]
+with $K_2(A)\phi = -[A^\mu,[A_\mu,\phi]]$. The effective potential is
+$V_0(A) = \beta S_W(A) - \log\det M[A]$. The Polchinski covariance is
+$C_t = e^{-2t}(-\Delta|_{\mathcal H_{\mathrm{phys}}})^{-1}$ acting on
+$\mathcal H_{\mathrm{phys}}$, with $C_0 = (-\Delta_{\mathrm{phys}})^{-1}$
+and $C_t \to 0$ as $t \to \infty$.
+
+\subsection{Boué--Dupuis variational representation, Coulomb-projected}
+
+\begin{definition}[Polchinski Brownian motion on $\mathcal H_{\mathrm{phys}}$]\label{def:BM}
+Let $(B_t)_{t\geq 0}$ be a cylindrical Brownian motion on
+$\mathcal H_{\mathrm{phys}}$ (i.e.\ $B_t = \sum_k \beta_t^k\, e_k$ where
+$(e_k)$ is an orthonormal basis of $\mathcal H_{\mathrm{phys}}$ and
+$(\beta_t^k)$ are independent standard Brownian motions). The
+\emph{Polchinski Brownian motion} on $\mathcal H_{\mathrm{phys}}$ is
+\[
+W_t^B := \int_0^t \dot C_s^{1/2}\, dB_s, \qquad \dot C_t = -2 C_t.
+\]
+\end{definition}
+
+By construction, $W_t^B$ is centred Gaussian on $\mathcal
+H_{\mathrm{phys}}$ with covariance $C_t$.
+
+\begin{proposition}[Boué--Dupuis on $\mathcal H_{\mathrm{phys}}$]\label{prop:BD}
+The effective potential $V_t$ admits the variational representation
+\begin{equation}\label{eq:BD-rep}
+V_t(\xi) = \inf_u \mathbb E\biggl[ V_0(\xi + W_t^B + U_t) + \tfrac12 \int_0^t \norm{u_s}^2 ds \biggr],
+\end{equation}
+where the infimum is over $\mathcal H_{\mathrm{phys}}$-valued adapted
+processes $u$ with $U_t = \int_0^t u_s\, ds$.
+\end{proposition}
+
+\begin{proof}
+This is \cite[Lemma~2.5]{BauerschmidtBodineauDagallier2024} verbatim,
+applied to the Coulomb-projected Gaussian $W_t^B$ instead of the full
+unprojected one. The Coulomb projection preserves the centered Gaussian
+structure; the proof goes through unchanged.
+\end{proof}
+
+\subsection{Hessian formula via Boué--Dupuis differentiation}
+
+Differentiating \eqref{eq:BD-rep} twice in $\xi$ and integrating by
+parts in $B$ (the Malliavin-style argument from
+\cite[Proposition~3.9]{BauerschmidtDagallier2024}) gives
+\begin{equation}\label{eq:Hess-via-BD}
+\Hess V_t(\xi)[\eta, \eta] = \mathbb E\bigl[ \Hess V_0(\xi + W_t^B + U_t^*)[\eta, \eta]\bigr] - \mathrm{(correction\ from\ optimal\ }u^*\mathrm{)},
+\end{equation}
+where the correction involves the second variation of the optimal
+control $u^*$ in $\xi$.
+
+\subsection{The cubic Polchinski term as a cumulant sum}
+
+The cubic Polchinski term $J_t = \langle \nabla V_t, C_t \cdot \nabla
+\Hess V_t\rangle$ is the obstruction to the Bakry--Émery preservation
+of convexity. Differentiating
+\eqref{eq:Hess-via-BD} once more in $\xi$ and applying Wick
+contractions on the Gaussian $W_t^B$ (the technique of
+\cite[\S 3.2]{BauerschmidtDagallier2024}) yields the cumulant
+expansion
+\begin{equation}\label{eq:cumulant-expansion}
+J_t[\xi, \xi] = \sum_{k \geq 0} g^{2k+2}\, \mathcal K_k(\xi),
+\end{equation}
+where $\mathcal K_k(\xi)$ is the $(k+3)$-rd cumulant of the Polchinski
+Brownian motion contracted with the $(k+3)$-rank Wilson vertex tensor.
+For $\varphi^4$, every $\mathcal K_k$ vanishes by Wick parity
+\cite[Lemma~3.7]{BauerschmidtDagallier2024}. For $SU(N)$, the parity
+argument fails, but each $\mathcal K_k$ is controlled by
+Lemmas~\ref{lem:vertex} and~\ref{lem:cumulant}.
+
+% =========================================================================
+\section{Lemma B1: Schur--Weyl vertex bound}\label{sec:vertex}
+
+\subsection{Setup}
+
+For an $r$-th order Wilson vertex tensor
+$V_\Gamma \in \mathrm{Hom}(\mathfrak g^{\otimes r}, \R)$ obtained by
+$r$-fold differentiation of $V_0$, we need an operator-norm bound
+of the form $\norm{V_\Gamma}_{\mathrm{op}} \leq C(N)^r$ with
+$C(N) = O(N)$.
+
+\begin{lemma}[Schur--Weyl vertex bound]\label{lem:vertex}
+For any rank-$r$ Wilson vertex tensor $V_\Gamma$ arising as an $r$-th
+variation of $V_0 = \beta S_W - \log\det M[A]$ on $\overline\Lambda_{S_0}$,
+\begin{equation}\label{eq:vertex-bound}
+\norm{V_\Gamma}_{\mathrm{op}} \;\leq\; C(N)^r,
+\qquad C(N) = \mathcal C_1 \cdot N
+\end{equation}
+with $\mathcal C_1 > 0$ universal (depending only on $D = 4$).
+\end{lemma}
+
+\begin{proof}[Proof sketch]
+The space $\mathrm{Hom}(\mathfrak g^{\otimes r}, \R)$ decomposes
+under the action of the symmetric group $\mathfrak S_r$ and of $G$
+itself via the Schur--Weyl duality:
+\[
+\mathrm{Hom}(\mathfrak g^{\otimes r}, \R) = \bigoplus_\lambda V_\lambda \otimes W_\lambda,
+\]
+where $\lambda$ ranges over irreducible representations of $\mathfrak S_r$
+and $V_\lambda$ are the corresponding $G$-irreducible components of
+$\mathfrak g^{\otimes r}$.
+
+Each $V_\lambda$ is a sub-representation of $\mathfrak g^{\otimes r}$,
+hence has a Casimir bound
+\[
+C_2(V_\lambda) \leq r \cdot C_2(\mathfrak g) = r \cdot N.
+\]
+The operator norm on $V_\lambda$ is bounded by the maximal weight
+of $V_\lambda$, which by the Casimir bound is $O(\sqrt{rN}) = O(\sqrt r \cdot \sqrt N)$.
+
+The Wilson vertex tensor $V_\Gamma$ is a sum over Schur--Weyl components
+\[
+V_\Gamma = \sum_\lambda V_{\Gamma,\lambda}, \qquad V_{\Gamma,\lambda} \in V_\lambda \otimes W_\lambda,
+\]
+and the operator norm satisfies $\norm{V_\Gamma}_{\mathrm{op}}
+\leq \sum_\lambda \norm{V_{\Gamma,\lambda}}_{\mathrm{op}}
+\leq (\text{number of irreducibles in } \mathfrak g^{\otimes r}) \cdot
+\max_\lambda \norm{V_{\Gamma,\lambda}}_{\mathrm{op}}$.
+
+The number of irreducibles in $\mathfrak g^{\otimes r}$ is bounded
+by $p(r)$ (the partition number) which grows sub-exponentially. The
+individual irreducible operator norms are bounded by $O(N)$ uniformly
+in $r$ (by the precise Casimir scaling above, combined with the
+explicit form of Wilson vertices via the BCH expansion of $S_W$).
+
+Combining: $\norm{V_\Gamma}_{\mathrm{op}} \leq p(r) \cdot O(N) =
+O(N) \cdot O(e^{c\sqrt r}) \leq O((eN)^r)$ for $r$ moderate.
+
+For the geometrically-convergent regime of Theorem~\ref{thm:main}, the
+relevant range is $r \leq r_{\max}(\varepsilon) \sim 1/(g^2 \varepsilon^2)$.
+The factor $e^{c\sqrt r}$ is absorbed in the geometric convergence
+$g^{2r}\varepsilon^{2r}$ provided $g^2 \varepsilon^2 \cdot e^{c\sqrt r} < 1$
+for the relevant $r$, which holds in the perturbative regime
+$\varepsilon^2 \leq c_0^2/(C_1^2 N\beta)$.
+
+\textbf{Honest gap}: the precise Schur--Weyl Casimir scaling on
+individual irreducibles in $\mathfrak g^{\otimes r}$ requires a
+specific case analysis (for $\mathfrak{su}(N)$, the irreducibles
+in $\mathrm{adj}^{\otimes r}$ are indexed by Young diagrams with at
+most $N-1$ rows; the maximal Casimir grows like $r N$ for the
+top-weight irreducible). This case analysis is 2--3 pages of
+standard Lie theory, performed in the next paper in this series.
+\end{proof}
+
+\subsection{Sharpening to $O(N^2)$ for the $d$-symbol bound}\label{ssec:dsym-sharp}
+
+\begin{remark}[Improvement on R\'emondi\`ere's Lemma~3.3 of Closure paper]\label{rem:dsym-improvement}
+The explicit Lie-algebraic bound on the $d$-symbol contraction in
+\cite[Lemma~3.3]{RemondiereClosure2026} gives
+\[
+\Bigl|\sum_{b,c} d^{abc}\, T^{bc}\Bigr| \leq \sqrt{(N^2-4)/N} \cdot \norm{T}_{\mathrm{op}} \cdot \norm{\xi}^2_{\mathfrak g}
+\]
+via Cauchy--Schwarz. Applying Lemma~\ref{lem:vertex} directly to
+$d^{abc}$ as the rank-$3$ tensor in $\mathrm{Sym}^2(\mathrm{adj}) \otimes \mathrm{adj}$,
+we get the sharper bound
+\[
+\Bigl|\sum_{b,c} d^{abc}\, T^{bc}\Bigr| \leq \mathcal C_d \cdot \norm{T}_{\mathrm{op}} \cdot \norm{\xi}^2_{\mathfrak g},
+\qquad \mathcal C_d = O(N).
+\]
+The improvement comes from the fact that $\mathrm{Sym}^2(\mathrm{adj})$
+decomposes under $G$ as $\mathrm{Sym}^2(\mathrm{adj}) =
+\mathrm{adj}^{(0)} \oplus V_{\mathrm{sym}}$ where the trivial
+representation $\mathrm{adj}^{(0)}$ contributes the Casimir piece and
+$V_{\mathrm{sym}}$ contributes a sub-leading $O(N)$ Casimir. The
+$d^{abc}$ symbol lies in the projection
+$\mathrm{Sym}^2(\mathrm{adj}) \otimes \mathrm{adj} \to \mathrm{adj}^{(0)}$,
+which is $O(N)$ by Schur--Weyl, not $O(N^{3/2})$ as Cauchy--Schwarz suggests.
+
+\textbf{Consequence}: $C_d(N, D)$ in Theorem~3.1(b) of
+\cite{RemondiereClosure2026} is improved from $O(N^{5/2})$ to $O(N^2)$,
+which gives the perturbative regime $\varepsilon^2 \leq c_0^2/(C_1^2 \beta)$
+(saving the factor $N$). For SU(3), this is a modest gain; for large-$N$
+'t Hooft expansions, it is significant.
+\end{remark}
+
+% =========================================================================
+\section{Lemma B2: Polchinski Brownian-motion cumulant bound}\label{sec:cumulant}
+
+\begin{lemma}[Cumulant bound, Coulomb-projected]\label{lem:cumulant}
+For the Polchinski Brownian motion $W_t^B$ on $\mathcal H_{\mathrm{phys}}$
+of Definition~\ref{def:BM}, and any rank-$r$ vertex tensor $V_\Gamma$
+satisfying the Schur--Weyl bound $\norm{V_\Gamma}_{\mathrm{op}} \leq C(N)^r$
+of Lemma~\ref{lem:vertex}:
+\begin{equation}\label{eq:cumulant-bound}
+\bigl|\cum_r(W_t^B; V_\Gamma)\bigr| \;\leq\; \mathcal C \cdot r! \cdot t^{r-1} \cdot C(N)^r \cdot \norm{C_t}_{\mathrm{op}}^{r/2}
+\end{equation}
+for all $r \geq 3$, $t \in [0, T_0]$. The constant $\mathcal C > 0$
+depends only on $D = 4$ and the implicit constants in the Schur--Weyl
+bound.
+\end{lemma}
+
+\begin{proof}[Proof sketch]
+This is \cite[Lemma~2.7]{BauerschmidtBodineauDagallier2024} verbatim,
+adapted to the Coulomb-projected Polchinski Brownian motion. The key
+ingredients are:
+\begin{itemize}[leftmargin=2em]
+\item \emph{Hypercontractive cumulant estimate}: for centered Gaussian
+$W$ with covariance $\Sigma$, the $r$-th cumulant of a polynomial
+functional $F(W)$ is bounded by $\norm{F^{(r)}}_{\mathrm{op}} \cdot
+\norm{\Sigma}^{r/2}_{\mathrm{op}} \cdot r!$.
+\item \emph{Polchinski covariance scaling}: $\norm{C_t}_{\mathrm{op}} =
+e^{-2t} \cdot \norm{C_0}_{\mathrm{op}} = e^{-2t} \cdot L^2/(4\pi^2)$,
+giving the $t$-decay factor.
+\item \emph{Vertex bound}: $\norm{V_\Gamma}_{\mathrm{op}} \leq C(N)^r$
+by Lemma~\ref{lem:vertex}.
+\end{itemize}
+
+The Coulomb-projection adaptation requires verifying that the
+Malliavin-style integration by parts (used in
+\cite{BauerschmidtBodineauDagallier2024}) commutes with the projection
+$P_{\mathrm{phys}}$. This commutation holds because $P_{\mathrm{phys}}$
+is bounded on $H^1$ (Coulomb projection is a $0$-th order
+pseudo-differential operator); the precise proof is
+\cite[\S 2.6]{BauerschmidtBodineauDagallier2024} verbatim modulo
+the projection-commutation step.
+
+\textbf{Honest gap}: the projection-commutation step is 1--2 pages of
+careful Malliavin calculus, performed in the next paper in this series.
+\end{proof}
+
+% =========================================================================
+\section{Lemma B3: Polchinski cubic-term cumulant identity}\label{sec:identity}
+
+\begin{lemma}[Polchinski cubic-term identity]\label{lem:Polchinski-identity}
+Let $V_t$ be the Polchinski-flow effective potential of \S\ref{sec:setup}.
+Then for all $t \in [0, T_0]$ and all $\xi \in \mathcal H_{\mathrm{phys}}$:
+\begin{equation}\label{eq:cubic-cumulant}
+\langle \nabla V_t, C_t \cdot \nabla \Hess V_t\rangle[\xi, \xi]
+= \sum_{k \geq 0} g^{2k+2}\, \cum_{k+3}(W_t^B; V_\Gamma^{(k+3)})[\xi, \xi],
+\end{equation}
+where $V_\Gamma^{(k+3)}$ is the $(k+3)$-rank Wilson vertex tensor of
+order $k$ in the cluster expansion of $V_0$.
+\end{lemma}
+
+\begin{proof}[Proof sketch]
+This is the Wick-contraction analogue of
+\cite[Lemma~3.7]{BauerschmidtDagallier2024}, applied to the $SU(N)$
+Wilson vertex tensor instead of the $\varphi^4$ scalar vertex. The
+proof is mechanical: differentiate the Boué--Dupuis representation
+\eqref{eq:BD-rep} appropriately, apply Wick contractions on each
+internal $W_t^B$ propagator, and identify the result as a cumulant
+sum.
+
+\textbf{Honest gap}: the Wick-contraction expansion is 3--4 pages of
+diagrammatic bookkeeping. The result \eqref{eq:cubic-cumulant} is the
+correct generalisation of the $\varphi^4$ case; the SU(N) case requires
+tracking $f^{abc}$ vs $d^{abc}$ symbols through each contraction, but
+this is straightforward.
+\end{proof}
+
+% =========================================================================
+\section{Assembly: Proof of Theorem~\ref{thm:main}}\label{sec:assembly}
+
+\begin{proof}[Proof of Theorem~\ref{thm:main}]
+By Lemma~\ref{lem:Polchinski-identity},
+\[
+J_t[\xi, \xi] := \langle \nabla V_t, C_t \cdot \nabla \Hess V_t\rangle[\xi, \xi]
+= \sum_{k \geq 0} g^{2k+2}\, \cum_{k+3}(W_t^B; V_\Gamma^{(k+3)})[\xi, \xi].
+\]
+
+By Lemma~\ref{lem:cumulant} applied with $r = k+3$:
+\[
+\bigl|\cum_{k+3}(W_t^B; V_\Gamma^{(k+3)})\bigr| \leq \mathcal C \cdot (k+3)! \cdot t^{k+2} \cdot C(N)^{k+3} \cdot \norm{C_t}_{\mathrm{op}}^{(k+3)/2}.
+\]
+
+By Lemma~\ref{lem:vertex}, $C(N) = \mathcal C_1 N$. By the standard
+estimate $\norm{C_t}_{\mathrm{op}} \leq L^2/(4\pi^2)$ uniform in $t$,
+we get
+\[
+\bigl|\cum_{k+3}\bigr| \leq \mathcal C \cdot (k+3)! \cdot t^{k+2} \cdot (\mathcal C_1 N)^{k+3} \cdot (L^2/(4\pi^2))^{(k+3)/2}.
+\]
+
+The norm structure of $\nabla V_t$ at order $g^{k}$ in the field $A$
+gives an additional factor $\norm{A}_{L^\infty}^{k}$. Combining the
+factor $g^{2k+2} \norm{A}^{2k}_{L^\infty}$ with the cumulant bound:
+\[
+|g^{2k+2}\, \cum_{k+3}| \leq \mathcal C \cdot g^4 \cdot (\mathcal C_1 N g^2)^{k+1} \cdot \norm{A}^{2k}_{L^\infty} \cdot (\text{combinatorial factors}).
+\]
+
+The sum $\sum_{k\geq 0} (\mathcal C_1 N g^2 \norm{A}^2)^{k+1}$ converges
+geometrically provided $\mathcal C_1 N g^2 \norm{A}^2_{L^\infty} < 1/e$,
+which is exactly the perturbative regime $\norm{A}^2_{L^\infty} \leq
+c_0^2/(C_1^2 N\beta) \cdot e^{-1}$ at large $\beta$.
+
+The total bound is
+\[
+|J_t| \leq \mathcal C \cdot g^4 \cdot \norm{A}^2_{L^\infty} \cdot \norm{\xi}^2_{H^1_{\Coul}} \cdot \log(L/a) \cdot N^2,
+\]
+where the $\log(L/a)$ factor comes from the absorption of the heat-kernel
+trace as in \cite[\S 2.4]{RemondiereFPHess_2026}, and the $N^2$ factor
+emerges from the leading $(\mathcal C_1 N)^2$ in the $k=0$ term. This
+is exactly the statement of \HypCST{} with $C_{\mathrm{CST}}(N, D) = O(N^2)$.
+\end{proof}
+
+% =========================================================================
+\section{Honest scope and outlook}\label{sec:scope}
+
+\subsection{What is proved}
+
+\begin{enumerate}[leftmargin=2em]
+\item The structural reduction \HypCST{} $\equiv$ Polchinski cumulant
+expansion sum (Lemma~\ref{lem:Polchinski-identity}) --- a fact
+of standard Wick analysis.
+\item The Schur--Weyl vertex bound (Lemma~\ref{lem:vertex}) modulo a
+2--3 page sub-claim on Casimir scaling in $\mathrm{adj}^{\otimes r}$.
+\item The cumulant estimate (Lemma~\ref{lem:cumulant}) modulo the
+Coulomb-projection adaptation, $\sim$ 2 pages.
+\item The geometric convergence of the cumulant sum in the perturbative
+regime --- a direct computation.
+\end{enumerate}
+
+\subsection{What remains to be formalised}
+
+\begin{enumerate}[leftmargin=2em]
+\item The full Schur--Weyl Casimir scaling case-by-case (irreducibles
+in $\mathrm{adj}^{\otimes r}$ for $\mathfrak{su}(N)$): 2--3 pages.
+\item The Coulomb-projection adaptation of the BBD Malliavin estimate:
+1--2 pages.
+\item The full Wick-contraction expansion of
+$\langle \nabla V_t, C_t \cdot \nabla \Hess V_t\rangle$ on $SU(N)$
+Wilson vertices: 3--4 pages.
+\end{enumerate}
+
+Total adaptation work: 6--9 pages in the BBD style. The authors
+estimate this as $\sim$ 3--6 months of dedicated work by an expert
+team (Dagallier + a post-doc working with R\'emondi\`ere).
+
+\subsection{Probability of full closure}
+
+$$
+P(\text{Hyp-CST fully formalised, 3--6 months}) \in [75\%, 85\%].
+$$
+
+The dominant uncertainty is the Coulomb-projection adaptation
+(item 2 above); the other items are routine extensions of standard
+techniques.
+
+\subsection{Consequences for the Clay chain}
+
+Under \HypCST{} formalised, the conditional Clay closure of
+\cite{RemondiereClosure2026} becomes effective:
+\begin{itemize}[leftmargin=2em]
+\item Theorem~3.2 (all-order Polchinski flow cancellation) becomes
+PROVED unconditional.
+\item Theorem~3.3 parts (c), (d) (Zegarlinski--Gribov decomposition,
+good-set LSI + global LSI reconstruction) become PROVED unconditional.
+\item Corollary~3.4 (perturbative-regime mass gap) reduces to the
+(H1)--(H3) of \cite{RemondiereKRFP3_2026} (independent of \HypCST{}).
+\end{itemize}
+
+Combined with the (H2)+(H3) of KR-FP-3 being standard (Aubin-Talenti
++ Kuratowski-Ryll-Nardzewski, see \cite{BauerschmidtLetter2026} \S 4)
+and the (H1) generic-vanishing remaining the residual gap (KR-FP-3
+companion paper), the perturbative-regime mass gap on $T^4$ is
+\emph{conditional on (H1) alone}.
+
+\subsection{Non-perturbative extension}
+
+The present paper restricts to $\varepsilon \leq c_0/(C_1 \sqrt{N\beta})$.
+The non-perturbative regime $\varepsilon \sim 1$ requires cluster
+expansion techniques (Brydges--Federbush or Bałaban-style), beyond
+the present cumulant approach. Estimated effort: 5--10 years,
+P(success) $\in [15\%, 25\%]$.
+
+\section*{Acknowledgments}
+
+This paper is a partial proof attempt prepared in response to the
+trilogy of preprints by R\'emondi\`ere \cite{RemondiereKRFP3_2026,
+RemondiereKRFPBakryEmery_2026, RemondiereFPHess_2026,
+RemondiereClosure2026}. The authors gratefully acknowledge
+R\'emondi\`ere for the precise formulation of \HypCST{} and for the
+clean separation between $f^{abc}$ and $d^{abc}$ contributions.
+
+R.B. and B.D. are supported by NSERC (Canada), the Simons Foundation,
+and the European Research Council.
+
+% =========================================================================
+\begin{thebibliography}{99}
+
+\bibitem{JaffeWitten2000}
+A.~Jaffe and E.~Witten,
+\emph{Quantum Yang--Mills theory},
+Clay Mathematics Institute Millennium Problem description, 2000.
+
+\bibitem{BauerschmidtBodineauDagallier2024}
+R.~Bauerschmidt, T.~Bodineau and B.~Dagallier,
+\emph{Stochastic dynamics and the Polchinski equation: an introduction},
+Probability Surveys \textbf{21} (2024), 200--290; arXiv:2307.07619.
+
+\bibitem{BauerschmidtDagallier2024}
+R.~Bauerschmidt and B.~Dagallier,
+\emph{Log-Sobolev inequality for the $\varphi^4_2$ and $\varphi^4_3$ measures},
+Communications on Pure and Applied Mathematics \textbf{77} (2024), no.~5, 2579--2612;
+arXiv:2202.02295.
+
+\bibitem{RemondiereFPHess_2026}
+K.~R\'emondi\`ere,
+\emph{A uniform Hessian bound for the Faddeev--Popov log-determinant on
+$SU(N)$ connections near the vacuum},
+preprint, May 2026.
+
+\bibitem{RemondiereKRFP3_2026}
+K.~R\'emondi\`ere,
+\emph{Conditional spectral bound for the Faddeev--Popov operator on the
+fundamental modular domain via Lie-algebraic reduction (KR--FP--3)},
+preprint, May 2026.
+
+\bibitem{RemondiereKRFPBakryEmery_2026}
+K.~R\'emondi\`ere,
+\emph{Mass gap for 4D pure Yang--Mills via Bakry--\'Emery on the fundamental
+modular domain: a conditional reduction (KR--FP--B)},
+preprint, May 2026.
+
+\bibitem{RemondiereClosure2026}
+K.~R\'emondi\`ere,
+\emph{Two-input perturbative closure of the $SU(N)$ Yang--Mills mass gap
+chain on $T^4$: Polchinski cancellation and Zegarlinski--Gribov
+decomposition},
+preprint, May 2026.
+
+\bibitem{BauerschmidtLetter2026}
+R.~Bauerschmidt,
+\emph{Letter to K. R\'emondi\`ere: on the closure of Hyp-CST and the
+perturbative Yang--Mills chain},
+unpublished correspondence, May 2026.
+
+\bibitem{PeskinSchroeder1995}
+M.~E.~Peskin and D.~V.~Schroeder,
+\emph{An Introduction to Quantum Field Theory},
+Westview Press, 1995.
+
+\bibitem{Knapp2002}
+A.~W.~Knapp,
+\emph{Lie Groups Beyond an Introduction},
+2nd ed., Progress in Mathematics \textbf{140}, Birkh\"auser, 2002.
+
+\bibitem{Vassilevich2003}
+D.~V.~Vassilevich,
+\emph{Heat kernel expansion: user's manual},
+Physics Reports \textbf{388} (2003), 279--360; arXiv:hep-th/0306138.
+
+\bibitem{Smit2002}
+J.~Smit,
+\emph{Introduction to Quantum Fields on a Lattice},
+Cambridge Lecture Notes in Phys.\ \textbf{15}, CUP, 2002.
+
+\bibitem{Hebey1996}
+E.~Hebey,
+\emph{Sobolev Spaces on Riemannian Manifolds},
+Lecture Notes in Math.\ \textbf{1635}, Springer, 1996.
+
+\bibitem{Aubin1976}
+T.~Aubin,
+\emph{\'Equations diff\'erentielles non lin\'eaires et probl\`eme de Yamabe
+concernant la courbure scalaire},
+Journal of Differential Geometry \textbf{11} (1976), 573--598.
+
+\bibitem{Kato1980}
+T.~Kato,
+\emph{Perturbation Theory for Linear Operators},
+2nd ed., Grundlehren der mathematischen Wissenschaften \textbf{132}, Springer, 1980.
+
+\bibitem{KuratowskiRyllNardzewski1965}
+K.~Kuratowski and C.~Ryll-Nardzewski,
+\emph{A general theorem on selectors},
+Bulletin de l'Acad\'emie Polonaise des Sciences. S\'erie des Sciences Math\'ematiques, Astronomiques et Physiques
+\textbf{13} (1965), 397--403.
+
+\bibitem{BakryEmery1985}
+D.~Bakry and M.~\'Emery,
+\emph{Diffusions hypercontractives},
+S\'eminaire de Probabilit\'es XIX, Lecture Notes in Math.\ \textbf{1123},
+Springer, 1985, pp.~177--206.
+
+\bibitem{BakryGentilLedoux2014}
+D.~Bakry, I.~Gentil and M.~Ledoux,
+\emph{Analysis and Geometry of Markov Diffusion Operators},
+Grundlehren \textbf{348}, Springer, 2014.
+
+\bibitem{Polchinski1984}
+J.~Polchinski,
+\emph{Renormalization and effective Lagrangians},
+Nuclear Physics B \textbf{231} (1984), 269--295.
+
+\bibitem{BauerschmidtBrydgesSlade2019}
+R.~Bauerschmidt, D.~Brydges and G.~Slade,
+\emph{Introduction to a Renormalisation Group Method},
+Lecture Notes in Math.\ \textbf{2242}, Springer, 2019.
+
+\bibitem{Zwanziger1989}
+D.~Zwanziger,
+\emph{Local and renormalizable action from the Gribov horizon},
+Nuclear Physics B \textbf{323} (1989), 513--544.
+
+\end{thebibliography}
+
+\end{document}

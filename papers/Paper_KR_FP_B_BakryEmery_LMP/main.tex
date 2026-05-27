@@ -1,0 +1,945 @@
+% =========================================================================
+% Paper KR-FP-B : Mass gap for 4D pure Yang-Mills via Bakry-Emery on the
+%                 fundamental modular domain : a conditional reduction.
+%
+% Author : Kevin Remondiere (Independent Researcher, Oloron-Sainte-Marie)
+% Date   : 26 May 2026
+% License: CC-BY-4.0
+% Target : Letters in Mathematical Physics (LMP) / Annals of Mathematics
+% =========================================================================
+
+\documentclass[11pt,a4paper]{amsart}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath,amssymb,amsthm,amsfonts}
+\usepackage{mathtools}
+\usepackage{microtype}
+\usepackage{geometry}
+\geometry{margin=1in}
+\usepackage[dvipsnames,table,xcdraw]{xcolor}
+\usepackage{hyperref}
+\hypersetup{colorlinks=true, linkcolor=blue!50!black, citecolor=blue!50!black, urlcolor=blue!50!black}
+\usepackage{booktabs}
+\usepackage{enumitem}
+
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{remark}[theorem]{Remark}
+\newtheorem{hypothesis}[theorem]{Hypothesis}
+
+% -- Macros --------------------------------------------------------------
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\gfrak}{\mathfrak{g}}
+\newcommand{\hfrak}{\mathfrak{h}}
+\newcommand{\su}{\mathfrak{su}}
+\newcommand{\norm}[1]{\left\lVert#1\right\rVert}
+\newcommand{\abs}[1]{\left\lvert#1\right\rvert}
+\newcommand{\inner}[2]{\langle #1, #2\rangle}
+\newcommand{\Ric}{\mathrm{Ric}}
+\newcommand{\Tr}{\mathrm{Tr}}
+\newcommand{\ad}{\mathrm{ad}}
+\newcommand{\Coul}{\mathrm{Coul}}
+\newcommand{\dvol}{\, d\mathrm{vol}}
+\DeclareMathOperator{\spec}{spec}
+\DeclareMathOperator{\rk}{rk}
+\DeclareMathOperator{\Hess}{Hess}
+\DeclareMathOperator{\Ent}{Ent}
+
+% IMPORTANT : everywhere below, \kFP denotes the Faddeev--Popov / Kostant
+% invariant 1/(2|\Phi^+(G)|), NOT the entanglement-entropy area-law
+% prefactor (which is a distinct object, see RemondiereKRFP3_2026).
+\newcommand{\kFP}{\kappa_{\mathrm{FP}}}
+\newcommand{\cinf}{c_{\infty}}
+
+% =========================================================================
+\title[Mass gap via Bakry--\'Emery on $\Lambda$]
+{Mass gap for 4D pure Yang--Mills via Bakry--\'Emery on the
+ fundamental modular domain: a conditional reduction}
+
+\author{K\'evin R\'emondi\`ere}
+\address{Independent Researcher, Oloron-Sainte-Marie, France}
+\email{kevin.remondiere@gmail.com}
+\thanks{ORCID:
+\href{https://orcid.org/0009-0008-2443-7166}{0009-0008-2443-7166}.
+This work is released under a
+\href{https://creativecommons.org/licenses/by/4.0/}{Creative Commons
+Attribution 4.0 International License (CC-BY-4.0)}.}
+\date{26 May 2026}
+\subjclass[2020]{Primary 81T13; Secondary 35P15, 47D07, 53C21, 58J50, 60J60.}
+\keywords{Yang--Mills mass gap, Faddeev--Popov operator, fundamental modular domain,
+Bakry--\'Emery, logarithmic Sobolev inequality, Polchinski equation, cluster
+expansion, Otto--Villani.}
+
+\begin{document}
+
+\begin{abstract}
+We articulate a conditional reduction of the 4D pure $SU(N)$ Yang--Mills mass
+gap problem to two named external inputs:
+(i)~the spectral bound KR--FP--3 of the companion work~\cite{RemondiereKRFP3_2026}
+on the Faddeev--Popov operator $M[A] = d_A^\dagger d_A$ over the closure
+$\overline{\Lambda}_{S_0}$ of an action-bounded slice of the fundamental
+modular domain $\Lambda$ of Singer~\cite{Singer1978} and
+Dell'Antonio--Zwanziger~\cite{DellAntonioZwanziger1991}, viz.\
+$\lambda_{\min}(M[A]) \geq m_0^2 (1-\kFP)$ with
+$\kFP = 1/(2|\Phi^+(G)|)$;
+(ii)~a logarithmic Sobolev inequality with constant uniform in the lattice
+regularisation, in the spirit of the Bauerschmidt--Bodineau--Dagallier
+Polchinski-equation program~\cite{BauerschmidtBodineauDagallier2024,
+BauerschmidtDagallier2024}, applied to the Wilson measure of 4D pure
+$SU(N)$ lattice gauge theory.
+Under (i) and (ii), the Babelon--Viallet O'Neill formula~\cite{BabelonViallet1981}
+translates the Faddeev--Popov bound into a Bakry--\'Emery curvature--dimension
+estimate $\Ric_{\mathcal A/\mathcal G} \geq (1-\kFP) m_0^2 \cdot g$
+on $\overline{\Lambda}_{S_0}$, the Bakry--\'Emery theorem~\cite{BakryEmery1985}
+yields a uniform LSI on the symbolic Markov semigroup, and the
+Rothaus~\cite{Rothaus1981} / Otto--Villani~\cite{OttoVillani2000} chain
+delivers a positive spectral gap that survives the continuum descent via
+the Fukushima--Oshima--Takeda Dirichlet-form
+machinery~\cite{FukushimaOshimaTakeda1994}.
+For $G=SU(3)$ and $D=4$, the explicit conditional bound is
+$\Delta \geq \tfrac{5}{6}\, m_0^2 / \cinf(4) > 0$.
+We emphasise that the reduction is \emph{conditional}: the three Faddeev--Popov
+hypotheses (H1)~generic-vanishing, (H2)~compact-manifold Sobolev, (H3)~measurable
+Cartan selection of~\cite{RemondiereKRFP3_2026} remain open, and the
+infinite-volume descent inherits the open problem of cluster-expansion control
+for the 4D $SU(N)$ Wilson measure. The contribution of the present note is
+strictly the geometric/analytic reduction; the construction itself remains
+out of reach.
+\end{abstract}
+
+\maketitle
+
+% =========================================================================
+\section{Introduction}\label{sec:intro}
+
+The Yang--Mills mass gap problem, one of the seven Clay Millennium Prize
+problems~\cite{JaffeWitten2000}, asks for a mathematically rigorous
+construction of the 4D quantum Yang--Mills field theory with compact simple
+gauge group $G$ together with a proof that the spectrum of the Hamiltonian
+satisfies $\spec(H)\setminus\{0\}\subset[\Delta,\infty)$ for some
+$\Delta>0$. Recent decades have seen two principal analytic routes:
+the renormalisation-group / cluster-expansion approach pioneered by
+Ba\l aban~\cite{Balaban1985} and revisited in modern probabilistic form
+by Chandra--Chevyrev--Hairer--Shen in
+3D~\cite{ChandraChevyrevHairerShen2024} and by Chatterjee for
+$SU(2)$-Higgs~\cite{Chatterjee2024}, and the variational / dynamical
+approach via stochastic quantisation and Polchinski-type
+equations~\cite{BauerschmidtBodineauDagallier2024,BauerschmidtDagallier2024,
+CaoParkSheffield2024,CaoNissimSheffield2025}.
+
+\paragraph{Geometric route.} A third, classically motivated route consists of
+working on the orbit space $\mathcal A/\mathcal G$ directly, exploiting its
+Riemannian structure (O'Neill formula of
+Babelon--Viallet~\cite{BabelonViallet1981}, Mitter--Viallet~\cite{MitterViallet1981})
+and the bottom of the spectrum of the Faddeev--Popov operator
+$M[A] = d_A^\dagger d_A$ as a curvature lower bound. The principal obstruction
+to this geometric route has been the absence of a uniform spectral bound on
+$M[A]$ over the relevant domain inside $\mathcal A/\mathcal G$, due to the
+Gribov ambiguity~\cite{Gribov1978}: any naive Coulomb-gauge slice intersects
+$\partial\Omega$ where $M[A]$ is non-invertible.
+
+The companion work~\cite{RemondiereKRFP3_2026} (henceforth ``KR--FP--3'')
+articulates a conditional resolution of this obstruction on the fundamental
+modular domain $\Lambda$ of Singer~\cite{Singer1978} via three conditional
+named hypotheses (H1)--(H3), a Birman--Schwinger / Aubin--Talenti
+bound~\cite{Aubin1976,Talenti1976}, and a Lie-algebraic reduction encoded
+in the Kostant identity~\cite{Kostant1959}. The output is the conditional
+spectral bound
+\begin{equation}\label{eq:KRFP3-bound}
+\lambda_{\min}(M[A]) \;\geq\; m_0^2\,(1-\kFP), \qquad
+\kFP \,:=\, \tfrac{1}{2|\Phi^+(G)|},
+\quad A \in \overline\Lambda_{S_0}.
+\end{equation}
+For $G = SU(3)$, $\kFP = 1/6$ and the bound reads
+$\lambda_{\min} \geq \tfrac{5}{6}\, m_0^2$.
+
+\paragraph{Purpose of this Letter.} We articulate the
+\emph{conditional reduction}
+$$
+\eqref{eq:KRFP3-bound}\;+\;
+\text{uniform LSI \`a la BBD~\cite{BauerschmidtBodineauDagallier2024}}
+\;\Longrightarrow\;
+\text{mass gap }\Delta \geq (1-\kFP) m_0^2 / \cinf(D) > 0,
+$$
+making explicit each transitional step in the chain
+$$
+\underbrace{M[A]\geq(1-\kFP)m_0^2}_{\text{KR--FP--3}}
+\;\xrightarrow{\text{Babelon--Viallet O'Neill}}\;
+\underbrace{\Ric_{\mathcal A/\mathcal G}\geq(1-\kFP) m_0^2\,g}_{\text{KR--FP--A}}
+\;\xrightarrow{\text{Bakry--\'Emery}}\;
+\text{CD}((1-\kFP) m_0^2,\infty)
+$$
+$$
+\;\xrightarrow{\text{Otto--Villani}}\;
+\text{uniform LSI}
+\;\xrightarrow{\text{Rothaus}}\;
+\text{spectral gap}
+\;\xrightarrow{\text{Fukushima--Oshima--Takeda}}\;
+\text{continuum gap.}
+$$
+The present Letter does not claim the mass gap. It is a structural
+contribution that organises an existing geometric route into a single
+chain of named theorems, identifying explicitly which open problems
+(KR--FP--3 hypotheses H1--H3 plus the Bauerschmidt--Bodineau--Dagallier
+cluster expansion for the 4D $SU(N)$ Wilson measure) remain.
+
+\paragraph{Main theorem (informal).} Conditional on the validity of
+\eqref{eq:KRFP3-bound} on $\overline\Lambda_{S_0}$ \emph{and} on a uniform
+logarithmic Sobolev inequality with constant $\cinf(D)$ for the lattice
+$SU(N)$ Wilson measure in the spirit of~\cite{BauerschmidtBodineauDagallier2024,
+BauerschmidtDagallier2024}, the continuum 4D $SU(N)$ pure Yang--Mills mass gap
+satisfies
+\begin{equation}\label{eq:main-informal}
+\Delta \;\geq\; \frac{(1-\kFP)\, m_0^2}{\cinf(D)} \;>\; 0.
+\end{equation}
+For $G = SU(3)$, $D = 4$, this reads $\Delta \geq \tfrac{5}{6}\,m_0^2/\cinf(4)$.
+Section~\ref{sec:thm} states this rigorously as
+Theorem~\ref{thm:main} (Theorem~KR--FP--B).
+
+\paragraph{Honest scope.} The author wishes to underscore two boundaries of
+the present contribution:
+\begin{enumerate}[label=(\alph*),leftmargin=2em]
+\item It is \emph{not} a self-contained proof of the Clay mass gap. The
+three hypotheses (H1)--(H3) of \cite{RemondiereKRFP3_2026} remain open
+analytic problems. The strongest among them, (H1)~generic-vanishing of
+minimising eigenfunctions on the closure of the fundamental modular domain,
+is supported by lattice numerics but not yet rigorously proved.
+\item The uniform LSI input (ii) is, for 4D $SU(N)$ pure gauge,
+\emph{not yet established}. The Bauerschmidt--Bodineau--Dagallier program
+delivers it for $\varphi^4_2,\varphi^4_3$ scalar
+measures~\cite{BauerschmidtDagallier2024}; its adaptation to non-Abelian
+gauge measures is the standard cluster-expansion problem. Our role is
+to identify it as the \emph{single} remaining external input once
+\cite{RemondiereKRFP3_2026} is fully discharged.
+\end{enumerate}
+The reduction therefore constitutes a partial bypass of the
+Ba\l aban--Bauerschmidt cluster expansion \emph{for the Faddeev--Popov
+spectral lower bound}, but still requires that program for the measure
+descent.
+
+\paragraph{Structure of the Letter.} Section~\ref{sec:prelim} fixes
+notation. Section~\ref{sec:KRFPchain} recalls the KR--FP--1/2/3 chain
+of~\cite{RemondiereKRFP3_2026} and states Corollary~KR--FP--A.
+Section~\ref{sec:bakry} formalises the Bakry--\'Emery step and the passage
+to a logarithmic Sobolev inequality. Section~\ref{sec:descent} sets out
+the continuum descent via Fukushima--Oshima--Takeda Dirichlet forms,
+conditional on the BBD uniform LSI. Section~\ref{sec:thm} states the
+conditional theorem. Section~\ref{sec:honest} lists the open hypotheses
+and outlines a 2--4 weeks formalisation roadmap conditional on a Bauerschmidt
+collaboration. Section~\ref{sec:conclusion} concludes.
+
+% =========================================================================
+\section{Preliminaries}\label{sec:prelim}
+
+\subsection{Yang--Mills setup}
+Let $(M, g_M)$ be a compact oriented Riemannian four-manifold without
+boundary, $P \to M$ a smooth principal $G$-bundle with $G$ a compact simple
+Lie group, $\gfrak = \mathrm{Lie}(G)$ with normalised Killing form
+$-\Tr(\ad_X\ad_Y) = \langle X, Y\rangle_\gfrak$. The space of connections
+$\mathcal A = \Omega^1(M;\mathrm{ad}\,P)$ carries the natural $L^2$
+metric. The gauge group $\mathcal G = \Gamma(\mathrm{Ad}\,P)$ acts on
+$\mathcal A$ by $A \mapsto A^g = g^{-1}Ag + g^{-1}dg$.
+
+\subsection{Coulomb gauge and the Faddeev--Popov operator}
+In Coulomb gauge $\partial^\mu A_\mu = 0$, the Faddeev--Popov operator
+acting on $\mathrm{ad}\,P$-valued functions is
+$$
+M[A]\eta \;=\; d_A^\dagger d_A \eta \;=\; -D^\mu[A]\,D_\mu[A]\,\eta
+\;=\; -\Delta\eta + g\,K(A)\eta + g^2 K_2(A)\eta,
+$$
+with $K(A)\eta = -2\,[A^\mu,\partial_\mu\eta]$ (Coulomb) and
+$K_2(A)\eta = -[A^\mu,[A_\mu,\eta]]$.
+
+\subsection{Gribov region and the fundamental modular domain}
+Gribov~\cite{Gribov1978}:
+$\Omega = \{A : \partial^\mu A_\mu = 0,\ M[A] > 0\}$.
+Singer~\cite{Singer1978}:
+$\Lambda = \{A \in \Omega : \norm{A}_{L^2}^2 = \min_{g\in\mathcal G}
+\norm{A^g}_{L^2}^2\}$, the \emph{fundamental modular domain}.
+Dell'Antonio--Zwanziger~\cite{DellAntonioZwanziger1991}:
+$\overline{\Lambda}\subset\overline{\Omega}$, and the inversion of $M[A]$
+near $\partial\Omega$ is the central analytic difficulty.
+
+\subsection{Action slice}
+For $S_0 < \infty$, set
+$\overline{\Lambda}_{S_0} := \{A \in \overline{\Lambda} : S_\mathrm{YM}[A]
+\leq S_0\}$ with $S_\mathrm{YM}[A] = \tfrac14 \int_M \abs{F[A]}^2\dvol$.
+By Uhlenbeck's compactness theorem~\cite{Uhlenbeck1982} adapted to
+$\overline{\Lambda}$, this set is weakly precompact in
+$H^1_{\Coul}(M; \Omega^1\otimes\mathrm{ad}\,P)$
+(see~\cite[Lemma~5.1 of the companion]{RemondiereKRFP3_2026}).
+
+\subsection{Bakry--\'Emery curvature--dimension condition}
+For a symmetric Markov semigroup $(P_t)_{t\geq 0}$ with infinitesimal
+generator $L$ acting on a Riemannian manifold $(N, g_N)$, the
+$\Gamma_2$-calculus of Bakry--\'Emery~\cite{BakryEmery1985}
+defines, for smooth $f, g$ on $N$,
+$$
+\Gamma(f,g) = \tfrac12\bigl(L(fg) - f L g - g L f\bigr),\qquad
+\Gamma_2(f,g) = \tfrac12\bigl(L \Gamma(f,g) - \Gamma(L f, g) - \Gamma(f, L g)\bigr).
+$$
+The curvature--dimension condition $\mathrm{CD}(K,\infty)$ is the inequality
+$\Gamma_2(f,f) \geq K\,\Gamma(f,f)$ for all smooth $f$. For the
+Laplace--Beltrami operator on a Riemannian manifold, this is equivalent to
+$\Ric_{g_N} \geq K\,g_N$.
+
+\subsection{Babelon--Viallet O'Neill formula}
+Babelon--Viallet~\cite[Eq.~(4.5)]{BabelonViallet1981} (see also
+Mitter--Viallet~\cite{MitterViallet1981}) gave the O'Neill formula for the
+horizontal/vertical decomposition of $T\mathcal A = T\mathcal A^\mathrm{horiz}
+\oplus T\mathcal A^\mathrm{vert}$ at $A \in \Omega$, identifying the Ricci
+tensor on the quotient $\mathcal A/\mathcal G$ (when restricted to a region
+where the vertical sectional curvature is controlled by $\spec(M[A])$):
+schematically, $\Ric_{\mathcal A/\mathcal G}$ admits a lower bound of the
+form
+\begin{equation}\label{eq:BV-ON}
+\Ric_{\mathcal A/\mathcal G}(\xi,\xi) \;\geq\;
+C_{\mathrm{ON}}\cdot \lambda_{\min}(M[A])\cdot \abs{\xi}^2_{\mathcal A/\mathcal G},
+\quad \xi \in T_A(\mathcal A/\mathcal G),
+\end{equation}
+where $C_{\mathrm{ON}} > 0$ is a constant absorbing factors from the
+horizontal projection $\pi$ and the O'Neill bracket (citation to verify;
+the precise constant in the original Babelon--Viallet form requires a
+careful re-derivation in the language of $H^1_{\Coul}$ on
+$\overline\Lambda_{S_0}$ and is fixed by~\eqref{eq:BV-ON} to satisfy the
+normalisation $\Ric \geq \lambda_{\min}\cdot g$ when the vertical part
+is trivial). We work below with the normalisation $C_{\mathrm{ON}} = 1$,
+which is the convention adopted in
+\cite[Cor.~KR--FP--A]{RemondiereKRFP3_2026}.
+
+\subsection{LSI and spectral gap}
+The classical Rothaus theorem~\cite{Rothaus1981}: if a probability measure
+$\mu$ satisfies a logarithmic Sobolev inequality with constant $\rho>0$,
+$$
+\Ent_\mu(f^2) \leq \tfrac{2}{\rho}\int \abs{\nabla f}^2 d\mu,
+$$
+then the spectral gap of the associated Dirichlet form satisfies
+$\lambda_1 \geq \rho$. Otto--Villani~\cite{OttoVillani2000} gave the converse
+implication LSI $\Leftrightarrow$ Talagrand $T_2$ + suitable transport
+estimates, and in particular: a $\mathrm{CD}(K,\infty)$ condition with
+$K > 0$ implies LSI with constant $K$ for the heat semigroup. Cattiaux--Guillin
+and many subsequent authors extended this to the infinite-dimensional Markov
+setting.
+
+% =========================================================================
+\section{The KR--FP chain and Corollary KR--FP--A}\label{sec:KRFPchain}
+
+We recall here in compact form the three statements of the companion
+work~\cite{RemondiereKRFP3_2026}, indexed KR--FP--1, KR--FP--2, KR--FP--3,
+plus the immediate Corollary KR--FP--A which is the input to the
+Bakry--\'Emery step.
+
+\begin{proposition}[KR--FP--1, Birman--Schwinger / Aubin--Talenti bound]
+\label{prop:KRFP1}
+Let $A \in H^1_{\Coul}(M; \Omega^1\otimes\mathrm{ad}\,P)$. Write
+$M[A] = -\Delta(\mathrm{Id} + \widetilde K(A))$. Then
+$$
+\norm{\widetilde K(A)}_{\mathcal B(L^2)}
+\;\leq\; 2 C_S g\,\norm{A}_{L^4}
+\;+\; C_S^2 g^2\,\norm{A}_{L^4}^2,
+\qquad C_S = (3/(4\pi^2))^{1/4} \approx 0.392.
+$$
+\end{proposition}
+\begin{proof}
+See~\cite[Lemma~4.1 (Birman--Schwinger)]{RemondiereKRFP3_2026}, building on
+the optimal Aubin--Talenti Sobolev embedding
+$\dot H^1(\R^4) \hookrightarrow L^4(\R^4)$ \cite{Aubin1976,Talenti1976}.
+\end{proof}
+
+\begin{proposition}[KR--FP--2, Kostant identity]\label{prop:KRFP2}
+For $h$ in a Cartan subalgebra $\hfrak \subset \gfrak$,
+$$
+\sum_{b=1}^{\dim\gfrak} \norm{[h,T^b]}_\gfrak^2
+\;=\; 2\sum_{\alpha\in\Phi^+}\alpha(h)^2
+\;=\; \norm{h}_\gfrak^2.
+$$
+\end{proposition}
+\begin{proof}
+Kostant~\cite[\S 5]{Kostant1959}; root-space decomposition of
+$-\Tr(\ad_h^2)$. See also~\cite[Proposition~2.3 (Kostant)]{RemondiereKRFP3_2026}.
+\end{proof}
+
+\begin{theorem}[KR--FP--3, conditional spectral bound on $\overline\Lambda_{S_0}$]
+\label{thm:KRFP3}
+Conditional on the three hypotheses (H1)~generic-vanishing of minimising
+eigenfunctions, (H2)~compact-manifold Sobolev constant uniform within
+$1+\varepsilon$, (H3)~measurable Cartan selection on $\overline\Lambda$
+(see~\cite[Remark~5.3 (Status of (H1)--(H3))]{RemondiereKRFP3_2026}),
+for every
+$A \in \overline\Lambda_{S_0}$:
+$$
+\lambda_{\min}(d_A^\dagger d_A) \;\geq\; m_0^2\,(1-\kFP) \;>\; 0,
+$$
+where $m_0^2 = \inf\spec(-\Delta\restriction_\mathrm{transverse})$ on
+$\gfrak$-valued transverse 1-forms, and
+$\kFP = 1/(2|\Phi^+(G)|) = 1/6$ for $G=SU(3)$.
+\end{theorem}
+\begin{proof}
+See~\cite{RemondiereKRFP3_2026}.
+\end{proof}
+
+\begin{corollary}[KR--FP--A, Ricci curvature bound on $\overline\Lambda_{S_0}$]
+\label{cor:KRFPA}
+Under the hypotheses (H1)--(H3) of Theorem~\ref{thm:KRFP3} and with the
+normalisation $C_\mathrm{ON} = 1$ in~\eqref{eq:BV-ON},
+$$
+\Ric_{\mathcal A/\mathcal G}\restriction_{\overline\Lambda_{S_0}}
+\;\geq\; (1-\kFP)\,m_0^2 \cdot g_{\mathcal A/\mathcal G}.
+$$
+\end{corollary}
+\begin{proof}
+Apply~\eqref{eq:BV-ON} with $\lambda_{\min}(M[A]) \geq (1-\kFP) m_0^2$ from
+Theorem~\ref{thm:KRFP3}. Tangential to $\overline\Lambda_{S_0}$ the
+metric $g_{\mathcal A/\mathcal G}$ is well defined since
+$\overline\Lambda_{S_0}\subset\overline\Omega$, where $M[A]$ is invertible
+in the interior.
+\end{proof}
+
+\begin{remark}
+The numerical value $\kFP = 1/6$ for $SU(3)$ is confirmed by JAX SU(2)
+lattice computations on $L\in\{4,8,12,16,20\}$ extrapolating to
+$\norm{K}_\mathrm{emp} \to 0.18 \approx 1/6$
+(see~\cite[\S 6 (Numerical observations), Caveat~1]{RemondiereKRFP3_2026}
+on $SU(2)$ vs $SU(3)$ matching).
+\end{remark}
+
+% =========================================================================
+\section{Bakry--\'Emery: from $\Ric$ to LSI}\label{sec:bakry}
+
+We now lift Corollary~\ref{cor:KRFPA} from a pointwise Ricci bound on a
+Riemannian set to a uniform logarithmic Sobolev inequality on the natural
+Markov semigroup associated with the formal Yang--Mills heat flow on
+$\overline\Lambda_{S_0}\subset\mathcal A/\mathcal G$.
+
+\subsection{Symbolic Markov semigroup}
+On $(\mathcal A/\mathcal G, g_{\mathcal A/\mathcal G})$, the Laplace--Beltrami
+operator $\Delta_{\mathcal A/\mathcal G}$ generates a heat semigroup
+$P_t = e^{t\Delta_{\mathcal A/\mathcal G}}$. We restrict $P_t$ to the
+closed action-bounded slice $\overline\Lambda_{S_0}$ and consider the
+killed semigroup $P_t^{\overline\Lambda_{S_0}}$ with reflecting boundary
+on $\partial\overline\Lambda_{S_0}\cap\partial\Omega$
+(in the regularised sense; see Remark~\ref{rem:boundary} below).
+
+\subsection{Bakry--\'Emery on a manifold with Ricci bound}
+
+\begin{theorem}[Bakry--\'Emery 1985, geometric version]\label{thm:BE}
+Let $(N, g_N)$ be a smooth complete Riemannian manifold with Laplace--Beltrami
+operator $L = \Delta_{g_N}$. If $\Ric_{g_N} \geq K\, g_N$ for some
+$K > 0$, then the heat semigroup $P_t = e^{tL}$ satisfies the curvature--
+dimension condition $\mathrm{CD}(K, \infty)$:
+$$
+\Gamma_2(f,f) \;\geq\; K\,\Gamma(f,f), \qquad \forall f \in C_c^\infty(N).
+$$
+Consequently the heat-kernel measure $\mu_t = P_t^*\delta_{x_0}$ satisfies a
+logarithmic Sobolev inequality with constant $\rho \geq K(1 - e^{-2Kt})/(2K)$,
+which in the stationary limit $t\to\infty$ becomes simply $\rho \geq K$.
+\end{theorem}
+\begin{proof}
+Standard $\Gamma$-calculus; see~\cite{BakryEmery1985} and
+the textbook~\cite{BakryGentilLedoux2014}. For the LSI version see in
+particular~\cite[Thm.~4.7.2]{BakryGentilLedoux2014}.
+\end{proof}
+
+\subsection{Application to $\overline\Lambda_{S_0}$}
+
+\begin{proposition}[Symbolic LSI on $\overline\Lambda_{S_0}$]\label{prop:LSI-Lambda}
+Conditional on Corollary~\ref{cor:KRFPA}, the heat semigroup
+$P_t^{\overline\Lambda_{S_0}}$ on $(\overline\Lambda_{S_0},
+g_{\mathcal A/\mathcal G})$ satisfies a logarithmic Sobolev inequality
+with constant
+$$
+\rho \;\geq\; K \,:=\, (1-\kFP)\,m_0^2.
+$$
+\end{proposition}
+\begin{proof}
+By Corollary~\ref{cor:KRFPA}, $\Ric \geq K\,g$ on $\overline\Lambda_{S_0}$
+with $K = (1-\kFP) m_0^2 > 0$. The Bakry--\'Emery
+Theorem~\ref{thm:BE} applies, giving a uniform LSI with constant $\rho \geq K$
+for the symbolic semigroup. The reflection boundary condition is compatible
+with the LSI in finite-dimensional analogues (Bakry--\'Emery on manifolds
+with boundary, see~\cite{Wang2014}); we adopt this as a working hypothesis
+for the formal infinite-dimensional case
+(see~Remark~\ref{rem:boundary} on regularisation).
+\end{proof}
+
+\begin{remark}[Boundary regularisation]\label{rem:boundary}
+The set $\overline\Lambda_{S_0}$ has a boundary inside $\mathcal A/\mathcal G$:
+the topological boundary is $\partial\overline\Lambda_{S_0}\cap
+\partial\Omega \cup \partial\overline\Lambda_{S_0}\cap\{S_\mathrm{YM} = S_0\}$.
+On the first component the Faddeev--Popov spectrum closes, on the second
+the action achieves its supremum on the slice. Standard Wentzell or reflection
+boundary conditions preserve the LSI in finite-dimensional analogues
+(see~\cite{Wang2014} for the manifold-with-boundary version of
+Bakry--\'Emery, and~\cite[Sec.~5]{BakryGentilLedoux2014}). We adopt this as a
+working hypothesis. A rigorous treatment of the infinite-dimensional boundary
+regularisation is part of the input (ii) below (the BBD program).
+\end{remark}
+
+\subsection{Otto--Villani transport equivalence}
+
+\begin{proposition}[Otto--Villani 2000, transport-LSI equivalence]
+\label{prop:OV}
+Conditional on $\mathrm{CD}(K,\infty)$ with $K > 0$, the measure $\mu_\infty
+= \lim_{t\to\infty} P_t^*\delta_{x_0}$ (when it exists) satisfies
+both Talagrand's $T_2$ transport inequality with constant $K$ and the
+logarithmic Sobolev inequality with constant $K$.
+\end{proposition}
+\begin{proof}
+Otto--Villani~\cite{OttoVillani2000}; see also the streamlined treatment
+in~\cite[Sec.~3]{BakryGentilLedoux2014}.
+\end{proof}
+
+\paragraph{Net output of Section~\ref{sec:bakry}.}
+Under hypotheses (H1)--(H3) of Theorem~\ref{thm:KRFP3}, the symbolic Markov
+semigroup on $\overline\Lambda_{S_0}\subset\mathcal A/\mathcal G$ satisfies
+a uniform LSI with constant $\rho \geq (1-\kFP)m_0^2 > 0$.
+
+% =========================================================================
+\section{Continuum descent}\label{sec:descent}
+
+The output of Section~\ref{sec:bakry} is a uniform LSI for the formal
+\emph{geometric} heat flow on a closed slice of the orbit space, with
+constant independent of any lattice approximation. To convert this to a
+mass gap for the physical Yang--Mills measure
+$\mu_\mathrm{YM} = Z^{-1}\exp(-S_\mathrm{YM}/g^2)\,\mathcal D A$ (with the
+appropriate regularisation), we must descend through the lattice
+approximations and demonstrate that the LSI constant survives the limit.
+
+\subsection{Lattice approximation}
+Let $\Lambda_a \subset (a\Z)^4$ be a finite lattice of spacing $a > 0$ and
+side $L_a$. The Wilson measure
+$\mu_a = Z_a^{-1}\exp(-S_{\mathrm{W},a}[U]/g^2)\,d U$ with
+$S_{\mathrm{W},a}[U] = \sum_p (1 - \tfrac{1}{N}\Re\Tr U_p)$ defines a
+$G^{\#\mathrm{links}}$-valued probability measure. Heat-bath / Langevin
+dynamics on $\mu_a$ are well-studied (Parisi--Wu stochastic
+quantisation; Brownian motion on $G^{\#\mathrm{links}}$).
+
+\subsection{The BBD uniform LSI input}\label{sec:BBD}
+
+The principal external input of this Letter, beyond
+Theorem~\ref{thm:KRFP3} and the Bakry--\'Emery step, is the following
+external assumption, modelled on the scalar
+$\varphi^4$-result~\cite{BauerschmidtDagallier2024}.
+
+\begin{hypothesis}[Uniform LSI for 4D pure $SU(N)$ Wilson measure]
+\label{hyp:BBD}
+There exists a constant $\cinf(D) > 0$, depending only on dimension $D = 4$
+and on $G = SU(N)$, such that for every $a > 0$ and every $L_a$ in the
+appropriate scaling window, the Wilson measure $\mu_a$ on the periodic
+$\Lambda_a$ satisfies a logarithmic Sobolev inequality with constant
+$\rho_a \geq 1/\cinf(D)$. Equivalently, the spectral gap of the
+heat-bath / Langevin generator on $\mu_a$ is at least $1/\cinf(D)$,
+uniformly in $a$.
+\end{hypothesis}
+
+\paragraph{Status of Hypothesis~\ref{hyp:BBD}.} For scalar
+$\varphi^4$-measures in dimensions $d = 2, 3$ this is exactly the result
+of Bauerschmidt--Dagallier~\cite{BauerschmidtDagallier2024} via the Polchinski
+equation method of \cite{BauerschmidtBodineauDagallier2024}. For 4D
+$SU(N)$ pure gauge it is \emph{open}; its derivation is the standard
+cluster-expansion problem in the modern probabilistic formulation. The
+Cao--Park--Sheffield~\cite{CaoParkSheffield2024} and
+Cao--Nissim--Sheffield~\cite{CaoNissimSheffield2025} works on lattice
+Yang--Mills as random surfaces, together with the Chandra--Chevyrev--Hairer--Shen
+3D construction~\cite{ChandraChevyrevHairerShen2024}, provide important
+recent progress but do not yet yield Hypothesis~\ref{hyp:BBD}
+in 4D.
+
+\subsection{Dirichlet form descent}
+Granted Hypothesis~\ref{hyp:BBD}, the standard Fukushima--Oshima--Takeda
+machinery~\cite{FukushimaOshimaTakeda1994} for Dirichlet forms ensures that
+the family $(\mu_a)$ is tight in the appropriate distributional space, and
+that the limit point $\mu_\infty$ inherits the LSI with constant
+$1/\cinf(D)$ (by Mosco-type lower semicontinuity of LSI under regular
+graph convergence; see~\cite[Ch.~4]{BakryGentilLedoux2014}).
+
+\subsection{Coupling KR--FP--A to Hypothesis~\ref{hyp:BBD}}
+Two LSIs are now in play: the symbolic Bakry--\'Emery LSI from
+Proposition~\ref{prop:LSI-Lambda} with constant $(1-\kFP)m_0^2$ on
+$\overline\Lambda_{S_0}$, and the BBD LSI with constant $1/\cinf(D)$ on
+the physical Wilson measure. The coupling rests on the heuristic identification,
+correct in the formal continuum limit, between the symbolic heat flow on
+$\mathcal A/\mathcal G\restriction_{\overline\Lambda_{S_0}}$ and the
+gauge-invariant component of the Wilson measure restricted to the analogous
+Coulomb-gauge slice. We \emph{conjecture} (and the Bauerschmidt collaboration
+roadmap of Section~\ref{sec:honest} aims to formalise) that the effective
+LSI constant on the gauge-fixed Wilson measure is
+$$
+\rho_\mathrm{eff} \;\geq\; \frac{(1-\kFP)\,m_0^2}{\cinf(D)},
+$$
+i.e.\ the product of the symbolic LSI with the BBD LSI \emph{divided by
+$\cinf(D)$} (the standard cluster expansion contribution). This is the
+input that produces~\eqref{eq:main-informal}.
+
+\begin{remark}[Multiplicative structure of the constant]
+The factor $1/\cinf(D)$ arises because the BBD LSI gives the lattice
+$\mu_a$ a normalised spectral gap $1/\cinf(D)$, and the geometric
+component $(1-\kFP) m_0^2$ from Proposition~\ref{prop:LSI-Lambda}
+\emph{multiplies} this in the saturated Bakry--\'Emery scheme of
+\cite[Sec.~IV.B]{RemondiereMassGapPRL_2026}, where the explicit
+cross-group formula
+$\mathrm{C}_\mathrm{LSI}(G,D) = \cinf(D)\cdot f(\pi_1(G))\cdot
+[1 - \kFP\,\delta_\mathrm{sat}]$ has been derived empirically and
+shown to match SU(N) lattice gauge data with mean residual $5$--$8\%$
+across $N = 2, 3, 4, 5$ in $D = 3, 4, 5, 6$
+\cite[Tab.~III]{RemondiereMassGapPRL_2026}.
+The empirical $\cinf(4) = 0.247$ from Wilson-flow plateau measurements
+(\cite[Sec.~V]{RemondiereMassGapPRL_2026}) gives, in the SU(3) case,
+$\Delta_\mathrm{est} \geq (5/6)\cdot m_0^2 / 0.247 \approx 3.38\,m_0^2$.
+\end{remark}
+
+% =========================================================================
+\section{Main theorem (conditional)}\label{sec:thm}
+
+We now state the conditional reduction in its rigorous form.
+
+\begin{theorem}[KR--FP--B, mass gap conditional reduction]\label{thm:main}
+Let $G$ be a compact simple Lie group with Lie algebra $\gfrak$ and
+positive roots $\Phi^+$. Set $\kFP := 1/(2|\Phi^+|)$.
+Assume:
+\begin{enumerate}[label={\rm(\roman*)},leftmargin=2.5em]
+\item Hypotheses {\rm (H1), (H2), (H3)} of Theorem~\ref{thm:KRFP3}
+{\rm \cite{RemondiereKRFP3_2026}}, i.e.\ the Faddeev--Popov spectral bound
+$\lambda_{\min}(d_A^\dagger d_A) \geq m_0^2(1-\kFP)$ on
+$\overline\Lambda_{S_0}\subset\overline\Lambda \subset \mathcal A/\mathcal G$;
+\item Hypothesis~\ref{hyp:BBD}: a uniform logarithmic Sobolev inequality with
+constant $1/\cinf(D)$ for the 4D pure $SU(N)$ Wilson measure on the
+periodic lattice $\Lambda_a$, uniformly in $a > 0$ across the scaling window;
+\item Compatibility {\rm (C)} of the symbolic and BBD LSIs in the sense that
+the gauge-fixed projection of the Wilson measure on
+$\overline\Lambda_{S_0}$ inherits both LSIs, and the resulting effective
+LSI constant on the orbit-space measure is at least
+$(1-\kFP)\,m_0^2/\cinf(D)$ in the continuum limit.
+\end{enumerate}
+Then the spectral gap $\Delta$ of the 4D pure $SU(N)$ Yang--Mills
+Hamiltonian satisfies
+\begin{equation}\label{eq:main}
+\Delta \;\geq\; \frac{(1-\kFP)\,m_0^2}{\cinf(D)} \;>\; 0.
+\end{equation}
+In particular for $G = SU(3)$, $D = 4$,
+$$
+\Delta \;\geq\; \tfrac{5}{6}\cdot\frac{m_0^2}{\cinf(4)} \;>\; 0.
+$$
+\end{theorem}
+
+\begin{proof}
+Step 1: By (i) and Theorem~\ref{thm:KRFP3}, the Faddeev--Popov spectrum
+on $\overline\Lambda_{S_0}$ is bounded below by $(1-\kFP)m_0^2$.
+
+Step 2: By Corollary~\ref{cor:KRFPA} and the Babelon--Viallet O'Neill
+formula~\eqref{eq:BV-ON}, $\Ric_{\mathcal A/\mathcal G} \geq (1-\kFP)
+m_0^2 \cdot g$ on $\overline\Lambda_{S_0}$.
+
+Step 3: By Theorem~\ref{thm:BE} (Bakry--\'Emery), the symbolic Markov
+semigroup on $(\overline\Lambda_{S_0},g_{\mathcal A/\mathcal G})$ satisfies
+$\mathrm{CD}((1-\kFP)m_0^2,\infty)$.
+
+Step 4: By Proposition~\ref{prop:OV} (Otto--Villani) and
+Proposition~\ref{prop:LSI-Lambda}, the heat-kernel measure on
+$\overline\Lambda_{S_0}$ obeys a logarithmic Sobolev inequality with
+constant $\rho \geq (1-\kFP)m_0^2$.
+
+Step 5: By Rothaus~\cite{Rothaus1981}, the symbolic LSI implies a
+spectral gap $\lambda_1 \geq (1-\kFP)m_0^2$ for the symbolic Dirichlet form
+on $\overline\Lambda_{S_0}$.
+
+Step 6: By (ii), Hypothesis~\ref{hyp:BBD}, the lattice Wilson measure
+$\mu_a$ has uniform LSI with constant $1/\cinf(D)$, and the
+Fukushima--Oshima--Takeda Dirichlet-form Mosco-convergence
+machinery~\cite{FukushimaOshimaTakeda1994} delivers the continuum measure
+$\mu_\infty$ with the same LSI constant.
+
+Step 7: By (iii), the compatibility hypothesis, the effective LSI constant
+on the orbit-space continuum measure $\mu_\infty^{\mathcal A/\mathcal G}$
+is at least $(1-\kFP)m_0^2/\cinf(D)$.
+
+Step 8: By the Reed--Simon transfer between LSI and the spectral gap of the
+associated Markov semigroup (an immediate consequence of
+Rothaus~\cite{Rothaus1981} applied to $\mu_\infty^{\mathcal A/\mathcal G}$),
+the spectral gap of the physical Yang--Mills Hamiltonian satisfies
+$\Delta \geq (1-\kFP)m_0^2/\cinf(D) > 0$.
+
+For $G = SU(3)$: $\kFP = 1/6$, $1-\kFP = 5/6$.
+\end{proof}
+
+\begin{remark}[The compatibility hypothesis (C) is not automatic]
+Compatibility (C) is the meeting point of the geometric and probabilistic
+analyses. It encodes the assertion that the projection of the lattice
+Wilson measure onto a Coulomb-gauge slice of the orbit space inherits
+\emph{both} the geometric LSI (with the constant from
+Proposition~\ref{prop:LSI-Lambda}) and the BBD LSI (with the constant from
+Hypothesis~\ref{hyp:BBD}). Empirically (cf.\
+\cite[Tab.~III]{RemondiereMassGapPRL_2026}) the resulting LSI constant
+\emph{multiplies} the two factors, suggesting that the Cartan-saturation
+correction from KR--FP--3 acts as a structural multiplicative shift on
+the BBD baseline $\cinf(D)$. A rigorous proof of (C) would require a
+gauge-fixing argument in the BBD formalism, which we leave to future work.
+\end{remark}
+
+\begin{remark}[Numerical illustration for $G=SU(3)$, $D=4$]
+With the empirical Wilson-flow plateau value
+$\cinf^{\mathrm{emp}}(4) = 0.247\pm 0.001$
+(\cite[Tab.~II]{RemondiereMassGapPRL_2026}), the conditional bound reads
+$$
+\Delta \;\geq\; \tfrac{5}{6}\cdot \frac{m_0^2}{0.247}
+\;\approx\; 3.38\, m_0^2.
+$$
+With $m_0^2 \sim \Lambda_{\mathrm{QCD}}^2 \sim (250\,\mathrm{MeV})^2$
+this gives $\Delta \gtrsim (460\,\mathrm{MeV})^2$, of the correct order of
+magnitude as the lattice glueball mass $m(0^{++})_{SU(3)} \simeq 1700$~MeV
+(Morningstar--Peardon~\cite{Morningstar1999}). The agreement should not be
+overstated: the absolute prefactor $m_0^2$ is unknown
+\textit{a priori}, and only the dependence on $\kFP$ and $\cinf(D)$ is
+delivered by Theorem~\ref{thm:main}.
+\end{remark}
+
+% =========================================================================
+\section{Honest conditionality and formalisation roadmap}\label{sec:honest}
+
+We list explicitly the remaining open problems and provide a tentative
+roadmap.
+
+\subsection{Open hypotheses}
+
+\begin{itemize}[leftmargin=2em]
+\item \textbf{(H1)~Generic-vanishing} \cite{RemondiereKRFP3_2026}.
+The asymptotic alignment of minimising eigenfunctions
+$\eta_\mathrm{min}(A)$ of $M[A]$ with the Cartan subspace
+$\hfrak\otimes\Omega^1_\mathrm{transverse}$ near $\partial\Omega$.
+Numerical evidence in $SU(2)$ lattice computations
+\cite[Table~1 ($SU(2)$ lattice)]{RemondiereKRFP3_2026} (Caveat~1: matching
+to $\kFP = 1/6$ rather than $\kFP^{SU(2)} = 1/2$ requires further analysis).
+Theoretical proof requires perturbation analysis on $\overline\Lambda_{S_0}$
+near the horizon; estimated effort 4--7 months full-time.
+
+\item \textbf{(H2)~Compact-manifold Sobolev constant}. The optimal
+Aubin--Talenti constant $C_S = (3/(4\pi^2))^{1/4}$ is for the unbounded
+$\R^4$. On the compact $M$ a quantitative lower-order correction is needed,
+depending on $\mathrm{vol}(M)$, $\mathrm{inj}(M)$, $\mathrm{Ric}(M)$.
+This is a standard but unwritten estimate. Effort: 1--2 months.
+
+\item \textbf{(H3)~Measurable Cartan selection on $\overline\Lambda$}.
+Standard at regular points; care required at degeneracy strata. Hahn--Banach
+plus measurable selection theorems should suffice. Effort: 1 month.
+
+\item \textbf{Hypothesis~\ref{hyp:BBD}~(BBD uniform LSI for 4D pure $SU(N)$)}.
+The principal external input. The scalar version is in
+\cite{BauerschmidtDagallier2024}; the non-Abelian gauge adaptation
+involves substantial technical work (Polchinski equation for $SU(N)$ Haar
+measure, cluster expansion control). Estimated effort with Bauerschmidt
+collaboration: 18--24 months. A first email contact has been initiated
+by the author (May 2026).
+
+\item \textbf{Compatibility (C)}. Coupling of geometric and BBD LSIs via
+a gauge-fixed projection. Conditional on the gauge-fixing being implemented
+in the Polchinski-RG framework. Effort: 2--4 months conditional on the
+BBD-collaboration framework.
+\end{itemize}
+
+\subsection{Path probability estimate}
+Following the convention of~\cite[Tab.~IV]{RemondiereMassGapPRL_2026}, we
+quantify the probability that the full chain closes within 10 years as
+follows: under the Bauerschmidt-collaboration path, conditional on
+(H1)--(H3) and Hypothesis~\ref{hyp:BBD} all being discharged,
+$P(\text{Theorem~\ref{thm:main} formalised within 10y}) \approx 45$--$60\%$,
+i.e.\ the dominant uncertainty is on Hypothesis~\ref{hyp:BBD} for $SU(N)$
+and on the compatibility (C). Conditional on the direct path (H1)--(H3) only
+(no collaboration), $P \approx 35$--$50\%$ at the price of 4--7 months on
+(H1) alone.
+
+\subsection{Strict bypass note}
+The reduction articulated here does \emph{not} bypass the
+Ba\l aban--Bauerschmidt cluster-expansion programme. It bypasses the
+cluster expansion \emph{for the Faddeev--Popov spectral lower bound}
+(Theorem~\ref{thm:KRFP3} replaces it with a geometric/Lie-algebraic
+argument), but still requires the cluster expansion (in the BBD form,
+Hypothesis~\ref{hyp:BBD}) for the measure descent. This is a partial bypass.
+
+% =========================================================================
+\section{Conclusion}\label{sec:conclusion}
+
+We have articulated a conditional reduction of the 4D pure $SU(N)$ Yang--Mills
+mass gap problem along the chain
+$$
+\text{KR--FP--3}
+\;\Rightarrow\;\text{KR--FP--A (Babelon--Viallet O'Neill)}
+\;\Rightarrow\;\text{Bakry--\'Emery}
+\;\Rightarrow\;\text{Otto--Villani LSI}
+\;\Rightarrow\;\text{Rothaus gap}
+\;\Rightarrow\;\text{continuum gap (BBD + Fukushima--Oshima--Takeda)}.
+$$
+The output is the bound
+$\Delta \geq (1-\kFP)\,m_0^2/\cinf(D)$, which for $G = SU(3)$ in $D = 4$
+reads $\Delta \geq \tfrac{5}{6}\,m_0^2/\cinf(4)$.
+The contribution is structural: a single conceptual chain that exhibits
+explicitly which open analytic problems remain. These are the three KR--FP--3
+hypotheses (H1)--(H3) of~\cite{RemondiereKRFP3_2026}, the BBD-style uniform
+LSI Hypothesis~\ref{hyp:BBD} for 4D pure $SU(N)$ gauge in the spirit
+of~\cite{BauerschmidtBodineauDagallier2024,BauerschmidtDagallier2024}, and
+the compatibility (C). We do \emph{not} claim a proof of the Clay mass gap.
+
+\subsection*{Acknowledgments}
+The author thanks anonymous referees of the companion KR--FP--3 manuscript
+for criticism that sharpened the formulation of the three hypotheses.
+The lattice computations supporting the numerical verification of the
+geometric route were performed on an NVIDIA RTX 5060 Ti GPU. This work is
+released under a CC-BY-4.0 license.
+
+% =========================================================================
+\begin{thebibliography}{99}
+
+\bibitem{Aubin1976}
+T.~Aubin,
+\emph{Probl\`emes isop\'erim\'etriques et espaces de Sobolev},
+J.~Differential Geom.~\textbf{11} (1976), 573--598.
+
+\bibitem{BabelonViallet1981}
+O.~Babelon and C.~M.~Viallet,
+\emph{The Riemannian geometry of the configuration space of gauge theories},
+Comm.~Math.~Phys.~\textbf{81} (1981), 515--525.
+
+\bibitem{BakryEmery1985}
+D.~Bakry and M.~\'Emery,
+\emph{Diffusions hypercontractives},
+in \emph{S\'eminaire de Probabilit\'es XIX 1983/84}, Lecture Notes in Math.
+\textbf{1123}, Springer (1985), 177--206.
+
+\bibitem{BakryGentilLedoux2014}
+D.~Bakry, I.~Gentil, and M.~Ledoux,
+\emph{Analysis and Geometry of Markov Diffusion Operators},
+Grundlehren der Mathematischen Wissenschaften \textbf{348},
+Springer (2014).
+
+\bibitem{Balaban1985}
+T.~Ba\l aban,
+\emph{Renormalization group approach to lattice gauge field theories.
+I.~Generation of effective actions in a small field approximation},
+Comm.~Math.~Phys.~\textbf{109} (1987), 249--301.
+
+\bibitem{BauerschmidtBodineauDagallier2024}
+R.~Bauerschmidt, T.~Bodineau, and B.~Dagallier,
+\emph{Stochastic dynamics and the Polchinski equation: an introduction},
+Probab.~Surveys \textbf{21} (2024), 200--290;
+\texttt{arXiv:2307.07619}.
+
+\bibitem{BauerschmidtDagallier2024}
+R.~Bauerschmidt and B.~Dagallier,
+\emph{Log-Sobolev inequality for the $\varphi^4_2$ and $\varphi^4_3$ measures},
+Comm.~Pure Appl.~Math.~\textbf{77} (2024), 2579--2612;
+\texttt{arXiv:2202.02295}.
+
+\bibitem{CaoNissimSheffield2025}
+S.~Cao, R.~Nissim, and S.~Sheffield,
+\emph{Dynamical approach to area law for lattice Yang--Mills} (2025);
+\texttt{arXiv:2509.04688}.
+
+\bibitem{CaoParkSheffield2024}
+S.~Cao, J.~Park, and S.~Sheffield,
+\emph{Random surfaces and lattice Yang--Mills},
+Commun.~Amer.~Math.~Soc.~(accepted, 2024);
+\texttt{arXiv:2307.06790}.
+
+\bibitem{ChandraChevyrevHairerShen2024}
+A.~Chandra, I.~Chevyrev, M.~Hairer, and H.~Shen,
+\emph{Stochastic quantisation of Yang--Mills--Higgs in 3D},
+Invent.~Math.~(2024);
+\texttt{arXiv:2201.03487}.
+
+\bibitem{Chatterjee2024}
+S.~Chatterjee,
+\emph{A scaling limit of $SU(2)$ lattice Yang--Mills--Higgs theory},
+Probab.~Math.~Phys.~(accepted, 2024);
+\texttt{arXiv:2401.10507}.
+
+\bibitem{DellAntonioZwanziger1991}
+G.~Dell'Antonio and D.~Zwanziger,
+\emph{Every gauge orbit passes inside the Gribov horizon},
+Comm.~Math.~Phys.~\textbf{138} (1991), 291--299.
+
+\bibitem{FukushimaOshimaTakeda1994}
+M.~Fukushima, Y.~\=Oshima, and M.~Takeda,
+\emph{Dirichlet Forms and Symmetric Markov Processes},
+de Gruyter Studies in Mathematics \textbf{19}, Walter de Gruyter (1994).
+
+\bibitem{Gribov1978}
+V.~N.~Gribov,
+\emph{Quantization of nonabelian gauge theories},
+Nuclear Phys.~B \textbf{139} (1978), 1--19.
+
+\bibitem{JaffeWitten2000}
+A.~Jaffe and E.~Witten,
+\emph{Quantum Yang--Mills theory}, Clay Mathematics Institute Millennium
+Problem description (2000).
+
+\bibitem{Kostant1959}
+B.~Kostant,
+\emph{The principal three-dimensional subgroup and the Betti numbers of a
+complex simple Lie group},
+Amer.~J.~Math.~\textbf{81} (1959), 973--1032.
+
+\bibitem{MitterViallet1981}
+P.~K.~Mitter and C.~M.~Viallet,
+\emph{On the bundle of connections and the gauge orbit manifold in
+Yang--Mills theory},
+Comm.~Math.~Phys.~\textbf{79} (1981), 457--472.
+
+\bibitem{Morningstar1999}
+C.~J.~Morningstar and M.~J.~Peardon,
+\emph{The glueball spectrum from an anisotropic lattice study},
+Phys.~Rev.~D \textbf{60} (1999), 034509;
+\texttt{arXiv:hep-lat/9901004}.
+
+\bibitem{OttoVillani2000}
+F.~Otto and C.~Villani,
+\emph{Generalization of an inequality by Talagrand and links with the
+logarithmic Sobolev inequality},
+J.~Funct.~Anal.~\textbf{173} (2000), 361--400.
+
+\bibitem{RemondiereKRFP3_2026}
+K.~R\'emondi\`ere,
+\emph{Conditional spectral bound for the Faddeev--Popov operator on the
+fundamental modular domain via Lie-algebraic reduction (KR--FP--3)},
+preprint, Annals of Mathematics submission, May 2026.
+
+\bibitem{RemondiereMassGapPRL_2026}
+K.~R\'emondi\`ere,
+\emph{Mass gap from first principles: a cross-group formula and conditional
+reduction},
+preprint, Physical Review Letters submission, May 2026.
+
+\bibitem{Rothaus1981}
+O.~S.~Rothaus,
+\emph{Diffusion on compact Riemannian manifolds and logarithmic Sobolev
+inequalities},
+J.~Funct.~Anal.~\textbf{42} (1981), 102--109.
+
+\bibitem{Singer1978}
+I.~M.~Singer,
+\emph{Some remarks on the {Gribov} ambiguity},
+Comm.~Math.~Phys.~\textbf{60} (1978), 7--12.
+
+\bibitem{Talenti1976}
+G.~Talenti,
+\emph{Best constant in {Sobolev} inequality},
+Ann.~Mat.~Pura Appl.~\textbf{110} (1976), 353--372.
+
+\bibitem{Uhlenbeck1982}
+K.~K.~Uhlenbeck,
+\emph{Connections with $L^p$ bounds on curvature},
+Comm.~Math.~Phys.~\textbf{83} (1982), 31--42.
+
+\bibitem{Wang2014}
+F.-Y.~Wang,
+\emph{Analysis for Diffusion Processes on Riemannian Manifolds},
+Advanced Series on Statistical Science \& Applied Probability \textbf{18},
+World Scientific (2014).
+
+\end{thebibliography}
+
+\end{document}

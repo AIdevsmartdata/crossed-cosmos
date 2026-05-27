@@ -1,0 +1,87 @@
+\documentclass[tikz,border=8pt]{standalone}
+\usepackage{tikz}
+\usetikzlibrary{positioning,arrows.meta,calc,backgrounds,fit}
+\definecolor{ymcore}{HTML}{E6F0FF}
+\definecolor{smpheno}{HTML}{FFF0E6}
+\definecolor{toponomt}{HTML}{E6FFE6}
+\definecolor{metasigp}{HTML}{F5E6FF}
+\definecolor{validates}{HTML}{17BECF}
+\definecolor{informs}{HTML}{17BECF}
+\definecolor{xcomm}{HTML}{E377C2}
+\definecolor{exact}{HTML}{1F77B4}
+\definecolor{keystoneborder}{HTML}{D4AF37}
+\begin{document}
+\begin{tikzpicture}[
+  anchor/.style={ellipse,draw,fill=ymcore,minimum height=8mm,minimum width=18mm,font=\small},
+  keystone/.style={ellipse,draw=keystoneborder,line width=2pt,fill=toponomt,minimum height=8mm,font=\bfseries\small},
+  sector/.style={diamond,draw,fill=smpheno,aspect=2,font=\small},
+  observable/.style={rectangle,draw,fill=metasigp,rounded corners=2pt,font=\small},
+  every edge/.append style={font=\tiny},
+  node distance=15mm and 22mm]
+
+  % --- Anchors (super-nodes) -------------------------------------------
+  \node[anchor]      (kFP)     {$\kappa_{FP}=\tfrac{1}{6}$};
+  \node[anchor,right=of kFP] (Koide)  {$K=\tfrac{2}{3}$};
+  \node[anchor,below=of kFP] (xistar) {$\xi^{\star}=\tfrac{2}{3}$};
+  \node[anchor,below=of Koide] (Foo)  {$F_{\infty}=\tfrac{9}{10}$};
+  \node[anchor,right=of Koide] (cinf) {$c_{\infty}=\tfrac{1}{4}$};
+  \node[anchor,right=of cinf]  (b0)   {$b_0=\tfrac{11N}{48\pi^{2}}$};
+  \node[anchor,below=of cinf]  (kinf) {$\zeta(3)/\sqrt{\pi}$};
+  \node[keystone,right=of b0]  (G2)   {$\dim G_{2}=7$};
+  \node[anchor,below=of G2]    (K3)   {$b_2(K3)=22$};
+  \node[anchor,below=of K3]    (N24)  {$24=\text{Niemeier}$};
+  \node[anchor,below=of kinf]  (pi2)  {$\tfrac{4}{\pi^{2}}\approx\tfrac{2}{5}$};
+
+  % --- Sectors --------------------------------------------------------
+  \node[sector,below=of xistar] (SYM)  {YM-SD};
+  \node[sector,below=of SYM]    (SYL)  {YM-lattice};
+  \node[sector,below=of Foo]    (SH)   {Hadrons};
+  \node[sector,right=of SH]     (SEW)  {EW};
+  \node[sector,right=of SEW]    (SYuk) {Yukawa};
+  \node[sector,right=of SYuk]   (SCKM) {CKM};
+  \node[sector,below=of N24]    (SCo)  {Cosmology};
+  \node[sector,left=of SCo]     (SSp)  {Sigma-primes};
+
+  % --- EXACT / IDENTITY arrows ----------------------------------------
+  \draw[->,thick,color=exact] (kFP) edge[bend left=10] node[above]{$4\kappa_{FP}$} (Koide);
+  \draw[->,thick,color=exact] (kFP) edge[bend right=15] (xistar);
+  \draw[->,thick,color=exact] (Koide) edge[bend left=8] node[right,font=\tiny]{$=$} (xistar);
+
+  % --- INFORMS / SHARED (anchor -> sector) ----------------------------
+  \draw[->,color=informs,dashed] (Foo)  -- (SH);
+  \draw[->,color=informs,dashed] (kFP)  -- (SYM);
+  \draw[->,color=informs,dashed] (kinf) -- (SYL);
+  \draw[->,color=informs,dashed] (b0)   -- (SYM);
+  \draw[->,color=informs,dashed] (G2)   -- (SYM);
+  \draw[->,color=informs,dashed] (K3)   -- (SSp);
+  \draw[->,color=informs,dashed] (N24)  -- (SCo);
+  \draw[->,color=informs,dashed] (pi2)  -- (SEW);
+
+  % --- VALIDATES feedback (sector -> anchor)---------------------------
+  \draw[->,color=validates,line width=1.2pt,densely dotted]
+        (SEW) edge[bend left=25] (kFP);   % Higgs validates kappa_FP
+  \draw[->,color=validates,line width=1.2pt,densely dotted]
+        (SYuk) edge[bend right=20] (Koide); % Koide validates 2/3
+  \draw[->,color=validates,line width=1.2pt,densely dotted]
+        (SYL) edge[bend left=18] (kinf);  % lattice validates zeta(3)/sqrt(pi)
+  \draw[->,color=validates,line width=1.2pt,densely dotted]
+        (SCo) edge[bend right=25] (N24);  % Lambda validates 281
+
+  % --- X-COMM (sector ↔ sector via shared anchor) ---------------------
+  \draw[<->,color=xcomm,dotted,thick] (SYM)  -- (SYL);
+  \draw[<->,color=xcomm,dotted,thick] (SEW)  -- (SYuk);
+  \draw[<->,color=xcomm,dotted,thick] (SYuk) -- (SCKM);
+  \draw[<->,color=xcomm,dotted,thick] (SCo)  -- (SSp);
+
+  % --- Legend ---------------------------------------------------------
+  \node[anchor=south west,font=\scriptsize,align=left,fill=white,draw]
+        at ($(SH.south west)+(-5mm,-12mm)$) {
+          \textbf{Legend} \\
+          $\,\bullet$ blue solid: \textsc{exact identity}\\
+          $\,\bullet$ cyan dashed: \textsc{informs} (anchor$\to$sector)\\
+          $\,\bullet$ cyan dotted: \textsc{validates} (sector$\to$anchor, feedback)\\
+          $\,\bullet$ pink dotted: \textsc{X-COMM} (sector$\leftrightarrow$sector)\\
+          $\,\bullet$ gold border: keystone node (G$_2$)
+        };
+\end{tikzpicture}
+\end{document}

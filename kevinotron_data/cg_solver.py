@@ -10,7 +10,7 @@ Both solve the normal equations for the Wilson-Dirac operator:
 where D^dag = gamma5 D gamma5 (gamma5-hermiticity).
 
 Usage:
-    from .cg_solver import cg_solve
+    from cg_solver import cg_solve
     x, n_iter, rel_res = cg_solve(apply_A_fn, b, tol=1e-10, max_iter=5000)
 """
 import os
@@ -20,7 +20,7 @@ import jax
 import jax.numpy as jnp
 from functools import partial
 
-from .wilson_dirac import apply_wilson_dirac, apply_gamma5, apply_ddag_d
+from wilson_dirac import apply_wilson_dirac, apply_gamma5, apply_ddag_d
 
 
 # ---------------------------------------------------------------------------
@@ -131,7 +131,7 @@ def solve_dirac_wilson(U, b, mass, Ls, Lt, tol=1e-10, max_iter=5000):
     Returns:
         x, n_iter, rel_res
     """
-    from .wilson_dirac import apply_ddag
+    from wilson_dirac import apply_ddag
     ddag_b = apply_ddag(U, b, mass, Ls, Lt)
     return cg_solve_wilson(U, ddag_b, mass, Ls, Lt, tol, max_iter)
 

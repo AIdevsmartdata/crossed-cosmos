@@ -137,7 +137,7 @@ cd notes/eci_v7_aspiration/M45_BIANCHI_IX_PAPER && pdflatex bianchi_ix_modular_s
 ```bibtex
 @software{crossed_cosmos_2026,
   title  = {crossed-cosmos: ECI v6.0.53.233 — M142 hierarchy + Schütt-Hodge MULTI-D + YM Mille attempt},
-  author = {Remondière, Kevin},
+  author = {R\'emondi\`ere, K\'evin},
   year   = {2026},
   doi    = {10.5281/zenodo.19686398},
   url    = {https://github.com/AIdevsmartdata/crossed-cosmos},
@@ -152,7 +152,7 @@ cd notes/eci_v7_aspiration/M45_BIANCHI_IX_PAPER && pdflatex bianchi_ix_modular_s
 
 ## Author
 
-**Kévin Remondière** — Independent researcher, Tarbes, France
+**Kévin Rémondière** — Independent researcher, Oloron-Sainte-Marie, France
 ORCID: [0009-0008-2443-7166](https://orcid.org/0009-0008-2443-7166)
 Email: kevin.remondiere@gmail.com
 GitHub: [AIdevsmartdata](https://github.com/AIdevsmartdata)

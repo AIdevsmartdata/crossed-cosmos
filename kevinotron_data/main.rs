@@ -34,6 +34,7 @@ use lattice::Lattice4D;
 use crate::observables::polyakov;
 use crate::observables::glueball;
 use crate::observables::topology;
+use crate::observables::glueball_gevp;
 use clap::Parser;
 use std::time::Instant;
 
@@ -119,6 +120,10 @@ struct Args {
     /// Measure glueball correlator
     #[arg(long)]
     glueball: bool,
+
+    /// Measure glueball with GEVP (multi-smearing-level correlator matrix)
+    #[arg(long)]
+    glueball_gevp: bool,
 
     /// Measure topological charge
     #[arg(long)]
@@ -712,7 +717,7 @@ fn main() {
         println!("RESULT: area={:.0}", area);
 
         // === Additional observables (on a fresh thermalized config) ===
-        if args.polyakov_scan || args.topo_charge || args.glueball || args.fermion_check {
+        if args.polyakov_scan || args.topo_charge || args.glueball || args.glueball_gevp || args.fermion_check {
             eprintln!("# --- Additional observables ---");
             let mut lat_obs = Lattice4D::new(group_ref, args.ls, lt, args.beta);
             let mut rng_obs = rand::thread_rng();
@@ -730,8 +735,8 @@ fn main() {
             }
             if args.glueball {
                 // Accumulate correlators over multiple configs for signal
-                let n_glueball_meas = 50;
-                let n_smear_steps = 10;
+                let n_glueball_meas = 500;
+                let n_smear_steps = 20;
                 let alpha_smear = 0.5;
                 let lt_obs = if args.lt == 0 { 2 * args.ls } else { args.lt };
                 let mut avg_corr = vec![0.0f64; lt_obs / 2 + 1];
@@ -779,6 +784,97 @@ fn main() {
                     let m_plateau = (m_eff[1] + m_eff[2]) / 2.0;
                     eprintln!("# GLUEBALL: m_0++ × a ≈ {:.4} (from m_eff plateau t=1,2)", m_plateau);
                 }
+            }
+            if args.glueball_gevp {
+                // GEVP: multi-smearing-level correlator matrix
+                let smear_levels = vec![0usize, 5, 10, 20, 30];
+                let n_ops = smear_levels.len();
+                let n_meas = 500;
+                let alpha_smear = 0.5;
+                let lt_obs = if args.lt == 0 { 2 * args.ls } else { args.lt };
+                let n_t = lt_obs / 2 + 1;
+                
+                // Accumulate cross-correlator matrix
+                let mut avg_corr = vec![vec![0.0f64; n_ops * n_ops]; n_t];
+                
+                eprintln!("# GLUEBALL-GEVP: {} ops × {} measurements, smear levels {:?}",
+                    n_ops, n_meas, smear_levels);
+                for meas in 0..n_meas {
+                    for _ in 0..10 {
+                        lat_obs.sweep_alpha(group_ref, 0.0, args.epsilon, &mut rng_obs);
+                    }
+                    let smeared = glueball_gevp::build_smeared_lattices(
+                        &lat_obs, group_ref, &smear_levels, alpha_smear);
+                    let c = glueball_gevp::correlator_matrix(&smeared, group_ref);
+                    for t in 0..n_t {
+                        for k in 0..n_ops*n_ops {
+                            avg_corr[t][k] += c[t][k];
+                        }
+                    }
+                    if (meas + 1) % 100 == 0 {
+                        eprintln!("#   meas {}/{}", meas + 1, n_meas);
+                    }
+                }
+                for t in 0..n_t {
+                    for k in 0..n_ops*n_ops {
+                        avg_corr[t][k] /= n_meas as f64;
+                    }
+                }
+                
+                // Output matrix for Python GEVP solver
+                eprintln!("# GLUEBALL-GEVP: matrix C(t) for t=0..{}", n_t-1);
+                for t in 0..n_t.min(8) {
+                    eprintln!("# C({}) =", t);
+                    for i in 0..n_ops {
+                        let row: Vec<String> = (0..n_ops).map(|j|
+                            format!("{:>12.4e}", avg_corr[t][i*n_ops+j])).collect();
+                        eprintln!("#   {}", row.join(" "));
+                    }
+                }
+                
+                // Solve GEVP in Rust → m_0++ directly
+                let eigs = glueball_gevp::solve_gevp(&avg_corr, n_ops, 1);
+                let m_eff = glueball_gevp::effective_masses_gevp(&eigs);
+                eprintln!("# GEVP eigenvalues λ_n(t):");
+                for t in 0..eigs.len().min(6) {
+                    let row: Vec<String> = eigs[t].iter().map(|x| format!("{:>11.4e}", x)).collect();
+                    eprintln!("#   t={}: {}", t, row.join(" "));
+                }
+                eprintln!("# GEVP effective masses m_n(t):");
+                for t in 0..m_eff.len().min(5) {
+                    let row: Vec<String> = m_eff[t].iter().map(|x| {
+                        if x.is_nan() { "    NaN ".to_string() } else { format!("{:>8.4}", x) }
+                    }).collect();
+                    eprintln!("#   t={}→{}: {}", t, t+1, row.join(" "));
+                }
+                if m_eff.len() >= 3 {
+                    // Ground state plateau from t=2,3
+                    let m0_pl = (m_eff[1][0] + m_eff[2][0]) / 2.0;
+                    eprintln!("# GEVP: m_0++ × a (ground state plateau t=2,3) = {:.4}", m0_pl);
+                    if m_eff.len() >= 4 {
+                        // Excited state
+                        let m1_pl = (m_eff[1][1] + m_eff[2][1]) / 2.0;
+                        eprintln!("# GEVP: m_1++ × a (first excited)             = {:.4}", m1_pl);
+                    }
+                }
+                
+                // Save to JSON for Python GEVP
+                let json_path = format!("glueball_gevp_{}_L{}_beta{:.2}.json",
+                    group_ref.name().to_lowercase().replace("(","").replace(")",""),
+                    args.ls, args.beta);
+                let mut json = String::from("{\"n_ops\": ");
+                json.push_str(&format!("{}, \"smear_levels\": {:?}, \"n_t\": {}, \"correlator\": [",
+                    n_ops, smear_levels, n_t));
+                for (t, row) in avg_corr.iter().enumerate() {
+                    if t > 0 { json.push_str(", "); }
+                    json.push('[');
+                    let entries: Vec<String> = row.iter().map(|x| format!("{:.6e}", x)).collect();
+                    json.push_str(&entries.join(", "));
+                    json.push(']');
+                }
+                json.push_str("]}");
+                std::fs::write(&json_path, json).ok();
+                eprintln!("# GLUEBALL-GEVP: saved to {}", json_path);
             }
             if args.fermion_check {
                 let g5h = fermion::check_gamma5_hermiticity(&lat_obs, group_ref, args.quark_mass);

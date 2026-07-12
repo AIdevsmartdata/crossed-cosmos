@@ -1,5 +1,14 @@
 # crossed-cosmos — ECI v7.0.2.0 (2026-05-21)
 
+> **⚠️ STATUS UPDATE (2026-07-12).** The ECI-era claims below are a historical
+> snapshot (last edited 2026-05-27); active research has since moved to a
+> separate track and this README is no longer the current state of the project.
+> Several ECI-era claims have been corrected or retracted since publication,
+> notably: **κ_FP = 1/(2h∨)** (Kostant) supersedes earlier κ readings;
+> **H15 retracted**; the m_YM "PDG match" bullet below is requalified in place
+> (see the dated notes). Corrected Zenodo versions are being issued under the
+> same concept DOI.
+
 **ECI** = *Empirical Cross-Galois Identities* — arithmetic-geometric research repository (Bianchi 3-orbifolds, class field theory, Selberg trace formula, Dijkgraaf-Witten) with peripheral connections to Yang-Mills mass-gap phenomenology.
 
 ## 🔗 Quick Links
@@ -58,7 +67,7 @@ This is a **research programme**, not a finished theory. Current state (2026-05-
 - **10 PROVED rational L-value theorems** in the M142 hierarchy for h_K = 1 imaginary quadratic fields
 - **Schütt-Hodge MULTI-WEIGHT MULTI-D theorem** (Hecke 1937 Grossencharakter + Newton identity, weights W ∈ {3,5,7,...,29})
 - **F(N) Theorem C.6** Tier A arithmetic core (Deligne-Ramanujan + Hecke 1937 + Schütt 2010) PROVED-CONDITIONAL on (H1) ; Tier B bridge factor 4-anchor SU(2-5) systematics-limited PASS at c=0.80 (paper §6.4) or c=0.52 (PUSH-2 RESCUE); **8-anchor AT 2021 single-c FAIL ≥5σ ; operative phenomenological extrapolator = M43_7 quartic 3.072·(1 + 1.615/N² − 2.764/N⁴), χ²=5.0 on 8 dof** (audit 2026-05-11 `notes/.../morn43_ds_top_subjects_2026-05-11/outputs/M43_7_AT2020_FN_reverse_proper.md` + `Paper_Theorem_C6_JNumberTheory_v2_polished.md` §6.5)
-- **m_YM(D=-67) = 1.706 GeV** matches PDG 2024 0⁺⁺ glueball **1.700 ± 0.050 GeV** at <0.1σ (Lucini-Teper 2010 J.HEP 01:079)
+- **m_YM(D=-67) = 1.706 GeV** vs the quenched-lattice 0⁺⁺ glueball scale (Morningstar–Peardon 1999: **1730(50)(80) MeV**; Lucini–Teper 2010 J.HEP 01:079). *Correction (2026-07-12): the earlier "matches PDG 2024 at <0.1σ" phrasing is retracted — the PDG lists no experimentally confirmed 0⁺⁺ glueball (nearest candidates f₀(1500)/f₀(1710) are mixed states), and D=−67/SU(3) is the anchor used to calibrate the fit's free constant, i.e. a calibration point, not a blind prediction (2-parameter phenomenological fit, mean ≈14% over 78 channels).*
 - **E08 Maxwell U(1)** Phys. Rev. D paper (82-85% submission-ready, c_Pic=20 PROVED 3 indep derivations)
 - **Mumford-Tate torus formal Theorem 5.1** (Pohlmann 1968 + Deligne 1979)
 - **AN2 Theorem 8.2** PROVED-EMPIRICAL 24/24 + 5/5 (canonical anchor)
@@ -66,7 +75,7 @@ This is a **research programme**, not a finished theory. Current state (2026-05-
 
 Honest TOE coverage : **25-35% v13 alone / 40-50% v14 hybride / 55-65% generous max** (3 Opus retros aligned).
 
-YM Millennium feasibility : **9-22% rigorous** (unchanged ; m_YM=glueball <0.1σ is BETTER than Λ_QCD 5.14× ratio category-error claim).
+YM Millennium feasibility : **9-22% rigorous** (unchanged ; the m_YM=glueball comparison is a calibrated-fit consistency check — see corrected bullet above — though still better-posed than the Λ_QCD 5.14× ratio category-error claim).
 
 It is **NOT** a Theory of Everything, does **NOT** solve any Clay Millennium problem, and does **NOT** claim "five cosmology tensions closed" or comparable sweeping results. Phenomenological claims are tagged with their experimental status (consistent / tension / falsified / below current sensitivity).
 
@@ -91,7 +100,7 @@ Found at `notes/heavy_artillery_2026-05-09/morn39/Paper_*.md` — Schütt MULTI-
 
 R-6 Lemniscate, R-2 Bloch-Kato, R3-C-1 short note, Modular Shadow LMP, Bianchi IX, m_β=0 LMP, Cassini Palatini PRD, Leptogenesis CSD LMP, v7.6 amendment. See [`PAPERS_STATUS.md`](PAPERS_STATUS.md).
 
-## Selected results (current as of v6.0.53.233)
+## Selected results (current as of v6.0.53.233 — pre-v7 internal numbering; the release table above is authoritative for citation)
 
 ### M142 hierarchy — 10 PROVED theorems (Q(i) → Q(√-163))
 - **α_2 = 1/12 RIGOROUS** for f = 4.5.b.a on Q(i) (Yager 1982 *Compositio Math.* 47)
@@ -102,8 +111,8 @@ R-6 Lemniscate, R-2 Bloch-Kato, R3-C-1 short note, Modular Shadow LMP, Bianchi I
 - 6 h_K=1 D × 8 split primes verified empirically + theoretical proof via Hecke + Newton
 
 ### Yang-Mills Millennium attempt
-- **m_YM(D=-67) = 1.706 GeV** = PDG 2024 0⁺⁺ glueball 1.700±0.050 GeV (<0.1σ match)
-- **Lucini-Teper 2010** lattice glueball anchor verified
+- **m_YM(D=-67) = 1.706 GeV** vs quenched-lattice 0⁺⁺ glueball scale (Morningstar–Peardon 1999: 1730(50)(80) MeV). *Corrected 2026-07-12: previously misstated as a "PDG 2024 <0.1σ match" — no experimentally confirmed 0⁺⁺ glueball exists in the PDG, and D=−67 is the calibration anchor of the fit, not a blind prediction.*
+- **Lucini-Teper 2010** lattice glueball anchor (calibration input)
 - ECI category : **glueball mass scale**, NOT Λ_QCD scale (D2 DEEP WAVE 2 catch)
 
 ### Bridges & ECI v14 hybrid
@@ -119,7 +128,7 @@ R-6 Lemniscate, R-2 Bloch-Kato, R3-C-1 short note, Modular Shadow LMP, Bianchi I
 
 ## Anti-fabrication discipline
 
-Working with LLM-assisted research requires explicit anti-fabrication protocols. Cumulative tracking of fabricated references / arithmetic errors caught : **322 firm** (2026-05-11 ; +0 in v6.0.53.231/232, only propagation-fabs caught). All theorem citations are verified verbatim via PDF reading of source papers ; numerical claims are cross-checked via PARI/GP, sympy, and mpmath at high precision. Mistral large-latest GLOBAL-BANNED 2026-05-09 (3+ confirmed fabrication instances incl. α_2=128/45 vs PARI-verified 1/12). Pre-cited canonical IDs SOP enforces 0% fab rate vs 57% TOE topic fab rate without it.
+Working with LLM-assisted research requires explicit anti-fabrication protocols. Cumulative tracking of fabricated references / arithmetic errors caught : **322 firm** (2026-05-11 snapshot ; 448 as of 2026-05-20 ; the discipline continues in the active programme). All theorem citations are verified verbatim via PDF reading of source papers ; numerical claims are cross-checked via PARI/GP, sympy, and mpmath at high precision. Mistral large-latest GLOBAL-BANNED 2026-05-09 (3+ confirmed fabrication instances incl. α_2=128/45 vs PARI-verified 1/12). Pre-cited canonical IDs SOP enforces 0% fab rate vs 57% TOE topic fab rate without it.
 
 See `notes/eci_v7_aspiration/feedback_*` for protocol details and `AI_USE.md` for full LLM collaboration disclosure.
 

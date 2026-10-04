@@ -56,7 +56,7 @@ import Crossed.InformationConservation
             + |μ_{a_n, β_m} − μ_{a_m, β_m}|     (Variation lattice at fixed β_m)
      ```
   2. **First term** controlled by `VariationBetaBound` :
-     `≤ C · β_n^{-α}` with `α = 0.82` (Bauerschmidt-Hairer 2024).
+     `≤ C · β_n^{-α}` with `α = 0.82` (Bauerschmidt-Hairer 2024 [reference not found on arXiv/Crossref — retracted 2026-10-04]).
   3. **Second term** controlled by `VariationLatticeBound` :
      `≤ C'' · L_n^{1-γ}` with `γ > 1` (Brydges-Federbush 1980 / Bałaban
      1985-1989).
@@ -83,7 +83,7 @@ import Crossed.InformationConservation
   | Theorem                                          | Status                   |
   |--------------------------------------------------|--------------------------|
   | `a_n`, `beta_n`, `L_n` (defs)                    | **PROVED** (defs)        |
-  | `VariationBetaBound`                             | `axiom` (Bauerschmidt-Hairer 2024) |
+  | `VariationBetaBound`                             | `axiom` (Bauerschmidt-Hairer 2024 [reference not found on arXiv/Crossref — retracted 2026-10-04]) |
   | `VariationLatticeBound`                          | `axiom` (Brydges-Federbush 1980)   |
   | `μ_AF_seq` (carrier)                             | `noncomputable def`      |
   | `tv_distance` (def, opaque)                      | `noncomputable def`      |
@@ -98,7 +98,7 @@ import Crossed.InformationConservation
 
   ## References
 
-  - Bauerschmidt, R. & Hairer, M. (2024). *Stochastic quantisation of
+  - Bauerschmidt, R. & Hairer, M. [reference not found on arXiv/Crossref — retracted 2026-10-04; arXiv:2006.04987 is by Chandra, Chevyrev, Hairer and Shen] (2024). *Stochastic quantisation of
     Yang-Mills*. arXiv:2006.04987 (variation-β bound, Theorem 3.4).
   - Brydges, D. & Federbush, P. (1980). *A note on energy bounds for
     boson lattice field theories*. J. Math. Phys. 21, 2240 (variation-
@@ -240,13 +240,13 @@ axiom tv_distance_triangle :
 
 These two axioms isolate the *only* analytic input needed for the
 direct AF convergence proof. They are the *exact* statements one
-extracts from the variation-β analysis of Bauerschmidt-Hairer 2024
+extracts from the variation-β analysis of Bauerschmidt-Hairer 2024 [reference not found on arXiv/Crossref — retracted 2026-10-04]
 and the variation-lattice analysis of Brydges-Federbush 1980 +
 Bałaban 1985-1989.
 -/
 
 /-- **The exponent `α` of the β-variation bound** : empirical value
-`α = 0.82` from Bauerschmidt-Hairer 2024 (Theorem 3.4, equation 3.7).
+`α = 0.82` from Bauerschmidt-Hairer 2024 [reference not found on arXiv/Crossref — retracted 2026-10-04] (Theorem 3.4, equation 3.7).
 We work with `α > 0` for the abstract proof. -/
 noncomputable def α : ℝ := 82 / 100
 
@@ -268,7 +268,7 @@ theorem one_sub_γ_neg : 1 - γ < 0 := by
   have h := γ_gt_one
   linarith
 
-/-- **The β-variation constant** `C_β > 0` (Bauerschmidt-Hairer 2024
+/-- **The β-variation constant** `C_β > 0` (Bauerschmidt-Hairer 2024 [reference not found on arXiv/Crossref — retracted 2026-10-04]
 Theorem 3.4, equation 3.7). Absorbs the implicit prefactor from the
 heat-kernel renormalisation. -/
 noncomputable def C_β : ℝ := 1
@@ -285,7 +285,7 @@ noncomputable def C_L : ℝ := 1
 theorem C_L_pos : C_L > 0 := by
   unfold C_L; norm_num
 
-/-- **Variation-β bound axiom** (Bauerschmidt-Hairer 2024, Thm 3.4) :
+/-- **Variation-β bound axiom** (Bauerschmidt-Hairer 2024 [reference not found on arXiv/Crossref — retracted 2026-10-04], Thm 3.4) :
 fixing the lattice scale `a`, two Wilson measures at inverse couplings
 `β, β'` (both ≥ 1) differ in TV by `≤ C_β · min(β, β')^{-α}`.
 
@@ -326,7 +326,7 @@ the log-Sobolev constant of the Wilson measure satisfies
 
 This is the empirical Theorem C of Kévin Rémondière (27 lattice datapoints cross-
 (N, D, G) ∈ SU+Sp groups, 7σ universal). NOT yet rigorously derived analytically
-— this is the open Bauerschmidt-Hairer 2024 territory (cf. arXiv:2202.02295 for
+— this is the open Bauerschmidt-Hairer 2024 [reference not found on arXiv/Crossref — retracted 2026-10-04] territory (cf. arXiv:2202.02295 for
 the analogous φ⁴_3 result).
 
 The exponent `α ≈ 0.82 ± 0.04` is calibrated by the PC-gamer β-scan at
@@ -502,7 +502,7 @@ mass gap `m_phys² ≥ 4`.
 
 **Conditional on** :
 
-- `VariationBetaBound` (Bauerschmidt-Hairer 2024 Thm 3.4)
+- `VariationBetaBound` (Bauerschmidt-Hairer 2024 [reference not found on arXiv/Crossref — retracted 2026-10-04] Thm 3.4)
 - `VariationLatticeBound` (Brydges-Federbush 1980 Lemma 2.1)
 - `AF_diagonal_bound` (combined triangle + two variations)
 - `AF_diagonal_vanishing` (elementary one-variable real analysis)
@@ -583,7 +583,7 @@ theorem direct_AF_uses_two_scalar_bounds :
 | `tv_distance` (opaque + 4 axioms)                      | `opaque + axiom`          |
 | `α = 0.82 > 0`, `γ = 6/5 > 1` (exponents)              | **PROVED**                |
 | `C_β > 0`, `C_L > 0`                                   | **PROVED**                |
-| `VariationBetaBound` (Bauerschmidt-Hairer 2024)        | `axiom`                   |
+| `VariationBetaBound` (Bauerschmidt-Hairer 2024 [reference not found on arXiv/Crossref — retracted 2026-10-04])        | `axiom`                   |
 | `VariationLatticeBound` (Brydges-Federbush 1980)       | `axiom`                   |
 | `AF_diagonal_bound`                                    | `axiom`                   |
 | `AF_diagonal_vanishing`                                | `axiom`                   |

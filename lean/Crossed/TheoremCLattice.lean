@@ -43,7 +43,7 @@ import Crossed.KappaOneSixth
   The *analytic content* (the LSI inequality itself involving measures,
   entropy, gradients on the Wilson lattice) is axiomatized as the
   "analytic continuation" — these are the parts requiring the full
-  measure-theoretic Bakry-Émery / Bauerschmidt-Hairer apparatus
+  measure-theoretic Bakry-Émery / Bauerschmidt-Hairer [reference not found on arXiv/Crossref — retracted 2026-10-04] apparatus
   (Comptes Rendus / Annals papers).
 
   ## Status (sorry audit)
@@ -295,13 +295,13 @@ requires :
    energy `D(f)` w.r.t. `μ_Wilson`
 3. The Bakry-Émery curvature-dimension inequality `Ric + Hess ≥ K · g`
    on the gauge orbit space
-4. The Bauerschmidt-Hairer constructive bound
+4. The Bauerschmidt-Hairer [reference not found on arXiv/Crossref — retracted 2026-10-04] constructive bound
 
 These are *analytic* ingredients that go beyond the algebraic backbone
 formalised here. We axiomatize the connection between the algebraic
 right-hand side `LHS_formula` and the analytic LSI constant `C_LSI`.
 
-**Reference** : Bauerschmidt-Hairer 2024 (the Comptes Rendus delivery of
+**Reference** : Bauerschmidt-Hairer 2024 [reference not found on arXiv/Crossref — retracted 2026-10-04] (the Comptes Rendus delivery of
 session 2026-05-22). -/
 
 /-- The opaque "analytic LSI constant" type for the lattice Wilson measure.

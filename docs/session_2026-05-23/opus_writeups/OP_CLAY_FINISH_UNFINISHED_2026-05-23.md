@@ -455,7 +455,7 @@ La loi Pascal $(D-2)/(2D)$ coincide à D=4 (donnant 1/4) mais diverge à D=3 (1/
 - **Open 1** : SU(3) Wilson L=8, n_meas=50 — vérifier convergence à $c_\infty(D=4) = 1/4$ avec statistique adéquate. Status : pending (~10 min de calcul, écrit dans script 181).
 - **Open 2** : Recovery sequence 4D explicite (lemmes R1+R2). ETA : 6-18 mois avec un Hairer-style spécialiste.
 - **Open 3** : Universalité cross-groupe (Sp(N), SO(N)). Préliminaire : $K_{\mathrm{eff}}(Sp \infty) = 3.46$, $K_{\mathrm{eff}}(SU \infty) = 3.40$, $K_{\mathrm{canonical}} = \sqrt{4 \pi e / 3} = 3.37$. Concordance à 2-3% (project_K_universal_crossgroup_2026-05-20).
-- **Open 4** : Champignon Bauerschmidt-Hairer 4D (régularité structures pour YM 4D pur). État de l'art : Bauerschmidt-Hairer 2025 sur $\phi^4_4$ donne template, extension YM 4D verrou principal.
+- **Open 4** : Champignon Bauerschmidt-Hairer [reference not found on arXiv/Crossref — retracted 2026-10-04] 4D (régularité structures pour YM 4D pur). État de l'art : Bauerschmidt-Hairer 2025 [reference not found on arXiv/Crossref — retracted 2026-10-04] sur $\phi^4_4$ donne template, extension YM 4D verrou principal.
 
 #### Bibliography (10+ refs vérifiables arXiv)
 

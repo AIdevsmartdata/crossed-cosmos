@@ -128,7 +128,7 @@ DS Bot doc `G3_BBD_adaptation_YM_2026-05-23.md` (275 lignes) vérifie les 3 pré
 
 DS Bot `G3_BBD_adaptation` vérifie ✅ **arXiv:2509.04688** : "Dynamical approach to area law for lattice Yang-Mills" (Cao, Nissim, Sheffield 2025, preprint submitted).
 
-**C'est la première preuve dynamique d'area law lattice YM 4D.** Renforce considérablement le cadre Bauerschmidt-Hairer (Cao = co-auteur YMH 3D arXiv:2201.03487 déjà cité). Reste à intégrer dans pitch BH collab.
+**C'est la première preuve dynamique d'area law lattice YM 4D.** Renforce considérablement le cadre Bauerschmidt-Hairer [reference not found on arXiv/Crossref — retracted 2026-10-04] (Cao = co-auteur YMH 3D arXiv:2201.03487 déjà cité). Reste à intégrer dans pitch BH collab.
 
 ### Status Lean total v18 (inchangé vs v17)
 

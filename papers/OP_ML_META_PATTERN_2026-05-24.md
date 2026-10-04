@@ -1053,7 +1053,7 @@ in /root/crossed-cosmos, kernel-verified Lean 0-axiom) establishes κ
 as a *fundamental quantity* via the SU(3)-roots/Hodge-self-dual
 construction. This means the existence of κ in the SM observables is
 not ad hoc — it is the expected continuation of the algebraic structure
-that produces κ=1/6 in Bauerschmidt-Hairer LSI estimates.
+that produces κ=1/6 in Bauerschmidt-Hairer [reference not found on arXiv/Crossref — retracted 2026-10-04] LSI estimates.
 
 What the present analysis tests is *not* whether κ should appear in SM
 observables (the answer to that is yes, on group-theoretic grounds), but

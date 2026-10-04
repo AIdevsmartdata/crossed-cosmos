@@ -61,7 +61,7 @@ For a compact simple Lie group $G$ of rank $r$ with positive-root system $\Phi^+
 $$N_G \;=\; 2\,|\Phi^+(G)|+1, \qquad d_G \;=\; \dim G \;=\; r + 2|\Phi^+(G)|. \tag{5}$$
 Thus $N_G = d_G - r + 1$. The integer $N_G$ is the *saturation exponent* of the companion paper [9], where it appears in the vacuum-energy formula
 $$\rho_\Lambda(G) \;=\; \tfrac{1}{4}\,J\bigl(\tau_{-|D_G|}\bigr)^{-N_G}\,M_P^4, \qquad J(\tau)=j(\tau)/12^3, \tag{6}$$
-and is identified with the integer exponent that emerges from a saturated cluster-expansion argument in $D{=}4$ Yang-Mills (gauge-Higgs Bauerschmidt-Hairer type). Eq. (6) is *not* re-derived here; we only use it to assign $|D_G|$.
+and is identified with the integer exponent that emerges from a saturated cluster-expansion argument in $D{=}4$ Yang-Mills (gauge-Higgs Bauerschmidt-Hairer [reference not found on arXiv/Crossref — retracted 2026-10-04] type). Eq. (6) is *not* re-derived here; we only use it to assign $|D_G|$.
 
 The assignment $G \mapsto |D_G|$ proceeds in two steps:
 

@@ -109,7 +109,7 @@ Total : ~1900 lignes, ZERO sorrys, ~11 axiomes nommés référencés (Brouwer-Ha
 ## 6 documents Opus master livrés (~50k mots total)
 
 1. `OP_CLAY_EINSTEIN_THROUGH_HOLE_2026-05-23.md` (9532 mots) — projective inverse limit + Conjecture C* + 3 paths
-2. `OP_CLAY_BH_CLOSURE_2026-05-23.md` (7482 mots) — Bauerschmidt-Hairer + κ=1/6
+2. `OP_CLAY_BH_CLOSURE_2026-05-23.md` (7482 mots) — Bauerschmidt-Hairer [reference not found on arXiv/Crossref — retracted 2026-10-04] + κ=1/6
 3. `OP_CLAY_FINISH_UNFINISHED_2026-05-23.md` (8490 mots) — 6 lemmes Pilier 3 + G6 84% + Wilson flow RK4
 4. `OP_G6_MOSCO_CCHS_4D_EXTENSION_2026-05-23.md` (6791 mots) — Mosco G+E+RS hybride
 5. `OP_CLAY_KOLMOGOROV_PROOF_CHAIN_2026-05-23.md` (11k mots) — 6-step proof chain rigueurs articulée

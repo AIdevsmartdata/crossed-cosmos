@@ -84,7 +84,7 @@ import Crossed.TheoremCLattice
   - Ledoux, M. (1999). *Concentration of measure and logarithmic
     Sobolev inequalities*. Séminaire de Probabilités XXXIII, LNM 1709,
     120-216.
-  - Bauerschmidt, R. & Hairer, M. (2024 / 2026 Crossed Cosmos session
+  - Bauerschmidt, R. & Hairer, M. [reference not found on arXiv/Crossref — retracted 2026-10-04] (2024 / 2026 Crossed Cosmos session
     `project_clay_haar_2_over_3D_universal_2026-05-23.md`) :
     constructive Gibbs uniqueness via LSI for the Wilson measure.
   - Brydges, D. & Federbush, P. (1980). *A lower bound for the mass

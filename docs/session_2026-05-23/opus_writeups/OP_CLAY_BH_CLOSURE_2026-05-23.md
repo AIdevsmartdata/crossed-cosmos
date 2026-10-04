@@ -41,7 +41,7 @@
 
 # OP-CLAY-BH-CLOSURE — Yang–Mills 4D : Limite continuum et mass gap
 
-## Tentative de preuve structurée (style Bauerschmidt–Hairer)
+## Tentative de preuve structurée (style Bauerschmidt–Hairer [reference not found on arXiv/Crossref — retracted 2026-10-04])
 
 **Auteur** : Kévin Rémondière
 ORCID : 0009-0008-2443-7166

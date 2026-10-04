@@ -65,7 +65,7 @@ import Crossed.VariationBetaBound
      inequality with constant `C_LSI > 0` uniform in `β`.
   2. **Gaussian deficit saturation coefficient** `κ ∈ [0, 1)` :
      the deficit functional of the optimal-transport Gaussian saturates
-     to within rate `κ` (cf. Bauerschmidt-Hairer 2024 / Bałaban cluster
+     to within rate `κ` (cf. Bauerschmidt-Hairer 2024 [reference not found on arXiv/Crossref — retracted 2026-10-04] / Bałaban cluster
      expansion).
 
   **Conclusion** : there exists `C = C(C_LSI, ‖S_W‖_Lip) > 0` such that
@@ -127,7 +127,7 @@ import Crossed.VariationBetaBound
     **254**(11):2865–2940. doi:10.1016/j.jfa.2008.02.014.
     Theorem 2.1 (the LSI + saturation Hölder-TV bound, adapted here for
     Wilson Gibbs).
-  - **Bauerschmidt, R. & Hairer, M.** (2024). Constructive Gibbs
+  - **Bauerschmidt, R. & Hairer, M.** [reference not found on arXiv/Crossref — retracted 2026-10-04] (2024). Constructive Gibbs
     uniqueness via LSI for the Wilson measure (cf. Crossed Cosmos
     session `project_clay_haar_2_over_3D_universal_2026-05-23.md`).
   - **Crossed.KappaOneSixth** (this codebase) : `κ = 1/6` PROVED via two

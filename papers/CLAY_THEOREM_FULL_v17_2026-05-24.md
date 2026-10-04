@@ -121,7 +121,7 @@ theorem mass_gap_continuum_via_direct_AF
     ∃ m_phys_sq : ℝ, m_phys_sq ≥ 4 ∧ m_phys_sq > 0
 ```
 
-PROVED conditional sur 9 axiomes nommés référencés littérature (Bauerschmidt-Hairer + Brydges-Federbush + Bałaban + Kolmogorov + Rothaus + Bakry-Émery + OS + Otto-Villani).
+PROVED conditional sur 9 axiomes nommés référencés littérature (Bauerschmidt-Hairer [reference not found on arXiv/Crossref — retracted 2026-10-04] + Brydges-Federbush + Bałaban + Kolmogorov + Rothaus + Bakry-Émery + OS + Otto-Villani).
 
 ### Nouveauté v17 — A2 (Lipschitz action→mesure) PROVED 0 sorrys
 
@@ -186,7 +186,7 @@ Le verrou physique restant est maintenant **explicitement isolé** dans un axiom
 
 | # | Axiome | Couvert v17 ? | Estimé fermeture |
 |---|---|---|---|
-| **A1** | `variation_beta_bound` (Bauerschmidt-Hairer 2024) | 🟡 Hölder via LSI Ledoux 1999 (sketch en cours, Étape 4) | 6-12 mois BH collab |
+| **A1** | `variation_beta_bound` (Bauerschmidt-Hairer 2024 [reference not found on arXiv/Crossref — retracted 2026-10-04]) | 🟡 Hölder via LSI Ledoux 1999 (sketch en cours, Étape 4) | 6-12 mois BH collab |
 | **A2** | Lipschitz action→mesure | ✅ **PROVED Lean 0 sorrys** (Étape 1 v17) | — |
 | **A3** | `pullback_contraction_iter` (Bałaban monotonicité) | 🟡 data-processing clarifié + iterated bound PROVED | 6-12 mois |
 | **A4** | Theorem C continuum analyticité | ✅ reframe explicit axiome (Étape 2 v17) | — |
@@ -309,7 +309,7 @@ TV(μ_{a_n,β_n}, μ_{a_m,β_m})
 
 **`VariationBetaBound.lean`** (491 lignes, 1 sorry, 4 axiomes) :
 - `alpha_empirical := 82/100` (calibration β-scan 4 points)
-- `VariationBetaBound` axiome (Bauerschmidt-Hairer 2024 Thm 3.4 forme)
+- `VariationBetaBound` axiome (Bauerschmidt-Hairer 2024 [reference not found on arXiv/Crossref — retracted 2026-10-04] Thm 3.4 forme)
 - `variation_beta_to_lemmaB_consistency` PROVED (bridge β→∞)
 - 20 théorèmes PROUVÉS
 

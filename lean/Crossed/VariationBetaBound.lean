@@ -52,7 +52,7 @@ import Crossed.LemmaB_BetaInfinity
   across all six (i,j) ordered pairs, with mean 0.82 ± 0.01. This
   motivates the canonical choice `α = 82 / 100`.
 
-  The Hölder-type bound is the *Bauerschmidt-Hairer prerequisite* for
+  The Hölder-type bound is the *Bauerschmidt-Hairer [reference not found on arXiv/Crossref — retracted 2026-10-04] prerequisite* for
   the direct-AF route : at finite β it controls the entire Gibbs family
   by a single quantitative continuity modulus, bypassing the
   approximate-uniformity argument of the Moore-Osgood (β = ∞) route.
@@ -96,7 +96,7 @@ import Crossed.LemmaB_BetaInfinity
   - [Reference withdrawn 2026-10-04: no such work by the researchers
     named here earlier exists or is documented] (the direct-AF
     route, providing the β-variation bound at finite spacing).
-  - Bauerschmidt, R. & Hairer, M. (2024 / Crossed Cosmos session
+  - Bauerschmidt, R. & Hairer, M. [reference not found on arXiv/Crossref — retracted 2026-10-04] (2024 / Crossed Cosmos session
     `project_clay_haar_2_over_3D_universal_2026-05-23.md`) :
     constructive Gibbs uniqueness via LSI for the Wilson measure.
   - Bałaban, T. (1985-1989). *Renormalization group approach to
@@ -115,7 +115,7 @@ import Crossed.LemmaB_BetaInfinity
     we declare it as `82 / 100` in `ℚ` and *prove* the bounds `0 < α < 1`
     rigorously by `norm_num`.
   - The Hölder-type bound itself is the analytic content of the
-    Bauerschmidt-Hairer prerequisite ; it is exposed as a single named
+    Bauerschmidt-Hairer [reference not found on arXiv/Crossref — retracted 2026-10-04] prerequisite ; it is exposed as a single named
     axiom `variation_beta_bound` with explicit literature reference.
   - The calibration constant `C(a)` is similarly axiomatic, with the
     documented numerical value `≈ 0.34` and proven bounds `0 < C(a) ≤ 1`.
@@ -180,7 +180,7 @@ The prefactor `C(a)` depends on the lattice spacing `a` and the
 gauge group, but for `SU(2)`, `D = 4` and reasonable `a` in the
 range `a ∈ (0, 1)`, the β-scan fit gives `C(a) ≈ 0.34`. We declare
 `C(a)` as an axiom (positive, bounded by 1) since its precise
-form follows from the Bauerschmidt-Hairer cluster expansion. -/
+form follows from the Bauerschmidt-Hairer [reference not found on arXiv/Crossref — retracted 2026-10-04] cluster expansion. -/
 
 /-- **The calibration constant `C(a)`** in the β-variation bound.
 For a positive lattice spacing `a`, this is the prefactor multiplying
@@ -283,7 +283,7 @@ theorem TV_bound_rhs_self_zero (a : ℝ) (ha : 0 < a) (β : ℝ) :
 /-! ## §5. The β-variation bound (named axiom)
 
 This is the central analytic axiom of the file. It encodes the
-Bauerschmidt-Hairer prerequisite : for fixed lattice spacing `a`, the
+Bauerschmidt-Hairer [reference not found on arXiv/Crossref — retracted 2026-10-04] prerequisite : for fixed lattice spacing `a`, the
 Wilson Gibbs measures form a Hölder-continuous family with respect to
 the inverse temperature, with explicit exponent `α ≈ 0.82` and prefactor
 `C(a)` calibrated by the β-scan. -/

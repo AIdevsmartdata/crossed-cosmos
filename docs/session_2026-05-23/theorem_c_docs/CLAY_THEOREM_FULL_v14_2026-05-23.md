@@ -505,7 +505,7 @@ $f(\pi_1(G))$ varie cross-groupe → bulles d'univers GUT avec différents $\pi_
 5. `THEOREM_C_PROOF_RIGOROUS_v1.md` (236 lignes)
 6. `G6_CONTINUUM_PROGRAM_v1.md` (CCHS ref patchée)
 7. **`OP_G6_MOSCO_CCHS_4D_EXTENSION_2026-05-23.md`** (556 lignes, 6791 mots Opus max-effort, programme E + C parallèle)
-8. **`OP_CLAY_BH_CLOSURE_2026-05-23.md`** (793 lignes, 7482 mots Opus — 5 lemmes structuré Bauerschmidt-Hairer, κ = 1/6 dérivé, 55-65 % Clay articulé)
+8. **`OP_CLAY_BH_CLOSURE_2026-05-23.md`** (793 lignes, 7482 mots Opus — 5 lemmes structuré Bauerschmidt-Hairer [reference not found on arXiv/Crossref — retracted 2026-10-04], κ = 1/6 dérivé, 55-65 % Clay articulé)
 9. **`OP_CLAY_FINISH_UNFINISHED_2026-05-23.md`** (749 lignes, 8490 mots Opus — 6 lemmes Pilier 3 + G6 84 % + paper outline + Wilson flow RK4)
 10. **`OP_CLAY_EINSTEIN_THROUGH_HOLE_2026-05-23.md`** (651 lignes, ~10 000 mots Opus — vision projective inverse limit, Conjecture C\* + 3 paths G1/G2/G3, 70–80 % au moins un succès 10 ans)
 11. `FINDINGS_haar_saturation_correction_2026-05-23.md`

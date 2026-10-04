@@ -7,7 +7,8 @@
 > contribution from them, is documented: their names have been removed as
 > authors.** The draft was produced with AI assistance, in part from an
 > AI-generated text that role-played an expert reply
-> (`papers/2026-05-24-session/synthesis/AI_ROLEPLAY_EXPERT_RESPONSE_HypCST_2026-05-26.md`);
+> (formerly `papers/2026-05-24-session/synthesis/AI_ROLEPLAY_EXPERT_RESPONSE_HypCST_2026-05-26.md`,
+> removed from the repository on 2026-10-04; it remains in the git history);
 > it was not written by them. Their published works remain cited as
 > references. `main.tex` and `main.pdf` were corrected accordingly (author
 > block, first-person passages, acknowledgments, one reference) and
@@ -75,8 +76,8 @@ lemmas it relies on are:
 3. Lemma B3 (Polchinski cubic-term cumulant identity): Wick-contraction
    analogue of arXiv:2202.02295 Lemma 3.7 for SU(N) Wilson.
 
-Total adaptation work: 6-9 pages in the BBD style. The authors
-estimate this as ~3-6 months of dedicated work.
+Total adaptation work: 6-9 pages in the BBD style. The author
+estimates this as ~3-6 months of dedicated work.
 
 ## Consequences for Clay chain
 
@@ -90,7 +91,8 @@ Under Hyp-CST formalised:
 
 Combined with (H2)+(H3) of KR-FP-3 being standard (Aubin-Talenti +
 Kuratowski-Ryll-Nardzewski, see `AI_ROLEPLAY_EXPERT_RESPONSE_HypCST_2026-05-26.md`
-§4), the perturbative-regime mass gap on T^4 is **conditional on (H1)
+§4, a file removed on 2026-10-04 and kept in the git history only),
+the perturbative-regime mass gap on T^4 is **conditional on (H1)
 generic-vanishing alone**.
 
 ## P(Clay 10y) estimation
@@ -136,11 +138,13 @@ pdflatex main.tex   # for refs
 
 ## Companion documents
 
-- `papers/2026-05-24-session/synthesis/AI_ROLEPLAY_EXPERT_RESPONSE_HypCST_2026-05-26.md`
+- (removed 2026-10-04) `papers/2026-05-24-session/synthesis/AI_ROLEPLAY_EXPERT_RESPONSE_HypCST_2026-05-26.md`
   --- an AI-generated text that role-plays an expert reply (*not* a letter
-  from any researcher; corrected 2026-10-04), which is the original source
-  of the cumulant argument written up in this paper.
-- `/root/cc-private/papers/Paper_Clay_Closure_Perturbative_CMP/main.tex`
+  from any researcher), which is the original source of the cumulant
+  argument written up in this paper. Because it still put words in a real
+  researcher's mouth, it was removed from the repository on 2026-10-04; it
+  remains in the git history only.
+- `papers/Paper_Clay_Closure_Perturbative_CMP/main.tex`
   --- the conditional perturbative-regime closure paper that
   introduced Hyp-CST.
 - `/root/cc-private/papers/Paper_FP_Hessian_Bound_Final_CMP/main.tex`

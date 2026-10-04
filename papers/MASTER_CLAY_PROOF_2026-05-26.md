@@ -204,7 +204,7 @@ Let μ_{a,β}^{(L)} be the Wilson lattice measure on T⁴_L at spacing a, coupli
 
 **Proof sketch**. The AF trajectory (a_n, β_n) with a_n = a₀·2^{−n}, β_n = β(a_n) defines a Cauchy sequence in total variation distance:
 
-- Variation-β bound (Bauerschmidt-Hairer 2024): ‖μ_{a,β} − μ_{a,β'}‖_TV ≤ C_β · |β − β'|^{α} with α > 0
+- Variation-β bound (Bauerschmidt-Hairer 2024 [reference not found on arXiv/Crossref — retracted 2026-10-04]): ‖μ_{a,β} − μ_{a,β'}‖_TV ≤ C_β · |β − β'|^{α} with α > 0
 - Variation-lattice bound (Brydges-Federbush 1980): ‖μ_{a,β} − μ_{a',β}‖_TV ≤ C_L · |a − a'|^{γ−1} with γ > 1
 
 Triangle inequality: the diagonal sequence is Cauchy → converges to unique limit μ_∞.
@@ -215,7 +215,7 @@ The mass gap in the continuum follows from the uniform LSI constant:
 - Limit a→0, L→∞ preserves λ₁ > 0 → mass gap Δ² = lim λ₁/a² > 0
 
 **Lean formalization**: `DirectAFConvergence.lean` — 633 lines, PROVED CONDITIONAL on:
-- `VariationBetaBound` (Bauerschmidt-Hairer 2024)
+- `VariationBetaBound` (Bauerschmidt-Hairer 2024 [reference not found on arXiv/Crossref — retracted 2026-10-04])
 - `VariationLatticeBound` (Brydges-Federbush 1980)
 - `theorem_C_lattice_empirical_asymptotic` (Theorem C, 27 datapoints)
 
@@ -270,7 +270,7 @@ Transport Conjecture (T1, T2) ────────────────�
 | KR-FP-3 (λ₁ bound) | **PROVED-CONDITIONAL on (H1a, H2, H3)** | — | Birman-Schwinger + Polchinski reduction (companion Opus 2026-05-26) |
 | KR-FP-B (Bakry-Émery) | **IN PROGRESS** (this session) | — | Bakry-Émery 1985 (standard thm) |
 | Schur-Weyl (Lemma 1.5) | **EXPANDED 70%** (this session) | — | Peter-Weyl (standard) |
-| VariationBetaBound | **AXIOM** (Bauerschmidt-Hairer 2024) | 633 (DirectAF) | 1 |
+| VariationBetaBound | **AXIOM** (Bauerschmidt-Hairer 2024 [reference not found on arXiv/Crossref — retracted 2026-10-04]) | 633 (DirectAF) | 1 |
 | VariationLatticeBound | **AXIOM** (Brydges-Federbush 1980) | 633 (DirectAF) | 1 |
 | Direct AF continuum | **PROVED CONDITIONAL** | 633 | Variation × 2 + Kolmogorov |
 | Transport (m_arith↔m_phys) | **PROVED CONDITIONAL** | 1900+ total | T1 + T2 |
@@ -302,7 +302,7 @@ Close the O(1/β) gap in Lemma 1.5 Schur-Weyl:
 - Eliminate Brascamp-Lieb gap G2
 
 ### 3. VARIATION BOUNDS (ETA: 12-18 months, requires Bauerschmidt collaboration)
-The VariationBetaBound and VariationLatticeBound are currently axioms. They are KNOWN results in the literature (Bauerschmidt-Hairer 2024 for β, Brydges-Federbush 1980 for lattice). The gap is:
+The VariationBetaBound and VariationLatticeBound are currently axioms. They are KNOWN results in the literature (Bauerschmidt-Hairer 2024 [reference not found on arXiv/Crossref — retracted 2026-10-04] for β, Brydges-Federbush 1980 for lattice). The gap is:
 - Extending BBD 2023 (Polchinski LSI for φ⁴) from scalar to SU(N) Wilson action
 - Formalizing the cluster expansion alternative (Bałaban 1984-1989)
 

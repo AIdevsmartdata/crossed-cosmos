@@ -88,7 +88,7 @@ import Crossed.VariationLatticeBound
     `2δ · e^{2δ}` is fully PROVED from it.
   - The physical content (Bałaban effective-action bound) is a
     *single* named axiom `action_bound_balaban_su_n`, exactly
-    isolating the 12-24 month Bauerschmidt-Hairer open input.
+    isolating the 12-24 month Bauerschmidt-Hairer [reference not found on arXiv/Crossref — retracted 2026-10-04] open input.
   - The combination `variation_lattice_via_lipschitz` reduces the
     central Bałaban bound on the Wilson measure
     (`Crossed.VariationLatticeBound.variation_lattice_bound`) to the
@@ -531,7 +531,7 @@ sup-norm bound
   `‖Γ_a(U) − β · S_W^a(U)‖_∞ ≤ C · e^{−α · β}`
 
 holds for every gauge field `U`. This is the **VRAI verrou physique**
-of the AF proof (12-24 months Bauerschmidt-Hairer extension to the
+of the AF proof (12-24 months Bauerschmidt-Hairer [reference not found on arXiv/Crossref — retracted 2026-10-04] extension to the
 full trajectory).
 
 Reference : Bałaban 1985 (Comm. Math. Phys. 102), Brydges-Federbush

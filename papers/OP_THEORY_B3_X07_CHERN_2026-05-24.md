@@ -768,7 +768,7 @@ The following references would *strengthen but not change* the verdicts of this 
 
 ## §7 Acknowledgements
 
-The author thanks the open-science infrastructure of arXiv, LMFDB, and Wikipedia for verifiable references; the Bauerschmidt–Hairer programme of lattice Yang–Mills LSI inequalities for the rigorous framework underlying $\kappa = 1/6$; the Atiyah–Bott legacy for the cohomological machinery of $\mathcal{M}(G;\Sigma_g)$.
+The author thanks the open-science infrastructure of arXiv, LMFDB, and Wikipedia for verifiable references; the Bauerschmidt–Hairer [reference not found on arXiv/Crossref — retracted 2026-10-04] programme of lattice Yang–Mills LSI inequalities for the rigorous framework underlying $\kappa = 1/6$; the Atiyah–Bott legacy for the cohomological machinery of $\mathcal{M}(G;\Sigma_g)$.
 
 **COPE-compliant LLM disclosure:** The present note was drafted with the assistance of an AI agent (Anthropic Claude Opus 4.7) operating under direct supervision and instruction-following by the author. The AI's role was: (a) factual verification of arXiv IDs and reference details via web searches and direct WebFetch queries (every arXiv ID below was verified individually); (b) execution of numerical checks scripted by the author and made available in the project directory (`/tmp/voie1_calcs/H1_orbit_decomp.py`, `H2_X07_periods.py`, `H3_chern_classes.py`); (c) drafting prose under tight constraints. The technical content, the choice of hypotheses to test, and the verdicts are the author's responsibility. No factual or numerical claim in the present note was propagated without independent verification. The AI agent's output is treated as an editorial-assistance draft; any errors are the author's.
 

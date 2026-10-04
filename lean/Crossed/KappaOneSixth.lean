@@ -35,7 +35,7 @@ import Mathlib.Data.Nat.Choose.Basic
 
   Lean 4 formalisation of the *rank-saturation correction factor*
   `κ = 1/6` appearing in Theorem C lattice. Today's session (Opus
-  Bauerschmidt-Hairer derivation) established `κ = 1/6` via two
+  Bauerschmidt-Hairer [reference not found on arXiv/Crossref — retracted 2026-10-04] derivation) established `κ = 1/6` via two
   independent derivations :
 
   1. **Hodge self-dual derivation (4D)** : the 2-form decomposition
@@ -71,7 +71,7 @@ import Mathlib.Data.Nat.Choose.Basic
   ## References
 
   - Crossed Cosmos `project_clay_haar_2_over_3D_universal_2026-05-23.md`
-    (today's session, Opus Bauerschmidt-Hairer 7482 mots delivery) :
+    (today's session, Opus Bauerschmidt-Hairer [reference not found on arXiv/Crossref — retracted 2026-10-04] 7482 mots delivery) :
     `κ = 1/6` derived via two independent paths matching empirical 0.161 at 2%.
   - Donaldson, S. K. (1990). *Polynomial Invariants for Smooth 4-Manifolds*,
     Topology 29, 257-315 (self-dual / anti-self-dual decomposition in 4D).

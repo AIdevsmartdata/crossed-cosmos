@@ -746,7 +746,7 @@ The Clay probability estimate is *revised upward* from the 12% of v14 (May 23, 2
 
 1. The algorithmic reformulation of Conjecture C$^{*}$ (§3.2) makes the problem *much more accessible* (Markov chain mixing time is standard literature, not an open spectral-gap problem on SU(N) Lie group).
 
-2. The seven-manifestations framework (§2) provides a *unified conceptual structure* that organises 7 disparate equations under one principle, making the mathematics *more elegant* and *more likely to be picked up* by Bauerschmidt-Hairer-tradition probabilists.
+2. The seven-manifestations framework (§2) provides a *unified conceptual structure* that organises 7 disparate equations under one principle, making the mathematics *more elegant* and *more likely to be picked up* by Bauerschmidt-Hairer-tradition [reference not found on arXiv/Crossref — retracted 2026-10-04] probabilists.
 
 3. The PySR symbolic regression finding $\Delta \approx 8L e^{-\mathrm{sw}}$ provides *empirical evidence* for the algorithmic mechanism, removing the need for the geometric *$1/L$* hypothesis (which was the *main weakness* of v14).
 

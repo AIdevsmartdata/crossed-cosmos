@@ -257,7 +257,7 @@ Independent of the present falsification, the following structural results are u
 
 1. **METAGROUP geometric framework**: the saturation polynomial $D(D-1)(5-D)/6$ identifying the three non-abelian pairs $(\mathrm{SU}(2),2)$, $(\mathrm{SU}(3),3)$, $(\mathrm{SU}(3),4)$, the multiplicative correction $\kappa = 1/6$ for the Wilson Gibbs measure log-Sobolev constant, $\lambda_H = 1/8$, $\sigma_8 = \sqrt{2/3}$, Weyl chirality, and the 5-Condition Uniqueness Theorem (Rémondière 2026, *Clay theorem v23* and *Pitch v22 final*).
 2. **Integer-form Heegner identification** $N = 2|\Phi^+(\mathrm{A}_2)|+1 = 7$ paired with $|D|=163$ as the largest Stark–Heegner $h=1$ discriminant — purely structural, no dynamical content (Note Gap A.4, in preparation).
-3. **Yang–Mills mass-gap programme** (Bauerschmidt–Hairer continuum extension, Pillar 3 spectral framework, etc.) — entirely decoupled from cosmological dark-energy phenomenology.
+3. **Yang–Mills mass-gap programme** (Bauerschmidt–Hairer [reference not found on arXiv/Crossref — retracted 2026-10-04] continuum extension, Pillar 3 spectral framework, etc.) — entirely decoupled from cosmological dark-energy phenomenology.
 
 The cosmological extension explored here is a separate hypothesis that has now been tested and rejected. None of the structural results above depend on its outcome.
 

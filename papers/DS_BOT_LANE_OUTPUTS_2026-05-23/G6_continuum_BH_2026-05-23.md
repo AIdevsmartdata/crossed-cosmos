@@ -1,4 +1,4 @@
-# G6 CONTINUUM — Hypothèses style Bauerschmidt-Hairer avec Theorem C
+# G6 CONTINUUM — Hypothèses style Bauerschmidt-Hairer [reference not found on arXiv/Crossref — retracted 2026-10-04] avec Theorem C
 
 **Date**: 2026-05-23T13:50 CEST
 **Agent**: maths (subagent depth 1/2, session c575277d)
@@ -22,7 +22,7 @@ $$c_\infty(D) = \max\left(0, \frac{C_2 - C_3}{2D}\right), \quad C_2 = \binom{D}{
 | **4** | **1/4** | **Vérifié MC β∈[3,9]** | **4 Bianchi/4-cellule, 2 modes** |
 | 5 | 0 | Vérifié 7σ (gap nul) | Bianchi sature les plaq |
 
-**Thèse**: c_∞(4) = 1/4 > 0 implique — sous hypothèses Bauerschmidt-Hairer — que la limite continuum de YM₄ SU(2) existe ET possède un mass gap strictement positif.
+**Thèse**: c_∞(4) = 1/4 > 0 implique — sous hypothèses Bauerschmidt-Hairer [reference not found on arXiv/Crossref — retracted 2026-10-04] — que la limite continuum de YM₄ SU(2) existe ET possède un mass gap strictement positif.
 
 ---
 

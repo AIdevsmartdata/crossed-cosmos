@@ -30,7 +30,7 @@ Prouver l'existence d'un exposant α > 0 tel que pour β, β' suffisamment grand
 
 $$\|\mu_{\beta} - \mu_{\beta'}\|_{TV} \leq C \cdot \beta^{-\alpha}$$
 
-**Sans invoquer Bauerschmidt-Hairer.** La preuve repose uniquement sur :
+**Sans invoquer Bauerschmidt-Hairer [reference not found on arXiv/Crossref — retracted 2026-10-04].** La preuve repose uniquement sur :
 
 1. **Theorem C** : $C_{\mathrm{LSI}}(\mu_\beta) = c_\infty$ pour tout $\beta \geq 5$ (certifié Lean)
 2. **Pinsker** : $\mathrm{TV}^2 \leq \mathrm{Ent}/2$

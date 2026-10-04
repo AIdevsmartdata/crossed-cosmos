@@ -123,7 +123,7 @@ $$g_{H^1}^{(A)}(\tau_1, \tau_2) \;:=\; \int_M \mathrm{Tr}(\tau_1 \wedge \star \t
 This is the **gauge-covariant $H^1$ metric**, weak Riemannian (Mitter–Viallet 1981 ; Singer 1981 Phys. Scr.). Equivalently in operator form,
 $$g_{H^1}^{(A)}(\tau_1, \tau_2) = \langle (1 + d_A^\dagger d_A)\tau_1, \tau_2\rangle_{L^2}. \tag{$g_{H^1}'$}$$
 
-**Remark (which metric is canonical?).** The most common choice in Babelon–Viallet 1981 is the **$L^2$ metric** $g_{L^2}(\tau_1,\tau_2) = \int \mathrm{Tr}(\tau_1 \wedge \star \tau_2)$, *not* the $H^1$ metric. The $H^1$ metric introduces an A-dependent zeroth-order correction in the Ricci tensor (cf. §II.4). For consistency with the Bauerschmidt–Hairer Polchinski framework (which is $L^2$ in the field variable), we will compute both and indicate which yields the desired bound.
+**Remark (which metric is canonical?).** The most common choice in Babelon–Viallet 1981 is the **$L^2$ metric** $g_{L^2}(\tau_1,\tau_2) = \int \mathrm{Tr}(\tau_1 \wedge \star \tau_2)$, *not* the $H^1$ metric. The $H^1$ metric introduces an A-dependent zeroth-order correction in the Ricci tensor (cf. §II.4). For consistency with the Bauerschmidt–Hairer [reference not found on arXiv/Crossref — retracted 2026-10-04] Polchinski framework (which is $L^2$ in the field variable), we will compute both and indicate which yields the desired bound.
 
 ### I.4. Vertical / horizontal decomposition
 
@@ -472,7 +472,7 @@ This **does close** via Bauerschmidt–Bodineau–Dagallier 2023, but the depend
 
 ---
 
-## §V. Connection with Bauerschmidt–Hairer tilted measures (~1.5K words)
+## §V. Connection with Bauerschmidt–Hairer [reference not found on arXiv/Crossref — retracted 2026-10-04] tilted measures (~1.5K words)
 
 ### V.1. Polchinski equation for Wilson measure
 
@@ -586,7 +586,7 @@ Status :
 ### VI.6. Comparison with alternative routes
 
 - **Route Bałaban–RG** (Bałaban 1985-88, Magnen–Rivasseau–Sénéor) : multiscale block-spin, ~80 % rigorous, but no spectral gap output.
-- **Route Bauerschmidt–Hairer / Polchinski LSI** (BBD 2023, BD 2024) : modern, $\phi^4$ proved, SU(N) extension open.
+- **Route Bauerschmidt–Hairer [reference not found on arXiv/Crossref — retracted 2026-10-04] / Polchinski LSI** (BBD 2023, BD 2024) : modern, $\phi^4$ proved, SU(N) extension open.
 - **Route Cao–Nissim–Sheffield 2025** (arXiv:2509.04688) : area law via dynamical Langevin, restricted to 't Hooft regime, partial gap.
 - **Route KR (this work)** : Babelon–Viallet Ricci → LSI directly via O'Neill. Structurally clean, but blocked at KR-FP-3.
 

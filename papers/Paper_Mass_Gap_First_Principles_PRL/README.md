@@ -8,6 +8,32 @@
 **Status**: PRL Letter v5 (5-page Letter incl. bibliography)
 **Target**: Physical Review Letters
 
+> **⚠️ INTEGRITY CORRECTION (2026-10-04) — read before the rest of this page.**
+> The text below (and `main.tex` / `main.pdf`, left unchanged as a historical
+> record) presents this formula as a first-principles derivation "from three
+> geometric anchors" with "zero free parameters". That framing is **withdrawn**:
+>
+> - The formula is a **Tier 2 calibrated phenomenological fit**, as already
+>   stated in the repository's [THEOREMS_INDEX](../../THEOREMS_INDEX.md): the
+>   coefficient F_∞ = 9/10 is the SU(3) anchor convention F(3) = 1 (TH3b,
+>   "Empirical CONVENTION, NOT structural derivation"), and the spectral input
+>   is **λ₁ = 1/F(3) = 1 by construction**, which makes the agreement with
+>   lattice data tautological with respect to λ₁ (EMP9). δ = +2 is an
+>   empirical input and η_∞, c_η were obtained from a fit to AT2021.
+> - The reading "λ₁ of the Bianchi orbifold is the spectral mechanism that
+>   generates the mass" is **dead, unconditionally** (THEOREMS_INDEX DEAD-λ1).
+> - "K-uniqueness" in Lean: the theorems verify the identity K² = 2πe·ξ★ for
+>   the *defined* constant K = √(4πe/3) (`lean/Crossed/Transport.lean`,
+>   lines 54 and 172-184); uniqueness of K is not formalised.
+> - Every probability in the tables below (P(Clay Prize, 10 y) = 30-50 %,
+>   P(Track A PRL accepted) = 95 %, P(Lemma B formal) = 65-80 %, Conjecture C*
+>   40-55 %, G1∨G2∨G3 75 %) is **withdrawn**: subjective, with no verifiable
+>   basis. The "READY for arXiv + PRL submission" status is superseded by
+>   this note.
+>
+> Proved mathematics used here (ξ★ = 2/3, the Dijkgraaf-Witten form of F(N))
+> and the other proved results listed in THEOREMS_INDEX are unaffected. See [CHANGELOG.md](../../CHANGELOG.md), entry 2026-10-04.
+
 ## Abstract (v5)
 
 We derive a closed-form expression for the dimensionless mass-gap ratio

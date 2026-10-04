@@ -73,7 +73,7 @@ These papers have been compiled, peer-review-ready, and are documented in [`PAPE
 - **ECI v14 spec** formalization (10K mots, 4 hybrid options H1/H3/H4)
 - **MEGA-RETROSPECTIVE FINAL** (12K mots, TOP 10 dispatches roadmap)
 - **DEEP WAVE 1 + DEEP WAVE 2 analyses** (~20K mots combined)
-- **Combined morn68+morn69 digest** (8.7K mots, m_YM=glueball <0.1σ + Mumford-Tate replaces Schoen)
+- **Combined morn68+morn69 digest** (8.7K mots, ~~m_YM=glueball <0.1σ~~ *[retracted, see below]* + Mumford-Tate replaces Schoen)
 - **Lean stub** `lean/EciM142.lean` (98 new lines real mathlib4 API)
 - **PARI verification scripts** (`m183_full_proof_test.gp` 89L, `m184_mechanism_test.gp` 45L)
 - **Templeton OFI 2026-08-14** application materials (research narrative + budget + CV + timeline)
@@ -85,8 +85,8 @@ These papers have been compiled, peer-review-ready, and are documented in [`PAPE
 - **Cluster** : 322 firm hallu count (+0 new this commit, only propagation-fabs caught)
 - **Hype** : 53-62 sober (downgrade from 56-65 after K3 heat-kernel correction)
 - **TOE coverage** : ECI v13 alone 25-35% / ECI v14 hybride 40-50% / generous max 55-65% (3 Opus retros aligned)
-- **YM Millennium feasibility** : 9-22% rigorous (unchanged honest)
-- **m_YM(D=-67) = 1.706 GeV** matches PDG 2024 0⁺⁺ glueball 1.700 ± 0.050 GeV at <0.1σ (Lucini-Teper 2010 J.HEP 01:079)
+- ~~**YM Millennium feasibility** : 9-22% rigorous (unchanged honest)~~ *Withdrawn 2026-10-04: no verifiable basis.*
+- **m_YM(D=-67) = 1.706 GeV** ~~matches PDG 2024 0⁺⁺ glueball 1.700 ± 0.050 GeV at <0.1σ~~ (Lucini-Teper 2010 J.HEP 01:079) *— Corrected 2026-10-04, as in README since 2026-07-12: no experimentally confirmed 0⁺⁺ glueball exists in the PDG; the comparison scale is the quenched-lattice value (Morningstar–Peardon 1999: 1730(50)(80) MeV), and D=−67 is the calibration anchor of the fit, not a blind prediction.*
 - **AN2 Theorem 8.2** PROVED-EMPIRICAL 24/24 + 5/5 (canonical anchor unchanged)
 - **Conjecture A REFINED** = master ECI v11 (8/11 Opus confirm)
 

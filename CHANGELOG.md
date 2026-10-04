@@ -8,6 +8,52 @@ v1–v3 were private drafts and are not archived here.
 
 ---
 
+## [integrity-2026-10-04] — 2026-10-04 (integrity correction; no new result, no theorem changed)
+
+Completes the 2026-07-12 README audit, which had requalified the "PDG match"
+but left three over-statements in place. All corrections are made **in place,
+with the original wording kept (struck through) and a dated note**, so that the
+history of the claims stays readable.
+
+### Requalified
+- **"First-Principles Mass Gap Formula" / "zero free parameters" →
+  Tier 2 calibrated phenomenological fit** (README headline, PAPERS.md "Latest",
+  `papers/Paper_Mass_Gap_First_Principles_PRL/README.md` banner). Aligned with
+  THEOREMS_INDEX TH3b (F(3) = 1 = SU(3) calibration convention) and EMP9
+  (RMS 0.85 % "tautological under λ₁ = 1"). Caveat stated explicitly:
+  **λ₁ = 1/F(3) = 1 holds by construction**. The Lean theorems
+  `K_squared_eq_2pi_e_xi_star` / `K_unicity_via_2pi_e_xi_star` are described
+  for what they are (an algebraic identity for a defined constant).
+- **"Wiles 1995-style"** analogy for the conditional surrogate withdrawn
+  (README, PAPERS.md #15).
+
+### Withdrawn
+- **"YM Millennium feasibility 9-22 % rigorous"** (README, PAPERS_INDEX.md),
+  **"P(Clay-level contribution 15y) ~18-30 %"** (THEOREMS_INDEX) and the
+  probability table of the PRL draft README (P(Clay Prize, 10y) = 30-50 %,
+  P(PRL accepted) = 95 %, ...): subjective self-assessments with no
+  derivation or verifiable basis.
+- **λ₁ Selberg falsifier** ("PARI Selberg λ₁ falsifier, $50 KVM") and the
+  open question "universal λ₁ lower bound on Bianchi orbifolds"
+  (THEOREMS_INDEX OPEN-Transport, PAPERS.md Corpus A).
+- Leftover "m_YM matches PDG 2024 0⁺⁺ glueball at <0.1σ" in PAPERS_INDEX.md,
+  already retracted in README on 2026-07-12 but missed there.
+
+### Recorded as dead (THEOREMS_INDEX RETRACTED / FALSIFIED, README section "Dead mechanisms")
+- **DEAD-λ1**: "λ₁ of the Bianchi orbifold is the spectral mechanism of the
+  mass gap" — dead unconditionally (internal verdict 2026-07-19).
+- FALS-Vol-N2m1 (volume ↔ N²−1, 2026-05-18), FALS-N2-dict (N² dictionary,
+  2026-05-19); the Bianchi-cosmology ↔ RG map is listed in the README section.
+
+### Unchanged
+- All proved results: Theorem 1.1 (TH-1.1), ξ★ = 2/3 (W1), TH3a, F(3) = 1 as
+  an arithmetic identity, Humbert volume formula, HSH, D′, CR′, Lean files.
+- `papers/Paper_Mass_Gap_First_Principles_PRL/main.tex` and `main.pdf` are
+  kept unchanged as a historical record; the banner in the paper README governs
+  how they should be read.
+
+---
+
 ## [5.0.0] — PLANNED (post-MCMC, pre-EPJ C submission)
 
 Target: release cut at the moment the MCMC posterior on $\xi_\chi$ lands and

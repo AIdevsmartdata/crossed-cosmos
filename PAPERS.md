@@ -8,7 +8,7 @@
 
 Total active papers: **32** organized in three corpora.
 
-**🆕 Latest (2026-05-21)** — `Paper_Mass_Gap_First_Principles_PRL/main.pdf` (4pp). First-principles closed-form for m²(J,P,C,ex,N)/σ₀ with K, F, ξ★ Lean-PROVED + two new rational constants η_∞ = 1/2 and c_η = -β/3 = -16/21 discovered from AT2021 cross-N fit. Zero free parameters at N→∞. Cross-N validation 78 channels SU(N) N∈{3,4,5,6,8}, mean 14% off (comparable to AT2021 systematics).
+**🆕 Latest (2026-05-21)** — `Paper_Mass_Gap_First_Principles_PRL/main.pdf` (4pp). ~~First-principles~~ closed-form for m²(J,P,C,ex,N)/σ₀ with K, F, ξ★ Lean-PROVED + two new rational constants η_∞ = 1/2 and c_η = -β/3 = -16/21 discovered from AT2021 cross-N fit. ~~Zero free parameters at N→∞.~~ *Requalified 2026-10-04: a Tier 2 calibrated phenomenological fit (F(3) = 1 convention, λ₁ = 1/F(3) = 1 by construction; see README and THEOREMS_INDEX TH3b/EMP9).* Cross-N validation 78 channels SU(N) N∈{3,4,5,6,8}, mean 14% off (comparable to AT2021 systematics).
 
 ---
 
@@ -19,7 +19,7 @@ Empirical observations on the SU(N) Yang-Mills mass gap, with the $K_{\mathrm{AS
 **Honest framing** (post-fact-check 2026-05-19):
 1. **Arithmetic surrogate** $m_{\rm arith}(N) := \sqrt{\sigma_0}\cdot C(N)\sqrt{\lambda_1(X_N)}$ is *defined* (not derived) with $C(N) = \sqrt{2\pi e}\cdot\sqrt{2/3}\cdot F(N)$, $F(N) = (9/10)(N^2+1)/N^2$.
 2. **Empirical observation**: $m_{\rm arith}(N)$ matches AT2021 lattice $m_{0^{++}}/\sqrt{\sigma}$ at RMS 0.85\% across 6 anchors $N\in\{2,3,4,5,6,\infty\}$ under saturation $\lambda_1=1$.
-3. **Open questions**: universal $\lambda_1$ lower bound on Bianchi orbifolds, existence of $K_{\rm ASP}(32)$, physical derivation of $F(N)$ from 4D YM, transport principle from arithmetic to physical spectrum.
+3. **Open questions**: ~~universal $\lambda_1$ lower bound on Bianchi orbifolds~~ *(withdrawn 2026-10-04: λ₁ = 1 is a calibration and the λ₁-mechanism reading is dead — THEOREMS_INDEX DEAD-λ1)*, existence of $K_{\rm ASP}(32)$, physical derivation of $F(N)$ from 4D YM, transport principle from arithmetic to physical spectrum.
 
 ### Index — 16 papers
 
@@ -39,7 +39,7 @@ Empirical observations on the SU(N) Yang-Mills mass gap, with the $K_{\mathrm{AS
 | 12 | A twisted Eguchi—Kawai spectral curve at $\SU(3)$ and the modular form $\mathbf{… | [`Paper_TEK_X024_Note`](papers/Paper_TEK_X024_Note/) | 8 | TBD |
 | 13 | **A topological invariant of Bianchi 3-orbifolds from the identity term of the Selberg pretrace formula** (TIER 1 PROVED UNCOND, ξ\* = 2/3 universal) | [`Paper_W1_xi_star_universal_CR`](papers/Paper_W1_xi_star_universal_CR/) | 4 | Comptes Rendus |
 | 14 | **A Center–Rank inequality with Dirichlet companion** (TIER 1 PROVED-COND CR + TIER 1 UNCOND CR' + 153/153 empirical) | [`Paper_CR_Theorem_JNT`](papers/Paper_CR_Theorem_JNT/) | 5 | J. Number Theory |
-| 15 | **A surrogate mass-gap formula for SU(N) Yang–Mills via Bianchi 3-orbifolds, framed as proved-conditional** (TIER 1 PROVED-COND on Karamata-Stirling + Transport, Wiles 1995-style companion) | [`Paper_RouteB_Mass_Gap_LMP`](papers/Paper_RouteB_Mass_Gap_LMP/) | 6 | Lett. Math. Phys. |
+| 15 | **A surrogate mass-gap formula for SU(N) Yang–Mills via Bianchi 3-orbifolds, framed as proved-conditional** (TIER 1 PROVED-COND on Karamata-Stirling + Transport, ~~Wiles 1995-style~~ companion; *Wiles analogy withdrawn 2026-10-04*) | [`Paper_RouteB_Mass_Gap_LMP`](papers/Paper_RouteB_Mass_Gap_LMP/) | 6 | Lett. Math. Phys. |
 | 16 | **The Transport Conjecture: formal statement and four candidate proof strategies** (TIER 3 OPEN explicit conjecture) | [`Paper_Transport_Conjecture_arXiv`](papers/Paper_Transport_Conjecture_arXiv/) | 4 | arXiv math-ph |
 
 Papers 13-16 (Wave B, 2026-05-20) close the YM programme post-Path-Beta with tier-honest framing; see [notes/YM_CLOSURE_V2_2026-05-20.md](notes/YM_CLOSURE_V2_2026-05-20.md) for the full audit. If `morn39/KleinSigma_LMP` exists, it belongs here.

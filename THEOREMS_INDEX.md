@@ -3,7 +3,7 @@
 Quick lookup of all proved theorems with tier classification, paper reference, and current status.
 
 **Cluster firm**: 444 STABLE (entry = exit, 110+ anti-fab catches ledgered)
-**Date**: 2026-05-20 (v7.0.0.1)
+**Date**: 2026-05-20 (v7.0.0.1) — integrity correction 2026-10-04 (dated notes in place; no theorem statement changed)
 **Author**: Kévin Rémondière, ORCID [0009-0008-2443-7166](https://orcid.org/0009-0008-2443-7166)
 
 ---
@@ -45,7 +45,7 @@ Quick lookup of all proved theorems with tier classification, paper reference, a
 | TH6 | **Arrow A3 Lichnerowicz** — Conjecture F v3 (cup product vanishing) | Burns-Flach + Brunault-Chida + Castella 2024 | [P4W3](papers/Paper_P4W3_MathAnn/) §7 |
 | TH8 | **P4-W3 Theorem 14 precise** — `r(D) = (A/B)·√d_gen^e` | (KS) + (BC-NC) + (CAST-EXT) + (TAM-PRIM) | [P4W3](papers/Paper_P4W3_MathAnn/) §8 |
 | TH11 | **Center-Rank theorem CR** — `rk_2(Cl K_ASP(N)) ≥ v_2(N)` | Gauss genus + 't Hooft (Z/2^{v_2(N)})⁶ | [CR Theorem JNT](papers/Paper_CR_Theorem_JNT/) §3 |
-| TH-8.1 | **Route B mass-gap physical claim** — `m_0⁺⁺(SU(N))/√σ = M(D_min^{(N)})/√λ₁(Y_K)` | (i) Karamata-Stirling + (T1)(T2) Transport + **(iii) H20/H21 9/10 = SU(3) calibration** | [Route B LMP](papers/Paper_RouteB_Mass_Gap_LMP/) §3 |
+| TH-8.1 | **Route B mass-gap physical claim** — `m_0⁺⁺(SU(N))/√σ = M(D_min^{(N)})/√λ₁(Y_K)` | (i) Karamata-Stirling + (T1)(T2) Transport + **(iii) H20/H21 9/10 = SU(3) calibration** | [Route B LMP](papers/Paper_RouteB_Mass_Gap_LMP/) §3 — *2026-10-04: λ₁(Y_K) enters only through the calibration λ_min = 1 = 1/F(3); it is not a mass-generating mechanism (see DEAD-λ1 below)* |
 | TH3b | **F(N) coefficient `c = 9/10 = 3²/(3²+1)`** = SU(3) anchor calibration F(3)=1 (H20 verdict 20-hypothesis test eliminates all alternatives) | [PRL Théorème A](papers/Paper_PRL_Theoreme_A_LMP/) | §3 | Empirical CONVENTION, NOT structural derivation. Tier 2 CALIBRATION. |
 
 ---
@@ -80,7 +80,7 @@ Quick lookup of all proved theorems with tier classification, paper reference, a
 
 | ID | Open Problem | Status |
 |---|---|---|
-| OPEN-Transport | **Transport Conjecture** — Φ : lattice YM Wightman → Bianchi spectral identification | TIER 3 OPEN, 2-Millennium stack (M1: constructive 4D YM + M2: spectral identification). PARI Selberg λ_1 falsifier setup ($50 KVM, 1-3 mo). [Transport v3 FINAL](papers/Paper_Transport_Conjecture_v3_FINAL/) |
+| OPEN-Transport | **Transport Conjecture** — Φ : lattice YM Wightman → Bianchi spectral identification | TIER 3 OPEN, 2-Millennium stack (M1: constructive 4D YM + M2: spectral identification). ~~PARI Selberg λ_1 falsifier setup ($50 KVM, 1-3 mo).~~ *Withdrawn 2026-10-04: λ_min = 1 is a calibration (TH3b, EMP9), not a quantity to measure; see DEAD-λ1.* [Transport v3 FINAL](papers/Paper_Transport_Conjecture_v3_FINAL/) |
 | OPEN-KS | **Karamata-Stirling rigorous completion** — substep (i) √(2πe) of Route B Theorem 8.1 | TIER 3 sketch. ~2-3 wk completion attempt. |
 | OPEN-K_ASP(32) | **K_ASP(32)** — smallest D with h_K=32, rk_2=5. PARI sweep `|D| < 2×10⁶` to find. | Sweep ongoing. |
 | OPEN-Faltings-rk2-5 | **First rk_2=5 anchor** — confirmed `|D| > 10000` (4 rk_2=4 in [-10000,-3]) | Computed Faltings sweep, see Phase 1. |
@@ -98,6 +98,11 @@ For full list see `notes/YM_CLOSURE_V2_2026-05-20.md` §5 Falsifications Ledger.
 | FALS-Phase-E2 | **Spin-4 SU(3-10) prediction** | ~10σ off AT2021 cross-N | 2026-05-15 |
 | FALS-Bridge-9.1 | **AdS hard-wall j_{0,1} cross-N N≥3** | 14.3σ off | 2026-05-15 |
 | FALS-Koide-struct | **Koide Q = 2/3 ↔ ECI ξ\* structural** | W1 PARI: ξ\*=2/3 UNIVERSAL topological (Selberg identity term only), no structural bridge to Koide | W1 verdict 2026-05-20 |
+| DEAD-λ1 | **λ₁(Bianchi orbifold) = spectral mechanism of the mass gap** | Dead unconditionally: λ₁ enters only as λ_min = 1 = 1/F(3) (SU(3) calibration convention), all N- and D-dependence is carried by F(N) and M(D), so the cross-N fit is tautological in λ₁; λ₁ Selberg falsifier and "universal λ₁ lower bound" open question withdrawn. Proved results (TH-1.1, W1, TH3a, Humbert volume) unaffected | internal verdict 2026-07-19, published 2026-10-04 |
+| REQ-FirstPrinciples | **"First-Principles Mass Gap Formula", "zero free parameters"** (README headline, Paper_Mass_Gap_First_Principles_PRL) | Requalified as Tier 2 calibrated phenomenological fit, aligned with TH3b and EMP9 | 2026-10-04 |
+| RETR-Feasibility | **"YM Millennium feasibility 9-22 % rigorous"**, "P(Clay-level contribution 15y) ~18-30 %", "P(Clay Prize, 10y) 30-50 %" | Subjective self-assessments with no derivation or verifiable basis | 2026-10-04 |
+| FALS-Vol-N2m1 | **Bianchi-orbifold volume ↔ N²−1** | Vol(D=−67)/Vol(D=−4) = 50.5 vs 8 (SU(3)); Humbert formula itself verified and unaffected | 2026-05-18 |
+| FALS-N2-dict | **"N² dictionary"** m²(J^PC)/m²(0⁺⁺) = (αN²+β)/γ | Falsified cross-N on AT2021: the ratios are constant in N | 2026-05-19 |
 | FALS-Maulik-K3-attribution | **Maulik 2014 Duke for K3 Picard≥16 → Hodge** | Maulik 2014 = Tate supersingular char p, NOT Hodge over C. Correct chain: Pohlmann + Tankeev + Varesco | Phase 1 catch 2026-05-20 |
 
 ---
@@ -129,6 +134,6 @@ For full list see `notes/YM_CLOSURE_V2_2026-05-20.md` §5 Falsifications Ledger.
 
 This work is **NOT a Theory of Everything**, **NOT a Clay Millennium solution**, and **NOT a fundamental physics breakthrough**. It is a tier-classified arithmetic-geometric research program with peripheral physics connections (Yang-Mills mass-gap surrogate formula matching lattice AT2021 at RMS 0.85%, conditional on the Transport Conjecture remaining open).
 
-**P(Clay-level contribution 15y)** : ~18-30% honest (dominated by YM/BSD/Hodge axis via 2-rank Cl(K)[2] shared organization).
+~~**P(Clay-level contribution 15y)** : ~18-30% honest (dominated by YM/BSD/Hodge axis via 2-rank Cl(K)[2] shared organization).~~ *Withdrawn 2026-10-04 (RETR-Feasibility): subjective, no verifiable basis.*
 
 Anti-fab discipline is the brand value: every claim tier-classified, every failure ledgered, every catch (110+ to date) documented openly.

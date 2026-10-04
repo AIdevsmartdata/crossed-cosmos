@@ -9,22 +9,30 @@
 > (see the dated notes). Corrected Zenodo versions are being issued under the
 > same concept DOI.
 >
-> **⚠️ INTEGRITY CORRECTION (2026-10-04).** Three over-statements that survived
-> the 2026-07-12 pass are corrected in place below (original wording kept,
-> struck through, with dated notes — nothing is silently rewritten):
-> (1) the "**First-Principles** Mass Gap Formula" with "**zero free parameters**"
-> is requalified as a **Tier 2 calibrated phenomenological fit**, in line with
-> this repository's own [THEOREMS_INDEX](THEOREMS_INDEX.md) (TH3b "Tier 2
-> CALIBRATION", EMP9 "tautological under λ₁=1"): the spectral input is fixed at
-> **λ₁ = 1/F(3) = 1 by construction**, so the agreement with lattice data
-> carries no independent mechanistic content; (2) the "YM Millennium
-> feasibility 9-22 % rigorous" figure is **withdrawn** (no derivation or
-> verifiable basis exists for it); (3) the reading "**λ₁ of the Bianchi
-> orbifold is the spectral mechanism that generates the mass**" is **dead,
-> unconditionally**, and the λ₁ Selberg falsifier is withdrawn from the open
-> questions. Proved mathematical results (Theorem 1.1, ξ★ = 2/3, F(N) form,
-> Humbert volume, HSH, D′, CR′) are **unaffected**. See
-> [CHANGELOG.md](CHANGELOG.md) (entry 2026-10-04).
+> **⚠️ INTEGRITY CORRECTION (2026-10-04).** Three over-statements identified
+> in an internal review of 2026-07-19, and missed by the 2026-07-12 pass, are
+> corrected in place below (original wording kept, struck through, with dated
+> notes — nothing is silently rewritten). **This is not a full audit of the
+> repository**: the points still open are listed in
+> [CHANGELOG.md](CHANGELOG.md) (entry 2026-10-04, "Still open").
+> (1) The "**First-Principles** Mass Gap Formula" with "**zero free
+> parameters**" is requalified as a **Tier 2 calibrated phenomenological fit**,
+> in line with this repository's own [THEOREMS_INDEX](THEOREMS_INDEX.md) (TH3b
+> "Tier 2 CALIBRATION"): its normalisation rests on the SU(3) convention
+> F(3) = 1, and its rational constants were identified post hoc against a fit
+> to lattice data. (2) The "YM Millennium feasibility 9-22 % rigorous" figure
+> is **withdrawn** (no derivation or verifiable basis exists for it).
+> (3) The reading "**λ₁ of the Bianchi orbifold is the spectral mechanism that
+> generates the mass**" is **dead, unconditionally**: in the arithmetic
+> surrogate m_arith, λ₁ is fixed to 1 = 1/F(3), so the surrogate's agreement
+> with lattice data is tautological in λ₁ (EMP9); the λ₁ Selberg falsifier is
+> withdrawn from the open questions.
+> In addition, the May-2026 documents that claim or prepare a proof of the
+> Yang–Mills mass gap (`papers/MASTER_CLAY_PROOF_2026-05-26.md`, the
+> `CLAY_THEOREM_FULL_v13`…`v23` series, `CLAY_SUBMISSION_CHECKLIST_2026-05-23.md`,
+> the `OP_CLAY_*` write-ups) now open with a dated **retraction notice**: no
+> such proof exists. What still stands is listed in the section "Dead
+> mechanisms and what still stands" below.
 
 **ECI** = *Empirical Cross-Galois Identities* — arithmetic-geometric research repository (Bianchi 3-orbifolds, class field theory, Selberg trace formula, Dijkgraaf-Witten) with peripheral connections to Yang-Mills mass-gap phenomenology.
 
@@ -62,7 +70,7 @@ with β = 16/7, ξ★ = 2/3, and δ_{J=1}=1 if J=1 else 0. Two new rational cons
 
 ~~Zero free parameters in the N→∞ limit.~~ Mean off cross-N : 14% on 78 channels SU(3-8) (excluding 2⁺⁻ ditorelon scattering states). Lean 4.29.1 formalization of K-uniqueness extended to 31 PROVED theorems (added `K_squared_eq_2pi_e_xi_star` + `K_unicity_via_2pi_e_xi_star`).
 
-> *Correction (2026-10-04).* This formula is **not** a first-principles derivation and does **not** have zero free parameters. (i) Its normalisation rests on the SU(3) anchor convention **F(3) = 1**, i.e. the coefficient 9/10 is a calibration (THEOREMS_INDEX **TH3b**, Tier 2 CALIBRATION); (ii) the spectral input is set to **λ₁ = 1/F(3) = 1**, which holds by construction, so the cross-N agreement is **tautological with respect to λ₁** (THEOREMS_INDEX **EMP9**); (iii) η_∞ and c_η are fitted to lattice data (within 2.8 % and 0.2 %, as stated above) and δ = +2 is an empirical input. The formula is therefore a calibrated phenomenological fit (Tier 2), useful as a compact description of lattice spectra, with no claim of a mass-generating mechanism. The two Lean theorems named above verify the algebraic identity K² = 2πe·ξ★ for the *defined* constant K = √(4πe/3) ([`lean/Crossed/Transport.lean`](lean/Crossed/Transport.lean), lines 54 and 172-184); they do not formalise any uniqueness of K nor any physical derivation.
+> *Correction (2026-10-04).* This formula is **not** a first-principles derivation and does **not** have zero free parameters. (i) Its normalisation rests on the SU(3) anchor convention **F(3) = 1**: the coefficient 9/10 is chosen so that F(3) = 1 (THEOREMS_INDEX **TH3b**, Tier 2 CALIBRATION). (ii) The formula contains **no Bianchi eigenvalue**. It extends the surrogate prefactor K²F(N)², in which λ₁ is implicitly fixed to 1 = 1/F(3) — the agreement of the surrogate m_arith with lattice data (RMS 0.85 % on 6 anchors) is tautological under λ₁ = 1 (THEOREMS_INDEX **EMP9**) — by spin, parity and C-splitting factors anchored on lattice data. The 14 % agreement on 78 channels is therefore not tautological, but it is the agreement of a fit, not a prediction. (iii) The rational constants β, η_∞ and c_η were **identified post hoc** against a free fit to AT2021 (β_∞ = 2.6429; a = 0.486(14), b = −0.764(40) in η(N) = a + b/N²; `papers/Paper_Mass_Gap_First_Principles_PRL/main.tex` l.193-207), and δ = +2 is an empirical input. Two different values of β circulate publicly: 16/7 in the formula above and 13/5 in the paper (v5) — see CHANGELOG, "Still open". The formula is therefore a calibrated phenomenological fit (Tier 2), useful as a compact description of lattice spectra, with no claim of a mass-generating mechanism. The two Lean theorems named above verify the algebraic identity K² = 2πe·ξ★ for the *defined* constant K = √(4πe/3) ([`lean/Crossed/Transport.lean`](lean/Crossed/Transport.lean), lines 54 and 172-184); they do not formalise any uniqueness of K nor any physical derivation.
 
 ---
 
@@ -94,8 +102,8 @@ This is a **research programme**, not a finished theory. Current state (2026-05-
 
 Honest TOE coverage : **25-35% v13 alone / 40-50% v14 hybride / 55-65% generous max** (3 Opus retros aligned).
 
-~~YM Millennium feasibility : **9-22% rigorous**~~ (unchanged ; the m_YM=glueball comparison is a calibrated-fit consistency check — see corrected bullet above — though still better-posed than the Λ_QCD 5.14× ratio category-error claim).
-*Withdrawn (2026-10-04): no derivation, data or audit trail for this percentage exists in this repository; it was a subjective self-assessment, not a "rigorous" figure. No probability of solving the Millennium problem is claimed.*
+~~YM Millennium feasibility : **9-22% rigorous** (unchanged ; the m_YM=glueball comparison is a calibrated-fit consistency check — see corrected bullet above — though still better-posed than the Λ_QCD 5.14× ratio category-error claim).~~
+*Withdrawn (2026-10-04): no derivation, data or audit trail for this percentage exists in this repository; it was a subjective self-assessment, not a "rigorous" figure. No probability of solving the Millennium problem is claimed. The m_YM = glueball comparison remains what the corrected bullet above says: a calibrated-fit consistency check.*
 
 It is **NOT** a Theory of Everything, does **NOT** solve any Clay Millennium problem, and does **NOT** claim "five cosmology tensions closed" or comparable sweeping results. Phenomenological claims are tagged with their experimental status (consistent / tension / falsified / below current sensitivity).
 
@@ -103,9 +111,10 @@ It is **NOT** a Theory of Everything, does **NOT** solve any Clay Millennium pro
 
 Recorded here so that the dead routes are not revived; the historical text above is left in place.
 
-- **DEAD, unconditionally — "λ₁(Bianchi orbifold) is the spectral mechanism of the mass gap."** λ₁ enters the mass formulas only through the constant λ_min = 1, which equals 1/F(3) by the SU(3) calibration convention; the formulas never use a computed Bianchi eigenvalue. Everything that varies across N (or across the discriminant D in the arithmetic surrogate) is carried by F(N) and M(D), so the cross-N fit is tautological with respect to λ₁ and no Bianchi eigenvalue does independent work. Four independent internal checks (2026-07-19) converged on this verdict. Consequences: the "PARI Selberg λ₁ falsifier" and the "universal λ₁ lower bound" are withdrawn as open questions (λ_min = 1 is a calibration, not a quantity to be measured), and the Route B physical claim (TH-8.1) is read as calibration, not mechanism. See [THEOREMS_INDEX.md](THEOREMS_INDEX.md) (RETRACTED / FALSIFIED, rows dated 2026-10-04).
+- **DEAD, unconditionally — "λ₁(Bianchi orbifold) is the spectral mechanism of the mass gap."** In the arithmetic surrogate m_arith(N) = √σ₀·C(N)·√λ₁ and in the Route B claim (TH-8.1), λ₁ enters only through the constant λ_min = 1, which equals 1/F(3) by the SU(3) calibration convention; no computed Bianchi eigenvalue is ever used. Everything that varies across N (or across the discriminant D) is carried by F(N) and M(D), so the surrogate's agreement with lattice data (RMS 0.85 %, 6 anchors) is tautological with respect to λ₁ (EMP9) and no Bianchi eigenvalue does independent work. The 2026-05-21 mass-gap formula above contains no λ₁ at all. Four independent internal checks (2026-07-19) converged on this verdict. Consequences: the "PARI Selberg λ₁ falsifier" and the "universal λ₁ lower bound" are withdrawn as open questions (λ_min = 1 is a calibration, not a quantity to be measured), and the Route B physical claim (TH-8.1) is read as calibration, not mechanism. See [THEOREMS_INDEX.md](THEOREMS_INDEX.md) (RETRACTED / FALSIFIED, rows dated 2026-10-04).
 - **Also falsified earlier (internal records, now stated publicly):** Bianchi-orbifold volume ↔ N²−1 (2026-05-18: Vol(D=−67)/Vol(D=−4) = 50.5 against 8 for SU(3)); the Bianchi-cosmology ↔ RG map H(β) = β(g) (2026-05-17, opposite sign); the "N² dictionary" m²(J^PC)/m²(0⁺⁺) = (αN²+β)/γ (2026-05-19, the actual ratios are constant in N).
-- **UNAFFECTED (proved mathematics):** Theorem 1.1 (per-χ decomposition of the Selberg pretrace, TH-1.1), ξ★ = 2/3 (W1), the form F(N) = 1 + c/N² via Dijkgraaf-Witten (TH3a) and the arithmetic identity F(3) = 1, the Humbert volume formula, HSH r(D) = 2^{rk₂}, Theorem D′, CR′. These never depended on the λ₁-mechanism reading.
+- **UNAFFECTED (proved mathematics):** Theorem 1.1 (per-χ decomposition of the Selberg pretrace, TH-1.1), ξ★ = 2/3 (W1), the form F(N) = 1 + c/N² via Dijkgraaf-Witten (TH3a), the Humbert volume formula, HSH r(D) = 2^{rk₂}, Theorem D′, CR′. These never depended on the λ₁-mechanism reading. (F(3) = 1 is deliberately not listed: it holds because c = 9/10 is chosen for it — TH3b.)
+- **Lean files: unchanged and not re-audited in this correction.** What they establish: algebraic identities about *defined* constants (e.g. K² = 2πe·ξ★ for K defined as √(4πe/3), `lean/Crossed/Transport.lean` l.54 and 172-184), and conditional statements whose analytic content is carried by named axioms (117 `axiom` declarations in `lean/Crossed/`, among them `Hyp_CST`, `lean/Crossed/Hyp_CST.lean` l.88, "SKETCH (axiom declared, not proven Lean-side)" l.22, and the finite-β Lemma B placeholder, `lean/Crossed/InformationConservation.lean` l.99-101). The theorem `mass_gap_continuum_D4` (`InformationConservation.lean` l.531-537) concludes `∃ m_phys_sq > 0`, which holds trivially: it is not a mass-gap theorem. **No Lean file in this repository proves a Yang–Mills mass gap**, and "0 sorry" there does not mean "proved".
 
 ## Content
 

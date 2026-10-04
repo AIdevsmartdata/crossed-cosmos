@@ -8,7 +8,7 @@
 
 Total active papers: **32** organized in three corpora.
 
-**🆕 Latest (2026-05-21)** — `Paper_Mass_Gap_First_Principles_PRL/main.pdf` (4pp). ~~First-principles~~ closed-form for m²(J,P,C,ex,N)/σ₀ with K, F, ξ★ Lean-PROVED + two new rational constants η_∞ = 1/2 and c_η = -β/3 = -16/21 discovered from AT2021 cross-N fit. ~~Zero free parameters at N→∞.~~ *Requalified 2026-10-04: a Tier 2 calibrated phenomenological fit (F(3) = 1 convention, λ₁ = 1/F(3) = 1 by construction; see README and THEOREMS_INDEX TH3b/EMP9).* Cross-N validation 78 channels SU(N) N∈{3,4,5,6,8}, mean 14% off (comparable to AT2021 systematics).
+**🆕 Latest (2026-05-21)** — `Paper_Mass_Gap_First_Principles_PRL/main.pdf` (4pp). ~~First-principles~~ closed-form for m²(J,P,C,ex,N)/σ₀ with K, F, ξ★ Lean-PROVED + two new rational constants η_∞ = 1/2 and c_η = -β/3 = -16/21 discovered from AT2021 cross-N fit. ~~Zero free parameters at N→∞.~~ *Requalified 2026-10-04: a Tier 2 calibrated phenomenological fit (F(3) = 1 convention, TH3b; the rational constants were identified post hoc against AT2021; the formula contains no Bianchi eigenvalue — the "tautological under λ₁ = 1" caveat, EMP9, concerns the surrogate m_arith). "Lean-PROVED" for K means the identity K² = 2πe·ξ★ for a defined K, not a uniqueness or a derivation (see README).* Cross-N validation 78 channels SU(N) N∈{3,4,5,6,8}, mean 14% off (comparable to AT2021 systematics).
 
 ---
 

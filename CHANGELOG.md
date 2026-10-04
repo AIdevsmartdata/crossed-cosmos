@@ -8,22 +8,32 @@ v1–v3 were private drafts and are not archived here.
 
 ---
 
-## [integrity-2026-10-04] — 2026-10-04 (integrity correction; no new result, no theorem changed)
+## [integrity-2026-10-04] — 2026-10-04 (integrity correction; no new result, no theorem statement changed)
 
-Completes the 2026-07-12 README audit, which had requalified the "PDG match"
-but left three over-statements in place. All corrections are made **in place,
-with the original wording kept (struck through) and a dated note**, so that the
-history of the claims stays readable.
+Corrects three over-statements identified in an internal review of 2026-07-19
+and missed by the 2026-07-12 README audit (which had requalified the "PDG
+match"), and adds a dated retraction notice at the top of the May-2026
+documents that claim or prepare a proof of the Yang–Mills mass gap.
+**This is not a full audit of the repository: see "Still open" below.**
+All corrections are made **in place, with the original wording kept (struck
+through) and a dated note**, so that the history of the claims stays readable;
+no file is deleted and no retracted document is rewritten.
 
 ### Requalified
 - **"First-Principles Mass Gap Formula" / "zero free parameters" →
   Tier 2 calibrated phenomenological fit** (README headline, PAPERS.md "Latest",
   `papers/Paper_Mass_Gap_First_Principles_PRL/README.md` banner). Aligned with
-  THEOREMS_INDEX TH3b (F(3) = 1 = SU(3) calibration convention) and EMP9
-  (RMS 0.85 % "tautological under λ₁ = 1"). Caveat stated explicitly:
-  **λ₁ = 1/F(3) = 1 holds by construction**. The Lean theorems
-  `K_squared_eq_2pi_e_xi_star` / `K_unicity_via_2pi_e_xi_star` are described
-  for what they are (an algebraic identity for a defined constant).
+  THEOREMS_INDEX TH3b: the coefficient c = 9/10 is chosen so that F(3) = 1.
+  The formula contains **no Bianchi eigenvalue**. The caveat "λ₁ = 1/F(3) = 1,
+  agreement tautological under λ₁ = 1" (EMP9) applies to the arithmetic
+  surrogate m_arith (RMS 0.85 % on 6 anchors), not to the 14 % agreement on 78
+  channels, which is the agreement of a fit with spin, parity and C factors
+  anchored on lattice data. The rational constants β, η_∞ and c_η were
+  **identified post hoc** against a free fit to AT2021 (β_∞ = 2.6429;
+  a = 0.486(14), b = −0.764(40); `main.tex` l.193-207), and δ = +2 is an
+  empirical input. The Lean theorems `K_squared_eq_2pi_e_xi_star` /
+  `K_unicity_via_2pi_e_xi_star` are described for what they are (an algebraic
+  identity for a defined constant).
 - **"Wiles 1995-style"** analogy for the conditional surrogate withdrawn
   (README, PAPERS.md #15).
 
@@ -39,6 +49,25 @@ history of the claims stays readable.
 - Leftover "m_YM matches PDG 2024 0⁺⁺ glueball at <0.1σ" in PAPERS_INDEX.md,
   already retracted in README on 2026-07-12 but missed there.
 
+### Retraction notice added (THEOREMS_INDEX RETR-ClayProof; content not rewritten)
+No proof of the Yang–Mills mass gap exists. Every version of the May-2026
+chain rests on steps that were never proved and enter Lean only as axioms:
+the continuum step (finite-β Lemma B / Conjecture C*;
+`lean/Crossed/InformationConservation.lean` l.99-101) and, in the 2026-05-26
+KR-FP chain, the structural hypothesis Hyp-CST (`lean/Crossed/Hyp_CST.lean`
+l.22, l.88). A dated notice now opens each of the following 19 files:
+- `papers/MASTER_CLAY_PROOF_2026-05-26.md`
+- `papers/CLAY_THEOREM_FULL_v17`, `v18`, `v19`, `v21`, `v22`, `v23` (`_2026-05-24.md`)
+- `docs/session_2026-05-23/theorem_c_docs/CLAY_THEOREM_FULL_v13`, `v14`
+  (`_2026-05-23.md`), `v15`, `v16` (`_2026-05-24.md`)
+- `docs/session_2026-05-24/CLAY_THEOREM_FULL_v15`, `v16` (`_2026-05-24.md`)
+- `docs/session_2026-05-23/theorem_c_docs/CLAY_SUBMISSION_CHECKLIST_2026-05-23.md`
+- `docs/session_2026-05-23/opus_writeups/OP_CLAY_BH_CLOSURE_2026-05-23.md`,
+  `OP_CLAY_EINSTEIN_THROUGH_HOLE_2026-05-23.md`,
+  `OP_CLAY_FINISH_UNFINISHED_2026-05-23.md`,
+  `OP_CLAY_INFORMATION_CONSERVATION_LAW_2026-05-24.md`
+- `docs/session_2026-05-24/opus_writeups/OP_CLAY_INFORMATION_CONSERVATION_LAW_2026-05-24.md`
+
 ### Recorded as dead (THEOREMS_INDEX RETRACTED / FALSIFIED, README section "Dead mechanisms")
 - **DEAD-λ1**: "λ₁ of the Bianchi orbifold is the spectral mechanism of the
   mass gap" — dead unconditionally (internal verdict 2026-07-19).
@@ -46,11 +75,47 @@ history of the claims stays readable.
   2026-05-19); the Bianchi-cosmology ↔ RG map is listed in the README section.
 
 ### Unchanged
-- All proved results: Theorem 1.1 (TH-1.1), ξ★ = 2/3 (W1), TH3a, F(3) = 1 as
-  an arithmetic identity, Humbert volume formula, HSH, D′, CR′, Lean files.
+- Proved results: Theorem 1.1 (TH-1.1), ξ★ = 2/3 (W1), the form of F(N)
+  (TH3a), Humbert volume formula, HSH, D′, CR′. (F(3) = 1 is not listed as a
+  result: it holds because c = 9/10 is chosen for it — TH3b.)
+- Lean files: unchanged and **not re-audited** in this correction. What they
+  establish: algebraic identities about defined constants (e.g. K² = 2πe·ξ★,
+  `lean/Crossed/Transport.lean` l.172-184) and conditional statements whose
+  analytic content sits in named axioms (117 `axiom` declarations in
+  `lean/Crossed/`). `mass_gap_continuum_D4`
+  (`lean/Crossed/InformationConservation.lean` l.531-537) concludes
+  `∃ m_phys_sq > 0`, which holds trivially. No Lean file proves a mass gap.
 - `papers/Paper_Mass_Gap_First_Principles_PRL/main.tex` and `main.pdf` are
   kept unchanged as a historical record; the banner in the paper README governs
   how they should be read.
+
+### Still open (not corrected by this entry)
+1. Other public files with proof-like or submission-ready framing of the
+   mass-gap chain carry no notice yet, notably
+   `papers/Paper_Clay_Closure_Perturbative_CMP/`,
+   `papers/Paper_Bauerschmidt_Hyp_CST_Proof_CMP/` (its author line must also
+   be reviewed), `papers/ARXIV_BATCH_SUBMISSION_2026-05-26.md`, the
+   `papers/PITCH_BAUERSCHMIDT_*` / `pitch_bauerschmidt_*` files, the notes in
+   `papers/2026-05-24-session/`, and further `papers/OP_*` notes;
+   `git grep -l "P(Clay"` still lists 50 files.
+2. `papers/Paper_Mass_Gap_First_Principles_PRL/main.tex` / `main.pdf` still
+   say "We derive" (l.63), "zero free parameters" (l.99, 181, 226, 386) and
+   "Clay Prize … 30–50 %/10y" (l.515).
+3. β = 16/7 (README formula) against β = 13/5 (PRL paper v5) in the parity
+   factor (β − P): two public versions of the same formula. (The C-splitting
+   term is the same in both, 1/2 − (16/21)/N².)
+4. Other subjective percentages left in place: "Honest TOE coverage
+   25-35 % / 40-50 % / 55-65 %" (README, PAPERS_INDEX), "Hype 53-62"
+   (PAPERS_INDEX).
+5. Lean claims elsewhere ("31 PROVED theorems", "19 PROVED zero-sorry",
+   "LemmaB_BetaInfinity PROVED", "0 sorry, 1893 lines") not re-audited.
+6. Public numerical λ₁ bounds (e.g. `papers/Paper_Lemma_A32_Selberg_JFA/`)
+   not re-checked here.
+7. The cross-reference title "TRANSPORT CLOSURE FINAL (V3 Wiles-style)"
+   in THEOREMS_INDEX is left as is.
+8. Apart from this entry, this CHANGELOG stops at 4.8.x-dev (April 2026):
+   the later releases (v6, v7.x) are not recorded here.
+9. A corrected Zenodo version under the concept DOI has not been issued yet.
 
 ---
 

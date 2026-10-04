@@ -15,16 +15,27 @@
 >
 > - The formula is a **Tier 2 calibrated phenomenological fit**, as already
 >   stated in the repository's [THEOREMS_INDEX](../../THEOREMS_INDEX.md): the
->   coefficient F_∞ = 9/10 is the SU(3) anchor convention F(3) = 1 (TH3b,
->   "Empirical CONVENTION, NOT structural derivation"), and the spectral input
->   is **λ₁ = 1/F(3) = 1 by construction**, which makes the agreement with
->   lattice data tautological with respect to λ₁ (EMP9). δ = +2 is an
->   empirical input and η_∞, c_η were obtained from a fit to AT2021.
+>   coefficient F_∞ = 9/10 is chosen so that F(3) = 1 (TH3b, "Empirical
+>   CONVENTION, NOT structural derivation").
+> - The formula contains **no Bianchi eigenvalue**. It extends the surrogate
+>   prefactor K²F(N)², in which λ₁ is implicitly fixed to 1 = 1/F(3) (the
+>   surrogate m_arith agrees with lattice data tautologically under λ₁ = 1,
+>   EMP9), by spin, parity and C-splitting factors anchored on lattice data.
+>   The 14 % agreement on 78 channels is not tautological, but it is that of
+>   a fit, not of a prediction.
+> - The "derived constants" β = 13/5, c_η = 16/21 and η_∞ = 1/2 were
+>   **identified post hoc** against a free fit to AT2021 (β_∞ = 2.6429;
+>   a = 0.486(14), b = −0.764(40); `main.tex` l.193-207); δ = +2 is an
+>   empirical input. The repository README gives β = 16/7 for the same
+>   formula: this inconsistency is still open.
 > - The reading "λ₁ of the Bianchi orbifold is the spectral mechanism that
 >   generates the mass" is **dead, unconditionally** (THEOREMS_INDEX DEAD-λ1).
 > - "K-uniqueness" in Lean: the theorems verify the identity K² = 2πe·ξ★ for
 >   the *defined* constant K = √(4πe/3) (`lean/Crossed/Transport.lean`,
->   lines 54 and 172-184); uniqueness of K is not formalised.
+>   lines 54 and 172-184); uniqueness of K is not formalised. The Lean table
+>   below ("0 sorry", `LemmaB_BetaInfinity` "PROVED" with 7 named axioms) was
+>   not re-audited: there, the analytic content sits in named axioms, so
+>   "0 sorry" does not mean "proved".
 > - Every probability in the tables below (P(Clay Prize, 10 y) = 30-50 %,
 >   P(Track A PRL accepted) = 95 %, P(Lemma B formal) = 65-80 %, Conjecture C*
 >   40-55 %, G1∨G2∨G3 75 %) is **withdrawn**: subjective, with no verifiable

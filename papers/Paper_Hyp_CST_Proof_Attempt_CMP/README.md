@@ -92,6 +92,9 @@ Under Hyp-CST formalised:
 Combined with (H2)+(H3) of KR-FP-3 being standard (Aubin-Talenti +
 Kuratowski-Ryll-Nardzewski, see `AI_ROLEPLAY_EXPERT_RESPONSE_HypCST_2026-05-26.md`
 §4, a file removed on 2026-10-04 and kept in the git history only),
+**[2026-10-04: unsupported — the only source given for "standard" is that
+AI-generated role-play text; no verified proof or published reference
+supports it.]**
 the perturbative-regime mass gap on T^4 is **conditional on (H1)
 generic-vanishing alone**.
 

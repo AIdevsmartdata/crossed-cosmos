@@ -175,7 +175,7 @@ it as a comment after the shebang line.
     `CLAY_THEOREM_FULL_v18_2026-05-24.md` l.131;
     `DS_BOT_LANE_OUTPUTS_2026-05-23/A1_holder_stability_beta.md` l.33;
     `DS_BOT_LANE_OUTPUTS_2026-05-23/G6_continuum_BH_2026-05-23.md` l.1, 25;
-    `NOTE_FP_UNIFORM_BOUND_2026-05-24.tex` l.98;
+    `NOTE_FP_UNIFORM_BOUND_2026-05-24.tex` l.138;
     `OP_FP_UNIFORM_BOUND_ATTACK_2026-05-24.md` l.126, 475, 589;
     `OP_ML_META_PATTERN_2026-05-24.md` l.1056;
     `OP_THEORY_B3_X07_CHERN_2026-05-24.md` l.771;
@@ -227,6 +227,21 @@ it as a comment after the shebang line.
   `papers/Paper_Hyp_CST_Proof_Attempt_CMP/` (`main.tex`: abstract and
   section "Honest scope and outlook"; README; `main.pdf` recompiled): the
   draft has one author.
+
+- **Notice also added to two files found by the final check** (same dated
+  notice, added on top): `papers/NOTE_FP_UNIFORM_BOUND_2026-05-24.tex` (as a
+  `%` comment; there is no compiled PDF of it in the repository), whose
+  abstract (l.62) and l.159 estimate a "5--15 % probability of closure in 18
+  months" for the full mass-gap chain, and
+  `papers/DS_BOT_LANE_OUTPUTS_2026-05-23/G3_BBD_adaptation_YM_2026-05-23.md`,
+  which gives a "confiance 3-10 %" (l.285, l.324) to the step said to
+  condition the Millennium Prize.
+- **Unsupported claim flagged in `papers/Paper_Hyp_CST_Proof_Attempt_CMP/`.**
+  The statement that (H2)+(H3) of KR-FP-3 are "standard" cited only the
+  removed AI-generated role-play text (`RoleplayNote2026` §4). An inline mark
+  "[2026-10-04: unsupported …]" now follows it in `main.tex` and in the
+  README; `main.pdf` recompiled (pdflatex, 7 pages). The rest of the text is
+  unchanged.
 
 ### Requalified
 - **"First-Principles Mass Gap Formula" / "zero free parameters" →
@@ -334,7 +349,9 @@ l.22, l.88). A dated notice now opens each of the following 19 files:
 5. Other subjective percentages left in place: "Honest TOE coverage
    25-35 % / 40-50 % / 55-65 %" (README, PAPERS_INDEX), "Hype 53-62"
    (PAPERS_INDEX), and percentages other than "P(Clay …)" inside the files
-   that now carry a notice.
+   that now carry a notice; and `papers/morn39_compiled/MumfordTate/source.md` (l.8),
+   which states a subjective percentage for another Clay problem (the Hodge
+   conjecture) and carries no notice.
 6. Lean claims elsewhere ("31 PROVED theorems", "19 PROVED zero-sorry",
    "LemmaB_BetaInfinity PROVED", "0 sorry, 1893 lines") not re-audited.
 7. Public numerical λ₁ bounds (e.g. `papers/Paper_Lemma_A32_Selberg_JFA/`)

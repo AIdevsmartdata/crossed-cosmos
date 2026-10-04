@@ -73,7 +73,7 @@ import Crossed.LemmaB_BetaInfinity
   | `inv_beta_diff_le_inv_10`                | **PROVED**            |
   | `TV_bound_rhs` (def)                     | **PROVED** (def)      |
   | `TV_bound_rhs_nonneg`                    | **PROVED**            |
-  | `variation_beta_bound` (axiom)           | `axiom` (Bauerschmidt collab — **DEPRECATED**, see §3bis) |
+  | `variation_beta_bound` (axiom)           | `axiom` (**DEPRECATED**, see §3bis) |
   | `variation_beta_bound_pinsker`           | **PROVED** (§3bis, via DS Bot Thm 3) |
   | `variation_beta_bound_from_pinsker`      | **PROVED** (§3bis, α=1 ⟹ α=0.82) |
   | `variation_beta_limit_zero`              | **PROVED** (no sorry, via Pinsker α=1) |
@@ -93,8 +93,8 @@ import Crossed.LemmaB_BetaInfinity
 
   ## References
 
-  - Bauerschmidt, R. & Dagallier, B. (2024+, in preparation). *Lattice
-    Gibbs measures with random-walk representations* (the direct-AF
+  - [Reference withdrawn 2026-10-04: no such work by the researchers
+    named here earlier exists or is documented] (the direct-AF
     route, providing the β-variation bound at finite spacing).
   - Bauerschmidt, R. & Hairer, M. (2024 / Crossed Cosmos session
     `project_clay_haar_2_over_3D_universal_2026-05-23.md`) :
@@ -316,7 +316,7 @@ with downstream lemmas (e.g. `variation_beta_bound_diagonal`,
 `variation_beta_limit_zero`) ; new code should use the PROVED
 `variation_beta_bound_pinsker` directly.
 
-Reference : Bauerschmidt-Dagallier (in preparation, 2024+) ; the
+Reference : [withdrawn 2026-10-04: no such work exists] ; the
 cluster expansion at large β provides the explicit Hölder modulus,
 matching the empirical β-scan exponent `α = 0.82`. The DS Bot direct
 proof (`A1_holder_stability_beta.md`, 2026-05-23) bypasses the cluster
@@ -986,7 +986,7 @@ theorem empirical_beta_values_valid :
 | `TV_bound_rhs` (def)                          | **PROVED** (def)      |
 | `TV_bound_rhs_nonneg`                         | **PROVED**            |
 | `TV_bound_rhs_self_zero`                      | **PROVED**            |
-| `variation_beta_bound`                        | `axiom` (Bauerschmidt-Dagallier — **DEPRECATED**, see §3bis) |
+| `variation_beta_bound`                        | `axiom` (**DEPRECATED**, see §3bis) |
 | `variation_beta_bound_diagonal`               | **PROVED (cond)**     |
 | `variation_beta_bound_diagonal_eq_zero`       | **PROVED (cond)**     |
 | `N_eff` (def)                                 | **PROVED** (def)      |
@@ -1045,7 +1045,7 @@ This file establishes the **first leg of the direct AF convergence
 proof** of the Wilson Gibbs family at finite spacing. After the
 §3bis upgrade, the central inequality is now a **theorem PROVED**
 under three atomic, literature-named carrier axioms ; the opaque
-Bauerschmidt-Dagallier preprint dependency (`variation_beta_bound`)
+preprint dependency (`variation_beta_bound`, reference withdrawn)
 is no longer load-bearing.
 
 Combined with `LemmaB_BetaInfinity.lean` (the boundary value at

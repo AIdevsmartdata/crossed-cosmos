@@ -8,8 +8,9 @@
 >
 > - Every version of the chain rests on steps that were **never proved** and
 >   enter only as stated conditions or Lean `axiom`s: depending on the version,
->   the continuum step (finite-β Lemma B / Conjecture C*, an `axiom`
->   placeholder in `lean/Crossed/InformationConservation.lean` l.99-101), the
+>   the continuum step (finite-β Lemma B / Conjecture C*, declared as
+>   `axiom lemma_B_beta_finite`, `lean/Crossed/InformationConservation.lean`
+>   l.445), the
 >   Transport Conjecture (itself a stack of two open problems, THEOREMS_INDEX
 >   OPEN-Transport), and, in the 2026-05-26 KR-FP chain, the structural
 >   hypothesis **Hyp-CST** (`lean/Crossed/Hyp_CST.lean`: "SKETCH (axiom

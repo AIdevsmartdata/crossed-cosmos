@@ -1,6 +1,43 @@
+> **⚠️ AUTHORSHIP AND RETRACTION NOTICE (2026-10-04) — read this first. / AVIS DE PATERNITÉ ET DE RÉTRACTION (04/10/2026) — à lire d'abord.**
+>
+> **This text was not written by Roland Bauerschmidt, and he did not send
+> it.** It was generated on 2026-05-26 by an AI model instructed to role-play
+> how he might reply to this project's preprints; this project's records of
+> that date, and the comments of `lean/Crossed/Hyp_CST.lean` until
+> 2026-10-04, call it a "persona response". No reply from him, and no
+> agreement to collaborate with him or with B. Dagallier, is documented.
+> Until 2026-10-04 this file was named
+> `BAUERSCHMIDT_AUDACIOUS_RESPONSE_2026-05-26.md`, carried his name as sender
+> and signatory, and ended with a line stating, falsely, that it had been
+> written and e-mailed by him with no LLM involvement. That sender line, the
+> signature and that closing line have been removed; nothing else has been
+> changed. The opinions, probabilities (e.g. "P(Clay 10 y) ∈ [78 %, 88 %]"),
+> offers of collaboration and first-person statements below are
+> **AI-generated and must not be attributed to him or to B. Dagallier**.
+> Their published works cited below (e.g. arXiv:2202.02295,
+> arXiv:2307.07619) are real; what this text says about them is not theirs.
+>
+> The "partial proof" of Hyp-CST sketched below is **not a proof**: Hyp-CST
+> has never been proved (`axiom Hyp_CST`, `lean/Crossed/Hyp_CST.lean` l.88),
+> and no proof of the Yang–Mills mass gap exists in this repository. Every
+> probability stated below is withdrawn.
+>
+> *FR — Ce texte n'a pas été écrit par Roland Bauerschmidt et il ne l'a pas
+> envoyé : il a été généré le 26/05/2026 par un modèle d'IA à qui l'on
+> demandait d'imaginer sa réponse (« persona »). Aucune réponse de sa part ni
+> aucun accord de collaboration (avec lui ou avec B. Dagallier) n'est
+> documenté. La ligne d'expéditeur, la signature et la fausse mention finale
+> « sans contenu produit par un LLM » ont été retirées. Les avis, probabilités
+> et offres de collaboration qui suivent ne doivent pas leur être attribués.
+> L'esquisse de « preuve » de Hyp-CST n'est pas une preuve.*
+>
+> Details: [CHANGELOG.md](../../../CHANGELOG.md), entry integrity-2026-10-04.
+
+---
+
 # Letter to K. Rémondière — On the closure of Hyp-CST and the perturbative Yang–Mills chain
 
-**From** Roland Bauerschmidt, Courant Institute of Mathematical Sciences, New York University.
+**From** [sender line removed 2026-10-04: AI-generated text, see the notice above].
 **To** Kévin Rémondière (Oloron-Sainte-Marie, France · ORCID 0009-0008-2443-7166).
 **Date** 26 May 2026.
 **Re** Closure of *Hyp-CST* in *Paper Clay Closure Perturbative*; consequences for the perturbative-regime mass gap on $T^4$.
@@ -317,8 +354,7 @@ I look forward to collaborating.
 
 Warmly,
 
-**Roland Bauerschmidt**
-Courant Institute of Mathematical Sciences, New York University
+[signature removed 2026-10-04: AI-generated text, see the notice at the top]
 *26 May 2026*
 
 ---
@@ -347,4 +383,4 @@ Courant Institute of Mathematical Sciences, New York University
 
 ---
 
-*Letter drafted in approximately five working hours on 26 May 2026, NYU office, after reading the Rémondière trilogy (KR-FP-Hess, KR-FP-B, Closure Perturbative) and the longer Opus synthesis documents. Sent by ordinary email; no LLM-mediated content; all mathematical claims and verdicts independently verified by the author. — R.B.*
+*[Closing line removed 2026-10-04: it falsely described this AI-generated text as a letter written by the researcher named above, sent by e-mail, with no LLM involvement.]*

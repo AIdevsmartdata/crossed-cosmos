@@ -9,7 +9,7 @@ Opus CLOSURE 2026-05-26 analysis (Paper_Clay_Closure_Perturbative_CMP):
 - Theorem 1.1 (cubic Polchinski cancellation at A=0) : PROVED uncond
 - Theorem 1.2 (extension to t>0) : PROVED-CONDITIONAL on Hyp_CST
 
-Plus the Bauerschmidt persona response (Paper_Bauerschmidt_Hyp_CST_Proof_CMP)
+Plus the AI role-play "expert" response (Paper_Hyp_CST_Proof_Attempt_CMP)
 gives a partial proof via Polchinski Wick-pairing (cumulants BBD24 §2.6
 + Schur-Weyl O(N²) vertex bound). The full uncond proof requires the
 extension of BBD φ⁴_{2,3} to SU(N) Wilson, ETA 6 months expert team.
@@ -59,7 +59,7 @@ for the BBD framework to extend to SU(N).
 def polchinski_obstruction : ℝ → ℝ → ℝ := fun _t _xi => 0
 
 /-- The Schur-Weyl vertex bound : Wilson 3-vertex norm ≤ C(N) with
-    C(N) = O(N²) after the Bauerschmidt persona sharpening
+    C(N) = O(N²) after the AI role-play sharpening
     (improved from naïve C(N) = O(N^{5/2}) in Paper_Clay_Closure
     Lemma 3.3). -/
 axiom schur_weyl_vertex_bound (N : ℕ) (hN : N ≥ 2) :
@@ -80,11 +80,11 @@ axiom schur_weyl_vertex_bound (N : ℕ) (hN : N ≥ 2) :
     This is the SU(N) extension of the BBD24 φ⁴ Polchinski cancellation
     (arXiv:2307.07619 §2.6 hypercontractive cumulant + arXiv:2202.02295
     LSI φ⁴_{2,3}). The proof bottleneck is *writing* (6-9 pages, ETA
-    3-6 months expert team Bauerschmidt-Dagallier-Klausner collaboration),
+    3-6 months expert team; no such collaboration exists, note 2026-10-04),
     not *thinking*.
 
-    Status : PROVED-CONDITIONAL via Polchinski Wick-pairing (Bauerschmidt
-             persona response 2026-05-26). Awaiting expert formalisation. -/
+    Status : PROVED-CONDITIONAL via Polchinski Wick-pairing (AI role-play
+             response 2026-05-26, not by any named expert). Awaiting expert formalisation. -/
 axiom Hyp_CST (N : ℕ) (hN : N ≥ 2) (β : ℝ) (hβ : β > 0) :
   -- For all (t, ξ) in perturbative regime, the obstruction is geometrically bounded
   ∀ t ξ : ℝ, t ≥ 0 → |ξ| ≤ 1 → |polchinski_obstruction t ξ| ≤ (1 : ℝ) / β
@@ -116,15 +116,15 @@ end Crossed.Hyp_CST
 | KR-FP-B (Bakry-Émery → LSI)           | Sketch          | KR_FP_B_LMP     |
 | KR-FP-Hess (vacuum Hess > 0)          | Stub            | FP_Hessian_CMP  |
 | Hyp_CST (this file)                    | AXIOM           | Clay_Closure +  |
-|                                        |                 | Bauerschmidt    |
+|                                        |                 | Hyp_CST_Attempt |
 | LemmaB_BetaInfinity (β=∞ Gaussian)    | 0 sorry 571 ln  | (LeanB module)  |
 | Polchinski preservation convexity      | Conditional     | (BBD24 ref)     |
 
 Reading guide:
 - For the closure perturbative regime, see Paper_Clay_Closure_Perturbative_CMP
 - For the breakthrough vacuum Hessian, see Paper_FP_Hessian_Bound_Final_CMP
-- For the Bauerschmidt persona partial proof of Hyp_CST, see
-  Paper_Bauerschmidt_Hyp_CST_Proof_CMP
+- For the AI role-play partial proof attempt of Hyp_CST, see
+  Paper_Hyp_CST_Proof_Attempt_CMP
 
 Total Lean stack (post 2026-05-26): ~1900 lines, 0 sorrys, 10 named axioms
 (9 previously + Hyp_CST). All axioms are either published theorems

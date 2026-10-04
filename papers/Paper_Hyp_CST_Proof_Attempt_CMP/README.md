@@ -1,6 +1,38 @@
-# Paper Bauerschmidt-Dagallier-Remondiere: On Hyp-CST and the perturbative-regime closure of the SU(N) Yang-Mills Polchinski chain
+> **⚠️ RETRACTION AND AUTHORSHIP NOTICE (2026-10-04) — read this first. / AVIS DE RÉTRACTION ET DE PATERNITÉ (04/10/2026) — à lire d'abord.**
+>
+> **Authorship.** Until 2026-10-04 this paper (folder then named
+> `Paper_Bauerschmidt_Hyp_CST_Proof_CMP`) listed R. Bauerschmidt (NYU) and
+> B. Dagallier as co-authors, wrote in their name ("our earlier work"), and
+> carried a funding statement in their name. **No agreement with them, and no
+> contribution from them, is documented: their names have been removed as
+> authors.** The draft was produced with AI assistance, in part from an
+> AI-generated text that role-played an expert reply
+> (`papers/2026-05-24-session/synthesis/AI_ROLEPLAY_EXPERT_RESPONSE_HypCST_2026-05-26.md`);
+> it was not written by them. Their published works remain cited as
+> references. `main.tex` and `main.pdf` were corrected accordingly (author
+> block, first-person passages, acknowledgments, one reference) and
+> recompiled; the rest of the text is unchanged.
+>
+> **Retraction.** This draft is not a proof. Hyp-CST has never been proved
+> (`lean/Crossed/Hyp_CST.lean`: "SKETCH (axiom declared, not proven
+> Lean-side)", l.22; `axiom Hyp_CST`, l.88), and no proof of the Yang–Mills
+> mass gap exists in this repository. The probabilities stated below
+> ("PARTIAL-PROVED 75-85%", "P(Clay 10 y, honest) ∈ [78%, 88%]", …) are
+> **withdrawn**: subjective, with no verifiable basis.
+>
+> *FR — Ce brouillon citait comme co-auteurs deux chercheurs (R. Bauerschmidt
+> et B. Dagallier) sans aucun accord documenté : leurs noms ont été retirés.
+> Ce n'est pas une preuve : Hyp-CST n'a jamais été prouvée et n'existe en Lean
+> que comme axiome. Les probabilités annoncées sont retirées.*
+>
+> Details and the list of points still open: [CHANGELOG.md](../../CHANGELOG.md),
+> entry integrity-2026-10-04.
 
-**Authors**: R. Bauerschmidt (NYU Courant) + B. Dagallier (Yale) + K. Remondiere (Independent, Oloron-Sainte-Marie, France)
+---
+
+# On Hyp-CST and the perturbative-regime closure of the SU(N) Yang-Mills Polchinski chain (proof attempt, retracted)
+
+**Author**: K. Remondiere (Independent, Oloron-Sainte-Marie, France) — *author line corrected 2026-10-04, see the notice above*
 **Date**: 26 May 2026
 **Target journal**: Communications in Mathematical Physics
 **Status**: PARTIAL-PROVED 75-85% (cumulant sketch + Casimir reading)
@@ -57,7 +89,7 @@ Under Hyp-CST formalised:
   of `PAPER_KR_FP3_AnnalsMath.tex` (independent of Hyp-CST).
 
 Combined with (H2)+(H3) of KR-FP-3 being standard (Aubin-Talenti +
-Kuratowski-Ryll-Nardzewski, see `BAUERSCHMIDT_AUDACIOUS_RESPONSE_2026-05-26.md`
+Kuratowski-Ryll-Nardzewski, see `AI_ROLEPLAY_EXPERT_RESPONSE_HypCST_2026-05-26.md`
 §4), the perturbative-regime mass gap on T^4 is **conditional on (H1)
 generic-vanishing alone**.
 
@@ -104,9 +136,10 @@ pdflatex main.tex   # for refs
 
 ## Companion documents
 
-- `/root/cc-private/papers/2026-05-24-session/synthesis/BAUERSCHMIDT_AUDACIOUS_RESPONSE_2026-05-26.md`
-  --- the Bauerschmidt letter to Remondiere (8000+ words), which is the
-  original source of the cumulant argument formalised in this paper.
+- `papers/2026-05-24-session/synthesis/AI_ROLEPLAY_EXPERT_RESPONSE_HypCST_2026-05-26.md`
+  --- an AI-generated text that role-plays an expert reply (*not* a letter
+  from any researcher; corrected 2026-10-04), which is the original source
+  of the cumulant argument written up in this paper.
 - `/root/cc-private/papers/Paper_Clay_Closure_Perturbative_CMP/main.tex`
   --- the conditional perturbative-regime closure paper that
   introduced Hyp-CST.

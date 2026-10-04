@@ -51,7 +51,7 @@ import Crossed.LemmaB_BetaInfinity
   7. β-finite ↔ β = ∞ consistency (Lemma B at β = ∞)
 
   Conditional on these seven manifestations and on Lemma B β-finite
-  (the open Bauerschmidt-Dagallier collaboration), we derive the
+  (open; no collaboration on it exists, note 2026-10-04), we derive the
   headline *continuum mass gap* theorem.
 
   ## Status (sorry audit)
@@ -81,8 +81,8 @@ import Crossed.LemmaB_BetaInfinity
   - Rothaus, O. S. (1981). *Diffusion on compact Riemannian manifolds
     and logarithmic Sobolev inequalities*. J. Funct. Anal. 42, 102-109
     (LSI ⇒ spectral gap).
-  - Bauerschmidt, R. & Dagallier, B. (2024+, in preparation). *Lattice
-    Gibbs measures with random-walk representations* (Lemma B β-finite,
+  - [Reference withdrawn 2026-10-04: no such work by the researchers
+    named here earlier exists or is documented] (Lemma B β-finite,
     the **open** analytic step).
   - Crossed Cosmos `project_clay_haar_2_over_3D_universal_2026-05-23.md`
     (today's session, three universal Haar laws cross-D + `f(π_1)`
@@ -420,13 +420,13 @@ theorem I_phys_conserved_pair
       h_gauge₁ h_transl₁ h_OS₁ h_LSI₁
   rw [h0, h1]
 
-/-! ## §4. The Lemma B β-finite axiom (OPEN — Bauerschmidt-Dagallier)
+/-! ## §4. The Lemma B β-finite axiom (OPEN)
 
 The headline mass gap theorem requires *one more analytic ingredient*
 beyond β = ∞ : the LSI inheritance from the lattice (β-finite) to the
 continuum (β = ∞) under the Kadanoff block-spinning RG. This is the
-**Lemma B β-finite** of the Bauerschmidt-Dagallier collaboration
-(in preparation, expected 6-12 months).
+**Lemma B β-finite** (open; the collaboration announced here never
+existed, note 2026-10-04).
 
 We expose it here as a single named axiom. The headline theorem is
 *conditional* on this axiom. -/
@@ -440,7 +440,7 @@ In the strict `β → ∞` limit, this bound saturates to `c_∞(D)` (which
 is the β = ∞ Lemma B, *already PROVED conditionally* in
 `Crossed.LemmaB_BetaInfinity`).
 
-**Status** : OPEN. Joint work Bauerschmidt-Dagallier, in preparation.
+**Status** : OPEN. (No joint work in preparation; note 2026-10-04.)
 Expected delivery 6-12 months from session 2026-05-23. -/
 axiom lemma_B_beta_finite
     (D N : ℕ) (β : ℝ) (_hβ : β ≥ 1)
@@ -523,7 +523,7 @@ continuum mass gap `m_phys² ≥ 8` (in lattice-spacing units).
 + Pillar 2 (BCH first-order, Hall axiom) + κ = 1/6 (PROVED) +
 Theorem C lattice (analytic continuation axioms) + Lemma B β = ∞
 (named Bakry-Émery + Bałaban axioms) + **Lemma B β-finite (OPEN,
-Bauerschmidt-Dagallier 6-12 months)** + Rothaus axiom (LSI ⇒ spectral
+not proved)** + Rothaus axiom (LSI ⇒ spectral
 gap) + Osterwalder-Schrader reconstruction axiom.
 
 This is the **first Lean formalisation of the continuum Yang-Mills
@@ -661,7 +661,7 @@ theorem cross_group_information_consistency :
 | κ = 1/6                                 | `KappaOneSixth.lean`              | **100% PROVED**, 0 axiom      |
 | Theorem C lattice                       | `TheoremCLattice.lean`            | PROVED (2 axioms continuation) |
 | Lemma B (β = ∞)                         | `LemmaB_BetaInfinity.lean`        | PROVED (7 axioms BE + Bałaban) |
-| Lemma B (β-finite)                      | this file §4                      | **OPEN** (Bauerschmidt-Dagallier 6-12 mo) |
+| Lemma B (β-finite)                      | this file §4                      | **OPEN**                       |
 | Information invariant `I_phys`          | this file §1                      | PROVED                         |
 | Seven manifestations                    | this file §2                      | PROVED (cond on imports)       |
 | Conservation theorem `I_phys` ↔ RG      | this file §3                      | PROVED (cond on imports)       |
@@ -688,8 +688,8 @@ formalisation programme : it shows that a single rational invariant
 gauge theory, conservatively across all seven independent
 manifestations, and that this conservation pins down a positive
 continuum mass gap *conditional* on the named analytic axioms
-(notably the open Lemma B β-finite collaboration with Bauerschmidt
-and Dagallier).
+(notably the open Lemma B β-finite, for which no collaboration
+exists; note 2026-10-04).
 -/
 
 /-- **Master summary identity** : `I_phys(4) = c_∞(4) = 1/4`, the

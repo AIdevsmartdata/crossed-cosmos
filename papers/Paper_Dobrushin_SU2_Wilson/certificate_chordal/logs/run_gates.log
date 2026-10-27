@@ -1,0 +1,43 @@
+G1 cap : cap >= L = 85 => boites identiques ; cap < L => refus
+  run G1_cap85                           RC=0 (attendu 0) OK
+  run G1_cap100                          RC=0 (attendu 0) OK
+  run G1_cap200                          RC=0 (attendu 0) OK
+  run G1_cap300                          RC=0 (attendu 0) OK
+  boites identiques pour cap 85/100/200/300 : True
+  run G1_refus_garde1_cap10              RC=1 (attendu 1) OK  | AssertionError: GARDE 1 : ctx.cap = 10 < L = 85
+  run G1_refus_garde1_cap84              RC=1 (attendu 1) OK  | AssertionError: GARDE 1 : ctx.cap = 84 < L = 85
+  run G1_refus_garde2_cap10              RC=1 (attendu 1) OK  | AssertionError: GARDE 2 : serie 1/Z de longueur 10 != L = 85 (ctx.cap = 10)
+  run G1_refus_garde2_cap84              RC=1 (attendu 1) OK  | AssertionError: GARDE 2 : serie 1/Z de longueur 84 != L = 85 (ctx.cap = 84)
+  garde 2 declenchee (cap10, garde 1 desactivee) : True
+  garde 2 declenchee (cap84, garde 1 desactivee) : True
+G3 N (ordre D) : 40 / 60 / 80 / 100 ; la borne doit bouger (restes) puis se stabiliser
+  run G3_D40                             RC=0 (attendu 0) OK
+  run G3_D60                             RC=0 (attendu 0) OK
+  run G3_D80                             RC=0 (attendu 0) OK
+  run G3_D100                            RC=0 (attendu 0) OK
+  D= 40 toutes_ok=True  derniere boite J0=4.860445757e-03 J1=6.084531873e-03 LB=1.688318812e-02 reste At=5.77e-02 reste N=8.82e-20  pire=('85/64', '4/3', 0.010798656250036957)
+  D= 60 toutes_ok=True  derniere boite J0=3.975758330e-03 J1=5.462990692e-03 LB=1.688318812e-02 reste At=3.71e-05 reste N=2.53e-29  pire=('85/64', '4/3', 0.011420197430618327)
+  D= 80 toutes_ok=True  derniere boite J0=3.975228508e-03 J1=5.462617767e-03 LB=1.688318812e-02 reste At=1.93e-08 reste N=7.26e-39  pire=('85/64', '4/3', 0.011420570355619653)
+  D=100 toutes_ok=True  derniere boite J0=3.975228233e-03 J1=5.462617575e-03 LB=1.688318812e-02 reste At=8.95e-12 reste N=2.08e-48  pire=('85/64', '4/3', 0.011420570547490424)
+  |J0(40)-J0(60)| = 8.847e-04 ; |J0(80)-J0(100)| = 2.743e-10 (doit decroitre, et etre non nul a 40/60)
+G4 quadrature NT : 256 / 512 / 1024 / 2048 ; majorants decroissants (somme de Riemann superieure)
+  run G4_NT256                           RC=0 (attendu 0) OK
+  run G4_NT512                           RC=0 (attendu 0) OK
+  run G4_NT1024                          RC=0 (attendu 0) OK
+  run G4_NT2048                          RC=0 (attendu 0) OK
+  boite  0 [0,1/48] J0: 3.979986e-03 > 3.963776e-03 > 3.955676e-03 > 3.951626e-03 ; J1: 4.033525e-03 > 4.000999e-03 > 3.984833e-03 > 3.976773e-03  decroissant=True
+  boite 32 [2/3,11/16] J0: 4.247124e-03 > 4.214520e-03 > 4.198305e-03 > 4.190219e-03 ; J1: 4.727135e-03 > 4.672161e-03 > 4.644930e-03 > 4.631378e-03  decroissant=True
+  boite 63 [21/16,4/3] J0: 4.266212e-03 > 4.215111e-03 > 4.189839e-03 > 4.177271e-03 ; J1: 5.877711e-03 > 5.781646e-03 > 5.734301e-03 > 5.710799e-03  decroissant=True
+G5 prec : 128 contre 192 (meme D/NT/NK)
+  run G5_p192                            RC=0 (attendu 0) OK
+  max |J1(p128) - J1(p192)| = 6.717e-14 ; toutes_ok p192 = True
+G7 NK : 64 / 128 / 512
+  run G7_NK64                            RC=0 (attendu 0) OK
+  NK=64 toutes_ok=True pire=('21/16', '4/3', 0.01106270102551994)
+  run G7_NK128                           RC=0 (attendu 0) OK
+  NK=128 toutes_ok=True pire=('127/96', '4/3', 0.011303977717731034)
+  run G7_NK512                           RC=0 (attendu 0) OK
+  NK=512 toutes_ok=True pire=('511/384', '4/3', 0.011477968267385362)
+
+ECHECS : aucun
+RC=0

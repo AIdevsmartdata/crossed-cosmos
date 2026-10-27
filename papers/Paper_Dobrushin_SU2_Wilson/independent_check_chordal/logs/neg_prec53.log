@@ -1,0 +1,32 @@
+multiprocessing.pool.RemoteTraceback: 
+"""
+Traceback (most recent call last):
+  File "/usr/lib/python3.14/multiprocessing/pool.py", line 125, in worker
+    result = (True, func(*args, **kwds))
+                    ~~~~^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.14/multiprocessing/pool.py", line 48, in mapstar
+    return list(map(*args))
+  File "./cert_vch.py", line 124, in box
+    check_prec(P)
+    ~~~~~~~~~~^^^
+  File "./cert_vch.py", line 33, in check_prec
+    assert iv.prec == P, f"GARDE PREC : iv.prec = {iv.prec} != {P}"
+           ^^^^^^^^^^^^
+AssertionError: GARDE PREC : iv.prec = 53 != 128
+"""
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "./cert_vch.py", line 226, in <module>
+    main()
+    ~~~~^^
+  File "./cert_vch.py", line 209, in main
+    res = pool.map(box, [(k0, k1, a.NT) for (k0, k1) in bx], chunksize=1)
+  File "/usr/lib/python3.14/multiprocessing/pool.py", line 367, in map
+    return self._map_async(func, iterable, mapstar, chunksize).get()
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "/usr/lib/python3.14/multiprocessing/pool.py", line 774, in get
+    raise self._value
+AssertionError: GARDE PREC : iv.prec = 53 != 128
+RC=1

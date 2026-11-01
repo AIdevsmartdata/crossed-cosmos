@@ -1,0 +1,1910 @@
+% Dobrushin uniqueness for the four-dimensional SU(2) Wilson lattice gauge measure for beta < 2/9.
+% Version 1.5, 1 November 2026 (the previous version is v1.4 of 28 October 2026, doi:10.5281/zenodo.23712954).
+% Compile: pdflatex (three passes). Cyrillic: T2A, family lmr substituted by cmr
+% (cm-super Type 1 fonts), for the verbatim quotations of Dobrushin (1970).
+\documentclass[11pt,a4paper]{article}
+\usepackage[T2A,T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[russian,english]{babel}
+% Unicode characters occurring in the verbatim Lean statements (Sections 4.4 and 5.2)
+\DeclareUnicodeCharacter{211A}{\ensuremath{\mathbb{Q}}}
+\DeclareUnicodeCharacter{211D}{\ensuremath{\mathbb{R}}}
+\DeclareUnicodeCharacter{2264}{\ensuremath{\le}}
+\DeclareUnicodeCharacter{2208}{\ensuremath{\in}}
+\DeclareUnicodeCharacter{03B2}{\ensuremath{\beta}}
+\DeclareUnicodeCharacter{03BA}{\ensuremath{\kappa}}
+\DeclareUnicodeCharacter{2200}{\ensuremath{\forall}}
+\DeclareUnicodeCharacter{2192}{\ensuremath{\to}}
+\DeclareUnicodeCharacter{2082}{\ensuremath{_2}}
+\usepackage{lmodern}
+\DeclareFontFamilySubstitution{T2A}{lmr}{cmr}% Latin Modern has no T2A shapes; use cm-super for Cyrillic
+\usepackage{amsmath,amssymb,amsthm,mathrsfs}
+\usepackage{booktabs,tabularx}
+\usepackage{geometry}
+\geometry{margin=2.6cm}
+\usepackage[colorlinks=true,linkcolor=blue,citecolor=blue,urlcolor=blue]{hyperref}
+\usepackage{xurl}% \path{} for hashes and file paths, breakable anywhere
+
+\hypersetup{pdftitle={Dobrushin uniqueness for the four-dimensional SU(2) Wilson lattice gauge measure for beta < 2/9, with interval/Lean certificates},pdfauthor={K\'evin R\'emondi\`ere}}
+\newtheorem{theorem}{Theorem}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+% Section 7 (area law) and Appendix B: environments numbered inside their section (7.1, 7.2, ..., B.1), so that the numbers
+% of all earlier items (Theorem 6, Corollary 14, Corollary 20, Proposition 22, ...) are unchanged.
+\theoremstyle{plain}
+\newtheorem{althm}{Theorem}[section]
+\newtheorem{allem}[althm]{Lemma}
+\newtheorem{alprop}[althm]{Proposition}
+\newtheorem{alcor}[althm]{Corollary}
+\theoremstyle{remark}
+\newtheorem{alrem}[althm]{Remark}
+\DeclareMathOperator{\arcosh}{arcosh}
+
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\E}{\mathbb{E}}
+\newcommand{\Cov}{\operatorname{Cov}}
+\newcommand{\Var}{\operatorname{Var}}
+\newcommand{\ReTr}{\operatorname{Re}\operatorname{Tr}}
+\newcommand{\st}[1]{\textsf{[#1]}}
+\newcommand{\ru}[1]{\foreignlanguage{russian}{#1}}
+\newcommand{\Zb}{\bar Z}
+\newcommand{\Dch}{D_{\mathrm{ch}}}
+\newcommand{\rch}{\rho_{\mathrm{ch}}}
+\newcommand{\fu}{\mathsf{u}}% sans-serif u, w: the functions A/E and t u - t + m_1 of Section 4 (not the u, w of Lemma flux)
+\newcommand{\fw}{\mathsf{w}}
+
+
+\title{Dobrushin uniqueness for the four-dimensional\\ SU(2) Wilson lattice gauge measure for $\beta<2/9$,\\
+with interval/Lean certificates\\[4pt]
+\large Version 1.5}
+\author{K\'evin R\'emondi\`ere\thanks{Independent researcher, Oloron-Sainte-Marie, France. ORCID
+\href{https://orcid.org/0009-0008-2443-7166}{0009-0008-2443-7166}. The note, the certificate code and the Lean
+files were prepared with the assistance of Claude (Anthropic); the analytic proof of \S\ref{sec:chordal} and the area-law
+section (\S\ref{sec:area}, Appendix~\ref{app:comparison}) were read by an independent reviewer, Kimi K3.1 Pro (Moonshot AI),
+see \S\ref{sec:limits}; every claim carries one of the status labels defined below.}}
+\date{1 November 2026 (v1.5; v1.4: 28 October 2026, literature update, \S\ref{sec:lit}; v1.3 of 28 September 2026, not publicly released)}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+We write out Dobrushin's uniqueness criterion, in its Wasserstein ($W_1$) form, for the $SU(2)$ Wilson lattice
+gauge measure on $\Z^4$, and compute the single-link influence coefficient \emph{exactly}, uniformly in the
+field, for two metrics on $SU(2)\cong S^3$.
+For the Euclidean (chordal) metric of $\R^4$, the metric used by Levin (1980), we show that the one-site
+coefficient in a field of strength $\kappa$ equals $\E_\kappa[x_\perp^2]=I_2(\kappa)/(\kappa I_1(\kappa))$, the
+second moment of a coordinate orthogonal to the field, \emph{for every} $\kappa\ge0$ (in v1.4: for $\kappa\le4/3$).
+For $\kappa>0$ the maximum over directions is attained exactly for the directions orthogonal to the field, oblique
+directions are strictly smaller (with explicit two-sided bounds), and the coefficient is strictly decreasing in
+$\kappa$, hence maximal at zero field, where it equals $1/4$. Hence each of the $18$ neighbouring links has
+influence exactly $\beta/4$, the Dobrushin sum is $9\beta/2$, and the (DLR) Gibbs measure exists and is unique
+for $\beta<2/9\approx0.2222$, in the normalisation $\beta\sum_p(1-\tfrac12\ReTr U_p)$.
+The proof of the identity is analytic: it bounds the covariance by the $L^1$ norm of an explicit divergence-free
+vector field on the ball with prescribed normal flux, bounds that norm slice by slice, and closes with an exact
+sum-of-squares identity and a Chebyshev association argument. It is new in this version, it uses no computer, and it is
+\emph{not} formalised in Lean. The interval-arithmetic proof of v1.4 for $\kappa\le4/3$, with its Lean-checked final
+rational step, is kept in Appendix~\ref{app:v14} as a second proof on that range.
+The bound $\Dch(\kappa)\le1/4$ for all fields, hence the maximum-at-zero-field property conjectured by Levin
+(Remark~3.7) for $N=4$, and the exactness of the influence coefficient $\beta/4$ were proved before by
+Bhattacharjee and Bhattacharya \cite{BB26}; accordingly, $2/9$ is exactly Levin's published bound transferred to
+the Wilson link, $2\sqrt5/45\approx0.0994$, with his factor $\sqrt5$ replaced by $1$.
+For the geodesic metric (the main result of v1.2 of this note) the exact coefficient is $8\beta/(9\pi)$,
+uniformly for $\kappa\le3\pi/8$, which gives the weaker range $\beta<\pi/16\approx0.196$ by the same method.
+Each threshold is sharp for its criterion.
+A remark records that Wu's theorem (2006) turns these coefficients into a Poincar\'e inequality for $\beta<2/9$,
+uniform in the volume and the boundary condition; this is a corollary, not a new method.
+The single-site machinery is not new: Levin (1980, Euclidean metric) and Royer (1986, geodesic metric) treat
+rotator models, and Levin's many-body version already covers the Wilson model; none of the cited papers
+mentions gauge theories. For comparison, the explicit range of Shen--Zhu--Zhu is $\beta<1/12$, the
+total-variation criterion (Gross 1979, Simon 1979) gives $\beta<1/18$ transferred, and global Bakry--\'Emery on
+link variables cannot pass $\beta=1/8$.
+As an application of the chordal coefficient (Section~\ref{sec:area}), Dobrushin's comparison for the slab $\sigma$-models of
+Durhuus and Fr\"ohlich gives Wilson's area law for $\beta<2/3$, uniformly on tori, with free boundary conditions and for every
+Gibbs measure, with the string-tension bound $\sigma\ge\arcosh(2/\beta-2)$. This range is not new: Borgs and Seiler (1983;
+Appendix~B of the preprint version) proved confinement for $\beta<12/17$ by a transfer-matrix argument, and we claim no priority
+on any threshold, only an independent proof with explicit constants. Apart from this application, no statement on decay of
+correlations or log-Sobolev inequality is claimed.
+\emph{Prior public statement.} The uniqueness range $\beta<2/9$ for the four-dimensional $SU(2)$ model, with
+exponential decay and a lattice mass gap, the all-field bound $\Dch(\kappa)\le1/4$ in the form
+$W_1(\nu_b,\nu_{b'})\le\frac14|b-b'|$ on $S^3$, and the exactness of the influence coefficient were stated publicly, with
+proofs, in the preprint \cite{BB26} of 18 October 2026 (Theorems E, F and 7 and Proposition~13 there). This note was
+prepared independently and makes \emph{no priority claim} on them. Its own contributions are: the exact value
+$\E_\kappa[x_\perp^2]=I_2/(\kappa I_1)$ of the supremum over directions for every $\kappa\ge0$, its maximisers, the
+two-sided estimate for oblique directions and the strict monotonicity in $\kappa$, with an analytic proof; the exact
+geodesic coefficient $8\beta/(9\pi)$ for $\kappa\le3\pi/8$; two interval-arithmetic certificates, each recertified by an
+independent implementation (Appendix~\ref{app:v14} and \S\ref{sec:cap}), with Lean-checked final steps; an explicit
+transfer of the published constants of Levin, Royer and Shen--Zhu--Zhu with their conventions; and the area-law application of
+Section~\ref{sec:area} (an independent proof by Dobrushin's comparison, valid for every Gibbs measure and with explicit constants;
+the range itself is not new, see above).
+\end{abstract}
+
+\paragraph{Status labels.}
+Every claim carries one label:
+\st{proved} (complete argument written here or in the cited source);
+\st{exact} (identity or inequality verified in exact rational arithmetic or by symbolic computation; computer-checked, not Lean);
+\st{interval-certified} (rigorous modulo trust in the interval library and in the reductions, which are proved on paper but
+not formalised: those of Appendix~\ref{app:v14} and \S\ref{sec:reduction}, and, for the cross-checks of \S\ref{sec:chcross},
+the definitions of \S\ref{sec:chslice});
+\st{Lean-checked} (kernel-checked in Lean~4, axioms \texttt{propext}, \texttt{Classical.choice}, \texttt{Quot.sound} only;
+this label never covers more than the Lean statements quoted verbatim in \S\ref{sec:chcap} and \S\ref{sec:cap},
+which are rational inequalities, conditional implications and threshold arithmetic; \emph{the analytic proof of
+\S\ref{sec:chordal} is not formalised});
+\st{read} (statement read in the original source, location given);
+\st{not checked} (cited from a source of which only the metadata or the abstract were seen, or a combination of published results not verified against the sources);
+\st{conjecture}.
+The label \st{numerical} marks floating-point evidence (including ball-arithmetic evaluations without a rigorous quadrature
+bound) which is \emph{not} part of any proof.
+
+\section{Statement and conventions}\label{sec:statement}
+
+Let $E$ be the set of (positively oriented) links of $\Z^4$ and $\mathcal P$ the set of unoriented plaquettes.
+A configuration is $U=(U_\ell)_{\ell\in E}\in SU(2)^E$; $U_p$ is the ordered product around $p$ (its
+real trace does not depend on the starting point or orientation, since $\ReTr W=\ReTr W^{-1}$ on $SU(2)$).
+For a finite $\Lambda\subset E$ and boundary condition $\bar U$, the Wilson specification is
+\begin{equation}\label{eq:wilson}
+  \mu^{\bar U}_{\Lambda}(dU_\Lambda)\;\propto\;
+  \exp\Big(-\beta\sum_{p\cap\Lambda\neq\emptyset}\big(1-\tfrac12\ReTr U_p\big)\Big)\prod_{\ell\in\Lambda}dU_\ell ,
+\end{equation}
+with $dU$ the normalised Haar measure. Throughout, $\beta=\beta_W$ is the \emph{Wilson} coupling, and
+the bare coupling $g$ is \emph{defined} by $\beta_W=2N/g^2$, i.e.\ $\beta_W=4/g^2$ for $SU(2)$; the coupling
+$g_0$ of Osterwalder--Seiler is a different normalisation (Table~\ref{tab:conv}). A Gibbs measure is a probability measure on $SU(2)^E$ satisfying the
+DLR equations for \eqref{eq:wilson}.
+We identify $SU(2)$ with the unit sphere $S^3\subset\R^4$ (unit quaternions) and use two metrics on it: the
+\emph{chordal} (Euclidean) distance $\rch(x,y)=|x-y|$ of $\R^4$, of diameter $2$, and the \emph{geodesic}
+(great-circle) distance $\rho$, of diameter $\pi$. They generate the same topology and Borel $\sigma$-algebra.
+
+\begin{table}[htbp]
+\centering\small
+\begin{tabular}{lll}
+\toprule
+convention & weight & relation to $\beta_W$ (for $SU(2)$)\\
+\midrule
+Wilson (this note) & $\exp(-\beta_W\sum_p(1-\frac1N\ReTr U_p))$ & ---\\
+$\frac{\beta}{N}\ReTr$ & $\exp(\frac{\beta}{N}\sum_p \ReTr U_p)$ & $\beta_W=\beta$\\
+raw trace & $\exp(\beta\sum_p\ReTr U_p)$ & $\beta_W=2\beta$\\
+'t~Hooft (SZZ, CNS) & $\exp(N\beta\sum_p\ReTr U_p)$ & $\beta_W=N^2\beta=4\beta$\\
+Osterwalder--Seiler & $\exp(\frac{1}{2g_0^2}\sum_P \operatorname{Re}\chi(g_P))$ & $\beta_W=1/g_0^2$ (hypothesis${}^\ast$), i.e.\ $g_0=g/2$\\
+\bottomrule
+\end{tabular}
+\caption{Conventions. The 't Hooft line is \cite[(1.2)]{SZZ23} (see \S\ref{sec:lit}); the
+Osterwalder--Seiler line is \cite[(2.1)--(2.2), p.~442]{OS78}, read on the page image
+(\st{read}). ${}^\ast$The conversion $\beta_W=1/g_0^2$ is a \emph{hypothesis}: it holds if $\chi$ is the
+fundamental character and each geometric plaquette is counted once in $\sum_P$. On p.~442, $\chi$ is
+``a character on $\mathcal G$'' and plaquettes are ``closed loops $uvxy$''; neither condition is stated
+there. The conversion is used only to translate thresholds, never in a proof.}
+\label{tab:conv}
+\end{table}
+
+\begin{theorem}[Main result]\label{thm:main}
+For $0\le\beta<2/9\approx0.2222$ there is exactly one Gibbs measure for the $SU(2)$ Wilson
+specification \eqref{eq:wilson} on $\Z^4$.
+Equivalently: $g^2>18$ with $g$ defined by $\beta_W=2N/g^2=4/g^2$; in the 't~Hooft normalisation of
+\cite{SZZ23}, $\beta_{\mathrm{tH}}<1/18\approx0.0556$; in the normalisation of \cite{OS78} (under the hypothesis
+of Table~\ref{tab:conv}), $g_0^2>9/2$.
+\end{theorem}
+\noindent Status: existence \st{proved} (Proposition~\ref{prop:exist});
+uniqueness \st{read} (Dobrushin 1970, Thm~4) + \st{proved} (\S\ref{sec:influence}, chordal metric) +
+Theorem~\ref{thm:chordal}, which is \st{proved} by an analytic argument valid for all fields (\S\ref{sec:chordal}; not formalised in Lean).
+For $\kappa\le4/3$, which is all that $\beta<2/9$ needs, a second proof is \st{interval-certified}, with its last rational
+step \st{Lean-checked} (Appendix~\ref{app:v14}). The threshold arithmetic is \st{Lean-checked}
+(\texttt{somme\_dobrushin\_lt\_one}, \texttt{kappa\_max\_lt}).
+
+\begin{theorem}[Geodesic criterion; the main result of v1.2]\label{thm:geo}
+With the geodesic metric $\rho$, Dobrushin's sum for \eqref{eq:wilson} equals $16\beta/\pi$ for
+$0\le\beta<\pi/16\approx0.19635$; so the geodesic $W_1$ criterion gives uniqueness for $\beta<\pi/16$ and fails at
+$\beta=\pi/16$.
+\end{theorem}
+\noindent Status: \st{proved} (\S\ref{sec:influence}) + Theorem~\ref{thm:onelink}, which is \st{proved} for
+$\kappa=0$ and \st{interval-certified} for $\kappa>0$, with its last rational step \st{Lean-checked}
+(\S\ref{sec:cap}). The uniqueness statement for $\beta<\pi/16$ is contained in Theorem~\ref{thm:main}; what
+Theorem~\ref{thm:geo} adds is the exact geodesic coefficient $8\beta/(9\pi)$ and its field-uniformity.
+
+Each threshold is \emph{sharp for its criterion}: with single-site conditionals, the chordal sum equals $9\beta/2$
+and the geodesic sum $16\beta/\pi$ exactly (Proposition~\ref{prop:influence}), so the chordal criterion fails at
+$\beta=2/9$ and the geodesic one at $\beta=\pi/16$. Nothing is claimed about other metrics, block or multi-site
+versions of the criterion, or the true uniqueness region.
+
+\paragraph{An application: the area law (\S\ref{sec:area}).} The chordal coefficient is not specific to uniqueness. Applied to the
+three-dimensional $\sigma$-models into which Durhuus and Fr\"ohlich \cite{DF80} decompose the four-dimensional theory, it gives, by
+Dobrushin's comparison, Wilson's area law for $\beta<2/3$, uniformly on tori, with free boundary conditions and for every Gibbs
+measure, with a string tension at least $\arcosh(2/\beta-2)$ (Theorem~\ref{thm:area}). The range is not new: Borgs and Seiler
+\cite{BS83} proved confinement for $\beta<12/17$ by a different method (\S\ref{sec:areaprior}), and no priority is claimed for any threshold.
+
+\section{Dobrushin's theorem and its hypotheses}\label{sec:dobrushin}
+
+We use the original Russian article \cite{Dob70} (Math-Net.Ru scan \texttt{tvp1856}; the
+quotations below were read on the rendered page images; English wording is ours).
+
+\paragraph{Setting (\S1, p.~469).} $T$ is a countable set; the random variables $\xi_t$ take values in a
+measurable space $(X,\mathfrak B)$. Dobrushin's standing assumption is that all probability measures on
+finite products of $(X,\mathfrak B)$ are perfect (``\ru{все вероятностные меры на прямых произведениях
+конечного числа экземпляров измеримого пространства $(X,\mathfrak B)$ совершенны}''), and for this it
+suffices (verbatim) that
+``\ru{$\mathfrak B$ было $\sigma$-алгеброй всех борелевских подмножеств для некоторой метрики,
+превращающей $X$ в полное сепарабельное метрическое пространство}''.
+Given an integer function $\nu$ on $T$,
+\begin{equation*}
+G_{t_0}=\{t:\nu(t)\le\nu(t_0),\ t\neq t_0,\ t\in T\},\qquad t_0\in T \qquad\text{\cite[(1.2)]{Dob70}},
+\end{equation*}
+and a field has conditional distributions $\{p_{t_0}\}$ if
+$\mathbf P\{\xi_{t_0}\in B\mid\xi_t,t\in G_{t_0}\}=p_{t_0}(B\mid x_t,t\in G_{t_0})$ \cite[(1.3)]{Dob70}.
+
+\paragraph{Wasserstein distance (\S3, p.~479).}
+``\ru{Назовем \emph{расстоянием Васерштейна} (см.~[12]) число}
+$R(P,Q)=\inf \mathrm{M}\rho(\eta,\zeta)$, (3.1)
+\ru{где нижняя грань берется по всем парам случайных величин $\eta,\zeta$ \dots\ таким, что $\eta$ имеет
+распределение $P$ и $\zeta$ --- распределение $Q$}''. This is $W_1$ defined by couplings, for the metric
+$\rho$ of $X$ (any metric making $X$ complete and separable).
+
+\paragraph{Theorem 4 (\S5, p.~488), verbatim.}
+``\ru{Для того чтобы существовало не более, чем одно, случайное поле $\{\xi_t, t\in T\}$ с заданными
+условными распределениями $\{p_{t_0}(\cdot|\cdot), t_0\in T\}$, для которого при некоторых $x_0\in X$ и
+$C<\infty$}
+$\mathrm{M}\rho(\xi_t,x_0)\le C<\infty$, $t\in T$, (5.1)
+\ru{достаточно, чтобы при некотором $d<1$ и всех $t_0\in T$}
+$\sum_{t\in G_{t_0}} r(t,t_0)\le d<1$, (5.2)
+\ru{где числа $r(t,t_0)$ \dots\ таковы, что расстояние Васерштейна}
+$R(p_{t_0}(\cdot|x^1_t,t\in G_{t_0}),p_{t_0}(\cdot|x^2_t,t\in G_{t_0}))\le\sum_{t\in G_{t_0}}r(t,t_0)\rho(x^1_t,x^2_t)$ (5.3)
+\ru{\dots\ Условие (5.3) выполнено, в частности, если}
+$r(\bar t,t_0)=\sup R(\cdots)/\rho(x^1_{\bar t},x^2_{\bar t})$, (5.4)
+\ru{где верхняя грань берется по всем парам условий \dots, отличным лишь при $t=\bar t$}.''
+(Translation: at most one field with the given conditionals and property (5.1) exists provided that, for
+some $d<1$ and all $t_0$, (5.2) holds with numbers $r$ satisfying the Wasserstein bound (5.3); (5.3)
+holds in particular for the supremum (5.4) over pairs of conditions differing only at $\bar t$.)
+
+\paragraph{Theorem 1 (existence, pp.~472--473).} Two conditions suffice; on p.~473 Dobrushin writes
+``\ru{Условие 1 заведомо выполнено, если $X$ --- бикомпакт. (Можно положить $h(x)\equiv1$.)}'' and, in the
+Markov case (conditionals depending on finitely many $x_t$, $t\in U_{t_0}$), ``\ru{условие 2 означает
+непрерывность $p_{t_0}(\cdot\mid x_t, t\in U_{t_0})$ по переменным $x_t$ в топологии слабой
+сходимости}''.
+
+\paragraph{Verification of the hypotheses for \eqref{eq:wilson}.} Let $d$ be either $\rch$ or $\rho$.
+\begin{enumerate}
+\item $T=E$ is countable; $X=SU(2)\cong S^3$ with $d$ is compact, hence complete and separable;
+$\mathfrak B$ is its Borel $\sigma$-algebra (the same for both metrics). \st{proved}
+\item Take $\nu\equiv0$; then $G_{t_0}=T\setminus\{t_0\}$ (the case Dobrushin himself mentions on
+p.~488, ``\ru{В случае $G_{t_0}=\{t:t\neq t_0\}$}''). The kernel $p_{\ell}(\cdot\mid U_{E\setminus\ell})$ is
+the single-link conditional law \eqref{eq:q} below; it has a density continuous in all variables, hence
+is jointly measurable. Every DLR measure for \eqref{eq:wilson} satisfies \cite[(1.3)]{Dob70} with these
+kernels. So uniqueness in Dobrushin's class implies uniqueness of the Gibbs measure. \st{proved}
+\item (5.1) holds for every field with $x_0=\mathbf 1$ and $C=\operatorname{diam}S^3$ ($2$ for $\rch$, $\pi$ for $\rho$). \st{proved}
+\item (5.2)--(5.4): $p_\ell$ depends only on the $18$ neighbouring links (\S\ref{sec:influence}), so
+$r(t,\ell)=0$ for all other $t$. With $r$ the supremum (5.4): for $d=\rch$ and every $\beta\ge0$,
+$\sum_t r(t,\ell)=9\beta/2$ (Proposition~\ref{prop:influence} and Theorem~\ref{thm:chordal}); for $\beta<2/9$ take $d=9\beta/2<1$.
+For $d=\rho$ and $\beta<\pi/16$, $\sum_t r(t,\ell)=16\beta/\pi$ (Theorem~\ref{thm:onelink}). \st{proved} given
+Theorems~\ref{thm:chordal} and~\ref{thm:onelink}.
+\item Existence: Theorem~1 applies (Condition~1 because $X$ is compact; Condition~2 because the
+conditional density is continuous in the neighbouring links), but it yields a field with the
+prescribed \emph{single-site} conditionals. We do not use it: existence of a measure satisfying the DLR
+equations for \emph{every} finite $\Lambda$ is proved directly in Proposition~\ref{prop:exist}. \st{proved}
+\end{enumerate}
+A second modern statement of the $W_1$ criterion on complete metric single-spin spaces is
+\cite[Thm~3.5]{DS25} (p.~8 of arXiv v4) \st{read}.
+
+\begin{proposition}[Existence in the DLR sense]\label{prop:exist}
+For every $\beta\ge0$ there is at least one probability measure $\mu$ on $SU(2)^E$ such that
+$\mu\gamma_\Delta=\mu$ for every finite $\Delta\subset E$, where $\gamma_\Delta(\cdot\mid\bar U)=
+\mu^{\bar U}_\Delta\otimes\delta_{\bar U_{E\setminus\Delta}}$ is the kernel \eqref{eq:wilson}.
+\end{proposition}
+\noindent Status: \st{proved}.
+\begin{proof}
+Write $H_\Delta(U)=\sum_{p\cap\Delta\ne\emptyset}(1-\tfrac12\ReTr U_p)$, a finite sum of continuous functions of
+finitely many links, with $0\le H_\Delta\le h_\Delta:=2\,|\{p:p\cap\Delta\ne\emptyset\}|$. Thus
+\[
+\gamma_\Delta f(\bar U)=Z_\Delta(\bar U)^{-1}\int f(U_\Delta,\bar U_{E\setminus\Delta})\,e^{-\beta H_\Delta(U_\Delta,\bar U)}\,dU_\Delta,
+\qquad Z_\Delta\ge e^{-\beta h_\Delta}>0 .
+\]
+\emph{(a) Feller property.} If $f$ is continuous on the compact space $SU(2)^E$ (product topology), the
+integrand is jointly continuous in $(U_\Delta,\bar U)$ and bounded, so $\gamma_\Delta f$ and $Z_\Delta$ are
+continuous by dominated convergence, and $\gamma_\Delta f$ is continuous.
+\emph{(b) Consistency.} For finite $\Delta\subset\Lambda$ one has $\gamma_\Lambda\gamma_\Delta=\gamma_\Lambda$: the density of
+$\gamma_\Lambda(\cdot\mid\bar U)$ is $e^{-\beta H_\Lambda}/Z_\Lambda$ and $H_\Lambda=H_\Delta+H'$ with $H'$ independent of
+$U_\Delta$ (the plaquettes meeting $\Lambda$ but not $\Delta$), so by Fubini integrating $\gamma_\Delta f$ against
+$\gamma_\Lambda$ first in $U_\Delta$ reproduces $\gamma_\Lambda f$.
+\emph{(c) Limit.} Fix $\bar U$ and finite $\Lambda_n\uparrow E$, and let $\mu_n=\gamma_{\Lambda_n}(\cdot\mid\bar U)$. By
+compactness (Prokhorov, or Riesz--Markov on $C(SU(2)^E)$) a subsequence converges weakly to some $\mu$.
+For finite $\Delta$ and continuous $f$, (b) gives $\mu_n(\gamma_\Delta f)=\mu_n(f)$ as soon as
+$\Delta\subset\Lambda_n$; by (a) both sides converge along the subsequence, so $\mu(\gamma_\Delta f)=\mu(f)$ for all
+continuous $f$, hence $\mu\gamma_\Delta=\mu$.
+\end{proof}
+Every such $\mu$ satisfies in particular \cite[(1.3)]{Dob70} with $G_{t_0}=T\setminus\{t_0\}$ (take $\Delta=\{\ell\}$),
+which is the direction used for uniqueness in item~2.
+
+\section{The single-link conditional law and the influence matrix}\label{sec:influence}
+
+\paragraph{Quaternion form.} For unit quaternions $u,w$, $\tfrac12\ReTr(uw)=\langle u,\bar w\rangle_{\R^4}$.
+Link $\ell$ lies in $2(d-1)=6$ plaquettes; for each such $p$, $\tfrac12\ReTr U_p=\tfrac12\ReTr(U_\ell W_p)$
+where the \emph{staple} $W_p$ is a product of the three other links of $p$ (or of their inverses; we use
+$\ReTr A=\ReTr A^{-1}$ to put $U_\ell$ first). Hence
+\begin{equation}\label{eq:q}
+  p_\ell(du\mid\cdot)=q_s(du)\propto e^{\beta\langle u,s\rangle}\,du,\qquad
+  s=\sum_{p\ni\ell}\overline{W_p}\in\R^4,\quad |s|\le 6 .
+\end{equation}
+Write $\kappa=\beta|s|\in[0,6\beta]$, $\hat s=s/|s|$, and $q_\kappa\propto e^{\kappa\langle u,\hat s\rangle}$.
+In the notation of Royer \cite[p.~31]{Roy86}, $q_s=\nu(\beta s)$ on $S^n$ with $n=3$: ``For each vector
+$h\in\R^{n+1}$ let $\nu(h)$ be the probability measure on $S^n$, the density of which is proportional to
+$x\to\exp(x.h)$'' \st{read}, on the Numdam page image; in Levin's notation \cite[(3.11), p.~68]{Lev80} it is
+$\mu_{\mathbf h}$ with $\mathbf h=\beta s$ and $N=4$ \st{read}. The single-site analysis below is therefore an
+instance of the setting of Levin \cite{Lev80} and Royer \cite{Roy86} for $n$-vector (rotator) models; what
+is specific to the gauge model is the staple structure and the count of neighbours. In fact the whole
+Wilson model is a $4$-vector model with four-body interactions in the sense of Levin
+\cite[Remark~3.6, (3.48), p.~73]{Lev80}: writing $u_1,\dots,u_4\in S^3\subset\R^4$ for the links of $p$ (with
+$u^{-1}=\bar u$), $\tfrac12\ReTr U_p=\langle u_1u_2\bar u_3\bar u_4,\mathbf 1\rangle$ is a multilinear function of
+$(u_1,u_2,u_3,u_4)$. \st{proved}
+
+\paragraph{Why 18 neighbours.} Each of the $6$ plaquettes through $\ell$ contains $3$ further links.
+Two distinct plaquettes through $\ell$ span different coordinate planes, or the same plane on opposite
+sides of $\ell$, so they share no link other than $\ell$. Hence the $6\times3=18$ links are pairwise
+distinct, each shares exactly one plaquette with $\ell$, and a change of one of them changes exactly one
+staple. In general dimension the count is $3\cdot2(d-1)$. \st{proved}
+
+\begin{definition}\label{def:D}
+For $\kappa\ge0$ and a unit vector $v\in\R^4$ put
+\begin{align*}
+\Dch(\kappa,v)&=\sup\{\Cov_{q_\kappa}(f,\langle u,v\rangle): f\ \text{1-Lipschitz for }\rch\},\\
+D(\kappa,v)&=\sup\{\Cov_{q_\kappa}(f,\langle u,v\rangle): f\ \text{1-Lipschitz for }\rho\},
+\end{align*}
+and $\Dch(\kappa)=\sup_{|v|=1}\Dch(\kappa,v)$, $D(\kappa)=\sup_{|v|=1}D(\kappa,v)$.
+By rotation invariance about $\hat s$, both depend on $v$ only through the angle $\alpha\in[0,\pi]$ between
+$v$ and $\hat s$; replacing $f$ by $-f$ shows that they bound $|\Cov|$.
+\end{definition}
+
+\begin{proposition}[Influence coefficients]\label{prop:influence}
+Let $r_{\mathrm{ch}}(y,\ell)$ and $r(y,\ell)$ be Dobrushin's coefficient (5.4) for a neighbour $y$ of $\ell$, for the
+metrics $\rch$ and $\rho$ respectively. Then
+\[
+  \beta\,\Dch(0)\;\le\;r_{\mathrm{ch}}(y,\ell)\;\le\;\beta\sup_{0\le\kappa\le6\beta}\Dch(\kappa),\qquad
+  \beta\,D(0)\;\le\;r(y,\ell)\;\le\;\beta\sup_{0\le\kappa\le6\beta}D(\kappa).
+\]
+With $\Dch(0)=1/4$ and Theorem~\ref{thm:chordal}, for every $\beta\ge0$: $r_{\mathrm{ch}}(y,\ell)=\beta/4$ and
+$\sum_y r_{\mathrm{ch}}(y,\ell)=18\beta/4=9\beta/2$. With $D(0)=8/(9\pi)$ (Lemma~\ref{lem:zero}) and
+Theorem~\ref{thm:onelink}, for $\beta<\pi/16$: $r(y,\ell)=8\beta/(9\pi)$ and $\sum_y r(y,\ell)=16\beta/\pi$.
+\end{proposition}
+\noindent Status: \st{proved} (the upper bounds use Kantorovich--Rubinstein duality \cite[Thm~10.8]{DS25},
+quoted below). The geodesic upper bound is the argument of Royer \cite[(3)--(4), p.~31]{Roy86} for $\nu(h)$ on $S^n$,
+here with $n=3$, $K=\beta$ and $z$ the moving staple: verbatim, ``$\mathrm R(\nu(Kz_1+\zeta),\nu(Kz_2+\zeta))
+\leqslant|K|(C(n)/(n+1))^{1/2}r(z_1,z_2)$. (3)'' and, along a minimal geodesic $z(t)$,
+``$\big|\frac{d}{dt}\int f(y)\nu(Kz(t)+\zeta,dy)\big|=|K\operatorname{cov}(f(y),y.z'(t))|$ (4)'' \st{read}.
+The chordal upper bound is the argument of Levin, who writes the distance ``as the variation of an expectation
+along an appropriate path in $\mathbf h$-space'' \cite[p.~68]{Lev80}, the straight segment
+\cite[(3.35), p.~71]{Lev80} \st{read}.
+Royer and Levin then bound the covariance by field-uniform constants; we instead compute $\sup_f$ of the
+covariance exactly, as a function of $\kappa=|h|$.
+
+\begin{proof}
+\emph{Upper bounds.} Let $U,U'$ differ only at $y$, and let $W=AU_y^{\pm1}B$ be the unique staple
+containing $y$ ($A,B$ fixed). The map $U_y\mapsto\overline{AU_y^{\pm1}B}$ is a composition of left and right
+multiplications by unit quaternions and of quaternion conjugation, hence the restriction to $S^3$ of an
+orthogonal map of $\R^4$; it is an isometry for both $\rch$ and $\rho$.
+\emph{Chordal:} let $s(t)=s+t(s'-s)$, $t\in[0,1]$, the straight segment between the two values of $s$; then
+$|s(t)|\le6$ by convexity and $|s'-s|=|\overline{W'}-\overline W|=\rch(U_y,U'_y)$. For $f$ 1-Lipschitz for $\rch$,
+\[
+\int f\,d(q_{s'}-q_{s})=\int_0^1\beta\,\Cov_{q_{s(t)}}\big(f,\langle u,s'-s\rangle\big)\,dt
+\le\beta\,\rch(U_y,U'_y)\sup_{\kappa\le6\beta}\Dch(\kappa).
+\]
+\emph{Geodesic:} along a constant-speed geodesic $t\mapsto U_y(t)$, $t\in[0,1]$, from
+$U_y$ to $U'_y$, the vector $s(t)$ moves on a great circle of the unit sphere translated by the
+other five staples, with $|\dot s(t)|=\rho(U_y,U'_y)$, and $|s(t)|\le6$. For $f$ 1-Lipschitz for $\rho$,
+\[
+\int f\,d(q_{s(1)}-q_{s(0)})=\int_0^1\beta\,\Cov_{q_{s(t)}}\big(f,\langle u,\dot s(t)\rangle\big)\,dt
+\le\beta\,\rho(U_y,U'_y)\sup_{\kappa\le6\beta}D(\kappa).
+\]
+In both cases the supremum over 1-Lipschitz $f$ of the left side is Dobrushin's Wasserstein distance (3.1)
+for the corresponding metric, by the Kantorovich--Rubinstein duality as stated in \cite[Thm~10.8, p.~53]{DS25} (verbatim):
+``Let $\mu$ and $\nu$ be two probability measures on a metric space $(\mathcal X,\rho)$ such that
+$\int_{\mathcal X}\rho(x,x_0)\,\mu(dx)<+\infty$ and $\int_{\mathcal X}\rho(x,x_0)\,\nu(dx)<+\infty$, for some
+$x_0\in\mathcal X$. Then the Wasserstein metric equals the Kantorovich-Rubinstein metric, i.e.,
+$\rho_W(\mu,\nu)=\sup_{f\in\mathrm{Lip}_1(\mathcal X)}\big(\int_{\mathcal X}f(x)\,\mu(dx)-\int_{\mathcal X}f(x)\,\nu(dx)\big)$''
+\st{read}, where $\rho_W$ is the infimum over couplings \cite[(2.1), p.~6]{DS25}, i.e.\ Dobrushin's (3.1).
+The moment condition is trivial on the compact $S^3$. Dividing by the distance of $U_y$ and $U'_y$ and taking the
+supremum gives the bounds on (5.4).
+
+\emph{Lower bounds.} The $18$ neighbours are distinct and each staple involves three of them only, so the
+six staples can be prescribed independently. Given a unit $v\in\R^4$, choose the staple containing $y$ so
+that $w:=\overline{W}\perp v$, and the other five staples (unit vectors) with sum $-w$ (possible since
+$|{-w}|=1\le5$); then $s=0$. Moving $U_y$ along a unit-speed geodesic moves $\overline W$ isometrically along
+a geodesic of $S^3$ through $w$; choosing it with initial velocity $v$ (tangent at $w$ since $v\perp w$)
+gives $\overline W(\varepsilon)=\cos\varepsilon\,w+\sin\varepsilon\,v$, so $s(\varepsilon)=\varepsilon v+O(\varepsilon^2)$,
+$\rho(U_y,U_y(\varepsilon))=\varepsilon$ and $\rch(U_y,U_y(\varepsilon))=2\sin(\varepsilon/2)=\varepsilon+O(\varepsilon^3)$.
+For fixed 1-Lipschitz $f$ (for either metric),
+$W_1(q_0,q_{s(\varepsilon)})\ge\int f\,d(q_{s(\varepsilon)}-q_0)=\beta\varepsilon\Cov_{q_0}(f,\langle u,v\rangle)
++O(\varepsilon^2)$ (only the trivial direction of the duality is used). Dividing by the distance and
+letting $\varepsilon\to0$, then optimising $f$, gives $r_{\mathrm{ch}}(y,\ell)\ge\beta\Dch(0,v)$ and
+$r(y,\ell)\ge\beta D(0,v)$; both zero-field values are independent of $v$ (Lemmas~\ref{lem:refl}
+and~\ref{lem:zero}).
+\end{proof}
+
+\section{The chordal one-link identity for all fields}\label{sec:chordal}
+
+Throughout this section $\hat s=e_1$, $x_1=\langle u,e_1\rangle$, $x_2=\langle u,e_2\rangle$ with $e_2\perp e_1$,
+$\bar\sigma$ is the normalised Haar measure of $S^3$, and $dq_\kappa=e^{\kappa x_1}\,d\bar\sigma/\Zb(\kappa)$ with
+\[
+\Zb(\kappa)=\E_{\bar\sigma}e^{\kappa x_1}=\sum_{k\ge0}\frac{\kappa^{2k}}{4^k\,k!\,(k+1)!}=\frac{2I_1(\kappa)}{\kappa}
+\]
+(the marginal law of $x_1$ under $\bar\sigma$ is $\frac2\pi\sqrt{1-t^2}\,dt$). We write $\E_\kappa$ for $\E_{q_\kappa}$ and
+$m_1=\E_\kappa x_1=\Zb'/\Zb$. For $\kappa>0$ put $R(t)=\sqrt{1-t^2}$ and $E(t)=e^{\kappa t}/\Zb(\kappa)$ on $[-1,1]$.
+The law of $x_1$ under $q_\kappa$ is $d\mu(t)=\frac2\pi R(t)E(t)\,dt$, and for a function $g$ on $[-1,1]$ we write
+$\langle g\rangle:=\int g\,d\mu=\E_\kappa[g(x_1)]$ (a bracket with a single argument is this average; the inner product
+of $\R^4$ always carries a comma). Since $q_\kappa$ is invariant under the rotations of $(x_2,x_3,x_4)$, which are
+isometries of $\rch$, $\Dch(\kappa,v)$ depends on $v$ only through $\alpha$.
+
+\begin{theorem}[Chordal one-link identity, all fields]\label{thm:chordal}
+For every $\kappa\ge0$,
+\[
+\Dch(\kappa)=\Dch(\kappa,e_2)=\E_\kappa[x_2^2]=\frac13\Big(1-\frac{\Zb''(\kappa)}{\Zb(\kappa)}\Big)
+\quad\Big(=\frac{I_2(\kappa)}{\kappa\,I_1(\kappa)}\ \text{ for }\kappa>0\Big),\qquad \Dch(0)=\tfrac14 .
+\]
+For $\kappa>0$ and a unit vector $v$ at angle $\alpha$ to $\hat s$,
+\begin{equation}\label{eq:window}
+\E_\kappa[x_2^2]-\cos^2\!\alpha\,\Delta(\kappa)\ \le\ \Dch(\kappa,v)\ \le\
+\E_\kappa[x_2^2]-\tfrac12\cos^2\!\alpha\,\Delta(\kappa)-\tfrac16\cos^2\!\alpha\,\mathcal S(\kappa)\ \le\
+\E_\kappa[x_2^2]-\tfrac12\cos^2\!\alpha\,\Delta(\kappa),
+\end{equation}
+where $\Delta(\kappa)=m_1^2+4m_1/\kappa-1=-\kappa\,\frac{d}{d\kappa}\E_\kappa[x_2^2]=\frac\kappa3\Cov_\kappa(x_1^2,x_1)>0$
+and $\mathcal S(\kappa)\ge0$ is the explicit quantity \eqref{eq:S}.
+Consequently, for $\kappa>0$ the maximum over directions is attained exactly for $v\perp\hat s$ ($\alpha=\pi/2$),
+$\kappa\mapsto\Dch(\kappa)$ is strictly decreasing, and
+\[
+\tfrac14-\Dch(\kappa)=\frac{4\Zb''(\kappa)-\Zb(\kappa)}{12\,\Zb(\kappa)}\ \ge\ \frac{\kappa^2}{96\,\Zb(\kappa)}>0\quad(\kappa>0),\qquad
+\Dch(\kappa)=\tfrac14-\tfrac{\kappa^2}{96}+\tfrac{\kappa^4}{1536}-\tfrac{\kappa^6}{23040}+\tfrac{13\kappa^8}{4423680}-\cdots .
+\]
+\end{theorem}
+\noindent Status: \st{proved} (\S\S\ref{sec:chrefl}--\ref{sec:chmain}); the proof is analytic and uses no computer. The value at $\kappa=0$ and
+the lower bound in \eqref{eq:window} are Lemma~\ref{lem:refl}; the upper bound is Lemmas~\ref{lem:slice}--\ref{lem:delta}; the identity for
+$\frac14-\Dch$ and the bound by $\kappa^2/(96\Zb)$ are \st{proved} by exact power series; the expansion is \st{exact} (exact series division).
+The proof is new in this version. It is \emph{not} formalised in Lean, it was read by one independent reviewer and has not been refereed
+(\S\ref{sec:limits}, item~3), and the numerical and interval cross-checks of \S\ref{sec:chcross} are not used in it. On $\kappa\le4/3$ a second,
+computer-assisted proof (the argument of v1.4) is in Appendix~\ref{app:v14}.
+
+\subsection{Reflection: the value at zero field and the lower bound}\label{sec:chrefl}
+
+\begin{lemma}[Reflection]\label{lem:refl}
+Let $v$ be a unit vector, $R_v x=x-2\langle x,v\rangle v$, and $q$ a probability measure on $S^3$ with
+$R_{v\#}q=q$. Then $\sup\{\Cov_q(f,\langle x,v\rangle): f \text{ 1-Lipschitz for }\rch\}=\E_q\langle x,v\rangle^2$.
+In particular $\Dch(0,v)=\E_{\bar\sigma}\langle x,v\rangle^2=1/4$ for every $v$, and
+$\Dch(\kappa,e_2)=\E_\kappa[x_2^2]$ for every $\kappa\ge0$. \st{proved}
+\end{lemma}
+\begin{proof}
+Put $u=\langle x,v\rangle$; $u\circ R_v=-u$, so $\E_qu=0$ and $\Cov_q(f,u)=\E_q[fu]=\frac12\E_q[(f(x)-f(R_vx))u]$.
+Since $|x-R_vx|=2|u|$, this is $\le\E_q u^2$, with equality for $f=u$, which is 1-Lipschitz. For $q=\bar\sigma$,
+$\E u^2=\frac14\E|x|^2=\frac14$; for $q=q_\kappa$ and $v=e_2$, $R_{e_2}$ preserves $x_1$, hence $q_\kappa$.
+\end{proof}
+The case $v\perp\mathbf h$ of Lemma~\ref{lem:refl} is Levin's Lemma~3.2: for $\hat{\mathbf e}\perp\mathbf h$,
+``$|\mu_{\mathbf h}[(\mathbf x\cdot\hat{\mathbf e})f]|\leqslant\frac1N$ (3.12)'', proved by the same reflection
+``$\leqslant\mu_{\mathbf h}(x_1^2)$ (3.14)'' \cite[p.~68]{Lev80} \st{read}; it is also Lemma~6(ii) of v1 of \cite{BB26}.
+The content of Theorem~\ref{thm:chordal} is that, for $N=4$ and every $\kappa$, no other direction does better.
+
+\subsection{Moments}\label{sec:chmom}
+
+\begin{lemma}[Elementary identities]\label{lem:ident}
+For $\kappa>0$:
+\begin{enumerate}
+\item[(i)] $\kappa\langle R^2\rangle=3m_1$. Hence $\E_\kappa[x_2^2]=\frac13\langle R^2\rangle=m_1/\kappa$, $\ \langle t^2\rangle=1-3m_1/\kappa$ and
+$\Var_\kappa x_1=1-3m_1/\kappa-m_1^2$.
+\item[(ii)] $m_1'=\Var_\kappa x_1$, i.e.\ $m_1'=1-3m_1/\kappa-m_1^2$. With $\Delta(\kappa):=\E_\kappa[x_2^2]-\Var_\kappa x_1=m_1^2+4m_1/\kappa-1$,
+one has $\dfrac{d}{d\kappa}\Big(\dfrac{m_1}\kappa\Big)=-\dfrac{\Delta(\kappa)}\kappa$.
+\item[(iii)] $\langle t^3\rangle=m_1-\dfrac3\kappa+\dfrac{12m_1}{\kappa^2}$ and $\Cov_\kappa(x_1^2,x_1)=\dfrac{3\Delta(\kappa)}\kappa$.
+\item[(iv)] $m_1=I_2(\kappa)/I_1(\kappa)$, hence $\E_\kappa[x_2^2]=\dfrac{I_2(\kappa)}{\kappa I_1(\kappa)}=\dfrac13\Big(1-\dfrac{\Zb''}{\Zb}\Big)$.
+\end{enumerate}
+\end{lemma}
+\noindent\st{proved}
+\begin{proof}
+(i) $(R^3E)'=RE\,(\kappa R^2-3t)$ and $R^3E$ vanishes at $\pm1$, so $0=\int_{-1}^1(R^3E)'dt=\frac\pi2\big(\kappa\langle R^2\rangle-3m_1\big)$.
+Given $x_1=t$, $(x_2,x_3,x_4)$ is uniform on a $2$-sphere of radius $R(t)$, so $\E_\kappa[x_j^2\mid x_1]=R(x_1)^2/3$ for $j=2,3,4$.
+(ii) $m_1=(\log\Zb)'$, so $m_1'=\Zb''/\Zb-(\Zb'/\Zb)^2=\E_\kappa x_1^2-m_1^2=\Var_\kappa x_1$, and (i) gives the Riccati form.
+Then $\Delta=m_1/\kappa-(1-3m_1/\kappa-m_1^2)=m_1^2+4m_1/\kappa-1$ and
+$\kappa m_1'-m_1=\kappa-3m_1-\kappa m_1^2-m_1=-\kappa\Delta$, which is $\kappa^2\frac{d}{d\kappa}(m_1/\kappa)$.
+(iii) $(tR^3E)'=RE\,(R^2-3t^2+\kappa tR^2)$ gives $0=\langle R^2\rangle-3\langle t^2\rangle+\kappa(m_1-\langle t^3\rangle)$, i.e.
+$\kappa\langle t^3\rangle=\frac{3m_1}\kappa-3\big(1-\frac{3m_1}\kappa\big)+\kappa m_1$. Then
+$\Cov_\kappa(x_1^2,x_1)=\langle t^3\rangle-\langle t^2\rangle m_1=\frac3\kappa\big(m_1^2+\frac{4m_1}\kappa-1\big)$.
+(iv) $\Zb=2I_1/\kappa$ and $I_1'=I_2+I_1/\kappa$ give $\Zb'=2I_2/\kappa$, so $m_1=I_2/I_1$. Finally $\E_\kappa x_1^2=\Zb''/\Zb$ and
+$\E_\kappa[x_2^2]=\frac13(1-\E_\kappa x_1^2)$.
+\end{proof}
+
+\subsection{Divergence-free fields}\label{sec:chfield}
+
+\begin{lemma}[Flux bound]\label{lem:flux}
+Let $u=\langle x,v\rangle$ and $w=(u-\E_\kappa u)\,e^{\kappa x_1}/\Zb(\kappa)$ on $S^3$, so that
+$\Cov_\kappa(f,u)=\E_{\bar\sigma}[fw]$. Let $V\in C^1(\bar B;\R^4)$ on the closed unit ball $\bar B\subset\R^4$ with
+$\operatorname{div}V=0$ in $B$ and $V(x)\cdot x=w(x)$ on $S^3$. Then, for every $f$ 1-Lipschitz for $\rch$,
+\[
+\Cov_\kappa(f,u)\le\frac1{2\pi^2}\int_B|V(y)|\,dy .
+\]
+\st{proved}
+\end{lemma}
+\begin{proof}
+McShane's extension $F(y)=\min_{x\in S^3}(f(x)+|y-x|)$ is 1-Lipschitz on $\R^4$ and equals $f$ on $S^3$ (here the
+chordal metric is essential: it is the restriction of the Euclidean one); by Rademacher's theorem
+$|\nabla F|\le1$ a.e. Since $FV$ is Lipschitz on $\bar B$ and $\operatorname{div}(FV)=\nabla F\cdot V$ a.e., the
+divergence theorem and $|S^3|=2\pi^2$ give
+$\E_{\bar\sigma}[fw]=\frac1{2\pi^2}\int_{S^3}F\,V\cdot x\,d\sigma=\frac1{2\pi^2}\int_B\nabla F\cdot V\,dy
+\le\frac1{2\pi^2}\int_B|V|\,dy$.
+\end{proof}
+For $\kappa=0$ the constant field $V=v$ is admissible and gives $|B|/|S^3|=(\pi^2/2)/(2\pi^2)=1/4$: a second proof of
+$\Dch(0)\le1/4$. Applied to $F(y)=\langle v,y\rangle$ (equality case), the same computation gives
+$\frac1{2\pi^2}\int_B\langle v,V\rangle\,dy=\E_{\bar\sigma}[uw]=\Var_\kappa(u)$ for every admissible $V$.
+
+\paragraph{The explicit field.} Let $\kappa>0$. Write $y=(y_1,z)$ with $z=(0,y_2,y_3,y_4)$ and $R=R(y_1)$. Put
+$q(t):=(t-m_1)E(t)$, so that $\int_{-1}^1q(s)R(s)\,ds=\frac\pi2\big(\langle t\rangle-m_1\big)=0$, and
+\begin{equation}\label{eq:ode}
+A(t)=\frac{3}{R(t)^3}\int_t^1q(s)R(s)\,ds=-\frac{3}{R(t)^3}\int_{-1}^tq(s)R(s)\,ds\qquad(-1<t<1)
+\end{equation}
+(the two expressions agree because $\int_{-1}^1qR=0$). Differentiating $A\,R^3=3\int_t^1qR\,ds$ gives $(AR^3)'=-3qR$, i.e.\ with $(R^3)'=-3tR$,
+\begin{equation}\label{eq:odeA}
+tA(t)-\tfrac13(1-t^2)A'(t)=q(t)=(t-m_1)\,e^{\kappa t}/\Zb(\kappa).
+\end{equation}
+For $v=\cos\alpha\,e_1+\sin\alpha\,e_2$ put
+\begin{equation}\label{eq:field}
+V=\cos\alpha\,\big[A(y_1)\,e_1-\tfrac13A'(y_1)\,z\big]+\sin\alpha\,E(y_1)\,e_2 .
+\end{equation}
+Then $\operatorname{div}V=\cos\alpha\,(A'-A')+\sin\alpha\,\partial_{y_2}E(y_1)=0$ ($z$ has three components), and on
+$S^3$, where $|z|^2=1-x_1^2$, $V\cdot x=\cos\alpha\,q(x_1)+\sin\alpha\,x_2E(x_1)=(u-\cos\alpha\,m_1)e^{\kappa x_1}/\Zb=w$,
+because $\E_\kappa u=\cos\alpha\,m_1$ ($\E_\kappa x_2=0$ by the symmetry $x_2\mapsto-x_2$). \st{proved}
+
+\emph{Regularity, for every $\kappa>0$.} Write $t=\cos\vartheta$ and $s=\cos\varphi$. Then
+$\int_t^1q(s)R(s)\,ds=\int_0^\vartheta q(\cos\varphi)\sin^2\!\varphi\,d\varphi=\vartheta^3G(\vartheta^2)$ with $G$ entire, because
+$\varphi\mapsto q(\cos\varphi)\sin^2\!\varphi$ is an even entire function vanishing to second order at $0$. As
+$\sin^3\vartheta=\vartheta^3H(\vartheta^2)$ with $H$ entire and $H(0)=1$, the function $A=3G(\vartheta^2)/H(\vartheta^2)$ is analytic in
+$\vartheta^2$ near $0$, hence analytic in $t=1-\vartheta^2/2+\cdots$ near $t=1$. Near $t=-1$ the same argument applies to the second
+expression in \eqref{eq:ode}. In $(-1,1)$ analyticity is clear. So $A$ is real-analytic on $[-1,1]$ and $V\in C^\infty(\bar B)$ for every $\kappa>0$:
+the field is admissible in Lemma~\ref{lem:flux}. (The series in $\kappa$ used in v1.4 for this purpose, convergent for $|\kappa|\le2$, is
+needed only for the certificates of Appendix~\ref{app:v14}.) \st{proved}
+
+\subsection{The slice estimate}\label{sec:chslice}
+
+On $[-1,1]$ put $\fu:=A/E$ and $\fw:=t\fu-t+m_1$ (functions of $t$; they are unrelated to the symbols $u,w$ of Lemma~\ref{lem:flux}). They are
+real-analytic, hence bounded with bounded derivatives. By \eqref{eq:odeA}, $\frac13R^2A'=tA-q=\fw E$, i.e.
+\begin{equation}\label{eq:ode3}
+A=\fu E,\qquad R^2A'=3\fw E,\qquad R^2(\fu'+\kappa\fu)=3\fw,\qquad \fw=t\fu-t+m_1 .
+\end{equation}
+Define
+\begin{equation}\label{eq:Xi}
+\Xi(\kappa):=\langle R^2\fu^2\rangle+\tfrac35\langle\fw^2\rangle-\langle R^2\rangle .
+\end{equation}
+
+\begin{lemma}[Slice estimate]\label{lem:slice}
+For $\kappa>0$ and every $\alpha$: $\ \Dch(\kappa,\alpha)\le\E_\kappa[x_2^2]+\dfrac{\cos^2\!\alpha}6\,\Xi(\kappa)$.
+\end{lemma}
+\noindent\st{proved}
+\begin{proof}
+By Lemma~\ref{lem:flux} applied to \eqref{eq:field}, $\Dch(\kappa,\alpha)\le\frac1{2\pi^2}\int_B|V|\,dy$. Fix $t=y_1\in(-1,1)$; the slice
+$\{y_1=t\}\cap B$ is the ball $\{|z|\le R(t)\}$ of $\R^3$. Put $a=A'(t)/3$. Then
+\[
+\begin{aligned}
+|V|^2&=\cos^2\!\alpha\,A^2+(\sin\alpha\,E-\cos\alpha\,a\,y_2)^2+\cos^2\!\alpha\,a^2(y_3^2+y_4^2)\\
+&=\cos^2\!\alpha\,A^2+\sin^2\!\alpha\,E^2-2\sin\alpha\cos\alpha\,aE\,y_2+\cos^2\!\alpha\,a^2|z|^2 .
+\end{aligned}
+\]
+Since $E>0$, $\sqrt P\le(P+E^2)/(2E)$ for every $P\ge0$. The cross term is odd in $y_2$ and integrates to $0$ over the ball,
+and $\int_{|z|\le R}|z|^2dz=\frac35R^2\cdot\frac43\pi R^3$. With $\sin^2\!\alpha=1-\cos^2\!\alpha$ and $a^2\cdot\frac35R^2=\frac1{15}R^2A'^2$,
+\[
+\int_{|z|\le R}|V|\,dz\ \le\ \frac43\pi R^3\Big[E+\cos^2\!\alpha\ \frac{A^2+\frac1{15}R^2A'^2-E^2}{2E}\Big].
+\]
+Integrating in $t$ (Fubini) and dividing by $2\pi^2$,
+\[
+\frac1{2\pi^2}\int_B|V|\,dy\ \le\ \frac2{3\pi}\int_{-1}^1R^3E\,dt+\frac{\cos^2\!\alpha}{3\pi}\int_{-1}^1R^3\,\frac{A^2+\frac1{15}R^2A'^2-E^2}{E}\,dt .
+\]
+The first term is $\frac13\langle R^2\rangle=\E_\kappa[x_2^2]$ (Lemma~\ref{lem:ident}(i)). In the second, \eqref{eq:ode3} gives
+$R^3A^2/E=R^3E\fu^2$ and $R^5A'^2/(15E)=\frac35RE\fw^2$, so the integrand is $RE\,\big(R^2\fu^2+\frac35\fw^2-R^2\big)$, and
+$\frac{\cos^2\alpha}{3\pi}\int RE(\cdots)\,dt=\frac{\cos^2\alpha}{3\pi}\cdot\frac\pi2\,\Xi=\frac{\cos^2\alpha}6\,\Xi$.
+\end{proof}
+No positivity of the components of $V$ is assumed: the amplitude $E(y_1)>0$ of the reflection field (the exact field at $\alpha=\pi/2$) is the reference scale.
+This is what replaces the function $m(y_1)$ of v1.4 (Appendix~\ref{app:v14}), which degenerates for large $\kappa$ (\S\ref{sec:chcross}).
+
+\subsection{An exact identity}\label{sec:chsos}
+
+\begin{lemma}\label{lem:sos}
+For $\kappa>0$, $\ \Xi(\kappa)=-3\Delta(\kappa)-\mathcal S(\kappa)$, where
+\begin{equation}\label{eq:S}
+\mathcal S(\kappa):=\frac15\Big\langle12\Big(\fw-\frac{\kappa R^2\fu}{4}\Big)^2+\frac{\kappa^2}4R^4\fu^2\Big\rangle\ \ge0 .
+\end{equation}
+\end{lemma}
+\noindent\st{proved}
+\begin{proof}
+\emph{Step 1 (a differential identity).} For $\phi\in C^1[-1,1]$ put $\eta=\frac\kappa5R^4-tR^2$ and
+\[
+\mathcal Q[\phi]=\tfrac13\big(R^2\phi'+(\kappa R^2-3t)\phi\big)^2-R^2\phi^2-\tfrac1{15}R^4\big(5\phi'^2+4\kappa\phi\phi'+2\kappa^2\phi^2\big).
+\]
+Expanding, the terms in $\phi'^2$ cancel ($\frac13R^4-\frac13R^4$), the coefficient of $\phi\phi'$ is
+$\frac23R^2(\kappa R^2-3t)-\frac{4\kappa}{15}R^4=2\eta$, and that of $\phi^2$ is
+$c_0:=\frac13(\kappa R^2-3t)^2-R^2-\frac{2\kappa^2}{15}R^4=\frac{\kappa^2}5R^4-2\kappa tR^2+3t^2-R^2$. Thus
+$\mathcal Q[\phi]=\eta\,(\phi^2)'+c_0\,\phi^2$. Next, $(R^5E)'=RE\,(\kappa R^4-5tR^2)$ and $(tR^3E)'=RE\,(R^2-3t^2+\kappa tR^2)$, so
+$(R\,E\,\eta)'=\frac\kappa5(R^5E)'-(tR^3E)'=R\,E\,c_0$. Hence
+\[
+R\,E\,\mathcal Q[\phi]=\big(R\,E\,\eta\,\phi^2\big)' .
+\]
+Since $R\eta=R^3(\frac\kappa5R^2-t)$ vanishes at $\pm1$ and $\phi$ is bounded, $\langle\mathcal Q[\phi]\rangle=\frac2\pi\int_{-1}^1RE\,\mathcal Q[\phi]\,dt=0$.
+
+\emph{Step 2.} Take $\phi=\fu$. By \eqref{eq:ode3}, $R^2\fu'+(\kappa R^2-3t)\fu=3\fw-3t\fu=3(m_1-t)$, so the first term of $\mathcal Q[\fu]$
+is $3(t-m_1)^2$, whose mean is $3\Var_\kappa x_1$. Thus
+$\langle R^2\fu^2\rangle+\frac1{15}\langle R^4(5\fu'^2+4\kappa\fu\fu'+2\kappa^2\fu^2)\rangle=3\Var_\kappa x_1$. Eliminating
+$\fu'=3\fw/R^2-\kappa\fu$ gives
+$\frac1{15}R^4(5\fu'^2+4\kappa\fu\fu'+2\kappa^2\fu^2)=3\fw^2-\frac{6\kappa}5R^2\fu\fw+\frac{\kappa^2}5R^4\fu^2$, hence
+\begin{equation}\label{eq:ID}
+\langle R^2\fu^2\rangle+3\langle\fw^2\rangle-\tfrac{6\kappa}5\langle R^2\fu\fw\rangle+\tfrac{\kappa^2}5\langle R^4\fu^2\rangle=3\Var_\kappa x_1 .
+\end{equation}
+
+\emph{Step 3.} By Lemma~\ref{lem:ident}, $\langle R^2\rangle=3\E_\kappa[x_2^2]=3(\Var_\kappa x_1+\Delta)$. Inserting this and \eqref{eq:ID} in
+\eqref{eq:Xi},
+\[
+\Xi=\langle R^2\fu^2\rangle+\tfrac35\langle\fw^2\rangle-3\Var_\kappa x_1-3\Delta=-3\Delta-\tfrac15\big\langle12\fw^2-6\kappa R^2\fu\fw+\kappa^2R^4\fu^2\big\rangle,
+\]
+and $12\fw^2-6\kappa R^2\fu\fw+\kappa^2R^4\fu^2=12\big(\fw-\frac{\kappa R^2\fu}4\big)^2+\frac{\kappa^2}4R^4\fu^2$.
+\end{proof}
+
+\subsection{Positivity of $\Delta$}\label{sec:chdelta}
+
+\begin{lemma}\label{lem:delta}
+$\Delta(\kappa)>0$ for every $\kappa>0$; equivalently, $\kappa\mapsto\E_\kappa[x_2^2]=I_2/(\kappa I_1)$ is strictly decreasing.
+\end{lemma}
+\noindent\st{proved}
+\begin{proof}
+By Lemma~\ref{lem:ident}(iii), $\Delta=\frac\kappa3\Cov_\kappa(x_1^2,x_1)$. Let $\mu_0$ be the law of $x_1$ under $\bar\sigma$ (it is even) and
+$d\nu=\cosh(\kappa t)\,d\mu_0/\Zb$, a probability measure since $\Zb=\int\cosh(\kappa t)\,d\mu_0$. For even $g$, $\E_\kappa g(x_1)=\nu[g]$; for odd $g$,
+$\E_\kappa g(x_1)=\nu[g\tanh\kappa t]$. Hence
+$\Cov_\kappa(x_1^2,x_1)=\nu[t^3\tanh\kappa t]-\nu[t^2]\,\nu[t\tanh\kappa t]=\Cov_\nu(t^2,\ t\tanh\kappa t)$.
+Both $t^2$ and $t\tanh\kappa t$ are strictly increasing functions of $y=t^2$. For $T,T'$ independent with law $\nu$,
+$\Cov_\nu(t^2,t\tanh\kappa t)=\frac12\E\big[(T^2-T'^2)(T\tanh\kappa T-T'\tanh\kappa T')\big]$; the integrand is $\ge0$, and $>0$ on the event
+$T^2\ne T'^2$, which has positive probability.
+\end{proof}
+
+\subsection{Proof of Theorem~\ref{thm:chordal}}\label{sec:chmain}
+
+\emph{Lower bound.} The function $f=\langle x,v\rangle$ is 1-Lipschitz for $\rch$, so $\Dch(\kappa,v)\ge\Cov_\kappa(f,\langle x,v\rangle)=\Var_\kappa\langle x,v\rangle
+=\cos^2\!\alpha\,\Var_\kappa x_1+\sin^2\!\alpha\,\E_\kappa[x_2^2]=\E_\kappa[x_2^2]-\cos^2\!\alpha\,\Delta$ (as $\Cov_\kappa(x_1,x_2)=0$ and
+$\E_\kappa x_2=0$). At $\alpha=\pi/2$, $\Dch(\kappa,e_2)=\E_\kappa[x_2^2]$ is Lemma~\ref{lem:refl}.
+
+\emph{Upper bound.} Lemmas~\ref{lem:slice} and~\ref{lem:sos} give
+$\Dch(\kappa,\alpha)\le\E_\kappa[x_2^2]+\frac{\cos^2\alpha}6\big(-3\Delta-\mathcal S\big)=\E_\kappa[x_2^2]-\frac{\cos^2\alpha}2\Delta-\frac{\cos^2\alpha}6\mathcal S$, and $\mathcal S\ge0$.
+By Lemma~\ref{lem:delta}, $\Delta>0$, so for $\kappa>0$ and $\cos\alpha\ne0$, $\Dch(\kappa,\alpha)<\E_\kappa[x_2^2]$. With the case $\alpha=\pi/2$:
+$\Dch(\kappa)=\E_\kappa[x_2^2]$, attained exactly at $\alpha=\pi/2$ (the vectors $v$ and $-v$ give the same value, $f\mapsto-f$).
+By Lemma~\ref{lem:ident}(ii) and Lemma~\ref{lem:delta}, $\frac{d}{d\kappa}\E_\kappa[x_2^2]=-\Delta/\kappa<0$: $\Dch$ is strictly decreasing on $(0,\infty)$,
+and continuous at $0$, where $\Dch(0)=1/4$ (Lemma~\ref{lem:refl}).
+
+\emph{The formulas.} $\E_\kappa[x_2^2]=I_2/(\kappa I_1)=\frac13(1-\Zb''/\Zb)$ is Lemma~\ref{lem:ident}(iv); hence
+$\frac14-\E_\kappa[x_2^2]=(4\Zb''-\Zb)/(12\Zb)$. From $z_{2k+2}/z_{2k}=\frac1{4(k+1)(k+2)}$ for the coefficients $z_{2k}=1/(4^kk!(k+1)!)$ of $\Zb$,
+the coefficient of $\kappa^{2k}$ in $4\Zb''-\Zb$ is $\frac{3k}{k+2}z_{2k}\ge0$, equal to $\frac18$ for $k=1$. Hence $4\Zb''-\Zb\ge\kappa^2/8$ and
+$\frac14-\Dch\ge\kappa^2/(96\Zb)$. The expansion follows by exact series division. \qed
+
+\begin{remark}[a constant on bounded fields]\label{rem:const}
+Since $\Zb$ is increasing on $[0,\infty)$, $\frac14-\Dch(\kappa)\ge\kappa^2/(96\Zb(K))$ on $[0,K]$. For $K=4/3$, $\Zb(4/3)\in[1.2393065416564178344\pm3\cdot10^{-20}]$ gives
+$1/(96\Zb(4/3))\ge0.0084052$, so $\frac14-\Dch\ge0.0084\,\kappa^2$ on $[0,4/3]$ \st{interval-certified}.
+\end{remark}
+
+\subsection{Consequences}\label{sec:chcons}
+
+\begin{corollary}\label{cor:chordal}
+(a) For every $\beta\ge0$ and every neighbour $y$ of $\ell$, the chordal influence coefficient is $r_{\mathrm{ch}}(y,\ell)=\beta/4$ and
+$\sum_yr_{\mathrm{ch}}(y,\ell)=9\beta/2$; so the chordal Dobrushin criterion holds if and only if $\beta<2/9$.
+(b) $W_1(\nu_b,\nu_{b'})\le\frac14|b-b'|$ for all $b,b'\in\R^4$ (with $\nu_b\propto e^{\langle x,b\rangle}\bar\sigma$ and $W_1$ for $\rch$), and the constant $\frac14$ is best possible.
+(c) For $N=4$ (single spin space $S^3\subset\R^4$), every unit $\hat{\mathbf c}$ and every $\mathbf g\in\R^4$, the quantity
+$\sup_{\|f\|_L\le1}|\mu_{\mathbf g}[(\mathbf x\cdot\hat{\mathbf c}-\langle\mathbf x\cdot\hat{\mathbf c}\rangle_{\mathbf g})f]|$ of Levin's Remark~3.7 is $\Dch(|\mathbf g|,\hat{\mathbf c})\le\Dch(|\mathbf g|)\le\frac14$,
+with equality at $\mathbf g=0$; so its maximum over $\mathbf g$ is attained at $\mathbf g=0$, with value $1/N=1/4$, and $\Dch(|\mathbf g|)$ is strictly decreasing in $|\mathbf g|$.
+\end{corollary}
+\noindent\st{proved}
+\begin{proof}
+(a) In Proposition~\ref{prop:influence}, $\beta\Dch(0)\le r_{\mathrm{ch}}(y,\ell)\le\beta\sup_{\kappa\le6\beta}\Dch(\kappa)$, and the supremum equals $\Dch(0)=\frac14$ by Theorem~\ref{thm:chordal}; there are
+$18$ neighbours. (b) By the segment formula in the proof of Proposition~\ref{prop:influence} (here with $s=b$, $\beta=1$), $\int f\,d(\nu_{b'}-\nu_b)=\int_0^1\Cov_{\nu_{b+t(b'-b)}}(f,\langle x,b'-b\rangle)\,dt
+\le|b'-b|\sup_\kappa\Dch(\kappa)=\frac14|b'-b|$ for $f$ 1-Lipschitz, then Kantorovich--Rubinstein duality \cite[Thm~10.8]{DS25}; the constant is attained at $b=0$ (Lemma~\ref{lem:refl}).
+(c) The supremum over $f$ is $\Dch(|\mathbf g|,\hat{\mathbf c})$ by definition, and $\Dch(|\mathbf g|,\hat{\mathbf c})\le\Dch(|\mathbf g|)\le\Dch(0)=\frac14=\Dch(0,\hat{\mathbf c})$ by Theorem~\ref{thm:chordal} and Lemma~\ref{lem:refl}.
+\end{proof}
+Parts (a) and (b) are already in \cite{BB26} (Proposition~13 with Theorem~7; Theorem~7), and so is the non-strict monotonicity of the transverse moment $\kappa\mapsto I_2/(\kappa I_1)$ (Lemma~5(iii)); see \S\ref{sec:lit} for what is new.
+
+\subsection{Cross-checks (not part of the proof)}\label{sec:chcross}
+
+Nothing in this subsection is used in the proof above. All scripts are in the folder \path{identity_all_kappa/} of the accompanying archive (SHA-256 below).
+
+\begin{table}[htbp]
+\centering\small
+\begin{tabularx}{\linewidth}{@{}>{\raggedright\arraybackslash}p{0.27\linewidth}>{\raggedright\arraybackslash}X>{\raggedright\arraybackslash}p{0.17\linewidth}@{}}
+\toprule
+check & what was done and the outcome & status\\
+\midrule
+differential identity and algebra of \S\ref{sec:chsos}, Lemma~\ref{lem:ident} & SymPy: $RE\,\mathcal Q[\phi]=(RE\eta\phi^2)'$ for arbitrary $\phi$; the three derivative formulas; the slice identity $R^3(A^2+\frac1{15}R^2A'^2-E^2)/E=R^3E\,(\fu^2+\frac1{15}R^2(\fu'+\kappa\fu)^2-1)$;
+the Riccati equation (to $10^{-51}$ for $I_2/I_1$); $\frac d{d\kappa}(m_1/\kappa)=-\Delta/\kappa$; $\Cov(x_1^2,x_1)=3\Delta/\kappa$; the identity $b'-(1-3b/\kappa-b^2)=-(s-2)^2/(s\kappa^2)$ for $b=(s-2)/\kappa$, $s=\sqrt{\kappa^2+4}$ & \st{exact}\\
+$\Xi+3\Delta+\mathcal S=0$ as formal power series in $\kappa$ & exact fractions, up to $\kappa^{39}$, all coefficients vanish; $\Xi=-\frac{3}{32}\kappa^2+\frac{363}{25600}\kappa^4-\cdots$,
+$\Delta=\frac1{48}\kappa^2-\frac1{384}\kappa^4+\frac1{3840}\kappa^6-\cdots$, $\mathcal S=\frac1{32}\kappa^2-\frac{163}{25600}\kappa^4+\cdots$ & \st{exact}\\
+the same identity at fixed $\kappa$ & Arb, $90$ digits, $\fu$ by Taylor recursion and Gauss--Legendre quadrature (two rules), $20$ values of $\kappa\in[0.01,400]$ and
+$100$ random values in $[0.010,208]$: residual $\le3.7\cdot10^{-89}$; an independent mpmath code (integral representation of $\fu$, no Taylor series), $30$ digits,
+$\kappa\in\{\frac12,\frac43,3,7,12,25\}$: residual $\le6.1\cdot10^{-31}$ & \st{numerical}\\
+$\Xi(\kappa)<0$ on $[4/3,20]$ & two independent interval implementations (Arb, $13\,974$ boxes; mpmath.iv with exact fractions, $18\,267$ boxes), continuous covering; worst
+$\Xi_{\mathrm{hi}}/\langle R^2\rangle$ is $-1.3\cdot10^{-4}$ (Arb, near $\kappa=20$, where the technique reaches its limit) and $-0.164$ (mpmath.iv). With Lemma~\ref{lem:slice} this gives $\Dch=\E_\kappa[x_2^2]$
+on that range without Lemmas~\ref{lem:sos}--\ref{lem:delta} & \st{interval-certified}\\
+$\Delta(\kappa)>0$ & Arb, $933$ boxes cover $[1/5,10^4]$: $\Delta>0\iff m_1>b$, where $b(\kappa)=(\sqrt{\kappa^2+4}-2)/\kappa$ is the positive root of $b^2+4b/\kappa=1$, and both $m_1$ and $b$ are increasing, so $m_1(\kappa_0)>b(\kappa_1)$ on a box $[\kappa_0,\kappa_1]$ suffices & \st{interval-certified}\\
+chain $\mathrm{Low}\le F\le B\le\E_\kappa[x_2^2]$ & $F=\frac1{2\pi^2}\int_B|V|$ for the field \eqref{eq:field} by $3$D quadrature, $B=\E_\kappa[x_2^2]+\frac{\cos^2\alpha}6\Xi$,
+$\mathrm{Low}=\E_\kappa[x_2^2]-\cos^2\!\alpha\,\Delta$: holds at $98$ grid points and at $180$ random $(\kappa,\alpha)$, $\kappa\in[0.05,60]$ (no violation; the smallest slack is $2.5\cdot10^{-8}$, at angles close to $90^\circ$ where the three bounds coincide);
+at $\kappa=4/3$, $\alpha=0^\circ,45^\circ,90^\circ$: $F=0.208916$, $0.221397$, $0.233321$, as in v1.4 & \st{numerical}\\
+direct optimal transport & exact discrete transport (POT), reduction by the symmetry in $(x_3,x_4)$, Richardson extrapolation, $25$ values $\kappa\in[0,50]\times10$ angles: the value at $90^\circ$ equals $\E_\kappa[x_2^2]$ to $10^{-7}$,
+the maximum over $\alpha$ is attained at $90^\circ$ for every $\kappa$ tested, and $L_{\mathrm{OT}}\le B$ (Table~\ref{tab:ot}) & \st{numerical}\\
+\bottomrule
+\end{tabularx}
+\caption{Cross-checks of Theorem~\ref{thm:chordal}.}
+\label{tab:cross}
+\end{table}
+
+\begin{table}[htbp]
+\centering\small
+\begin{tabular}{rrccccc}
+\toprule
+$\kappa$ & $\alpha$ & $L_{\mathrm{OT}}$ & Low & $F$ & $B$ & $\E_\kappa[x_2^2]$\\
+\midrule
+$2$ & $0^\circ$ & $0.172701$ & $0.162709$ & $0.172869$ & $0.179396$ & $0.216564$ \\
+$2$ & $40^\circ$ & $0.191871$ & $0.184961$ & $0.191924$ & $0.194753$ & $0.216564$ \\
+$2$ & $90^\circ$ & $0.216564$ & $0.216564$ & $0.216564$ & $0.216564$ & $0.216564$ \\
+$10$ & $0^\circ$ & $0.024799$ & $0.014112$ & $0.025200$ & $0.046808$ & $0.085419$ \\
+$10$ & $40^\circ$ & $0.057718$ & $0.043574$ & $0.057745$ & $0.062761$ & $0.085419$ \\
+$10$ & $90^\circ$ & $0.085419$ & $0.085419$ & $0.085419$ & $0.085419$ & $0.085419$ \\
+$50$ & $0^\circ$ & $0.002252$ & $0.000594$ & $0.002268$ & $0.009855$ & $0.019403$ \\
+$50$ & $40^\circ$ & $0.012568$ & $0.008365$ & $0.012568$ & $0.013800$ & $0.019403$ \\
+$50$ & $90^\circ$ & $0.019403$ & $0.019403$ & $0.019403$ & $0.019403$ & $0.019403$ \\
+\bottomrule
+\end{tabular}
+\caption{Optimal-transport values $L_{\mathrm{OT}}$ of $\Dch(\kappa,\alpha)$ against the chain of bounds (\st{numerical}; $L_{\mathrm{OT}}\le B$ and $\mathrm{Low}\le L_{\mathrm{OT}}$ within $2\cdot10^{-5}$ in all $250$ cases).}
+\label{tab:ot}
+\end{table}
+
+\begin{table}[htbp]
+\centering\small
+\begin{tabular}{rcccc}
+\toprule
+$\kappa$ & $\Dch(\kappa)=I_2/(\kappa I_1)$ & $\frac14-\Dch$ & $\kappa^2/(96\Zb)$ & $\Delta$\\
+\midrule
+$1/2$ & $0.2474359$ & $0.002564143$ & $0.002524$ & $0.00505$ \\
+$1$ & $0.2401937$ & $0.009806276$ & $0.009216$ & $0.01847$ \\
+$4/3$ & $0.2333214$ & $0.01667858$ & $0.01494$ & $0.03007$ \\
+$2$ & $0.2165637$ & $0.03343629$ & $0.02619$ & $0.05385$ \\
+$3$ & $0.1893079$ & $0.06069212$ & $0.03557$ & $0.07977$ \\
+$4$ & $0.1645118$ & $0.08548818$ & $0.03415$ & $0.09107$ \\
+$6$ & $0.127121$ & $0.122879$ & $0.01834$ & $0.09024$ \\
+$10$ & $0.08541853$ & $0.1645815$ & $0.00195$ & $0.07131$ \\
+$20$ & $0.04629939$ & $0.2037006$ & $9.814\cdot10^{-7}$ & $0.04265$ \\
+$50$ & $0.01940306$ & $0.2305969$ & $2.243\cdot10^{-18}$ & $0.01881$ \\
+\bottomrule
+\end{tabular}
+\caption{Values of the exact coefficient (\st{numerical}, mpmath, $30$ digits).}
+\label{tab:values}
+\end{table}
+
+\paragraph{Artefacts (SHA-256).} Paths are relative to the folder \path{identity_all_kappa/} of the accompanying archive.\par\noindent
+{\small
+\begin{tabularx}{\linewidth}{@{}>{\raggedright\arraybackslash}p{0.40\linewidth}>{\raggedright\arraybackslash}X@{}}
+\toprule
+file & SHA-256\\
+\midrule
+\path{scripts/verif_symbolique.py} & \path{9458229aaf3b2a3d2527b60df9c42c311c7ecbd988e7c5e512b1ebbc42ac12d1}\\
+\path{scripts/serie_identite_exacte.py} & \path{be7832a2df16a6a0011b7cf57d4f56de328ee2e266aad893b24c5b0ef0efe980}\\
+\path{scripts/ident_num_arb.py} & \path{9302093edba6325cfe484f75a1fc09e96596654d19e718a22effcfd42fe38a98}\\
+\path{scripts/ident_num_mp.py} & \path{d87c807e59799631cebfe01220217656d9f447e33b75c1e11a86f96fb09496e7}\\
+\path{scripts/cert_xi_arb.py} & \path{623ddee924c1ef6eb31815a8ad2a208bfd339e4f20e8c25edc25232c7cf925ee}\\
+\path{scripts/cert_xi_mpiv.py} & \path{097d406a2ef83c733f0de14f36f44bf683b0cf0611b7b81289c4c729884fadd7}\\
+\path{scripts/cert_delta_boites.py} & \path{a3a3c1d98d101ce1845585aa6024683b1bedd01485e38ae052e6de52630cdf17}\\
+\path{scripts/flux_champ_exact.py} & \path{214fe55874ece9334c33584c8900765fa739b79f17df166d109f7c2ca3c3320d}\\
+\path{scripts/ot_controle.py} & \path{7cdc9b22d506182c91a3b8d13e4364e6e4143bfe7525f276bc0a4488a67a5973}\\
+\path{scripts/d7_limite.py} & \path{17e3de668fc92d53c75ad573ccf7b7e740b94920a30b4e6d74481151c5fe454e}\\
+\bottomrule
+\end{tabularx}}
+
+\begin{remark}[Why v1.4 stopped at $\kappa\le4/3$]\label{rem:limit14}
+The one-variable inequality \eqref{eq:1d} of Appendix~\ref{app:v14}, $\max(\tilde J_0,\tilde J_1)<\tilde N/\Zb^2$, is false for $\kappa>\kappa^*\approx3.280$, and the hypothesis $m>0$
+of Proposition~\ref{prop:alpha} fails for $\kappa\gtrsim6.85$ (high-precision Arb, \st{numerical}): the ratio $\max(J_0,J_1)/(\E_\kappa[x_2^2]-\Var_\kappa x_1)$ equals $0.3154$ at $\kappa=4/3$ and $0.4679$ at $\kappa=2$
+(the values $0.32$ and $0.47$ of v1.4 are recovered), $0.9831$ at $3.25$ and $1.1318$ at $3.5$; $\min m$ vanishes at $\kappa=6.8458$. This is a limit of the second-order estimate of v1.4, not of the result: for large $\kappa$,
+$A\ll E$ in the bulk of the law, so the uniform minorant $m(y_1)$ of $\langle v,V\rangle$ degenerates, while the exact flux of the same field stays well below $\E_\kappa[x_2^2]$ for every $\alpha<\pi/2$ (Table~\ref{tab:ot}).
+The slice estimate of \S\ref{sec:chslice} uses $E(y_1)$ as scale instead of $m(y_1)$, and the criterion $\Xi<0$ holds, with a growing margin, on the whole grid tested ($\Xi/\langle R^2\rangle$ from $-0.0078$ at $\kappa=1/4$ to $-0.998$ at $\kappa=400$).
+\end{remark}
+
+\begin{remark}[Earlier numerical evidence and the quality of the field]\label{rem:chordal}
+Before Theorem~\ref{thm:chordal} was proved, linear programs for $\sup_f$ (reduction to functions of two
+coordinates, HiGHS; logs \path{calc/lp2d_m14.log} and \path{calc/check1d.log}) gave for
+$\max_\alpha\Dch(\kappa,\alpha)$ the values $0.2500$, $0.2474$, $0.2402$, $0.2332$, $0.2164$ at $\kappa=0$, $0.5$, $1$,
+$4/3$, $2$,
+the maximum over directions being attained for $v\perp\hat s$; the same code reproduces the geodesic $D(0)$ to
+$0.15\%$ \st{numerical}. These values agree with $\E_\kappa[x_2^2]=0.25,\,0.24744,\,0.24019,\,0.23332,\,0.21656$ (the
+discretised programs are neither upper nor lower bounds; the value $0.2164<0.21656$ at $\kappa=2$ is a
+discretisation error, since $\E_\kappa[x_2^2]$ is an exact lower bound for $\Dch(\kappa)$). The full flux bound of
+the explicit field \eqref{eq:field} is within $1.7\cdot10^{-4}$ of the linear programs for all directions tested,
+so the field is close to optimal \st{numerical}.
+\end{remark}
+
+\section{The geodesic one-link bound}\label{sec:onelink}
+
+This section is the main result of v1.2 of this note, unchanged in substance. It gives the exact
+field-uniform coefficient for the geodesic metric, hence Theorem~\ref{thm:geo}.
+
+\begin{theorem}[One-link bound, geodesic metric]\label{thm:onelink}
+For all $\kappa\in[0,59/50]$ and all unit $v$,
+\[
+D(\kappa,v)\;\le\;\frac{8}{9\pi}-0.0085\,\kappa^2 ,
+\]
+with equality at $\kappa=0$. Since $6\cdot\pi/16=3\pi/8<59/50$, this covers $\kappa\le6\beta$ for all
+$\beta<\pi/16$.
+\end{theorem}
+\noindent Status: $\kappa=0$ \st{proved}; $\kappa>0$ \st{interval-certified}. Precisely: Lean proves only
+that the monotone bound \texttt{bP} is $<0$ in each of the $160$ boxes, i.e.\ $\Phi<0$ on $[0,K^2]$
+\emph{if} the exported rationals bound the coefficients (\st{Lean-checked}, \S\ref{sec:cap}); the
+constant $0.0085$ and the covering of $\alpha\in[0,\pi]$ by the boxes (box $\mapsto$ $\alpha$-interval) are
+\st{interval-certified}, not in Lean. The inequality $3\pi/8<59/50$ is \st{Lean-checked}
+(\texttt{kappa\_max\_lt}).
+
+\begin{lemma}[$\kappa=0$]\label{lem:zero}
+$D(0,v)=8/(9\pi)$ for every unit $v$. \st{proved}
+\end{lemma}
+\begin{proof}
+Let $\gamma\in[0,\pi]$ be the angle between $u$ and $v$; under Haar measure its law is
+$\frac2\pi\sin^2\gamma\,d\gamma$. \emph{Upper bound:} $\cos\gamma$ is a first eigenfunction of
+$-\Delta_{S^3}$ (eigenvalue $3$), so $\psi=\cos\gamma/3$ solves $-\Delta\psi=\langle u,v\rangle$ and, for
+1-Lipschitz $f$, $\Cov(f,\langle u,v\rangle)=\E[\nabla f\cdot\nabla\psi]\le\E|\nabla\psi|
+=\frac13\cdot\frac2\pi\int_0^\pi\sin^3\gamma\,d\gamma=\frac{8}{9\pi}$.
+\emph{Lower bound:} $f=\pi/2-\gamma$ is 1-Lipschitz and (integration by parts)
+\[
+\Cov(f,\cos\gamma)=-\E[\gamma\cos\gamma]=-\frac2\pi\int_0^\pi\gamma\cos\gamma\sin^2\gamma\,d\gamma
+=-\frac2\pi\Big(-\frac49\Big)=\frac{8}{9\pi}.
+\]
+\end{proof}
+
+\subsection{Reduction (proved, not formalised)}\label{sec:reduction}
+
+\paragraph{Step 1: transport.} Let $L=\Delta_{S^3}+\kappa\nabla x\cdot\nabla$ with $x=\langle u,\hat s\rangle$;
+$L$ is symmetric in $L^2(q_\kappa)$, with Dirichlet form $\E_{q_\kappa}[\nabla\varphi\cdot\nabla\psi]$.
+\emph{Weak solutions (Lax--Milgram).} Let $H$ be the space of $\varphi\in H^1(S^3)$ with $\E_{q_\kappa}\varphi=0$,
+with the inner product $\E_{q_\kappa}[\nabla\varphi\cdot\nabla\psi]$; it is a Hilbert space by the Poincar\'e
+inequality of Step~3 ($\lambda>0$). For $g\in L^2(q_\kappa)$ with $\E_{q_\kappa}g=0$, the functional
+$\varphi\mapsto\E_{q_\kappa}[\varphi g]$ is bounded on $H$ by $\|g\|_2\lambda^{-1/2}\|\nabla\varphi\|_2$, so by
+Riesz there is a unique $\psi\in H$ with $\E[\nabla\varphi\cdot\nabla\psi]=\E[\varphi g]$ for all
+$\varphi\in H^1$ (constants integrate against $g$ to zero); we write $-L\psi=g$ in this weak sense, which is
+all that is used below. With $g=\langle u,v\rangle-\E_{q_\kappa}\langle u,v\rangle$ and $f$ 1-Lipschitz for
+$\rho$ (so $f\in H^1$ with $|\nabla f|\le1$ a.e., by Rademacher's theorem),
+$\Cov_{q_\kappa}(f,\langle u,v\rangle)=\E[\nabla f\cdot\nabla\psi_v]\le\E|\nabla\psi_v|$, so
+$D(\kappa,v)\le\E_{q_\kappa}|\nabla\psi_v|$. \st{proved}
+
+\paragraph{Step 2: reduced ODEs and exact series.} Write $v=\cos\alpha\,\hat s+\sin\alpha\,e$ with
+$e\perp\hat s$, $y=\langle u,e\rangle$, and seek $\psi_v=\cos\alpha\,g(x)+\sin\alpha\,y\,h(x)$, $p=g'$.
+Using $\Delta_{S^3}g(x)=(1-x^2)g''-3xg'$, $\Delta_{S^3}(yh)=y[(1-x^2)h''-5xh'-3h]$,
+$|\nabla x|^2=1-x^2$ and $\nabla x\cdot\nabla y=-xy$, the equation reduces to
+\[
+(1-x^2)(p'+\kappa p)-3xp=-(x-m),\qquad (1-x^2)(h''+\kappa h')-5xh'-(3+\kappa x)h=-1,
+\]
+with $m=\E_{q_\kappa}x$. Expanding $p=\sum_n\kappa^np_n$, $h=\sum_n\kappa^nh_n$, $m=\sum_n\kappa^nm_n$ gives
+polynomials $p_n,h_n$ with rational coefficients, computed exactly; $p_n,h_n$ have parity $(-1)^n$ and
+$m_n=0$ for $n$ even (asserted in exact arithmetic by the certificate script).
+For the truncation $\psi_N$ at order $N$, the residual is
+$L\psi_N+(\langle u,v\rangle-\cos\alpha\,m)=\cos\alpha\,(m_N-m)+R'$ with
+$R'=\kappa^{N+1}\big[\cos\alpha(1-x^2)p_N+\sin\alpha\,y\big((1-x^2)h_N'-xh_N\big)\big]$
+(identity also checked symbolically in $\R^4$ at rational points of $S^3$).
+Since the full residual $R$ has $q_\kappa$-mean zero, $|\cos\alpha(m_N-m)|\le\|R'\|_\infty$, hence
+$\|R\|_\infty\le2\kappa^{N+1}\rho_N$, where $\rho_N$ is the sum of $\ell^1$ norms of the coefficients of the
+two bracketed polynomials ($\rho_{16}\approx8.1\cdot10^{-10}$). \st{proved}
+
+\paragraph{Step 3: correction via Poincar\'e.} Let $-L\varphi=R$; then $\psi_v=\psi_N+\varphi$ exactly. The
+density of $q_\kappa$ w.r.t.\ Haar measure has log-oscillation at most $2\kappa$ and the spectral gap of
+$-\Delta_{S^3}$ is $3$, so by the Holley--Stroock perturbation argument \cite{HS87} the Poincar\'e constant
+of $q_\kappa$ satisfies $\lambda\ge3e^{-2\kappa}$. (Proof: write $dq_\kappa=h\,d\sigma$ with $\sigma$ the
+Haar measure, $h=e^{\kappa x}/\tilde Z$, so $e^{-\kappa}/\tilde Z\le h\le e^{\kappa}/\tilde Z$; then
+$\operatorname{Var}_{q}f\le\E_q(f-\E_\sigma f)^2\le\frac{e^{\kappa}}{\tilde Z}\operatorname{Var}_\sigma f
+\le\frac{e^{\kappa}}{3\tilde Z}\E_\sigma|\nabla f|^2\le\frac{e^{2\kappa}}{3}\E_q|\nabla f|^2$.) Then
+$\E|\nabla\varphi|^2=\E[\varphi R]\le\|R\|_2(\E|\nabla\varphi|^2/\lambda)^{1/2}$, whence
+\[
+\E|\nabla\varphi|\le\|R\|_2/\sqrt\lambda\le\varepsilon_N(\kappa):=2\kappa^{N+1}\rho_N e^{\kappa}/\sqrt3 .
+\]
+So $D(\kappa,v)\le\E|\nabla\psi_N|+\varepsilon_N(\kappa)$. \st{proved}
+
+\paragraph{Step 4: AM--GM.} With $\varrho=\sin\gamma/3=|\nabla\psi_0|$ ($\cos\gamma=\langle u,v\rangle$),
+pointwise $|X|\le(|X|^2/\varrho+\varrho)/2$, hence
+$\E|\nabla\psi_N|\le U_N:=\E\big[(|\nabla\psi_N|^2/\varrho+\varrho)/2\big]$, with equality at $\kappa=0$. \st{proved}
+
+\paragraph{Step 5: polynomial coordinates.} The image of the uniform measure on $S^3$ under
+$u\mapsto(\langle u,\hat s\rangle,\langle u,e\rangle)$ is uniform on the unit disc, and $|\nabla\psi_N|^2$ is a
+polynomial in $(x,y,\kappa)$. In the rotated frame $s=\langle u,v\rangle$, $t=\sqrt{1-s^2}\,\tau$, the singular
+weight $1/\varrho$ cancels against the Jacobian and
+\[
+U_N(\kappa,\alpha)\,Z(\kappa)=\iint_{[-1,1]^2}\Big[\tfrac32|\nabla\psi_N|^2+\tfrac{1-s^2}{6}\Big]e^{\kappa x}\,ds\,d\tau,
+\qquad Z(\kappa)=\pi\sum_{k\ge0}\frac{(\kappa^2/4)^k}{k!\,(k+1)!}=\pi\Zb(\kappa).
+\]
+At $\kappa=0$ the integral is $8/9$ and $Z(0)=\pi$, recovering $8/(9\pi)$. The coefficient of $\kappa^j$ is the
+integral of a polynomial of degree $\le j+2$ in $(s,\tau)$: the terms odd in $\tau$ integrate to zero
+(also exactly on symmetric Gauss nodes), and in the remaining terms $\sqrt{1-s^2}$ occurs only squared.
+\st{proved}
+
+\paragraph{Step 6: exact factorisation of $\kappa^2$.} Put
+$\Delta_{\mathrm g}(\kappa,\alpha):=\big(U_N+\varepsilon_N-\tfrac{8}{9\pi}\big)Z=\sum_jE_j(\alpha)\kappa^j+(\text{remainders})$.
+$E_0=0$ exactly ($I_0=8/9$), and $E_j=0$ for $j$ odd by the parity $u\mapsto-u$, i.e.\ $(s,\tau)\mapsto(-s,-\tau)$.
+Hence $\Delta_{\mathrm g}=\kappa^2\Phi(w)$ with $w=\kappa^2$ and
+$\Phi(w)=\sum_{k\ge1}E_{2k}w^{k-1}+(\text{Taylor remainder}+\varepsilon_NZ)/\kappa^2$; the last two terms
+are increasing in $\kappa$ and are bounded at $\kappa=K=59/50$. This is what makes the comparison at
+$\kappa\to0$ non-degenerate: no two touching balls are ever compared. \st{proved}
+
+Since $Z$ is increasing, $\Phi\le-c_\ast$ on $[0,K^2]$ implies
+$D(\kappa,v)\le\frac{8}{9\pi}-\frac{c_\ast}{Z(K)}\kappa^2$.
+
+\begin{remark}[second order, exact]
+An independent exact computation (SymPy, harmonic components in $\R^4$; code not included in the archive)
+gives $E_2(\alpha)=-(1309\cos^2\alpha+779)/21600$, maximal at $\alpha=\pi/2$. Locally as $\kappa\to0$ the
+method cannot give a coefficient better than $779/(21600\pi)\approx0.0115$ in front of $\kappa^2$; along the
+route actually used ($c_\ast/Z(K)$, uniform on $[0,K]$), since $c_\ast\le-\sup_\alpha\Phi(0)=779/21600$, the
+ceiling is $779/(21600\,Z(K))\approx0.0097$. The certified $0.0085$ is below both.
+(Status: exact computation; the same $E_2$ and $E_4$ are reproduced in exact rationals, by a different method,
+by the independent check \path{independent_check_geodesic/}.)
+\end{remark}
+
+\subsection{Computer-assisted part}\label{sec:cap}
+
+\paragraph{Interval evaluation.} Parameters: series order $N=16$; Gauss--Legendre with $N_G=22$ nodes per
+direction, exact for polynomial degree $\le2N_G-1=43$, hence for all $j\le D=41$; $\alpha\in[0,\pi]$ cut into
+$160$ boxes of width $\pi/160$, $(\cos\alpha,\sin\alpha)$ enclosed by balls; Arb ball arithmetic
+(python-flint 0.9.0) with working precision $128$ bits and series length cap $200$, both set explicitly and
+read back. Nodes and weights are rigorous balls (\texttt{arb.legendre\_p\_root}). Orders $\kappa^0,\dots,\kappa^{41}$
+are computed; the orders $\ge42$ of $e^{\kappa x}$ are covered by the Lagrange bound
+$|\text{rem}|/\kappa^2\le4\kappa^{D-1}e^{\kappa}\sum_i\sup|A_i|/(D+1-i)!\le1.53\cdot10^{-21}$ at $\kappa=K$.
+On each box, $\Phi(w)\le\sum_k\max(c_k\cdot0^k,c_kK^{2k})$ with $c_k$ upper bounds of $E_{2k+2}$ (the constant
+term absorbing the remainder bounds).
+
+\paragraph{Result.} All $160$ boxes pass in one piece in $w$; the worst bound is
+$\Phi\le-0.03175361$ (box 75, $\alpha$ near $\pi/2$); $Z(59/50)\in[3.721046472\pm4.7\cdot10^{-10}]$, and
+$0.03175361/Z(59/50)\in[0.0085335161\pm5\cdot10^{-12}]>0.0085$. A second run with $N=20$, $N_G=26$,
+$240$ boxes, precision $192$ passes with worst bound $-0.03333053$ (stability check, same code).
+\st{interval-certified}
+
+\paragraph{Erratum on an earlier version (important).} A first version of this certificate (Lean commit
+\texttt{1f3ace0}) was \emph{invalid}: python-flint's default \texttt{ctx.cap}${}=10$ silently truncated every
+product of power series at $\kappa^9$, so the orders $\kappa^{10},\dots,\kappa^{41}$ were neither computed nor
+bounded, and in each of the $160$ boxes at least one exported bound (orders $E_{12}$--$E_{40}$) was below
+the true value. Lean accepted it, since Lean only sees the rational inequalities. The error was found by
+an independent adversarial re-verification, and its numerical effect is small ($\le4.7\cdot10^{-6}$ against a margin
+$0.0317$), but the artefact had to be regenerated. The repaired script makes cap and precision mandatory
+arguments, refuses $\mathrm{cap}<L=42$ (guard~1) and asserts that every series and product has length
+exactly $L$ (guard~2, $851\,840$ assertions per run; the assertion is on \texttt{.prec} because
+\texttt{coeffs()} drops trailing zeros). The chordal certificate of \S\ref{sec:chcap} was written with the
+same guards from the start.
+
+\paragraph{Independent checks (gates).} All logs return code 0 unless a refusal is expected.
+\begin{center}\small
+\begin{tabular}{p{0.28\linewidth}p{0.64\linewidth}}
+\toprule
+gate & outcome\\
+\midrule
+G1: cap $\in\{42,50,100,200\}$ & identical results in all $160$ boxes; cap $=10$ refused by guard~1; cap $=10$ and $41$ with guard~1 disabled refused by guard~2\\
+G2: explicit Cauchy convolution (no \texttt{arb\_series}) & all $42$ coefficients overlap; $\max|\Delta\mathrm{mid}|=1.5\cdot10^{-39}$\\
+G3: $N\in\{16,20,24\}$ vs $32$ & $|U_N-U_{32}|$ nonzero, decreasing ($1.34\cdot10^{-10}$, $1.20\cdot10^{-12}$, $1.08\cdot10^{-14}$ at $\alpha=0$, $\kappa=1.18$), below $\varepsilon_N$\\
+G4: $N_G\in\{21,22,26\}$ & $22$ vs $26$ overlap for $j\le41$; with $21$ nodes disagreement starts exactly at $j=40$, as predicted by Gauss exactness\\
+G5: Arb vs float polar grid & gap $\le1.0\cdot10^{-8}$, decreasing as $O(h^2)$ under grid refinement\\
+independent recomputation (Galerkin; code not included in the archive) & Galerkin solver at finite $\kappa$ and exact $E_2,E_4$: consistent with every box bound; recomputed data identical byte for byte\\
+independent check (exact rationals; \path{independent_check_geodesic/}) & $E_j(\alpha)\in\mathbb Q[\cos\alpha]$ computed exactly by a different method (no quadrature, no \texttt{arb\_series}); all $3200$ Lean coefficients of \texttt{7a211ed} ($160$ boxes $\times$ $E_2,\dots,E_{40}$) are true upper bounds, via rigorous box majorants with the invariant ``majorant $\ge$ exact sample'' checked everywhere; the same tool refutes the old commit \texttt{1f3ace0} ($1634$ false bounds, $160/160$ boxes); worst \texttt{bP} $=-0.03175360$ in rationals; $0.0085335\ge0.0085$ checked exactly against a rigorous upper bound of $Z(K)$; $U_{16}$ vs.\ an independent Galerkin solver at $700$ points $(\kappa,\alpha)$: $\max|\Delta|=1.34\cdot10^{-10}<\varepsilon_{16}$\\
+\bottomrule
+\end{tabular}
+\end{center}
+Floating-point gates are \st{numerical}; they test the modelling, they are not part of the proof.
+
+\paragraph{Lean.} Commit \path{7a211ed0426e95b36a0ff35f5e896f8594b34fd3} of the author's Lean library (parent
+\texttt{1f3ace0}; only \path{KevYM/Certif/DobrushinLien/Donnees.lean} changed). The three modules are reproduced byte
+for byte in the standalone Lean project \path{lean/} of the accompanying archive (they are unchanged in
+\texttt{1b0f039}). Lean toolchain \texttt{v4.34.0}. Main statements (verbatim):
+{\footnotesize
+\begin{verbatim}
+theorem sound (cs : List ℚ) (a b : ℚ) (ha : 0 ≤ a) (hneg : bP cs 0 a b < 0)
+    (es : List ℝ) (hes : List.Forall₂ (fun (e : ℝ) (c : ℚ) => e ≤ (c : ℝ)) es cs)
+    (w : ℝ) (haw : (a : ℝ) ≤ w) (hwb : w ≤ b) : pR es 0 w < 0
+theorem certs_ok : certs.all (fun cs => decide (bP cs 0 0 KW < 0)) = true
+theorem certificat_boites (cs : List ℚ) (hcs : cs ∈ certs) (es : List ℝ)
+    (hes : List.Forall₂ (fun (e : ℝ) (c : ℚ) => e ≤ (c : ℝ)) es cs)
+    (w : ℝ) (hw0 : 0 ≤ w) (hw : w ≤ (KW : ℝ)) : pR es 0 w < 0
+theorem somme_dobrushin_lt_one (β : ℝ) (hβ : β < Real.pi / 16) :
+    18 * β * (8 / (9 * Real.pi)) < 1
+theorem kappa_max_lt : 6 * (Real.pi / 16) < (59 : ℝ) / 50
+\end{verbatim}}
+Here \texttt{bP} is the monotone upper bound $\sum_k\max(c_ka^k,c_kb^k)$, \texttt{pR es 0 w}${}=\sum_je_jw^j$
+(\texttt{pR\_eq\_sum}), \texttt{KW}${}=3481/2500=(59/50)^2$, and \texttt{certs} is the list of $160$ exported
+rational coefficient vectors (Arb upper bounds rounded up to the grid $2^{-40}$, re-checked exactly
+before export). \texttt{certs\_ok} is proved by \texttt{decide +kernel}. The file also proves
+$18\cdot(\pi/16)\cdot 8/(9\pi)=1$ and the converse for $\beta\ge\pi/16$.
+Build clean (0 warnings); all $13$ theorems depend only on \texttt{propext}, \texttt{Classical.choice},
+\texttt{Quot.sound}; the rebuild from \texttt{git archive 7a211ed} succeeds, and so does the from-scratch build of
+the standalone project (\path{lean/logs/build_from_zero.log}). \st{Lean-checked}
+
+\paragraph{What Lean covers, exactly.} Lean proves \texttt{bP cs 0 0 KW < 0} (strict) for each of the
+$160$ exported vectors, and the implication of \texttt{certificat\_boites}: \emph{if} the true
+coefficients lie below the exported rationals, \emph{then} $\Phi<0$ on $[0,K^2]$; plus the threshold
+arithmetic. Not in Lean: the constant $0.0085$ (i.e.\ $-\max\texttt{bP}/Z(K)\ge0.0085$, checked exactly in
+rationals by the independent check against a rigorous upper bound of $Z(K)$) and the covering of $[0,\pi]$ by the boxes
+(the association box $\mapsto\alpha$-interval is a comment in the Lean file); both are
+\st{interval-certified}.
+
+\paragraph{Trust base.} The implication ``integrals $\Rightarrow$ exported bounds'' rests on Arb and on the
+reduction of \S\ref{sec:reduction} (proved on paper; the classical inputs are Kantorovich--Rubinstein
+duality, quoted from \cite[Thm~10.8]{DS25}, the Holley--Stroock perturbation argument, written out in
+Step~3, and the weak solvability of $-L\varphi=R$, written out in Step~1), and is \emph{not} formalised. It is
+cross-checked in exact rationals by the independent check (table above), which shares with the certificate only the
+modelling (reduced ODEs, measure $ds\,d\tau$).
+
+\paragraph{Artefacts (SHA-256).} Paths are relative to the accompanying archive.\par\noindent
+{\small
+\begin{tabularx}{\linewidth}{@{}>{\raggedright\arraybackslash}p{0.40\linewidth}>{\raggedright\arraybackslash}X@{}}
+\toprule
+file & SHA-256\\
+\midrule
+\path{certificate_geodesic/cert_lien.py} (v2) & \path{8b76b11125693b8f71b44898e959635066b3804560c2ee314092667a562ea096}\\
+\path{certificate_geodesic/export_lean.py} & \path{1885f8bc2e8444bd616efa41c5c18bbfaa3fca78e6bc3e06ae197014160c1bcb}\\
+\path{certificate_geodesic/cert_N16_G22_B160_cap200_p128.json} & \path{91700df0e8031e1f6ed4c3d6d9e88c42ddf36f0abeacd58c9f328738b0d9c43e}\\
+\path{lean/KevYM/Certif/DobrushinLien/Donnees.lean} (${}={}$\texttt{7a211ed}) & \path{9d6c06283848a9ef38baecb222e195e9aa528009412e7c8bded6f2555321c37f}\\
+\bottomrule
+\end{tabularx}}
+
+\section{Proofs of Theorems~\ref{thm:main} and~\ref{thm:geo}, and a corollary}
+\emph{Theorem~\ref{thm:main}.} Let $\beta<2/9$, and use the chordal metric. By Theorem~\ref{thm:chordal}, $\Dch$ is decreasing, so
+$\sup_{\kappa\le6\beta}\Dch(\kappa)=\Dch(0)=1/4$; by
+Proposition~\ref{prop:influence} each of the $18$ neighbours has influence $\beta/4$ and all other links have
+influence $0$; so (5.2) holds with $d=9\beta/2<1$ (\texttt{somme\_dobrushin\_lt\_one}). (5.1) holds for every
+field. By \cite[Thm~4]{Dob70} there is at most one field with the Wilson single-link conditionals, hence at most
+one Gibbs measure (item~2 of \S\ref{sec:dobrushin}); existence is Proposition~\ref{prop:exist}. (Only $\kappa\le6\beta<4/3$ occurs here, the range of the proof of Appendix~\ref{app:v14}, which uses \texttt{kappa\_max\_lt}.) \qed
+
+\emph{Theorem~\ref{thm:geo}.} Let $\beta<\pi/16$, and use the geodesic metric. By Theorem~\ref{thm:onelink},
+$\sup_{\kappa\le6\beta}D(\kappa)=D(0)=8/(9\pi)$, and Proposition~\ref{prop:influence} gives the sum $16\beta/\pi<1$
+(\texttt{somme\_dobrushin\_lt\_one} of the geodesic module). For $\beta\ge\pi/16$ the lower bound of
+Proposition~\ref{prop:influence} gives a sum $\ge16\beta/\pi\ge1$. \qed
+
+\subsection{A Poincar\'e inequality for $\beta<2/9$ (a corollary of Wu's theorem)}\label{sec:poincare}
+
+The influence coefficients of Proposition~\ref{prop:influence} are Dobrushin's interdependence coefficients in the sense of Wu \cite[(2.3)]{Wu06}.
+His theorem therefore turns Theorem~\ref{thm:chordal} into a Poincar\'e inequality, uniform in the volume and in the boundary condition, on the whole range of
+Theorem~\ref{thm:main}. This is a corollary, not a new method: the Poincar\'e inequality under Dobrushin's condition is classical (\S\ref{sec:lit}), and we claim only
+its explicit form for this model. It is a Poincar\'e inequality only: no log-Sobolev inequality and no decay of correlations is claimed.
+
+\begin{corollary}[Poincar\'e inequality]\label{cor:poincare}
+Let $0\le\beta<2/9$, let $\Lambda\subset E$ be finite, $\bar U$ any boundary condition, and $\mu=\mu^{\bar U}_\Lambda$ the probability measure \eqref{eq:wilson} on $SU(2)^\Lambda$.
+For every $f\in C^1(SU(2)^\Lambda)$,
+\[
+\Var_\mu(f)\ \le\ \frac{1}{\lambda_0\,\big(1-\frac92\beta\big)}\ \sum_{\ell\in\Lambda}\E_\mu\big[|\nabla_\ell f|^2\big],
+\]
+where $\nabla_\ell$ is the gradient in $U_\ell$ for the round metric of the unit sphere $S^3$, and $\lambda_0>0$ is the infimum over $\kappa\in[0,6\beta]$ of the spectral gap
+of $q_\kappa$ (its best Poincar\'e constant) for this metric. One has $\lambda_0\ge2-6\beta$ (Bakry--\'Emery) and $\lambda_0\ge3$ \cite[Lemma~4 of v1, Lemma~122 of v4]{BB26}. Hence
+\[
+\Var_\mu(f)\ \le\ \frac13\Big(1-\frac92\beta\Big)^{-1}\sum_{\ell\in\Lambda}\E_\mu|\nabla_\ell f|^2 ,
+\]
+and the weaker constant $\big[(2-6\beta)(1-\tfrac92\beta)\big]^{-1}$ uses the Bakry--\'Emery bound only. For the bi-invariant metric $\langle X,Y\rangle=-\operatorname{Tr}(XY)$
+(the Frobenius normalisation of Proposition~\ref{prop:piflux}: the round $S^3$ of radius $\sqrt2$, in which $|\nabla f|_F^2=\tfrac12|\nabla f|^2$) the two constants become
+$\tfrac23(1-\tfrac92\beta)^{-1}$ and $\big[(1-3\beta)(1-\tfrac92\beta)\big]^{-1}$.
+\end{corollary}
+\noindent Status: \st{proved}, from \cite[Thm~2.1]{Wu06} (\st{read}), the Bakry--\'Emery criterion \cite{BE85} (as used in \cite[proof of Lemma~5.4]{Wu06}; not re-read) and, for the constant $\frac13$,
+\cite[Lemma~4]{BB26} (\st{read}; its proof by Barta's method is not re-derived here).
+\begin{proof}
+\emph{(1) The Dobrushin matrix.} Let $T=\Lambda$. The conditional law of $U_\ell$ under $\mu$ given the other links of $\Lambda$ is the law $q_s$ of \eqref{eq:q} (the links outside $\Lambda$ are frozen to $\bar U$).
+Let $C=(c_{\ell\ell'})$ be the Dobrushin matrix of $\mu$ for the chordal metric, $c_{\ell\ell'}=\sup W_1\big(\mu_\ell(\cdot|x),\mu_\ell(\cdot|y)\big)/\rch(x_{\ell'},y_{\ell'})$ over configurations $x,y$ differing only at $\ell'$;
+this is the coefficient (5.4) of \cite{Dob70} and the matrix (2.3) of \cite{Wu06}. The conditions that occur for $\mu$ form a subset of those of the full specification, so
+$c_{\ell\ell'}\le r_{\mathrm{ch}}(\ell',\ell)=\beta/4$ if $\ell'$ is one of the (at most $18$) neighbours of $\ell$ in $\Lambda$, and $c_{\ell\ell'}=0$ otherwise (Proposition~\ref{prop:influence}, Theorem~\ref{thm:chordal}).
+Hence $r_{\mathrm{sp}}(C)\le\|C\|_\infty\le9\beta/2<1$.
+\emph{(2) Tensorisation.} Theorem~2.1 of \cite{Wu06} (p.~5; $T$ finite, $(E,d)$ Polish, here $S^3$ with $\rch$, and a moment condition that is trivial on a compact space) states that if $r_{\mathrm{sp}}(C)<1$ then
+$(1-r_{\mathrm{sp}}(C))\Var_\mu(f)\le\E_\mu\sum_\ell\Var_{\mu_\ell}(f)$ for $f\in L^2(\mu)$, where $\mu_\ell$ is the conditional law of the $\ell$-th coordinate. The metric $d$ enters only through $C$ and may differ from the metric of the gradient,
+as in \cite[Prop.~5.5]{Wu06} (Euclidean metric for $C$, Riemannian gradient).
+\emph{(3) One site.} $\mu_\ell=q_s$ with $\beta|s|\le6\beta$, i.e.\ $q_s$ is $q_\kappa$ up to a rotation, with $\kappa\le6\beta$; so $\Var_{\mu_\ell}(f)\le\lambda_0^{-1}\E_{\mu_\ell}|\nabla_\ell f|^2$. Summing over $\ell$ and averaging over the conditions gives the inequality.
+\emph{(4) The values of $\lambda_0$.} On the unit $S^3$, $\mathrm{Ric}=2g$ and $\mathrm{Hess}\,\langle x,a\rangle=-\langle x,a\rangle g$, so $q_\kappa\propto e^{-V}$ with $V=-\kappa x_1$ has
+$\mathrm{Ric}+\mathrm{Hess}\,V=(2+\kappa x_1)g\ge(2-\kappa)g$; the Bakry--\'Emery criterion gives a gap $\ge2-\kappa\ge2-6\beta>0$. The bound $3$ is \cite[Lemma~4]{BB26}.
+\end{proof}
+
+\begin{remark}\label{rem:poincare}
+(i) \emph{Comparison.} Shen--Zhu--Zhu \cite{SZZ23} prove a log-Sobolev inequality, hence a Poincar\'e inequality, for $\beta<1/12$. Theorem~B of \cite{BB26} (v1, p.~2) gives the Bakry--\'Emery
+condition, with log-Sobolev and Poincar\'e inequalities uniform in the volume and the boundary condition, for $|\beta|<1/(8d)$ in their normalisation, i.e.\ $\beta_W<1/8$ for $SU(2)$ in $d=4$. Corollary~\ref{cor:poincare} extends the range of the
+Poincar\'e inequality alone to $2/9$ (a factor $8/3$ over \cite{SZZ23}); it says nothing about the log-Sobolev inequality beyond $1/8$. The authors of \cite{BB26} write that Dobrushin's condition,
+its Wasserstein form and its consequences for decay and for transport and Poincar\'e inequalities (citing, among others, \cite{Wu06}) ``are classical'' (v1, p.~19, footnote), without writing out the Poincar\'e inequality at $\beta_W<2/9$ for this model, to our
+knowledge (literature search not exhaustive).
+(ii) \emph{Infinite volume.} For $f$ local and $C^1$, both sides of the inequality are continuous under weak convergence of $\mu$, and the limit points of the finite-volume measures are Gibbs measures (proof of
+Proposition~\ref{prop:exist}), hence equal the unique Gibbs measure of Theorem~\ref{thm:main}. That measure therefore satisfies the same inequality for local $C^1$ functions $f$ (the sum over $\ell\in E$ has finitely many non-zero terms).
+(iii) \emph{Numerical controls} (\st{numerical}; they check conventions and are not part of the proof). The one-site gap of $q_\kappa$, computed by Rayleigh--Ritz in the sectors $l=0,1,2$ of spherical harmonics on $S^2$ and, independently, by a grid discretisation,
+is $3$ at $\kappa=0$ and $3.0083$, $3.2337$, $3.5164$, $10.580$ at $\kappa=\frac14,\frac43,2,10$. A Monte Carlo test on the $4^4$ torus ($1024$ links, exact heat bath, four observables, $\beta\in\{0.05,0.1,0.15,0.2\}$, $2\cdot10^4$ measurements each)
+satisfied both $(1-\frac92\beta)\Var f\le\E\sum_\ell\Var_\ell f$ and the Poincar\'e inequality with both constants in all $16$ cases, within $3\sigma$ and with a wide margin.
+\end{remark}
+
+\section{Application: Wilson's area law for $\beta<2/3$}\label{sec:area}
+
+The coefficient of Theorem~\ref{thm:chordal} is not specific to uniqueness. It is applied here to the three-dimensional $\sigma$-models into which Durhuus and Fr\"ohlich \cite{DF80} decompose the four-dimensional theory, and gives Wilson's area law for $\beta=\beta_W<2/3$. \emph{This range is not new}: Borgs and Seiler \cite{BS83} obtained confinement for $\beta_W<12/17\approx0.706$ by a different argument (\S\ref{sec:areaprior}), and \emph{we claim no priority on any threshold}. What this section offers is an independent proof by Dobrushin's comparison, valid on tori uniformly in the volume, in boxes with free boundary conditions and for every Gibbs measure on $\Z^4$, with explicit constants for every rectangular loop and the explicit lower bound $\arcosh(2/\beta-2)$ for the string tension.
+
+\subsection{Statement}\label{sec:areastat}
+
+\paragraph{Measures.} For $L\ge2$ let $\mathbb T_L=(\Z/L\Z)^4$ be the periodic torus and $\mathbb B=\prod_{\mu=1}^4\{0,\dots,L_\mu\}$ a box. Links, plaquettes $p=(z;\mu,\nu)$, $\mu<\nu$, and $U_p=U_{z,\mu}U_{z+e_\mu,\nu}U_{z+e_\nu,\mu}^{-1}U_{z,\nu}^{-1}$ are as in \S\ref{sec:statement}; on $\mathbb B$ only the links and plaquettes inside the box are present (free boundary conditions). For $\Lambda\in\{\mathbb T_L,\mathbb B\}$,
+\begin{equation}\label{eq:al-fin}
+\mu_\Lambda(dU)=Z^{-1}\exp\Big(\beta\sum_p\tfrac12\ReTr U_p\Big)\prod_\ell dU_\ell ,
+\end{equation}
+the weight of \eqref{eq:wilson} up to a constant factor. A Gibbs measure on $\Z^4$ is a probability measure $\mu$ with $\mu\gamma_\Delta=\mu$ for every finite set $\Delta$ of links (\S\ref{sec:statement}); one exists for every $\beta$ (Proposition~\ref{prop:exist}), and uniqueness is established in this note only for $\beta<2/9$ (Theorem~\ref{thm:main}).
+
+\paragraph{Wilson loops.} For a closed lattice path $\gamma$, $U_\gamma$ is the ordered product of its link variables and $W_\gamma=\frac12\operatorname{Tr}U_\gamma\in[-1,1]$. A \emph{rectangular loop with sides $R$ (along $e_\mu$) and $T$ (along $e_\nu$)}, $\mu\ne\nu$, $R,T\ge1$, is the boundary of a planar $R\times T$ rectangle of lattice squares; its area is $RT$.
+
+\begin{althm}[Area law]\label{thm:area}
+Let $0\le\beta<2/3$ and $\lambda_*(\beta):=\arcosh(2/\beta-2)$ for $\beta>0$, $\lambda_*(0):=+\infty$. For $0\le\lambda<\lambda_*(\beta)$ put
+\begin{equation}\label{eq:al-theta}
+\theta_\lambda:=\frac\beta4\,(2\cosh\lambda+4)\in[0,1),\qquad C_\lambda:=\frac{8\,\theta_\lambda}{1-\theta_\lambda}.
+\end{equation}
+Let $\gamma$ be a rectangular loop with sides $R$ along $e_\mu$ and $T$ along $e_\nu$. Then, for every $\lambda\in[0,\lambda_*(\beta))$,
+\begin{equation}\label{eq:al-main}
+|\langle W_\gamma\rangle|\ \le\ \min\Big\{C_\lambda^{\,T}\,e^{-\lambda RT},\ \big(1-e^{-12\beta}\big)^{T}\Big\}
+\end{equation}
+in each of the following cases: \emph{(i)} $\langle\cdot\rangle=\mu_{\mathbb T_L}$, $L\ge2$, provided $R\le L/2$ and $T\le L-1$; \emph{(ii)} $\langle\cdot\rangle=\mu_{\mathbb B}$ for a box $\mathbb B$ containing $\gamma$; \emph{(iii)} $\langle\cdot\rangle=\mu$ for any Gibbs measure $\mu$ on $\Z^4$. The two sides may be exchanged. The constants depend on $\beta$ and $\lambda$ only.
+\end{althm}
+\noindent Status: \st{proved} (\S\S\ref{sec:slab}--\ref{sec:areaproof} and Appendix~\ref{app:comparison}), from Theorem~\ref{thm:chordal} (through Corollary~\ref{cor:chordal}(b)); not formalised in Lean.
+
+\begin{alcor}[String tension and uniform area law]\label{cor:area}
+Let $0<\beta<2/3$. In each case of Theorem~\ref{thm:area}:
+\emph{(a)} $\displaystyle\liminf_{R,T\to\infty}\frac{-\log|\langle W_{R\times T}\rangle|}{RT}\ \ge\ \lambda_*(\beta)=\arcosh\Big(\frac2\beta-2\Big)$, and on tori the bound is uniform in $L\ge\max(2R,T+1)$;
+\emph{(b)} with $\lambda_\beta=\lambda_*(\beta)/2$, $R_\beta=\max\{1,\lceil2\log^+C_{\lambda_\beta}/\lambda_\beta\rceil\}$ and $c(\beta)=\min\{\lambda_\beta/2,\ |\log(1-e^{-12\beta})|/R_\beta\}>0$, one has $|\langle W_\gamma\rangle|\le e^{-c(\beta)RT}$ for every rectangular loop $\gamma$.
+\end{alcor}
+\begin{proof}
+(a) By \eqref{eq:al-main}, $-\log|\langle W\rangle|/(RT)\ge\lambda-\log C_\lambda/R\to\lambda$ for every $\lambda<\lambda_*(\beta)$.
+(b) If $R\ge R_\beta$, then $\lambda_\beta R/2\ge\log^+C_{\lambda_\beta}$ and the first bound in \eqref{eq:al-main} is at most $e^{-\lambda_\beta RT/2}$. If $R<R_\beta$, the second bound is $e^{-|\log(1-e^{-12\beta})|T}\le e^{-|\log(1-e^{-12\beta})|RT/R_\beta}$.
+\end{proof}
+
+\begin{alrem}[Behaviour of the bound]\label{rem:al-behaviour}
+$\lambda_*(\beta)=\log(4/\beta)-\beta+O(\beta^2)$ as $\beta\to0$, and $\lambda_*(\beta)\sim3\sqrt{2/3-\beta}$ as $\beta\uparrow2/3$. The strong-coupling expansion of the string tension is $\sigma=-\log u-4u^4+O(u^8)$ with $u=I_2(\beta)/I_1(\beta)=\beta/4+O(\beta^3)$ \cite[Table~1]{DZ81} \st{read}, so the lower bound has the exact leading behaviour $\log(4/\beta)$ at strong coupling, and $\sigma-\lambda_*(\beta)=\beta+O(\beta^2)$.
+\end{alrem}
+
+\subsection{Relation to earlier work}\label{sec:areaprior}
+
+Ranges are in $\beta_W$ (Table~\ref{tab:conv}); they are collected in Table~\ref{tab:comp}.
+
+\paragraph{Borgs and Seiler.} Borgs and Seiler \cite{BS83} use the slab decomposition of \cite{DF80} to reduce confinement to the requirement that ``the $u$-spins show exponential clustering uniformly in the random coupling field $v$'' (preprint p.~20), and verify it, in Appendix~B of the preprint version, by a random-walk expansion together with operator inequalities for the transfer matrix; no Dobrushin criterion is involved. They state that ``irrespective of $J_M$ and temperature we are sure to have confinement for $J_E<\tilde J_c$'', with $\tilde J_c=(d-\frac16)^{-1}$ for $SU(2)$ (preprint (II.55), p.~21; proof pp.~B1--B6), $d$ being the space dimension and $J_E$ the coefficient of $\operatorname{Re}\operatorname{Tr}$ in the action (their (II.2)--(II.5), pp.~4--5). In the normalisation of this note $\beta_W=2J_E$, so for $d=3$ their range is $\beta_W<12/17\approx0.706$, which is larger than $2/3$ \st{read}. Thus \cite[Appendix~B of the preprint version]{BS83} proves confinement in a larger range than Theorem~\ref{thm:area}: \emph{the threshold $2/3$ is not new, and no priority is claimed for it or for any other threshold.} We read the preprint MPI-PAE/PTh 16/83 (March 1983); the journal version, Comm.\ Math.\ Phys.\ 91 (1983) 329--380, was not consulted. We did not find in the preprint a statement for individual Wilson loops, nor one for arbitrary Gibbs measures.
+
+\paragraph{Durhuus and Fr\"ohlich.} They introduced the slab decomposition (their (1.17)--(1.19)) and the clustering criterion \cite{DF80}. They prove confinement for $\beta<1/(2(\nu-1))$ and state, in a parenthesis closing the appendix to their \S5, that ``a more refined estimate extends this result to $\beta<1/(\nu-1)$'' (preprint p.~80), without giving it; in their normalisation (1.13) (plaquettes counted once, $\beta_W=2\beta$) the announced range is $\beta_W<2/3$ for $\nu=4$ \st{read}. One identity of their derivation, $\vec S_1\cdot\vec S_2=\operatorname{tr}(\varphi(\vec S_1)^{-1}\varphi(\vec S_2))$ (preprint p.~48; their $\varphi$ is our $\iota$), holds only up to a factor $2$ (see \eqref{eq:al-trace2}); with this correction the range covered by their written argument is $\beta_W<1/6$ in the normalisation of this note.
+
+\paragraph{Other ranges.} Osterwalder and Seiler \cite[Thm.~5.1]{OS78} prove the area law for planar loops in the region of convergence of the cluster expansion (small $\beta$, no explicit range) \st{read}. Fr\"ohlich \cite[(21)--(25)]{Fro79} compares by Ginibre inequalities the $SU(2)$ theory with the $\Z_2$ gauge theory and the latter with decoupled Ising slabs \st{read}; with the sharpness of the Ising transition \cite{ABF87} this should give an area law up to $\beta_W\approx K_c=0.221654626(5)$, the critical coupling of the three-dimensional Ising model \cite{FXL18} (up to $K_c/2\approx0.1108$ with the constant of \cite[(23)]{Fro79} as printed). We have not seen this combination written out and have not checked its uniformity in the volume \st{not checked}. Cao, Nissim and Sheffield \cite{CNS25} verify the criterion of \cite{DF80} by the Bakry--\'Emery condition and obtain the area law on tori, uniformly in the volume, for $\beta_{\mathrm{tH}}<1/(8(d-1))$, i.e.\ $\beta_W<1/6$ \st{read}. Brydges, Giffen, Durhuus and Fr\"ohlich \cite{BGDF86} (surface representations of Wilson loop expectations; only the abstract and the metadata were seen) and Seiler's monograph \cite{Sei82} were not consulted.
+
+\paragraph{What is claimed.} Theorem~\ref{thm:area} is an independent proof, by Dobrushin's comparison, of the area law in a range already covered by \cite{BS83}. It holds on tori uniformly in the volume, with free boundary conditions and for every Gibbs measure on $\Z^4$, with explicit constants for every rectangular loop, and gives the string-tension bound $\arcosh(2/\beta-2)$. Its ingredients are the slab decomposition \cite{DF80,CNS25}, the exact one-link coefficient (Theorem~\ref{thm:chordal}, whose bound $\frac14$ for all fields is also \cite[Theorem~7]{BB26}), Dobrushin's comparison, a count of walks and an elementary Doeblin bound; no technical novelty beyond their combination is claimed.
+
+\subsection{The slab $\sigma$-models}\label{sec:slab}
+
+\paragraph{Quaternions.} As in \S\ref{sec:influence}, $SU(2)$ is identified with $S^3\subset\R^4$, here through the map of Durhuus and Fr\"ohlich \cite[(5.1)]{DF80}
+\[
+\iota(q)=\begin{pmatrix}q^0+iq^3&-q^1+iq^2\\ q^1+iq^2&q^0-iq^3\end{pmatrix},\qquad q\in\R^4,
+\]
+which maps $S^3$ onto $SU(2)$ and the normalised surface measure $\bar\sigma$ onto Haar measure. For $q,r\in S^3$ and $h\in\R^4$,
+\begin{equation}\label{eq:al-trace2}
+\operatorname{Tr}\big(\iota(q)^{-1}\iota(r)\big)=2\langle q,r\rangle,\qquad\|\iota(h)\|_{\mathrm{op}}=|h|
+\end{equation}
+(since $\iota(h)^*\iota(h)=|h|^2I$), so that $\rch(q,r)=\|\iota(q)-\iota(r)\|_{\mathrm{op}}$; and for $A,B\in SU(2)$ the map $r\mapsto\iota^{-1}(A\,\iota(r)B^{-1})$ is the restriction to $S^3$ of a matrix $O_{A,B}\in SO(4)$ (left and right multiplications by unit quaternions). \st{proved}; checked numerically (\texttt{s1\_normalisations.py}, items (a)--(c), folder \path{verif_loi_aire/}).
+
+\paragraph{Twisted $O(4)$ models.} A \emph{bond} is a triple $b=(b_-,b_+,O_b)$ with $b_\pm$ sites and $O_b\in SO(4)$; several bonds may join the same two sites. Let $V$ (free sites) and $F$ (frozen sites) be finite disjoint sets, $\mathfrak B$ a finite family of bonds with $b_\pm\in V\cup F$ and at least one end in $V$, $\beta\ge0$ and $\xi\in(S^3)^F$. The \emph{twisted $O(4)$ model} is the probability measure on $(S^3)^V$
+\begin{equation}\label{eq:al-twisted}
+\mu^\xi(dq)=\frac1Z\exp\Big(\beta\sum_{b\in\mathfrak B}\langle q_{b_-},O_bq_{b_+}\rangle\Big)\prod_{x\in V}\bar\sigma(dq_x),\qquad q_z:=\xi_z\ (z\in F).
+\end{equation}
+Let $\deg(x)$ be the number of bonds with an end at $x$ and $m_{xz}$ the number of bonds joining $x$ and $z$. The substitution $(q,\xi)\mapsto(-q,-\xi)$ leaves every term of the exponent and $\bar\sigma$ unchanged (this is the action of the centre $\{\pm I\}$ of $SU(2)$), hence
+\begin{equation}\label{eq:al-centre}
+\text{the image of }\mu^\xi\text{ under }q\mapsto-q\text{ is }\mu^{-\xi};\quad\text{if }F=\emptyset,\ \E_{\mu^\emptyset}[\psi(q_x)]=0\ \text{for every bounded odd }\psi.
+\end{equation}
+
+\begin{allem}[Slab decomposition; {\cite[(1.17)--(1.19)]{DF80}}]\label{lem:al-slab}
+Let $\mu=\mu_\Lambda$ with $\Lambda=\mathbb T_L$ or a box $\mathbb B$, and let $\mathcal H$ be the $\sigma$-algebra generated by the \emph{horizontal} links, those in the directions $1,2,3$. For a slab $k$ ($x_4\in[k,k+1]$) write $Q^k_x=U_{(x,k),4}$ and $q^k_x=\iota^{-1}(Q^k_x)$, $x$ in the spatial lattice $\Lambda^{(3)}$ ($(\Z/L\Z)^3$, or a box of $\Z^3$). Conditionally on $\mathcal H$ the families $(q^k_x)_x$, one for each slab, are independent, and $(q^k_x)_x$ has the law \eqref{eq:al-twisted} with $V=\Lambda^{(3)}$, $F=\emptyset$ and one bond $(x,x+e_\mu,O_{A,B})$ for each vertical plaquette $p=((x,k);\mu,4)$, $\mu\le3$, where $A=U_{(x,k),\mu}$ and $B=U_{(x,k+1),\mu}$. On the torus $\deg(x)=6$ for every $x$; in a box $\deg(x)\le6$.
+\end{allem}
+\begin{proof}
+For $p=((x,k);\mu,4)$, $U_p=A\,Q^k_{x+e_\mu}B^{-1}(Q^k_x)^{-1}$, so by \eqref{eq:al-trace2}
+\[
+\tfrac12\ReTr U_p=\tfrac12\operatorname{Tr}\big(\iota(q^k_x)^{-1}\iota(O_{A,B}q^k_{x+e_\mu})\big)=\langle q^k_x,O_{A,B}\,q^k_{x+e_\mu}\rangle .
+\]
+A horizontal plaquette contains no vertical link, and a vertical plaquette contains two vertical links of the same slab. So the density of $\mu_\Lambda$ is $e^{\beta h(\mathcal H)}\prod_ke^{\beta S_k}$, $h$ collecting the horizontal plaquettes and $S_k$ being the exponent of \eqref{eq:al-twisted} for slab $k$; Fubini gives the claim. On the torus $x$ lies in the six bonds $(x,x\pm e_\mu)$, $\mu\le3$ (for $L=2$ two of them join the same sites).
+\end{proof}
+
+\paragraph{Single-site laws and influence.} For $x\in V$ and a configuration $\eta$ of the other sites (frozen ones included), the conditional law of $q_x$ under \eqref{eq:al-twisted} is
+\begin{equation}\label{eq:al-onesite}
+\gamma_x(du\mid\eta)=\nu_{\beta s_x(\eta)}(du),\qquad s_x(\eta)=\sum_{b:\,b_-=x}O_b\eta_{b_+}+\sum_{b:\,b_+=x}O_b^{\mathsf T}\eta_{b_-},\quad|s_x(\eta)|\le\deg(x),
+\end{equation}
+where $\nu_h(du)\propto e^{\langle u,h\rangle}\bar\sigma(du)$ is the law of Corollary~\ref{cor:chordal}(b). It is the same law as the single-link conditional law \eqref{eq:q} of the Wilson measure: the six plaquettes through a vertical link all lie in its slab. Let $\operatorname{Lip}_1$ be the set of real functions on $S^3$ that are $1$-Lipschitz for $\rch$. For $z\in(V\cup F)\setminus\{x\}$ put
+\begin{equation}\label{eq:al-cxz}
+c_{xz}=\sup\Big\{\frac{\big|\int f\,d\gamma_x(\cdot\mid\eta)-\int f\,d\gamma_x(\cdot\mid\eta')\big|}{\rch(\eta_z,\eta'_z)}:\ f\in\operatorname{Lip}_1,\ \eta,\eta'\text{ equal off }z,\ \eta_z\ne\eta'_z\Big\};
+\end{equation}
+by Kantorovich--Rubinstein duality this is Dobrushin's coefficient (5.4) of \cite{Dob70} for the chordal metric (as in Proposition~\ref{prop:influence}), but only the form \eqref{eq:al-cxz} is used below.
+
+\begin{allem}[Influence]\label{lem:al-influence}
+For the model \eqref{eq:al-twisted}, $c_{xz}\le\frac\beta4\,m_{xz}$; hence $\sum_zc_{xz}\le\frac\beta4\deg(x)\le\frac{3\beta}2$.
+\end{allem}
+\begin{proof}
+Let $\eta,\eta'$ differ only at $z$, $s=s_x(\eta)$, $s'=s_x(\eta')$. Then $s'-s=\sum_b\tilde O_b(\eta'_z-\eta_z)$, the sum over the $m_{xz}$ bonds joining $x$ and $z$, with $\tilde O_b\in\{O_b,O_b^{\mathsf T}\}$ orthogonal, so $|s'-s|\le m_{xz}\,\rch(\eta_z,\eta'_z)$. In the proof of Corollary~\ref{cor:chordal}(b), Theorem~\ref{thm:chordal} gives $\int f\,d(\nu_{b'}-\nu_b)\le\frac14|b'-b|$ for $f\in\operatorname{Lip}_1$ and all $b,b'\in\R^4$ (before the duality is used). With $b=\beta s$, $b'=\beta s'$ and $f\mapsto-f$ this gives $|\int f\,d\gamma_x(\cdot\mid\eta')-\int f\,d\gamma_x(\cdot\mid\eta)|\le\frac\beta4|s'-s|$.
+\end{proof}
+
+\begin{alrem}[The threshold $2/3$ is the limit of the criterion]\label{rem:al-ceiling}
+Let $L\ge3$ (or work on $\Z^3$), fix the twists, a site $x$, a neighbour $z$ and a unit vector $v$. Choose $\eta_z$ with $w:=\tilde O\eta_z\perp v$ ($\tilde O$ the orthogonal map of the bond $xz$) and the five other neighbours with $\sum\tilde O_b\eta_b=-w$ (five unit vectors can sum to any vector of norm $\le5$), so that $s_x=0$. The lower-bound argument of Proposition~\ref{prop:influence} gives $c_{xz}\ge\beta\Dch(0)=\beta/4$. So the Dobrushin sum of the slab is exactly $6\cdot\beta/4=3\beta/2$, and the single-site criterion holds if and only if $\beta<2/3$. Moreover, for trivial horizontal links the slab is the untwisted $O(4)$ model on $\Z^3$ with coupling $J=\beta$, whose critical coupling is $J_c=0.9360(1)$ \cite{KK95} \st{read}: no decay in the slab that is uniform in the twists can hold beyond it, and $2/3$ is the mean-field point $Jz/N=1$ ($z=6$, $N=4$).
+\end{alrem}
+
+\subsection{Decay of correlations in a slab}\label{sec:slabdecay}
+
+Let $\mu^\xi$ be a twisted model, $C=(c_{xx'})_{x,x'\in V}$ with $c_{xx}:=0$, and assume Dobrushin's condition
+\begin{equation}\label{eq:al-dob}
+\alpha:=\max_{x\in V}\sum_{z\in(V\cup F)\setminus\{x\}}c_{xz}<1,\qquad D:=\sum_{k\ge0}C^k
+\end{equation}
+($D$ converges: the row sums of $C^k$ are $\le\alpha^k$). For $G:(S^3)^V\to\R$ let $\delta_x(G)=\sup\{|G(q)-G(q')|/\rch(q_x,q'_x):\ q,q'\text{ equal off }x,\ q_x\ne q'_x\}$, and let $\mathcal L$ be the set of $G$ with $\delta_x(G)<\infty$ for all $x\in V$ (such $G$ are continuous).
+
+\begin{alprop}[Comparison]\label{prop:al-comparison}
+Under \eqref{eq:al-dob}, for $G\in\mathcal L$ and $\xi,\xi'\in(S^3)^F$,
+\begin{equation}\label{eq:al-cmp}
+|\mu^\xi(G)-\mu^{\xi'}(G)|\ \le\ \sum_{x,x'\in V}\ \sum_{z\in F}\delta_x(G)\,D_{xx'}\,c_{x'z}\,\rch(\xi_z,\xi'_z).
+\end{equation}
+\end{alprop}
+\noindent This is a Wasserstein form of Dobrushin's comparison theorem (see \cite{Fol82} for a covariance estimate under Dobrushin's condition; the statements there were not checked). A complete proof, in the spirit of \cite[Prop.~2.5]{Wu06} \st{read}, is given in Appendix~\ref{app:comparison}. \st{proved}
+
+\begin{alcor}[Two-point bounds]\label{cor:al-twopoint}
+Assume \eqref{eq:al-dob}. For $x\ne y$ in $V$ put $G_{xy}=\sum_{k\ge1}(C^k)_{xy}$. Let $\psi:S^3\to\mathbb C$ be bounded and measurable, and $\chi:S^3\to\mathbb C$ with $|\chi(u)-\chi(u')|\le\rch(u,u')$. Then
+\begin{align}
+\big|\operatorname{Cov}_{\mu^\xi}\big(\chi(q_x),\psi(q_y)\big)\big|&\le2\,\|\psi\|_\infty\,G_{xy},\label{eq:al-cov}\\
+\big|\E_{\mu^\xi}\chi(q_x)-\E_{\mu^{\xi'}}\chi(q_x)\big|&\le\sum_{z\in F}\rch(\xi_z,\xi'_z)\sum_{k\ge1}(\bar C^k)_{xz},\label{eq:al-bdry}
+\end{align}
+where $\bar C=(c_{uv})$ is indexed by $V\cup F$, with zero rows at the frozen sites.
+\end{alcor}
+\begin{proof}
+Let $\chi$ be real. Given $q_y=a$, the law of $q_{V\setminus\{y\}}$ under $\mu^\xi$ is the model with free set $V'=V\setminus\{y\}$ and frozen data $(\xi,a)$, with the same coefficients $c$ (so \eqref{eq:al-dob} holds). Proposition~\ref{prop:al-comparison} with $G=\chi(q_x)$ gives $|\E[\chi(q_x)\mid q_y=a]-\E[\chi(q_x)\mid q_y=a']|\le\rch(a,a')\sum_{k\ge0}(C_{V'}^kC_{V',y})_x\le\rch(a,a')\,G_{xy}$, since every product of coefficients along a path in $V'$ followed by one step to $y$ is a term of $(C^{k+1})_{xy}$. As $\rch\le2$, $\operatorname{Cov}(\chi(q_x),\psi(q_y))=\E[(\E[\chi(q_x)\mid q_y]-\E\chi(q_x))\psi(q_y)]$ is bounded by $2G_{xy}\|\psi\|_\infty$. Inequality \eqref{eq:al-bdry} is \eqref{eq:al-cmp} for $G=\chi(q_x)$, because $\sum_{x'}D_{xx'}c_{x'z}=\sum_{k\ge1}(\bar C^k)_{xz}$. A complex $\chi$ is handled through $\operatorname{Re}(e^{-i\vartheta}\chi)$, $\vartheta$ real.
+\end{proof}
+
+\begin{allem}[Tilted walk count]\label{lem:al-walks}
+Let $x\in V$ and $y=x+Re_1$, $R\ge1$, in a model of Lemma~\ref{lem:al-slab} on $(\Z/L\Z)^3$, with $d=\min_{j\in\Z}|R+jL|$, or in a model on a subset $V\subset\Z^3$ with nearest-neighbour bonds, with $d=R$. Let $N_k(x,y)$ be the number of walks of $k$ bonds from $x$ to $y$ through sites of $V$. Then, for every $\lambda\ge0$ and $k\ge1$, $N_k(x,y)\le2e^{-\lambda d}(2\cosh\lambda+4)^k$. Consequently, by Lemma~\ref{lem:al-influence} ($(C^k)_{xy}\le(\beta/4)^kN_k(x,y)$), if $\theta_\lambda<1$,
+\[
+G_{xy}\ \le\ \sum_{k\ge1}\big(\tfrac\beta4\big)^kN_k(x,y)\ \le\ 2e^{-\lambda d}\,\frac{\theta_\lambda}{1-\theta_\lambda}.
+\]
+\end{allem}
+\begin{proof}
+A walk is a sequence of steps $\varepsilon_1,\dots,\varepsilon_k\in\{\pm e_1,\pm e_2,\pm e_3\}$ (on the torus with $L=2$ the two bonds joining $x$ and $x+e_\mu$ are the steps $\pm e_\mu$). Let $D=\sum_s\langle\varepsilon_s,e_1\rangle\in\Z$. A walk from $x$ to $y$ has $D\in R+L\Z$ in the torus case and $D=R$ in the other; in both cases $|D|\ge d$, so its indicator is at most $e^{\lambda(|D|-d)}\le e^{-\lambda d}(e^{\lambda D}+e^{-\lambda D})$. Summing over the $6^k$ step sequences, $\sum e^{\pm\lambda D}=(e^\lambda+e^{-\lambda}+4)^k$.
+\end{proof}
+
+\subsection{Proof of Theorem~\ref{thm:area}}\label{sec:areaproof}
+
+By the symmetry of the Wilson specification under permutations of the axes we may take $\nu=4$ (the side of length $T$ is vertical) and $\mu=1$. Let the loop start at $(x,k_0)$ and put $y=x+Re_1$. Then
+\begin{equation}\label{eq:al-loop}
+U_\gamma=H_0\,Q^{k_0}_y\,Q^{k_0+1}_y\cdots Q^{k_0+T-1}_y\,H_T^{-1}\,(Q^{k_0+T-1}_x)^{-1}\cdots(Q^{k_0}_x)^{-1},
+\end{equation}
+where $H_0$ (resp.\ $H_T$) is the product of the $R$ horizontal links from $(x,k_0)$ to $(y,k_0)$ (resp.\ at time $k_0+T$). On the torus, $T\le L-1$ makes the slabs $k_0,\dots,k_0+T-1$ distinct, and $R\le L/2$ gives $d=R$ in Lemma~\ref{lem:al-walks}.
+
+\paragraph{Factorisation.} For a twisted model $\nu_k$ define the linear map $\mathcal M_k(X)=\E_{\nu_k}[\iota(q_y)\,X\,\iota(q_x)^{-1}]$ on $2\times2$ complex matrices. If the slabs are independent with laws $\nu_k$ and $H_0,H_T$ are fixed, \eqref{eq:al-loop} gives, by expanding the products entrywise and using independence,
+\begin{equation}\label{eq:al-factor}
+\E\big[\tfrac12\operatorname{Tr}U_\gamma\big]=\tfrac12\operatorname{Tr}\Big(H_0\,\mathcal M_{k_0}\big(\mathcal M_{k_0+1}(\cdots\mathcal M_{k_0+T-1}(H_T^{-1})\cdots)\big)\Big).
+\end{equation}
+
+\begin{allem}\label{lem:al-M}
+Let $\nu$ be a twisted model satisfying \eqref{eq:al-dob}, $x\ne y$ in $V$, and suppose $|\E_\nu\psi(q_x)|\le\epsilon$ and $|\E_\nu\psi(q_y)|\le\epsilon$ for all functions $\psi(u)=a^*\iota(u)b$ and $\psi(u)=a^*\iota(u)^{-1}b$, $a,b\in\mathbb C^2$ unit vectors. Then $\|\mathcal M(X)\|_{\mathrm{op}}\le2(2G_{xy}+\epsilon^2)\|X\|_{\mathrm{op}}$.
+\end{allem}
+\begin{proof}
+Write $X=\sum_{r=1}^2s_rp_rw_r^*$ (singular values), so $\sum_rs_r\le2\|X\|_{\mathrm{op}}$. For unit $a,b$, $a^*\mathcal M(X)b=\sum_rs_r\E[\psi_r(q_y)\chi_r(q_x)]$ with $\psi_r(u)=a^*\iota(u)p_r$, $\chi_r(u)=w_r^*\iota(u)^{-1}b$. Both are bounded by $1$ and $1$-Lipschitz for $\rch$, because $\|\iota(u)-\iota(u')\|_{\mathrm{op}}=|u-u'|$ and $\iota(u)^{-1}=\iota(\bar u)$ with $u\mapsto\bar u$ an isometry. By \eqref{eq:al-cov}, $|\E[\psi_r(q_y)\chi_r(q_x)]|\le|\operatorname{Cov}(\chi_r(q_x),\psi_r(q_y))|+\epsilon^2\le2G_{xy}+\epsilon^2$. Hence $|a^*\mathcal M(X)b|\le(2G_{xy}+\epsilon^2)\sum_rs_r$.
+\end{proof}
+
+\paragraph{Case (i): torus.} By Lemma~\ref{lem:al-slab}, conditionally on $\mathcal H$ the slabs are independent twisted models on $(\Z/L\Z)^3$ with $F=\emptyset$; by Lemma~\ref{lem:al-influence}, \eqref{eq:al-dob} holds with $\alpha\le3\beta/2<1$ whatever the twists; by \eqref{eq:al-centre}, $\epsilon=0$ in Lemma~\ref{lem:al-M} (the functions $\psi$ are odd). Hence, by \eqref{eq:al-factor}, Lemma~\ref{lem:al-M} and Lemma~\ref{lem:al-walks},
+\[
+|\E[W_\gamma\mid\mathcal H]|\le\big\|\mathcal M_{k_0}\circ\cdots\circ\mathcal M_{k_0+T-1}(H_T^{-1})\big\|_{\mathrm{op}}\le(4G_{xy})^T\le\Big(\frac{8\theta_\lambda}{1-\theta_\lambda}\Big)^Te^{-\lambda RT},
+\]
+using $|\frac12\operatorname{Tr}(H_0Y)|\le\|Y\|_{\mathrm{op}}$ for $H_0\in SU(2)$. Taking expectations gives the first bound in \eqref{eq:al-main}.
+
+\paragraph{Case (ii): free boundary conditions.} Identical, with Lemma~\ref{lem:al-walks} on a box of $\Z^3$, $F=\emptyset$ and $\deg\le6$.
+
+\paragraph{Case (iii): Gibbs measures.} Let $\mu$ be a Gibbs measure, $n\ge R$, $C_n=\{x'\in\Z^3:\|x'-x\|_\infty\le n\}$ and $\Delta_n$ the set of vertical links $((x',k),4)$ with $x'\in C_n$, $k_0\le k\le k_0+T-1$. Then $\mu(W_\gamma)=\mu(\gamma_{\Delta_n}W_\gamma)$. The plaquettes meeting $\Delta_n$ are vertical plaquettes of the slabs $k_0,\dots,k_0+T-1$, so $\gamma_{\Delta_n}(\cdot\mid\omega)$ is the product over these slabs of twisted models \eqref{eq:al-twisted} with $V=C_n$ and $F=\partial C_n$ (the outer boundary), with twists and frozen spins given by $\omega$. For each slab, \eqref{eq:al-dob} holds with $\alpha\le3\beta/2$ and $G_{xy}\le2e^{-\lambda R}\theta_\lambda/(1-\theta_\lambda)$ (Lemmas~\ref{lem:al-influence} and~\ref{lem:al-walks}). For $\psi$ as in Lemma~\ref{lem:al-M}, \eqref{eq:al-centre} gives $\E_{\mu^\xi}\psi(q_x)=\frac12\big(\E_{\mu^\xi}\psi(q_x)-\E_{\mu^{-\xi}}\psi(q_x)\big)$ and, by \eqref{eq:al-bdry} with $\xi'=-\xi$ and $\rch(\xi_z,-\xi_z)=2$,
+\[
+|\E_{\mu^\xi}\psi(q_x)|\le\sum_{z\in F}\sum_{k\ge1}(\bar C^k)_{xz}\le\sum_{k\ge n+1-R}\Big(\frac{3\beta}2\Big)^k=:\epsilon_n,
+\]
+because a walk from $x$ (or from $y$) to $\partial C_n$ has at least $n+1-R$ bonds and the row sums of $\bar C$ are $\le3\beta/2$; the same bound holds for $\psi(q_y)$. By \eqref{eq:al-factor} and Lemma~\ref{lem:al-M}, $|\gamma_{\Delta_n}W_\gamma(\omega)|\le\big(2(2G_{xy}+\epsilon_n^2)\big)^T$ for every $\omega$. Letting $n\to\infty$ ($\epsilon_n\to0$) gives the first bound in \eqref{eq:al-main}. No uniqueness of $\mu$ is used.
+
+\paragraph{The second bound in \eqref{eq:al-main}.} In all three cases the links $Q^k_y$, $k_0\le k\le k_0+T-1$, share no plaquette (a plaquette contains two vertical links of one slab, at different spatial sites). Under the Wilson specification, their conditional law given all the other links is therefore the product of single-link laws \eqref{eq:al-onesite} with $|s|\le6$, whose densities with respect to $\bar\sigma$ are $\ge e^{-6\beta}/e^{6\beta}=e^{-12\beta}$. Write such a law as $e^{-12\beta}\bar\sigma+(1-e^{-12\beta})\nu'$, with $\nu'$ a probability measure; since $\int\iota(u)\,\bar\sigma(du)=0$ and $\|\iota(u)\|_{\mathrm{op}}=1$, $\|\E[Q^k_y\mid\text{rest}]\|_{\mathrm{op}}\le1-e^{-12\beta}$. Conditioning \eqref{eq:al-loop} on all links but the $Q^k_y$ gives $|\E[W_\gamma\mid\text{rest}]|\le\big\|\prod_k\E[Q^k_y\mid\text{rest}]\big\|_{\mathrm{op}}\le(1-e^{-12\beta})^T$. (For the torus and the box this conditional law follows from \eqref{eq:al-fin} by Fubini; for Gibbs measures it is the DLR equation for the finite set of these $T$ links.) \qed
+
+\subsection{Scope and checks}\label{sec:areanum}
+
+Only rectangular planar loops are treated. For $2/9\le\beta<2/3$ the uniqueness of the Gibbs measure is not known; Theorem~\ref{thm:area}(iii) holds for each Gibbs measure. The walk count of Lemma~\ref{lem:al-walks} is sharp for the walk sum: a Fourier computation of $\sum_k(\beta/4)^kN_k$ on $(\Z/48\Z)^3$ gives the decay rate $\lambda_*(\beta)$ within $1\%$ at $\beta\in\{0.5,0.6,0.65\}$ \st{numerical} (\texttt{s3\_marches.py}, folder \path{verif_loi_aire/}, where the $840$ exact walk counts of Lemma~\ref{lem:al-walks} on $(\Z/L\Z)^3$, $L\le5$, $k\le12$, are also checked), so any improvement of the rate would have to come from the coefficients $c_{xz}$, not from the counting. The identity $\frac12\ReTr U_p=\langle q_x,O_{A,B}q_{x+e_\mu}\rangle$ and the count of $6$ neighbours (Lemma~\ref{lem:al-slab}) are checked numerically on a $3^4$ torus (\texttt{s1\_normalisations.py}, items (c), (e)). These checks are not part of any proof.
+
+\section{Relation to the literature}\label{sec:lit}
+
+\paragraph{Bhattacharjee--Bhattacharya(--Lockwood) \cite{BB26} (added in v1.4, updated here).} After v1.3 of this note
+(28 September 2026, not publicly released) was completed, we learned of the public preprint \cite{BB26}, dated 18 October 2026.
+\emph{Versions and numbering.} The Hexagon record has four versions (dates of the record: 18, 22, 28 and 30 October 2026; the PDFs are dated 18, 20, 27 and 30 October); its web pages show the title of the latest one for all four, and the titles below are those of the PDFs.
+Version v1 (29 pages, two authors) is \emph{Mass Gap of Lattice Yang--Mills Theory up to the Dobrushin Ceiling}; v2 (28 pages) is
+\emph{Mass Gap of Four-Dimensional Lattice Yang--Mills Theory in a Forest Gauge}, which cites the all-field estimate below as Theorem~7 of the Dobrushin-ceiling paper (its reference~[9], Zenodo release v2.0.2, doi:10.5281/zenodo.23449466); v3 (54 pages) and v4 (70 pages), with a third author, J.~M.~Lockwood,
+contain its proof in an appendix, as Theorem~91 (v3, p.~47) and Theorem~125 (v4, p.~64, Appendix~I). The Zenodo record 10.5281/zenodo.23786523 (30 October; all versions: 10.5281/zenodo.23444338) contains the v1 paper
+(Theorem~7, p.~9) and the v4 paper (Theorem~125). Below, ``Theorem~7 ($=125$)'' means Theorem~7 of v1 and Theorem~125 of v4; likewise Lemmas~4, 5, 6 of v1 are Lemmas~122, 123, 124 of v4 (p.~63).
+
+\emph{What \cite{BB26} proves.} Its Theorem~E (v1, p.~2) reads (text of the PDF): ``Let $G=SU(2)$ and $|\beta|<1/(6(d-1))$. The Wilson theory on $\mathbb Z^d$
+has exactly one infinite-volume Gibbs measure, and its truncated correlations of local Lipschitz functions decay
+exponentially with every rate $\lambda<-\log 6(d-1)|\beta|$. At $d=4$ the range is $\beta_W<2/9$. No single-link
+Wasserstein--Dobrushin argument, in the chordal or the geodesic metric, reaches beyond this range.'' with
+$\beta_W=N^2\beta$ (their footnote~4, the normalisation of \cite{SZZ23}); its Theorem~F adds a spectral gap of the
+transfer matrix in this range, and its Theorem~7 (p.~9) states that for every $c\in\R^4$ and unit $h\in\R^4$,
+``$L(c,h)\le\frac14$, with equality at $c=0$. Equivalently, $W_1(\nu_b,\nu_{b'})\le\frac14|b-b'|$ for all
+$b,b'\in\R^4$, and the constant $\frac14$ is the best possible.'' \st{read}. (Here $L(c,h)=\sup_g\Cov_{\nu_c}(g,\langle h,x\rangle)$ over chordally $1$-Lipschitz $g$,
+i.e.\ $L(\kappa e_1,h)=\Dch(\kappa,h)$.) To our knowledge \cite{BB26} is the
+first public statement of the range of our Theorem~\ref{thm:main}, with stronger conclusions, and of the
+maximum-at-zero-field property of Levin's Remark~3.7 for $N=4$ and \emph{all} fields.
+
+\emph{What this note does not claim.} The following are in \cite{BB26} (numbers of v1, with those of v4 after ``$=$'' when they differ): the uniqueness range $\beta_W<2/9$ (Theorem~E);
+the bound $\Dch(\kappa)\le\frac14$ for every $\kappa$ (Theorem~7 $=125$), hence Levin's maximum-at-zero-field property for $N=4$; the reflection computation $L(c,h)=\E x_2^2=A/\kappa$ for $h\perp c$, with $A=I_2/I_1$
+(Lemma~6(ii) $=124$(ii); our Lemma~\ref{lem:refl}); the monotonicity $A'\le A/\kappa$ of the transverse moment (Lemma~5(iii) $=123$(iii)), i.e.\ the non-strict decrease of $\kappa\mapsto I_2/(\kappa I_1)$;
+the exactness of the influence coefficient, $\sup C_{ee'}=|\beta|$ for every $\beta$, i.e.\ $\beta_W/4$ in our normalisation (Proposition~13 with Theorem~7; our Corollary~\ref{cor:chordal}(a));
+and the limit $\beta_W=1/8$ of the Bakry--\'Emery curvature method (Theorem~C, p.~2; our Proposition~\ref{prop:piflux}, which we had written before seeing \cite{BB26}).
+We make \emph{no priority claim} on any of these.
+
+\emph{What is new here, relative to \cite{BB26}.} (i) The exact value of the supremum over directions, $\sup_v\Dch(\kappa,v)=I_2(\kappa)/(\kappa I_1(\kappa))$ for every $\kappa\ge0$:
+\cite{BB26} proves ``$\le\frac14$''; for $v\perp\hat s$ it computes the value $I_2/(\kappa I_1)$ by reflection, but does not show that no other direction does better.
+(ii) The maximisers: for $\kappa>0$, exactly $v\perp\hat s$. (iii) The two-sided estimate \eqref{eq:window} for oblique directions.
+(iv) The strict decrease of $\kappa\mapsto I_2/(\kappa I_1)$ and, with (i), of $\Dch$.
+(v) The proof: a divergence-free flux field with a slice estimate and an exact sum-of-squares identity, in place of harmonic extension, Cauchy--Schwarz and the positivity of Bessel-series coefficients.
+For oblique directions the majorant that the proof of \cite{BB26} gives is close to $\frac14$ without being exact: at $\kappa=4/3$ we recompute it from their formulas as $0.2498$, against the exact $\Dch(4/3)=0.2333$ \st{numerical}.
+Independently of \cite{BB26}, this note also provides: the exact geodesic coefficient $8\beta/(9\pi)$ for $\kappa\le3\pi/8$ (Theorem~\ref{thm:onelink}) and the range $\pi/16$; two interval-arithmetic
+certificates, each recertified by an independent implementation; the Lean-checked final steps of Appendix~\ref{app:v14} and \S\ref{sec:cap}; and the transfers of the published constants
+of Levin, Royer, Gross, Simon and Shen--Zhu--Zhu to the Wilson link (Table~\ref{tab:comp}).
+
+Concerning the geodesic metric, \cite{BB26} notes (footnote to Theorem~7, v1, p.~9) that the quarter fails in that metric already at $c=0$, because $\arcsin x_2$ is geodesically $1$-Lipschitz with covariance
+$8/(9\pi)\approx0.283>\frac14$ with $x_2$ under the uniform law, and (Proposition~13) that no single-link argument in either metric goes beyond $2/9$. That covariance is the lower bound of our Lemma~\ref{lem:zero};
+the field-uniform upper bound of Theorem~\ref{thm:onelink} and the exact value $8\beta/(9\pi)$ of the geodesic influence coefficient for $\kappa\le3\pi/8$ are not in \cite{BB26}, to our knowledge.
+We have not checked the proofs of \cite{BB26} in full: we recomputed the steps of the proof of Theorem~7 and confirmed its statement numerically by optimal transport up to $\kappa=50$ (\st{numerical}), but nothing here depends on that check.
+Versions v2--v4 of the preprint treat a different object (gauge-invariant observables and free-boundary limits in a gauge-fixed theory, with the ranges $\beta_W<1/3$ and $\beta_W\le0.345$ for $SU(2)$ in the abstract of v4),
+which we do not compare with Theorem~\ref{thm:main}, whose statement is DLR uniqueness for the Wilson specification. Nissim \cite{Nis25} treats $U(N)$ at sufficiently small 't~Hooft coupling; no numerical $SU(2)$ threshold is stated there.
+
+\paragraph{Shen--Zhu--Zhu \cite{SZZ23}.} Their action is (verbatim LaTeX from the arXiv source, eq.~(1.2),
+p.~4 of the arXiv PDF)
+\begin{center}\small\verb|\cS (Q) \eqdef N\beta  \Re \sum_{p\in \CP^+_{\Lambda_{L}}} \Tr(Q_p),|\end{center}
+i.e.\ $\mathcal S(Q)=N\beta\operatorname{Re}\sum_{p\in\mathcal P^+}\operatorname{Tr}(Q_p)$, one term per plaquette; their
+Assumption~1.1 is equivalent to (1.3), p.~4: $|\beta|<\frac{1}{16(d-1)}$ for $G=SU(N)$. For $SU(2)$,
+$2\beta_{\mathrm{tH}}\ReTr=4\beta_{\mathrm{tH}}\cdot\frac12\ReTr$, so $\beta_W=4\beta_{\mathrm{tH}}$ and their range is
+$\beta_W<1/12\approx0.0833$ in $d=4$. Under it they prove (Theorem~1.2, p.~5) uniqueness of the invariant
+measure of the Langevin dynamics and convergence of all tight limits of the finite-volume measures, together
+with a log-Sobolev inequality (Theorem~1.4) and exponential decay of correlations (Corollary~1.6).
+On p.~6 (arXiv v1, the only arXiv version; the published text was not compared) they write (verbatim): ``We remark that uniqueness for small $\beta$ could possibly also be proven
+using the method of Dobrushin, see e.g.\ [Dob70]. To this end one would also need to consider the related
+Wasserstein metric with respect to the Riemannian distance similarly as we do in this paper. However as we
+understand such an argument has not been carried out in detail for lattice Yang Mills in the literature.''
+The present note carries out this programme for the gauge model, for uniqueness only (with the Riemannian
+distance in Theorem~\ref{thm:geo}, and with the Euclidean distance of $\R^4$ in Theorem~\ref{thm:main}). The
+single-site ingredient ($W_1$ on a sphere, derivative along a path of fields written as a covariance) is not
+new: it is the method of Levin \cite{Lev80} (Euclidean metric) and Royer \cite{Roy86} (geodesic metric) for
+rotator models, and Levin's many-body version already covers the Wilson model (next paragraphs). Neither paper
+mentions gauge theories.
+Our uniqueness statement is directly of DLR type; we do \emph{not} claim that \cite{SZZ23} lacks DLR
+uniqueness (their statement is formulated for the Langevin invariant measure and limits with periodic,
+Dirichlet ``or other'' boundary conditions).
+
+\paragraph{Levin: the Euclidean $W_1$ criterion on spheres, many-body interactions.} Levin \cite{Lev80}
+(read on the page images of the Project Euclid scan) considers ``the lattice model on $\Z^\nu$ with single
+spin space $S^{N-1}$, $N\geqslant2$'' with ``a priori measure $\mu_0$ the invariant probability measure on
+$S^{N-1}$'' (p.~65) and the ``Vaserstein distance'' $V(\mu,\nu)=\sup_{\|f\|_L=1}|\mu(f)-\nu(f)|$ over
+functions of Lipschitz norm $1$ for ``$\|\cdot\|_2$ [\ldots] Euclidean norm on $\R^N$'' ((3.3)--(3.4), p.~67),
+i.e.\ the \emph{chordal} metric of $S^{N-1}\subset\R^N$. His Theorem~3 (p.~67) reads: ``For $\mathbf h,\mathbf h'\in\R^N$,
+let $\mu_{\mathbf h},\mu_{\mathbf h'}$ be probability measures on $S^{N-1}$ given by
+$d\mu_{\mathbf h}(\mathbf x)=\frac1{Z_{\mathbf h}}e^{\mathbf h\cdot\mathbf x}d\mu_0(\mathbf x)$ [\ldots] Then,
+$V(\mu_{\mathbf h},\mu_{\mathbf h'})\leqslant\frac{\sqrt5}{N}\|\mathbf h'-\mathbf h\|_2$. (3.8)'', proved by writing the
+distance ``as the variation of an expectation along an appropriate path in $\mathbf h$-space'' (p.~68), with two
+lemmas controlling ``separately variation parallel to the `magnetic field', and perpendicular to the `magnetic
+field','' the perpendicular one being Lemma~3.2 (p.~68, quoted in \S\ref{sec:chrefl}). Remark~3.6 (p.~73) extends
+the uniqueness theorem to ``many-body interactions of the
+form $\sum J_X^{(i_a)}\prod_{a\in X}\sigma_a^{i_a}$'' with the condition
+``$T>T_C^N\equiv\big(\sup_{a}\sum_{X\ni a}(|X|-1)\mathscr J_X\big)\frac{\sqrt5}{N}$, (3.49)'', where $\mathscr J_X$ is the
+supremum of the interaction over configurations; the details are ``[left] to the reader''. Remark~3.7 (p.~73)
+conjectures that ``the numerical factor of $\sqrt5$ appearing in Theorem~1 can be replaced by $1$'' and notes that
+``the conjecture is true if one shows $\sup_{\|f\|_L=1}|\mu_{\mathbf g}[(\mathbf x\cdot\hat{\mathbf c}-\langle\mathbf x\cdot\hat{\mathbf c}\rangle_{\mathbf g})f]|$ [\ldots]
+attains its maximum value at $\mathbf g=0$''. \st{read}. The paper does not mention gauge theories.
+
+\emph{Transfer to the Wilson link} (our computation from the published statement, not a published
+result). As noted in \S\ref{sec:influence}, the Wilson weight $e^{(\beta/2)\ReTr U_p}=e^{\beta\langle u_1u_2\bar u_3\bar u_4,\mathbf 1\rangle}$
+is of Levin's form (3.48) with $N=4$, $|X|=4$ and $\mathscr J_X=\beta$; each link lies in $6$ plaquettes, so (3.49)
+at unit temperature reads $6\cdot3\cdot\beta\cdot\sqrt5/4<1$, i.e.\ $\beta_W<2\sqrt5/45\approx0.09938$.
+\st{proved} from \st{read} (exact arithmetic; log \path{calc/levin_transfer.log}).
+This already exceeds $1/12$.
+
+\emph{What Theorem~\ref{thm:chordal} adds.} The supremum in Levin's Remark~3.7 is our $\Dch(|\mathbf g|)$ for $N=4$.
+Theorem~\ref{thm:chordal} shows that it attains its maximum at $\mathbf g=0$, with value $1/N=1/4$, and is strictly decreasing in $|\mathbf g|$, for every $\mathbf g$; it identifies it exactly
+($\E_{\mathbf g}[x_\perp^2]$, attained by the coordinate orthogonal to the field). It therefore confirms, for $N=4$, the
+maximum-at-$\mathbf g=0$ property conjectured in \cite[Rem.~3.7]{Lev80}; for all fields this had been proved by \cite[Theorem~7]{BB26}, which Theorem~\ref{thm:chordal} recovers independently.
+It does not prove the conjecture, which is stated for all $N$, all $\mathbf g$ and general interactions.
+Since the fields that occur for $\beta<2/9$ satisfy $|\mathbf g|\le6\beta<4/3$, the Wilson threshold is
+Levin's transferred bound with $\sqrt5$ replaced by $1$: $2\sqrt5/45\cdot\sqrt5=2/9$ exactly.
+
+\paragraph{Royer: the geodesic $W_1$ criterion on spheres.} Royer \cite{Roy86} (read on the Numdam page
+images) works with ``the unit sphere $S^n$ with its natural (geodesic) distance $r$'' and Dobrushin's
+distance ``$\mathrm R(\nu_1,\nu_2)=\sup\{\int f\,d\nu_1-\int f\,d\nu_2;\ \mathscr L(f)\leqslant1\}$'' (p.~30).
+He defines $C(n,h)$ as ``the best constant in the inequality $\operatorname{var}(f,\nu(h))\leqslant C(n,h)(\mathscr L(f))^2$''
+and $C(n)=\sup_hC(n,h)$ (Lemma~1.2, p.~31), proves (3)--(4) quoted in \S\ref{sec:influence}, and bounds $C(n)$:
+the proof of Corollary~2.3 (p.~34) gives ``$C(n,h)\leqslant\chi(n,h)<(n-2)^{-1}$; thus
+$C(n)\leqslant(n-2)^{-1}$'', Corollary~3.5 (p.~37) ``$C(n,0)=v_n$'', and Theorem~3.6 (p.~37) ``For $n>1$,
+$C(n)<v_n+v_{n-1}$'', with $v_n+v_{n-1}=2\sum_{k\geqslant n}k^{-2}$ (p.~37). He states that his estimates
+``improve on that given by Levin [10], namely $N/\sqrt5$, for $N\geqslant3$'' (p.~30), and on p.~38 he conjectures
+the geodesic analogue of Levin's Remark~3.7: ``one might think that $C(n,h)\leqslant C(n,0)$''. \st{read}.
+
+\emph{Transfer to the Wilson link} (our computation from the published statements, not a published
+result). By (3) with $n=3$, $K=\beta$ and $z$ the staple moved by the neighbour, each neighbour has influence
+at most $\beta(C(3)/4)^{1/2}$, hence uniqueness when $18\beta(C(3)/4)^{1/2}<1$. With $C(3)\le1$ (Cor.~2.3) this
+gives $\beta_W<1/9\approx0.1111$; with $C(3)<v_3+v_2=\pi^2/3-5/2$ (Thm~3.6) it gives
+$\beta_W<\big(9\sqrt{\pi^2/3-5/2}\big)^{-1}\approx0.12502$. \st{proved} (exact arithmetic; SymPy logs
+\path{calc/royer_transfer.log} and \path{calc/chiffres_v1.log}). At zero field, Royer's route gives $\beta(v_3/4)^{1/2}$ with
+$(v_3/4)^{1/2}=\tfrac12(\pi^2/12-\tfrac12)^{1/2}\approx0.28393$, only $0.35\%$ above our exact
+$D(0)=8/(9\pi)\approx0.28294$; but this is not uniform in the field and gives no uniqueness statement.
+
+\emph{Where the gain comes from.} Our main threshold $2/9$ exceeds the transferred Royer bound $0.12502$ by a
+factor $1.777$, Levin's transferred bound by exactly $\sqrt5\approx2.236$, and $1/12$ by $8/3$; the geodesic
+threshold $\pi/16$ exceeds $0.12502$ by $1.5705$, and $2/9$ exceeds $\pi/16$ by $13.2\%$. The gain is not in the
+constants at $h=0$: it comes from computing the exact single-link coefficient as a function of $\kappa=\beta|s|$ and
+showing that it is maximal at $\kappa=0$ on $[0,6\beta]$ (Theorems~\ref{thm:chordal} and~\ref{thm:onelink}), which
+replaces the field-uniform constants $\sqrt5/N$ (Levin) and $C(n)$ (Royer). This maximality is the property
+conjectured by Levin (Euclidean metric, all $N$, all fields) and, for the variance constant, by Royer. For $N=4$ we
+establish it for the Euclidean $W_1$ coefficient at every field (Theorem~\ref{thm:chordal}; for all fields it had been
+proved before in \cite{BB26}, Theorem~7) and for the geodesic one only for $\kappa\le3\pi/8$, by a computer-assisted proof.
+To our knowledge \cite{BB26} does not contain the geodesic coefficient of Theorem~\ref{thm:onelink}, and we found no other published proof of
+either property (literature search not exhaustive).
+
+\paragraph{Total variation.} The classical total-variation form of Dobrushin's criterion for many-body
+interactions on a compact single-spin space is due to Gross \cite{Gro79} and Simon \cite{Sim79}, neither of
+whom mentions gauge theories. Gross \cite{Gro79} (read on the page images) treats ``$X$ a compact metric
+space'', with ``the cases of principle current interest [\ldots] $X=$ finite set, $S^m$, compact group, or a
+finite product of these'' (p.~10), coefficients $\varrho_{a,b}=\frac12\sup\|\mu_b(\cdot|s)-\mu_b(\cdot|t)\|_{\mathrm{Var}}$
+((2.3), p.~11), and proves (Theorem~3, p.~22): ``If $\alpha_0<1$ then $\varphi$ has a unique Gibbs state $\sigma$'' with
+the decay bound (4.9), where $\alpha_0=2e^{4\|\varphi\|_1}\sup_a\sum_{b\neq a}\zeta(a,b)e^{d(a,b)}$ (4.8), and
+``$\|\mu_a(\cdot|t)-\mu_a(\cdot|s)\|_{\mathrm{Var}}\leqslant e^{4\zeta(a,b)}-1$'' ((4.11), Lemma~4.1). \st{read}.
+Simon \cite{Sim79} (read on the page images) proves: ``If $\sum_{0\in X}(|X|-1)\|\Phi(X)\|_\infty<1$, then (2)
+holds'' (Theorem, p.~184), with ``$\|\Phi(X)\|_\infty$ [replaceable] by $\frac12[\max(\Phi(X))-\min(\Phi(X))]$''
+(Remark~1, p.~185), via the Lemma ``$\|\mu_h-\mu_g\|\leqslant\|h-g\|_\infty$'' whose proof writes
+$\frac{d}{d\theta}\nu_\theta(f)$ as a covariance ((3)--(4), p.~184); in Remark~5 (p.~185) he observes that a
+one-site quantity ``takes its maximum at $a=0$ by the GHS inequality'' for spins in $[-1,1]$. \st{read}.
+\emph{Transfer to the Wilson link} (ours): with $\Phi(p)=-\frac\beta2\ReTr U_p$, Simon's condition with his
+Remark~1 reads $18\beta<1$, i.e.\ $\beta_W<1/18\approx0.056$; Gross's Theorem~3 gives $36\beta e^{24\beta}<1$, i.e.\
+$\beta_W<0.0180$, and his (4.11) in his Theorem~1 gives $\beta_W<\ln(10/9)/4\approx0.0263$ \st{proved} from
+\st{read} (log \path{calc/gross_transfer.log}). Chatterjee \cite{Cha20} (read in
+arXiv:1811.09770v3) applies the total-variation criterion to $\mathbb Z_2$ (Ising) lattice gauge theory in
+$d=4$: ``The easiest way to prove exponential decay of correlations at strong coupling is by using Dobrushin's
+condition'' (p.~21) and, in the proof of Theorem~5.2 (p.~24), ``There are at most $18$ such neighbors'', with a
+total-variation bound $L_0\lambda$ per neighbour, $L_0$ a universal constant that is not made explicit. \st{read}.
+For the $SU(2)$ single-link conditionals the exact one-link total-variation coefficient is
+$c_{\mathrm{TV}}(\beta)=\sup\|q_s-q_{s'}\|_{\mathrm{TV}}=\tfrac{4\beta}{3\pi}+O(\beta^2)$, the supremum being over
+$|s|,|s'|\le6$ differing by one staple, so $|s-s'|\le2$. \st{proved}: \emph{upper bound} (this is the route
+(3) of Simon's Lemma, without the Schwarz step), along the segment
+$s(t)=s+t\delta$, $\delta=s'-s$, $|s(t)|\le6$, the density $h_t$ of $q_{s(t)}$ w.r.t.\ Haar measure satisfies
+$e^{-12\beta}\le h_t\le e^{12\beta}$, and $\frac{d}{dt}q_{s(t)}=\beta(\langle u,\delta\rangle-\E_{q_{s(t)}}\langle u,\delta\rangle)q_{s(t)}$,
+so $\|q_s-q_{s'}\|_{\mathrm{TV}}\le\frac\beta2\sup_t\big(\E_{q_{s(t)}}|\langle u,\delta\rangle|+|\E_{q_{s(t)}}\langle u,\delta\rangle|\big)
+\le\beta\big(e^{12\beta}\tfrac{4}{3\pi}+e^{12\beta}-1\big)$, using $\E_{\mathrm{Haar}}|\langle u,e\rangle|=4/(3\pi)$ and
+$\E_{\mathrm{Haar}}\langle u,\delta\rangle=0$; \emph{lower bound}, take $s=0$ and $s'=-2w$ (flip the staple
+$w\mapsto-w$, the other five summing to $-w$), then $\|q_0-q_{s'}\|_{\mathrm{TV}}=\frac12\E_{\mathrm{Haar}}|e^{\beta\langle u,s'\rangle}/Z-1|
+=\frac\beta2\E_{\mathrm{Haar}}|\langle u,s'\rangle|+O(\beta^2)=\frac{4\beta}{3\pi}+O(\beta^2)$. The resulting sum
+$24\beta/\pi$ gives the threshold $\approx\pi/24\approx0.131$ \emph{at leading order only}; the finite-$\beta$
+threshold, from a floating-point evaluation of $c_{\mathrm{TV}}(\beta)$, is $\approx0.1310$ \st{numerical}.
+The ratio of the first-order coefficients is $\frac{12/(9\pi)}{8/(9\pi)}=\frac32$ for the geodesic metric, and
+$\frac{4/(3\pi)}{1/4}=\frac{16}{3\pi}\approx1.70$ for the chordal one; the ``gain of $W_1$ over total variation''
+therefore depends on the metric.
+
+\paragraph{Summary: five levels.} (i) Total variation: transferred published constants give $\beta_W<1/18$
+(Simon) \st{proved} from \st{read}; with the exact one-link coefficient, $\beta_W\approx\pi/24\approx0.131$
+(leading order \st{proved}, value \st{numerical}). (ii) Euclidean $W_1$ with Levin's published constant
+transferred to the Wilson link: $\beta_W<0.09938$ \st{proved} from \st{read}. (iii) Geodesic $W_1$ with Royer's
+published constants transferred: $\beta_W<0.12502$ (Thm~3.6) or $<1/9$ (Cor.~2.3) \st{proved} from \st{read}.
+(iv) Geodesic $W_1$ with the exact coefficient, uniform in $|h|\le6\beta$ (Theorem~\ref{thm:geo}):
+$\beta_W<\pi/16\approx0.19635$. (v) Euclidean $W_1$ with the exact coefficient, uniform in $|h|\le6\beta$
+(Theorem~\ref{thm:main}): $\beta_W<2/9\approx0.2222$. Levels (ii)--(v) exceed $1/12$ rigorously; the
+exact-coefficient TV level does so only at leading order and numerically, since the explicit upper bound on
+$c_{\mathrm{TV}}$ written above proves the total-variation criterion only for $\beta<0.0414$.
+
+\paragraph{Bakry--\'Emery cannot pass $\beta_W=1/8$.}
+\begin{proposition}\label{prop:piflux}
+Equip each factor $SU(2)$ with a bi-invariant metric (any constant scale per link). At the $\pi$-flux
+configuration ($U_\ell=\pm\mathbf 1$ with every $U_p=-\mathbf 1$; it exists on $\Z^4$ and on periodic boxes of
+even side) the quadratic form $\mathrm{Ric}+\beta\,\mathrm{Hess}\,S_W$, $S_W=\sum_p(1-\frac12\ReTr U_p)$, is not
+positive definite for $\beta>1/8$ (and, on even periodic boxes, has the eigenvalue $0$ at $\beta=1/8$, so it
+is not positive definite there either). Hence the global Bakry--\'Emery
+condition $\mathrm{Ric}+\beta\,\mathrm{Hess}\,S_W\ge K>0$ on link variables fails for $\beta_W\ge1/8$. \st{proved}
+\end{proposition}
+\begin{proof}
+In the Frobenius normalisation ($X_a=i\sigma_a/\sqrt2$), $\exp(sX_a)$ has rotation angle $s/\sqrt2$, so
+$SU(2)$ is the round $S^3$ of radius $\sqrt2$ and $\mathrm{Ric}=g$. Both $\mathrm{Ric}$ and $\mathrm{Hess}\,S_W$ are
+$(0,2)$-tensors unchanged by constant rescalings of the factors, so the sign question is scale-free.
+Perturb $U_\ell\mapsto e^{X_\ell}U_\ell$. At a configuration with all $U_\ell$ central ($\pm\mathbf 1$),
+$U_p\mapsto U_p\,e^{X_1}e^{X_2}e^{-X_3}e^{-X_4}$, so the second-order expansion of $1-\frac12\ReTr U_p$ at
+$U_p=-\mathbf 1$ is minus the one at $U_p=\mathbf 1$, and both configurations are critical. Therefore
+$\mathrm{Hess}\,S_W(\pi\text{-flux})=-\mathrm{Hess}\,S_W(\text{flat})=-\frac12\,d^*d\otimes I_3$, where $d^*d=B^{\mathsf T}B$
+with $B$ the lattice curl (since $1-\frac12\ReTr e^{Y}=|Y|^2/4+O(|Y|^3)$ and the commutator terms of $Y$ are
+traceless). By Fourier analysis the largest eigenvalue of $d^*d$ is $4d=16$, attained at momentum
+$(\pi,\pi,\pi,\pi)$ with $d-1=3$ transverse polarisations. So $\lambda_{\min}(\mathrm{Hess}\,S_W)=-8$ with
+multiplicity $9$ on even periodic boxes (on $\Z^4$: infimum of the quadratic form, via Weyl sequences), and
+$\mathrm{Ric}+\beta\,\mathrm{Hess}\,S_W$ has the eigenvalue $1-8\beta$.
+\end{proof}
+Checks \st{numerical}: an independent arbiter script (finite differences, $L=2$) finds
+$\lambda_{\min}=-8.000000$, multiplicity $9$, $\max|H(\pi)+H(\text{flat})|=7.5\cdot10^{-8}$; a second script
+written for this note finds $\max\operatorname{eig}(B^{\mathsf T}B)=16$ with multiplicity $3$ on $L=2$ and $L=4$, and
+$Q_\pi(v)=-Q_{\text{flat}}(v)=-\frac12v^{\mathsf T}(B^{\mathsf T}B\otimes I_3)v$ to $2\cdot10^{-7}$ along random directions
+on $L=4$. Whether $\sup_U(-\lambda_{\min}\mathrm{Hess}\,S_W)=8$ (so that global Bakry--\'Emery holds up to exactly
+$1/8$) is \st{conjecture}. Consistently, \cite{SZZ23} bound $|\mathrm{Hess}|$ by $12\beta_W$ and obtain $1/12$.
+Since $2/9>\pi/16>0.12502>1/8$ (the transferred Royer bound exceeds $1/8$ by a margin of $2\cdot10^{-5}$; and,
+at leading order only, $\pi/24>1/8$), Dobrushin-type criteria, which need no convexity, go beyond the ceiling of
+the global Bakry--\'Emery route on link variables with bi-invariant product metrics. This does not contradict
+\cite{CNS25}, which obtains an area law up to $\beta_W<1/6$ by applying Bakry--\'Emery to a different (vertex)
+spin system. The same limit, for every $SU(N)$ and every $d$, is Theorem~C of \cite{BB26} (v1, p.~2):
+$\inf_Q\lambda_{\min}(\mathrm{Ric}-N\beta\,\mathrm{Hess}\,S_0(Q))=N/2-4dN|\beta|$ on every torus of even side, which vanishes at $\beta_W=N^2|\beta|=1/8$
+for $SU(2)$ in $d=4$; Proposition~\ref{prop:piflux} was written before we saw that preprint.
+
+\paragraph{Other works.} Osterwalder--Seiler \cite{OS78} prove, by cluster expansion, decay, a mass gap and
+uniqueness of the infinite-volume limit for ``$g_0$ sufficiently large'', without an explicit constant
+\st{read}. Chatterjee \cite{Cha21} (arXiv:2006.16229v5, p.~7, after Definition~2.3; the published version was not
+compared) states that exponential decay under arbitrary boundary conditions ``can be shown to hold for
+essentially any lattice gauge theory when $\beta$ is small enough, using the methods of Dobrushin and Shlosman''
+\cite{DS85}, without a constant \st{read}. Cao--Nissim--Sheffield
+\cite{CNS25} (arXiv, not yet refereed) prove an area law on the torus for $\beta_{\mathrm{tH}}<\frac1{8(d-1)}$,
+i.e.\ $\beta_W<1/6$; this is a statement on Wilson loops, not on uniqueness, and its relation to \S\ref{sec:area} is discussed in \S\ref{sec:areaprior}.
+Seiler's monograph \cite{Sei82} could not be obtained and was \emph{not consulted}; for Georgii's book
+\cite{Geo88} only the table of contents was read (Chapter~8 ``Uniqueness'', \S8.1 ``Dobrushin's condition of
+weak dependence'', p.~140), and its content was \emph{not consulted}; Simon's book \cite{Sim93} was \emph{not
+consulted}. No claim of this note rests on any of them (see \S\ref{sec:limits}, item~4).
+
+\begin{table}[htbp]
+\centering\small
+\begin{tabularx}{\linewidth}{@{}>{\raggedright\arraybackslash}p{0.25\linewidth}>{\raggedright\arraybackslash}X>{\raggedright\arraybackslash}p{0.19\linewidth}>{\raggedright\arraybackslash}p{0.21\linewidth}@{}}
+\toprule
+source & statement & range in $\beta_W$ ($SU(2)$, $d=4$) & status\\
+\midrule
+\cite{OS78} & decay, gap, unique limit & small, not explicit & \st{read}\\
+\cite{Cha20} & TV-Dobrushin, decay, $\mathbb Z_2$ gauge, $d=4$ & not explicit ($L_0$) & \st{read}; other group\\
+\cite{Gro79} Thm~3, transferred (here) & uniqueness, decay & $<0.0180$ & \st{proved} from \st{read}\\
+\cite{Sim79} Thm + Rem.~1, transferred (here) & uniqueness & $<1/18\approx0.056$ & \st{proved} from \st{read}\\
+\cite{SZZ23} & uniqueness, LSI, decay & $<1/12\approx0.083$ & \st{read}\\
+\cite{Lev80} Rem.~3.6, transferred (here) & uniqueness & $<2\sqrt5/45\approx0.0994$ & \st{proved} from \st{read}\\
+\cite{Roy86} Cor.~2.3, transferred (here) & uniqueness & $<1/9\approx0.111$ & \st{proved} from \st{read}\\
+Prop.~\ref{prop:piflux} & global BE on links fails & $\ge1/8=0.125$ & \st{proved}\\
+\cite{BB26} Thm~B (preprint) & Bakry--\'Emery, log-Sobolev and Poincar\'e inequalities, decay & $<1/8=0.125$ & \st{read}; proofs not checked here\\
+\cite{Roy86} Thm~3.6, transferred (here) & uniqueness & $<0.12502$ & \st{proved} from \st{read}\\
+TV-Dobrushin, exact one-link coefficient (here) & uniqueness & $\approx\pi/24\approx0.131$ & leading order \st{proved}, value \st{numerical}\\
+\cite{CNS25} & area law on torus (\S\ref{sec:areaprior}) & $<1/6\approx0.167$ & \st{read}, preprint\\
+Theorem~\ref{thm:geo} (geodesic $W_1$, exact coefficient) & uniqueness (DLR) only & $<\pi/16\approx0.196$ & see Thm~\ref{thm:geo}\\
+Theorem~\ref{thm:main} (Euclidean $W_1$, exact coefficient) & uniqueness (DLR) only & $<2/9\approx0.222$ & see Thm~\ref{thm:main}\\
+Cor.~\ref{cor:poincare} (via \cite{Wu06}) & Poincar\'e inequality, uniform in volume and b.c. & $<2/9\approx0.222$ & \st{proved} from \st{read}\\
+\cite{BB26} Thms~E, F (preprint, v1, 18 Oct.\ 2026) & uniqueness, decay, transfer-matrix gap & $<2/9\approx0.222$ & \st{read}; proofs not checked here\\
+\midrule
+\cite{DF80}, written argument (corrected, \S\ref{sec:areaprior}) & area law (slab criterion) & $<1/6\approx0.167$ & \st{read}\\
+\cite{DF80}, announced (literal reading) & area law, ``more refined estimate'', no proof & $<2/3\approx0.667$ & \st{read}\\
+\cite{Fro79} + \cite{ABF87} & area law via Ising slabs & $\approx0.2217$ & \st{read} for \cite{Fro79}; \st{not checked}\\
+Theorem~\ref{thm:area} (Dobrushin comparison on the slabs) & area law; tori, free b.c., every Gibbs measure & $<2/3\approx0.667$ & \st{proved} from Theorem~\ref{thm:chordal}\\
+\cite{BS83} (preprint, Appendix~B) & confinement (slab clustering, transfer matrix) & $<12/17\approx0.706$ & \st{read}, preprint only\\
+\bottomrule
+\end{tabularx}
+\caption{Explicit ranges, all converted to $\beta_W$ for $SU(2)$ in $d=4$ (Table~\ref{tab:conv}). Rows marked
+``transferred (here)'' apply published statements of \cite{Gro79,Sim79,Lev80,Roy86} to the Wilson link;
+they are not published results, and none of these papers mentions gauge theories.}
+\label{tab:comp}
+\end{table}
+
+\section{Limitations}\label{sec:limits}
+\begin{enumerate}
+\item \emph{Scope.} The note proves uniqueness of the Gibbs measure and, as a corollary of Wu's theorem \cite{Wu06}, the Poincar\'e
+inequality of Corollary~\ref{cor:poincare} for $\beta<2/9$; and, as an application (\S\ref{sec:area}), Wilson's area law for rectangular
+loops for $\beta<2/3$, a range that is not new (\cite{BS83}). No decay of correlations of the Wilson measure, spectral gap of the
+transfer matrix or log-Sobolev inequality is claimed at $\beta<2/9$ in this note. The preprint \cite{BB26} states exponential decay and a transfer-matrix gap
+in the same range (proofs not checked here); among refereed publications, the best explicit range we know for
+these conclusions remains $1/12$ \cite{SZZ23}. Explicit decay statements covering four-body plaquette interactions do exist in total
+variation: Gross's Theorem~3 \cite{Gro79}, transferred, gives uniqueness and exponential decay for
+$\beta_W<0.0180$, far below $1/12$. Gross's Theorem~1 \cite[p.~11]{Gro79} turns any total-variation Dobrushin sum
+below $1$ into exponential decay (take $d(a,b)=r|a-b|$ with $r>0$ small); with a certified bound on $c_{\mathrm{TV}}$
+it would give decay up to the TV threshold $\approx0.131$, hence beyond $1/12$ \st{conjecture} (not certified,
+not written out). For the $W_1$ criterion, Levin \cite[Remark~3.5, p.~72]{Lev80} states that, ``parallel to the
+discussion of Gross'', the truncated spin--spin correlations decay exponentially under the $W_1$ condition with a
+semi-metric weight (his (3.46)--(3.47)); applied to our influence matrices this would plausibly give exponential
+decay of correlations of Lipschitz observables for $\beta<2/9$ \st{conjecture}. Nothing is claimed.
+\item \emph{Formalisation boundary.} The analytic proof of Theorem~\ref{thm:chordal} (all fields, \S\ref{sec:chordal}) is not formalised in Lean; Lean covers none of it.
+In the second, computer-assisted proof of Appendix~\ref{app:v14} (chordal, $\kappa\le4/3$), the flux bound, the explicit field and the elimination of the direction
+(\S\S\ref{sec:chfield}, \ref{sec:chalpha}) are proved on paper; the box bounds, the positivity of $m$ and the constant $0.0084$ are interval-certified; Lean checks only the final rational
+implication, two algebraic steps and the threshold arithmetic. For the geodesic certificate, the chain
+``integrals $\to$ coefficient bounds'' (Arb, reduction of \S\ref{sec:reduction}) is outside Lean, and so are the
+constant $0.0085$ and the covering of $[0,\pi]$ by the boxes (\S\ref{sec:cap}). The differential identity $R\,E\,\mathcal Q[\phi]=(R\,E\,\eta\,\phi^2)'$, the sum-of-squares algebra,
+the moment and Riccati identities and the Chebyshev argument of \S\ref{sec:chordal} are natural candidates for formalisation; none was formalised. Kantorovich--Rubinstein duality is
+quoted from \cite[Thm~10.8, p.~53]{DS25}; McShane's extension, the divergence theorem for Lipschitz fields, the
+Holley--Stroock perturbation argument \cite{HS87} and the weak solvability of $-L\varphi=R$ (Lax--Milgram +
+Poincar\'e) are standard and written out here; none of them is formalised. Wu's theorem, used in Corollary~\ref{cor:poincare}, is quoted, not reproved. The area law of \S\ref{sec:area} and Appendix~\ref{app:comparison}
+(slab decomposition, Wasserstein comparison, walk count, factorisation of the loop) is proved on paper only; Lean covers none of it.
+\item \emph{History and audit of the certificates and proofs.} The first geodesic certificate was wrong (see the erratum);
+the present one passed guards designed to catch that failure mode and two independent recomputations. The chordal
+certificate of Appendix~\ref{app:v14} was written with the same guards and is confirmed by an independent implementation with different
+arithmetic, tail bounds and quadrature (\S\ref{sec:chcap}); its mathematical reduction was re-derived line by line
+in that independent verification. The analytic proof of \S\ref{sec:chordal}, new in this version, was checked as follows: every algebraic identity
+symbolically (SymPy); the key identity $\Xi+3\Delta+\mathcal S=0$ as a formal power series in exact rational arithmetic up to $\kappa^{39}$, and numerically at $120$ values of $\kappa\in[0.01,400]$ (Arb, $90$ digits)
+and by independent mpmath codes ($30$ and $50$ digits); the resulting bounds against exact optimal-transport computations of the supremum (\S\ref{sec:chcross}); and it was read step by step by one independent reviewer,
+a language model of a different family from the one that assisted the writing (Kimi K3.1 Pro, Moonshot AI), which found no error and recomputed the identities with its own code.
+The area-law section (\S\ref{sec:area} and Appendix~\ref{app:comparison}) was read by the same reviewer, first as a separate working note and then in its present condensed form
+(no objection; the reviewer recomputed the quaternionic identities and exact walk counts with its own code and compared the statements on \cite{BS83,DF80} and on the other sources with the page images).
+This is not a refereeing: neither certificate, and none of the proofs, has been audited or refereed by a party outside the project, and the new proofs (\S\ref{sec:chordal}, \S\ref{sec:area}) have not been read by a human referee.
+\item \emph{Novelty and prior art.} The single-site $W_1$ machinery on spheres is due to Levin \cite{Lev80}
+(Euclidean metric, many-body multilinear interactions, which cover the Wilson model; transferred, $0.0994$)
+and Royer \cite{Roy86} (geodesic metric; transferred, $0.12502$). The field-uniformity of the one-site
+coefficient (maximum at zero field) was conjectured by both. For $N=4$ and the Euclidean metric it was proved, for all fields, by \cite{BB26} (Theorem~7),
+before the identity of Theorem~\ref{thm:chordal}, which adds the exact value of the supremum over directions, its maximisers, the estimate for oblique directions and a different proof (\S\ref{sec:lit}).
+The total-variation criterion for many-body interactions is due to Gross \cite{Gro79} and Simon \cite{Sim79}, and the Poincar\'e inequality under Dobrushin's condition to Wu \cite{Wu06} (``classical'' for \cite{BB26}).
+None of Levin, Royer, Gross, Simon mentions gauge theories, and none contains $\beta<\pi/16$, $\beta<2/9$ or a better threshold; \cite{BB26} contains $\beta<2/9$ (Theorem~E).
+For the area law of \S\ref{sec:area}, the range $\beta<2/3$ is not new: confinement for $\beta<12/17$ is in the preprint version of \cite{BS83} (Appendix~B), which we read only in that version; Durhuus and Fr\"ohlich \cite{DF80} announced $\beta<2/3$ without proof (literal reading of their normalisation), and the ranges of \cite{Fro79,ABF87} and \cite{CNS25} are smaller (\S\ref{sec:areaprior}). The literature search for the area law is not exhaustive: MathSciNet was not queried, and \cite{BGDF86} and \cite{Sei82} were not consulted.
+The contribution of this note is the exact field-uniform single-link coefficient for the Euclidean metric (all fields, with an analytic proof) and for the geodesic metric ($\kappa\le3\pi/8$), the certification of the latter,
+the resulting thresholds $2/9$ (also in \cite{BB26}) and $\pi/16$, and the transfers of published constants.
+\emph{Limitation of the literature search:} Seiler's monograph \cite{Sei82} (not obtainable), the content of
+Georgii's book \cite{Geo88} (table of contents only) and Simon's book \cite{Sim93} were not consulted; any of them
+may contain a Dobrushin-type statement for plaquette interactions or for $SU(2)$ gauge fields. No claim of this
+note rests on them, but a priority claim for the gauge application should be read with this limitation in mind.
+\item \emph{Range of fields.} The chordal identity is proved for all $\kappa\ge0$; the computer-assisted proof of v1.4 (Appendix~\ref{app:v14}) covers $\kappa\le4/3$ only, which is what $\beta<2/9$ requires.
+Levin's conjecture for $N=4$ (maximum at zero field, Remark~3.7 of \cite{Lev80}) was decided by \cite{BB26}, Theorem~7, which gives $\Dch(\kappa)\le\frac14$ for every $\kappa$; Theorem~\ref{thm:chordal} recovers it with the exact value
+of the supremum over directions. Levin's conjecture for $N\ne4$, and for interactions other than the Wilson one, is not addressed. Royer's analogous conjecture for the variance constant, ``one might think that $C(n,h)\leqslant C(n,0)$'' \cite[p.~38]{Roy86}, is not addressed either, and the geodesic $W_1$ bound is certified only for $\kappa\le59/50$.
+\item \emph{The value $\pi/24$} is exact only at leading order in $\beta$; the finite-$\beta$ TV threshold is a
+floating-point estimate, and has not been recertified in interval arithmetic.
+\item \emph{Physics.} The results are strong-coupling statements ($g^2>18$ for uniqueness, $g^2>6$ for the area law, with $\beta_W=4/g^2$). They say nothing
+about the continuum limit or the weak-coupling regime relevant to the Yang--Mills mass gap problem.
+\end{enumerate}
+
+\appendix
+\section{The computer-assisted proof of v1.4 on $0\le\kappa\le4/3$}\label{app:v14}
+
+This appendix reproduces, with its mathematics unchanged, the argument by which v1.4 proved the chordal identity on $0\le\kappa\le4/3$, the range that $\beta<2/9$ needs. No statement of the main text depends on it: the analytic proof of
+\S\ref{sec:chordal} covers all $\kappa$. It is kept because it is an independent second proof on $[0,4/3]$ whose final rational steps are checked in Lean, and because the certificates, their independent check and the Lean files are part
+of the archive. The notation is that of \S\ref{sec:chordal}, except that $m(y_1)$ below is the function of Proposition~\ref{prop:alpha}, not the mean $m_1$; Lemmas~\ref{lem:refl} and~\ref{lem:flux} and the explicit field \eqref{eq:field} are those of
+\S\ref{sec:chordal}.
+
+\begin{proposition}[v1.4]\label{prop:v14}
+For $\kappa\in[0,4/3]$ and all $\alpha$, $\Dch(\kappa,\alpha)\le\E_\kappa[x_2^2]$; with Lemma~\ref{lem:refl} this is the identity $\Dch(\kappa)=\E_\kappa[x_2^2]$ on $[0,4/3]$.
+\end{proposition}
+\noindent Status: the upper bound is \st{proved} (\S\ref{sec:chfield}, \S\ref{sec:chalpha}) up to the one-variable inequality \eqref{eq:1d}, which is \st{interval-certified} (\S\ref{sec:chcap}); its last rational step is \st{Lean-checked}.
+
+\subsection{Series for $A$ and regularity for $\kappa\le4/3$}\label{sec:chseries}
+
+\emph{Series and regularity.} $A=\sum_{j\ge0}\kappa^jA_j$ where $A_j$ is the unique polynomial solution of
+$L[A_j]=q_j$, $L[p]=tp-\frac13(1-t^2)p'$, $q_j$ the coefficient of $\kappa^j$ in $q$: $L$ maps degree $d$ to
+degree $d+1$ with leading factor $1+d/3$, the homogeneous solutions $c(1-t^2)^{-3/2}$ are unbounded, and the
+solvability condition $\int q_j\sqrt{1-t^2}=0$ holds order by order; so $A_j$ has degree $j$
+($A_0=1$, $A_1=\frac34t$, $A_2=\frac3{10}t^2-\frac7{40}$). $A$ is holomorphic in $\kappa$ for $|\kappa|\le2$ (where
+$|\Zb|\ge2-\Zb(2)>0.4$) and bounded there, so Cauchy's estimates and Markov's inequality $\|p'\|_\infty\le
+(\deg p)^2\|p\|_\infty$ make the series and its first two $t$-derivatives converge uniformly on $[-1,1]$ for
+$\kappa\le4/3$; hence $V\in C^1(\bar B)$ \st{proved}. The explicit bounds are those of the certificate
+(\S\ref{sec:chcap}).
+
+
+\subsection{Elimination of the direction}\label{sec:chalpha}
+
+\begin{proposition}\label{prop:alpha}
+Let $m(y_1)=\min(A,E)-|A'|R/6$ and assume $m>0$ on $[-1,1]$. With
+\[
+J_0=\frac{2}{5\pi}\int_{-1}^1\Big(\frac{A'}{3}\Big)^2\frac{R^5}{2m}\,dy_1,\qquad
+J_1'=\frac{2}{3\pi}\int_{-1}^1(E-A)^2\frac{R^3}{2m}\,dy_1,\qquad J_1=J_1'+\tfrac23J_0,
+\]
+one has, for all $\alpha$,
+$\Dch(\kappa,\alpha)\le\cos^2\alpha\,\big(\Var_\kappa x_1+\max(J_0,J_1)\big)+\sin^2\alpha\,\E_\kappa x_2^2$.
+\st{proved}
+\end{proposition}
+\begin{proof}
+By Lemma~\ref{lem:flux} applied to \eqref{eq:field}, $\Dch(\kappa,\alpha)\le\frac1{2\pi^2}\int_B|V|$.
+Pointwise, $\langle v,V\rangle=\cos^2\!\alpha\,A+\sin^2\!\alpha\,E-\cos\alpha\sin\alpha\,\frac{A'}3y_2\ge m(y_1)>0$ (as
+$|\cos\alpha\sin\alpha|\le\frac12$ and $|y_2|\le R$), and $\sqrt{a^2+b^2}\le a+b^2/(2a)$ for $a>0$ gives
+$|V|\le\langle v,V\rangle+|V_\perp|^2/(2m)$, where, in the orthonormal frame $(v,n,e_3,e_4)$ with
+$n=-\sin\alpha\,e_1+\cos\alpha\,e_2$,
+$|V_\perp|^2=\cos^2\!\alpha\,\big[\big(\sin\alpha(E-A)-\cos\alpha\frac{A'}3y_2\big)^2+\big(\frac{A'}3\big)^2(y_3^2+y_4^2)\big]$.
+The integral of $\langle v,V\rangle$ is $2\pi^2\Var_\kappa(u)=2\pi^2(\cos^2\!\alpha\Var_\kappa x_1+\sin^2\!\alpha\,\E_\kappa x_2^2)$
+(end of \S\ref{sec:chfield}; $\Cov_\kappa(x_1,x_2)=0$ and $\E_\kappa x_2=0$ by the symmetry $x_2\mapsto-x_2$).
+On the section $\{|z|\le R\}$ of the ball, the cross term is odd in $y_2$, and $\int1=\frac43\pi R^3$,
+$\int y_2^2=\frac4{15}\pi R^5$, $\int(y_3^2+y_4^2)=\frac8{15}\pi R^5$. Dividing by $2\pi^2$, with $s=\sin^2\alpha$,
+the excess is at most $\cos^2\!\alpha\,\big[sJ_1'+(1-\frac s3)J_0\big]$, affine in $s\in[0,1]$, hence at most
+$\cos^2\!\alpha\,\max(J_0,J_1)$.
+\end{proof}
+
+\paragraph{Reduction to one variable.} If, for a given $\kappa$, $m>0$ on $[-1,1]$ and
+$\Var_\kappa x_1+\max(J_0,J_1)\le\E_\kappa x_2^2$, Proposition~\ref{prop:alpha} gives $\Dch(\kappa,\alpha)\le\E_\kappa x_2^2$
+for all $\alpha$ (the convex combination \texttt{etape\_alpha}, \st{Lean-checked}), and Lemma~\ref{lem:refl} gives
+equality at $\alpha=\pi/2$. Now $N:=\Zb^2(\E_\kappa x_2^2-\Var_\kappa x_1)=\frac13\Zb^2-\frac43\Zb''\Zb+\Zb'^2=\kappa^2\tilde N(\kappa)$ with
+$\tilde N$ a power series, and $A'=\kappa\tilde A$, $E-A=\kappa\tilde D$ with power series $\tilde A,\tilde D$ (since
+$A_0=E_0=1$). Writing $\tilde J_0,\tilde J_1$ for $J_0,J_1$ with $A',E-A$ replaced by $\tilde A,\tilde D$ (so
+$J_i=\kappa^2\tilde J_i$), it suffices to prove
+\begin{equation}\label{eq:1d}
+\frac{\tilde N(\kappa)}{\Zb(\kappa)^2}>\max\big(\tilde J_0(\kappa),\tilde J_1(\kappa)\big)\quad\text{and}\quad m>0\ \text{on }[-1,1],
+\qquad\text{for all }\kappa\in[0,4/3]
+\end{equation}
+(the step from \eqref{eq:1d} to the inequality before it is \texttt{etape\_kappa2}, \st{Lean-checked}). At $\kappa=0$,
+exactly, $\tilde N/\Zb^2=1/48$, $\tilde A=\frac34$, $\tilde D=\frac t4$, $m=1$, and $\tilde J_0=\tilde J_1=1/256$: the
+margin is $13/768$, so \eqref{eq:1d} is \emph{not} degenerate at zero field, unlike the geodesic inequality of
+\S\ref{sec:onelink}. \st{proved}
+
+
+\subsection{Computer-assisted part}\label{sec:chcap}
+
+\paragraph{Interval evaluation.} Script \path{certificate_chordal/cert_ch.py}, Arb ball arithmetic
+(python-flint 0.9.0), working precision $128$ bits and series length cap $200$, both mandatory arguments, set
+explicitly and read back. All series in $\kappa$ ($\Zb,\Zb',\Zb'',1/\Zb$, $m_1$, $m_1/\Zb$, $\Zb^2$, $\Zb''\Zb$, $\Zb'^2$,
+$N$) are computed to length $L=D+5=85$ ($D=80$); guard~1 refuses $\mathrm{cap}<L$, guard~2 asserts
+\texttt{.prec}${}=L$ on each of these ten series and products (trailing zeros are padded explicitly, since
+\texttt{coeffs()} drops them). The $A_j$ are obtained by exact downward recursion; the solvability residual
+contains $0$ for all $j\le80$. \emph{Tails:} all orders $>80$ are bounded, not neglected: Cauchy's estimates on
+$|\kappa|\le2$ ($|\Zb|\ge0.409363$, $|m_1|\le1.6830$, $|E|\le18.050$, $|A|\le228.21$, using
+$\int_t^1\sqrt{1-s^2}\,ds\le\frac\pi2(1-t^2)^{3/2}$) and on $|\kappa|\le4$ for $N$, and Markov's inequality for
+$A_j'$. At $\kappa=4/3$ the tails are $1.9\cdot10^{-8}$ ($\tilde A$), $3.0\cdot10^{-12}$ ($\tilde D$) and
+$7.3\cdot10^{-39}$ ($N$).
+\emph{Boxes:} $[0,4/3]$ is cut into $256$ boxes $[i/192,(i+1)/192]$, $\kappa$ being a ball in each; the series are
+folded into polynomials in $t=y_1$, and $[-1,1]$ is cut into $1024$ dyadic sub-intervals, on which the polynomials
+are evaluated in centred form $p(t_c)+p'(T)(T-t_c)$. On each sub-interval $m>0$ is \emph{asserted}, and $\tilde J_0$,
+$\tilde J_1$ are bounded above by upper Riemann sums (with exact upper bounds for $R^3,R^5$). $\tilde N$ is bounded
+below on the box (minus its tail), and $\Zb$ above by its value at the right end (nonnegative coefficients).
+
+\paragraph{Result.} All $256$ boxes pass; the worst margin is $1.142\cdot10^{-2}$, on the last box
+$[85/64,4/3]$ (lower bound $1.6883\cdot10^{-2}$ for $\tilde N/\Zb^2$ against $\tilde J_1\le5.463\cdot10^{-3}$,
+$\tilde J_0\le3.975\cdot10^{-3}$, $m\ge0.192$); at $\kappa\in[0,1/192]$ the margin is $1.690\cdot10^{-2}$.
+The right-hand side can be multiplied by about $3$ before the inequality fails. \st{interval-certified}
+
+\paragraph{Gates.} All logs return code 0 unless a refusal is expected (logs in the archive).
+\begin{center}\small
+\begin{tabular}{p{0.30\linewidth}p{0.62\linewidth}}
+\toprule
+gate & outcome\\
+\midrule
+cap $\in\{85,100,200,300\}$ & identical results in all $256$ boxes; cap $10$ and $84={}L-1$ refused by guard~1, and by guard~2 when guard~1 is disabled\\
+order $D\in\{40,60,80,100\}$ & the bound moves ($\tilde J_0$ of the last box $4.8604\cdot10^{-3}$, $3.97576\cdot10^{-3}$, $3.975228508\cdot10^{-3}$, $3.975228233\cdot10^{-3}$) and stabilises; all four runs pass\\
+sub-intervals $\in\{256,\dots,2048\}$ & upper Riemann sums strictly decreasing, step halving ($O(1/N_T)$)\\
+precision $128$ vs $192$ & $\max|\Delta\tilde J_1|=6.7\cdot10^{-14}$; all boxes pass\\
+boxes $\in\{64,128,512\}$ & all pass; worst margin $1.106$, $1.130$, $1.148\cdot10^{-2}$\\
+exact gate (fractions, no Arb) & solvability residuals exactly $0$ for $j\le80$; $\tilde N_0=1/48$, odd orders $0$; all $6891$ exact coefficients lie in the Arb balls\\
+numerical gate (\st{numerical}) & series $A$ vs direct quadrature $1.3\cdot10^{-15}$; $|\operatorname{div}V|\le4\cdot10^{-11}$; $|V\cdot x-w|\le7\cdot10^{-16}$; full flux bound $\frac1{2\pi^2}\int_B|V|$ by 3D quadrature within $1.7\cdot10^{-4}$ of the linear programs of \path{calc/lp2d_m14.log} (e.g.\ $0.20892$, $0.22140$, $0.23332$ vs $0.20887$, $0.22145$, $0.23324$ at $\kappa=4/3$, $\alpha=0,\pi/4,\pi/2$)\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\paragraph{Independent check.} A second implementation (\path{independent_check_chordal/}), written without
+reading or importing the certificate code, recomputes everything with different tools: exact rational
+coefficients up to order $100$ (own downward solver; solvability residuals exactly $0$ and $L[A_j]=q_j$ checked
+exactly), \texttt{mpmath.iv} interval arithmetic instead of Arb, elementary tail bounds instead of complex Cauchy
+estimates ($|[\kappa^n]1/\Zb|\le2^{-n}$ by induction, and $(1-t^2)^{-3/2}\int_t^1\sqrt{1-s^2}\,ds\le1$ on $[0,1)$ instead of
+$\pi/2$), a uniform partition in $\theta$ ($t=\cos\theta$) with exact weights $\int\sin^4$, $\int\sin^6$, and naive
+Horner evaluation. On its own partition ($200$ boxes of width $1/150$) it certifies \eqref{eq:1d} on all of
+$[0,4/3]$ (worst margin $1.1395\cdot10^{-2}$, $m\ge0.188$); it also recertifies the $256$ boxes of the Lean data
+file and checks, two-sidedly, that none of the exported rationals contradicts its own enclosures. Its negative
+gates fail as they should (precision sabotaged to $53$ bits: refused; series shorter than $D+2$: refused; left
+side of \eqref{eq:1d} scaled by $0.30$: fails on the last box, while $0.35$ passes).
+Exact checks: $\E_{\bar\sigma}u^2=1/4$ and the cost $1/4$ of the reflection coupling (SymPy), the coefficient
+$3k/(k+2)$ symbolically for all $k$, $c_2=1/96$; a Monte-Carlo evaluation of the full flux bound at $\kappa=4/3$
+($0.20884$, $0.22131$, $0.23322$) agrees with the linear programs \st{numerical}. \st{interval-certified}
+
+\paragraph{Lean.} Commit \path{1b0f039c53c1e2a11c496cc5a1cb7774ab5a010e} of the author's Lean library (parent
+\texttt{7a211ed}, which holds the geodesic modules of \S\ref{sec:cap}; three new files, no existing file changed),
+module \path{KevYM/Certif/DobrushinCordale/}. The three modules are reproduced byte for byte in the standalone
+project \path{lean/} of the accompanying archive. Lean toolchain \texttt{v4.34.0}. Main statements (verbatim):
+{\scriptsize
+\begin{verbatim}
+theorem sound (L : List Boite) (a c : ℚ) (hch : chaine L a c = true) (hok : L.all Boite.ok = true)
+    (Nt J0 J1 : ℝ → ℝ)
+    (hN : ∀ b ∈ L, ∀ κ : ℝ, (b.k0 : ℝ) ≤ κ → κ ≤ (b.k1 : ℝ) → (b.lb : ℝ) ≤ Nt κ)
+    (hJ0 : ∀ b ∈ L, ∀ κ : ℝ, (b.k0 : ℝ) ≤ κ → κ ≤ (b.k1 : ℝ) → J0 κ ≤ (b.h0 : ℝ))
+    (hJ1 : ∀ b ∈ L, ∀ κ : ℝ, (b.k0 : ℝ) ≤ κ → κ ≤ (b.k1 : ℝ) → J1 κ ≤ (b.h1 : ℝ))
+    (κ : ℝ) (ha : (a : ℝ) ≤ κ) (hc : κ ≤ (c : ℝ)) : max (J0 κ) (J1 κ) < Nt κ
+theorem etape_kappa2 (k Nt Jt V1 E2 : ℝ) (hE : E2 - V1 = k ^ 2 * Nt) (h : Jt < Nt) :
+    V1 + k ^ 2 * Jt ≤ E2
+theorem etape_alpha (V1 E2 J c s : ℝ) (hcs : c ^ 2 + s ^ 2 = 1) (h : V1 + J ≤ E2) :
+    c ^ 2 * (V1 + J) + s ^ 2 * E2 ≤ E2
+theorem somme_dobrushin_lt_one (β : ℝ) (hβ : β < 2 / 9) : 18 * β * (1 / 4) < 1
+theorem kappa_max_lt (β : ℝ) (hβ : β < 2 / 9) : 6 * β < 4 / 3
+theorem pi_div_16_lt : Real.pi / 16 < 2 / 9
+theorem certificat_cordal (Nt J0 J1 : ℝ → ℝ)
+    (hN : ∀ b ∈ boites, ∀ κ : ℝ, (b.k0 : ℝ) ≤ κ → κ ≤ (b.k1 : ℝ) → (b.lb : ℝ) ≤ Nt κ)
+    (hJ0 : ∀ b ∈ boites, ∀ κ : ℝ, (b.k0 : ℝ) ≤ κ → κ ≤ (b.k1 : ℝ) → J0 κ ≤ (b.h0 : ℝ))
+    (hJ1 : ∀ b ∈ boites, ∀ κ : ℝ, (b.k0 : ℝ) ≤ κ → κ ≤ (b.k1 : ℝ) → J1 κ ≤ (b.h1 : ℝ))
+    (κ : ℝ) (h0 : 0 ≤ κ) (hK : κ ≤ 4 / 3) : max (J0 κ) (J1 κ) < Nt κ
+\end{verbatim}}
+Here \texttt{Boite.ok b} is \texttt{h0 < lb \&\& h1 < lb \&\& k0 ≤ k1}, \texttt{chaine} checks that the boxes are
+chained from $a$ to $c$, and \texttt{boites} is the list of the $256$ exported boxes $\langle k_0,k_1,lb,h_0,h_1\rangle$
+(Arb bounds rounded outward to the grid $2^{-40}$, re-checked exactly before export); \texttt{boites\_ok} and
+\texttt{boites\_chaine} are proved by \texttt{decide +kernel}. The file also proves $18\cdot(2/9)\cdot\frac14=1$, the
+converse for $\beta\ge2/9$, and $6\cdot(2/9)=4/3$. Build clean (0 warnings); all $16$ theorems of the module depend
+only on \texttt{propext}, \texttt{Classical.choice}, \texttt{Quot.sound}; the rebuild from \texttt{git archive 1b0f039}
+succeeds, and the standalone project \path{lean/} of the archive builds from an empty \texttt{.lake} with the same
+axiom report (\path{lean/logs/build_from_zero.log}). \st{Lean-checked}
+
+\paragraph{What Lean covers, exactly.} \texttt{certificat\_cordal} is a conditional implication: \emph{if} real
+functions \texttt{Nt}, \texttt{J0}, \texttt{J1} (standing for $\tilde N/\Zb^2$, $\tilde J_0$, $\tilde J_1$) are bounded box by
+box by the exported rationals, \emph{then} $\max(\tilde J_0,\tilde J_1)<\tilde N/\Zb^2$ on $[0,4/3]$. Lean also checks
+the two algebraic steps \texttt{etape\_alpha}, \texttt{etape\_kappa2} and the threshold arithmetic. Not in Lean:
+the flux bound, the explicit field and Proposition~\ref{prop:alpha} (proved on paper, \S\S\ref{sec:chfield}--\ref{sec:chalpha}),
+the bounds of each box and the positivity of $m$ (\st{interval-certified}), and the constant $0.0084$.
+
+\paragraph{Artefacts (SHA-256).} Paths are relative to the accompanying archive.\par\noindent
+{\small
+\begin{tabularx}{\linewidth}{@{}>{\raggedright\arraybackslash}p{0.40\linewidth}>{\raggedright\arraybackslash}X@{}}
+\toprule
+file & SHA-256\\
+\midrule
+\path{certificate_chordal/cert_ch.py} & \path{d83aa23b2fd20707b08076c87053aa8c9bc9e277ca15d78be95e5afa7dab14c0}\\
+\path{certificate_chordal/export_lean.py} & \path{f9f59cbeb0a0ac0c609ce7471b97ea3c69ea7f7330ac4c5975c152416b374ac4}\\
+\path{certificate_chordal/cert_D80_NT1024_NK256_cap200_p128.json} & \path{aa5da0f05c1ee230782c30bd451981df2100ca75a9fc46ca73a6b7e54c765bb5}\\
+\path{lean/KevYM/Certif/DobrushinCordale/Donnees.lean} (${}={}$\texttt{1b0f039}) & \path{72a0901472475b3a6d98033692b899e32c5f9b2a1daab7b9ed5c22416dc462fe}\\
+\bottomrule
+\end{tabularx}}
+
+
+\section{Proof of Proposition~\ref{prop:al-comparison} (Dobrushin's comparison)}\label{app:comparison}
+
+\emph{Reduction.} Ordering $F=\{z_1,\dots,z_r\}$ and replacing $\xi$ by $\xi'$ one frozen site at a time, it suffices to treat $\xi,\xi'$ differing at a single $z\in F$: the right side of \eqref{eq:al-cmp} is additive over $z$, and $C$ does not depend on $\xi$.
+
+\emph{Step 1 (one-site kernels).} For $x\in V$ let $(\gamma^\xi_xG)(q)=\int G(q_{V\setminus x},u)\,\gamma_x(du\mid q_{V\setminus x},\xi)$. Clearly $\delta_x(\gamma_x^\xi G)=0$. If $q,q'$ differ only at $x'\ne x$,
+\[
+\begin{aligned}
+\gamma^\xi_xG(q)-\gamma^\xi_xG(q')={}&\int\big[G(q_{V\setminus x},u)-G(q'_{V\setminus x},u)\big]\gamma_x(du\mid q,\xi)\\
+&+\int G(q'_{V\setminus x},u)\big[\gamma_x(du\mid q,\xi)-\gamma_x(du\mid q',\xi)\big];
+\end{aligned}
+\]
+the first term is at most $\delta_{x'}(G)\,\rch(q_{x'},q'_{x'})$ and, $u\mapsto G(q'_{V\setminus x},u)$ being $\delta_x(G)$-Lipschitz, the second is at most $\delta_x(G)\,c_{xx'}\rch(q_{x'},q'_{x'})$ by \eqref{eq:al-cxz}. So $\delta_{x'}(\gamma^\xi_xG)\le\delta_{x'}(G)+\delta_x(G)\,c_{xx'}$. In the same way, for every $q$,
+\begin{equation}\label{eq:al-onestep}
+|\gamma^\xi_xG(q)-\gamma^{\xi'}_xG(q)|\le\delta_x(G)\,c_{xz}\,\rch(\xi_z,\xi'_z).
+\end{equation}
+
+\emph{Step 2 (random scan).} Let $n=|V|$ and $P^\xi=n^{-1}\sum_{x\in V}\gamma^\xi_x$. Since $\gamma_x(\cdot\mid q_{V\setminus x},\xi)$ is the conditional law of $q_x$ under $\mu^\xi$, $\mu^\xi\gamma^\xi_x=\mu^\xi$ and so $\mu^\xi P^\xi=\mu^\xi$. By Step~1, writing $\delta(G)$ for the row vector $(\delta_x(G))_{x\in V}$,
+\[
+\delta(P^\xi G)\le\delta(G)\,M\quad\text{entrywise},\qquad M:=(1-\tfrac1n)I+\tfrac1nC\ \ge0,
+\]
+and the row sums of $M$ are $\le\vartheta:=1-(1-\alpha)/n<1$. In particular $P^\xi G\in\mathcal L$.
+
+\emph{Step 3 (convergence).} Put $G_t=(P^\xi)^tG$. Then $\delta(G_t)\le\delta(G)M^t$, so
+\[
+\sum_x\delta_x(G_t)\le\vartheta^t\sum_x\delta_x(G)\to0 .
+\]
+Changing one coordinate at a time, $\sup G_t-\inf G_t\le2\sum_x\delta_x(G_t)\to0$; as $\mu^\xi(G_t)=\mu^\xi(G)$, $G_t\to\mu^\xi(G)$ uniformly.
+
+\emph{Step 4 (telescoping).} Using $\mu^{\xi'}P^{\xi'}=\mu^{\xi'}$ and \eqref{eq:al-onestep},
+\[
+\begin{aligned}
+|\mu^{\xi'}(G_t)-\mu^{\xi'}(G_{t+1})|&=\big|\mu^{\xi'}\big((P^{\xi'}-P^{\xi})G_t\big)\big|\\
+&\le\frac{\rch(\xi_z,\xi'_z)}n\sum_x\delta_x(G_t)\,c_{xz}\le\frac{\rch(\xi_z,\xi'_z)}n\,\big(\delta(G)M^t\big)c_{\cdot z}.
+\end{aligned}
+\]
+Summing over $t\ge0$ and using Step~3, $|\mu^{\xi'}(G)-\mu^\xi(G)|\le n^{-1}\rch(\xi_z,\xi'_z)\,\delta(G)\big(\sum_tM^t\big)c_{\cdot z}$, and $\sum_tM^t=(I-M)^{-1}=n(I-C)^{-1}=nD$. \qed
+
+\begin{thebibliography}{99}
+\bibitem{Dob70} R.~L.~Dobrushin, \ru{Задание системы случайных величин при помощи условных распределений},
+Teor.\ Veroyatn.\ Primen.\ 15:3 (1970) 469--497; English transl.\ \emph{Prescribing a system of random variables
+by conditional distributions}, Theory Probab.\ Appl.\ 15 (1970) 458--486, doi:10.1137/1115049.
+\bibitem{SZZ23} H.~Shen, R.~Zhu, X.~Zhu, \emph{A stochastic analysis approach to lattice Yang--Mills at strong
+coupling}, Comm.\ Math.\ Phys.\ 400 (2023) 805--851, doi:10.1007/s00220-022-04609-1, arXiv:2204.12737.
+(Page numbers above refer to the arXiv v1 PDF, the only arXiv version.)
+\bibitem{OS78} K.~Osterwalder, E.~Seiler, \emph{Gauge field theories on a lattice}, Ann.\ Phys.\ 110 (1978)
+440--471, doi:10.1016/0003-4916(78)90039-8.
+\bibitem{Sei82} E.~Seiler, \emph{Gauge Theories as a Problem of Constructive Quantum Field Theory and
+Statistical Mechanics}, Lecture Notes in Physics 159, Springer (1982), doi:10.1007/3-540-11559-5.
+\emph{Not consulted.}
+\bibitem{CNS25} S.~Cao, R.~Nissim, S.~Sheffield, \emph{Dynamical approach to area law for lattice Yang--Mills},
+arXiv:2509.04688v2 (2025).
+\bibitem{Cha21} S.~Chatterjee, \emph{A probabilistic mechanism for quark confinement}, Comm.\ Math.\ Phys.\ 385
+(2021) 1007--1039, doi:10.1007/s00220-021-04086-y, arXiv:2006.16229. (Page number above refers to the arXiv v5
+PDF; the published version was not compared.)
+\bibitem{DS85} R.~L.~Dobrushin, S.~B.~Shlosman, \emph{Constructive criterion for the uniqueness of Gibbs field},
+in: Statistical Physics and Dynamical Systems, Birkh\"auser (1985) 347--370, doi:10.1007/978-1-4899-6653-7\_20.
+\bibitem{DS25} T.~C.~Dorlas, B.~Savoie, \emph{On the Wasserstein distance and the Dobrushin uniqueness theorem},
+Rev.\ Math.\ Phys.\ 37 (2025), doi:10.1142/S0129055X25300018, arXiv:2305.19371. (Theorem and page
+numbers refer to the arXiv v4 PDF, 66 pp.; the published version was not compared.)
+\bibitem{HS87} R.~Holley, D.~Stroock, \emph{Logarithmic Sobolev inequalities and stochastic Ising models},
+J.\ Stat.\ Phys.\ 46 (1987) 1159--1194, doi:10.1007/BF01011161.
+\bibitem{Roy86} G.~Royer, \emph{Study of Dobrushin's critical coupling in rotator models}, Ann.\ Inst.\
+H.~Poincar\'e Phys.\ Th\'eor.\ 44:1 (1986) 29--38 (Numdam \path{AIHPA_1986__44_1_29_0}; metadata from Numdam,
+no Crossref DOI; read on the page images, pp.~30, 31, 34, 37).
+\bibitem{Lev80} S.~L.~Levin, \emph{Application of Dobrushin's uniqueness theorem to $N$-vector models},
+Comm.\ Math.\ Phys.\ 78 (1980) 65--74, doi:10.1007/BF01941969 (Project Euclid \path{cmp/1103908501}; read on the
+page images, pp.~65, 66, 67, 68, 71, 72, 73).
+\bibitem{Cha20} S.~Chatterjee, \emph{Wilson loops in Ising lattice gauge theory}, Comm.\ Math.\ Phys.\ 377
+(2020) 307--340, doi:10.1007/s00220-020-03738-9, arXiv:1811.09770. (Page numbers above refer to the arXiv v3
+PDF; the published version was not compared.)
+\bibitem{Gro79} L.~Gross, \emph{Decay of correlations in classical lattice models at high temperature},
+Comm.\ Math.\ Phys.\ 68 (1979) 9--27, doi:10.1007/BF01562538 (Project Euclid \path{cmp/1103905263}; read on the
+page images, pp.~10, 11, 21, 22).
+\bibitem{Sim79} B.~Simon, \emph{A remark on Dobrushin's uniqueness theorem}, Comm.\ Math.\ Phys.\ 68 (1979)
+183--185, doi:10.1007/BF01418127 (Project Euclid \path{cmp/1103905311}; read on the page images, pp.~183--185).
+\bibitem{Sim93} B.~Simon, \emph{The Statistical Mechanics of Lattice Gases, Volume~I}, Princeton University
+Press (1993), doi:10.1515/9781400863433 (metadata from Crossref). \emph{Not consulted.}
+\bibitem{Geo88} H.-O.~Georgii, \emph{Gibbs Measures and Phase Transitions}, de Gruyter, Berlin--New York (1988),
+doi:10.1515/9783110850147. \emph{Content not consulted}; table of contents read (Deutsche Nationalbibliothek
+record 880793589).
+\bibitem{BB26} D.~Bhattacharjee, U.~Bhattacharya (v1, v2) with J.~M.~Lockwood (v3, v4), Hexagon preprint hexagon:2610.00341, versions v1 (18 October 2026) to v4 (30 October 2026),
+\url{https://hexagonmath.org/pdf/2610.00341v1} and \url{https://hexagonmath.org/pdf/2610.00341v4}. Titles of the PDFs: v1 \emph{Mass Gap of Lattice Yang--Mills Theory up to the Dobrushin Ceiling};
+v2 \emph{Mass Gap of Four-Dimensional Lattice Yang--Mills Theory in a Forest Gauge}; v3 \emph{Yang--Mills Mass Gap in 4D: Lattice SU(N) and Every Compact Simple Group};
+v4 \emph{Mass Gap of Four-Dimensional Lattice Yang--Mills Theory for Every Compact Simple Group}. Zenodo, release v4.8.0, doi:10.5281/zenodo.23786523 (30 October 2026; all versions: doi:10.5281/zenodo.23444338),
+authors D.~Bhattacharjee, U.~Bhattacharya, J.~M.~Lockwood. Theorem, lemma and page numbers: see \S\ref{sec:lit}.
+\bibitem{Nis25} R.~Nissim, \emph{U(N) lattice Yang--Mills in the 't~Hooft regime}, preprint arXiv:2510.22788 (2025), \url{https://arxiv.org/abs/2510.22788}.
+\bibitem{Wu06} L.~Wu, \emph{Poincar\'e and transportation inequalities for Gibbs measures under the Dobrushin uniqueness condition}, Ann.\ Probab.\ 34:5 (2006)
+1960--1989, doi:10.1214/009117906000000368, arXiv:math/0611635. (Theorem and page numbers refer to the arXiv v1 PDF, whose pagination differs from the journal's.)
+\bibitem{BE85} D.~Bakry, M.~\'Emery, \emph{Diffusions hypercontractives}, S\'eminaire de Probabilit\'es XIX, Lecture Notes in Math.\ 1123, Springer (1985) 177--206
+(cited as in the reference list of \cite{Wu06}; not re-read).
+\bibitem{DF80} B.~Durhuus, J.~Fr\"ohlich, \emph{A connection between $\nu$-dimensional Yang--Mills theory and $(\nu-1)$-dimensional, non-linear $\sigma$-models},
+Comm.\ Math.\ Phys.\ 75 (1980) 103--151, doi:10.1007/BF01222514; preprint IHES/P/79/302 (September 1979), read on the page images of the preprint (``preprint p.''
+refers to its printed page numbers).
+\bibitem{BS83} C.~Borgs, E.~Seiler, \emph{Lattice Yang--Mills theory at nonzero temperature and the confinement problem}, Comm.\ Math.\ Phys.\ 91 (1983) 329--380,
+doi:10.1007/BF01208780; preprint MPI-PAE/PTh~16/83 (March 1983), read in the scan of the KEK library (``preprint p.'' refers to its printed page numbers, (II.$n$) to its
+equations and Appendix~B to its pages B1--B6). \emph{The journal version was not consulted.}
+\bibitem{Fro79} J.~Fr\"ohlich, \emph{Confinement in $Z_n$ lattice gauge theories implies confinement in $SU(n)$ lattice Higgs theories}, Phys.\ Lett.\ B 83 (1979) 195--198,
+doi:10.1016/0370-2693(79)90684-1; read in the preprint IHES/P/79/2 (pp.~4, 7--9).
+\bibitem{ABF87} M.~Aizenman, D.~J.~Barsky, R.~Fern\'andez, \emph{The phase transition in a general class of Ising-type models is sharp}, J.\ Stat.\ Phys.\ 47 (1987) 343--374,
+doi:10.1007/BF01007515. \emph{Metadata only.}
+\bibitem{FXL18} A.~M.~Ferrenberg, J.~Xu, D.~P.~Landau, \emph{Pushing the limits of Monte Carlo simulations for the three-dimensional Ising model}, Phys.\ Rev.\ E 97 (2018) 043301,
+doi:10.1103/PhysRevE.97.043301, arXiv:1806.03558 (abstract: $K_c=0.221\,654\,626(5)$).
+\bibitem{Fol82} H.~F\"ollmer, \emph{A covariance estimate for Gibbs measures}, J.\ Funct.\ Anal.\ 46 (1982) 387--395, doi:10.1016/0022-1236(82)90053-2. \emph{Metadata only.}
+\bibitem{BGDF86} D.~C.~Brydges, C.~Giffen, B.~Durhuus, J.~Fr\"ohlich, \emph{Surface representations of Wilson loop expectations in lattice gauge theory}, Nucl.\ Phys.\ B 275 (1986) 459--487,
+doi:10.1016/0550-3213(86)90609-7. \emph{Not consulted} (abstract and metadata only).
+\bibitem{KK95} K.~Kanaya, S.~Kaya, \emph{Critical exponents of a three dimensional $O(4)$ spin model}, Phys.\ Rev.\ D 51 (1995) 2404--2410, doi:10.1103/PhysRevD.51.2404, arXiv:hep-lat/9409001
+(energy $\sum(1-\vec s\cdot\vec s\,')$, critical inverse temperature $K_c=0.9360(1)$).
+\bibitem{DZ81} J.-M.~Drouffe, J.-B.~Zuber, \emph{Roughening transition in lattice gauge theories in arbitrary dimension (II). The groups $Z_3$, $U(1)$, $SU(2)$, $SU(3)$},
+Nucl.\ Phys.\ B180 [FS2] (1981) 264--274, doi:10.1016/0550-3213(81)90419-3; Table~1, p.~267, read on the page image.
+
+\end{thebibliography}
+
+\end{document}

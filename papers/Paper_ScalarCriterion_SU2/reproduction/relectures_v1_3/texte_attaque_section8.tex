@@ -1,0 +1,98 @@
+%=====================================================================================================================
+\section{The criterion fails at every fixed lattice size as $\beta\to\infty$}\label{sec:fixed}
+
+\textbf{Status of this section.} Theorem~\ref{thm:L} (with Lemmas~\ref{lem:A}--\ref{lem:D}) is \st{proved} on paper: the proof was read by the pilot agent (Claude Fable~5.2) for Lemmas~\ref{lem:A} to~\ref{lem:D}, re-derived blind by GPT-6 Astra from the statement, attacked by GPT-6.1 Sol (who corrected the wording of Lemma~\ref{lem:A} and proved the factor $1/\log\beta$ of Lemma~\ref{lem:C}(c)), and found again by an independent chain of the project. The constants $C$ and $\beta_0$ are \emph{not} explicit. Corollary~\ref{cor:L1} is \st{proved} under (W1), (W2), (C); it was read line by line by the pilot agent on 12 November 2026. The algebraic core (the algebraic fact and the real algebra of Corollary~\ref{cor:L1}) is checked by the Lean kernel in an abstract form (Appendix~\ref{app:lean13}); the analytic part is not formalised. Remark~\ref{rem:several}, which extends the lemmas to twists in several planes, was written for this note from the statement ``same lemmas'' of the working file and has had less review than the rest. No human has checked any of it.
+
+\emph{Anteriority.} The ingredients are classical: twisted boundary conditions ('t~Hooft \cite{tH79}, not read by us), isolated twisted vacua and their moduli on the torus (Coste, Gonz\'alez-Arroyo, Jurkiewicz, Korthals Altes \cite{CGJK85}; van Baal \cite{vB84}; neither read by us), and Laplace's method. We do not claim novelty for the asymptotics; we have not found the comparison in the form below (power law in $\beta$ for $SU(2)$ against an exponential for $U(1)$ and $\Z_2$, and the consequence for the doubling defect at fixed size).
+%% ANTERIORITE-A-TRANCHER-PAR-LE-PILOTE : lire [CGJK85] et [vB84] avant publication ; ajuster cette phrase et le paragraphe "Anteriority" de l'introduction si le resultat y figure.
+
+\emph{What this section says, and does not say.} It says where the criterion fails: at every fixed lattice size $n$, $\Delta_\beta(n)$ stays above a constant much larger than $2^{-9}$ as $\beta\to\infty$. It is not a mass-gap result, it proves nothing at weak coupling about the continuum limit, and it says nothing about how fast $n$ must grow with $\beta$.
+
+\subsection{Setting}
+Let $\Lambda=\prod_{\mu=0}^{d-1}\Z/L_\mu$, $d\ge2$, $L_\mu\ge2$, $V=|\Lambda|$, with links $(x,\mu)$ and plaquettes $p=(x;\mu,\nu)$. For $G=SU(2)$ and signs $\epsilon_p\in\{\pm1\}$ put
+\[
+S_\epsilon(U)=\sum_p\bigl(1-\epsilon_p\tfrac12\Tr U_p\bigr)\ge0,\qquad Z_\epsilon=\int e^{-\beta S_\epsilon(U)}\,dU
+\]
+with $dU$ the normalised Haar measure and $\beta=\beta_W=4/g^2$ as in~\eqref{eq:wilson}. $Z_0:=Z_{\epsilon\equiv1}$. A \emph{single-plane twist} is $\epsilon_p=-1$ exactly on the plaquettes $(x;0,1)$ with $(x_0,x_1)$ fixed (all values of the other $d-2$ coordinates, so $\prod_{\mu\ge2}L_\mu$ plaquettes) and $\epsilon_p=+1$ elsewhere; $Z_k$ denotes its partition function and $R=Z_k/Z_0$. (This is the twist of Section~\ref{sec:thooft}, time being direction $0$; by translation invariance the position $(x_0,x_1)$ is immaterial, and we take $x_0=L_0-1$, $x_1=L_1-1$.) The gauge group $\mathcal G=SU(2)^\Lambda$ acts by $(g\cdot U)_{(x,\mu)}=g_xU_{(x,\mu)}g_{x+\mu}^{-1}$ and leaves $S_\epsilon$ invariant. For $U(1)$ and $\Z_2$ (on the cube $L_\mu\equiv L$) the action is $1-\epsilon_p\Re U_p$, same signs.
+
+\begin{theorem}[fixed-size twist ratio]\label{thm:L}
+For $SU(2)$ there are $C=C(\Lambda)$ and $\beta_0=\beta_0(\Lambda)$ such that for $\beta\ge\beta_0$ and a single-plane twist
+\[
+\frac{Z_k}{Z_0}\ \le\ C\,\beta^{-(d-1)/2};\qquad\text{for }d=4:\quad \frac{Z_k}{Z_0}\le C\,\frac{\beta^{-3/2}}{\log\beta}.
+\]
+On the cube $(\Z/L)^d$, for the same twist, $U(1)$ satisfies $Z_k/Z_0\le C'\beta^{q}e^{-2\beta L^{d-4}}$ (for some $C'$, $q$ depending on $L$, $d$) and $\Z_2$ satisfies $Z_k/Z_0\le2^{(d-1)(V-1)}e^{-2\beta L^{d-2}}$. The constants $C,\beta_0,C'$ are not explicit. \st{proved}
+\end{theorem}
+\emph{Warning on the form of the bound.} In dimension four the theorem gives $Z_k/Z_0=o(\beta^{-3/2})$; hence no equivalent of the form $C\beta^{-3/2}$ with $C>0$ can hold, and the exponent $(d-1)/2$ is an upper bound on the decay, not proved to be its exact order (the exact order is not claimed; a lower bound by a power of $\beta$ was found by Astra, $Z_k/Z_0\ge c_k\beta^{-3(d-1)V/2}$, so the ratio is squeezed between powers of $\beta$).
+
+\subsection{The lemmas}
+\begin{lemma}[zero sets]\label{lem:A}
+Let $N_k=\{U:S_\epsilon(U)=0\}$ for the single-plane twist, and $N_0=\{S_0=0\}$ (flat configurations). (a) $N_k$ is the union of $2^{d-2}$ orbits of $\mathcal G$, each with stabiliser $\{\pm1\}$ (the constants), hence a compact smooth submanifold of dimension $3V$. (b) $N_0$ contains a smooth submanifold $N_0^{\mathrm{gen}}$ of dimension $3V-1+d$ (flat configurations whose holonomies commute and are not all central).
+\end{lemma}
+\begin{proof}
+$S_\epsilon(U)=0$ iff $\epsilon_pU_p=1$ for every $p$. \emph{(a)} Open the torus along the hyperplanes $x_\mu=L_\mu-1\to0$. The interior plaquettes are flat (they are not twisted: the twisted plaquettes have $x_0=L_0-1$ and $x_1=L_1-1$, so they contain links crossing the cuts), and the box is simply connected, so a gauge transformation sets to $1$ all links that do not cross a cut. The remaining links are those crossing a cut, $U_{(x,\mu)}$ with $x_\mu=L_\mu-1$. A plaquette $(x;\mu,\nu)$ with $x_\mu=L_\mu-1$ and $x_\nu<L_\nu-1$ contains two such links, at $x$ and $x+e_\nu$, and two links that do not cross a cut; it is untwisted when $(\mu,\nu)\ne(0,1)$ or $x_1<L_1-1$, and then flatness says $U_{(x,\mu)}=U_{(x+e_\nu,\mu)}$. Hence each crossing link is constant along the transverse directions, equal to some $\Omega_\mu\in SU(2)$. (One may check that a closed section of the twisted plane has zero boundary and the product $-1$; the statement ``the transport around the boundary of any $2$-chain is the product of the $\epsilon_p$'' is false and is not used.) The plaquettes at the intersection of cuts are then commutators: $\Omega_0\Omega_1\Omega_0^{-1}\Omega_1^{-1}=-1$ (the twisted ones) and $[\Omega_\mu,\Omega_\nu]=1$ for every other pair. Conversely every such $d$-tuple gives a configuration of $N_k$, and two tuples that are conjugate give gauge-equivalent configurations.
+
+The relation $\Omega_0\Omega_1=-\Omega_1\Omega_0$ gives, taking traces in $\Omega_1\Omega_0\Omega_1^{-1}=-\Omega_0$, $\Tr\Omega_0=0$, and likewise $\Tr\Omega_1=0$: both are pure unit quaternions $u,v$, and $uv=-vu$ iff $u\perp v$. $SO(3)$ acts transitively on orthonormal pairs, so $(\Omega_0,\Omega_1)$ is conjugate to $(i\sigma_1,i\sigma_2)$. For $\mu\ge2$, $\Omega_\mu$ commutes with $i\sigma_1$ and $i\sigma_2$, hence with the whole quaternion algebra, so $\Omega_\mu=\pm1$. This gives $2^{d-2}$ classes. In the gauge where the non-crossing links equal $1$, the residual gauge transformations are the constants $g$ with $g\Omega_\mu g^{-1}=\Omega_\mu$ for all $\mu$, that is $g=\pm1$. The classes are distinct because $\Omega_\mu=\pm1$ ($\mu\ge2$) is gauge invariant. So $N_k$ is a union of $2^{d-2}$ orbits $\mathcal G/\{\pm1\}$, of dimension $3V$.
+
+\emph{(b)} A commuting $d$-tuple with a non-central element is conjugate into the maximal torus $\{e^{i\theta\sigma_3}\}$; near such a point the commuting $d$-tuples form a manifold of dimension $2+d$ (the axis in $S^2$ and the $d$ angles). The gauge-fixed description as in (a) shows that the stabiliser of such a configuration is the centraliser of the tuple, a copy of $U(1)$, so the orbit has dimension $3V-1$, and the family of orbits has the $d$ angles as parameters: $\dim N_0^{\mathrm{gen}}=3V-1+d$.
+\end{proof}
+
+\begin{lemma}[Morse--Bott along $N_k$]\label{lem:B}
+At every point of $N_k$ the Hessian of $S_\epsilon$ (for the bi-invariant metric $\langle X,Y\rangle=-\frac12\Tr XY$) has as kernel exactly the tangent space of the gauge orbit, and is positive definite on its orthogonal complement.
+\end{lemma}
+\begin{proof}
+Write $U=\exp(A)\bar U$ with $\bar U\in N_k$, $A_e\in\mathfrak{su}(2)$. Each plaquette is $U_p=\epsilon_p\exp(F_p)$ with $F_p=(D_1A)_p+O(|A|^2)$, where $D_1$ is the lattice exterior derivative twisted by the adjoint representation of the flat background $\bar U$, and $1-\epsilon_p\frac12\Tr U_p=1-\cos|F_p|=\frac12|F_p|^2+O(|F_p|^4)$. Hence $S_\epsilon=\frac12\|D_1A\|^2+O(|A|^3)$: the Hessian is $D_1^*D_1$ with no curvature term, because $S_\epsilon$ vanishes with its gradient at $\bar U$. Its kernel is $\ker D_1=\operatorname{im}D_0\oplus H^1(\Lambda;\mathrm{ad}\bar U)$, and $\operatorname{im}D_0$ is the tangent space of the orbit. It remains to show $H^1=0$. Under $\mathrm{Ad}(i\sigma_1)$, $\mathrm{Ad}(i\sigma_2)$ and $\mathrm{Ad}(\pm1)$, $\mathfrak{su}(2)$ splits into three flat real line bundles: $\sigma_1$ (holonomy $-1$ along direction $1$), $\sigma_2$ (holonomy $-1$ along direction $0$), $\sigma_3$ (holonomy $-1$ along directions $0$ and $1$); the holonomy along $\mu\ge2$ is $+1$. The cohomology of a rank-one local system on the torus whose holonomy is not trivial vanishes in all degrees (K\"unneth: $H^*(S^1;\mathcal L)=0$ if the holonomy is $\ne1$), and the cell complex of the lattice torus ($L_\mu\ge2$) computes it. Hence $H^1=0$.
+\end{proof}
+
+\begin{lemma}[Laplace]\label{lem:C}
+(a) $Z_k\le C_1\beta^{-3(d-1)V/2}$. (b) $Z_0\ge c\,\beta^{-(3(d-1)V+1-d)/2}$. Hence $Z_k/Z_0\le C\beta^{-(d-1)/2}$. (c) For $d=4$, $Z_0\ge c\,\beta^{-(9V-3)/2}\log\beta$, hence $Z_k/Z_0\le C\beta^{-3/2}/\log\beta$.
+\end{lemma}
+\begin{proof}
+(a) By Lemmas~\ref{lem:A} and~\ref{lem:B} and compactness there are a tubular neighbourhood $\mathcal T$ of $N_k$, $c>0$ and $\delta>0$ with $S_\epsilon\ge c\,\mathrm{dist}(\cdot,N_k)^2$ on $\mathcal T$ and $S_\epsilon\ge\delta$ outside. In normal coordinates, $Z_k\le e^{-\beta\delta}+C\,\mathrm{vol}(N_k)(\pi/(c\beta))^{\kappa/2}$ with $\kappa=3dV-3V$ the codimension of $N_k$ in the configuration space of dimension $3dV$; this is $\le C_1\beta^{-3(d-1)V/2}$.
+
+(b) Only a Taylor bound is needed (no non-degeneracy): on a tubular neighbourhood of a compact set $K\subset N_0^{\mathrm{gen}}$ with non-empty interior in one smooth piece, away from the central strata, $S_0\le C'\mathrm{dist}(\cdot,N_0)^2$ because $S_0\ge0$ vanishes to second order on $N_0$. The Haar density is bounded below in normal coordinates, so $Z_0\ge c(K)\beta^{-\kappa'/2}$ with $\kappa'=3dV-(3V-1+d)=3(d-1)V+1-d$. The quotient has the exponent $\bigl[3(d-1)V-(3(d-1)V+1-d)\bigr]/2=(d-1)/2$. (The central stratum of $N_0$ is \emph{not} Morse--Bott; we do not use a Gaussian expansion there.)
+
+(c) (Sol.) In the gauge fixed at a base point, near the trivial field there are $12$ constant coordinates $X_\mu\in\mathfrak{su}(2)$ ($\mu=0,\dots,3$) and $9(V-1)$ further coordinates $q$ (total $12V-3(V-1)=9V+3$), and by Taylor expansion of the plaquette holonomies (smooth, vanishing when $q=0$ and the $X_\mu$ commute) $S_0\le C\bigl(\sum_{\mu<\nu}\|[X_\mu,X_\nu]\|^2+\|q\|^2\bigr)$. Consider the region $X_0=ru$ ($u$ a unit vector), $X_i=t_iu+z_i$ with $z_i\perp u$ ($i=1,2,3$), $\beta^{-1/4}\le r\le r_0$, $|t_i|\le cr$, $|z_i|\le c\beta^{-1/2}/r$, $\|q\|\le c\beta^{-1/2}$. There $\|[X_0,X_i]\|\lesssim r|z_i|\le c^2\beta^{-1/2}$ and $\|[X_i,X_j]\|\lesssim|t_i||z_j|+|t_j||z_i|+|z_i||z_j|\lesssim\beta^{-1/2}$ (using $r\ge\beta^{-1/4}$), so $\beta S_0$ stays bounded on the region. Its volume is, with $X_0=ru$ of density $r^2dr\,du$, $\int r^2dr\prod_{i=1}^3\bigl(r\cdot\beta^{-1}r^{-2}\bigr)\cdot\beta^{-9(V-1)/2}\asymp\beta^{-3-9(V-1)/2}\int_{\beta^{-1/4}}^{r_0}\frac{dr}{r}\asymp\beta^{-(9V-3)/2}\log\beta$. Hence $Z_0\ge c\,\beta^{-(9V-3)/2}\log\beta$, while by (a) with $d=4$ ($3(d-1)V/2=9V/2$) one gets $Z_k/Z_0\le C\beta^{-3/2}/\log\beta$.
+\end{proof}
+
+\begin{lemma}[$U(1)$ and $\Z_2$]\label{lem:D}
+On the cube $(\Z/L)^d$ with the same twist: for $U(1)$, $\min S_\epsilon\ge2L^{d-4}$ and $Z_0\ge c\beta^{-q}$; for $\Z_2$, $\min S_\epsilon=2L^{d-2}$ and $Z_0\ge2^{-(d-1)(V-1)}$.
+\end{lemma}
+\begin{proof}
+Fix the $d-2$ coordinates other than $0,1$: the $L^2$ plaquettes $(x;0,1)$ of this section form a closed $2$-torus, exactly one of them twisted, and there are $L^{d-2}$ sections. \emph{$U(1)$.} The sum of the plaquette angles $\theta_p$ over a section lies in $2\pi\Z$ (each link appears twice with opposite signs). With $\phi_p=\theta_p+\pi\mathbf 1[p\text{ twisted}]$, $\sum_p\phi_p\equiv\pi\pmod{2\pi}$. Since $1-\cos\phi\ge(2/\pi^2)\mathrm{dist}(\phi,2\pi\Z)^2$, $\sum_p\mathrm{dist}(\phi_p,2\pi\Z)\ge\pi$ and by Cauchy--Schwarz over $L^2$ plaquettes the cost of a section is at least $(2/\pi^2)\pi^2/L^2=2/L^2$; summing over $L^{d-2}$ sections gives $2L^{d-4}$. $Z_0\ge c\beta^{-q}$ by the Taylor argument of Lemma~\ref{lem:C}(b) on the smooth manifold of flat $U(1)$ configurations. \emph{$\Z_2$.} In each section the product of the $U_p$ is $1$, but exactly one plaquette is twisted, so at least one plaquette of the section has $\epsilon_pU_p=-1$ and costs $2$; $U=1$ attains $2L^{d-2}$. The flat configurations are $|B^1|\cdot|H^1(T^d;\Z_2)|=2^{V-1+d}$ out of $2^{dV}$, so $Z_0\ge2^{V-1+d-dV}=2^{-(d-1)(V-1)}$.
+\end{proof}
+
+\begin{proof}[Proof of Theorem~\ref{thm:L}]
+$SU(2)$: Lemma~\ref{lem:C}(b) and (c). $U(1)$ and $\Z_2$: $Z_k\le e^{-\beta\min S_\epsilon}$ (normalised measure) and Lemma~\ref{lem:D}.
+\end{proof}
+
+\begin{remark}[several planes]\label{rem:several}
+For a twist in the planes $(0,i)$, $i\in S\subset\{1,\dots,d-1\}$, $S\ne\emptyset$ (all with the same time layer), the same lemmas hold with the same exponent. The relations become $\Omega_0\Omega_i=-\Omega_i\Omega_0$ ($i\in S$) and all other pairs commuting. Then $\Omega_0=u$ and each $\Omega_i$ ($i\in S$) is a pure unit quaternion orthogonal to $u$, and two commuting such elements are equal up to sign, so $\Omega_i=\pm v$ with a fixed $v\perp u$; the other $\Omega_\mu$ are $\pm1$. The stabiliser is again $\{\pm1\}$, the zero set is a union of orbits $\mathcal G/\{\pm1\}$ of dimension $3V$, and the three line bundles of Lemma~\ref{lem:B} have holonomies, along the direction $0$ and along $i\in S$, $(+,-)$, $(-,+)$ and $(-,-)$ respectively, never all trivial since $S\ne\emptyset$, so $H^1=0$. Lemma~\ref{lem:C} then gives $Z_k/Z_0\le C\beta^{-(d-1)/2}$ for every $k\ne0$ (the denominator $Z_0$ is the same). This remark is used for the $7$ twists $k\in\Z_2^3\setminus\{0\}$ of Corollary~\ref{cor:L1}(ii)--(iii) and for the rectangular tori $\sigma_j\times n$; the proofs of the lemmas are written for general sides $L_\mu\ge2$ and use the shape only through $V$.
+\end{remark}
+
+\subsection{The algebraic fact}
+Two elements of $SU(2)$ can anticommute ($i\sigma_1$ and $i\sigma_2$); in an abelian group, or in any commutative ring of characteristic $\ne2$ without zero divisors, two non-zero elements never do. A twist is therefore classically free for $SU(2)$ (there are flat $SO(3)$ bundles of the twist class considered; not every class $w_2\ne0$ has one, for instance $n_{01}=n_{23}=1$, whose Pfaffian is non-zero) and costs an action of order $\beta$ for $U(1)$ and $\Z_2$ (Lemma~\ref{lem:D}). This is the source of the difference of Theorem~\ref{thm:L}: for $SU(2)$ the suppression of the twist is only entropic (isolated twisted vacua against a module of tori of positive dimension), a power of $\beta$; for $U(1)$ and $\Z_2$ it is energetic, $e^{-c\beta}$. Lean checks the algebraic statements in Appendix~\ref{app:lean13} (anticommuting pair of $SU(2)$, the commutant, an explicit pair, and the abelian cases); the lattice geometry is not formalised.
+
+\subsection{Consequence for the criterion}
+\begin{corollary}[the criterion fails at fixed size; \st{proved} under (W1), (W2), (C)]\label{cor:L1}
+Let $n\ge3$ and assume (W1), (W2), (C) for the tori $\sigma_j\times n$, $j=0,\dots,3$ (for Wilson's $SU(2)$ theory, (W1) is proved and (W2), (C) are given by Proposition~\ref{prop:wilsonC}). Then:
+\begin{enumerate}
+\item[(i)] There are $C(n)$ and $\beta_1(n)$ with, for $\beta\ge\beta_1(n)$, $\Delta_\beta(n)\ge8\log\dfrac{8}{5+3C(n)\beta^{-3/2}}>3.7$.
+\item[(ii)] $\displaystyle\liminf_{\beta\to\infty}\Delta_\beta(n)\ \ge\ 15\log8=45\log2\approx31.19$, the number $\Delta_4(n)=45\log2$ computed for the deconfined $\Z_2$ theory in Example~\ref{ex:z2} (the $SU(2)$ statement is an inequality, not an equality).
+\item[(iii)] On the cube alone, with the seven twists: $\Delta_\beta(n)\ge8\log\dfrac{8}{1+7r}$ whenever the seven ratios $Z_k/Z_0$ ($k\ne0$) of the torus $n^4$ are at most $r$; in particular $\Delta_\beta(n)\ge8\log4\approx11.09$ as soon as $r\le1/7$.
+\end{enumerate}
+These are lower bounds, not limit values. They imply that $\varepsilon_1(n)\to1$ as $\beta\to\infty$ at every fixed $n$, so (V1) of Section~\ref{sec:thooft} fails there.
+\end{corollary}
+\begin{proof}
+By Theorem~\ref{thm:twosub}'s ingredients (the left half of Proposition~\ref{prop:bracket} and Proposition~\ref{prop:sectors}(d)), $\sum_j2^{3-j}\bigl[\log(1+s^0_{\sigma_j}(n))+\varphi_{\sigma_j}(n)\bigr]\le\Delta(n)$, all terms being non-negative, so $\Delta(n)\ge\sum_j2^{3-j}\varphi_j$ with $\varphi_j=-\log(1-D_j)$ and $D_j=\frac18\sum_{k\ne0}(1-R_k)$, $R_k=Z_k/Z_0$ on $\Sigma_j$.
+
+(i) On the cube ($j=0$, weight $8$) the three single-plane twists $(0,i)$ have the same ratio $R\le C(n)\beta^{-3/2}$ by Theorem~\ref{thm:L} and hypercubic symmetry; the four other terms of $D_0$ are $\ge0$ (Proposition~\ref{prop:sectors}(b): $0\le1-Z_k/Z_0$), so $D_0\ge\frac38(1-R)$, $1-D_0\le(5+3R)/8$, and $\Delta\ge8\varphi_0\ge8\log(8/(5+3R))$. For $\beta$ large $8\log(8/5)=3.760\ldots>3.7$.
+
+(ii) For each $j$ the seven twists $k\ne0$ have ratios $R_k\le C_j\beta^{-3/2}$ (Remark~\ref{rem:several}), so $D_j\to7/8$ and $\varphi_j\to\log8$; and $\sum_j2^{3-j}=15$.
+
+(iii) $1-D=(1+\sum_{k\ne0}R_k)/8\le(1+7r)/8$.
+\end{proof}
+Corollary~\ref{cor:L1} is independent of Theorem~7.59 of \cite{BB26v5} and of Proposition~\ref{prop:scale}, and it passes through (V1) alone; but it is qualitative in $n$ (it gives nothing on how large $n$ must be for a given $\beta$), whereas Proposition~\ref{prop:scale} is quantitative and conditional. That the gap of the transfer operator closes at fixed size as $\beta\to\infty$ is, as we read it, already in \cite{BB26v5}; Corollary~\ref{cor:L1} does not allow us to claim it.
+
+\begin{remark}[comparison with $U(1)$ and $\Z_2$; physical reading]\label{rem:L-comparison}
+In Theorem~\ref{thm:L} the twist ratio of $SU(2)$ is bounded by a power of $\beta$, that of $U(1)$ and $\Z_2$ by $e^{-c\beta}$. The only difference between $SU(2)$ and the abelian theories for (V1) at fixed size is therefore the nature of the deficit (a power of $\beta$ against an exponential). A proof of (V1) at weak coupling must see this non-abelian feature, and must show that the polynomial deficit disappears when the effective coupling at the scale $n$ becomes of order one as $n$ grows; nothing in this note does so. \st{heuristic}: a box of fixed lattice size is, at weak coupling, smaller than the deconfinement length in all four directions, and sees the four isolated twisted vacua of Lemma~\ref{lem:A} as degenerate with the untwisted one up to a power of $\beta$.
+\end{remark}

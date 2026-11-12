@@ -1,0 +1,135 @@
+%=====================================================================================================================
+\section{Flux sectors and 't~Hooft twists}\label{sec:thooft}
+
+\textbf{Status of this section.} The section is about the electric-flux sectors of the periodic trace (Remark~\ref{rem:W2}). Proposition~\ref{prop:sectors} and Theorem~\ref{thm:twosub} are \st{proved} on paper; they were read line by line by the pilot agent of the project (Claude Fable~5.2) on 12 November 2026. Theorem~\ref{thm:twistall} is \st{proved} on paper and rests on Theorem~\ref{thm:R}. Proposition~\ref{prop:wilsonC}, which provides hypothesis (C) below for Wilson's $SU(2)$ theory, rests on the paper proof of \cite{TBv12}, itself checked by AI models only. Proposition~\ref{prop:scale} is \st{conditional} on Theorem~7.59 of \cite{BB26v5}, which we read and re-did step by step. Seven abstract finite statements are checked by the Lean kernel (Appendix~\ref{app:lean13}); that appendix says what they state and what they do not. No human has checked any of it.
+
+The identity of Proposition~\ref{prop:sectors}(a) is classical ('t~Hooft~\cite{tH79}, not read by us; \cite[(2.9) and App.~I]{TY85}; \cite[(8)--(9)]{Kan}); (d) is a rewriting of it. Part of the material on dyadic cubes was obtained earlier in unpublished internal reports of 11 November 2026 \cite{internal}. What we believe is new here is the exact additive decomposition (d) with the vacuum lemma (c), the extension to all cubes, all large times and tori of bounded aspect ratio through Theorem~\ref{thm:R}, the equivalence of Theorem~\ref{thm:twosub} with the criterion, and the scale bound of Proposition~\ref{prop:scale}; we have not searched the literature exhaustively. \emph{Nothing in this section is proved at weak coupling, and nothing in it gives an area law in infinite volume.}
+
+\subsection{Centre operators and twisted partition functions}\label{subsec:C}
+\begin{enumerate}
+\item[(C)] For every spatial torus $t$ there are three commuting self-adjoint unitaries $C_1,C_2,C_3$ on $\Hinv(t)$ commuting with $K_t$; for $k\in\Z_2^3$ put $C^k=C_1^{k_1}C_2^{k_2}C_3^{k_3}$ and $Z_k(t,M)=\Tr(C^kK_t^M)$, and assume $Z_k(t,M)\ge0$.
+\end{enumerate}
+(We call $t$ a spatial torus with all sides at least $3$ when (W2) is used, as in Section~\ref{sec:reverse}.) By Remark~\ref{rem:W2}, the centre transformations of the links crossing a spatial hyperplane commute with $K$; (C) asks that they be implemented by unitaries on $\Hinv$ with non-negative twisted traces.
+
+\begin{proposition}[(C) for Wilson's $SU(2)$ theory; \st{proved} on paper, resting on \cite{TBv12}]\label{prop:wilsonC}
+Let $t$ be a spatial torus with all sides at least $2$, $\beta>0$, and $T=(MPC_\beta M)|_{\Hinv}$ the transfer operator of \cite{TBv12} (the operator of the proposition on the transfer representation there), so that $K_t=e^{-6\beta V(t)}T$ satisfies $Z_\beta(t,M)=\Tr K_t^M$ for $M\ge2$ and is positive and trace class. For $i=1,2,3$ let $C_i$ be the multiplication by $-1$ of all links of direction $i$ that cross a fixed plane $x_i=c_i$ (at all transverse positions). Then the $C_i$ are self-adjoint unitaries that commute with each other and with $K_t$, and for $M\ge2$ and $k\in\Z_2^3$, $\Tr(C^kK_t^M)$ is the Wilson partition function (same normalisation as $Z_\beta$) in which the sign of $\frac12\Tr U_p$ is reversed on the temporal plaquettes of the planes $(0,i)$ lying above the cut $i$, on one time layer, for each $i$ with $k_i=1$ (a 't~Hooft twist in these time--space planes; the cuts of the different directions are on a single common time layer). In particular $Z_k\ge0$.
+\end{proposition}
+\begin{proof}
+For one direction this is the proof of items (i)--(ii) of the flux-sector theorem of \cite{TBv12}. The $C_i$ act on disjoint sets of links, so they commute. Each preserves the Haar measure and commutes with the gauge transformations (multiplication by a central element), it preserves every spatial plaquette weight (a plaquette contains $0$ or $2$ links of direction $i$ crossing the cut, at the same $x_i$) and the kernel $c_\beta$ (since $(-U)(-V)^{-1}=UV^{-1}$); hence it commutes with $M$, $P$, $C_\beta$ and $T$. In the layer integral of \cite{TBv12}, replacing $V$ by $C^kV$ in the kernel of the last step changes the sign of $h=\frac12\Tr$ on exactly the temporal plaquettes $(0,i)$ whose link in direction $i$ on layer $0$ lies in the cut, for the $i$ with $k_i=1$, because $h(-g)=-h(g)$, and touches no other plaquette; the Mercer expansion gives $\int s_M(U,C^kU)\,dU=\sum_j\lambda_j^M\langle\varphi_j,C^k\varphi_j\rangle=\Tr(C^kT^M)$. The factor $e^{-6\beta V(t)M}$ is common: the action has $6$ plaquettes per site, so $e^{-S_\beta}=e^{-6\beta V(t)M}\exp(\beta\sum_p\frac12\Tr U_p)$ on the lattice of volume $V(t)M$. $Z_k$ is the integral of a positive weight.
+\end{proof}
+\emph{Scope.} The proofs of \cite{TBv12} are written there for one long direction and a square fibre $F=(\Z/L)^2$; the positivity proof (multinomial expansion of $\exp(\beta\langle Q(U),Q(V)\rangle)$ in the unit quaternions) uses neither parity nor equality of the sides, and the composition of several commuting cuts is the same substitution; we did not rewrite those proofs for rectangular fibres. This is the point on which the application of Section~\ref{sec:reverse} to Wilson's theory rests (Remark~\ref{rem:Rused}(iii)), and the status of \cite{TBv12} is that of a paper proof checked by models only.
+
+\subsection{Decomposition into sectors}\label{subsec:T1}
+\begin{proposition}[sector decomposition; \st{proved}]\label{prop:sectors}
+Assume (W2) and (C) for a torus $t$ (omitted from the notation). Let $P_e=\frac18\sum_k(-1)^{k\cdot e}C^k$ for $e\in\Z_2^3$, $\mathcal H_e=P_e\Hinv$, and $\Tr_e(M)=\Tr(P_eK^M)\ge0$. Let $\lambda_0=\|K\|>0$.
+\begin{enumerate}
+\item[(a)] $Z_k=\sum_e(-1)^{k\cdot e}\Tr_e$, $\Tr_0=\frac18\sum_kZ_k$ and $\sum_{e\ne0}\Tr_e=\frac18\sum_{k\ne0}(Z_0-Z_k)$.
+\item[(b)] For $k\ne0$: $1-Z_k/Z_0=2\sum_{e:\,k\cdot e\ \mathrm{odd}}\Tr_e/Z_0\in[0,\min(2D,1)]$, where $D=\sum_{e\ne0}\Tr_e/Z_0=\frac18\sum_{k\ne0}(1-Z_k/Z_0)\in[0,1]$.
+\item[(c)] (neutral vacuum) $\lambda_0$ is an eigenvalue of $K|_{\mathcal H_0}$; if $\lambda_0$ is simple, its eigenvector lies in $\mathcal H_0$.
+\item[(d)] (exact decomposition) Let $s^0(M)=\Tr_0(K/\lambda_0)^M-1\ge0$ (the excited trace of the neutral sector, one copy of $\lambda_0$ removed, which is legitimate by (c)) and $\varphi(M)=\log\bigl(8Z_0/\sum_kZ_k\bigr)=-\log(1-D)\ge0$. Then, with $h(M)=\log(1+s(M))$ as in Section~\ref{sec:reverse},
+\[
+h(M)=\log\bigl(1+s^0(M)\bigr)+\varphi(M).
+\]
+\item[(e)] Let $s^{\mathrm{fl}}(M)=\sum_{e\ne0}\Tr_e(K/\lambda_0)^M$. Then $s^{\mathrm{fl}}\le s$, $D=s^{\mathrm{fl}}/(1+s)$, and $0\le1-Z_k/Z_0\le2s(M)/(1+s(M))\le2s(M)$; for $M'\ge M$, $s(M')\le s(M)\rho^{M'-M}$ with $\rho=\max_{i\ge1}r_i$.
+\end{enumerate}
+\end{proposition}
+\begin{proof}
+(a) The $C^k$ commute with $K$ and with each other, so they are simultaneously diagonalisable with $K$, and $\Hinv=\bigoplus_e\mathcal H_e$ with $C^k=(-1)^{k\cdot e}$ on $\mathcal H_e$. Hence $Z_k=\sum_e(-1)^{k\cdot e}\Tr_e$, and $\Tr_e=\frac18\sum_k(-1)^{k\cdot e}Z_k$ because $\sum_k(-1)^{k\cdot e}=8\delta_{e,0}$; the third identity is the sum of the second over $e\ne0$ (using $Z_0=\sum_e\Tr_e$). $\Tr_e\ge0$ since $K\ge0$.
+
+(b) $Z_0-Z_k=\sum_e\bigl(1-(-1)^{k\cdot e}\bigr)\Tr_e=2\sum_{k\cdot e\text{ odd}}\Tr_e$; the sum runs over $e\ne0$, hence is at most $2D\,Z_0$. Since $Z_k\ge0$, $1-Z_k/Z_0\le1$. For $e\ne0$ exactly four of the seven $k\ne0$ have $k\cdot e$ odd; summing the identity over $k\ne0$ gives $\sum_{k\ne0}(1-Z_k/Z_0)=8D$.
+
+(c) $K$ is positive and trace class, so $\lambda_0$ is an eigenvalue and the eigenvalues below $\lambda_0$ are at most $r_*\lambda_0$ with $r_*<1$. Let $g_e$ be the multiplicity of $\lambda_0$ in $\mathcal H_e$; $\sum_eg_e\ge1$. For every $e$, $\Tr_e(M)/\lambda_0^M=g_e+\sum_{\lambda<\lambda_0}(\lambda/\lambda_0)^M\to g_e$ as $M\to\infty$, the tail being at most $r_*^{M-1}\,\Tr(K/\lambda_0)$. Hence $Z_k(M)/\lambda_0^M\to G_k:=\sum_e(-1)^{k\cdot e}g_e$, and $G_k\ge0$ because $Z_k\ge0$. Now $\sum_kG_k=\sum_eg_e\sum_k(-1)^{k\cdot e}=8g_0$. If $g_0=0$, all the $G_k\ge0$ have sum $0$, so $G_0=\sum_eg_e=0$, contradicting $\sum_eg_e\ge1$. Hence $g_0\ge1$. If $\lambda_0$ is simple, $\sum_eg_e=1$ and $g_0=1$.
+
+(d) $\Tr_0=Z_0-\sum_{e\ne0}\Tr_e=(1-D)Z_0$, and $D<1$ since $\Tr_0\ge\lambda_0^M>0$ by (c). Dividing by $\lambda_0^M$: $\Tr(K/\lambda_0)^M=1+s(M)$ (definition of $s$, one copy of $\lambda_0$ removed) and $\Tr_0(K/\lambda_0)^M=1+s^0(M)$, so $(1+s^0)=(1-D)(1+s)$; take logarithms. Finally $\Tr_0=\frac18\sum_kZ_k$ by (a), so $\varphi=-\log(1-D)=\log(8Z_0/\sum_kZ_k)$; $s^0\ge0$ because $\Tr_0(K/\lambda_0)^M\ge1$ by (c).
+
+(e) By (c) one copy of $\lambda_0$ lies in $\mathcal H_0$, so the eigenvalues of $K$ on $\bigoplus_{e\ne0}\mathcal H_e$ form a sub-multiset of $\{\lambda_i\}_{i\ge1}$, and $s^{\mathrm{fl}}\le s$. Dividing $D\,Z_0=\sum_{e\ne0}\Tr_e$ by $\lambda_0^M$ gives $D=s^{\mathrm{fl}}/(1+s)$, and (b) gives the bound on $1-Z_k/Z_0$. Finally $r_i^{M'}=r_i^Mr_i^{M'-M}\le r_i^M\rho^{M'-M}$.
+\end{proof}
+Neither the simplicity of $\lambda_0$ nor any parity of the periods is used. The additive split (d) does \emph{not} pass term by term to the doubling curvatures: with $p^0(M)=2\log(1+s^0(M))-\log(1+s^0(2M))\ge0$ one has $p(M)=p^0(M)+[2\varphi(M)-\varphi(2M)]$, but the bracket can be negative (take at $M=1$ the neutral eigenvalues $1$ and $0.1$ with multiplicity $20$ and one eigenvalue $1$ in a flux sector: the bracket is $2\log\frac43-\log\frac{2.2}{1.2}\approx-0.031$). This is why Theorem~\ref{thm:twosub} below goes through the bracket of Proposition~\ref{prop:bracket} and not through this identity.
+
+\subsection{The criterion forces twist disorder at every larger scale}\label{subsec:T2}
+\begin{theorem}[\st{proved} under (W1), (W2), (C)]\label{thm:twistall}
+Assume (W1), (W2) and (C) for all periods at least $3$, let $n\ge3$ with $\Delta(n)\le2^{-9}$, and put $q=256\,\Delta(n)\le\frac12$.
+\begin{enumerate}
+\item[(a)] For every integer $N\ge n$ let $m=2^jn\le N<2m$. For $t=(N,N,N)$, every $M\ge m$ and every $k\ne0$,
+\[
+s_t(M)\le\frac{q^{M/n}}{248},\qquad 0\le1-\frac{Z_k(t,M)}{Z_0(t,M)}\le\frac{q^{M/n}}{124};
+\]
+in particular $0\le1-Z_k/Z_0\le q^{N/n}/124\le2^{-N/n}/124$ on the hypercube $N^4$. If $q>0$, every sector $e\ne0$ of the cube has $-\log(\|K|_{\mathcal H_e}\|/\lambda_0)\ge\log(1/q)/n$.
+\item[(b)] If $a=\min_it_i\ge n$, $\max_it_i\le24a$ and $m=2^jn\le a<2m$, then for $M\ge m$: $s_t(M)\le\theta^{M/n}$ and $1-Z_k/Z_0\le2\theta^{M/n}$, with $\theta=e^{18/31}-1\approx0.787$.
+\item[(c)] For Wilson's $SU(2)$ theory on $N^4$ (so that (W1) extends to the twisted partition functions by permutations of the axes), the bound of (a) holds for every twist class $e_\mu\wedge b\in H^2(T^4;\Z_2)$, $b$ in the span of the other three axes: the six single-plane twists, the spatial (``magnetic'') ones included, and $22$ of the $63$ non-zero classes in all.
+\end{enumerate}
+In the normalisation of \cite{TY85,KT02}, $e^{-F_{\mathrm{el}}}=\frac12(1-Z_k/Z_0)$ and $e^{-F_{\mathrm v}}=Z_k/Z_0$ for a single-plane twist; on $N^4$ this reads
+\[
+F_{\mathrm{el}}\ \ge\ \frac Nn\log\frac1q+\log248\ \ge\ \frac Nn\log2+5.51,\qquad 0\le F_{\mathrm v}\le\frac{q^{N/n}}{123}.
+\]
+\end{theorem}
+\begin{proof}
+(a) Apply Theorem~\ref{thm:R}(a) at the base $m=m_j$ to $t=(N,N,N)$, for which $\min_it_i=N\ge m$ and $V(t)=N^3<8m^3$: $h_t(m)\le16\Delta(m)/31$, and $\Delta(m)\le q^p/256$ with $p=2^j=m/n$; so $h_t(m)\le q^p/496\le1$ and $s_t(m)=e^{h_t(m)}-1\le2h_t(m)\le q^p/248$. Each excited ratio satisfies $r^m\le s_t(m)\le q^p$, hence $r^n\le q$ and $\rho\le q^{1/n}$. By Proposition~\ref{prop:sectors}(e), for $M\ge m$, $s_t(M)\le s_t(m)\rho^{M-m}\le q^{p}q^{(M-m)/n}/248=q^{M/n}/248$, and $1-Z_k/Z_0\le2s_t(M)$. The spectrum of $K|_{\mathcal H_e}$, $e\ne0$, is at most $\rho\lambda_0$ (Proposition~\ref{prop:sectors}(e)).
+
+(b) As in the proof of Theorem~\ref{thm:R}(d): $s_t(m)\le2^{1-p}\theta\le\theta^p$ with $p=m/n$, hence $r^n\le\theta$, $\rho\le\theta^{1/n}$ and $s_t(M)\le s_t(m)\rho^{M-m}\le\theta^{M/n}$.
+
+(c) A permutation $\pi$ of the axes sending $\mu$ to the time axis maps $N^4$ to itself, preserves the Haar measure and the Wilson action, and maps the stack of twisted plaquettes of the class $e_\mu\wedge b$ (the twisted weight is the Wilson weight with the signs of that stack reversed) to the stack of the time--space twist $k=\pi(b)\in\Z_2^3\setminus\{0\}$, to which (a) applies with $M=N$. Count: the decomposable non-zero classes of $H^2(T^4;\Z_2)\cong\Lambda^2\Z_2^4$ are the $35$ two-dimensional subspaces of $\Z_2^4$; those that contain a coordinate vector are $6$ (spanned by two coordinate vectors), $12$ (a coordinate vector and the sum of two others) and $4$ (a coordinate vector and the sum of the three others), that is $22$; the other $13$ (for instance $(e_1+e_3)\wedge(e_2+e_3)$) contain none. The remaining $28$ classes have non-zero Pfaffian and are not decomposable.
+
+The free energies: $\frac12(1-Z_k/Z_0)\le q^{N/n}/248$ gives the bound on $F_{\mathrm{el}}$ ($q\le\frac12$, $\log248=5.513$). With $x=1-Z_k/Z_0\le1/124$, $0\le-\log(1-x)\le x/(1-x)\le\frac{124}{123}x\le q^{N/n}/123$.
+\end{proof}
+\emph{What Theorem~\ref{thm:twistall} does not say.} For a time $M<m(N)$ the bound degrades (use a base $m_i\le M$, with a factor $(N/m_i)^3$). It says nothing on the classes of twist that need a magnetic background on the spatial torus ($41$ of the $63$), because the criterion sees tori without twist only. On dyadic hypercubes a bound with the exponent $2N/n$ instead of $N/n$ follows from the planar reflection inequality of the internal reports \cite{internal}; Theorem~\ref{thm:twistall} adds the non-dyadic sizes, all times $M\ge m$ and the tori of bounded aspect ratio.
+
+\begin{remark}[a length, not an area]\label{rem:length}
+The lower bound $F_{\mathrm{el}}\ge(N/n)\log(1/q)+\log248$ grows like a \emph{length}, $N/n$, and not like an area $N^2$. Nothing proved here gives a growth of $F_{\mathrm{el}}$ faster than linear in $N$, and no area law in infinite volume follows from Theorem~\ref{thm:twistall}. The exponent comes from the criterion through the excited trace, which the criterion controls extensively in the volume, not through any property of the transverse size of the box. The conclusion of Theorem~\ref{thm:twistall} fails for the deconfined $\Z_2$ theory and for $U(1)$ (table below), so it is not empty, but it is not a statement of confinement.
+\end{remark}
+
+\subsection{Two one-scale conditions}\label{subsec:T3}
+For $j=0,\dots,3$ let $\sigma_j=((2n)^j,n^{3-j})$ and $\Sigma_j=\sigma_j\times n$ (time $n$), and define
+\[
+\varepsilon_1(n)=\max_j\max_{k\ne0}\Bigl(1-\frac{Z_k(\Sigma_j)}{Z_0(\Sigma_j)}\Bigr),\qquad
+\varepsilon_2(n)=\max_j\Bigl(\frac{\frac18\sum_kZ_k(\Sigma_j)}{\lambda_0(\sigma_j)^n}-1\Bigr)=\max_js^0_{\sigma_j}(n).
+\]
+(V1) \emph{one-scale twist disorder}: $\varepsilon_1(n)$ is small; (V2) \emph{one-scale neutral bound}: $\varepsilon_2(n)$ is small.
+\begin{theorem}[\st{proved} under (W1), (W2), (C)]\label{thm:twosub}
+Let $n\ge3$.
+\begin{enumerate}
+\item[(a)] $\Delta(n)\le30\Bigl[\varepsilon_2+\dfrac{7\varepsilon_1/8}{1-7\varepsilon_1/8}\Bigr]$, hence $\Delta(n)\le30(\varepsilon_1+\varepsilon_2)$ if $\varepsilon_1\le\frac18$.
+\item[(b)] $\varepsilon_2\le e^{\Delta(n)}-1$ and $\varepsilon_1\le2(1-e^{-\Delta(n)})\le2\Delta(n)$. On the cube $\Sigma_0=n^4$, which has the weight $8$, even $s^0\le e^{\Delta/8}-1$ and $1-Z_k/Z_0\le2(1-e^{-\Delta/8})$.
+\item[(c)] If $\varepsilon_1+\varepsilon_2\le2^{-9}/30$ then $\Delta(n)\le2^{-9}$; if $\Delta(n)\le2^{-9}$ then $\varepsilon_1\le2^{-8}$ and $\varepsilon_2\le1.001\cdot2^{-9}$.
+\item[(d)] With $Z^0(\sigma,M)=\frac18\sum_kZ_k(\sigma,M)$ and $p^0_\sigma(n)=2\log Z^0(\sigma,n)-\log Z^0(\sigma,2n)$: $\log(1+s^0_\sigma(n))\le p^0_\sigma(n)\le2\log(1+s^0_\sigma(n))$. So (V2) is, up to a factor $2$, the smallness of a doubling defect \emph{in the time} of the neutral sector, written with twisted partition functions only.
+\end{enumerate}
+\end{theorem}
+\begin{proof}
+(a) By Proposition~\ref{prop:bracket}, $\Delta(n)\le2\sum_j2^{3-j}\log(1+s_{\sigma_j}(n))$, and by Proposition~\ref{prop:sectors}(d) at $M=n$, $\log(1+s_{\sigma_j}(n))=\log(1+s^0_{\sigma_j}(n))+\varphi_j$ with $\log(1+s^0_{\sigma_j})\le s^0_{\sigma_j}\le\varepsilon_2$ and $\varphi_j=-\log(1-D_j)\le D_j/(1-D_j)$. By Proposition~\ref{prop:sectors}(b), $D_j=\frac18\sum_{k\ne0}(1-Z_k/Z_0)\le\frac78\varepsilon_1$, and $x\mapsto x/(1-x)$ is increasing. Since $\sum_j2^{3-j}=15$, the sum is at most $30[\varepsilon_2+(7\varepsilon_1/8)/(1-7\varepsilon_1/8)]$. If $\varepsilon_1\le\frac18$, then $7\varepsilon_1/8\le7/64$ and $(7/8)/(1-7/64)=56/57<1$.
+
+(b) The left half of Proposition~\ref{prop:bracket} and Proposition~\ref{prop:sectors}(d) give $\sum_j2^{3-j}[\log(1+s^0_{\sigma_j})+\varphi_j]\le\Delta(n)$. Both terms are $\ge0$ and every weight is $\ge1$, so $\log(1+s^0_{\sigma_j})\le\Delta$ and $\varphi_j\le\Delta$, that is $D_j\le1-e^{-\Delta}$; Proposition~\ref{prop:sectors}(b) gives $1-Z_k/Z_0\le2D_j$. On the cube the weight is $8$.
+
+(c) Computation: $\varepsilon_1\le2(1-e^{-2^{-9}})\le2^{-8}$ and $(e^{2^{-9}}-1)\cdot2^9=1.00098\ldots$.
+
+(d) Apply Lemma~\ref{lem:squaring}(a) to the positive trace-class block $K|_{\mathcal H_0}$, whose largest eigenvalue is $\lambda_0$ by Proposition~\ref{prop:sectors}(c): $Z^0(\sigma,M)=\lambda_0^M(1+s^0(M))$, $\lambda_0$ cancels in $p^0_\sigma(n)$, and the upper bound holds because $\log(1+s^0(2n))\ge0$.
+\end{proof}
+Thus the criterion is equivalent, up to constants, to (V1) \emph{and} (V2) at one scale, and Theorem~\ref{thm:twistall} says that together they propagate to all larger scales. The two failure modes are separate:
+\begin{center}\footnotesize
+\begin{tabular}{@{}>{\raggedright\arraybackslash}p{0.27\textwidth}>{\raggedright\arraybackslash}p{0.2\textwidth}>{\raggedright\arraybackslash}p{0.2\textwidth}>{\raggedright\arraybackslash}p{0.25\textwidth}@{}}
+\toprule
+model & (V1) & (V2) & criterion\\
+\midrule
+$\Z_2$, $d=4$, $\beta=\infty$ (Example~\ref{ex:z2}) & fails: $Z_k=0$ for $k\ne0$, $\varepsilon_1=1$ & holds: $s^0=0$ & fails, $\Delta_4=15\log8=45\log2$, all of it from $\varphi=\log8$\\
+$U(1)$ with weight $\varphi(z^2)$ \cite[Prop.~11.29]{BB26v5}, as read & holds exactly: $Z_k\equiv Z_0$ & fails (photons) & fails, as for $U(1)$\\
+$U(1)$, Coulomb phase (stipulated spectrum, \S\ref{sec:witness}) & fails (light fluxes) & fails (photons) & fails\\
+\bottomrule
+\end{tabular}
+\end{center}
+The first line is \st{proved} once (C) is granted for that model (the multiplication of the links by $-1$ across a hyperplane is a symmetry of the rank-$8$ projector $K$ of Example~\ref{ex:z2}, and a non-trivial twist class admits no configuration with all twisted plaquettes satisfied, so $Z_k=0$): then $\Tr_e=Z_0/8$ for every $e$, so each of the eight sectors contains exactly one state, $s^0=0$, $\varepsilon_1=1$ and $\varphi=\log8$. The second line uses only that $U\mapsto-U$ leaves the weight invariant and that the image measure is the $U(1)$ Wilson measure, so that $\Delta$ is that of $U(1)$ (as we read \cite[Prop.~11.29]{BB26v5}); the failure of the criterion for $U(1)$ and the third line are conditional on the stipulated spectrum of Section~\ref{sec:witness}. In particular neither an area law nor (V1) alone implies the criterion, in agreement with \cite[Prop.~11.29]{BB26v5}. In the language of \cite[l.~6681--6686]{BB26v5} (``the hypothesis asks that the twisted sectors be disordered at the scale $\ell/2$''), (V1) is the periodic, partition-function form of such a disorder; their hypothesis (M) concerns Dirichlet boxes uniformly in the boundary condition and their (D) is a Poincar\'e inequality, and no implication between either of them and (V1) or (V2) is proved here.
+
+\subsection{A necessary scale}\label{subsec:T5}
+We use the following statement of \cite{BB26v5}, \st{read} and re-done by us, not verified in the sense of a full re-derivation. In their normalisation the Wilson weight on $SU(2)=$ unit quaternions is $\exp(c\sum_p\Re\Tr Q_p)$ with $c=2\beta_{\mathrm{BB}}$, and $\beta_W=4\beta_{\mathrm{BB}}$; with our $\beta=\beta_W$ this is $c=\beta/2$, and $c\ge\frac1{32}$ is $\beta\ge\frac1{16}$. \emph{Theorem~7.59 as read}: let $\epsilon(c)=12(\log c+5.42)/c$; for every spatial torus $t=(\ell_1,\ell_2,\ell_3)$ with sides at least $3$ and $(\ell_1\ell_2)^2\epsilon(c)<3$, the largest excited ratio $r_1(t)$ of their transfer operator satisfies $1-r_1(t)\le2(\ell_1+\ell_2)^2\epsilon/\bigl(1-(\ell_1\ell_2)^2\epsilon/3\bigr)$. Their $r_1$ is our largest excited ratio: both transfer operators have the traces $Z(t,M)$ for all $M\ge3$, and a positive summable family is determined by its power sums of order $M\ge3$ (the signed measure $\sum_i\lambda_i^3\delta_{\lambda_i}-\sum_j\mu_j^3\delta_{\mu_j}$ on a compact interval has all its moments equal to zero, hence vanishes by Weierstrass), so the non-zero spectra coincide with multiplicities. Put $\varepsilon:=\epsilon(\beta/2)=24(\log\beta-\log2+5.42)/\beta\le24(\log\beta+4.7269)/\beta$.
+
+\begin{proposition}[necessary scale; \st{conditional} on Theorem~7.59 of \cite{BB26v5} as read]\label{prop:scale}
+Assume (W1)--(W2) for Wilson's $SU(2)$ theory at $\beta\ge\frac1{16}$. If $\Delta_\beta(n)\le2^{-9}$ for some $n\ge3$ then, for every $\kappa\in(0,1)$,
+\[
+n\ \ge\ \min\Bigl\{\Bigl(\frac{3\kappa}{\varepsilon}\Bigr)^{1/4},\ \Bigl(\frac{(1-\kappa)\log2\,(1-\frac{\log2}6)}{8\varepsilon}\Bigr)^{1/3}\Bigr\}.
+\]
+With $\kappa=\frac12$ and $L_\beta=\log\beta+4.727$ this gives $n\ge\min\{(\beta/(16L_\beta))^{1/4},(\beta/(627L_\beta))^{1/3}\}$; and $n\ge(1-o(1))\bigl(\beta/(8L_\beta)\bigr)^{1/4}$ as $\beta\to\infty$.
+\end{proposition}
+\begin{proof}
+By Theorem~\ref{thm:lattice} with $j=0$ (or Theorem~\ref{thm:R}(c) with $N=n$), $r_1^n\le256\Delta(n)\le\frac12$ on the cube $n^3$, so $1-r_1\ge1-2^{-1/n}\ge(\log2/n)(1-\log2/(2n))\ge\log2\,(1-\log2/6)/n$ for $n\ge3$ ($1-e^{-x}\ge x-x^2/2$). If $n^4\varepsilon\le3\kappa$, the theorem of \cite{BB26v5} at $\ell_1=\ell_2=n$ gives $1-r_1\le8n^2\varepsilon/(1-\kappa)$, whence $n^3\ge(1-\kappa)\log2\,(1-\log2/6)/(8\varepsilon)$. Otherwise $n^4\varepsilon>3\kappa$. The simplified form: for $\kappa=\frac12$ the two constants are $24/(3\kappa)=16$ and $192/(\frac12\log2(1-\log2/6))=626.35\ldots\le627$, with $\varepsilon$ replaced by its upper bound $24L_\beta/\beta$. For the asymptotics, as $\beta\to\infty$ the second branch ($\asymp(\beta/L_\beta)^{1/3}$) exceeds the first ($\asymp(\beta/L_\beta)^{1/4}$) for any fixed $\kappa$; let $\kappa\to1$ slowly.
+\end{proof}
+The smallest integer $n\ge3$ compatible with both inequalities of the proof (computed exactly, with $1-2^{-1/n}$ and the exact $\epsilon$, not from the analytic minimum, which is smaller) is $3$ for $\beta\le10^5$, $6$ at $10^6$, $22$ at $10^8$, $75$ at $10^{10}$, $242$ at $10^{12}$ and $2334$ at $10^{16}$ (\path{calculs/constantes_v1_3.py}); the bound is therefore empty for $\beta\le10^5$, polynomial in $\beta$, and far below the scale $n\sim e^{3\pi^2\beta/11}$ suggested by asymptotic freedom (\st{heuristic}); it is consistent with, and much weaker than, that expectation. Composing \cite[Cor.~7.60]{BB26v5} with Theorem~\ref{thm:R}(b) instead would give a bound $38$ times weaker.
+
+\emph{Reading of the theorem of \cite{BB26v5}.} As we read its proof, the test functions are traces of Polyakov loops, odd under the centre flips: the theorem concerns the sectors of electric flux, and says that at a fixed size an electric-flux state becomes degenerate with the vacuum as $\beta\to\infty$. Since $1-Z_k/Z_0\ge2r_e^n/(1+s(n))$ for the sectors $e$ with $k\cdot e$ odd, this contradicts (V1) and (V2) \emph{together} at fixed size. That (V1) alone fails there is proved, independently of \cite{BB26v5}, in Section~\ref{sec:fixed}.

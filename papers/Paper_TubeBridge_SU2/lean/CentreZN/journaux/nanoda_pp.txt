@@ -1,0 +1,593 @@
+theorem CentreZN.centre_flip_bound.{u_1 u_2 u_3} :
+  forall {«Ω» : Type u_1} {S : Type u_2} {P : Type u_3}
+    [inst._@.CentreZNRejeu.2058914402._hygCtx._hyg.5 : MeasurableSpace «Ω»]
+    [inst._@.CentreZNRejeu.2058914402._hygCtx._hyg.8 : Fintype P]
+    [inst._@.CentreZNRejeu.2058914402._hygCtx._hyg.11 : DecidableEq P] (N : Nat)
+    [inst._@.CentreZNRejeu.2058914402._hygCtx._hyg.17 : NeZero N] (ζ : Complex),
+  Eq (HPow.hPow ζ N) (OfNat.ofNat 1) → (forall (μ : MeasureTheory.Measure «Ω»)
+    [inst._@.CentreZNRejeu.2058914402._hygCtx._hyg.32 : MeasureTheory.IsProbabilityMeasure μ]
+    (τ : S → «Ω» → «Ω»),
+  (forall (s : S), MeasureTheory.MeasurePreserving (τ s) μ μ) → (forall (chg : S → P → ZMod N),
+  Function.Surjective chg → (forall (T : P → «Ω» → Complex),
+  (forall (p : P), Measurable (T p)) → (forall (κ : Real),
+  (forall (p : P) («ω» : «Ω»), LE.le (Norm.norm (T p «ω»)) κ) → (forall (s : S) (p : P) («ω» : «Ω»),
+    Eq (T p (τ s «ω»)) (HMul.hMul (HPow.hPow ζ (ZMod.val (chg s p))) (T p «ω»))) →
+  (forall (R : «Ω» → Real),
+  Measurable R → (forall («ω» : «Ω»), LE.le (OfNat.ofNat 0) (R «ω»)) → (forall (s : S) («ω» : «Ω»),
+    Eq (R (τ s «ω»)) (R «ω»)) →
+  MeasureTheory.Integrable
+      (fun («ω» : «Ω») =>
+      HMul.hMul (R «ω») (Real.exp (Finset.sum Finset.univ (fun (p : P) => Complex.re (T p «ω»))))) μ →
+  (forall (W : «Ω» → Complex),
+  Measurable W → (forall («ω» : «Ω»), LE.le (Norm.norm (W «ω»)) (OfNat.ofNat 1)) → (forall (q : ZMod N)
+    (A : Finset P),
+  (forall (s : S) («ω» : «Ω»),
+    Eq (W (τ s «ω»))
+      (HMul.hMul (HPow.hPow ζ (ZMod.val (HMul.hMul q (Finset.sum A (fun (p : P) => chg s p))))) (W «ω»))) →
+  (forall (ρ : Real),
+  (forall (t : Complex),
+    LE.le (Norm.norm t) κ → LE.le
+      (Norm.norm
+        (Finset.sum Finset.univ
+          (fun (j : ZMod N) =>
+          HMul.hMul (HPow.hPow ζ (ZMod.val (HMul.hMul q j)))
+            (Complex.ofReal (Real.exp (Complex.re (HMul.hMul (HPow.hPow ζ (ZMod.val j)) t)))))))
+      (HMul.hMul ρ
+        (Finset.sum Finset.univ
+          (fun (j : ZMod N) => Real.exp (Complex.re (HMul.hMul (HPow.hPow ζ (ZMod.val j)) t)))))) →
+  LE.le
+    (Norm.norm
+      (MeasureTheory.integral μ
+        (fun («ω» : «Ω») =>
+        HMul.hMul (W «ω»)
+          (Complex.ofReal
+            (HMul.hMul (R «ω») (Real.exp (Finset.sum Finset.univ (fun (p : P) => Complex.re (T p «ω»)))))))))
+    (HMul.hMul (HPow.hPow ρ (Finset.card A))
+      (MeasureTheory.integral μ
+        (fun («ω» : «Ω») =>
+        HMul.hMul (R «ω») (Real.exp (Finset.sum Finset.univ (fun (p : P) => Complex.re (T p «ω»))))))))))))))) :=
+  _
+
+theorem CentreZN.twist_ratio_bound.{u_1 u_2 u_3} :
+  forall {«Ω» : Type u_1} {S : Type u_2} {P : Type u_3}
+    [inst._@.CentreZNRejeu.1258119933._hygCtx._hyg.5 : MeasurableSpace «Ω»]
+    [inst._@.CentreZNRejeu.1258119933._hygCtx._hyg.8 : Fintype P]
+    [inst._@.CentreZNRejeu.1258119933._hygCtx._hyg.11 : DecidableEq P] (N : Nat)
+    [inst._@.CentreZNRejeu.1258119933._hygCtx._hyg.17 : NeZero N] (ζ : Complex),
+  Eq (HPow.hPow ζ N) (OfNat.ofNat 1) → (forall (μ : MeasureTheory.Measure «Ω»)
+    [inst._@.CentreZNRejeu.1258119933._hygCtx._hyg.32 : MeasureTheory.IsProbabilityMeasure μ]
+    (τ : S → «Ω» → «Ω»),
+  (forall (s : S), MeasureTheory.MeasurePreserving (τ s) μ μ) → (forall (chg : S → P → ZMod N),
+  (forall (t : P → ZMod N),
+    Eq (Finset.sum Finset.univ (fun (a : P) => t a)) (OfNat.ofNat 0) → Exists (fun (s : S) => Eq (chg s) t)) →
+  (forall (T : P → «Ω» → Complex),
+  (forall (p : P), Measurable (T p)) → (forall (κ : Real),
+  (forall (p : P) («ω» : «Ω»), LE.le (Norm.norm (T p «ω»)) κ) → (forall (s : S) (p : P) («ω» : «Ω»),
+    Eq (T p (τ s «ω»)) (HMul.hMul (HPow.hPow ζ (ZMod.val (chg s p))) (T p «ω»))) →
+  (forall (R : «Ω» → Real),
+  Measurable R → (forall («ω» : «Ω»), LE.le (OfNat.ofNat 0) (R «ω»)) → (forall (s : S) («ω» : «Ω»),
+    Eq (R (τ s «ω»)) (R «ω»)) →
+  MeasureTheory.Integrable
+      (fun («ω» : «Ω») =>
+      HMul.hMul (R «ω») (Real.exp (Finset.sum Finset.univ (fun (p : P) => Complex.re (T p «ω»))))) μ →
+  (forall (q : ZMod N) (ρ : Real),
+  (forall (t : Complex),
+    LE.le (Norm.norm t) κ → LE.le
+      (Norm.norm
+        (Finset.sum Finset.univ
+          (fun (j : ZMod N) =>
+          HMul.hMul (HPow.hPow ζ (ZMod.val (HMul.hMul q j)))
+            (Complex.ofReal (Real.exp (Complex.re (HMul.hMul (HPow.hPow ζ (ZMod.val j)) t)))))))
+      (HMul.hMul ρ
+        (Finset.sum Finset.univ
+          (fun (j : ZMod N) => Real.exp (Complex.re (HMul.hMul (HPow.hPow ζ (ZMod.val j)) t)))))) →
+  (forall (p₀ : P),
+  LE.le
+    (Norm.norm
+      (Finset.sum Finset.univ
+        (fun (k : ZMod N) =>
+        HMul.hMul (HPow.hPow ζ (ZMod.val (HMul.hMul q k)))
+          (Complex.ofReal
+            (MeasureTheory.integral μ
+              (fun («ω» : «Ω») =>
+              HMul.hMul (R «ω»)
+                (Real.exp
+                  (Finset.sum Finset.univ
+                    (fun (p : P) =>
+                    Complex.re
+                      (HMul.hMul (ite (Eq p p₀) (HPow.hPow ζ (ZMod.val k)) (OfNat.ofNat 1)) (T p «ω»)))))))))))
+    (HMul.hMul (HPow.hPow ρ (Fintype.card P))
+      (Finset.sum Finset.univ
+        (fun (k : ZMod N) =>
+        MeasureTheory.integral μ
+          (fun («ω» : «Ω») =>
+          HMul.hMul (R «ω»)
+            (Real.exp
+              (Finset.sum Finset.univ
+                (fun (p : P) =>
+                Complex.re
+                  (HMul.hMul (ite (Eq p p₀) (HPow.hPow ζ (ZMod.val k)) (OfNat.ofNat 1))
+                    (T p «ω»)))))))))))))))) :=
+  _
+
+theorem CentreZN.rho_crude (N : Nat) :
+  forall [inst._@.CentreZNRejeu.4143063669._hygCtx._hyg.5 : NeZero N] (ζ : Complex),
+  IsPrimitiveRoot ζ N → (forall (q : ZMod N),
+  Ne q (OfNat.ofNat 0) → (forall (t : Complex),
+  LE.le
+    (Norm.norm
+      (Finset.sum Finset.univ
+        (fun (j : ZMod N) =>
+        HMul.hMul (HPow.hPow ζ (ZMod.val (HMul.hMul q j)))
+          (Complex.ofReal (Real.exp (Complex.re (HMul.hMul (HPow.hPow ζ (ZMod.val j)) t)))))))
+    (HMul.hMul (HSub.hSub (OfNat.ofNat 1) (Real.exp (HMul.hMul (Neg.neg (OfNat.ofNat 2)) (Norm.norm t))))
+      (Finset.sum Finset.univ
+        (fun (j : ZMod N) => Real.exp (Complex.re (HMul.hMul (HPow.hPow ζ (ZMod.val j)) t))))))) :=
+  _
+
+theorem CentreZN.rho_two (t : Complex) :
+  LE.le
+    (Norm.norm
+      (Finset.sum Finset.univ
+        (fun (j : ZMod (OfNat.ofNat 2)) =>
+        HMul.hMul (HPow.hPow (Neg.neg (OfNat.ofNat 1)) (ZMod.val (HMul.hMul (OfNat.ofNat 1) j)))
+          (Complex.ofReal (Real.exp (Complex.re (HMul.hMul (HPow.hPow (Neg.neg (OfNat.ofNat 1)) (ZMod.val j)) t)))))))
+    (HMul.hMul (Real.tanh (Norm.norm t))
+      (Finset.sum Finset.univ
+        (fun (j : ZMod (OfNat.ofNat 2)) =>
+        Real.exp (Complex.re (HMul.hMul (HPow.hPow (Neg.neg (OfNat.ofNat 1)) (ZMod.val j)) t))))) :=
+  _
+
+theorem CentreZN.sharp_one_plaquette (N : Nat) :
+  forall [inst._@.CentreZNRejeu.1630639833._hygCtx._hyg.5 : NeZero N] (ζ : Complex),
+  Eq (HPow.hPow ζ N) (OfNat.ofNat 1) → (forall (q : ZMod N) (t : Complex),
+  Exists
+    (fun (μ : MeasureTheory.Measure (ZMod N)) =>
+    And (MeasureTheory.IsProbabilityMeasure μ)
+      (And (forall (s : ZMod N), MeasureTheory.MeasurePreserving (fun (j : ZMod N) => HAdd.hAdd s j) μ μ)
+        (And (forall (j : ZMod N), Eq (Norm.norm (HMul.hMul (HPow.hPow ζ (ZMod.val j)) t)) (Norm.norm t))
+          (And (forall (j : ZMod N), Eq (Norm.norm (HPow.hPow ζ (ZMod.val (HMul.hMul q j)))) (OfNat.ofNat 1))
+            (And
+              (forall (s j : ZMod N),
+              Eq (HMul.hMul (HPow.hPow ζ (ZMod.val (HAdd.hAdd s j))) t)
+                (HMul.hMul (HPow.hPow ζ (ZMod.val s)) (HMul.hMul (HPow.hPow ζ (ZMod.val j)) t)))
+              (And
+                (forall (s j : ZMod N),
+                Eq (HPow.hPow ζ (ZMod.val (HMul.hMul q (HAdd.hAdd s j))))
+                  (HMul.hMul (HPow.hPow ζ (ZMod.val (HMul.hMul q s))) (HPow.hPow ζ (ZMod.val (HMul.hMul q j)))))
+                (And
+                  (Eq
+                    (MeasureTheory.integral μ
+                      (fun (j : ZMod N) =>
+                      HMul.hMul (HPow.hPow ζ (ZMod.val (HMul.hMul q j)))
+                        (Complex.ofReal (Real.exp (Complex.re (HMul.hMul (HPow.hPow ζ (ZMod.val j)) t))))))
+                    (HMul.hMul (Inv.inv (Nat.cast N))
+                      (Finset.sum Finset.univ
+                        (fun (j : ZMod N) =>
+                        HMul.hMul (HPow.hPow ζ (ZMod.val (HMul.hMul q j)))
+                          (Complex.ofReal (Real.exp (Complex.re (HMul.hMul (HPow.hPow ζ (ZMod.val j)) t))))))))
+                  (Eq
+                    (MeasureTheory.integral μ
+                      (fun (j : ZMod N) => Real.exp (Complex.re (HMul.hMul (HPow.hPow ζ (ZMod.val j)) t))))
+                    (HMul.hMul (Inv.inv (Nat.cast N))
+                      (Finset.sum Finset.univ
+                        (fun (j : ZMod N) =>
+                        Real.exp (Complex.re (HMul.hMul (HPow.hPow ζ (ZMod.val j)) t)))))))))))))) :=
+  _
+
+theorem CentreZN.centre_flip_bound_crude.{u_1 u_2 u_3} :
+  forall {«Ω» : Type u_1} {S : Type u_2} {P : Type u_3}
+    [inst._@.CentreZNRejeu.907295501._hygCtx._hyg.5 : MeasurableSpace «Ω»]
+    [inst._@.CentreZNRejeu.907295501._hygCtx._hyg.8 : Fintype P]
+    [inst._@.CentreZNRejeu.907295501._hygCtx._hyg.11 : DecidableEq P] (N : Nat)
+    [inst._@.CentreZNRejeu.907295501._hygCtx._hyg.17 : NeZero N] (ζ : Complex),
+  IsPrimitiveRoot ζ N → (forall (μ : MeasureTheory.Measure «Ω»)
+    [inst._@.CentreZNRejeu.907295501._hygCtx._hyg.28 : MeasureTheory.IsProbabilityMeasure μ]
+    (τ : S → «Ω» → «Ω»),
+  (forall (s : S), MeasureTheory.MeasurePreserving (τ s) μ μ) → (forall (chg : S → P → ZMod N),
+  Function.Surjective chg → (forall (T : P → «Ω» → Complex),
+  (forall (p : P), Measurable (T p)) → (forall (κ : Real),
+  (forall (p : P) («ω» : «Ω»), LE.le (Norm.norm (T p «ω»)) κ) → (forall (s : S) (p : P) («ω» : «Ω»),
+    Eq (T p (τ s «ω»)) (HMul.hMul (HPow.hPow ζ (ZMod.val (chg s p))) (T p «ω»))) →
+  (forall (R : «Ω» → Real),
+  Measurable R → (forall («ω» : «Ω»), LE.le (OfNat.ofNat 0) (R «ω»)) → (forall (s : S) («ω» : «Ω»),
+    Eq (R (τ s «ω»)) (R «ω»)) →
+  MeasureTheory.Integrable
+      (fun («ω» : «Ω») =>
+      HMul.hMul (R «ω») (Real.exp (Finset.sum Finset.univ (fun (p : P) => Complex.re (T p «ω»))))) μ →
+  (forall (W : «Ω» → Complex),
+  Measurable W → (forall («ω» : «Ω»), LE.le (Norm.norm (W «ω»)) (OfNat.ofNat 1)) → (forall (q : ZMod N),
+  Ne q (OfNat.ofNat 0) → (forall (A : Finset P),
+  (forall (s : S) («ω» : «Ω»),
+    Eq (W (τ s «ω»))
+      (HMul.hMul (HPow.hPow ζ (ZMod.val (HMul.hMul q (Finset.sum A (fun (p : P) => chg s p))))) (W «ω»))) →
+  LE.le
+    (Norm.norm
+      (MeasureTheory.integral μ
+        (fun («ω» : «Ω») =>
+        HMul.hMul (W «ω»)
+          (Complex.ofReal
+            (HMul.hMul (R «ω») (Real.exp (Finset.sum Finset.univ (fun (p : P) => Complex.re (T p «ω»)))))))))
+    (HMul.hMul
+      (HPow.hPow (HSub.hSub (OfNat.ofNat 1) (Real.exp (HMul.hMul (Neg.neg (OfNat.ofNat 2)) κ))) (Finset.card A))
+      (MeasureTheory.integral μ
+        (fun («ω» : «Ω») =>
+        HMul.hMul (R «ω») (Real.exp (Finset.sum Finset.univ (fun (p : P) => Complex.re (T p «ω»))))))))))))))) :=
+  _
+
+theorem CentreZN.twist_ratio_bound_crude.{u_1 u_2 u_3} :
+  forall {«Ω» : Type u_1} {S : Type u_2} {P : Type u_3}
+    [inst._@.CentreZNRejeu.1802702854._hygCtx._hyg.5 : MeasurableSpace «Ω»]
+    [inst._@.CentreZNRejeu.1802702854._hygCtx._hyg.8 : Fintype P]
+    [inst._@.CentreZNRejeu.1802702854._hygCtx._hyg.11 : DecidableEq P] (N : Nat)
+    [inst._@.CentreZNRejeu.1802702854._hygCtx._hyg.17 : NeZero N] (ζ : Complex),
+  IsPrimitiveRoot ζ N → (forall (μ : MeasureTheory.Measure «Ω»)
+    [inst._@.CentreZNRejeu.1802702854._hygCtx._hyg.28 : MeasureTheory.IsProbabilityMeasure μ]
+    (τ : S → «Ω» → «Ω»),
+  (forall (s : S), MeasureTheory.MeasurePreserving (τ s) μ μ) → (forall (chg : S → P → ZMod N),
+  (forall (t : P → ZMod N),
+    Eq (Finset.sum Finset.univ (fun (a : P) => t a)) (OfNat.ofNat 0) → Exists (fun (s : S) => Eq (chg s) t)) →
+  (forall (T : P → «Ω» → Complex),
+  (forall (p : P), Measurable (T p)) → (forall (κ : Real),
+  (forall (p : P) («ω» : «Ω»), LE.le (Norm.norm (T p «ω»)) κ) → (forall (s : S) (p : P) («ω» : «Ω»),
+    Eq (T p (τ s «ω»)) (HMul.hMul (HPow.hPow ζ (ZMod.val (chg s p))) (T p «ω»))) →
+  (forall (R : «Ω» → Real),
+  Measurable R → (forall («ω» : «Ω»), LE.le (OfNat.ofNat 0) (R «ω»)) → (forall (s : S) («ω» : «Ω»),
+    Eq (R (τ s «ω»)) (R «ω»)) →
+  MeasureTheory.Integrable
+      (fun («ω» : «Ω») =>
+      HMul.hMul (R «ω») (Real.exp (Finset.sum Finset.univ (fun (p : P) => Complex.re (T p «ω»))))) μ →
+  (forall (q : ZMod N),
+  Ne q (OfNat.ofNat 0) → (forall (p₀ : P),
+  LE.le
+    (Norm.norm
+      (Finset.sum Finset.univ
+        (fun (k : ZMod N) =>
+        HMul.hMul (HPow.hPow ζ (ZMod.val (HMul.hMul q k)))
+          (Complex.ofReal
+            (MeasureTheory.integral μ
+              (fun («ω» : «Ω») =>
+              HMul.hMul (R «ω»)
+                (Real.exp
+                  (Finset.sum Finset.univ
+                    (fun (p : P) =>
+                    Complex.re
+                      (HMul.hMul (ite (Eq p p₀) (HPow.hPow ζ (ZMod.val k)) (OfNat.ofNat 1)) (T p «ω»)))))))))))
+    (HMul.hMul
+      (HPow.hPow (HSub.hSub (OfNat.ofNat 1) (Real.exp (HMul.hMul (Neg.neg (OfNat.ofNat 2)) κ))) (Fintype.card P))
+      (Finset.sum Finset.univ
+        (fun (k : ZMod N) =>
+        MeasureTheory.integral μ
+          (fun («ω» : «Ω») =>
+          HMul.hMul (R «ω»)
+            (Real.exp
+              (Finset.sum Finset.univ
+                (fun (p : P) =>
+                Complex.re
+                  (HMul.hMul (ite (Eq p p₀) (HPow.hPow ζ (ZMod.val k)) (OfNat.ofNat 1))
+                    (T p «ω»)))))))))))))))) :=
+  _
+
+theorem CentreZN.recover_column_flip_bound.{u_1 u_2 u_3} :
+  forall {«Ω» : Type u_1} {E : Type u_2} {P : Type u_3}
+    [inst._@.CentreZNRejeu.2360856561._hygCtx._hyg.5 : MeasurableSpace «Ω»]
+    [inst._@.CentreZNRejeu.2360856561._hygCtx._hyg.8 : Fintype E]
+    [inst._@.CentreZNRejeu.2360856561._hygCtx._hyg.11 : DecidableEq E]
+    [inst._@.CentreZNRejeu.2360856561._hygCtx._hyg.14 : Fintype P]
+    [inst._@.CentreZNRejeu.2360856561._hygCtx._hyg.17 : DecidableEq P] (μ : MeasureTheory.Measure «Ω»)
+    [inst._@.CentreZNRejeu.2360856561._hygCtx._hyg.22 : MeasureTheory.IsProbabilityMeasure μ]
+    (τ : (E → Units Int) → «Ω» → «Ω»),
+  (forall (σ : E → Units Int), MeasureTheory.MeasurePreserving (τ σ) μ μ) → (forall (bd : P → Finset E),
+  Function.Surjective (fun (σ : E → Units Int) (p : P) => Finset.prod (bd p) (fun (a : E) => σ a)) → (forall (K :
+      P → «Ω» → Real),
+  (forall (p : P), Measurable (K p)) → (forall (κ : Real),
+  (forall (p : P) («ω» : «Ω»), LE.le (abs (K p «ω»)) κ) → (forall (σ : E → Units Int) (p : P)
+      («ω» : «Ω»),
+    Eq (K p (τ σ «ω»))
+      (HMul.hMul (Int.cast (Units.val (Finset.prod (bd p) (fun (i : E) => σ i)))) (K p «ω»))) →
+  (forall (R : «Ω» → Real),
+  Measurable R → (forall («ω» : «Ω»), LE.le (OfNat.ofNat 0) (R «ω»)) → (forall (σ : E → Units Int)
+      («ω» : «Ω»),
+    Eq (R (τ σ «ω»)) (R «ω»)) →
+  MeasureTheory.Integrable
+      (fun («ω» : «Ω») => HMul.hMul (R «ω») (Real.exp (Finset.sum Finset.univ (fun (p : P) => K p «ω»))))
+      μ →
+  (forall (W : «Ω» → Real),
+  Measurable W → (forall («ω» : «Ω»), LE.le (abs (W «ω»)) (OfNat.ofNat 1)) → (forall (A : Finset P),
+  (forall (σ : E → Units Int) («ω» : «Ω»),
+    Eq (W (τ σ «ω»))
+      (HMul.hMul (Int.cast (Units.val (Finset.prod A (fun (p : P) => Finset.prod (bd p) (fun (e : E) => σ e)))))
+        (W «ω»))) →
+  LE.le
+    (abs
+      (MeasureTheory.integral μ
+        (fun («ω» : «Ω») =>
+        HMul.hMul (W «ω») (HMul.hMul (R «ω») (Real.exp (Finset.sum Finset.univ (fun (p : P) => K p «ω»)))))))
+    (HMul.hMul (HPow.hPow (Real.tanh κ) (Finset.card A))
+      (MeasureTheory.integral μ
+        (fun («ω» : «Ω») =>
+        HMul.hMul (R «ω») (Real.exp (Finset.sum Finset.univ (fun (p : P) => K p «ω»)))))))))))) :=
+  _
+
+theorem CentreZN.recover_twist_ratio_bound.{u_1 u_2 u_3} :
+  forall {«Ω» : Type u_1} {E : Type u_2} {P : Type u_3}
+    [inst._@.CentreZNRejeu.3014028283._hygCtx._hyg.5 : MeasurableSpace «Ω»]
+    [inst._@.CentreZNRejeu.3014028283._hygCtx._hyg.8 : Fintype E]
+    [inst._@.CentreZNRejeu.3014028283._hygCtx._hyg.11 : DecidableEq E]
+    [inst._@.CentreZNRejeu.3014028283._hygCtx._hyg.14 : Fintype P]
+    [inst._@.CentreZNRejeu.3014028283._hygCtx._hyg.17 : DecidableEq P] (μ : MeasureTheory.Measure «Ω»)
+    [inst._@.CentreZNRejeu.3014028283._hygCtx._hyg.22 : MeasureTheory.IsProbabilityMeasure μ]
+    (τ : (E → Units Int) → «Ω» → «Ω»),
+  (forall (σ : E → Units Int), MeasureTheory.MeasurePreserving (τ σ) μ μ) → (forall (bd : P → Finset E),
+  (forall (σ : E → Units Int),
+    Eq (Finset.prod Finset.univ (fun (p : P) => Finset.prod (bd p) (fun (a : E) => σ a))) (OfNat.ofNat 1)) →
+  (forall (t : P → Units Int),
+    Eq (Finset.prod Finset.univ (fun (a : P) => t a)) (OfNat.ofNat 1) → Exists
+      (fun (σ : E → Units Int) => forall (p : P), Eq (Finset.prod (bd p) (fun (e : E) => σ e)) (t p))) →
+  (forall (K : P → «Ω» → Real),
+  (forall (p : P), Measurable (K p)) → (forall (κ : Real),
+  (forall (p : P) («ω» : «Ω»), LE.le (abs (K p «ω»)) κ) → (forall (σ : E → Units Int) (p : P)
+      («ω» : «Ω»),
+    Eq (K p (τ σ «ω»))
+      (HMul.hMul (Int.cast (Units.val (Finset.prod (bd p) (fun (x : E) => σ x)))) (K p «ω»))) →
+  (forall (R : «Ω» → Real),
+  Measurable R → (forall («ω» : «Ω»), LE.le (OfNat.ofNat 0) (R «ω»)) → (forall (σ : E → Units Int)
+      («ω» : «Ω»),
+    Eq (R (τ σ «ω»)) (R «ω»)) →
+  MeasureTheory.Integrable
+      (fun («ω» : «Ω») => HMul.hMul (R «ω») (Real.exp (Finset.sum Finset.univ (fun (p : P) => K p «ω»))))
+      μ →
+  (forall (p₀ : P),
+  LE.le
+    (abs
+      (HSub.hSub
+        (MeasureTheory.integral μ
+          (fun («ω» : «Ω») =>
+          HMul.hMul (R «ω») (Real.exp (Finset.sum Finset.univ (fun (p : P) => K p «ω»)))))
+        (MeasureTheory.integral μ
+          (fun («ω» : «Ω») =>
+          HMul.hMul (R «ω»)
+            (Real.exp (Finset.sum Finset.univ (fun (p : P) => ite (Eq p p₀) (Neg.neg (K p «ω»)) (K p «ω»))))))))
+    (HMul.hMul (HPow.hPow (Real.tanh κ) (Fintype.card P))
+      (HAdd.hAdd
+        (MeasureTheory.integral μ
+          (fun («ω» : «Ω») =>
+          HMul.hMul (R «ω») (Real.exp (Finset.sum Finset.univ (fun (p : P) => K p «ω»)))))
+        (MeasureTheory.integral μ
+          (fun («ω» : «Ω») =>
+          HMul.hMul (R «ω»)
+            (Real.exp
+              (Finset.sum Finset.univ (fun (p : P) => ite (Eq p p₀) (Neg.neg (K p «ω»)) (K p «ω»))))))))))))) :=
+  _
+
+theorem CentreZN.mixed_word_neutral.{u_1 u_2 u_3} :
+  forall {E : Type u_1} {F : Type u_2} {X : Type u_3} (N : Nat) (e : E) (y y' : F) (x x' : X),
+  CentreZN.Neutral N
+    (List.cons (Prod.mk (Sum.inl (Prod.mk e y)) Bool.true)
+      (List.cons (Prod.mk (Sum.inr x) Bool.true)
+        (List.cons (Prod.mk (Sum.inl (Prod.mk e y')) Bool.false)
+          (List.cons (Prod.mk (Sum.inr x') Bool.false) List.nil)))) :=
+  _
+
+theorem CentreZN.wilson_centre_flip_bound.{u_1 u_2 u_3 u_4 u_5} :
+  forall {G : Type u_1} {E : Type u_2} {F : Type u_3} {X : Type u_4} {P : Type u_5}
+    [inst._@.CentreZNRejeu.3626416059._hygCtx._hyg.7 : Group G]
+    [inst._@.CentreZNRejeu.3626416059._hygCtx._hyg.10 : MeasurableSpace G]
+    [inst._@.CentreZNRejeu.3626416059._hygCtx._hyg.13 : MeasurableMul₂ G]
+    [inst._@.CentreZNRejeu.3626416059._hygCtx._hyg.16 : MeasurableInv G]
+    [inst._@.CentreZNRejeu.3626416059._hygCtx._hyg.19 : Fintype E]
+    [inst._@.CentreZNRejeu.3626416059._hygCtx._hyg.22 : DecidableEq E]
+    [inst._@.CentreZNRejeu.3626416059._hygCtx._hyg.25 : Fintype F]
+    [inst._@.CentreZNRejeu.3626416059._hygCtx._hyg.28 : Fintype X]
+    [inst._@.CentreZNRejeu.3626416059._hygCtx._hyg.31 : Fintype P]
+    [inst._@.CentreZNRejeu.3626416059._hygCtx._hyg.34 : DecidableEq P] (N : Nat)
+    [inst._@.CentreZNRejeu.3626416059._hygCtx._hyg.40 : NeZero N] (ζ : Complex),
+  Eq (HPow.hPow ζ N) (OfNat.ofNat 1) → (forall (haarG : MeasureTheory.Measure G)
+    [inst._@.CentreZNRejeu.3626416059._hygCtx._hyg.55 : MeasureTheory.IsProbabilityMeasure haarG],
+  (forall (g : G), MeasureTheory.MeasurePreserving (fun (h : G) => HMul.hMul g h) haarG haarG) → (forall (z : G),
+  Eq (HPow.hPow z N) (OfNat.ofNat 1) → (forall (g : G), Eq (HMul.hMul z g) (HMul.hMul g z)) → (forall (chi :
+      G → Complex),
+  Measurable chi → (forall (g : G), LE.le (Norm.norm (chi g)) (OfNat.ofNat 1)) → (forall (g : G),
+    Eq (chi (HMul.hMul z g)) (HMul.hMul ζ (chi g))) →
+  (forall (w : P → List (Prod E Bool)) (c : P → F → Complex),
+  (forall (p : P) (y : F), LE.le (Norm.norm (c p y)) (OfNat.ofNat 1)) → (forall (β : Real),
+  LE.le (OfNat.ofNat 0) β → (forall (R : CentreZN.Config G E F X → Real),
+  Measurable R → (forall («ω» : CentreZN.Config G E F X), LE.le (OfNat.ofNat 0) (R «ω»)) → (forall (σ :
+        E → ZMod N) («ω» : CentreZN.Config G E F X),
+    Eq (R (CentreZN.columnTwist z σ «ω»)) (R «ω»)) →
+  MeasureTheory.Integrable
+      (fun («ω» : CentreZN.Config G E F X) =>
+      HMul.hMul (R «ω»)
+        (Real.exp (Finset.sum Finset.univ (fun (p : P) => Complex.re (CentreZN.coupling β c chi w p «ω»)))))
+      (CentreZN.configMeasure haarG) →
+  (forall (q : ZMod N) (psi : G → Complex),
+  Measurable psi → (forall (g : G), LE.le (Norm.norm (psi g)) (OfNat.ofNat 1)) → (forall (g : G),
+    Eq (psi (HMul.hMul z g)) (HMul.hMul (HPow.hPow ζ (ZMod.val q)) (psi g))) →
+  (forall (wC : List (Prod E Bool)) (y0 : F) (A : Finset P),
+  (forall (σ : E → ZMod N),
+    Eq (CentreZN.baseCharge wC σ) (Finset.sum A (fun (p : P) => CentreZN.baseCharge (w p) σ))) →
+  Function.Surjective (fun (σ : E → ZMod N) (p : P) => CentreZN.baseCharge (w p) σ) → (forall (ρ : Real),
+  (forall (t : Complex),
+    LE.le (Norm.norm t) (HMul.hMul β (Nat.cast (Fintype.card F))) → LE.le
+      (Norm.norm
+        (Finset.sum Finset.univ
+          (fun (j : ZMod N) =>
+          HMul.hMul (HPow.hPow ζ (ZMod.val (HMul.hMul q j)))
+            (Complex.ofReal (Real.exp (Complex.re (HMul.hMul (HPow.hPow ζ (ZMod.val j)) t)))))))
+      (HMul.hMul ρ
+        (Finset.sum Finset.univ
+          (fun (j : ZMod N) => Real.exp (Complex.re (HMul.hMul (HPow.hPow ζ (ZMod.val j)) t)))))) →
+  LE.le
+    (Norm.norm
+      (MeasureTheory.integral (CentreZN.configMeasure haarG)
+        (fun («ω» : CentreZN.Config G E F X) =>
+        HMul.hMul (psi (CentreZN.holonomy (CentreZN.baseWord wC y0) «ω»))
+          (Complex.ofReal
+            (HMul.hMul (R «ω»)
+              (Real.exp
+                (Finset.sum Finset.univ (fun (p : P) => Complex.re (CentreZN.coupling β c chi w p «ω»)))))))))
+    (HMul.hMul (HPow.hPow ρ (Finset.card A))
+      (MeasureTheory.integral (CentreZN.configMeasure haarG)
+        (fun («ω» : CentreZN.Config G E F X) =>
+        HMul.hMul (R «ω»)
+          (Real.exp
+            (Finset.sum Finset.univ (fun (p : P) => Complex.re (CentreZN.coupling β c chi w p «ω»)))))))))))))))) :=
+  _
+
+theorem CentreZN.torus_charge_explicit :
+  forall {m n N : Nat} (σ : CentreZN.TorusEdge m n → ZMod N) (p : Prod (Fin m) (Fin n)),
+  Eq (CentreZN.baseCharge (CentreZN.torusWord p) σ)
+    (HSub.hSub
+      (HSub.hSub
+        (HAdd.hAdd (σ (Sum.inl (Prod.mk (Prod.fst p) (Prod.snd p))))
+          (σ (Sum.inr (Prod.mk (DFunLike.coe (finRotate m) (Prod.fst p)) (Prod.snd p)))))
+        (σ (Sum.inl (Prod.mk (Prod.fst p) (DFunLike.coe (finRotate n) (Prod.snd p))))))
+      (σ (Sum.inr (Prod.mk (Prod.fst p) (Prod.snd p))))) :=
+  _
+
+theorem CentreZN.torus_charge_sum :
+  forall {m n N : Nat} (σ : CentreZN.TorusEdge m n → ZMod N),
+  Eq (Finset.sum Finset.univ (fun (p : Prod (Fin m) (Fin n)) => CentreZN.baseCharge (CentreZN.torusWord p) σ))
+    (OfNat.ofNat 0) :=
+  _
+
+theorem CentreZN.torus_charge_image :
+  forall {m n N : Nat},
+  LE.le (OfNat.ofNat 2) m → LE.le (OfNat.ofNat 2) n → (forall (t : Prod (Fin m) (Fin n) → ZMod N),
+  Eq (Finset.sum Finset.univ (fun (p : Prod (Fin m) (Fin n)) => t p)) (OfNat.ofNat 0) → Exists
+    (fun (σ : CentreZN.TorusEdge m n → ZMod N) =>
+    forall (p : Prod (Fin m) (Fin n)),
+    Eq (CentreZN.baseCharge (CentreZN.torusWord p) σ) (t p))) :=
+  _
+
+theorem CentreZN.wilson_twist_ratio_torus.{u_1 u_2 u_3 u_4} :
+  forall {G : Type u_1} {F : Type u_2} {X : Type u_3} {Q : Type u_4}
+    [inst._@.CentreZNRejeu.2340270033._hygCtx._hyg.6 : Group G]
+    [inst._@.CentreZNRejeu.2340270033._hygCtx._hyg.9 : MeasurableSpace G]
+    [inst._@.CentreZNRejeu.2340270033._hygCtx._hyg.12 : MeasurableMul₂ G]
+    [inst._@.CentreZNRejeu.2340270033._hygCtx._hyg.15 : MeasurableInv G]
+    [inst._@.CentreZNRejeu.2340270033._hygCtx._hyg.18 : Fintype F]
+    [inst._@.CentreZNRejeu.2340270033._hygCtx._hyg.21 : Fintype X]
+    [inst._@.CentreZNRejeu.2340270033._hygCtx._hyg.24 : Fintype Q] (N : Nat)
+    [inst._@.CentreZNRejeu.2340270033._hygCtx._hyg.30 : NeZero N] (ζ : Complex),
+  Eq (HPow.hPow ζ N) (OfNat.ofNat 1) → (forall (m n : Nat),
+  LE.le (OfNat.ofNat 2) m → LE.le (OfNat.ofNat 2) n → (forall (haarG : MeasureTheory.Measure G)
+    [inst._@.CentreZNRejeu.2340270033._hygCtx._hyg.61 : MeasureTheory.IsProbabilityMeasure haarG],
+  (forall (g : G), MeasureTheory.MeasurePreserving (fun (h : G) => HMul.hMul g h) haarG haarG) → (forall (z : G),
+  Eq (HPow.hPow z N) (OfNat.ofNat 1) → (forall (g : G), Eq (HMul.hMul z g) (HMul.hMul g z)) → (forall (chi :
+      G → Complex),
+  Measurable chi → (forall (g : G), LE.le (Norm.norm (chi g)) (OfNat.ofNat 1)) → (forall (g : G),
+    Eq (chi (HMul.hMul z g)) (HMul.hMul ζ (chi g))) →
+  (forall (weights : Prod (Fin m) (Fin n) → F → Complex),
+  (forall (p : Prod (Fin m) (Fin n)) (y : F), LE.le (Norm.norm (weights p y)) (OfNat.ofNat 1)) → (forall (β : Real),
+  LE.le (OfNat.ofNat 0) β → (forall (wq : Q → CentreZN.Word (CentreZN.TorusEdge m n) F X),
+  (forall (k : Q), CentreZN.Neutral N (wq k)) → (forall (coef : Q → Complex) (q : ZMod N) (ρ : Real),
+  (forall (t : Complex),
+    LE.le (Norm.norm t) (HMul.hMul β (Nat.cast (Fintype.card F))) → LE.le
+      (Norm.norm
+        (Finset.sum Finset.univ
+          (fun (j : ZMod N) =>
+          HMul.hMul (HPow.hPow ζ (ZMod.val (HMul.hMul q j)))
+            (Complex.ofReal (Real.exp (Complex.re (HMul.hMul (HPow.hPow ζ (ZMod.val j)) t)))))))
+      (HMul.hMul ρ
+        (Finset.sum Finset.univ
+          (fun (j : ZMod N) => Real.exp (Complex.re (HMul.hMul (HPow.hPow ζ (ZMod.val j)) t)))))) →
+  (forall (p₀ : Prod (Fin m) (Fin n)),
+  LE.le
+    (Norm.norm
+      (Finset.sum Finset.univ
+        (fun (k : ZMod N) =>
+        HMul.hMul (HPow.hPow ζ (ZMod.val (HMul.hMul q k)))
+          (Complex.ofReal
+            (MeasureTheory.integral (CentreZN.configMeasure haarG)
+              (fun («ω» : CentreZN.Config G (CentreZN.TorusEdge m n) F X) =>
+              HMul.hMul (CentreZN.termsWeight chi wq coef «ω»)
+                (Real.exp
+                  (Finset.sum Finset.univ
+                    (fun (p : Prod (Fin m) (Fin n)) =>
+                    Complex.re
+                      (CentreZN.coupling β
+                        (fun (p : Prod (Fin m) (Fin n)) (y : F) =>
+                        ite (Eq p p₀) (HMul.hMul (HPow.hPow ζ (ZMod.val k)) (weights p y)) (weights p y)) chi
+                        CentreZN.torusWord p «ω»))))))))))
+    (HMul.hMul (HPow.hPow ρ (HMul.hMul m n))
+      (Finset.sum Finset.univ
+        (fun (k : ZMod N) =>
+        MeasureTheory.integral (CentreZN.configMeasure haarG)
+          (fun («ω» : CentreZN.Config G (CentreZN.TorusEdge m n) F X) =>
+          HMul.hMul (CentreZN.termsWeight chi wq coef «ω»)
+            (Real.exp
+              (Finset.sum Finset.univ
+                (fun (p : Prod (Fin m) (Fin n)) =>
+                Complex.re
+                  (CentreZN.coupling β
+                    (fun (p : Prod (Fin m) (Fin n)) (y : F) =>
+                    ite (Eq p p₀) (HMul.hMul (HPow.hPow ζ (ZMod.val k)) (weights p y)) (weights p y)) chi
+                    CentreZN.torusWord p «ω»))))))))))))))))) :=
+  _
+
+theorem CentreZN.wilson_twist_ratio_torus_crude.{u_1 u_2 u_3 u_4} :
+  forall {G : Type u_1} {F : Type u_2} {X : Type u_3} {Q : Type u_4}
+    [inst._@.CentreZNRejeu.2000256022._hygCtx._hyg.6 : Group G]
+    [inst._@.CentreZNRejeu.2000256022._hygCtx._hyg.9 : MeasurableSpace G]
+    [inst._@.CentreZNRejeu.2000256022._hygCtx._hyg.12 : MeasurableMul₂ G]
+    [inst._@.CentreZNRejeu.2000256022._hygCtx._hyg.15 : MeasurableInv G]
+    [inst._@.CentreZNRejeu.2000256022._hygCtx._hyg.18 : Fintype F]
+    [inst._@.CentreZNRejeu.2000256022._hygCtx._hyg.21 : Fintype X]
+    [inst._@.CentreZNRejeu.2000256022._hygCtx._hyg.24 : Fintype Q] (N : Nat)
+    [inst._@.CentreZNRejeu.2000256022._hygCtx._hyg.30 : NeZero N] (ζ : Complex),
+  IsPrimitiveRoot ζ N → (forall (m n : Nat),
+  LE.le (OfNat.ofNat 2) m → LE.le (OfNat.ofNat 2) n → (forall (haarG : MeasureTheory.Measure G)
+    [inst._@.CentreZNRejeu.2000256022._hygCtx._hyg.57 : MeasureTheory.IsProbabilityMeasure haarG],
+  (forall (g : G), MeasureTheory.MeasurePreserving (fun (h : G) => HMul.hMul g h) haarG haarG) → (forall (z : G),
+  Eq (HPow.hPow z N) (OfNat.ofNat 1) → (forall (g : G), Eq (HMul.hMul z g) (HMul.hMul g z)) → (forall (chi :
+      G → Complex),
+  Measurable chi → (forall (g : G), LE.le (Norm.norm (chi g)) (OfNat.ofNat 1)) → (forall (g : G),
+    Eq (chi (HMul.hMul z g)) (HMul.hMul ζ (chi g))) →
+  (forall (weights : Prod (Fin m) (Fin n) → F → Complex),
+  (forall (p : Prod (Fin m) (Fin n)) (y : F), LE.le (Norm.norm (weights p y)) (OfNat.ofNat 1)) → (forall (β : Real),
+  LE.le (OfNat.ofNat 0) β → (forall (wq : Q → CentreZN.Word (CentreZN.TorusEdge m n) F X),
+  (forall (k : Q), CentreZN.Neutral N (wq k)) → (forall (coef : Q → Complex) (q : ZMod N),
+  Ne q (OfNat.ofNat 0) → (forall (p₀ : Prod (Fin m) (Fin n)),
+  LE.le
+    (Norm.norm
+      (Finset.sum Finset.univ
+        (fun (k : ZMod N) =>
+        HMul.hMul (HPow.hPow ζ (ZMod.val (HMul.hMul q k)))
+          (Complex.ofReal
+            (MeasureTheory.integral (CentreZN.configMeasure haarG)
+              (fun («ω» : CentreZN.Config G (CentreZN.TorusEdge m n) F X) =>
+              HMul.hMul (CentreZN.termsWeight chi wq coef «ω»)
+                (Real.exp
+                  (Finset.sum Finset.univ
+                    (fun (p : Prod (Fin m) (Fin n)) =>
+                    Complex.re
+                      (CentreZN.coupling β
+                        (fun (p : Prod (Fin m) (Fin n)) (y : F) =>
+                        ite (Eq p p₀) (HMul.hMul (HPow.hPow ζ (ZMod.val k)) (weights p y)) (weights p y)) chi
+                        CentreZN.torusWord p «ω»))))))))))
+    (HMul.hMul
+      (HPow.hPow
+        (HSub.hSub (OfNat.ofNat 1)
+          (Real.exp (HMul.hMul (Neg.neg (OfNat.ofNat 2)) (HMul.hMul β (Nat.cast (Fintype.card F)))))) (HMul.hMul m n))
+      (Finset.sum Finset.univ
+        (fun (k : ZMod N) =>
+        MeasureTheory.integral (CentreZN.configMeasure haarG)
+          (fun («ω» : CentreZN.Config G (CentreZN.TorusEdge m n) F X) =>
+          HMul.hMul (CentreZN.termsWeight chi wq coef «ω»)
+            (Real.exp
+              (Finset.sum Finset.univ
+                (fun (p : Prod (Fin m) (Fin n)) =>
+                Complex.re
+                  (CentreZN.coupling β
+                    (fun (p : Prod (Fin m) (Fin n)) (y : F) =>
+                    ite (Eq p p₀) (HMul.hMul (HPow.hPow ζ (ZMod.val k)) (weights p y)) (weights p y)) chi
+                    CentreZN.torusWord p «ω»))))))))))))))))) :=
+  _
+
+axiom propext {a b : Sort 0} : Iff a b → Eq a b
+
+axiom Quot.sound.{u} {α : Sort u} {r : α → α → Sort 0} {a b : α} : r a b → Eq (Quot.mk r a) (Quot.mk r b)
+
+axiom Classical.choice.{u} {α : Sort u} : Nonempty α → α
+

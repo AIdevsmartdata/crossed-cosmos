@@ -1,0 +1,190 @@
+/work/lean_zn_rejeu_1112/src/mut_M1b_constante_partout.lean:616:79: error: unsolved goals
+case calc.step
+N : ℕ
+inst✝ : NeZero N
+ζ : ℂ
+hζ : IsPrimitiveRoot ζ N
+q : ZMod N
+hq : q ≠ 0
+t : ℂ
+hqval : q.val ≠ 0
+hzero : ∑ j, ζ ^ (q * j).val = 0
+hnorm : ∀ (j : ZMod N), ‖ζ ^ j.val * t‖ = ‖t‖
+hlo : ∀ (j : ZMod N), Real.exp (-‖t‖) ≤ Real.exp (ζ ^ j.val * t).re
+hhi : ∀ (j : ZMod N), Real.exp (ζ ^ j.val * t).re ≤ Real.exp ‖t‖
+hshift :
+  ∑ j, ζ ^ (q * j).val * ↑(Real.exp (ζ ^ j.val * t).re) =
+    ∑ j, ζ ^ (q * j).val * ↑(Real.exp (ζ ^ j.val * t).re - Real.exp (-‖t‖))
+hsum : ∑ j, Real.exp (ζ ^ j.val * t).re ≤ ↑N * Real.exp ‖t‖
+hexp : Real.exp (-2 * ‖t‖) * Real.exp ‖t‖ = Real.exp (-‖t‖)
+hsub : Real.exp (-2 * ‖t‖) * ∑ j, Real.exp (ζ ^ j.val * t).re ≤ ↑N * Real.exp (-‖t‖)
+⊢ (1 - Real.exp (-2 * ‖t‖)) * ∑ j, Real.exp (ζ ^ j.val * t).re ≤
+    (1 - Real.exp (-‖t‖)) * ∑ j, Real.exp (ζ ^ j.val * t).re
+/work/lean_zn_rejeu_1112/src/mut_M1b_constante_partout.lean:793:2: error: Tactic `apply` failed: could not unify the conclusion of `centre_flip_bound N ζ hζ.pow_eq_one μ τ hτ chg hsurj T hTm κ
+  hT hTτ R hRm hR0 hRτ hRint W hWm hW1 q A hWτ (1 - Real.exp (-2 * κ))`
+  ‖∫ (ω : Ω), W ω * ↑(R ω * Real.exp (∑ p, (T p ω).re)) ∂μ‖ ≤
+    (1 - Real.exp (-2 * κ)) ^ #A * ∫ (ω : Ω), R ω * Real.exp (∑ p, (T p ω).re) ∂μ
+with the goal
+  ‖∫ (ω : Ω), W ω * ↑(R ω * Real.exp (∑ p, (T p ω).re)) ∂μ‖ ≤
+    (1 - Real.exp (-κ)) ^ #A * ∫ (ω : Ω), R ω * Real.exp (∑ p, (T p ω).re) ∂μ
+
+Note: The full type of `centre_flip_bound N ζ hζ.pow_eq_one μ τ hτ chg hsurj T hTm κ hT hTτ R hRm hR0 hRτ hRint W hWm
+  hW1 q A hWτ (1 - Real.exp (-2 * κ))` is
+  (∀ (t : ℂ),
+      ‖t‖ ≤ κ →
+        ‖∑ j, ζ ^ (q * j).val * ↑(Real.exp (ζ ^ j.val * t).re)‖ ≤
+          (1 - Real.exp (-2 * κ)) * ∑ j, Real.exp (ζ ^ j.val * t).re) →
+    ‖∫ (ω : Ω), W ω * ↑(R ω * Real.exp (∑ p, (T p ω).re)) ∂μ‖ ≤
+      (1 - Real.exp (-2 * κ)) ^ #A * ∫ (ω : Ω), R ω * Real.exp (∑ p, (T p ω).re) ∂μ
+
+Ω : Type u_1
+S : Type u_2
+P : Type u_3
+inst✝⁴ : MeasurableSpace Ω
+inst✝³ : Fintype P
+inst✝² : DecidableEq P
+N : ℕ
+inst✝¹ : NeZero N
+ζ : ℂ
+hζ : IsPrimitiveRoot ζ N
+μ : Measure Ω
+inst✝ : IsProbabilityMeasure μ
+τ : S → Ω → Ω
+hτ : ∀ (s : S), MeasurePreserving (τ s) μ μ
+chg : S → P → ZMod N
+hsurj : Function.Surjective chg
+T : P → Ω → ℂ
+hTm : ∀ (p : P), Measurable (T p)
+κ : ℝ
+hT : ∀ (p : P) (ω : Ω), ‖T p ω‖ ≤ κ
+hTτ : ∀ (s : S) (p : P) (ω : Ω), T p (τ s ω) = ζ ^ (chg s p).val * T p ω
+R : Ω → ℝ
+hRm : Measurable R
+hR0 : ∀ (ω : Ω), 0 ≤ R ω
+hRτ : ∀ (s : S) (ω : Ω), R (τ s ω) = R ω
+hRint : Integrable (fun ω => R ω * Real.exp (∑ p, (T p ω).re)) μ
+W : Ω → ℂ
+hWm : Measurable W
+hW1 : ∀ (ω : Ω), ‖W ω‖ ≤ 1
+q : ZMod N
+hq : q ≠ 0
+A : Finset P
+hWτ : ∀ (s : S) (ω : Ω), W (τ s ω) = ζ ^ (q * ∑ p ∈ A, chg s p).val * W ω
+⊢ ‖∫ (ω : Ω), W ω * ↑(R ω * Real.exp (∑ p, (T p ω).re)) ∂μ‖ ≤
+    (1 - Real.exp (-κ)) ^ #A * ∫ (ω : Ω), R ω * Real.exp (∑ p, (T p ω).re) ∂μ
+/work/lean_zn_rejeu_1112/src/mut_M1b_constante_partout.lean:822:2: error: Tactic `apply` failed: could not unify the type of `twist_ratio_bound N ζ hζ.pow_eq_one μ τ hτ chg himg T hTm κ hT hTτ R
+  hRm hR0 hRτ hRint q (1 - Real.exp (-2 * κ)) ?m.216 p₀`
+  ‖∑ k, ζ ^ (q * k).val * ↑(∫ (ω : Ω), R ω * Real.exp (∑ p, ((if p = p₀ then ζ ^ k.val else 1) * T p ω).re) ∂μ)‖ ≤
+    (1 - Real.exp (-2 * κ)) ^ Fintype.card P *
+      ∑ k, ∫ (ω : Ω), R ω * Real.exp (∑ p, ((if p = p₀ then ζ ^ k.val else 1) * T p ω).re) ∂μ
+with the goal
+  ‖∑ k, ζ ^ (q * k).val * ↑(∫ (ω : Ω), R ω * Real.exp (∑ p, ((if p = p₀ then ζ ^ k.val else 1) * T p ω).re) ∂μ)‖ ≤
+    (1 - Real.exp (-κ)) ^ Fintype.card P *
+      ∑ k, ∫ (ω : Ω), R ω * Real.exp (∑ p, ((if p = p₀ then ζ ^ k.val else 1) * T p ω).re) ∂μ
+
+Ω : Type u_1
+S : Type u_2
+P : Type u_3
+inst✝⁴ : MeasurableSpace Ω
+inst✝³ : Fintype P
+inst✝² : DecidableEq P
+N : ℕ
+inst✝¹ : NeZero N
+ζ : ℂ
+hζ : IsPrimitiveRoot ζ N
+μ : Measure Ω
+inst✝ : IsProbabilityMeasure μ
+τ : S → Ω → Ω
+hτ : ∀ (s : S), MeasurePreserving (τ s) μ μ
+chg : S → P → ZMod N
+himg : ∀ (t : P → ZMod N), ∑ p, t p = 0 → ∃ s, chg s = t
+T : P → Ω → ℂ
+hTm : ∀ (p : P), Measurable (T p)
+κ : ℝ
+hT : ∀ (p : P) (ω : Ω), ‖T p ω‖ ≤ κ
+hTτ : ∀ (s : S) (p : P) (ω : Ω), T p (τ s ω) = ζ ^ (chg s p).val * T p ω
+R : Ω → ℝ
+hRm : Measurable R
+hR0 : ∀ (ω : Ω), 0 ≤ R ω
+hRτ : ∀ (s : S) (ω : Ω), R (τ s ω) = R ω
+hRint : Integrable (fun ω => R ω * Real.exp (∑ p, (T p ω).re)) μ
+q : ZMod N
+hq : q ≠ 0
+p₀ : P
+⊢ ‖∑ k, ζ ^ (q * k).val * ↑(∫ (ω : Ω), R ω * Real.exp (∑ p, ((if p = p₀ then ζ ^ k.val else 1) * T p ω).re) ∂μ)‖ ≤
+    (1 - Real.exp (-κ)) ^ Fintype.card P *
+      ∑ k, ∫ (ω : Ω), R ω * Real.exp (∑ p, ((if p = p₀ then ζ ^ k.val else 1) * T p ω).re) ∂μ
+/work/lean_zn_rejeu_1112/src/mut_M1b_constante_partout.lean:913:5: warning: Variable name `hpar` is not explicitly referenced.
+
+The binding can be removed (if unused) or named `_` (if used implicitly).
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+/work/lean_zn_rejeu_1112/src/mut_M1b_constante_partout.lean:1390:10: warning: This simp argument is unused:
+  j.isLt
+
+Hint: Omit it from the simp argument list.
+  simp ̵[̵j̵.̵i̵s̵L̵t̵]̵
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+/work/lean_zn_rejeu_1112/src/mut_M1b_constante_partout.lean:1700:2: error: linarith failed to find a contradiction
+G : Type u_1
+F : Type u_2
+X : Type u_3
+Q : Type u_4
+inst✝⁸ : Group G
+inst✝⁷ : MeasurableSpace G
+inst✝⁶ : MeasurableMul₂ G
+inst✝⁵ : MeasurableInv G
+inst✝⁴ : Fintype F
+inst✝³ : Fintype X
+inst✝² : Fintype Q
+N : ℕ
+inst✝¹ : NeZero N
+ζ : ℂ
+hζ : IsPrimitiveRoot ζ N
+m n : ℕ
+hm : 2 ≤ m
+hn : 2 ≤ n
+haarG : Measure G
+inst✝ : IsProbabilityMeasure haarG
+hleft : ∀ (g : G), MeasurePreserving (fun h => g * h) haarG haarG
+z : G
+hzN : z ^ N = 1
+hcentral : ∀ (g : G), z * g = g * z
+chi : G → ℂ
+hchim : Measurable chi
+hchi1 : ∀ (g : G), ‖chi g‖ ≤ 1
+hchiz : ∀ (g : G), chi (z * g) = ζ * chi g
+weights : Fin m × Fin n → F → ℂ
+hweights : ∀ (p : Fin m × Fin n) (y : F), ‖weights p y‖ ≤ 1
+β : ℝ
+hβ : 0 ≤ β
+wq : Q → Word (TorusEdge m n) F X
+hneutral : ∀ (k : Q), Neutral N (wq k)
+coef : Q → ℂ
+q : ZMod N
+hq : q ≠ 0
+p₀ : Fin m × Fin n
+t : ℂ
+ht : ‖t‖ ≤ β * ↑(Fintype.card F)
+he : Real.exp (-2 * (β * ↑(Fintype.card F))) ≤ Real.exp (-2 * ‖t‖)
+a✝ : 1 - Real.exp (-2 * (β * ↑(Fintype.card F))) < 1 - Real.exp (-‖t‖)
+⊢ False
+failed
+'CentreZN.centre_flip_bound' depends on axioms: [propext, Classical.choice, Quot.sound]
+'CentreZN.twist_ratio_bound' depends on axioms: [propext, Classical.choice, Quot.sound]
+'CentreZN.rho_crude' depends on axioms: [propext, sorryAx, Classical.choice, Quot.sound]
+'CentreZN.rho_two' depends on axioms: [propext, Classical.choice, Quot.sound]
+'CentreZN.sharp_one_plaquette' depends on axioms: [propext, Classical.choice, Quot.sound]
+'CentreZN.centre_flip_bound_crude' depends on axioms: [propext, sorryAx, Classical.choice, Quot.sound]
+'CentreZN.twist_ratio_bound_crude' depends on axioms: [propext, sorryAx, Classical.choice, Quot.sound]
+'CentreZN.recover_column_flip_bound' depends on axioms: [propext, Classical.choice, Quot.sound]
+'CentreZN.recover_twist_ratio_bound' depends on axioms: [propext, Classical.choice, Quot.sound]
+'CentreZN.mixed_word_neutral' depends on axioms: [propext, Quot.sound]
+'CentreZN.wilson_centre_flip_bound' depends on axioms: [propext, Classical.choice, Quot.sound]
+'CentreZN.torus_charge_explicit' depends on axioms: [propext, Classical.choice, Quot.sound]
+'CentreZN.torus_charge_sum' depends on axioms: [propext, Classical.choice, Quot.sound]
+'CentreZN.torus_charge_image' depends on axioms: [propext, Classical.choice, Quot.sound]
+'CentreZN.wilson_twist_ratio_torus' depends on axioms: [propext, Classical.choice, Quot.sound]
+'CentreZN.wilson_twist_ratio_torus_crude' depends on axioms: [propext, sorryAx, Classical.choice, Quot.sound]
+RC=1

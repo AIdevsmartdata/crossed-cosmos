@@ -1,5 +1,6 @@
 % A scalar finite-volume criterion for a continuum mass gap in SU(2) lattice gauge theory.
-% Version 1.0, 12 November 2026. Package prepared locally; not published, not deposited.
+% Version 1.1, 12 November 2026: literature corrections only (Section 1.3, Section 8.2 comparison, bibliography, Use of AI, status statements).
+% Version 1.0 (doi:10.5281/zenodo.24150807) is unchanged as a record. No statement, proof, constant or Lean file is changed.
 % Compile: pdflatex, twice.
 \documentclass[11pt,a4paper]{article}
 \usepackage[T1]{fontenc}
@@ -52,7 +53,7 @@ the targeted declaration. A re-run on the final text with localisation of the er
 \href{https://orcid.org/0009-0008-2443-7166}{0009-0008-2443-7166}. The proofs, the programs, the Lean files and this note were
 prepared with the assistance of AI models (Claude Opus~5.5, Claude Sonnet~5.5 and Claude Fable~5.2, Anthropic; Qwen3.8, Qwen team; GPT-6.1 Sol, OpenAI; DeepSeek V4 Pro, DeepSeek); their roles are described in the
 statement on the use of AI at the end of the note.}}
-\date{12 November 2026}
+\date{12 November 2026 (version 1.1)}
 
 \begin{document}
 \maketitle
@@ -91,6 +92,8 @@ part~(iii) is in their text; no priority is claimed (\S\ref{sec:bb26v5}).
 and no reconstruction. It does not apply as it stands to the formalised construction of OpenAI (Section~\ref{sec:openai-construction}).
 Reading $\Delta$ as a combination of R\'enyi-2 entropies of the thermal weights is a reformulation, not a result. The criterion is a sufficient
 condition; its equivalence with the Yang--Mills mass-gap problem is not claimed. The proofs have been checked by AI models only.
+
+\emph{Version 1.1 (12 November 2026): literature corrections only; no statement, proof, constant or Lean file is changed.} Two additions: the principle that an inequality between partition functions of finite periodic tori (twisted against untwisted) implies decay is classical (Tomboulis--Yaffe, Kov\'acs--Tomboulis, Kanazawa), and the comparison with these papers is recorded in \S\ref{sec:compare}.
 \end{abstract}
 
 \paragraph{Status labels.}
@@ -153,7 +156,7 @@ certificate.
 \item \emph{Reported computational instance} (Proposition~\ref{prop:instance}). Conditional on (ENC) and (RAT), $\Delta_\beta(2)\le1.741\cdot10^{-3}<2^{-9}$ for the $SU(2)$ Wilson theory and $0\le\beta\le0.005$. The analytic implication is proved on paper; the two computational inputs are reported from one implementation and remain uncertified here. The gap is already known in this regime.
 \end{itemize}
 
-\subsection{What is new and what is not}
+\subsection{What is new and what is not}\label{subsec:notnew}
 \emph{Not new.} The doubling mechanism, in $d=2$ for spins \cite{OAI26}. The positive, self-adjoint transfer operator of lattice gauge
 theories \cite{Lus77,OS78}. The closure lemma ``same $q$ along any filter'' and the passage from the $q$-form to a gap through a named
 reconstruction hypothesis, which are part of our archived Lean statement ClayYM v1.1 \cite{ClayYM}. The form of the result, ``a local
@@ -163,6 +166,8 @@ which is that of Theorem~B of Bhattacharjee et al.\ \cite{BB26} and of Theorem~5
 traces and a one-scale criterion with a gap conclusion, which are in version~5.0.0 of Bhattacharjee et al.\ \cite{BB26v5}
 (\S\ref{sec:bb26v5}). The unconditional squaring bound $p(2m)\le2(e^{p(m)}-1)^2$ (Lemma~\ref{lem:squaring}) is implicit in the chain of
 inequalities of \cite[proof of Lemma~2.1]{OAI26}.
+
+The principle that an inequality between the partition functions of finite periodic tori, twisted against untwisted, implies a decay: for Wilson loops of $SU(2)$, $\langle W[C]\rangle\le2(e^{-F_{\mathrm{el}}})^{|A_C|/|A_{12}|}$ with $e^{-F_{\mathrm{el}}}=\langle\frac12(1-\mathcal O[\mathcal V])\rangle$, in Kov\'acs and Tomboulis \cite[eqs.~(6) and~(11), pp.~4--5]{KT02}, and restated as Theorem~1 of Kanazawa \cite[p.~5]{Kan}, who attributes it to Tomboulis and Yaffe \cite{TY85} and to \cite{KT02}; for $SU(N)$ and $\mathbb Z_N$ fluxes, in Kanazawa \cite[Theorem~2, p.~7]{Kan}; and, for correlations of classical spin systems, in Kanazawa \cite[Theorem~5, p.~17]{Kan}, for $L_\mu=2^kn$: $|\langle\Gamma_\mu(x;n)\rangle|/\langle\Gamma_\mu(x;0)\rangle\le2\{\langle\Gamma_\mu(x;0)^2\rangle/\langle\Gamma_\mu(x;0)\rangle^2\}^{n/L_\mu}\{1-\int dg\,\langle\mathcal O(g)[\mathcal V]\rangle\}^{n/L_\mu}$. His abstract (p.~1) states: ``Basically the inequalities guarantee that a system in a box that is sufficiently insensitive to boundary conditions has a non-zero mass gap.'' The hypothesis there is a ratio of twisted to untwisted partition functions, not the doubling defect, and the conclusion is a decay in a box of period $L$, not a bound on the transfer matrix of every spatial torus (\S\ref{sec:compare}); the family of the argument (reflection positivity, Schwarz inequality, doublings) is the same as ours. The absence of these papers from the list of version~1.0 was a gap of the anteriority search.
 
 \emph{Incremental content.} The contribution is predominantly a routine transposition of the doubling mechanism of \cite{OAI26}.
 It consists of the higher-dimensional bookkeeping and the explicit bounds $256$ at $2^{-9}$ in $d=4$ and $64$ at $2^{-7}$ in $d=3$; the
@@ -836,6 +841,7 @@ is wider (\S\ref{sec:bb26v5}).
 transfer bounds at every fixed physical scale (C1), a landing bound (C2), time continuity (C3) and a non-zero excited sector (C4) give a
 gap $\ge w$ for the transfer operators of limits of block observables. Four multi-scale hypotheses against one scalar inequality; none of
 them is discharged here, and (C3)--(C4) have no counterpart (non-triviality is not treated here).
+\item \emph{Tomboulis--Yaffe, Kov\'acs--Tomboulis, Kanazawa} \cite{TY85,KT02,Kan} \st{read} (\cite{TY85} pp.~317 and 332, \cite{KT02} eqs.~(8) and (11), \cite{Kan} Theorems~1, 2 and~5, read in the texts; page numbers are those of the printed paper for \cite{TY85} and of the arXiv versions for the others; \cite{TY85} was read on these pages only). Same family of argument in \cite{KT02,Kan}: reflection positivity, Schwarz inequality, repeated doublings of a loop or of a correlation until periodicity removes it, with divisibility conditions on the sides ($L_\mu=2^pl_\mu$ in the proof of \cite[Theorem~2, p.~9]{Kan}, whose footnote~10 says that the same condition was present in \cite{TY85}; reflection positivity is applied to a two-point function in \cite[p.~332]{TY85}), and an inequality between partition functions of finite periodic tori. Different hypothesis: insensitivity of the torus to a centre twist on a stack of plaquettes, $\langle\mathcal O[\mathcal V]\rangle=Z^{(-)}/Z\to1$ (equivalently $e^{-F_{\mathrm{el}}}=\frac12(1-Z^{(-)}/Z)$ small), not the doubling defect $16\log Z(n^4)-\log Z((2n)^4)$ of this note. Different conclusion: a bound on Wilson loops of a periodic box, $\langle W[C]\rangle\le2(e^{-F_{\mathrm{el}}})^{|A_C|/|A_{12}|}$ (and, in \cite{Kan}, on correlations of spins), and not a bound on the excited eigenvalues of the transfer operator on every spatial torus. We do not claim that either hypothesis implies the other. These papers also contain the precedent recalled in \S\ref{subsec:notnew}, and are not used in our proofs.
 \item \emph{Knabe-type criteria} \cite{Kna88,GM16,Lem19}. Finite-size gap criteria for frustration-free quantum Hamiltonians: a local
 gap above a threshold on a finite subsystem implies a global gap. Same logical form, different objects: local Hamiltonian gaps, no
 partition functions, no reflection positivity, no continuum limit, one direction only.
@@ -929,7 +935,7 @@ the lake scaffolding (\texttt{lakefile.toml}, \texttt{lake-manifest.json}, \text
 reconstruction (b); the Mathlib package directory was copied from reconstruction (b) (official cache: ``no files to download''), but no build artefact of the note was
 copied, and \path{main.lean} was taken from the archive (sha256 \texttt{944a99f6\dots}); \texttt{lake build} return code $0$ (8925 jobs, \texttt{main} built in $28$\,s; $33$\,s for \texttt{lake build}, following a $13$\,s cache check), the
 same two linter warnings as before, and the same $35$ declarations with axioms \texttt{propext}, \texttt{Classical.choice}, \texttt{Quot.sound}, the list being identical to that of \texttt{build4}. The logs are
-in the package (\path{rejeu_depuis_arbre_git_2026-11-12/}). Rebuilds (b) and (c) compiled the already assembled \path{main.lean}; they did not rerun the assembler from the component sources. They used the standard Lean kernel, not an independent kernel. The complete tree of the final package, which differs from the archived one only outside the two subtrees above, was not itself rebuilt. The Lean sources are not yet in the public repository. An independent kernel check (nanoda) has not been run for this project.
+in the package (\path{rejeu_depuis_arbre_git_2026-11-12/}). Rebuilds (b) and (c) compiled the already assembled \path{main.lean}; they did not rerun the assembler from the component sources. They used the standard Lean kernel, not an independent kernel. The complete tree of the final package, which differs from the archived one only outside the two subtrees above, was not itself rebuilt. Version~1.1 (12 November 2026) changes the note, the README and the metadata files only: \path{lean/}, \path{ClayYM_v1_1_extrait/}, \path{reproduction/} and \path{rejeu_depuis_arbre_git_2026-11-12/} are byte for byte those of version~1.0. The Lean sources are not yet in the public repository. An independent kernel check (nanoda) has not been run for this project.
 
 
 \begin{center}\footnotesize
@@ -976,6 +982,7 @@ corrections, adapted and incorporated in this version (the hypotheses (W2$^+$), 
 conditional status of the Maxwell witness, the formulation of the converse, the novelty and strictness claims, and the comparison with the OpenAI
 construction); Sol also recommended that this material be folded into a broader note rather than stand alone; publishing it as a stand-alone note is the author's decision. On 12 November 2026 Sol reviewed, again by reading and without running programs, the first version of this text and required sixteen corrections (three blocking: the domain of the Lean specialisation, the status of Proposition~\ref{prop:instance}, and the order-eight coefficients), which Claude Sonnet adapted; a second read-only check of 12 November 2026 (\path{RELECTURE_SOL_TEXTE_CORRIGE.md}) found partial applications and asked for one blocking and four non-blocking corrections (the conditional status of Proposition~\ref{prop:instance} in the abstract and the list of results, the description of \texttt{SpecLink}, the concordance table, the attribution of the reviews and the wording of the rebuild descriptions), which are applied in this version; Sol has not re-read this version. These reviews do not certify the computational inputs or endorse a subsequent revision.
 \item \emph{Claude Fable~5.2 (Anthropic)} acted as the project's pilot: it directed and arbitrated the work (the arbitrations are recorded in the project's registry). It wrote none of the proofs of this note, with one exception: on 12 November 2026 it wrote \S\ref{sec:bb26v5}, including the derivation \eqref{eq:bb26implies}, and the other sentences of this version that refer to \cite{BB26v5}, and it ran the final \texttt{pdflatex} compilation. That subsection was written after two independent readings of the same passages of \cite{BB26v5}, by \emph{DeepSeek V4 Pro (DeepSeek)} and by Qwen3.8, both without running programs. DeepSeek V4 Pro then checked the text of that subsection against the same passages (12 November 2026, without running programs): it confirmed the derivation \eqref{eq:bb26implies} and asked for two changes of wording (a literal quotation for hypothesis (W), and ``narrower'' instead of ``weaker'' for our conclusion), which are applied; it has not re-read the final wording.
+\item \emph{Version 1.1 (12 November 2026).} A literature search was made on 12 November 2026, after the publication of version~1.0, by Claude Sonnet~5.5, which read the texts it obtained (scanned copies and arXiv files); the equation numbers and pages cited above for \cite{TY85,KT02,Kan} were checked on images of the pages. In the same search DeepSeek V4 Pro, without tools, compared excerpts of those sources with statements of the companion note on the twist ratio (not of the present note). The corrections of this version (Section~\ref{sec:intro}, \S\ref{sec:compare}, the bibliography and the status statements) were written by Claude Sonnet~5.5. One further review of this version by DeepSeek V4 Pro, without tools, on the text of the note and excerpts of the sources, is described in the file \texttt{RELECTURES.md} of the package. No statement, proof, constant or Lean file was changed.
 \item \emph{GPT-6 Astra (OpenAI)} examined, blind, the electric-flux sectors under a scalar hypothesis (registry, 11 November 2026); that material is not part of this note.
 \item \emph{Claude Sonnet~5.5 (Anthropic)} prepared this version of 12 November 2026: it compared each formalised statement with the Lean
 declarations, applied the corrections above to the text (no statement, proof, constant or Lean file was otherwise modified), ran the
@@ -1001,8 +1008,10 @@ Phys.\ 61 (1990) 79--119, doi:10.1007/BF01013955.
 values of the coupling constant}, Commun.\ Math.\ Phys.\ 82 (1982) 545--606, doi:10.1007/BF01961240.
 \bibitem{GM16} D.~Gosset, E.~Mozgunov, \emph{Local gap threshold for frustration-free spin systems}, J.\ Math.\ Phys.\ 57 (2016)
 091901, doi:10.1063/1.4962337, arXiv:1512.00088.
+\bibitem{Kan} T.~Kanazawa, \emph{Generalizing the Tomboulis--Yaffe inequality to $SU(N)$ lattice gauge theories and general classical spin systems}, Ann.\ Phys.\ 324 (2009) 1634--1665, arXiv:0808.3442v3 [math-ph] (page numbers cited here are those of the arXiv version).
 \bibitem{Kau49} B.~Kaufman, \emph{Crystal statistics. II. Partition function evaluated by spinor analysis}, Phys.\ Rev.\ 76 (1949)
 1232--1243, doi:10.1103/PhysRev.76.1232.
+\bibitem{KT02} T.~G.~Kov\'acs, E.~T.~Tomboulis, \emph{Vortex waistlines and long range fluctuations}, Phys.\ Rev.\ D 65 (2002) 074501, arXiv:hep-lat/0108017v2 (page numbers cited here are those of the arXiv version).
 \bibitem{Kna88} S.~Knabe, \emph{Energy gaps and elementary excitations for certain VBS-quantum antiferromagnets}, J.\ Stat.\ Phys.\ 52
 (1988) 627--638, doi:10.1007/BF01019721.
 \bibitem{Lem19} M.~Lemm, \emph{Finite-size criteria for spectral gaps in $D$-dimensional quantum spin systems}, arXiv:1902.07141 (2019).
@@ -1019,6 +1028,7 @@ doi:10.1007/BF01645738.
 doi:10.1016/0003-4916(78)90039-8.
 \bibitem{Raj26} H.~T.~Rajabu, \emph{Multiscale covariance transfer and a conditional continuum mass gap for four-dimensional $SU(2)$
 lattice Yang--Mills theory}, version 2.1 (29 October 2026), in the Zenodo record doi:10.5281/zenodo.23729328.
+\bibitem{TY85} E.~T.~Tomboulis, L.~G.~Yaffe, \emph{Finite temperature $SU(2)$ lattice gauge theory}, Commun.\ Math.\ Phys.\ 100 (1985) 313--341 (read in a scanned copy with an OCR text layer).
 \bibitem{ClayYM} K.~R\'emondi\`ere, \emph{ClayYM: a candidate Lean~4 statement of the Yang--Mills existence and mass gap problem, with
 compiled guards against fake models}, version 1.1.0 (25 October 2026), Zenodo, doi:10.5281/zenodo.23644079 (all versions).
 \bibitem{internal} Internal notes of the project, 25 October and 10 November 2026 (unpublished).

@@ -1,0 +1,47 @@
+theorem TubeAreaVerif.enonce_canonique.{u_1 u_2 u_3} :
+  forall {«Ω» : Type u_1} {E : Type u_2} {P : Type u_3}
+    [inst._@.ColumnFlipComplet.4259354877._hygCtx._hyg.5 : MeasurableSpace «Ω»]
+    [inst._@.ColumnFlipComplet.4259354877._hygCtx._hyg.8 : Fintype E]
+    [inst._@.ColumnFlipComplet.4259354877._hygCtx._hyg.11 : DecidableEq E]
+    [inst._@.ColumnFlipComplet.4259354877._hygCtx._hyg.14 : Fintype P]
+    [inst._@.ColumnFlipComplet.4259354877._hygCtx._hyg.17 : DecidableEq P] (μ : MeasureTheory.Measure «Ω»)
+    [inst._@.ColumnFlipComplet.4259354877._hygCtx._hyg.22 : MeasureTheory.IsProbabilityMeasure μ]
+    (τ : (E → Units Int) → «Ω» → «Ω»),
+  (forall (σ : E → Units Int), MeasureTheory.MeasurePreserving (τ σ) μ μ) → (forall (bd : P → Finset E),
+  Function.Surjective (fun (σ : E → Units Int) (p : P) => Finset.prod (bd p) (fun (a : E) => σ a)) → (forall (K :
+      P → «Ω» → Real),
+  (forall (p : P), Measurable (K p)) → (forall (κ : Real),
+  (forall (p : P) («ω» : «Ω»), LE.le (abs (K p «ω»)) κ) → (forall (σ : E → Units Int) (p : P)
+      («ω» : «Ω»),
+    Eq (K p (τ σ «ω»))
+      (HMul.hMul (Int.cast (Units.val (Finset.prod (bd p) (fun (i : E) => σ i)))) (K p «ω»))) →
+  (forall (R : «Ω» → Real),
+  Measurable R → (forall («ω» : «Ω»), LE.le (OfNat.ofNat 0) (R «ω»)) → (forall (σ : E → Units Int)
+      («ω» : «Ω»),
+    Eq (R (τ σ «ω»)) (R «ω»)) →
+  MeasureTheory.Integrable
+      (fun («ω» : «Ω») => HMul.hMul (R «ω») (Real.exp (Finset.sum Finset.univ (fun (p : P) => K p «ω»))))
+      μ →
+  (forall (W : «Ω» → Real),
+  Measurable W → (forall («ω» : «Ω»), LE.le (abs (W «ω»)) (OfNat.ofNat 1)) → (forall (A : Finset P),
+  (forall (σ : E → Units Int) («ω» : «Ω»),
+    Eq (W (τ σ «ω»))
+      (HMul.hMul (Int.cast (Units.val (Finset.prod A (fun (p : P) => Finset.prod (bd p) (fun (e : E) => σ e)))))
+        (W «ω»))) →
+  LE.le
+    (abs
+      (MeasureTheory.integral μ
+        (fun («ω» : «Ω») =>
+        HMul.hMul (W «ω») (HMul.hMul (R «ω») (Real.exp (Finset.sum Finset.univ (fun (p : P) => K p «ω»)))))))
+    (HMul.hMul (HPow.hPow (Real.tanh κ) (Finset.card A))
+      (MeasureTheory.integral μ
+        (fun («ω» : «Ω») =>
+        HMul.hMul (R «ω») (Real.exp (Finset.sum Finset.univ (fun (p : P) => K p «ω»)))))))))))) :=
+  _
+
+axiom propext {a b : Sort 0} : Iff a b → Eq a b
+
+axiom Quot.sound.{u} {α : Sort u} {r : α → α → Sort 0} {a b : α} : r a b → Eq (Quot.mk r a) (Quot.mk r b)
+
+axiom Classical.choice.{u} {α : Sort u} : Nonempty α → α
+

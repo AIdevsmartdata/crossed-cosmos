@@ -1,0 +1,63 @@
+theorem TubeArea.neutral_word_flip_invariant.{u_1 u_2 u_3 u_4} :
+  forall {G : Type u_1} {E : Type u_2} {F : Type u_3} {X : Type u_4}
+    [inst._@.TubeActionC.468354018._hygCtx._hyg.6 : Group G] {z : G},
+  Eq (HMul.hMul z z) (OfNat.ofNat 1) → (forall (g : G), Eq (HMul.hMul z g) (HMul.hMul g z)) → (forall (q :
+      TubeArea.GeneralWord E F X),
+  TubeArea.NeutralWord q → (forall (σ : E → Units Int) («ω» : TubeArea.WilsonConfig G E F X),
+  Eq (TubeArea.generalHolonomy q (TubeArea.columnFlip z σ «ω»)) (TubeArea.generalHolonomy q «ω»))) :=
+  _
+
+theorem TubeArea.mixedWord_neutral.{u_1 u_2 u_3} :
+  forall {E : Type u_1} {F : Type u_2} {X : Type u_3} (e : E) (y y' : F) (x x' : X),
+  TubeArea.NeutralWord (TubeArea.mixedWord e y y' x x') :=
+  _
+
+theorem TubeArea.wilson_action_area_law_rectangle.{u_1 u_2 u_3 u_4} :
+  forall {G : Type u_1} {F : Type u_2} {X : Type u_3} {Q : Type u_4}
+    [inst._@.TubeActionC.2486159384._hygCtx._hyg.6 : Group G]
+    [inst._@.TubeActionC.2486159384._hygCtx._hyg.9 : MeasurableSpace G]
+    [inst._@.TubeActionC.2486159384._hygCtx._hyg.12 : MeasurableMul₂ G]
+    [inst._@.TubeActionC.2486159384._hygCtx._hyg.15 : MeasurableInv G]
+    [inst._@.TubeActionC.2486159384._hygCtx._hyg.18 : Fintype F]
+    [inst._@.TubeActionC.2486159384._hygCtx._hyg.21 : Fintype X]
+    [inst._@.TubeActionC.2486159384._hygCtx._hyg.24 : Fintype Q] (m n : Nat) (a b : Fin (HAdd.hAdd m (OfNat.ofNat 1)))
+    (c d : Fin (HAdd.hAdd n (OfNat.ofNat 1))),
+  LT.lt (Fin.val a) (Fin.val b) → LT.lt (Fin.val c) (Fin.val d) → (forall (haarG : MeasureTheory.Measure G)
+    [inst._@.TubeActionC.2486159384._hygCtx._hyg.77 : MeasureTheory.IsProbabilityMeasure haarG],
+  (forall (g : G), MeasureTheory.MeasurePreserving (fun (h : G) => HMul.hMul g h) haarG haarG) → (forall (z : G),
+  Eq (HMul.hMul z z) (OfNat.ofNat 1) → (forall (g : G), Eq (HMul.hMul z g) (HMul.hMul g z)) → (forall (chi :
+      G → Real),
+  Measurable chi → (forall (g : G), LE.le (abs (chi g)) (OfNat.ofNat 1)) → (forall (g : G),
+    Eq (chi (HMul.hMul z g)) (Neg.neg (chi g))) →
+  (forall (weights : Prod (Fin m) (Fin n) → F → Real),
+  (forall (p : Prod (Fin m) (Fin n)) (y : F), LE.le (abs (weights p y)) (OfNat.ofNat 1)) → (forall (β : Real),
+  LE.le (OfNat.ofNat 0) β → (forall (wq : Q → TubeArea.GeneralWord (TubeArea.GridEdge m n) F X),
+  (forall (q : Q), TubeArea.NeutralWord (wq q)) → (forall (coef : Q → Real) (y0 : F),
+  LE.le
+    (abs
+      (MeasureTheory.integral (TubeArea.wilsonMeasure haarG)
+        (fun («ω» : TubeArea.WilsonConfig G (TubeArea.GridEdge m n) F X) =>
+        HMul.hMul (TubeArea.wilsonLoop chi (TubeArea.rectWord a b c d) y0 «ω»)
+          (HMul.hMul (TubeArea.neutralActionWeight chi wq coef «ω»)
+            (Real.exp
+              (Finset.sum Finset.univ
+                (fun (p : Prod (Fin m) (Fin n)) =>
+                TubeArea.wilsonCoupling β weights chi TubeArea.gridWord p «ω»)))))))
+    (HMul.hMul
+      (HPow.hPow (Real.tanh (HMul.hMul β (Nat.cast (Fintype.card F))))
+        (HMul.hMul (HSub.hSub (Fin.val b) (Fin.val a)) (HSub.hSub (Fin.val d) (Fin.val c))))
+      (MeasureTheory.integral (TubeArea.wilsonMeasure haarG)
+        (fun («ω» : TubeArea.WilsonConfig G (TubeArea.GridEdge m n) F X) =>
+        HMul.hMul (TubeArea.neutralActionWeight chi wq coef «ω»)
+          (Real.exp
+            (Finset.sum Finset.univ
+              (fun (p : Prod (Fin m) (Fin n)) =>
+              TubeArea.wilsonCoupling β weights chi TubeArea.gridWord p «ω»))))))))))))) :=
+  _
+
+axiom propext {a b : Sort 0} : Iff a b → Eq a b
+
+axiom Quot.sound.{u} {α : Sort u} {r : α → α → Sort 0} {a b : α} : r a b → Eq (Quot.mk r a) (Quot.mk r b)
+
+axiom Classical.choice.{u} {α : Sort u} : Nonempty α → α
+

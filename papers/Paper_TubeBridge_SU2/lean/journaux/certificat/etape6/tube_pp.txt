@@ -1,0 +1,127 @@
+theorem TubeAreaVerif.enonce_canonique_G1 :
+  forall {m n : Nat},
+  LE.le (OfNat.ofNat 2) m → LE.le (OfNat.ofNat 2) n → (forall (σ :
+      Sum (Prod (Fin m) (Fin n)) (Prod (Fin m) (Fin n)) → Units Int),
+  Eq
+    (Finset.prod Finset.univ
+      (fun (p : Prod (Fin m) (Fin n)) =>
+      Finset.prod
+        (Insert.insert (Sum.inl (Prod.mk (Prod.fst p) (Prod.snd p)))
+          (Insert.insert (Sum.inl (Prod.mk (Prod.fst p) (DFunLike.coe (finRotate n) (Prod.snd p))))
+            (Insert.insert (Sum.inr (Prod.mk (Prod.fst p) (Prod.snd p)))
+              (Singleton.singleton (Sum.inr (Prod.mk (DFunLike.coe (finRotate m) (Prod.fst p)) (Prod.snd p)))))))
+        (fun (e : Sum (Prod (Fin m) (Fin n)) (Prod (Fin m) (Fin n))) => σ e))) (OfNat.ofNat 1)) :=
+  _
+
+theorem TubeAreaVerif.enonce_canonique_G2 :
+  forall {m n : Nat},
+  LE.le (OfNat.ofNat 2) m → LE.le (OfNat.ofNat 2) n → (forall (t : Prod (Fin m) (Fin n) → Units Int),
+  Eq (Finset.prod Finset.univ (fun (p : Prod (Fin m) (Fin n)) => t p)) (OfNat.ofNat 1) → Exists
+    (fun (σ : Sum (Prod (Fin m) (Fin n)) (Prod (Fin m) (Fin n)) → Units Int) =>
+    forall (p : Prod (Fin m) (Fin n)),
+    Eq
+      (Finset.prod
+        (Insert.insert (Sum.inl (Prod.mk (Prod.fst p) (Prod.snd p)))
+          (Insert.insert (Sum.inl (Prod.mk (Prod.fst p) (DFunLike.coe (finRotate n) (Prod.snd p))))
+            (Insert.insert (Sum.inr (Prod.mk (Prod.fst p) (Prod.snd p)))
+              (Singleton.singleton (Sum.inr (Prod.mk (DFunLike.coe (finRotate m) (Prod.fst p)) (Prod.snd p)))))))
+        (fun (e : Sum (Prod (Fin m) (Fin n)) (Prod (Fin m) (Fin n))) => σ e)) (t p))) :=
+  _
+
+theorem TubeAreaVerif.enonce_canonique_G3 :
+  forall {m n : Nat},
+  LE.le (OfNat.ofNat 2) m → LE.le (OfNat.ofNat 2) n → (forall (σ :
+      Sum (Prod (Fin m) (Fin n)) (Prod (Fin m) (Fin n)) → Units Int) (p : Prod (Fin m) (Fin n)),
+  Eq
+    (Finset.prod
+      (Insert.insert (Sum.inl (Prod.mk (Prod.fst p) (Prod.snd p)))
+        (Insert.insert (Sum.inl (Prod.mk (Prod.fst p) (DFunLike.coe (finRotate n) (Prod.snd p))))
+          (Insert.insert (Sum.inr (Prod.mk (Prod.fst p) (Prod.snd p)))
+            (Singleton.singleton (Sum.inr (Prod.mk (DFunLike.coe (finRotate m) (Prod.fst p)) (Prod.snd p)))))))
+      (fun (e : Sum (Prod (Fin m) (Fin n)) (Prod (Fin m) (Fin n))) => σ e))
+    (HMul.hMul
+      (HMul.hMul
+        (HMul.hMul (σ (Sum.inl (Prod.mk (Prod.fst p) (Prod.snd p))))
+          (σ (Sum.inl (Prod.mk (Prod.fst p) (DFunLike.coe (finRotate n) (Prod.snd p))))))
+        (σ (Sum.inr (Prod.mk (Prod.fst p) (Prod.snd p)))))
+      (σ (Sum.inr (Prod.mk (DFunLike.coe (finRotate m) (Prod.fst p)) (Prod.snd p)))))) :=
+  _
+
+theorem TubeArea.torus_plaq_parity :
+  forall {m n : Nat},
+  LE.le (OfNat.ofNat 2) m → LE.le (OfNat.ofNat 2) n → (forall (σ : TubeArea.TorusEdge m n → Units Int),
+  Eq (Finset.prod Finset.univ (fun (p : Prod (Fin m) (Fin n)) => TubeArea.plaq TubeArea.torusBd σ p))
+    (OfNat.ofNat 1)) :=
+  _
+
+theorem TubeArea.torus_plaq_image :
+  forall {m n : Nat},
+  LE.le (OfNat.ofNat 2) m → LE.le (OfNat.ofNat 2) n → (forall (t : Prod (Fin m) (Fin n) → Units Int),
+  Eq (Finset.prod Finset.univ (fun (p : Prod (Fin m) (Fin n)) => t p)) (OfNat.ofNat 1) → Exists
+    (fun (σ : TubeArea.TorusEdge m n → Units Int) =>
+    forall (p : Prod (Fin m) (Fin n)),
+    Eq (TubeArea.plaq TubeArea.torusBd σ p) (t p))) :=
+  _
+
+theorem TubeArea.torus_plaq_explicit :
+  forall {m n : Nat},
+  LE.le (OfNat.ofNat 2) m → LE.le (OfNat.ofNat 2) n → (forall (σ : TubeArea.TorusEdge m n → Units Int)
+    (p : Prod (Fin m) (Fin n)),
+  Eq (TubeArea.plaq TubeArea.torusBd σ p)
+    (HMul.hMul
+      (HMul.hMul
+        (HMul.hMul (σ (Sum.inl (Prod.mk (Prod.fst p) (Prod.snd p))))
+          (σ (Sum.inl (Prod.mk (Prod.fst p) (DFunLike.coe (finRotate n) (Prod.snd p))))))
+        (σ (Sum.inr (Prod.mk (Prod.fst p) (Prod.snd p)))))
+      (σ (Sum.inr (Prod.mk (DFunLike.coe (finRotate m) (Prod.fst p)) (Prod.snd p)))))) :=
+  _
+
+theorem TubeArea.wilson_action_area_law_rectangle.{u_1 u_2 u_3 u_4} :
+  forall {G : Type u_1} {F : Type u_2} {X : Type u_3} {Q : Type u_4}
+    [inst._@.TubeTorusGeomC.2486159384._hygCtx._hyg.6 : Group G]
+    [inst._@.TubeTorusGeomC.2486159384._hygCtx._hyg.9 : MeasurableSpace G]
+    [inst._@.TubeTorusGeomC.2486159384._hygCtx._hyg.12 : MeasurableMul₂ G]
+    [inst._@.TubeTorusGeomC.2486159384._hygCtx._hyg.15 : MeasurableInv G]
+    [inst._@.TubeTorusGeomC.2486159384._hygCtx._hyg.18 : Fintype F]
+    [inst._@.TubeTorusGeomC.2486159384._hygCtx._hyg.21 : Fintype X]
+    [inst._@.TubeTorusGeomC.2486159384._hygCtx._hyg.24 : Fintype Q] (m n : Nat)
+    (a b : Fin (HAdd.hAdd m (OfNat.ofNat 1))) (c d : Fin (HAdd.hAdd n (OfNat.ofNat 1))),
+  LT.lt (Fin.val a) (Fin.val b) → LT.lt (Fin.val c) (Fin.val d) → (forall (haarG : MeasureTheory.Measure G)
+    [inst._@.TubeTorusGeomC.2486159384._hygCtx._hyg.77 : MeasureTheory.IsProbabilityMeasure haarG],
+  (forall (g : G), MeasureTheory.MeasurePreserving (fun (h : G) => HMul.hMul g h) haarG haarG) → (forall (z : G),
+  Eq (HMul.hMul z z) (OfNat.ofNat 1) → (forall (g : G), Eq (HMul.hMul z g) (HMul.hMul g z)) → (forall (chi :
+      G → Real),
+  Measurable chi → (forall (g : G), LE.le (abs (chi g)) (OfNat.ofNat 1)) → (forall (g : G),
+    Eq (chi (HMul.hMul z g)) (Neg.neg (chi g))) →
+  (forall (weights : Prod (Fin m) (Fin n) → F → Real),
+  (forall (p : Prod (Fin m) (Fin n)) (y : F), LE.le (abs (weights p y)) (OfNat.ofNat 1)) → (forall (β : Real),
+  LE.le (OfNat.ofNat 0) β → (forall (wq : Q → TubeArea.GeneralWord (TubeArea.GridEdge m n) F X),
+  (forall (q : Q), TubeArea.NeutralWord (wq q)) → (forall (coef : Q → Real) (y0 : F),
+  LE.le
+    (abs
+      (MeasureTheory.integral (TubeArea.wilsonMeasure haarG)
+        (fun («ω» : TubeArea.WilsonConfig G (TubeArea.GridEdge m n) F X) =>
+        HMul.hMul (TubeArea.wilsonLoop chi (TubeArea.rectWord a b c d) y0 «ω»)
+          (HMul.hMul (TubeArea.neutralActionWeight chi wq coef «ω»)
+            (Real.exp
+              (Finset.sum Finset.univ
+                (fun (p : Prod (Fin m) (Fin n)) =>
+                TubeArea.wilsonCoupling β weights chi TubeArea.gridWord p «ω»)))))))
+    (HMul.hMul
+      (HPow.hPow (Real.tanh (HMul.hMul β (Nat.cast (Fintype.card F))))
+        (HMul.hMul (HSub.hSub (Fin.val b) (Fin.val a)) (HSub.hSub (Fin.val d) (Fin.val c))))
+      (MeasureTheory.integral (TubeArea.wilsonMeasure haarG)
+        (fun («ω» : TubeArea.WilsonConfig G (TubeArea.GridEdge m n) F X) =>
+        HMul.hMul (TubeArea.neutralActionWeight chi wq coef «ω»)
+          (Real.exp
+            (Finset.sum Finset.univ
+              (fun (p : Prod (Fin m) (Fin n)) =>
+              TubeArea.wilsonCoupling β weights chi TubeArea.gridWord p «ω»))))))))))))) :=
+  _
+
+axiom propext {a b : Sort 0} : Iff a b → Eq a b
+
+axiom Quot.sound.{u} {α : Sort u} {r : α → α → Sort 0} {a b : α} : r a b → Eq (Quot.mk r a) (Quot.mk r b)
+
+axiom Classical.choice.{u} {α : Sort u} : Nonempty α → α
+

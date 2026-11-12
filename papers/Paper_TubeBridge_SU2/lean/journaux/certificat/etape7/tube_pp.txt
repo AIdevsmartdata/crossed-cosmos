@@ -1,0 +1,244 @@
+theorem TubeArea.wilson_twist_ratio_bound.{u_1 u_2 u_3 u_4 u_5} :
+  forall {G : Type u_1} {E : Type u_2} {F : Type u_3} {X : Type u_4} {P : Type u_5}
+    [inst._@.TubeToreWilsonC.3871050881._hygCtx._hyg.7 : Group G]
+    [inst._@.TubeToreWilsonC.3871050881._hygCtx._hyg.10 : MeasurableSpace G]
+    [inst._@.TubeToreWilsonC.3871050881._hygCtx._hyg.13 : MeasurableMul₂ G]
+    [inst._@.TubeToreWilsonC.3871050881._hygCtx._hyg.16 : MeasurableInv G]
+    [inst._@.TubeToreWilsonC.3871050881._hygCtx._hyg.19 : Fintype E]
+    [inst._@.TubeToreWilsonC.3871050881._hygCtx._hyg.22 : DecidableEq E]
+    [inst._@.TubeToreWilsonC.3871050881._hygCtx._hyg.25 : Fintype F]
+    [inst._@.TubeToreWilsonC.3871050881._hygCtx._hyg.28 : Fintype X]
+    [inst._@.TubeToreWilsonC.3871050881._hygCtx._hyg.31 : Fintype P]
+    [inst._@.TubeToreWilsonC.3871050881._hygCtx._hyg.34 : DecidableEq P] (haarG : MeasureTheory.Measure G)
+    [inst._@.TubeToreWilsonC.3871050881._hygCtx._hyg.39 : MeasureTheory.IsProbabilityMeasure haarG],
+  (forall (g : G), MeasureTheory.MeasurePreserving (fun (h : G) => HMul.hMul g h) haarG haarG) → (forall (z : G),
+  Eq (HMul.hMul z z) (OfNat.ofNat 1) → (forall (g : G), Eq (HMul.hMul z g) (HMul.hMul g z)) → (forall (chi :
+      G → Real),
+  Measurable chi → (forall (g : G), LE.le (abs (chi g)) (OfNat.ofNat 1)) → (forall (g : G),
+    Eq (chi (HMul.hMul z g)) (Neg.neg (chi g))) →
+  (forall (w : P → List (Prod E Bool)),
+  (forall (p : P), List.Nodup (List.map Prod.fst (w p))) → (forall (c : P → F → Real),
+  (forall (p : P) (y : F), LE.le (abs (c p y)) (OfNat.ofNat 1)) → (forall (β : Real),
+  LE.le (OfNat.ofNat 0) β → (forall (R : TubeArea.WilsonConfig G E F X → Real),
+  Measurable R → (forall («ω» : TubeArea.WilsonConfig G E F X), LE.le (OfNat.ofNat 0) (R «ω»)) → (forall (σ :
+        E → Units Int) («ω» : TubeArea.WilsonConfig G E F X),
+    Eq (R (TubeArea.columnFlip z σ «ω»)) (R «ω»)) →
+  MeasureTheory.Integrable
+      (fun («ω» : TubeArea.WilsonConfig G E F X) =>
+      HMul.hMul (R «ω»)
+        (Real.exp (Finset.sum Finset.univ (fun (p : P) => TubeArea.wilsonCoupling β c chi w p «ω»))))
+      (TubeArea.wilsonMeasure haarG) →
+  (forall (σ : E → Units Int),
+    Eq (Finset.prod Finset.univ (fun (p : P) => TubeArea.plaq (fun (p : P) => TubeArea.wordBoundary (w p)) σ p))
+      (OfNat.ofNat 1)) →
+  (forall (t : P → Units Int),
+    Eq (Finset.prod Finset.univ (fun (p : P) => t p)) (OfNat.ofNat 1) → Exists
+      (fun (σ : E → Units Int) =>
+      forall (p : P),
+      Eq (TubeArea.plaq (fun (p : P) => TubeArea.wordBoundary (w p)) σ p) (t p))) →
+  (forall (p₀ : P),
+  LE.le
+    (abs
+      (HSub.hSub
+        (MeasureTheory.integral (TubeArea.wilsonMeasure haarG)
+          (fun («ω» : TubeArea.WilsonConfig G E F X) =>
+          HMul.hMul (R «ω»)
+            (Real.exp (Finset.sum Finset.univ (fun (p : P) => TubeArea.wilsonCoupling β c chi w p «ω»)))))
+        (MeasureTheory.integral (TubeArea.wilsonMeasure haarG)
+          (fun («ω» : TubeArea.WilsonConfig G E F X) =>
+          HMul.hMul (R «ω»)
+            (Real.exp
+              (Finset.sum Finset.univ
+                (fun (p : P) =>
+                TubeArea.wilsonCoupling β (fun (p : P) (y : F) => ite (Eq p p₀) (Neg.neg (c p y)) (c p y)) chi w p
+                  «ω»)))))))
+    (HMul.hMul (HPow.hPow (Real.tanh (HMul.hMul β (Nat.cast (Fintype.card F)))) (Fintype.card P))
+      (HAdd.hAdd
+        (MeasureTheory.integral (TubeArea.wilsonMeasure haarG)
+          (fun («ω» : TubeArea.WilsonConfig G E F X) =>
+          HMul.hMul (R «ω»)
+            (Real.exp (Finset.sum Finset.univ (fun (p : P) => TubeArea.wilsonCoupling β c chi w p «ω»)))))
+        (MeasureTheory.integral (TubeArea.wilsonMeasure haarG)
+          (fun («ω» : TubeArea.WilsonConfig G E F X) =>
+          HMul.hMul (R «ω»)
+            (Real.exp
+              (Finset.sum Finset.univ
+                (fun (p : P) =>
+                TubeArea.wilsonCoupling β (fun (p : P) (y : F) => ite (Eq p p₀) (Neg.neg (c p y)) (c p y)) chi w p
+                  «ω»)))))))))))))) :=
+  _
+
+theorem TubeArea.wilson_electric_flux_torus.{u_1 u_2 u_3 u_4} :
+  forall {G : Type u_1} {F : Type u_2} {X : Type u_3} {Q : Type u_4}
+    [inst._@.TubeToreWilsonC.3130354643._hygCtx._hyg.6 : Group G]
+    [inst._@.TubeToreWilsonC.3130354643._hygCtx._hyg.9 : MeasurableSpace G]
+    [inst._@.TubeToreWilsonC.3130354643._hygCtx._hyg.12 : MeasurableMul₂ G]
+    [inst._@.TubeToreWilsonC.3130354643._hygCtx._hyg.15 : MeasurableInv G]
+    [inst._@.TubeToreWilsonC.3130354643._hygCtx._hyg.18 : Fintype F]
+    [inst._@.TubeToreWilsonC.3130354643._hygCtx._hyg.21 : Fintype X]
+    [inst._@.TubeToreWilsonC.3130354643._hygCtx._hyg.24 : Fintype Q] (m n : Nat),
+  LE.le (OfNat.ofNat 2) m → LE.le (OfNat.ofNat 2) n → (forall (haarG : MeasureTheory.Measure G)
+    [inst._@.TubeToreWilsonC.3130354643._hygCtx._hyg.45 : MeasureTheory.IsProbabilityMeasure haarG],
+  (forall (g : G), MeasureTheory.MeasurePreserving (fun (h : G) => HMul.hMul g h) haarG haarG) → (forall (z : G),
+  Eq (HMul.hMul z z) (OfNat.ofNat 1) → (forall (g : G), Eq (HMul.hMul z g) (HMul.hMul g z)) → (forall (chi :
+      G → Real),
+  Measurable chi → (forall (g : G), LE.le (abs (chi g)) (OfNat.ofNat 1)) → (forall (g : G),
+    Eq (chi (HMul.hMul z g)) (Neg.neg (chi g))) →
+  (forall (weights : Prod (Fin m) (Fin n) → F → Real),
+  (forall (p : Prod (Fin m) (Fin n)) (y : F), LE.le (abs (weights p y)) (OfNat.ofNat 1)) → (forall (β : Real),
+  LE.le (OfNat.ofNat 0) β → (forall (wq : Q → TubeArea.GeneralWord (TubeArea.TorusEdge m n) F X),
+  (forall (q : Q), TubeArea.NeutralWord (wq q)) → (forall (coef : Q → Real) (p₀ : Prod (Fin m) (Fin n)),
+  LE.le
+    (abs
+      (HSub.hSub
+        (MeasureTheory.integral (TubeArea.wilsonMeasure haarG)
+          (fun («ω» : TubeArea.WilsonConfig G (TubeArea.TorusEdge m n) F X) =>
+          HMul.hMul (TubeArea.neutralActionWeight chi wq coef «ω»)
+            (Real.exp
+              (Finset.sum Finset.univ
+                (fun (p : Prod (Fin m) (Fin n)) =>
+                TubeArea.wilsonCoupling β weights chi TubeArea.torusWord p «ω»)))))
+        (MeasureTheory.integral (TubeArea.wilsonMeasure haarG)
+          (fun («ω» : TubeArea.WilsonConfig G (TubeArea.TorusEdge m n) F X) =>
+          HMul.hMul (TubeArea.neutralActionWeight chi wq coef «ω»)
+            (Real.exp
+              (Finset.sum Finset.univ
+                (fun (p : Prod (Fin m) (Fin n)) =>
+                TubeArea.wilsonCoupling β
+                  (fun (p : Prod (Fin m) (Fin n)) (y : F) => ite (Eq p p₀) (Neg.neg (weights p y)) (weights p y)) chi
+                  TubeArea.torusWord p «ω»)))))))
+    (HMul.hMul (HPow.hPow (Real.tanh (HMul.hMul β (Nat.cast (Fintype.card F)))) (HMul.hMul m n))
+      (HAdd.hAdd
+        (MeasureTheory.integral (TubeArea.wilsonMeasure haarG)
+          (fun («ω» : TubeArea.WilsonConfig G (TubeArea.TorusEdge m n) F X) =>
+          HMul.hMul (TubeArea.neutralActionWeight chi wq coef «ω»)
+            (Real.exp
+              (Finset.sum Finset.univ
+                (fun (p : Prod (Fin m) (Fin n)) =>
+                TubeArea.wilsonCoupling β weights chi TubeArea.torusWord p «ω»)))))
+        (MeasureTheory.integral (TubeArea.wilsonMeasure haarG)
+          (fun («ω» : TubeArea.WilsonConfig G (TubeArea.TorusEdge m n) F X) =>
+          HMul.hMul (TubeArea.neutralActionWeight chi wq coef «ω»)
+            (Real.exp
+              (Finset.sum Finset.univ
+                (fun (p : Prod (Fin m) (Fin n)) =>
+                TubeArea.wilsonCoupling β
+                  (fun (p : Prod (Fin m) (Fin n)) (y : F) => ite (Eq p p₀) (Neg.neg (weights p y)) (weights p y)) chi
+                  TubeArea.torusWord p «ω»)))))))))))))) :=
+  _
+
+theorem TubeArea.twist_ratio_bound.{u_1 u_2 u_3} :
+  forall {«Ω» : Type u_1} {E : Type u_2} {P : Type u_3}
+    [inst._@.TubeToreWilsonC.1258119933._hygCtx._hyg.5 : MeasurableSpace «Ω»]
+    [inst._@.TubeToreWilsonC.1258119933._hygCtx._hyg.8 : Fintype E]
+    [inst._@.TubeToreWilsonC.1258119933._hygCtx._hyg.11 : DecidableEq E]
+    [inst._@.TubeToreWilsonC.1258119933._hygCtx._hyg.14 : Fintype P]
+    [inst._@.TubeToreWilsonC.1258119933._hygCtx._hyg.17 : DecidableEq P] (μ : MeasureTheory.Measure «Ω»)
+    [inst._@.TubeToreWilsonC.1258119933._hygCtx._hyg.22 : MeasureTheory.IsProbabilityMeasure μ]
+    (τ : (E → Units Int) → «Ω» → «Ω»),
+  (forall (σ : E → Units Int), MeasureTheory.MeasurePreserving (τ σ) μ μ) → (forall (bd : P → Finset E),
+  (forall (σ : E → Units Int),
+    Eq (Finset.prod Finset.univ (fun (p : P) => TubeArea.plaq bd σ p)) (OfNat.ofNat 1)) →
+  (forall (t : P → Units Int),
+    Eq (Finset.prod Finset.univ (fun (a : P) => t a)) (OfNat.ofNat 1) → Exists
+      (fun (σ : E → Units Int) => forall (p : P), Eq (TubeArea.plaq bd σ p) (t p))) →
+  (forall (K : P → «Ω» → Real),
+  (forall (p : P), Measurable (K p)) → (forall (κ : Real),
+  (forall (p : P) («ω» : «Ω»), LE.le (abs (K p «ω»)) κ) → (forall (σ : E → Units Int) (p : P)
+      («ω» : «Ω»),
+    Eq (K p (τ σ «ω»)) (HMul.hMul (TubeArea.sgn (TubeArea.plaq bd σ p)) (K p «ω»))) →
+  (forall (R : «Ω» → Real),
+  Measurable R → (forall («ω» : «Ω»), LE.le (OfNat.ofNat 0) (R «ω»)) → (forall (σ : E → Units Int)
+      («ω» : «Ω»),
+    Eq (R (τ σ «ω»)) (R «ω»)) →
+  MeasureTheory.Integrable
+      (fun («ω» : «Ω») => HMul.hMul (R «ω») (Real.exp (Finset.sum Finset.univ (fun (p : P) => K p «ω»))))
+      μ →
+  (forall (p₀ : P),
+  LE.le
+    (abs
+      (HSub.hSub
+        (MeasureTheory.integral μ
+          (fun («ω» : «Ω») =>
+          HMul.hMul (R «ω») (Real.exp (Finset.sum Finset.univ (fun (p : P) => K p «ω»)))))
+        (MeasureTheory.integral μ
+          (fun («ω» : «Ω») =>
+          HMul.hMul (R «ω»)
+            (Real.exp (Finset.sum Finset.univ (fun (p : P) => ite (Eq p p₀) (Neg.neg (K p «ω»)) (K p «ω»))))))))
+    (HMul.hMul (HPow.hPow (Real.tanh κ) (Fintype.card P))
+      (HAdd.hAdd
+        (MeasureTheory.integral μ
+          (fun («ω» : «Ω») =>
+          HMul.hMul (R «ω») (Real.exp (Finset.sum Finset.univ (fun (p : P) => K p «ω»)))))
+        (MeasureTheory.integral μ
+          (fun («ω» : «Ω») =>
+          HMul.hMul (R «ω»)
+            (Real.exp
+              (Finset.sum Finset.univ (fun (p : P) => ite (Eq p p₀) (Neg.neg (K p «ω»)) (K p «ω»))))))))))))) :=
+  _
+
+theorem TubeArea.torus_plaq_parity :
+  forall {m n : Nat},
+  LE.le (OfNat.ofNat 2) m → LE.le (OfNat.ofNat 2) n → (forall (σ : TubeArea.TorusEdge m n → Units Int),
+  Eq (Finset.prod Finset.univ (fun (p : Prod (Fin m) (Fin n)) => TubeArea.plaq TubeArea.torusBd σ p))
+    (OfNat.ofNat 1)) :=
+  _
+
+theorem TubeArea.torus_plaq_image :
+  forall {m n : Nat},
+  LE.le (OfNat.ofNat 2) m → LE.le (OfNat.ofNat 2) n → (forall (t : Prod (Fin m) (Fin n) → Units Int),
+  Eq (Finset.prod Finset.univ (fun (p : Prod (Fin m) (Fin n)) => t p)) (OfNat.ofNat 1) → Exists
+    (fun (σ : TubeArea.TorusEdge m n → Units Int) =>
+    forall (p : Prod (Fin m) (Fin n)),
+    Eq (TubeArea.plaq TubeArea.torusBd σ p) (t p))) :=
+  _
+
+theorem TubeArea.wilson_action_area_law_rectangle.{u_1 u_2 u_3 u_4} :
+  forall {G : Type u_1} {F : Type u_2} {X : Type u_3} {Q : Type u_4}
+    [inst._@.TubeToreWilsonC.2486159384._hygCtx._hyg.6 : Group G]
+    [inst._@.TubeToreWilsonC.2486159384._hygCtx._hyg.9 : MeasurableSpace G]
+    [inst._@.TubeToreWilsonC.2486159384._hygCtx._hyg.12 : MeasurableMul₂ G]
+    [inst._@.TubeToreWilsonC.2486159384._hygCtx._hyg.15 : MeasurableInv G]
+    [inst._@.TubeToreWilsonC.2486159384._hygCtx._hyg.18 : Fintype F]
+    [inst._@.TubeToreWilsonC.2486159384._hygCtx._hyg.21 : Fintype X]
+    [inst._@.TubeToreWilsonC.2486159384._hygCtx._hyg.24 : Fintype Q] (m n : Nat)
+    (a b : Fin (HAdd.hAdd m (OfNat.ofNat 1))) (c d : Fin (HAdd.hAdd n (OfNat.ofNat 1))),
+  LT.lt (Fin.val a) (Fin.val b) → LT.lt (Fin.val c) (Fin.val d) → (forall (haarG : MeasureTheory.Measure G)
+    [inst._@.TubeToreWilsonC.2486159384._hygCtx._hyg.77 : MeasureTheory.IsProbabilityMeasure haarG],
+  (forall (g : G), MeasureTheory.MeasurePreserving (fun (h : G) => HMul.hMul g h) haarG haarG) → (forall (z : G),
+  Eq (HMul.hMul z z) (OfNat.ofNat 1) → (forall (g : G), Eq (HMul.hMul z g) (HMul.hMul g z)) → (forall (chi :
+      G → Real),
+  Measurable chi → (forall (g : G), LE.le (abs (chi g)) (OfNat.ofNat 1)) → (forall (g : G),
+    Eq (chi (HMul.hMul z g)) (Neg.neg (chi g))) →
+  (forall (weights : Prod (Fin m) (Fin n) → F → Real),
+  (forall (p : Prod (Fin m) (Fin n)) (y : F), LE.le (abs (weights p y)) (OfNat.ofNat 1)) → (forall (β : Real),
+  LE.le (OfNat.ofNat 0) β → (forall (wq : Q → TubeArea.GeneralWord (TubeArea.GridEdge m n) F X),
+  (forall (q : Q), TubeArea.NeutralWord (wq q)) → (forall (coef : Q → Real) (y0 : F),
+  LE.le
+    (abs
+      (MeasureTheory.integral (TubeArea.wilsonMeasure haarG)
+        (fun («ω» : TubeArea.WilsonConfig G (TubeArea.GridEdge m n) F X) =>
+        HMul.hMul (TubeArea.wilsonLoop chi (TubeArea.rectWord a b c d) y0 «ω»)
+          (HMul.hMul (TubeArea.neutralActionWeight chi wq coef «ω»)
+            (Real.exp
+              (Finset.sum Finset.univ
+                (fun (p : Prod (Fin m) (Fin n)) =>
+                TubeArea.wilsonCoupling β weights chi TubeArea.gridWord p «ω»)))))))
+    (HMul.hMul
+      (HPow.hPow (Real.tanh (HMul.hMul β (Nat.cast (Fintype.card F))))
+        (HMul.hMul (HSub.hSub (Fin.val b) (Fin.val a)) (HSub.hSub (Fin.val d) (Fin.val c))))
+      (MeasureTheory.integral (TubeArea.wilsonMeasure haarG)
+        (fun («ω» : TubeArea.WilsonConfig G (TubeArea.GridEdge m n) F X) =>
+        HMul.hMul (TubeArea.neutralActionWeight chi wq coef «ω»)
+          (Real.exp
+            (Finset.sum Finset.univ
+              (fun (p : Prod (Fin m) (Fin n)) =>
+              TubeArea.wilsonCoupling β weights chi TubeArea.gridWord p «ω»))))))))))))) :=
+  _
+
+axiom propext {a b : Sort 0} : Iff a b → Eq a b
+
+axiom Quot.sound.{u} {α : Sort u} {r : α → α → Sort 0} {a b : α} : r a b → Eq (Quot.mk r a) (Quot.mk r b)
+
+axiom Classical.choice.{u} {α : Sort u} : Nonempty α → α
+

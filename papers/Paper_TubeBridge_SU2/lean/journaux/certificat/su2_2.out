@@ -1,0 +1,100 @@
+/work/lean_tube/su2_2.lean:338:2: error: unsolved goals
+case refine_1
+J : ℝ
+this : MeasurableSingletonClass ℤˣ :=
+  {
+    measurableSet_singleton := fun u =>
+      have hv := MeasurableSpace.le_map_comap;
+      have hs := hv (measurableSet_singleton ↑u);
+      Eq.mpr
+        (eq_of_heq
+          ((fun α inst s s' e'_3 =>
+              Eq.casesOn (motive := fun a x => s' = a → e'_3 ≍ x → MeasurableSet s ≍ MeasurableSet s') e'_3
+                (fun h =>
+                  Eq.ndrec (motive := fun s' => ∀ (e_3 : s = s'), e_3 ≍ Eq.refl s → MeasurableSet s ≍ MeasurableSet s')
+                    (fun e_3 h => HEq.refl (MeasurableSet s)) (Eq.symm h) e'_3)
+                (Eq.refl s') (HEq.refl e'_3))
+            ℤˣ Units.instMeasurableSpace {u} ((fun v => ↑v) ⁻¹' {↑u})
+            (Set.ext fun v =>
+              of_eq_true
+                (Eq.trans
+                  (congr (congrArg Iff Set.mem_singleton_iff._simp_1)
+                    (Eq.trans Set.mem_preimage._simp_1
+                      (Eq.trans Set.mem_singleton_iff._simp_1 sharp_one_edge._simp_1_1)))
+                  (iff_self (v = u))))))
+        hs }
+μ : Measure ℤˣ := 2⁻¹ • (Measure.dirac 1 + Measure.dirac (-1))
+havg : ∀ (f : ℤˣ → ℝ), ∫ (ω : ℤˣ), f ω ∂μ = (∑ u, f u) / 2
+⊢ 2⁻¹ + 2⁻¹ = 1
+/work/lean_tube/su2_2.lean:420:23: warning: This simp argument is unused:
+  cf_neg_sign_ne_one
+
+Hint: Omit it from the simp argument list.
+  simp [centralSign, c̵f̵_̵n̵e̵g̵_̵s̵i̵g̵n̵_̵n̵e̵_̵o̵n̵e̵,̵ ̵hz]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+/work/lean_tube/su2_2.lean:426:23: warning: This simp argument is unused:
+  cf_neg_sign_ne_one
+
+Hint: Omit it from the simp argument list.
+  simp [centralSign, c̵f̵_̵n̵e̵g̵_̵s̵i̵g̵n̵_̵n̵e̵_̵o̵n̵e̵,̵ ̵hcentral]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+/work/lean_tube/su2_2.lean:499:23: warning: This simp argument is unused:
+  cf_neg_sign_ne_one
+
+Hint: Omit it from the simp argument list.
+  simp [centralSign, c̵f̵_̵n̵e̵g̵_̵s̵i̵g̵n̵_̵n̵e̵_̵o̵n̵e̵,̵ ̵sgn, hodd]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+'TubeAreaVerif.enonce_canonique_A' depends on axioms: [propext, Classical.choice, Quot.sound]
+'TubeAreaVerif.enonce_canonique_B' depends on axioms: [propext, sorryAx, Classical.choice, Quot.sound]
+'TubeArea.wilson_column_flip_bound' depends on axioms: [propext, Classical.choice, Quot.sound]
+@TubeArea.wilson_column_flip_bound : ∀ {G : Type u_1} {E : Type u_2} {F : Type u_3} {X : Type u_4} {P : Type u_5}
+  [inst : Group G] [inst_1 : MeasurableSpace G] [MeasurableMul₂ G] [MeasurableInv G] [inst_4 : Fintype E]
+  [inst_5 : DecidableEq E] [inst_6 : Fintype F] [inst_7 : Fintype X] [inst_8 : Fintype P] [DecidableEq P]
+  (haarG : Measure G) [IsProbabilityMeasure haarG],
+  (∀ (g : G), MeasurePreserving (fun h => g * h) haarG haarG) →
+    ∀ (z : G),
+      z * z = 1 →
+        (∀ (g : G), z * g = g * z) →
+          ∀ (chi : G → ℝ),
+            Measurable chi →
+              (∀ (g : G), |chi g| ≤ 1) →
+                (∀ (g : G), chi (z * g) = -chi g) →
+                  ∀ (w : P → List (E × Bool)),
+                    (∀ (p : P), (List.map Prod.fst (w p)).Nodup) →
+                      ∀ (c : P → F → ℝ),
+                        (∀ (p : P) (y : F), |c p y| ≤ 1) →
+                          ∀ (β : ℝ),
+                            0 ≤ β →
+                              ∀ (R : TubeArea.WilsonConfig G E F X → ℝ),
+                                Measurable R →
+                                  (∀ (ω : TubeArea.WilsonConfig G E F X), 0 ≤ R ω) →
+                                    (∀ (σ : E → ℤˣ) (ω : TubeArea.WilsonConfig G E F X),
+                                        R (TubeArea.columnFlip z σ ω) = R ω) →
+                                      Integrable (fun ω => R ω * Real.exp (∑ p, TubeArea.wilsonCoupling β c chi w p ω))
+                                          (TubeArea.wilsonMeasure haarG) →
+                                        ∀ (wC : List (E × Bool)),
+                                          (List.map Prod.fst wC).Nodup →
+                                            ∀ (y0 : F) (A : Finset P),
+                                              (∀ (σ : E → ℤˣ),
+                                                  ∏ e ∈ TubeArea.wordBoundary wC, σ e =
+                                                    ∏ p ∈ A, TubeArea.plaq (fun p => TubeArea.wordBoundary (w p)) σ p) →
+                                                (Function.Surjective fun σ =>
+                                                    TubeArea.plaq (fun p => TubeArea.wordBoundary (w p)) σ) →
+                                                  |∫ (ω : TubeArea.WilsonConfig G E F X),
+                                                        TubeArea.wilsonLoop chi wC y0 ω *
+                                                          (R ω *
+                                                            Real.exp
+                                                              (∑ p,
+                                                                TubeArea.wilsonCoupling β c chi w p
+                                                                  ω)) ∂TubeArea.wilsonMeasure haarG| ≤
+                                                    Real.tanh (β * ↑(Fintype.card F)) ^ #A *
+                                                      ∫ (ω : TubeArea.WilsonConfig G E F X),
+                                                        R ω *
+                                                          Real.exp
+                                                            (∑ p,
+                                                              TubeArea.wilsonCoupling β c chi w p
+                                                                ω) ∂TubeArea.wilsonMeasure haarG
+RC=1

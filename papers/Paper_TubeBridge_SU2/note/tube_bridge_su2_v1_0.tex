@@ -1,0 +1,460 @@
+% An elementary twist-ratio bound for the SU(2) Wilson lattice, formalised in Lean 4 on the objects of OpenAI's four-dimensional development.
+% Version 1.0, 12 November 2026. Package prepared locally; not published, not deposited.
+% Compile: pdflatex, three passes.
+\documentclass[11pt,a4paper]{article}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern}
+\usepackage[english]{babel}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{booktabs,array,longtable}
+\usepackage{geometry}
+\geometry{margin=2.2cm}
+\setlength{\emergencystretch}{5em}\sloppy
+\usepackage[colorlinks=true,linkcolor=blue,citecolor=blue,urlcolor=blue]{hyperref}
+\usepackage{xurl}
+\hypersetup{pdftitle={An elementary twist-ratio bound for the SU(2) Wilson lattice, formalised in Lean 4 on the objects of OpenAI's four-dimensional development},pdfauthor={K\'evin R\'emondi\`ere}}
+
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{example}[theorem]{Example}
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+\numberwithin{equation}{section}
+
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Tr}{\operatorname{Tr}}
+\newcommand{\E}{\mathbb{E}}
+\newcommand{\lean}[1]{\texttt{\expandafter\leanbk\detokenize{#1}\relax}}
+\def\leanbk#1{\ifx#1\relax\else\ifx#1.#1\allowbreak\else\ifx#1_#1\allowbreak\else#1\fi\fi\expandafter\leanbk\fi}
+\newcommand{\st}[1]{\textsf{[#1]}}
+\newcommand{\CHECK}{\textsf{[CHECK]}}
+
+\title{An elementary twist-ratio bound for the $SU(2)$ Wilson lattice,\\ formalised in Lean~4 on the objects of OpenAI's\\ four-dimensional development}
+\author{K\'evin R\'emondi\`ere\thanks{Independent researcher, Oloron-Sainte-Marie, France. ORCID
+\href{https://orcid.org/0009-0008-2443-7166}{0009-0008-2443-7166}. The proofs, the Lean files and this note were
+prepared with the assistance of AI models (Claude Fable~5.2, Claude Opus~5.5 and Claude Sonnet~5.5, Anthropic; GPT-6.1 Sol and GPT-6 Astra, OpenAI; Qwen3.8, Qwen team; DeepSeek V4 Pro, DeepSeek); their roles are described in the
+statement on the use of AI at the end of the note.}}
+\date{12 November 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+This technical note records an elementary sign-averaging inequality for lattice gauge theories with a central involution, and twenty-three declarations of Lean~4 that formalise it. The centre-flip operation on which it rests, multiplying by $-1$ all links of a ``column'' of the lattice, is classical; the bounds obtained by averaging over independent column signs are recorded here without any claim of priority. The head theorem is stated on the lattice, the Wilson energy and the $SU(2)$ of the public Lean development of OpenAI (it is compiled inside that project): for every period $l\ge2$ and every $\beta\ge0$, if $Z_0$ is the Wilson partition function of the periodic four-dimensional lattice and $Z_1$ the one in which the sign of the plaquettes of the plane of axes $0,1$ at one base point (and all positions along axes $2,3$) is reversed, then $|Z_0-Z_1|\le\tanh(\beta l^2)^{l^2}(Z_0+Z_1)$. The same mechanism gives an abstract bound $|\langle W\rangle|\le\tanh(\kappa)^{|A|}$ (stated for unnormalised weighted integrals, hence for expectations when the partition function is positive), whose constant is attained in a one-edge example, and an elementary area law $\tanh(\beta|F|)^{\mathrm{area}}$ on (rectangular plate)$\times$(finite fibre $F$). The bounds hold at every coupling but degenerate when the transverse section grows at fixed $\beta>0$; they say nothing about the mass gap in dimension four, the weak-coupling regime or the neutral sector. The 23 declarations were checked on 11 November 2026 by Lean 4.32.0 and 4.32.2 and by the independent kernel nanoda. On 12 November 2026 an AI model that had written neither the statements, nor the proofs, nor this note rebuilt the cumulative Lean file from the git archive of this package, on the same rented machine and in the same compiled environment (Lean 4.32.0, OpenAI's project): return code 0, no error, standard axioms only, and nanoda re-checked the exported closure (40\,099 declarations, no error). Lean 4.32.2 was not redone, and the environment was not rebuilt from scratch (Section~\ref{sec:repro}). A transfer-matrix consequence for the odd and even centre-parity sectors of a tube, $\lambda_1/\lambda_0\le\tanh(\beta L^2)^l$, is proved on paper only and checked by AI models only. Written by AI models and read by other AI models; not refereed; no human has checked the proofs.
+\end{abstract}
+
+\section{Introduction and results}\label{sec:intro}
+\subsection{The statement}
+Let $G$ be a group with a central element $z$, $z^2=1$, and $\chi:G\to[-1,1]$ a function with $\chi(zg)=-\chi(g)$ (for $SU(2)$: $z=-1$ and $\chi$ the half trace). If all the links of a ``column'' of a lattice, namely the links of a given base edge at \emph{all} positions of a transverse fibre, are multiplied by $z$, then the Haar measure is preserved, every plaquette that contains the column twice, or not at all, keeps its holonomy, and a plaquette of the base plane that contains the column once has its holonomy multiplied by $z$, so that $\chi$ of its holonomy changes sign. Averaging over independent column signs then turns each base plaquette into a hyperbolic cosine or sine of its coupling, and the ratio is bounded by $\tanh$ of the coupling bound. This is the whole mechanism (Section~\ref{sec:proofs}). Expectation bounds are stated as inequalities between unnormalised integrals; they give the corresponding bound on $|\langle W\rangle|$ whenever the partition function is positive.
+
+\begin{theorem}[\lean{TubeBridge.openai_su2_twist_ratio}, \st{Lean}]\label{thm:bridge}
+Let $l\ge2$, $\beta\ge0$ and $a,b\in\Z/l\Z$. On the periodic lattice of period $l$ in the four directions, with the Haar measure of any Wilson family of $SU(2)$ of OpenAI's development, let
+$Z_0=\int e^{-\beta E_W(U)}dU$ and $Z_1=\int e^{-\beta E^{(a,b)}_{W}(U)}dU$, where $E_W$ is their Wilson energy and $E_W^{(a,b)}$ is the same energy in which the term of every plaquette of the plane of axes $0$ and $1$ with base point $(a,b)$ (at every position along axes $2$ and $3$) has the sign of its trace term reversed. Then
+\[
+|Z_0-Z_1|\le\tanh(\beta l^2)^{l^2}\,(Z_0+Z_1).
+\]
+\end{theorem}
+The statement is made, and the file compiled, on the objects \lean{YangMills.GaugeGroup}, \lean{YangMills.Site}, \lean{YangMills.Configuration}, \lean{YangMills.wilsonEnergy}, \lean{YangMills.WilsonFamily} and \lean{YangMills.su2} of that development, without modifying them; the energy with signs, \lean{TubeBridge.signedWilsonEnergy}, and the twist, \lean{TubeBridge.planeTwist}, are our two added statement-level definitions (the proof of the bridge adds further auxiliary definitions \texttt{bridge\_*} in the same namespace). The quantity $(Z_0-Z_1)/(Z_0+Z_1)$ is the ratio of the odd to the even centre-parity part of the partition function (Section~\ref{sec:tube}); the theorem is an upper bound on it that decays with the number of base plaquettes, in the spirit of the free energy of electric flux of 't~Hooft and of Tomboulis and Yaffe~\cite{TY85}; we make no claim on the precise relation to their normalisation.
+
+\subsection{Everything that is stated, with its status}
+\begin{itemize}
+\item \st{Lean}: the 23 declarations of Section~\ref{sec:statements}. In order: the abstract column-flip bound and its sharpness (\lean{column_flip_bound}, \lean{sharp_one_edge}); a Wilson-type version for an abstract group (\lean{wilson_column_flip_bound}); the rectangular grid with free boundary, Stokes and surjectivity, and the elementary area law $\tanh(\beta|F|)^{\mathrm{area}}$ (\lean{grid_plaq_surjective}, \lean{grid_stokes_rectangle}, \lean{tube_area_law_rectangle}); the same for the complete Wilson-type action with neutral terms (\lean{neutral_word_flip_invariant}, \lean{mixedWord_neutral}, \lean{wilson_action_area_law_rectangle}); the discrete torus: explicit plaquette sign, parity and image (\lean{torus_plaq_explicit}, \lean{torus_plaq_parity}, \lean{torus_plaq_image}); the torus versions of the bound, the twist-ratio bound and two small analytic lemmas (\lean{torus_flip_bound}, \lean{twist_ratio_bound}, \lean{le_of_forall_pow_le_const_mul_pow}, \lean{flux_gap_of_traces}); the Wilson-type twist ratio on (torus)$\times$(fibre) (\lean{wilson_twist_ratio_bound}, \lean{wilson_electric_flux_torus}); and the bridge (\lean{signedWilsonEnergy_one}, \lean{openai_wilson_twist_ratio}, \lean{openai_wilson_twist_ratio_family}, \lean{su2_neg_one_mem}, \lean{openai_su2_twist_ratio}).
+\item \st{proved} (paper, not formalised): the proofs of Section~\ref{sec:proofs}, which are the mathematical content of the Lean files (the Lean proofs themselves are organised differently and were not compared line by line with the paper proofs), and the flux-sector theorem of Section~\ref{sec:tube}, which uses two of the Lean results and whose remaining steps (operator construction, trace identities, spectral step) were written on paper and checked only by AI models.
+\item \st{hypothesis}: none is used in the Lean statements beyond those displayed. No numerical computation is reported.
+\end{itemize}
+
+\subsection{What the bound is not}
+The factor $\tanh(\beta l^2)^{l^2}$ tends to~$1$ when $l$ grows at fixed $\beta>0$, because the transverse section $l^2$ grows with the volume: the bound is exact in finite volume and vacuous in the limit. It does not prove a mass gap in dimension four, nor a gap uniform in the volume at weak coupling, nor anything about the neutral sector or the continuum limit (Section~\ref{sec:scope}).
+
+\paragraph{Roadmap.} Section~\ref{sec:setting}: conventions. Section~\ref{sec:statements}: the 23 statements. Section~\ref{sec:proofs}: proofs of the core and of the chain to the bridge. Section~\ref{sec:tube}: the flux-sector bound on a tube (paper only). Section~\ref{sec:scope}: what the bound says and does not say. Then anteriority, reproducibility and the statement on the use of AI.
+
+\section{Setting and conventions}\label{sec:setting}
+\paragraph{Signs.} $\{\pm1\}=\mathbb Z^\times$ is the group of units of $\Z$; $\operatorname{sgn}:\{\pm1\}\to\R$ is the inclusion. For finite sets $E$ (edges) and $P$ (plaquettes), a boundary map $\operatorname{bd}:P\to2^E$ and $\sigma:E\to\{\pm1\}$, the sign of $p$ is $s_p(\sigma)=\prod_{e\in\operatorname{bd}(p)}\sigma(e)$ (\lean{plaq}).
+
+\paragraph{Wilson-type data.} A group $G$ with measurable multiplication and inversion and a left-invariant probability measure $\mathrm{haar}_G$; a central involution $z$; a measurable function $\chi:G\to[-1,1]$ with $\chi(zg)=-\chi(g)$ (for $SU(2)$: $z=-1$, $\chi=\frac12\operatorname{Re}\Tr$); the oddness of $\chi$ is what makes the centre act on traces. If $z=1$ the oddness forces $\chi\equiv0$ and the statements are true and empty; the content assumes $z\ne1$ (the two-point example of \lean{sharp_one_edge}, $G=\{\pm1\}$, $\chi=\operatorname{sgn}$, shows that the hypotheses are not vacuous). A configuration assigns an element of $G$ to each \emph{long link} $(e,y)$, where $e$ is an edge of a \emph{base} and $y$ a site of a finite \emph{fibre} $F$, and to each \emph{other link} $x\in X$ (links of the fibre and links transverse to it); the measure is the product of $\mathrm{haar}_G$ over all links. A \emph{column} is the set of long links $(e,y)$, $y\in F$, with $e$ fixed. For $\sigma:E\to\{\pm1\}$ the \emph{column flip} left-multiplies by $z$ every long link $(e,y)$ with $\sigma(e)=-1$ (\lean{columnFlip}).
+
+\paragraph{Words.} A word is a list of (link, orientation) pairs; its holonomy is the ordered product, with inverses for the reversed orientation (\lean{generalHolonomy}). A word is \emph{neutral} if every \emph{column} $e$ occurs an even number of times in total among its long entries, counted over all fibre sites (formally: the product of the column signs $\sigma(e)$ at its long entries is $1$ for every $\sigma$, \lean{NeutralWord}). The fibre plaquettes and the \emph{mixed} plaquettes (long link $(e,y)$, link $x$, long link $(e,y')$ reversed, link $x'$ reversed) are neutral.
+
+\paragraph{Status labels.} \st{Lean}: a declaration accepted by the Lean kernel (and by the independent kernel nanoda), using the standard axioms only. \st{proved}: a paper proof, in this note. \st{computed}: none here. \st{hypothesis}: stated as such.
+
+\section{The twenty-three statements}\label{sec:statements}
+
+The following items are Lean declarations of the file \texttt{TubePont\_pont\_6.lean} (copy of \texttt{pont\_6.lean}); each has the status \st{Lean} (kernel-checked, Section~\ref{sec:repro}). The abstract statements are L01, L03, L13, L14, L15, L16, L17; the statements about explicit lattices are L04, L05, L06, L09, L10, L11, L12, L18; and the statements on the public OpenAI objects are L19--L23. The remaining auxiliary items are L02 (an explicit one-edge saturation example), L07 (an abstract word-invariance lemma), and L08 (a concrete neutral word construction).
+
+\paragraph{L01 \lean{TubeArea.column_flip_bound} \st{Lean}}
+Let $\Omega$ be a measurable space and $E,P$ finite types. Let $\mu$ be a probability measure on $\Omega$. For each $\sigma:E\to\mathbb Z^\times$, let $\tau_\sigma:\Omega\to\Omega$ be measure-preserving. Let $bd:P\to\operatorname{Finset}E$, and write $\operatorname{plaq} bd \sigma p=\prod_{e\in bd p}\sigma(e)$. Assume the map $\sigma\mapsto p\mapsto \operatorname{plaq} bd \sigma p$ is surjective. Let $K:P\to\Omega\to\mathbb R$ be measurable with $|K_p\omega|\le \kappa$, $K_p(\tau_\sigma\omega)=\operatorname{sgn}(\operatorname{plaq} bd \sigma p)K_p\omega$, let $R\ge 0$ be measurable, invariant under every $\tau_\sigma$, with $R\exp(\sum_p K_p)$ integrable, and let $W$ be measurable, $|W|\le 1$, such that $W(\tau_\sigma\omega)=\operatorname{sgn}(\prod_{p\in A}\operatorname{plaq} bd \sigma p)W\omega$. Then
+\[
+\Bigl|\int W\,R\,e^{\sum_p K_p}\,d\mu\Bigr|
+\le (\tanh\kappa)^{|A|}\int R\,e^{\sum_p K_p}\,d\mu .
+\]
+
+\paragraph{L02 \lean{TubeArea.sharp_one_edge} \st{Lean}}
+For every real $J$ there exists a probability measure $\mu$ on $\mathbb Z^\times$ such that, for every $u\in\mathbb Z^\times$, multiplication by $u$ preserves $\mu$, and
+\[
+\int \operatorname{sgn}\omega\, e^{J\operatorname{sgn}\omega}\,d\mu
+=\tanh J \int e^{J\operatorname{sgn}\omega}\,d\mu,\qquad
+\int e^{J\operatorname{sgn}\omega}\,d\mu>0.
+\]
+
+\paragraph{L03 \lean{TubeArea.wilson_column_flip_bound} \st{Lean}}
+Let $G$ be a group with measurable multiplication and inverse, and let $\operatorname{haar}_G$ be a left-invariant probability measure on $G$. Let $z\in G$ satisfy $z^2=1$ and be central. Let $\chi:G\to\mathbb R$ be measurable, $|\chi|\le 1$, and $\chi(z g)=-\chi(g)$. Let $E,F,X,P$ be finite. A \emph{WilsonConfig} $G E F X$ is a configuration of group elements on the long links $E\times F$ and the auxiliary links $X$; $\operatorname{wilsonMeasure}\operatorname{haar}_G$ is the product of $\operatorname{haar}_G$ over all link variables. The map $\operatorname{columnFlip} z \sigma$ changes a configuration by left-multiplying the long-link variables of columns with $\sigma(e)=-1$ by $z$. For $w:P\to\operatorname{List}(E\times\operatorname{Bool})$ with each first-coordinate list duplication-free, $c:P\to F\to\mathbb R$ with $|c p y|\le 1$, $\beta\ge 0$, the coupling $\operatorname{wilsonCoupling} \beta c \chi w p \omega$ is $\beta\sum_y c p y\,\chi(\text{holonomy of }w p\text{ at }y)$. Let $R$ be measurable, nonnegative, invariant under $\operatorname{columnFlip} z\sigma$ for all $\sigma$, with $R\exp(\sum_p\operatorname{wilsonCoupling}\beta c \chi w p)$ integrable. Let $w_C$ be a duplication-free word, $y_0\in F$, and $A\subseteq P$ finite. Assume the Stokes boundary condition: for all $\sigma$,
+\[
+\prod_{e\in\operatorname{wordBoundary}w_C}\sigma(e)
+=\prod_{p\in A}\operatorname{plaq}\bigl(p\mapsto \operatorname{wordBoundary}(w p)\bigr)\sigma p,
+\]
+and assume surjectivity of the corresponding plaquette-sign map. Write $K_p=\operatorname{wilsonCoupling}\beta\,c\,\chi\,w\,p$, $\Phi=R\,e^{\sum_pK_p}$ and $\mu_W=\operatorname{wilsonMeasure}$. Then
+\[
+\Bigl|\int \operatorname{wilsonLoop}\chi\,w_C\,y_0\;\Phi\,d\mu_W\Bigr|
+\le \tanh(\beta|F|)^{|A|}\int \Phi\,d\mu_W .
+\]
+
+\paragraph{L04 \lean{TubeArea.grid_plaq_surjective} \st{Lean}}
+For natural numbers $m,n$, $\operatorname{GridEdge} m n$ is the finite set of edges of the rectangular $m\times n$ grid and $\operatorname{gridBd}p$ is the four-edge boundary of the plaquette $p$. The map
+\[
+\sigma:\operatorname{GridEdge} m n\to \mathbb Z^\times
+\;\longmapsto\;
+p\mapsto \operatorname{plaq}\operatorname{gridBd}\sigma p
+\]
+is surjective.
+
+\paragraph{L05 \lean{TubeArea.grid_stokes_rectangle} \st{Lean}}
+Let $a,b:\operatorname{Fin}(m+1)$, $c,d:\operatorname{Fin}(n+1)$ with $a<b$ and $c<d$. The set $\operatorname{rectPlaquettes}a b c d$ is the set of plaquettes in the rectangle $[a,b)\times[c,d)$, and $\operatorname{rectBoundary}a b c d$ is its boundary-edge set. For every $\sigma:\operatorname{GridEdge} m n\to \mathbb Z^\times$,
+\[
+\prod_{e\in\operatorname{rectBoundary}a b c d}\sigma(e)
+=\prod_{p\in\operatorname{rectPlaquettes}a b c d}\operatorname{plaq}\operatorname{gridBd}\sigma p .
+\]
+
+\paragraph{L06 \lean{TubeArea.tube_area_law_rectangle} \st{Lean}}
+With $G,\operatorname{haar}_G,z,\chi$ as in L03, let $m,n\in\mathbb N$, $a,b:\operatorname{Fin}(m+1)$, $c,d:\operatorname{Fin}(n+1)$ with $a<b$, $c<d$, and $y_0\in F$. Let $\operatorname{weights}:(\operatorname{Fin}m\times\operatorname{Fin}n)\to F\to\mathbb R$ satisfy $|\operatorname{weights}\,p\,y|\le 1$, let $\beta\ge0$, and let $R$ be measurable, nonnegative, invariant under every column flip $\operatorname{columnFlip}\,z\,\sigma$ for $\sigma:\operatorname{GridEdge}\,m\,n\to\mathbb Z^\times$, such that $\Phi=R\,e^{\sum_p\operatorname{wilsonCoupling}\beta\operatorname{weights}\chi\operatorname{gridWord}p}$ is integrable. Then
+\[
+\Bigl|\int \operatorname{wilsonLoop}\chi\,(\operatorname{rectWord}a\,b\,c\,d)\,y_0\;\Phi\,d\mu_W\Bigr|
+\le \tanh(\beta|F|)^{(b-a)(d-c)}\int \Phi\,d\mu_W .
+\]
+
+\paragraph{L07 \lean{TubeArea.neutral_word_flip_invariant} \st{Lean}}
+A \emph{GeneralWord} $E F X$ is a finite oriented word whose letters are long links $(e,y)$ with $e\in E$, $y\in F$, or auxiliary links $x\in X$; its holonomy is the ordered product with inverses for negative orientations. A word $q$ is \emph{NeutralWord} if the product of the column signs at its long-link occurrences is identically $1$ for every sign assignment. If $G$ is a group, $z$ is a central involution, and $q$ is neutral, then for every $\sigma:E\to\mathbb Z^\times$ and every configuration $\omega$,
+\[
+\operatorname{generalHolonomy}q(\operatorname{columnFlip}z\sigma\,\omega)
+=\operatorname{generalHolonomy}q\,\omega.
+\]
+
+\paragraph{L08 \lean{TubeArea.mixedWord_neutral} \st{Lean}}
+For $e:E$, $y,y':F$, $x,x':X$, the \emph{mixedWord} $e y y' x x'$ is the word consisting of the long link $e$ at $y$, the auxiliary link $x$, the same long link at $y'$ in reverse, and the auxiliary link $x'$ in reverse. This mixed word is neutral.
+
+\paragraph{L09 \lean{TubeArea.wilson_action_area_law_rectangle} \st{Lean}}
+The weight $\operatorname{neutralActionWeight}\chi\,wq\,coef\,\omega$ is $\exp\bigl(\sum_q coef_q\,\chi(\operatorname{generalHolonomy}(wq_q)\,\omega)\bigr)$. Under the group data of L06 (no weight $R$ is assumed), let $Q$ be finite, $wq:Q\to\operatorname{GeneralWord}(\operatorname{GridEdge}\,m\,n)\,F\,X$ with every $wq_q$ neutral, and $coef:Q\to\mathbb R$. Put $\Psi=\operatorname{neutralActionWeight}\chi\,wq\,coef\cdot e^{\sum_p\operatorname{wilsonCoupling}\beta\operatorname{weights}\chi\operatorname{gridWord}p}$. Then
+\[
+\Bigl|\int \operatorname{wilsonLoop}\chi\,(\operatorname{rectWord}a\,b\,c\,d)\,y_0\;\Psi\,d\mu_W\Bigr|
+\le \tanh(\beta|F|)^{(b-a)(d-c)}\int \Psi\,d\mu_W .
+\]
+
+\paragraph{L10 \lean{TubeArea.torus_plaq_explicit} \st{Lean}}
+Let $m,n\ge2$. $\operatorname{TorusEdge} m n$ is the set of horizontal and vertical edges of the discrete torus $(\mathbb Z/m)\times(\mathbb Z/n)$, written as a sum type, and $\operatorname{torusBd}p$ is the four-edge boundary of the plaquette at $p$. For every $\sigma:\operatorname{TorusEdge} m n\to\mathbb Z^\times$ and every $p:\operatorname{Fin}m\times\operatorname{Fin}n$,
+\[
+\operatorname{plaq}\operatorname{torusBd}\sigma p
+=
+\sigma(\operatorname{inl}(p_1,p_2))\,
+\sigma(\operatorname{inl}(p_1,\operatorname{finRotate} n\,p_2))\,
+\sigma(\operatorname{inr}(p_1,p_2))\,
+\sigma(\operatorname{inr}(\operatorname{finRotate} m\,p_1,p_2)).
+\]
+
+\paragraph{L11 \lean{TubeArea.torus_plaq_parity} \st{Lean}}
+For $m,n\ge2$ and every $\sigma:\operatorname{TorusEdge} m n\to\mathbb Z^\times$,
+\[
+\prod_{p:\operatorname{Fin}m\times\operatorname{Fin}n}
+\operatorname{plaq}\operatorname{torusBd}\sigma p=1.
+\]
+
+\paragraph{L12 \lean{TubeArea.torus_plaq_image} \st{Lean}}
+For $m,n\ge2$, if $t:\operatorname{Fin}m\times\operatorname{Fin}n\to\mathbb Z^\times$ satisfies $\prod_p t p=1$, then there exists $\sigma:\operatorname{TorusEdge} m n\to\mathbb Z^\times$ such that, for every $p$, $\operatorname{plaq}\operatorname{torusBd}\sigma p=t p$.
+
+\paragraph{L13 \lean{TubeArea.torus_flip_bound} \st{Lean}}
+With the same abstract data as L01, but with surjectivity replaced by the parity and image conditions
+\[
+\prod_p\operatorname{plaq}bd\sigma p=1
+\qquad\text{for all }\sigma,
+\]
+and every $t:P\to\mathbb Z^\times$ with $\prod_p t p=1$ is realized by some $\sigma$, the following bound holds:
+\[
+\bigl(1-(\tanh\kappa)^{|P|}\bigr)
+\Bigl|\int W\,R\,e^{\sum_p K_p}\,d\mu\Bigr|
+\le
+\bigl((\tanh\kappa)^{|A|}+(\tanh\kappa)^{|P|-|A|}\bigr)
+\int R\,e^{\sum_p K_p}\,d\mu .
+\]
+
+\paragraph{L14 \lean{TubeArea.twist_ratio_bound} \st{Lean}}
+With the same closed-surface data and hypotheses as L13 except that there is no $W$, no $A$ and no $\operatorname{hWm},\operatorname{hW1},\operatorname{hW\tau}$, and with a distinguished plaquette $p_0:P$, let $Z_0=\int R\,e^{\sum_p K_p}\,d\mu$ and let $Z_1$ be the same integral with $K_{p_0}$ replaced by $-K_{p_0}$. Then
+\[
+|Z_0-Z_1|
+\le
+(\tanh\kappa)^{|P|}(Z_0+Z_1).
+\]
+
+\paragraph{L15 \lean{TubeArea.le_of_forall_pow_le_const_mul_pow} \st{Lean}}
+If $a,b,M$ are real numbers with $0\le a$, $0\le b$, $0<M$, and $a^n\le M b^n$ for every positive natural number $n$, then $a\le b$.
+
+\paragraph{L16 \lean{TubeArea.flux_gap_of_traces} \st{Lean}}
+Let $\ell\in\mathbb N$, $q,\lambda_0,\lambda_1,D\in\mathbb R$ with $q,\lambda_0,\lambda_1\ge0$ and $D>0$. Let $Ev,Od:\mathbb N\to\mathbb R$ satisfy, for every positive $n$,
+\[
+\lambda_1^n\le Od(n),\qquad Ev(n)\le D\lambda_0^n,\qquad
+Od(n)\le q^{n\ell}Ev(n).
+\]
+Then $\lambda_1\le q^{\ell}\lambda_0$.
+
+\paragraph{L17 \lean{TubeArea.wilson_twist_ratio_bound} \st{Lean}}
+Retain the group, coupling and remaining-weight data and hypotheses of L03 (including $\beta\ge0$, $|c|\le1$ and the flip-invariant integrable $R$), omit the loop word $w_C$, the site $y_0$, the set $A$ and the Stokes condition, and replace surjectivity by the parity and image conditions
+\[
+\prod_p\operatorname{plaq}\bigl(p\mapsto\operatorname{wordBoundary}(w p)\bigr)\sigma p=1
+\qquad\text{for all }\sigma,
+\]
+and every $t:P\to\mathbb Z^\times$ with $\prod_p t p=1$ is realized, let $p_0:P$. Then
+\[
+|Z_0-Z_1|
+\le
+(\tanh(\beta|F|))^{|P|}(Z_0+Z_1),
+\]
+where $Z_0=\int R\,e^{\sum_p\operatorname{wilsonCoupling}\beta c\chi w p}\,d\operatorname{wilsonMeasure}$ and $Z_1$ is the same integral with $c p_0$ replaced by $-c p_0$.
+
+\paragraph{L18 \lean{TubeArea.wilson_electric_flux_torus} \st{Lean}}
+Let $m,n\ge2$, and let $\operatorname{torusWord}\,p$ be the word around the plaquette with corner $p$ on the torus $(\mathbb Z/m)\times(\mathbb Z/n)$ (bottom, right, top reversed, left reversed, with cyclic successors \lean{finRotate}). With the group data $(G,\operatorname{haar}_G,z,\chi)$ of L06 and with $\operatorname{weights}:(\operatorname{Fin}m\times\operatorname{Fin}n)\to F\to\mathbb R$ bounded by $1$, a finite family $wq:Q\to\operatorname{GeneralWord}(\operatorname{TorusEdge}\,m\,n)\,F\,X$ of neutral words, coefficients $coef:Q\to\mathbb R$, $\beta\ge0$ and a plaquette $p_0$,
+\[
+|Z_0-Z_1|\le\tanh(\beta|F|)^{mn}(Z_0+Z_1),
+\]
+where $Z_0=\int\operatorname{neutralActionWeight}\chi\,wq\,coef\cdot e^{\sum_p\operatorname{wilsonCoupling}\beta\operatorname{weights}\chi\operatorname{torusWord}p}\,d\mu_W$ and $Z_1$ is the same integral with the weights $\operatorname{weights}\,p_0\,y$ negated for all $y$.
+
+\paragraph{L19 \lean{TubeBridge.signedWilsonEnergy_one} \st{Lean}}
+In the OpenAI objects, a \emph{GaugeGroup} is a closed subgroup of a unitary group, and a \emph{Configuration} $g l$ assigns link variables on the four-dimensional periodic lattice of side $l$. The \emph{Wilson energy} is the usual Wilson action, and \emph{signedWilsonEnergy} $s U$ is the sum $\sum_p\bigl(1-s_p\,\tfrac{1}{n+1}\operatorname{Re}\Tr U_p\bigr)$ in which the sign $s_p$ multiplies only the normalised trace term (the constant $1$ is unchanged). For every gauge group $g$, positive natural $l$, and configuration $U$,
+\[
+\operatorname{signedWilsonEnergy}(\operatorname{fun}\_\Rightarrow 1)U
+=\operatorname{wilsonEnergy}U.
+\]
+
+\paragraph{L20 \lean{TubeBridge.openai_wilson_twist_ratio} \st{Lean}}
+The sign function \emph{planeTwist}$(a,b)$ on $\operatorname{Site}\,l\times\operatorname{Directions}$ takes the value $-1$ exactly on the plaquettes in the plane spanned by axes $0$ and $1$ with base coordinates $(a,b)$, and value $1$ elsewhere. Let $g$ be a gauge group whose image contains $-1$, let $l$ be a positive natural with $l\ge2$, let $\beta\ge0$, and let $\operatorname{haar}$ be a left-invariant probability measure on $g.\operatorname{image}$. Then
+\[
+|Z_0-Z_1|\le\tanh(\beta l^2)^{l^2}\,(Z_0+Z_1),
+\]
+where $\mu$ is the product of $\operatorname{haar}$ over all links $\operatorname{Site}\,l\times\operatorname{Axis}$, $Z_0=\int e^{-\beta\operatorname{wilsonEnergy}U}d\mu(U)$ and $Z_1=\int e^{-\beta\operatorname{signedWilsonEnergy}(\operatorname{planeTwist}a\,b)\,U}d\mu(U)$.
+
+\paragraph{L21 \lean{TubeBridge.openai_wilson_twist_ratio_family} \st{Lean}}
+A \emph{WilsonFamily} $g$ packages a chosen probability Haar measure $C.\operatorname{haar}$ on $g.\operatorname{image}$. Under the same hypotheses as L20, with $C$ a WilsonFamily for $g$ and $\mu$ the product measure built from $C.\operatorname{haar}$, the same twist-ratio inequality holds for all $a,b:\mathbb Z/l$.
+
+\paragraph{L22 \lean{TubeBridge.su2_neg_one_mem} \st{Lean}}
+The public OpenAI object $\operatorname{su2}$ contains the negative identity:
+\[
+(-1:\operatorname{UnitaryRepresentation}\operatorname{su2}.n)\in\operatorname{su2}.\operatorname{image}.
+\]
+
+\paragraph{L23 \lean{TubeBridge.openai_su2_twist_ratio} \st{Lean}}
+For every WilsonFamily $C$ for $\operatorname{su2}$, every positive natural $l$ with $l\ge2$, every $\beta\ge0$, and all $a,b:\mathbb Z/l$, with $Z_0,Z_1$ as in L20 and $\mu$ the product of $C.\operatorname{haar}$,
+\[
+|Z_0-Z_1|\le\tanh(\beta l^2)^{l^2}\,(Z_0+Z_1),
+\]
+where $\mu$ is the product of $C.\operatorname{haar}$ over all links and $Z_0,Z_1$ are as in L20.
+
+\paragraph{What these statements do not say}
+None of the Lean statements proves a mass gap or a uniform lower bound as the fibre size grows. The abstract inequalities are Wilson-type statements for an abstract group with a central involution and an odd function; they do not by themselves assert a result for $\operatorname{SU}(2)$ beyond the bridge instances L22--L23. In L20--L23 the volume dependence is the plane area: the argument of $\tanh$ is $\beta l^2$ and the exponent is $l^2$, not the full four-dimensional lattice volume $l^4$.
+\section{Proofs of the core and of the chain to the bridge}\label{sec:proofs}
+The proofs below are the mathematical content of the Lean files. The Lean proofs themselves (by GPT-6.1 Sol) are longer and organised differently; they were not compared line by line with the arguments below. The statements are the ones of Section~\ref{sec:statements}.
+
+\subsection{The abstract column-flip bound}
+Let $(\Omega,\mu)$ be a probability space, $E,P$ finite sets, $\operatorname{bd}:P\to2^E$, and $s_p(\sigma)=\prod_{e\in\operatorname{bd}(p)}\sigma(e)$ for $\sigma:E\to\{\pm1\}$. Assume: for each $\sigma$ a measure-preserving $\tau_\sigma:\Omega\to\Omega$; measurable $K_p$ with $|K_p|\le\kappa$ and $K_p\circ\tau_\sigma=s_p(\sigma)K_p$; measurable $R\ge0$ with $R\circ\tau_\sigma=R$ and $Re^{\sum_pK_p}\in L^1(\mu)$ (then $\kappa\ge0$ if $P\ne\emptyset$); a measurable $W$ with $|W|\le1$ and $W\circ\tau_\sigma=\prod_{p\in A}s_p(\sigma)\,W$ for a set $A\subseteq P$. Put $I=\int WRe^{\sum_pK_p}d\mu$ and $Z=\int Re^{\sum_pK_p}d\mu$.
+
+\begin{lemma}[column-flip identity, \st{proved}]\label{lem:flip}
+Let $t\in\{\pm1\}^P$ be of the form $t=(s_p(\sigma))_p$. Then $I=\bigl(\prod_{p\in A}t_p\bigr)\int WRe^{\sum_pt_pK_p}d\mu$ and $Z=\int Re^{\sum_pt_pK_p}d\mu$.
+\end{lemma}
+\begin{proof}
+Since $\tau_\sigma$ preserves $\mu$, $I=\int(WRe^{\sum K_p})\circ\tau_\sigma\,d\mu=\bigl(\prod_{p\in A}t_p\bigr)\int W\,R\,e^{\sum_pt_pK_p}d\mu$. The same computation without $W$ gives the second identity.
+\end{proof}
+
+\begin{theorem}[\lean{TubeArea.column_flip_bound}, \st{Lean}]\label{thm:cf}
+If the sign map $\sigma\mapsto(s_p(\sigma))_p$ is onto $\{\pm1\}^P$, then $|I|\le(\tanh\kappa)^{|A|}Z$.
+\end{theorem}
+\begin{proof}
+By surjectivity Lemma~\ref{lem:flip} holds for every $t\in\{\pm1\}^P$. Average over $t$ uniform on $\{\pm1\}^P$ (a finite average, so Fubini is immediate). For independent signs, $\E_t\,e^{t_pK_p}=\cosh K_p$ and $\E_t\,t_pe^{t_pK_p}=\sinh K_p$, hence
+\[
+I=\int WR\prod_{p\in A}\sinh K_p\prod_{p\notin A}\cosh K_p\,d\mu,\qquad Z=\int R\prod_{p\in P}\cosh K_p\,d\mu .
+\]
+Since $|W|\le1$, $R\ge0$ and $|\sinh K|\le\tanh\kappa\cosh K$ for $|K|\le\kappa$, we get $|I|\le(\tanh\kappa)^{|A|}\int R\prod_P\cosh K_p\,d\mu=(\tanh\kappa)^{|A|}Z$.
+\end{proof}
+
+\begin{proposition}[sharpness, \lean{TubeArea.sharp_one_edge}, \st{Lean}]\label{prop:sharp}
+For every $J\in\R$ there is a probability measure $\mu$ on $\{\pm1\}$, invariant under multiplication by $\pm1$ (namely the uniform one), such that $\int\operatorname{sgn}(\omega)e^{J\operatorname{sgn}(\omega)}d\mu=\tanh(J)\int e^{J\operatorname{sgn}(\omega)}d\mu$, and $\int e^{J\operatorname{sgn}(\omega)}d\mu>0$. For $J=\kappa\ge0$, one edge, one plaquette, $K=\kappa\operatorname{sgn}$ and $W=\operatorname{sgn}$, Theorem~\ref{thm:cf} is an equality.
+\end{proposition}
+\begin{proof}
+$\int\omega e^{J\omega}=\sinh J$ and $\int e^{J\omega}=\cosh J$.
+\end{proof}
+
+\subsection{The torus: parity, image, twist ratio}
+On the discrete torus $(\Z/m)\times(\Z/n)$, $m,n\ge2$, with horizontal edges $H(i,j)$ and vertical edges $V(i,j)$ and the plaquette with corner $p=(i,j)$ bounded by $H(i,j),H(i,j+1),V(i,j),V(i+1,j)$ (indices mod the periods; \lean{TubeArea.torus_plaq_explicit} is the explicit formula for $s_p$), each edge lies on the boundaries of exactly two distinct plaquettes, so $\prod_ps_p(\sigma)=1$ for every $\sigma$ (\lean{TubeArea.torus_plaq_parity}). Conversely every $t\in\{\pm1\}^P$ with $\prod_pt_p=1$ is of the form $(s_p(\sigma))_p$ (\lean{TubeArea.torus_plaq_image}; the Lean proof builds $\sigma$ explicitly, by prefix products; we do not reproduce it). So the image of the sign map is exactly the set of \emph{even} configurations. Let $\E_{\mathrm{even}}$ be the uniform average over even $t$; then $\E_{\mathrm{even}}f=\E_t\bigl[f(t)\bigl(1+\prod_pt_p\bigr)\bigr]$ (the right side is a probability average since $\E_t[1+\prod_pt_p]=1$). Lemma~\ref{lem:flip} holds for every even $t$, so the averaging of the proof of Theorem~\ref{thm:cf} is over even $t$ only. Put $N=|P|$, $q=\tanh\kappa$, $C=\int R\prod_P\cosh K_p\,d\mu$ and $S=\int R\prod_P\sinh K_p\,d\mu$. Since $\E_{\mathrm{even}}e^{\sum t_pK_p}=\prod\cosh K_p+\prod\sinh K_p$, we get $Z_0=Z=C+S$. Let $Z_1=\int R\exp\bigl(\sum_p\epsilon_pK_p\bigr)d\mu$ with $\epsilon_{p_0}=-1$ and $\epsilon_p=1$ otherwise; the same argument applies to $Z_1$ because $\epsilon_pK_p$ obeys the same flip rule, and reversing $K_{p_0}$ changes the sign of $\prod\sinh$ only, so $Z_1=C-S$. Hence
+\[
+Z_0-Z_1=2S,\qquad Z_0+Z_1=2C,\qquad |S|\le q^NC .
+\]
+(The last inequality is $|\sinh K_p|\le q\cosh K_p$ for each factor.)
+
+\begin{theorem}[\lean{TubeArea.twist_ratio_bound}, \st{Lean}]\label{thm:tr}
+Under the parity and image hypotheses, $|Z_0-Z_1|\le(\tanh\kappa)^N(Z_0+Z_1)$.
+\end{theorem}
+\begin{proof}
+From the displayed formulas, $|Z_0-Z_1|=2|S|\le2q^NC=q^N(Z_0+Z_1)$.
+\end{proof}
+
+\begin{theorem}[\lean{TubeArea.torus_flip_bound}, \st{Lean}]\label{thm:tfb}
+Under the same hypotheses and with $W$, $A$ as above, $(1-q^N)\,|I|\le(q^{|A|}+q^{N-|A|})\,Z$.
+\end{theorem}
+\begin{proof}
+For even $t$ the observable gives, since $\prod_{p\in A}t_p\,(1+\prod_Pt_p)=\prod_At_p+\prod_{P\setminus A}t_p$ (as $t_p^2=1$),
+\[
+I=\int WR\Bigl(\prod_{A}\sinh K_p\prod_{P\setminus A}\cosh K_p+\prod_{P\setminus A}\sinh K_p\prod_A\cosh K_p\Bigr)d\mu .
+\]
+Hence $|I|\le(q^{|A|}+q^{N-|A|})\,C$. Also $Z=C+S\ge(1-q^N)\,C$ because $|S|\le q^NC$. Therefore $(1-q^N)|I|\le(q^{|A|}+q^{N-|A|})(1-q^N)C\le(q^{|A|}+q^{N-|A|})\,Z$.
+\end{proof}
+
+The lemma \lean{TubeArea.le_of_forall_pow_le_const_mul_pow} ($0\le a,b$, $M>0$, $a^n\le Mb^n$ for all $n\ge1$ implies $a\le b$) and \lean{TubeArea.flux_gap_of_traces} (if $\lambda_1^n\le\mathrm{Od}(n)$, $\mathrm{Ev}(n)\le D\lambda_0^n$ and $\mathrm{Od}(n)\le q^{n\ell}\mathrm{Ev}(n)$ for all $n\ge1$, then $\lambda_1\le q^\ell\lambda_0$) are the scalar ingredients of the spectral step of Section~\ref{sec:tube}; they are elementary and their proofs are not reproduced.
+
+\subsection{Wilson-type theories on (plate)$\times$(fibre)}
+With the data of Section~\ref{sec:setting}, let $\tau_\sigma$ be the column flip. It preserves the product of left-invariant measures. Let $p$ be a base plaquette with a word of distinct base edges (four for a square plaquette), and $y\in F$. The holonomy of $p$ at the fibre site $y$ is a product of four long links $(e,y)$; the flip multiplies each factor of a flipped edge by $z$, and as $z$ is central the holonomy is multiplied by $z^{\#\{\text{flipped edges of }p\}}$, that is by $z$ if $s_p(\sigma)=-1$ and by $1$ otherwise. Since $\chi(zg)=-\chi(g)$, $\chi(\mathrm{hol}_{p,y})\circ\tau_\sigma=s_p(\sigma)\chi(\mathrm{hol}_{p,y})$. With real weights $|c_{p,y}|\le1$, $K_p=\beta\sum_{y\in F}c_{p,y}\chi(\mathrm{hol}_{p,y})$ satisfies $|K_p|\le\beta|F|$ and $K_p\circ\tau_\sigma=s_p(\sigma)K_p$ (this is how signs of a twist enter: as signs of the $c_{p,y}$). A mixed plaquette contains the column $e$ twice, $(e,y)$ and $(e,y')^{-1}$: its holonomy is $(zU_1)\,x\,(zU_2)^{-1}x'^{-1}$ and $z$ cancels because it is central with $z^{-1}=z$; a plaquette without long link is untouched. More generally the holonomy of a neutral word is invariant (\lean{TubeArea.neutral_word_flip_invariant}, \lean{TubeArea.mixedWord_neutral}). Hence any weight of the form $R=\exp\bigl(\sum_q\mathrm{coef}_q\,\chi(\mathrm{hol}_q)\bigr)$ over neutral words $q$ (real coefficients, arbitrary signs) is flip-invariant, measurable, bounded and positive. Theorem~\ref{thm:cf} then yields \lean{TubeArea.wilson_column_flip_bound}: if $W=\chi(\mathrm{hol}_{w_C,y_0})$ is the loop of a word $w_C$ of distinct edges at a fibre site $y_0$, and $A$ is a set of plaquettes such that (Stokes) $\prod_{e\in w_C}\sigma(e)=\prod_{p\in A}s_p(\sigma)$ for every $\sigma$ (a statement on signs only, not a non-abelian Stokes theorem) and the sign map is onto, then $|\int WRe^{\sum K}|\le\tanh(\beta|F|)^{|A|}\int Re^{\sum K}$. On the rectangular grid with free boundary the two hypotheses are proved (\lean{TubeArea.grid_plaq_surjective}, \lean{TubeArea.grid_stokes_rectangle}), which gives the elementary area law \lean{TubeArea.tube_area_law_rectangle} with $|A|=(b-a)(d-c)$ for a rectangle $[a,b)\times[c,d)$, and \lean{TubeArea.wilson_action_area_law_rectangle} when a finite family of neutral terms (mixed and fibre plaquettes, with arbitrary real coefficients) is added; no hypothesis on $R$ remains there. On the torus, with the parity and image lemmas, the same argument with Theorem~\ref{thm:tr} gives \lean{TubeArea.wilson_twist_ratio_bound} (abstract parity and image hypotheses) and \lean{TubeArea.wilson_electric_flux_torus} (the complete Wilson-type action on (torus $m\times n$, $m,n\ge2$)$\times F$): $|Z_0-Z_1|\le\tanh(\beta|F|)^{mn}(Z_0+Z_1)$, where $Z_1$ is obtained by negating the weights $c_{p_0,y}$ for all $y$.
+
+\subsection{The bridge to OpenAI's objects}\label{sec:bridgeproof}
+Let $l\ge2$. The sites of OpenAI's lattice are $\mathrm{Axis}\to\Z/l$ (four axes); links are (site, axis). The links of axes $0$ and $1$ play the role of long links: the base edge of such a link is the pair $(x_0,x_1)$ of the first two coordinates with its axis (so $m=n=l$, $2l^2$ base edges), and the fibre site is $y=(x_2,x_3)$, so $|F|=l^2$ and the base has $N=l^2$ plaquettes. The flip $\tau_\sigma$ multiplies by $-1$ (\lean{TubeBridge.bridge_tau}) every link of axis $0$ or $1$ whose base edge carries $\sigma=-1$, at every fibre site; it preserves the product measure by left-invariance. A plaquette of the plane $(0,1)$ at the site $x$ has its four links on the base edges $H(x_0,x_1)$, $V(x_0{+}1,x_1)$, $H(x_0,x_1{+}1)$ and $V(x_0,x_1)$, which are the boundary of the torus plaquette of corner $(x_0,x_1)$; a plaquette of a plane $(0,2),(0,3),(1,2),(1,3)$ has two links on the same column (same base edge, different fibre sites), and a plaquette of the plane $(2,3)$ no long link: these five orientations are neutral. With $\chi=\operatorname{Re}\Tr/(n{+}1)$ (for $SU(2)$, $\frac12\operatorname{Re}\Tr$), $|\chi|\le1$, $\chi(-V)=-\chi(V)$ and $E_W=\sum(1-\chi(\mathrm{hol}))$, we have $e^{-\beta E_W}=R\,e^{\sum_{p}K_p}$ with $K_p=\beta\sum_{y}\chi(\mathrm{hol}_{(0,1),p,y})$, $|K_p|\le\beta l^2$, and $R=\exp(-\beta\cdot\#\text{plaquettes}+\beta\sum_{\text{five orientations}}\chi(\mathrm{hol}))$ flip-invariant. In the signed energy of \lean{TubeBridge.planeTwist}$(a,b)$ the trace term of the plaquettes of the plane $(0,1)$ with base point $(a,b)$ at all fibre sites has sign $-1$, so $e^{-\beta E^{(a,b)}_W}=R\,e^{\sum_p\epsilon_pK_p}$ with $\epsilon_{(a,b)}=-1$. Theorem~\ref{thm:tr} applies with $\kappa=\beta l^2$, $N=l^2$ (parity and image by L11, L12, since $l\ge2$), and it gives Theorem~\ref{thm:bridge} (\lean{TubeBridge.openai_wilson_twist_ratio} for any gauge group containing $-1$; the family version \lean{TubeBridge.openai_wilson_twist_ratio_family} for the measure of any \lean{WilsonFamily}; \lean{TubeBridge.su2_neg_one_mem}: $\det(-1_{2\times2})=1$; and \lean{TubeBridge.openai_su2_twist_ratio} for \lean{su2}). The measurability, boundedness and integrability required by Theorem~\ref{thm:tr} are proved in Lean for continuous bounded functions on a product of second-countable compact spaces.
+
+\subsection{Dependencies among the 23 declarations}
+Read from the text of the file by a name search (not by a Lean dependency analysis): \lean{wilson_column_flip_bound} uses \lean{column_flip_bound}; \lean{tube_area_law_rectangle} uses \lean{wilson_column_flip_bound}, \lean{grid_plaq_surjective} and \lean{grid_stokes_rectangle}; \lean{wilson_action_area_law_rectangle} uses \lean{tube_area_law_rectangle}; \lean{torus_plaq_parity} and \lean{torus_plaq_image} use \lean{torus_plaq_explicit}; \lean{wilson_twist_ratio_bound} uses \lean{twist_ratio_bound}; \lean{wilson_electric_flux_torus} uses \lean{wilson_twist_ratio_bound}, \lean{torus_plaq_parity} and \lean{torus_plaq_image}; \lean{openai_wilson_twist_ratio} uses \lean{twist_ratio_bound}, \lean{torus_plaq_parity} and \lean{torus_plaq_image}; \lean{openai_wilson_twist_ratio_family} uses \lean{openai_wilson_twist_ratio}; \lean{openai_su2_twist_ratio} uses the family version and \lean{su2_neg_one_mem}; \lean{flux_gap_of_traces} uses \lean{le_of_forall_pow_le_const_mul_pow}. The declarations \lean{sharp_one_edge}, \lean{torus_flip_bound}, \lean{signedWilsonEnergy_one} and \lean{mixedWord_neutral} are not used by another of the 23, and \lean{neutral_word_flip_invariant} is used only through auxiliary lemmas.
+
+\section{The flux-sector bound on a tube (proved on paper)}\label{sec:tube}
+\textbf{Status of this section: \st{proved} on paper, checked by AI models only.} Two ingredients are in Lean: the twist-ratio bound (\lean{TubeArea.wilson_electric_flux_torus}) and, as a variant, the scalar lemma \lean{TubeArea.flux_gap_of_traces}. The construction of the transfer operator, the trace identities and the spectral step are not formalised. The theorem was first written by GPT-6 Astra; it was then checked independently by Claude Opus~5.5 (``ready after minor corrections''), by DeepSeek V4 Pro (``no fatal error; gaps in the bookkeeping of degenerate periods and in the compressed passage from the temporal links to the kernel'') and by Qwen3.8 (``gap in general'' for the trace identities, as written by Astra, and a request to state the scope). The present write-up includes the two missing points (the passage from the temporal links, in full, and periods at least $2$), and it removes two claims that were not proved (the unitary equivalence for a change of representative of the fibre twist, which is not needed here, and the identification of the sectors with $\mathbb Z_2$ electric flux, which we do not claim).
+
+\subsection{Setting}
+Let $l,L\ge2$ and $n\ge2$ be integers, $G=SU(2)$, $h(g)=\frac12\Tr g$, $F=(\Z/L)^2$, $\beta>0$ (at $\beta=0$ one has $Z_0=Z_1=1$, $T$ is the rank-one averaging operator and the odd sector is trivial; the trace identities below hold for $\beta=0$ too, but injectivity, $\lambda_1>0$ and the Hamiltonian $H$ do not). The spatial slice is the torus $S=C_l\times F$ (a cycle of length $l$ times the fibre; vertices $V_s$, links $E_s$, plaquettes $P_s$); the lattice is $C_n\times S$ with periods $(n,l,L,L)$, all $\ge2$, and \emph{labelled} links. Configurations are $(U,a)$: spatial links $U^t\in X=G^{E_s}$ at each time $t\in\Z/n$, and temporal links $a_t\in G^{V_s}$ from time $t$ to $t+1$. The weight is $\exp(\beta\sum_pz_ph(U_p))$ over all plaquettes, with the Haar measure on every link. The signs $z_p\in\{\pm1\}$ equal $+1$ except on the plaquettes of the fibre plane (axes $2,3$), where they are arbitrary but \emph{the same on every time slice} (this is needed so that a single operator $T$ describes every step; the value of the signs is otherwise irrelevant below). $Z_0(n)$ is the integral of this weight, and $Z_1(n)$ the same integral in which $z_p=-1$ also for the $L^2$ temporal--long plaquettes (time, long direction) above one base plaquette of $C_n\times C_l$, at all fibre sites (the 't~Hooft twist in that plane). Put $t=\tanh(\beta L^2)$, so $t<1$.
+
+On $L^2(X,dU)$ (normalised Haar measure) the gauge group $\mathcal G=G^{V_s}$ acts by $(g\cdot U)_e=g_{s(e)}U_eg_{t(e)}^{-1}$; $P$ is the orthogonal projection onto gauge invariants (the Haar average over $\mathcal G$) and $\mathcal H=\operatorname{ran}P$. Let $V_b(U)=\beta\sum_{p\in P_s}z_ph(U_p)$ and $M$ the multiplication by $e^{V_b/2}$. Let $c_\beta(U,V)=\exp\bigl(\beta\sum_{e\in E_s}h(U_eV_e^{-1})\bigr)$ and $C_\beta$ the integral operator with this kernel. Let $c\in X\to X$ multiply by $-1$ the $L^2$ long links that cross a fixed cut (all fibre sites), and $(\Omega f)(U)=f(cU)$.
+
+\begin{theorem}[flux-sector bound, \st{proved}]\label{thm:flux}
+(i) The operator $T=(MPC_\beta M)|_{\mathcal H}$ on $\mathcal H$ is positive, injective and trace class; $\Omega$ is a self-adjoint unitary commuting with $T$, so $\mathcal H=\mathcal H_0\oplus\mathcal H_1$ ($\Omega=\pm1$), and both summands are non-zero. (ii) For every $n\ge2$: $Z_0(n)=\Tr_{\mathcal H}T^n$ and $Z_1(n)=\Tr_{\mathcal H}(\Omega T^n)$. (iii) Let $\lambda_s$ be the largest eigenvalue of $T|_{\mathcal H_s}$. Then
+\[
+\lambda_1\le\tanh(\beta L^2)^{\,l}\,\lambda_0 .
+\]
+Hence $\lambda_0$ is the largest eigenvalue of $T$ on $\mathcal H$ and, with $H=-\log(T/\lambda_0)$, every vector of $\mathcal H_1$ in the domain satisfies $\langle f,Hf\rangle\ge-l\log\tanh(\beta L^2)\,\|f\|^2\ge2l\,e^{-2\beta L^2}\|f\|^2$.
+\end{theorem}
+
+\subsection{The transfer representation}
+\begin{proposition}\label{prop:positive}
+$C_\beta\ge0$ and $\langle f,C_\beta f\rangle>0$ for $f\ne0$; the kernel $s(U,V)=e^{V_b(U)/2}\bigl(\int_{\mathcal G}c_\beta(g\cdot U,V)\,dg\bigr)e^{V_b(V)/2}$ is continuous and $S=MPC_\beta M$ is a positive operator, with $S=P(MC_\beta M)P$; its restriction $T$ to $\mathcal H$ is positive, injective and trace class, with $\Tr T=\int s(U,U)\,dU<\infty$ and a Mercer expansion $s(U,V)=\sum_j\lambda_j\varphi_j(U)\overline{\varphi_j(V)}$ converging uniformly.
+\end{proposition}
+\begin{proof}
+Identify $SU(2)$ with the unit quaternions: $h(uv^{-1})=\langle q(u),q(v)\rangle_{\R^4}$. With $Q(U)\in\R^{4|E_s|}$ the concatenation of the $q(U_e)$, $c_\beta(U,V)=\exp(\beta\langle Q(U),Q(V)\rangle)=\sum_{\alpha\in\N^{4|E_s|}}\frac{\beta^{|\alpha|}}{\alpha!}Q(U)^\alpha Q(V)^\alpha$ (multinomial expansion), so $\langle f,C_\beta f\rangle=\sum_\alpha\frac{\beta^{|\alpha|}}{\alpha!}|\langle\phi_\alpha,f\rangle|^2\ge0$ with $\phi_\alpha=Q^\alpha$. If it vanishes and $\beta>0$, $f$ is orthogonal to all polynomials in $Q$, hence $f=0$ by Stone--Weierstrass on the compact $X\subset\R^{4|E_s|}$. The kernel $c_\beta$ is continuous and invariant under simultaneous gauge transformations of $U$ and $V$, so $C_\beta P=PC_\beta$; $V_b$ is gauge invariant and bounded, so $M$ is bounded, positive, invertible and commutes with $P$. Thus $S=MPC_\beta M=P(MC_\beta M)P$ has the continuous kernel $s$, and for $f\in L^2$, $\langle f,Sf\rangle=\langle PMf,C_\beta PMf\rangle\ge0$ (the cross terms vanish since $C_\beta$ commutes with $P$). A positive operator with a continuous kernel on a compact space with a finite measure is trace class with $\Tr=\int s(U,U)\,dU$ and has a uniformly convergent eigenfunction expansion (Mercer's theorem, used as a black box). For $f\in\mathcal H$, $f\ne0$, $\langle f,Tf\rangle=\langle Mf,C_\beta Mf\rangle>0$. 
+\end{proof}
+
+\begin{lemma}[temporal links]\label{lem:temporal}
+Let $a\in G^{V_s}$ be the temporal links between layers $U$ and $V$ (the link $a_v$ going from $(t,v)$ to $(t{+}1,v)$), and for a link $e:x\to y$ let the temporal--long plaquette be $U_ea_y(V_e)^{-1}a_x^{-1}$. Then $\int da\prod_{e\in E_s}\exp\bigl(\beta h(U_ea_yV_e^{-1}a_x^{-1})\bigr)=\int_{\mathcal G}c_\beta(g\cdot U,V)\,dg$.
+\end{lemma}
+\begin{proof}
+$h$ is a class function, so $h(U_ea_yV_e^{-1}a_x^{-1})=h\bigl((a_x^{-1}U_ea_y)V_e^{-1}\bigr)=h\bigl((g\cdot U)_eV_e^{-1}\bigr)$ with $g_v=a_v^{-1}$, and $a\mapsto g$ preserves the Haar measure of $\mathcal G$.
+\end{proof}
+
+\begin{proof}[Proof of Theorem~\ref{thm:flux} (i)--(ii)]
+Integrating the temporal links layer by layer (Lemma~\ref{lem:temporal}; the plaquettes of the fibre plane and the spatial plaquettes are inside $V_b$, each appearing once at each time, and are split symmetrically between the two adjacent layers) gives $Z_0(n)=\int\prod_{t\in\Z/n}dU^t\,\prod_ts(U^t,U^{t+1})$. By the Mercer expansion this equals $\sum_j\lambda_j^n=\Tr_{L^2(X)}S^n=\Tr_{\mathcal H}T^n$, because $S=SP=PS$ vanishes on $\ker P$. For $\Omega$: $c$ is the left multiplication by central elements, so it preserves the Haar measure and commutes with every $g\cdot$; a spatial plaquette of the plane (long, fibre) contains $0$ or $2$ links crossing the cut (the two long links of the plaquette are at the same long position), and a fibre plaquette none, so $V_b\circ c=V_b$; and $c_\beta(cU,cV)=c_\beta(U,V)$ since $(-U_e)(-V_e)^{-1}=U_eV_e^{-1}$. Hence $\Omega$ commutes with $M$, $C_\beta$, $P$, $S$ and $T$, and $s(cU,cV)=s(U,V)$. Now reverse the sign of $h$ on the temporal--long plaquettes of the cut between layers $n{-}1$ and $0$ (take that seam by time translation invariance): as $h(-g)=-h(g)$, this is the substitution $V\mapsto cV$ in the kernel of that step, that is, the kernel $s(U^{n-1},cU^0)$ replaces $s(U^{n-1},U^0)$. By the Mercer expansion, $Z_1(n)=\int s_{n}(U,cU)\,dU=\sum_j\lambda_j^n\langle\varphi_j,\Omega\varphi_j\rangle=\Tr(S^n\Omega)=\Tr_{\mathcal H}(\Omega T^n)$, where $s_n$ is the kernel of $S^n$. Finally $\mathcal H_0\ni1$, and the trace of the holonomy of the loop going once around $C_l$ at a fixed fibre site is a non-zero gauge-invariant function with $\Omega W=-W$ (it crosses the cut once), so $\mathcal H_1\ne0$. Positivity and injectivity of $T$ and trace class are Proposition~\ref{prop:positive}.
+\end{proof}
+
+\subsection{The sector bound}
+\begin{proof}[Proof of Theorem~\ref{thm:flux} (iii)]
+Let $A_n=\Tr(P_0T^n)$ and $B_n=\Tr(P_1T^n)$ with $P_{0,1}=(1\pm\Omega)/2$; then $Z_0=A_n+B_n$, $Z_1=A_n-B_n$. Since $T\ge0$, $B_n=\sum$ over the eigenvalues of $T|_{\mathcal H_1}$ of $\lambda^n\ge0$, and $A_n=(Z_0+Z_1)/2>0$ because both are integrals of positive weights. The 4D Wilson action on the lattice $C_n\times C_l\times F$ with the fibre-plane signs is of the form of \lean{TubeArea.wilson_electric_flux_torus}: the long links are the links of the time and long axes (indexed by a base edge of the torus $C_n\times C_l$ and a fibre site), the other links are the fibre links; the base plaquettes are the temporal--long plaquettes, with $c_{p,y}=1$; the plaquettes mixing one of the two base axes with a fibre axis are mixed plaquettes and those of the fibre plane contain no long link, so they are neutral terms with real coefficients (including the signs $z_p$ and the factor $\beta$). The twist negates $c_{p_0,y}$ for all $y\in F$. With $m=n$ (time), $n=l$ (long), $|F|=L^2$, the theorem gives $|Z_0-Z_1|\le t^{nl}(Z_0+Z_1)$, that is $0\le B_n\le t^{nl}A_n$ for all $n\ge2$. (This identification of the action with the abstract one is a direct inspection of the plaquette words; it is not formalised for non-cubic periods, whereas for the cubic case $n=l=L$ it is the bridge theorem.)
+
+Let $\lambda_s>0$ be the largest eigenvalue of $T|_{\mathcal H_s}$ (it exists since $T$ is compact, positive, injective and $\mathcal H_s\ne0$). For a positive trace-class operator $\lambda_s^n\le\Tr_{\mathcal H_s}T^n\le\lambda_s^{n-1}\Tr_{\mathcal H_s}T$. Therefore, for $n\ge2$,
+\[
+\lambda_1^n\le B_n\le t^{nl}A_n\le t^{nl}\lambda_0^{n-1}\Tr T .
+\]
+If $\lambda_1>t^l\lambda_0$, then $\bigl(\lambda_1/(t^l\lambda_0)\bigr)^n\le\Tr T/\lambda_0$ for all $n\ge2$ is impossible ($\Tr T<\infty$). So $\lambda_1\le t^l\lambda_0<\lambda_0$. (This is the content of \lean{TubeArea.flux_gap_of_traces}, which is stated for all $n\ge1$ and is not applied literally here, since the identities above are proved for $n\ge2$; the argument needs only large $n$.) Finally $-\log t=\log\frac{1+u}{1-u}\ge2u$ with $u=e^{-2\beta L^2}$.
+\end{proof}
+
+\subsection{Scope and standard facts used}
+The standard facts used as black boxes are Haar invariance, Mercer's theorem, the spectral theorem for compact self-adjoint operators, Stone--Weierstrass and the multinomial expansion; no external reference was checked by us for them. No periods equal to $1$ are treated. The sectors $\mathcal H_0,\mathcal H_1$ are the $\pm1$ eigenspaces of $\Omega$; we call them centre-parity sectors, and their identification with the $\mathbb Z_2$ electric flux through the cut (true in the Peter--Weyl basis, where the centre acts on the spin-$j$ representation by $(-1)^{2j}$) is not proved here.
+\begin{itemize}
+\item The theorem gives nothing on the even sector beyond $\lambda_0$: $\lambda_1/\lambda_0$ is not the transfer-matrix gap; two even eigenvalues $1,e^{-\epsilon}$ with an odd eigenvalue $t^l$ satisfy all the stated bounds for every $\epsilon>0$.
+\item At fixed $\beta>0$ and $l$, the ratio bound $t^l$ tends to $1$ and the odd-sector energy lower bound $-l\log t$ tends to $0$ as $L\to\infty$: nothing is uniform in $L$; there is no infinite-volume or continuum statement. The sign-averaging step uses only the hypotheses of \lean{wilson_electric_flux_torus} (a central involution and an odd bounded $\chi$), but the transfer-matrix part additionally uses the positivity and strict positivity of the convolution kernel proved above for the $SU(2)$ half trace; whether the same argument applies to $U(1)$ or $\mathbb Z_2$ (for which the one-link kernel can have negative eigenvalues if $\chi$ is not a positive-definite function) is not examined here.
+\item The vacuum here is the vacuum of the chosen static fibre background; we do not claim that the flux tension $\lim\Delta_l/l$, if it exists, equals the Wilson-loop tension.
+\item The ratio $q_n=B_n/A_n=(Z_0-Z_1)/(Z_0+Z_1)$ is not the ``electric flux free energy'' in the normalisation of Tomboulis and Yaffe, which is $B_n/Z_0=q_n/(1+q_n)$.
+\end{itemize}
+No claim of sharpness for $SU(2)$ is made here: a strong-coupling comparison and the exact saturation for the two-dimensional $\mathbb Z_2$ model were written by the first author of the proof and checked only by models; they are not needed and are not part of this note.
+
+\section{What the bound says and does not say}\label{sec:scope}
+\paragraph{What it says.} In finite volume and at every coupling $\beta\ge0$, the partition functions with and without a 't~Hooft twist in a plane differ, relatively, by at most $\tanh(\beta l^2)^{l^2}$ (Theorem~\ref{thm:bridge}); for a Wilson loop bounding $A$ base plaquettes of a plate with a fibre of $|F|$ sites the expectation is at most $\tanh(\beta|F|)^{|A|}$ in absolute value (\lean{tube_area_law_rectangle}). The constant is attained in the one-edge, one-plaquette abstract example (Proposition~\ref{prop:sharp}); it is not claimed to be optimal for $SU(2)$. The proofs need no cluster expansion and no small parameter.
+
+\paragraph{What it does not say.}
+\begin{itemize}
+\item It is not uniform in the transverse section: $\tanh(\beta l^2)^{l^2}\to1$ as $l\to\infty$ at fixed $\beta>0$ (both the argument of $\tanh$ and the exponent grow like $l^2$), and $\tanh(\beta|F|)^{\mathrm{area}}\to1$ as $|F|\to\infty$ at fixed $\beta>0$ and fixed area. It gives no string tension and no mass gap uniform in the fibre size, and no statement in infinite volume or in the continuum limit.
+\item It says nothing about the mass gap of four-dimensional Yang--Mills theory, nor about the weak-coupling regime where a gap uniform in the volume at fixed coupling is required.
+\item The sign-averaging statements (L01--L18) concern an abstract group with a central involution and a bounded odd function $\chi$; they apply verbatim to $U(1)$ (with $\chi=\cos$, $z=-1$) and $\mathbb Z_2$ lattice gauge theories (the two-point example of Proposition~\ref{prop:sharp} only shows that the abstract bound is attained; it is not a $\mathbb Z_2$ gauge theory), whose four-dimensional behaviour is not analysed here. The bound is therefore an elementary consequence of a symmetry and gives no four-dimensional conclusion uniform in the transverse size; its fixed-fibre area-law consequence, uniform in the size of the base, is a separate matter and is the content of L06 and L09.
+\item Expectation bounds are stated for unnormalised integrals; dividing by $Z$ requires $Z>0$ ($R\equiv0$ is allowed in L01).
+\item The hypotheses \lean{hsurj}, \lean{hpar}, \lean{himg} (independence of plaquette signs, or parity only) are strong exactness conditions; they are proved for the free rectangular grid and for the discrete torus with periods $\ge2$ only. The ``Stokes'' hypothesis is a relation between signs, not a non-abelian Stokes theorem. Periods equal to $1$ are not treated.
+\item The bridge theorem concerns the twist in the plane of the axes $0,1$ with the transverse plane of the axes $2,3$; the period $l$ is the same in the four directions. Other geometries are covered by the abstract statements, not by the bridge.
+\item The flux-sector bound of Section~\ref{sec:tube} gives no gap in the neutral (even) sector: the odd/even ratio $\lambda_1/\lambda_0$ is not the spectral gap of the transfer matrix.
+\end{itemize}
+Two companion notes by the same author (a finite-volume area law for $SU(2)$ in four dimensions, and a scalar criterion) are not used here, and nothing is claimed about their relation to this note beyond Section~\ref{sec:anteriority}. As a perspective only: whether the structure of the odd and even sectors, together with a bound on the neutral sector, could enter a finite-volume criterion at weak coupling is open and is not addressed.
+
+\section{Anteriority}\label{sec:anteriority}
+This section records what was searched and read. It does not claim priority, and the word ``new'' is not used in this note.
+
+\paragraph{The tool.} The centre-flip operation, multiplying a set of links by a central element and using that the measure is invariant, is classical: it is the basic move of Tomboulis and Yaffe~\cite{TY85} (Section~3 of that paper, as read in the project's local copy of the text), and it appears in many arguments about the centre symmetry. A related use occurs in the preprint of Bhattacharjee et al.~\cite{BB26}, where a flip $z_1$ of all links in one direction at one coordinate is used to show that traces of closed loops have mean zero (lines 3743--3747 of the text extracted from version~5.0.0). In none of the passages read does the flip serve to average over independent signs of all columns, and no factor $\tanh$ occurs in such a column-averaging bound (hyperbolic tangents occur elsewhere in~\cite{BB26}, for Ising rings and one-dimensional tubes). We call the centre flip classical; the averaging bounds are recorded here without a priority claim, and their specific form (all columns, product of $\tanh$) was not found written in the passages we read.
+
+\paragraph{Neighbouring results.} Results of Borgs and Seiler~\cite{BS83} on twisted boundary conditions and finite-temperature Wilson loops, and the work of Tomboulis and Yaffe~\cite{TY85} and of Kanazawa~\cite{Kan} on the vortex free energy, are the nearest rigorous neighbours that were opened. The note of Borgs on area laws for spatial Wilson loops at high temperature~\cite{Bor85} \emph{could not be read} (it is not freely accessible), and it is the most likely neighbour of the area law of \lean{tube_area_law_rectangle}; 't~Hooft's original paper~\cite{tH79} was not read either (it is cited through the bibliography of~\cite{TY85}). No claim is made about what these papers contain beyond what was read.
+
+\paragraph{Our own earlier notes.} The area law for the four-dimensional periodic torus (version 1.2 of the author's note on $SU(2)$ up to $\beta\approx0.813$) gives, for the rectangles allowed there (including $R\le L/2$ and $T\le L-1$), $|\langle W\rangle|\le C^T\theta^{RT}$ with constants independent of the period $L$, but only for $\beta\le0.81348$ and by a computer-assisted proof. The bound of the present note holds at every $\beta\ge0$ and has a one-page proof, but its base $\tanh(\beta|F|)$ depends on the cardinality $|F|$ of the transverse fibre; on the torus $(\Z/L\Z)^4$ one has $|F|=L^2$ and the bound becomes vacuous as $L$ grows at fixed $\beta>0$. The two statements are complementary and neither implies the other; the twist-ratio bound has no counterpart in the earlier note.
+
+\paragraph{BB26, version 5.0.0.} The text extracted from version~5.0.0 of~\cite{BB26} (10\,120 lines) was searched for the words twist, 't~Hooft, flux, centre, vortex, tanh, tube and column, and the passages around each occurrence were read. We did not read the whole text. The authors write (lines 9263--9265) that boundary conditions with values in the centre are 't~Hooft's twisted ones and that, ``for fat boxes they are the natural test of ($M_{d,m}(c)$); we have no estimate for them along the four-dimensional tuning''; here the twisted conditions are boundary conditions of a Dirichlet box in a hypothesis on a second singular value, which is a different object from the twisted partition function of a finite periodic volume treated here, and Theorem~\ref{thm:bridge} does not address their hypothesis (it degenerates when the section grows). In the passages read we did not find a twist-ratio bound, a column-flip bound with a $\tanh$ factor, or a bound on a flux sector of a tube; their ``tubes'' (Lemma~7.31) are a different notion. An independent comparison by another model (DeepSeek V4 Pro, on the excerpts only) reached the same conclusion, with the same caveat that it is limited to the excerpts. Not read: the papers listed above as not read, the larger part of~\cite{BB26}, and any version later than~5.0.0.
+
+\paragraph{Conclusion.} To the best of our reading, we did not find the exact statements of this note written in the passages we read; they are elementary and probably folklore in principle; we claim no priority. A check of the latest archives of the works cited in this section is to be repeated on the day of any release.
+
+\section{Reproducibility}\label{sec:repro}
+\paragraph{What was compiled, and by whom.} The Lean files were compiled on 11 November 2026 (20:12--22:41) on a rented machine, by the project's scripts driven by the pilot (an AI model). The author did not compile them. \emph{Replay of 12 November 2026 (03:54--04:08 UTC).} Claude Sonnet 5.5, a model that is not the author of the statements, the proofs or this note, rebuilt the Lean file from the \texttt{git archive} of the package folder (git tree of the folder \texttt{b1d1e6ed\dots}, of its subfolder \texttt{lean/} \texttt{7634d3da\dots}; sha256 of the archive \texttt{b8229a82\dots ac9bec}), on the same rented machine as on 11 November and in the same already compiled environment: Lean 4.32.0, Mathlib as built for OpenAI's project, and OpenAI's project itself (nothing was taken from the machine's working folder of 11 November other than this environment). Results: \texttt{lake env lean} on \texttt{TubePont\_pont\_6.lean} returned code 0 with no error and 18 linter warnings; the 24 \texttt{\#print axioms} lines (the 23 declarations, or for L01, L02 and L10--L16 the verification theorems that restate and apply them, plus OpenAI's \texttt{YangMills.su2Theory}) all read \texttt{[propext, Classical.choice, Quot.sound]}; no forbidden token; the verification footers are the last 143 lines of the file, which is byte for byte the frozen base A--H, the stage-I file and the footer \texttt{PIED\_I.lean} of the archive; the closure of the five \texttt{TubeBridge} declarations was exported by \texttt{lean4export} (4\,090\,351 lines) and checked by the unmodified \texttt{nanoda\_bin} of 11 November: ``Checked 40099 declarations with no errors''; the closure of the 23 declarations also: ``Checked 40630 declarations with no errors''. \emph{Not redone:} Lean 4.32.2 (not installed on that machine); the check of the closure of \texttt{YangMills.su2Theory} (OpenAI's theorem, outside this note; an export of 58\,690\,813 lines was interrupted by the operator after five minutes); the rebuild of Mathlib and of OpenAI's project from their sources, and the check that the project's folder is commit \texttt{3456e5e7} (no git metadata on the machine; the build tool reported local changes in the \texttt{mathlib} folder); the export digest differs from that of 11 November while the line and declaration counts are equal (cause not investigated). The replayer is an AI model of the same family as the pilot, so this is a replay by a non-author, not by an independent human or laboratory. The scripts and logs are in \texttt{rejeu\_depuis\_arbre\_git\_2026-11-12/}.
+\begin{itemize}
+\item Lean 4.32.0 and Lean 4.32.2, with Mathlib at the revision pinned by OpenAI's project (\texttt{81a5d257c8e4}, tag v4.32.0); both runs ended with return code 0 and printed, for every declaration of the table in Section~\ref{sec:statements}, the three standard axioms \lean{propext}, \lean{Classical.choice}, \lean{Quot.sound}.
+\item The cumulative file \lean{TubePont_pont_6.lean} imports \lean{Mathlib}, \lean{PublicWilson} and \lean{ConcreteSU2} from the public repository \texttt{yang-mills-group/OpenAI-YM-20261028}, commit \texttt{3456e5e7} (Lean 4.32.0). That repository is not copied into the package (see the section ``Licence'' of the package's \texttt{README.md}); it must be fetched separately.
+\item Independent kernel: nanoda 0.4.32 (unmodified binary), run on the exported closure of the declarations of the file (export of 4\,090\,351 lines, sha256 \texttt{4d9c751e\dots9f49}): ``Checked 40099 declarations with no errors''. Earlier cumulative stages were exported and checked in the same way (``Checked 26868, 28343, 31363, 31384, 27006, 31116, 31158 declarations''; see the package).
+\item The statements of the successive stages were fixed by the pilot before each proof loop and copied word for word (empty \texttt{diff}). Verification footers (\texttt{lean/pieds/}), never written by the proving model, which could neither compile nor edit them, were appended to each compilation: for the stages of L01--L02, L10--L12 and L13--L16 they restate the targets without the auxiliary definitions; for the other stages they only print the axioms of, and check the types of, the existing declarations.
+\item Forbidden tokens (\texttt{sorry}, \texttt{axiom}, \texttt{native\_decide}, \texttt{unsafe}) are absent from the proved source files (the packaged initial skeleton \texttt{lean/pieds/ColumnFlip\_squelette\_initial.lean} contains \texttt{sorry} by design and is not one of them).
+\item The logs contain linter warnings only (unnecessary sequence focus, unused simp arguments, unused variables).
+\end{itemize}
+The full sha256 digests of the nine Lean files are in Table~\ref{tab:sha}; \texttt{sha256sum -c SHA256SUMS} in the package root checks them. The logs are in \texttt{lean/journaux/}.
+
+\paragraph{Not formalised, not recomputed.} The transfer-matrix section (Section~\ref{sec:tube}) is on paper only. No numerical computation is reported in this note.
+
+\input{shatable.tex}
+
+\section*{Use of AI}\label{sec:ai}
+\addcontentsline{toc}{section}{Use of AI}
+The work reported here was carried out with AI models, under the author's direction. The roles below are those recorded in the working files of the project (the certificate \texttt{lean/journaux/CERTIFICAT\_fr.md} for the Lean work; the dated reports of the project, not part of the package, for the reviews).
+\begin{itemize}
+\item \emph{Claude Fable~5.2 (Anthropic)} acted as the project's pilot: it chose the target, froze the statements before each proof loop (it wrote them, except that of \lean{wilson_column_flip_bound}, drafted by Sol from its specification and read by the pilot before freezing; the pilot is called ``Claude'' in the certificate), wrote the verification footers, drove the compilation loops and the independent-kernel checks, and arbitrated; it wrote none of the Lean proofs.
+\item \emph{GPT-6.1 Sol (OpenAI)} wrote all the Lean proofs (eight proof files, one to six rounds each; it could not compile and could not modify the verification footers) and drafted the statement of \lean{wilson_column_flip_bound}. Sol also made, on 12 November 2026, one read-only review of the complete text of this note, described in the file \texttt{RELECTURES.md} of the package.
+\item \emph{GPT-6 Astra (OpenAI)} wrote the paper proof of the flux-sector theorem of Section~\ref{sec:tube}.
+\item \emph{Claude Opus~5.5 (Anthropic)} reviewed that proof independently on 11 November 2026, with small numerical controls (statement ``ready after minor corrections'').
+\item \emph{DeepSeek V4 Pro (DeepSeek)} read the 18 first statements blind, without comments (11 November), reviewed the same proof (11 November), compared excerpts of~\cite{BB26} with our statements (12 November), and wrote first drafts of several sections of this note from the certificate and the Lean statements, which Claude Sonnet then assembled, checked against the Lean text and corrected.
+\item \emph{Qwen3.8 (Qwen team), run locally}, made a cold adversarial review of the flux-sector proof (11 November); its objections on the transfer-matrix bridge led to the full write-up of Section~\ref{sec:tube}.
+\item \emph{Claude Sonnet~5.5 (Anthropic)} prepared this version of 12 November 2026: it assembled and corrected the text, compared each statement of the text with the Lean declaration, ran \texttt{pdflatex}, and assembled the package. In that role it compiled no Lean file; a later Claude Sonnet~5.5 session, which had not written the text, replayed the Lean compilation from the git archive on 12 November 2026 (Section~\ref{sec:repro}) and then updated the reproducibility statements, the release tag and the checksums.
+\end{itemize}
+None of these checks is a substitute for refereeing: no human has checked the proofs.
+The human author read the final text of this note before its release; he did not verify the proofs, and no human expert has checked them.
+
+{\small
+\begin{thebibliography}{99}\setlength{\itemsep}{1pt}
+\bibitem{BB26} D.~Bhattacharjee, U.~Bhattacharya, J.~M.~Lockwood, T.~Romanov, I.~J.~Sessford, S.~Singha Roy, \emph{The Yang--Mills mass gap from one bound at one scale}, version 5.0.0 (12 November 2026), Zenodo, doi:10.5281/zenodo.24147967.
+\bibitem{Bor85} C.~Borgs, Area law for spatial Wilson loops in high-temperature lattice gauge theories, Nucl.\ Phys.\ B 261 (1985) 455--460 (not read).
+\bibitem{BS83} C.~Borgs, E.~Seiler, Lattice Yang--Mills theory at nonzero temperature and the confinement problem, Commun.\ Math.\ Phys.\ 91 (1983) 329--380.
+\bibitem{tH79} G.~'t~Hooft, A property of electric and magnetic flux in non-Abelian gauge theories, Nucl.\ Phys.\ B 153 (1979) 141--160 (not read).
+\bibitem{TY85} E.~T.~Tomboulis, L.~G.~Yaffe, Finite temperature SU(2) lattice gauge theory, Commun.\ Math.\ Phys.\ 100 (1985) 313.
+\bibitem{Kan} N.~Kanazawa, extension of the Tomboulis--Yaffe inequality to $SU(N)$, arXiv:0808.3442, Ann.\ Phys.\ 324 (2009).
+\bibitem{OAI} OpenAI, Lean development \texttt{OpenAI-YM-20261028} (repository \texttt{yang-mills-group}), commit \texttt{3456e5e7}, Apache License 2.0.
+\end{thebibliography}}
+\end{document}
+

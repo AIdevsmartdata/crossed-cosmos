@@ -1,0 +1,50 @@
+{
+ "balayage_t": {
+  "nb_t": 3030,
+  "qsigma_et_n_ok": true,
+  "total_exact": 0.40705906148867615,
+  "total_state": 0.5833333333333334,
+  "ratio_H_exact": 0.07372572815534281,
+  "ratio_S": 0.25,
+  "ratio_BCH": 0.08333333333333333,
+  "logb": 227.72356826121262,
+  "argmax_logb": 1,
+  "n_over_t6": 302366560940.0,
+  "H_over_n8": 1922960495.4040751,
+  "Ns_ratio": 60.000000000019845
+ },
+ "limite_asymptotique_log10_beta1_sur_t120": "227.72357",
+ "t_min_pour_borne_<1": 78,
+ "log10_beta_pour_t_min": 454.7749205840537,
+ "log10_beta_pour_24_beta^-1/120_log_beta_<1": 536.6546159574083
+}
+
+lem:L1 | C_1 = 96+6log(3pi^3/8)+6(3/2 log2+log c3') < 124 | energie E(1-W)<=C_1/beta, partout | oui | 123.732227632
+lem:L1/prop | C_2 = pi^2 C_1/2 <= 612 | moments d'ordre 2 des coordonnees (K = C_2 N_*^2) | oui | 611.9154729
+cor:tight | (2/pi^2) th^2 <= 1-cos th | E|a_e|^2 <= N sum (pi^2/2) beta(1-W) | oui | grille 2001 pts + concavite
+lem:stein (i) | kappa = int_0^inf e^-t(1-e^-2t)^-1/2 dt /sqrt(2 pi) = sqrt(pi/8) | borne de Stein sans dimension | oui | 0.626657068658
+lem:stein (v) | |grad log j| <= g^2|a|/5 sur g|a|/2<=1 : sin t >= 5t/6 sur [0,1] et sin t - t cos t <= t^3/3 | terme jacobien | oui | grille 1000 pts
+sec.rate comptes | D=(6n+1)(2n-1)^3 <= 48 n^4 | Lemme S (B), nombre de liens libres | oui | n=16..200000 exact (entiers), polynome ensuite : 48n^4-64n^3+24n^2-1
+sec.rate comptes | P_n=6(2n)^2(2n-1)^2 <= 96 n^4 | Lemme S (H) | oui | n=16..200000; polynome
+sec.rate comptes | |C^2_n|=6(2n)^2(2n+1)^2 <= 103 n^4 (n>=14) | Lemme H2 | oui | n=16..200000; 7n^2>=96n+24 pour n>=14
+sec.rate comptes | |W_n|=(2 floor(n/8)+1)^4 >= (3n/16)^4 | Lemme H2 (moyenne sur w) | oui | n=16..200000 exact; (n/4-1)>=3n/16 ssi n>=16
+lem:shorttree | N_*=6n(10n+1)=60n^2+6n <= (60+2e-11)n^2 pour n>=3e11 | constante 10^227.73 | oui | 6n<=2e-11 n^2 ssi n>=3e11
+lem:H2 | c_H = 4C_1*512*65536*103/81 <= 2.117e10 | erreur harmonique c_H/n^2 | oui | 21163318790.3
+QC (lemme S) | kappa H g <= delta/4 (g=g_*) ; rapport (S) maximal | somme des erreurs | oui | 0.25
+QC (lemme H2) | delta_H / delta (comptes exacts) <= 0.074+eps ; avec l'enonce cru c_H/n^2 : <= 1/4+eps | somme | oui | exact 0.07373 ; enonce 0.25000
+QC (lemme BCH) | delta_BCH/delta <= 1/12+eps | somme | oui | 0.08333333333333333
+QC total | somme <= 0.41 delta (comptes exacts) ; <= 0.583 delta (enonce cru) ; il suffit de <= delta | 3 delta' <= Gamma_G/2 | oui | exact 0.40706 ; enonce 0.58333
+QC | n_t <= 3.024e11 t^6 ; H <= 1.988e9 n^8 | borne de beta_1 | oui | n/t^6 max 3.0237e+11 ; H/n^8 max 1.9230e+09
+QC | log10(beta_1 / t^120) <= 227.73 pour tous les t testes | constante 10^227.73 | oui | max 227.72357 en t=1
+lem:projrate/QSigma | m=floor(7n/8)-t >= 4+3688 t^3 et 408/(m-4)^2 <= c_* t^-6/2 | |c_n-c(t)|<=c(t)/2 | oui | t=3030 valeurs testees
+lem:projrate | 408 = 2*4*45 + 48 (360/m^2 + 192*(1/4)/(m-4)^2) | vitesse grossiere | oui | 360+48
+Gamma_G | (1-x)^{-3/2}-1 >= 3x/2 ; (3/2)(9)^{-5/2} = 1/162 ; Gamma_G >= c_n^2/162 | Gamma >= Gamma_G/2 | oui | grille c^2 in (0,4] (s1=s2=2 : cas le plus defavorable pour la forme ; s_i<=2 quelconque : la fonction est decroissante en s_i)
+Gamma_G | Gamma_G >= c_n^2/162 pour s_i in {0.1,1,2}, c^2<=s1 s2 | meme | oui | grille
+Gamma_G | 162*4 = 648 = 3888/6 ; 6 delta = c_*^2 t^-12 /648 | Gamma_G >= 6 delta | oui | 648
+assemblage | m <= (1/t) log(1 + 1/(2 Gamma_G)) <= (1/t) log(1+324 t^12/c_*^2) | borne finale | oui | 1/(2*c^2/648)=324/c^2
+assemblage | log(325/c_*^2) = 25.2262 <= 25.23 | (12 log t + 25.23)/t | oui | 25.226157
+cor. R | 10^(227.73/120) = 79.03 | passage de t a beta | oui | 79.022361
+cor. R | 2*79.03*(12 log x+25.23) <= 24 log beta, beta>=1e228 (t=floor x>=x/2) | constante 24 | oui | affine en log beta: valeur en 1e228 = -8602.45 ; pente < 0
+cor. R | 3*79.03*(12 log x+25.23) <= 36 log beta (t impair >= x/3) | constante 36 | oui | -12903.7
+cor. R | x=(beta/10^227.73)^(1/120) >= 1 pour beta >= 1e228 ; beta_1(t) <= 10^227.73 t^120 <= beta pour t<=x | domaine de validite | oui | x(1e228)=1.0051943
+remarque | borne < 1 ssi t >= 78 (borne en t), ssi beta >= 10^536.7 (borne du corollaire 24 b^-1/120 log b) | phrase 'numeriquement vide avant ...' | oui | beta_1(78) = 10^454.77

@@ -1,0 +1,2034 @@
+% Weak-coupling vanishing of the transfer-matrix gap of infinite-volume SU(2) lattice Gibbs states.
+% Version 1.3 (draft, NOT deposited), 12 November 2026. Adds an explicit rate in beta (Section 'An explicit rate'); version 1.2 recentred the note on the infinite-volume statement. Not refereed.
+% Compile: pdflatex, two or three passes.
+\documentclass[11pt,a4paper]{article}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern}
+\usepackage[english]{babel}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{booktabs,array}
+\usepackage{geometry}
+\geometry{margin=2.2cm}
+\setlength{\emergencystretch}{2em}
+\usepackage[colorlinks=true,linkcolor=blue,citecolor=blue,urlcolor=blue]{hyperref}
+\usepackage{xurl}
+
+\hypersetup{pdftitle={Weak-coupling vanishing of the transfer-matrix gap of infinite-volume SU(2) lattice Gibbs states},pdfauthor={K\'evin R\'emondi\`ere}}
+
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+\numberwithin{equation}{section}
+
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\E}{\mathbb{E}}
+\newcommand{\tr}{\operatorname{tr}}
+\newcommand{\Var}{\operatorname{Var}}
+\newcommand{\Cov}{\operatorname{Cov}}
+\newcommand{\st}[1]{\textsf{[#1]}}
+\newcommand{\cP}{\mathcal{P}}
+\newcommand{\cG}{\mathcal{G}}
+\newcommand{\cH}{\mathcal{H}}
+\newcommand{\cO}{\mathcal{O}}
+\newcommand{\Th}{\Theta}
+\newcommand{\Tg}{\widetilde U}
+
+\title{Weak-coupling vanishing of the transfer-matrix gap\\ of infinite-volume $SU(2)$ lattice Gibbs states}
+\author{K\'evin R\'emondi\`ere\thanks{Independent researcher, Oloron-Sainte-Marie, France. ORCID
+\href{https://orcid.org/0009-0008-2443-7166}{0009-0008-2443-7166}. The proofs, the programs and this note were prepared with the
+assistance of AI models (Claude Opus~5.5, Claude Fable~5.2 and Claude Sonnet, Anthropic; Qwen3.8, Qwen team; DeepSeek~V4~Pro, DeepSeek; GPT-6.1~Sol and
+GPT-6~Astra, OpenAI); their roles are described in the
+statement on the use of AI at the end of the note.}}
+\date{\textbf{Version 1.3 (draft, not deposited), 12 November 2026}\\
+\small Not refereed; the proofs have not been checked by a human}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+For the $SU(2)$ Wilson lattice gauge theory on $\Z^4$ we prove that, for every family $\mu_\beta$ of translation-invariant Gibbs states
+that are reflection positive with respect to the time reflection through a hyperplane of sites, the gap
+$m(\mu_\beta)=-\log\|T|_{\Omega^\perp}\|$ tends to zero as $\beta\to\infty$. Here $T$ is the one-step transfer operator on the
+Osterwalder--Schrader Hilbert space of $\mu_\beta$ and $\Omega$ its distinguished vacuum vector. The states are infinite-volume states
+from the start; uniqueness of the state is not assumed, and the class includes all infinite-volume limits of even periodic tori.
+For every fixed integer $t\ge1$, $\limsup_{\beta\to\infty}m(\mu_\beta)\le B(t)=(2/t)\log(c(0)/c(t))$, where $c$ is an explicit
+correlation of the free lattice Maxwell field and $B(t)=O((\log t)/t)$. The same conclusion holds for the gauge-invariant sector, for the
+positive part of the spectrum of $T$, and, under spatial cubic symmetry, for the cubic-invariant sector. The same bound $B(t)$ also
+holds after removing the full eigenspaces of $T$ at $+1$ and $-1$, including in the gauge-invariant sector. For every fixed $K>0$, an
+explicit gauge-invariant observable built on two adjacent plaquettes has a decay rate along the time axis, defined through even time
+separations, that tends to zero.
+Version~1.3 adds an explicit rate: for $\beta\ge10^{228}$ and every such state, $m(\mu)\le24\,\beta^{-1/120}\log\beta$ (Theorem~\ref{thm:rate}).
+This bound is far above the expected exponentially small gap: the underlying bound $(12\log t+25.23)/t$ is smaller than $1$ only for $\beta\gtrsim10^{455}$, and the simplified form $24\beta^{-1/120}\log\beta$ only for $\beta\gtrsim10^{537}$; it is a rate in the sense of order in $\beta$.
+
+The key step identifies the joint weak-coupling limit of the nonnegative variables $2\beta(1-\Xi_i)$, tested against bounded Lipschitz
+functions, as the joint law of squared norms of differences of a three-colour free Maxwell field. This holds for every family of
+translation-invariant Gibbs states, without uniqueness or a correlation inequality.
+
+\emph{Relation to earlier work.} A statement at a fixed lattice size, with a rate $O((\log\beta)/\beta)$, for the unique zero-temperature state of the cylinder
+over a spatial torus, is Theorem~7.59 of Bhattacharjee et al., version~5.0.0 (Zenodo record created on 11 November 2026, 23:29 UTC),
+which precedes this note. The two statements concern different objects and, as far as we have been able to read, neither implies the
+other, including the two rates (\S\ref{sec:bb26}). We claim no priority. A reading of the whole text of that paper in twelve parts by an AI model, with its quotations checked against the text, found no statement on infinite-volume states and no rate in that setting; no human has read it for this purpose.
+
+This note proves neither part of Chatterjee's Problem~5.1 in \emph{Yang--Mills for probabilists}. That problem asks for a finite positive
+correlation length of the plaquette--plaquette covariance at every $\beta$, in every infinite-volume limit, and then for its divergence;
+our result concerns the inverse transfer-operator gap, which bounds the temporal correlation length from above for states common to
+the two classes. Neither inclusion between these classes is established here.
+The rate is a power of $\beta$; we obtain no exponential rate, no information on the gap at moderate $\beta$, and nothing uniform in the volume at fixed coupling.
+An adaptation of the argument to the $U(1)$ Wilson action is outlined in Remark~\ref{rem:U1}. For the different Villain action,
+masslessness of the photon at weak coupling is known. The gap-vanishing mechanism therefore does not distinguish $SU(2)$ from $U(1)$
+and establishes no confinement statement.
+\end{abstract}
+
+\paragraph{Status labels.}
+\st{proved}: complete argument written in this note; \st{computed}: floating-point or exact computation in the sandbox described in
+\S\ref{sec:repro}, never used in a proof; \st{read}: statement read in the cited source, location given; \st{abstract read}: only the
+abstract or summary of the cited source was read; \st{standard}: textbook fact not checked to a page; \st{sketch}: the changes needed
+are listed but the argument is not written in full; \st{heuristic}.
+
+{\small\setcounter{tocdepth}{1}\tableofcontents}
+
+%=====================================================================================================================
+\section{Introduction}\label{sec:intro}
+
+\subsection{The question}
+In four-dimensional lattice gauge theory, divergence of correlation lengths in lattice units is a prerequisite for the expected
+continuum limit at weak coupling. The question treated here is whether the gap of the transfer operator of an \emph{infinite-volume}
+reflection-positive state of $SU(2)$ Wilson theory closes as $\beta\to\infty$, for every such state and without uniqueness.
+Chatterjee \cite[\S5, Problem~5.1, p.~9]{Cha18} asks to show, for every compact non-Abelian
+$G\subseteq U(N)$ and every infinite-volume limit of the finite-volume Wilson measures, that the covariance $f_\beta(x)$ of the plaquette
+variables $W_{p_0}$ and $W_{p_x}$ satisfies $\lim_{|x|\to\infty}\log f_\beta(x)/|x|=-1/\xi(\beta)$ with $\xi(\beta)\in(0,\infty)$, and
+that $\xi(\beta)\to\infty$ as $\beta\to\infty$ (the exact text is quoted in \S\ref{sec:cha}).
+
+\emph{We prove neither assertion.} Theorem~\ref{thm:A} is an analogue of the second one, for $G=SU(2)$, in which $\xi(\beta)$ is replaced
+by the inverse $1/m(\mu_\beta)$ of the transfer-operator gap, and the infinite-volume limits by translation-invariant Gibbs states that
+are reflection positive for a hyperplane of sites. For every real observable $X$ depending only on spatial links of the time-zero slice,
+$|\Cov(X,\tau_tX)|\le e^{-m(\mu)t}\Var X$, so $1/m(\mu_\beta)$ is an upper bound for the time-direction correlation length of such
+observables, the spatial plaquette among them. Its divergence therefore does not imply that the plaquette correlation length of
+Problem~5.1 diverges. Proposition~\ref{prop:reduced} proves the same bound after removal of the full eigenspaces at $\pm1$ but supplies
+no spectral overlap statement for $W_p$. No inclusion between the two classes of states is established here.
+
+\subsection{Results}
+Let $\cG^{\mathrm{RP}}_\beta$ be the set of translation-invariant Gibbs states of the $SU(2)$ Wilson theory at inverse coupling $\beta$
+that are reflection positive for the time reflection through the hyperplane $\{x_0=0\}$, and $m(\mu)=-\log\|T|_{\Omega^\perp}\|$ the gap of
+the transfer operator $T$ of $\mu$ (Definition~\ref{def:gap}). All limits of periodic tori belong to $\cG^{\mathrm{RP}}_\beta$
+(Proposition~\ref{prop:tori}).
+\begin{itemize}
+\item \textbf{Theorem~\ref{thm:A}} \st{proved}. For every family $\mu_\beta\in\cG^{\mathrm{RP}}_\beta$ and every fixed integer $t\ge1$,
+$\limsup_{\beta\to\infty}m(\mu_\beta)\le B(t)$; hence $m(\mu_\beta)\to0$. The same holds for the gap in the gauge-invariant sector and
+for the positive part of the spectrum (Remark~\ref{rem:whichgap}). Proposition~\ref{prop:reduced} gives the same bound after removing
+all eigenvectors with eigenvalues $\pm1$, on the full OS space and in its gauge-invariant sector; for the remaining positive spectrum,
+it gives $B(t)$ at odd times and hence vanishing as well. Under spatial cubic invariance, the gap in the invariant sector
+also tends to zero (Corollary~\ref{cor:cubic}, whose proof is given in outline through Remark~\ref{rem:loops}). For each fixed $K>0$, the even-time decay rate of the observable in
+Corollary~\ref{cor:obs} tends to zero by the fixed-$K$ bound proved there.
+\item \textbf{Theorem~\ref{thm:rate}} \st{proved} (new in version~1.3). For $\beta\ge10^{228}$ and every $\mu\in\cG^{\mathrm{RP}}_\beta$,
+$m(\mu)\le m^{\mathrm{inv}}(\mu)\le24\beta^{-1/120}\log\beta$ and $m_+(\mu)\le36\beta^{-1/120}\log\beta$. It is derived from the same
+Gaussian limit with a quantitative error (Stein's method for the conditional law in a box that grows with $\beta$), and rests on the statements
+of the status table below.
+\item \textbf{Proposition~\ref{prop:Y}} \st{proved}. In every family of translation-invariant Gibbs states, without reflection positivity,
+the variables $2\beta(1-\Xi_i)$ converge jointly against bounded Lipschitz tests to $|Y_i|^2$, where $Y_i$ are differences of a
+three-colour free Maxwell field. This statement concerns these squared norms, not convergence of the entire coloured curvature field
+or of unbounded polynomial correlations.
+\item \textbf{Lemma~\ref{lem:L1}} \st{proved}. $\E_\mu[1-\frac12\tr U_p]\le124/\beta$ in every translation-invariant Gibbs state, $\beta\ge2$.
+\end{itemize}
+
+\paragraph{Status of the pieces of the rate (version~1.3).}
+\begin{center}\small
+\begin{tabular}{@{}p{0.52\linewidth}p{0.4\linewidth}@{}}
+\toprule
+Piece & Status\\\midrule
+Energy bound $\E_\mu(1-W_p)\le124/\beta$ (Lemma~\ref{lem:L1}); variational principle; box gauge & \st{proved} in versions 1.0--1.2, reused\\
+Appendix~\ref{app:stokes} (non-abelian Stokes) & \st{proved}; executed on boxes of side 2 and 4, two sentences corrected in 1.3 \st{computed}\\
+Short tree, Lemma~\ref{lem:shorttree}; Taylor expansion, Lemma~\ref{lem:quat} & \st{proved}; tree counts \st{computed} for $n\le5$\\
+Stein comparison, Lemma~\ref{lem:stein} & \st{proved}; one-link check \st{computed}\\
+Harmonic part to second order, Lemma~\ref{lem:H2}; Lemma~\ref{lem:bch2} & \st{proved}\\
+Crude projector rate, Lemma~\ref{lem:projrate} & \st{proved} by hand; the constant is checked \st{computed}\\
+Bound $c(t)\ge c_*t^{-6}$ (Lemma~\ref{lem:free}) & \st{proved} in 1.0, reused\\
+Constants and their arithmetic (Theorem~\ref{thm:rate}) & \st{proved}; recomputed in exact arithmetic \st{computed}\\
+A better exponent than $1/120$ & not claimed (\st{heuristic} only, Remark~\ref{rem:exponent})\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\subsection{Relation to Theorem~7.59 and Corollary~7.60 of Bhattacharjee et al., version~5.0.0}\label{sec:bb26}
+\emph{Source and dates.} D.~Bhattacharjee, U.~Bhattacharya, J.~M.~Lockwood, T.~Romanov, I.~J.~Sessford and S.~Singha Roy,
+\emph{The Yang--Mills mass gap from one bound at one scale}, version~5.0.0 (157 pages), Zenodo, doi:10.5281/zenodo.24147967 \cite{BB26}.
+The Zenodo record of this version was created on 11 November 2026 at 23:29:13~UTC. This is the date of creation of the record, not a verified date of first
+appearance of any result in it. This note is dated 12 November 2026 and has not been deposited: their record precedes this note.
+The passages cited here (\S1.4, Lemma~7.3, the statement and proof of Theorem~7.59, the statement and proof of
+Corollary~7.60, and the paragraphs of \S2 and Corollary~6.4 defining and using translation-invariant reflection-positive states and torus
+limits) were read \st{read}. In addition, on 12 November 2026, an AI model (DeepSeek~V4~Pro) read the whole text of version~5.0.0 in twelve parts; an automatic check of its quotations against the text flagged seven doubtful answers, which were then examined, and the statements used here were opened in the text. That reading found no statement about infinite-volume states and no rate in that setting (the only rate is Theorem~7.59, at fixed torus size). It is a reading by an AI model of a 157-page paper, not a human reading and not a guarantee of absence; keyword searches of the text (``infinite volume'', ``translation invariant'', ``Gibbs state'', ``gap closes'') gave the same result.
+
+\emph{Their statement.} Their weight is $\exp(c\sum_p\mathrm{Re}\,\mathrm{Tr}\,Q_p)$ with $c=2\beta_{\mathrm{BB}}$; for $SU(2)$ this corresponds to our
+$\beta=4\beta_{\mathrm{BB}}=2c$ \st{read}. Theorem~7.59 of \cite{BB26}: let $G=SU(2)$, $c\ge32$, $\varepsilon(c)=12(\log c+5.42)/c$, and let $t=(\ell_1,\ell_2,\ell_3)$ be a spatial
+torus with sides at least $3$ and $(\ell_1\ell_2)^2\varepsilon(c)<3$. Then
+\[
+1-r_1(t)\le\frac{2(\ell_1+\ell_2)^2\varepsilon(c)}{1-(\ell_1\ell_2)^2\varepsilon(c)/3},
+\]
+where $1>r_1(t)$ is the second eigenvalue of the normalised transfer matrix $R=T/\lambda_0$ of the cylinder over $t$ (a compact self-adjoint
+nonnegative operator with simple top eigenvalue, Lemma~7.3 there), whose ground state is the zero-temperature state $\mu^0_t=\lim_M\mu_{t,M}$ of the cylinder.
+The gap of a torus of fixed lattice size therefore closes as $\beta\to\infty$, with a rate $O((\log\beta)/\beta)$ and explicit constants.
+Corollary~7.60 of \cite{BB26} deduces that, under their hypothesis~$(B^*)$ and $\varepsilon(2\beta_{\mathrm{BB}})\le10^{-3}$, the base scale satisfies
+$T_0>\bigl(\beta_{\mathrm{BB}}/(64(\log2\beta_{\mathrm{BB}}+5.42))\bigr)^{1/4}$. We use neither of these statements in any proof. Their proof, as we read it, rests on a
+centre symmetry (the loops winding around the torus have mean zero), an energy bound on the mean plaquette action that is uniform in the torus,
+Fricke's identity for $SU(2)$, and a Dirichlet-form estimate at time one.
+
+\emph{What is common.} The qualitative conclusion that, for four-dimensional $SU(2)$ Wilson theory, a transfer-matrix gap tends to zero as the
+coupling tends to zero is in both. Both arguments start from an energy bound of the form $\E[1-\tfrac12\tr U_p]=O((\log\beta)/\beta)$ or $O(1/\beta)$ obtained from a convexity inequality for
+the logarithm of the partition function, compared at $\beta$ and $\beta/2$, together with a lower bound on the Haar measure of a small ball, and both bound a variational
+quotient for the transfer operator by a Dirichlet form or a covariance of test functions. The two energy bounds are not comparable as statements: theirs is $O((\log\beta)/\beta)$ with a small explicit constant, uniformly over tori; ours is $124/\beta$, without logarithm, for every translation-invariant Gibbs state.
+
+\emph{What differs.} (a)~The objects: theirs is the transfer matrix of the cylinder over one spatial torus of fixed size and its unique ground state; ours is the
+transfer operator of an infinite-volume state of $\Z^4$, defined from reflection positivity, which need not have a unique vacuum (we assume reflection positivity for the site reflection only, and neither assume nor use $T\ge0$).
+(b)~The size: their bound degrades as $(\ell_1+\ell_2)^2\varepsilon(c)$ and requires $(\ell_1\ell_2)^2\varepsilon(c)<3$; ours has no volume parameter, and its rate is a power of $\beta$ (Theorem~\ref{thm:rate}). (c)~The test functions: theirs are traces of loops winding around the torus (and the product of two of them), which are not functions of finitely many
+links of $\Z^4$; ours are local gauge-invariant functions of two adjacent plaquettes and a link. (d)~The mechanism: theirs is the centre symmetry; ours is the
+convergence of curvature differences to a massless free Maxwell field (Proposition~\ref{prop:Y}) and the power-law decay of its correlation; we make no claim about whether the centre mechanism has an analogue for $U(1)$. (e)~Ours includes the removal of the full eigenspaces at $\pm1$ (Proposition~\ref{prop:reduced}), the
+gauge-invariant, positive and cubic sectors, and the explicit profile $B(t)$; theirs includes the rate $O((\log\beta)/\beta)$ at fixed size and Corollary~7.60.
+
+\emph{Do the statements imply each other?} We do not see a deduction in either direction, and we explain why, as a reading and not as a theorem.
+Theirs does not give ours: for each fixed $\beta$ their hypothesis $(\ell_1\ell_2)^2\varepsilon(c)<3$ excludes tori with $\ell_1\ell_2\ge(3/\varepsilon(c))^{1/2}$, which is of order $(\beta/\log\beta)^{1/2}$, so the bound says nothing about the limit
+in which the spatial volume tends to infinity first; the gap of an infinite-volume state is not bounded above by the gaps of its approximating cylinders without a statement that
+correlations of \emph{local} observables, which are what pass to the limit, retain the slow mode, and in their proof the slow mode is carried by observables that wind around the torus;
+and their state is a specific unique cylinder state, while ours is an arbitrary element of $\cG^{\mathrm{RP}}_\beta$, with no uniqueness and a possibly degenerate vacuum.
+Ours does not give theirs: ours is a statement about states on $\Z^4$ for $\beta\to\infty$ with no finite-torus assertion
+(\S\ref{sec:notprove}), and its rate $24\beta^{-1/120}\log\beta$ is much weaker than $O((\log\beta)/\beta)$, while theirs is a quantitative statement for one cylinder at fixed size.
+\emph{The two rates, with the conversion of the coupling.} Their $c=2\beta_{\mathrm{BB}}$ equals $\beta/2$ for our Wilson coupling $\beta$, so
+$\varepsilon(c)=24(\log(\beta/2)+5.42)/\beta$ and their bound reads $1-r_1\le C(\ell)\,(\log\beta)/\beta$ for a torus of fixed size, with
+$r_1$ an eigenvalue of the normalised transfer matrix of that cylinder (so their quantity is $1-r_1$, not $-\log r_1$, and the two agree to first order only). Our
+bound is on $m(\mu)=-\log\|T|_{\Omega^\perp}\|$ for an infinite-volume state, in $\beta^{-1/120}\log\beta$. Neither is deduced from the other:
+a bound for each torus does not bound the infinite-volume state, which is not a limit of the gaps of the cylinders in any sense proved by either paper,
+and a bound for infinite-volume states says nothing about the one fixed cylinder state of \cite{BB26}, whose vacuum is unique and which is not a translation-invariant state of $\Z^4$.
+Where both could be compared (a torus whose side grows with $\beta$), their theorem requires $(\ell_1\ell_2)^2\varepsilon(c)<3$, which does not reach infinite volume at any fixed $\beta$.
+We do not claim that our exponent is related to theirs.
+The paper \cite{BB26} also treats infinite-volume reflection-positive translation-invariant states and torus limits (\S2, Corollary~6.4 there), but for \emph{lower} bounds on the gap at strong coupling, and
+neither our reading of the cited passages nor the reading of the whole text by an AI model found an upper bound on the gap of such a state at weak coupling.
+This is a reading, not a theorem; a human reader of the whole paper may find a connection that we did not.
+
+\begingroup\sloppy\emph{Earlier versions.} A remark in version~4.47.1\allowbreak{} of the same work (Zenodo doi:\allowbreak10.5281/\allowbreak zenodo.24117822, record created on 10 November 2026, 18:49~UTC, remark~(b) on p.~37 there)
+states, for $SU(N)$, $\beta\ge1$ and the torus of side $2n+4$, that a cube Poincar\'e condition $\mathrm{BP}(n,\varpi)$ implies $\varpi\le C_Nn^4(1+\log\beta)/\beta$, referring to their release v4.44.0 
+(doi:\allowbreak10.5281/\allowbreak zenodo.24085959, record created on 9 November 2026, 14:50~UTC) \st{read}. That is a bound on a resampling constant of cubes, not a statement on the transfer-operator gap.
+We have not opened v4.44.0 and do not know whether it contains a statement of the type of Theorem~7.59. A keyword search of the text of version~4.47.1 found none; this is not a reading.
+The dates above are dates of creation of records.\endgroup
+
+\emph{Consequently} we make no claim of priority for the qualitative closing of the lattice gap at weak coupling, which is public in \cite{BB26} at fixed lattice size. What remains to
+this note, if the proofs hold, is the statement for infinite-volume states and the Gaussian limit of Proposition~\ref{prop:Y}; their historical status is not established (\S\ref{sec:prior}).
+
+\subsection{Other prior work, and what is not new}
+\emph{Not new.} The variational principle for transfer operators and reflection positivity of the Wilson action
+\cite{OS78,Lus77}. Under the reflection-positivity hypotheses used in \cite[App.~A, (A1.3)--(A1.4)]{TY85} \st{read}, and whenever the
+corresponding string tension is defined, the bound $\sigma(\beta)\le-\log\langle\frac12\tr U_p\rangle$ together with Lemma~\ref{lem:L1}
+yields $\sigma\to0$. That source attributes the bound to \cite{Sei78}, not read by us. We do not use this bound and do not assert its
+hypotheses for every state of our class. The masslessness of the photon of four-dimensional $U(1)$ lattice gauge theory with the Villain action at weak coupling
+\cite[\S2.11]{FS82} \st{read}, after Guth's proof of non-confinement for that action \cite{Gut80} \st{abstract read}. The idea that lattice
+Yang--Mills theory is Gaussian at small scales when the coupling is small, used by Chatterjee for the leading term of the free energy of
+$U(N)$ theories in boxes with free boundary conditions \cite{Cha16}. Gaussian limits in the presence of a Higgs field, where the limit is
+massive \cite{Cha24,RYZ26}. The closing of the gap at fixed lattice size, with a rate $O((\log\beta)/\beta)$, for $SU(2)$ \cite[Thm.~7.59]{BB26} (\S\ref{sec:bb26}).
+Stein's method as a tool for quantitative Gaussian approximation (\S\ref{sec:rate}); the form used there, on the conditional law in a box, is derived in this note.
+
+\emph{Contribution of this note.} We present an argument for weak-coupling vanishing of the transfer-operator gap in the stated class of
+infinite-volume $SU(2)$ Gibbs states, together with the bounded-observable limit in Proposition~\ref{prop:Y}. The latter identifies squared norms of
+curvature differences without assuming uniqueness or a correlation inequality. An adaptation of the gap-vanishing argument to the
+$U(1)$ Wilson action is outlined in Remark~\ref{rem:U1}. For the Villain action, Fr\"ohlich and Spencer prove masslessness at sufficiently
+weak coupling \cite[\S2.11]{FS82}. This concerns a different action from the Wilson adaptation outlined here.
+Historical status remains \st{UNSURE}: the limited search
+recorded in \S\ref{sec:prior} does not establish that either conclusion was previously unknown or unproved, and we claim no priority.
+
+\subsection{Status of the proof}\label{sec:status}
+(Version~1.3 also makes explicit, in the proof of Proposition~\ref{prop:tori}, that the test function $g$ does not depend on $U_E$, as pointed out by a reviewer.)
+Version~0.2 incorporated repairs identified in the GPT-6.1-Sol, GPT-6-Astra and Qwen reports: the principal logarithm chart,
+tail control before normalisation in Lemma~\ref{lem:S}, the support convention in Lemma~\ref{lem:H}, and a fixed-$K$ proof of
+Corollary~\ref{cor:obs}. Appendix~\ref{app:stokes} supplies an explicit proof and a bound for Lemma~\ref{lem:stokes}.
+Version~0.3 results from a further line-by-line adversarial reading. It found no error in the chain of proof of Theorem~\ref{thm:A}.
+It revised the scope statements and several attributions, expanded the comparison with Problem~5.1, and added
+Remarks~\ref{rem:loops}, \ref{rem:mechanism}, \ref{rem:whichgap} and~\ref{rem:U1}.
+Version~0.3 was then refereed by GPT-6~Astra. Version~0.4 was integrated by GPT-6.1~Sol: it applies the eight corrections of that report
+and re-derives its spectral strengthening in Proposition~\ref{prop:reduced}, including the complete proof after removal of the
+eigenspaces at $\pm1$.
+The model reports are fallible reviews, not independent certification of the theorem or its historical novelty.
+The computations in \S\ref{sec:repro} are supplementary and are used in no proof; the values labelled \st{computed} were replayed for version~1.0 by an
+agent other than their author (\S\ref{sec:repro}), except the asymptotic value $B(10^4)$, which is labelled as derived from an unproved asymptotic form.
+No human verification of the proofs is claimed.
+Version~1.0 (12 November 2026) differs from version~0.4 by editorial changes only: version label, statement on the use of AI,
+reproducibility section (replay of the programs), and the labelling of numerical values; no statement or proof was modified.
+Version~1.1 writes out the five proof details requested by the DeepSeek report: the finite-box density, its tails and normalisation;
+the coordinate-sweep induction; the energy counts and arithmetic; the bounded-test estimate off the small-field event; and the
+Caccioppoli averaging. No hypothesis or conclusion of Theorem~\ref{thm:A} or Proposition~\ref{prop:reduced} is changed.
+The new estimates are derived in the text; no program or compiler was run for this revision.
+Version~1.2 (12 November 2026, draft, not deposited) re-centres the note on the infinite-volume statement after the appearance of
+\cite{BB26} (\S\ref{sec:bb26}); it rewrites the title, abstract and introduction accordingly and replaces the statements on prior work. It also incorporates
+the following repairs, all of presentation: the proof of (H3) in Lemma~\ref{lem:H} is written out (convergence in probability followed by the lower semicontinuity of a nonnegative continuous functional); the compact exhaustion in
+Lemma~\ref{lem:DLRlim} is written out with its Markov estimate; the passage to the limit in Proposition~\ref{prop:tori} is written out; and
+Remark~\ref{rem:loops} and Corollary~\ref{cor:cubic} are labelled as outlines. No hypothesis, conclusion or constant of
+Theorem~\ref{thm:A}, Proposition~\ref{prop:Y} or Proposition~\ref{prop:reduced} is changed. The programs were not run again for this revision.
+Version~1.3 (12 November 2026, draft, not deposited) adds Section~\ref{sec:rate} (an explicit rate, Theorem~\ref{thm:rate}, with Lemmas~\ref{lem:shorttree}--\ref{lem:bch2}), the status table above,
+and two corrections of wording in Appendix~\ref{app:stokes} that do not alter a statement. The abstract, the comparison with \cite{BB26}, \S\ref{sec:notprove},
+\S\ref{sec:repro} and the statement on the use of AI are updated. Theorem~\ref{thm:A}, Proposition~\ref{prop:Y} and Proposition~\ref{prop:reduced} are unchanged.
+Appendix~\ref{app:stokes} was executed (\S\ref{sec:repro}); the new section and the constants of Theorem~\ref{thm:rate} were reviewed by models of three families and the arithmetic recomputed, but no human has checked them.
+
+%=====================================================================================================================
+\section{Setting and statements}\label{sec:setting}
+
+\subsection{Model}
+Points of $\Z^4$ are $x=(x_0,x_1,x_2,x_3)$; $x_0$ is time. An oriented link $(x,\mu)$ goes from $x$ to $x+e_\mu$ and carries
+$U_{x,\mu}\in SU(2)$; the reversed link carries $U_{x,\mu}^{-1}$. For a plaquette $p=(x;\mu\nu)$, $\mu<\nu$,
+$U_p=U_{x,\mu}U_{x+e_\mu,\nu}U_{x+e_\nu,\mu}^{-1}U_{x,\nu}^{-1}$ and $W_p=\frac12\tr U_p\in[-1,1]$. $dU$ is the normalised Haar measure.
+For a finite set $E$ of links let $\cP(E)$ be the set of plaquettes containing a link of $E$, and
+\begin{equation}\label{eq:spec}
+\gamma_E(dU_E\mid\omega)=Z_E(\beta,\omega)^{-1}\exp\Bigl(\beta\sum_{p\in\cP(E)}W_p\Bigr)\prod_{e\in E}dU_e,
+\end{equation}
+$\omega$ the configuration outside $E$ (this differs from the weight $e^{-\beta\sum(1-W_p)}$ by a constant). A \emph{Gibbs state} is a
+probability measure $\mu$ on $SU(2)^{\text{links}}$ with $\mu\gamma_E=\mu$ for every finite $E$. $\cG^{\mathrm{TI}}_\beta$ denotes the
+translation-invariant Gibbs states.
+
+For $U\in SU(2)$ let $\delta(U)\in[0,\pi]$ be defined by $\frac12\tr U=\cos\delta(U)$; it is the geodesic distance from $1$ to $U$ for the
+bi-invariant metric of $SU(2)\cong S^3$, so $\delta(U^{-1})=\delta(U)$, $\delta(VUV^{-1})=\delta(U)$, $\delta(UV)\le\delta(U)+\delta(V)$.
+On $[0,\pi]$, $(2/\pi^2)\delta^2\le1-\cos\delta\le\delta^2/2$. Under Haar measure $\delta$ has density $(2/\pi)\sin^2\theta$, so
+$\mathrm{Haar}\{\delta\le r\}\ge8r^3/(3\pi^3)$ for $r\le\pi/2$. Put $g=2/\sqrt\beta$.
+For $U\ne-I$ there is a unique $a\in\R^3$ satisfying
+\[
+|a|<\frac{2\pi}{g},
+\qquad
+U=\exp\!\left(\frac{ig}{2}a\cdot\sigma\right).
+\]
+It satisfies $|a|=2\delta(U)/g$. Set $a=0$ at $U=-I$ as a measurable convention on this Haar-null set.
+The principal-coordinate density of Haar measure with respect to Lebesgue measure is
+\[
+\frac{g^3}{16\pi^2}
+\left(\frac{\sin(g|a|/2)}{g|a|/2}\right)^2
+\mathbf1_{\{|a|<2\pi/g\}},
+\]
+where the quotient is interpreted as $1$ at $a=0$.
+
+\subsection{Reflection positivity and the transfer operator}
+The time reflection through sites acts on configurations by $(\Th U)_{(\bar x,t),i}=U_{(\bar x,-t),i}$ for spatial links and
+$(\Th U)_{(\bar x,t),0}=U_{(\bar x,-t-1),0}^{-1}$ for temporal links, and on functions by $(\Th F)(U)=\overline{F(\Th U)}$. Let $\mathcal A_+$
+be the continuous functions of finitely many links of the half-space $\{x_0\ge0\}$ (temporal links from $t$ to $t+1$, $t\ge0$). A state
+$\mu$ is \emph{reflection positive} (RP) if $\mu(\Th F\cdot F)\ge0$ for all $F\in\mathcal A_+$. Then $\langle F,G\rangle=\mu(\Th F\cdot G)$ is a
+positive Hermitian form on $\mathcal A_+$; $\cH_\mu$ is the Hilbert space obtained by quotient and completion; $\Omega=[1]$; $\tau_s$ is the
+time translation. $\cG^{\mathrm{RP}}_\beta\subset\cG^{\mathrm{TI}}_\beta$ is the subset of RP states.
+
+\begin{lemma}\label{lem:OS}
+If $\mu$ is invariant under time translations and RP, then $T[F]=[\tau_1F]$ defines a self-adjoint contraction of $\cH_\mu$ with $T\Omega=\Omega$.
+\end{lemma}
+\begin{proof}
+$\Th\tau_s=\tau_{-s}\Th$ and invariance give $\langle F,\tau_sG\rangle=\langle\tau_sF,G\rangle$ and
+$\langle\tau_jF,\tau_jF\rangle=\langle F,\tau_{2j}F\rangle\le\|F\|\,\|\tau_{2j}F\|$. By induction
+$\|\tau_1F\|\le\|F\|^{1-2^{-k}}\|\tau_{2^k}F\|^{2^{-k}}$, and $\|\tau_NF\|^2=\mu(\Th\tau_NF\cdot\tau_NF)\le\|F\|_\infty^2$. Letting $k\to\infty$,
+$\|\tau_1F\|\le\|F\|$; in particular null vectors are mapped to null vectors, and $T$ is well defined, contractive and symmetric.
+\end{proof}
+
+\begin{definition}\label{def:gap}
+For $\mu\in\cG^{\mathrm{RP}}_\beta$, define
+$m(\mu):=-\log\|T|_{\Omega^\perp}\|\in[0,\infty]$, with $-\log0=\infty$.
+Since $T$ is self-adjoint and preserves $\Omega^\perp$, $\|T|_{\Omega^\perp}\|$ is the spectral radius of $T|_{\Omega^\perp}$; the
+spectrum of $T$ lies in $[-1,1]$ and both signs count.
+The space $\cH_\mu$ is built from all of $\mathcal A_+$, not only from gauge-invariant functions; see Remark~\ref{rem:whichgap} for the
+gauge-invariant sector.
+This definition removes only the distinguished vector $\Omega$.
+If $\ker(T-I)\cap\Omega^\perp\ne\{0\}$ or $\ker(T+I)\ne\{0\}$, then $m(\mu)=0$.
+It need not coincide with the gap obtained by removing the entire eigenspace of $T$ for the eigenvalue~$1$.
+It can vanish trivially for mixtures of distinct states (Remark~\ref{rem:whichgap}(iii)). Nevertheless,
+Proposition~\ref{prop:reduced} shows that the same weak-coupling bound also holds after removing all eigenvectors with eigenvalues
+$+1$ and $-1$.
+\end{definition}
+
+\subsection{The free Maxwell field}
+Let $d$ be the lattice exterior derivative and $\Pi_\infty$ the orthogonal projection of the space $\ell^2$ of square-summable
+functions of the plaquettes of $\Z^4$ onto the closure of the image under $d$ of the finitely supported $1$-forms. Let $F=(F^1,F^2,F^3)$
+be three independent centred Gaussian fields on plaquettes with covariance $\Pi_\infty$ (the free Maxwell field strength, three
+colours). With $\hat k_\mu=2\sin(k_\mu/2)$, $\hat k^2=\sum_\mu\hat k_\mu^2$ and $\cosh\omega(k)=1+\frac12\sum_{i=1}^3\hat k_i^2$, put
+\begin{equation}\label{eq:c}
+c(t)=\int_{[-\pi,\pi]^4}\frac{d^4k}{(2\pi)^4}\,e^{ik_0t}\,\frac{\hat k_1^2(\hat k_1^2+\hat k_2^2)}{\hat k^2}
+=\int_{[-\pi,\pi]^3}\frac{d^3k}{(2\pi)^3}\,\hat k_1^2(\hat k_1^2+\hat k_2^2)\,\frac{e^{-\omega t}}{2\sinh\omega}>0 .
+\end{equation}
+By Lemma~\ref{lem:free}, $c(t)$ is the covariance of one colour of $Y=F_{(0;12)}-F_{(e_1;12)}$ and of its translate by $te_0$.
+$c(0)=1.1377494917$ \st{computed}.
+
+\subsection{Statements}
+For a plaquette $p=(x;\mu\nu)$ and a direction $\lambda$ put $p'=p+e_\lambda$, $V=U_{x,\lambda}$ and
+\begin{equation}\label{eq:Xi}
+\Xi(p,\lambda)=\tfrac12\tr\bigl(U_pVU_{p'}^{-1}V^{-1}\bigr),
+\end{equation}
+the Wilson loop of a closed path based at $x$, hence gauge invariant. Its weak-coupling meaning is $2\beta(1-\Xi)\approx|F_p-F_{p'}|^2$.
+
+\begin{proposition}[Gaussian limit of curvature differences]\label{prop:Y}
+Let $r\ge1$, $(p_i,\lambda_i)_{i\le r}$ plaquettes and directions, $\Xi_i=\Xi(p_i,\lambda_i)$, and $\Phi:[0,\infty)^r\to\R$ bounded and
+Lipschitz. For every family $\mu_\beta\in\cG^{\mathrm{TI}}_\beta$,
+\[
+\lim_{\beta\to\infty}\E_{\mu_\beta}\bigl[\Phi\bigl(2\beta(1-\Xi_1),\dots,2\beta(1-\Xi_r)\bigr)\bigr]=\E\bigl[\Phi(|Y_1|^2,\dots,|Y_r|^2)\bigr],
+\qquad Y_i=F_{p_i}-F_{p_i+e_{\lambda_i}}.
+\]
+\end{proposition}
+
+\begin{theorem}\label{thm:A}
+For every family $\mu_\beta\in\cG^{\mathrm{RP}}_\beta$ and every integer $t\ge1$,
+\[
+\limsup_{\beta\to\infty}m(\mu_\beta)\le B(t):=\frac2t\log\frac{c(0)}{c(t)}\le\frac2t\Bigl(6\log t+\log\frac{c(0)}{c_*}\Bigr),\qquad c_*=6\cdot10^{-5}.
+\]
+In particular $\lim_{\beta\to\infty}m(\mu_\beta)=0$.
+\end{theorem}
+Numerically $B(10^2)=0.5594$ and $B(10^3)=0.08357$ \st{computed}. The computed values of $c(t)t^6$ approach $8/\pi^2$ (\S\ref{sec:repro}),
+which suggests $B(t)=(12\log t+2\log(\pi^2c(0)/8)+o(1))/t$ with $2\log(\pi^2c(0)/8)=0.678141$; this asymptotic form is not proved here,
+and the value $B(10^4)\approx0.01112$ comes from it, not from a direct evaluation \st{computed, asymptotic}. None of these numbers is used
+in a proof.
+
+%=====================================================================================================================
+\section{The energy bound}\label{sec:L1}
+
+Boxes: $B_n=\{|x|_\infty\le n\}$, $S_n=B_n\setminus B_{n-1}$, $E_n$ the links with at least one endpoint in $B_{n-1}$, $\Sigma_n$ the links
+with both endpoints in $S_n$. Every plaquette containing a link of $E_n$ has its vertices in $B_n$ and its links in $E_n\cup\Sigma_n$ (its
+vertices differ from an endpoint in $B_{n-1}$ by at most one in each coordinate), and every link of $B_n$ is in $E_n\cup\Sigma_n$.
+All links and plaquettes are counted once, using positive coordinate directions. Put $m=2n-1$, so the interior has side $m$
+and the box has side $m+2$. For a fixed link direction, the other three coordinates have $m$ choices, and the lower endpoint
+in that direction ranges from $-n$ to $n-1$, giving $m+1$ choices. Thus
+\[
+|B_{n-1}|=m^4,\qquad |E_n|=4(m+1)m^3=8n(2n-1)^3.
+\]
+Also $|S_n|=(m+2)^4-m^4\le8(m+2)^3$: write the difference of fourth powers as
+$2\bigl((m+2)^3+(m+2)^2m+(m+2)m^2+m^3\bigr)$ and bound each summand by $(m+2)^3$.
+A plaquette belongs to $\cP(E_n)$ exactly when it has a vertex in $B_{n-1}$.
+For each of its six orientations the two coordinates transverse to its plane have $m$ choices each, and the two lower
+coordinates in its plane have $m+1$ choices each. Consequently
+\[
+|\cP(E_n)|=6(m+1)^2m^2\le6(m+2)^4.
+\]
+
+\begin{lemma}[gauge fixing on a forest]\label{lem:G}
+Let $T_I\subset E_n$ be a forest each component of which contains exactly one site of $S_n$ (its root) and whose components cover
+$B_{n-1}$. If $F(U_{E_n},\omega)$ is bounded, measurable and invariant under gauge transformations supported in $B_{n-1}$
+($U_{x,\mu}\mapsto g_xU_{x,\mu}g_{x+e_\mu}^{-1}$), then $\int F\prod_{e\in E_n}dU_e=\int F(w,1_{T_I},\omega)\prod_{e\in E_n\setminus T_I}dw_e$.
+\end{lemma}
+\begin{proof}
+Along each component, from the root ($g=1$), set $g_y=g_xU_{x\to y}$ for each tree link oriented from parent to child; then
+$U^g=1$ on $T_I$. For fixed $U_{T_I}$, $U_e\mapsto(U^{g(U)})_e$ is a left and right translation for $e\notin T_I$, hence preserves Haar
+measure; $F(U)=F(U^{g(U)})$, and the remaining integral over $U_{T_I}$ equals one.
+\end{proof}
+
+\begin{lemma}[energy]\label{lem:L1}
+For $\beta\ge2$ and every $\mu\in\cG^{\mathrm{TI}}_\beta$, $\bar e(\mu):=\sum_{0\le\mu<\nu\le3}\E_\mu[1-W_{(0;\mu\nu)}]\le C_1/\beta$ with $C_1=124$.
+\end{lemma}
+\begin{proof}
+Fix $n\ge2$; write $m=2n-1$, $E=E_n$, $P=\cP(E_n)$, and $\mathrm{bd}\subset P$ for the plaquettes containing a link of $\Sigma_n$.
+For a plaquette of $P$, its two transverse coordinates are interior. It has a link in $\Sigma_n$ exactly when at least one of
+its two in-plane lower coordinates is $-n$ or $n-1$: that coordinate then supplies an entire edge on a face of $B_n$.
+There are $(m+1)^2$ in-plane choices in all, and $(m-1)^2$ choices with all four vertices interior. Hence
+\[
+|\mathrm{bd}|=6m^2\bigl((m+1)^2-(m-1)^2\bigr)=24m^3.
+\]
+This also implies the previously used bound $|\mathrm{bd}|\le24|S_n|$: alternatively, each link belongs to six plaquettes and
+$|\Sigma_n|\le4|S_n|$. For a boundary condition $\omega$, $\phi(\beta)=\log Z_E(\beta,\omega)$ is convex with
+$\phi'(\beta)=\E_{\gamma_E(\cdot|\omega)}\sum_PW_p$, so
+\begin{equation}\label{eq:conv}
+\E_{\gamma_E(\cdot|\omega)}\sum_{p\in P}(1-W_p)=|P|-\phi'(\beta)\le|P|-\tfrac2\beta\bigl(\phi(\beta)-\phi(\beta/2)\bigr).
+\end{equation}
+Use Lemma~\ref{lem:G} with the temporal forest $T_I=\{((\bar x,t),(\bar x,t+1)):\bar x\in[-(n-1),n-1]^3,\,-n\le t\le n-2\}$.
+There are $m^3$ chains, each with $m$ edges and root $(\bar x,-n)\in S_n$; they cover every interior vertex and have disjoint
+interior vertices. Thus $|T_I|=m^4$, and the number of free group variables is
+\[
+F_n=|E|-|T_I|=4(m+1)m^3-m^4=(3m+4)m^3=(6n+1)(2n-1)^3.
+\]
+
+\emph{Lower bound.} Restrict every free variable to $\{\delta\le r\}$, $r=\beta^{-1/2}\le1\le\pi/2$.
+Its Haar mass is at least $8\beta^{-3/2}/(3\pi^3)$, as follows by integrating
+$(2/\pi)\sin^2\theta\ge(8/\pi^3)\theta^2$ on $[0,r]$.
+A plaquette of $P\setminus\mathrm{bd}$ has four links equal to $1$ or within $r$ of $1$, so
+$1-W_p\le\delta(U_p)^2/2\le(4r)^2/2=8/\beta$; for $p\in\mathrm{bd}$ use $1-W_p\le2$.
+Writing $\alpha=\log(3\pi^3/8)$ therefore gives
+\[
+\begin{split}
+Z_E(\beta,\omega)
+&\ge \exp\bigl(\beta|P|-8|P\setminus\mathrm{bd}|-2\beta|\mathrm{bd}|\bigr)
+       \left(\frac8{3\pi^3}\beta^{-3/2}\right)^{F_n},\\
+\phi(\beta)&\ge\beta|P|-8|P|-2\beta|\mathrm{bd}|
+                  -F_n\left(\frac32\log\beta+\alpha\right).
+\end{split}
+\]
+
+\emph{Upper bound at $\beta'=\beta/2$.} Let $Q$ be the temporal plaquettes $((\bar x,t);0i)$ whose two temporal links are in $T_I$
+($\bar x,\bar x+e_i\in[-(n-1),n-1]^3$, $-n\le t\le n-2$).
+For each $i\in\{1,2,3\}$ there are $m-1$ choices along $i$, $m^2$ choices in the other two spatial directions, and $m$ choices of $t$.
+Thus $|Q|=3(m-1)m^3=3(2n-2)(2n-1)^3$, and for $p\in Q$,
+$W_p=\frac12\tr(U_{(\bar x,t+1),i}U_{(\bar x,t),i}^{-1})$. Bound $W_p\le1$ off $Q$. For fixed $(\bar x,i)$ the spatial links
+$\ell_s=((\bar x,s),i)$ are fixed for $s=\pm n$ (they lie in $\Sigma_n$) and free for $|s|\le n-1$, and $Q$ couples them in the chain
+$\ell_{-n},\ell_{-n+1},\dots,\ell_{n-1}$, with $m$ couplings and $m$ free links; $\ell_n$ occurs in no retained coupling.
+Distinct chains have disjoint free variables. Starting at $\ell_{n-1}$, Haar invariance gives
+$\int\exp(\beta'\tfrac12\tr(UV^{-1}))\,dU=I(\beta')$ for every fixed $V$.
+Repeating down each chain yields exactly $I(\beta')^{|Q|}$, including when its fixed bottom link is arbitrary.
+All remaining free Haar integrals equal one after bounding $W_p\le1$ off $Q$. Furthermore
+\[
+\begin{split}
+I(\beta')
+&=\frac2\pi\int_0^\pi e^{\beta'\cos\theta}\sin^2\theta\,d\theta\\
+&\le\frac2\pi e^{\beta'}\int_0^\infty\theta^2e^{-2\beta'\theta^2/\pi^2}\,d\theta\\
+&=\frac2\pi e^{\beta'}\frac{\sqrt\pi}{4}
+                 \left(\frac{\pi^2}{2\beta'}\right)^{3/2}
+ =e^{\beta'}\frac{\pi^{5/2}}{4\sqrt2}\,\beta'^{-3/2}
+ =:e^{\beta'}c_3'\beta'^{-3/2}.
+\end{split}
+\]
+Consequently
+\[
+\begin{split}
+Z_E(\beta',\omega)&\le e^{\beta'(|P|-|Q|)}I(\beta')^{|Q|},\\
+\phi(\beta/2)&\le\frac\beta2|P|-\frac32|Q|\log\beta
+                    +|Q|\left(\frac32\log2+\log c_3'\right).
+\end{split}
+\]
+
+\emph{Conclusion.} Put $\zeta=\frac32\log2+\log c_3'$. The counts above give
+\[
+F_n-|Q|=\bigl((3m+4)-3(m-1)\bigr)m^3=7m^3,
+\]
+and subtracting the two bounds on $\phi$ yields
+\[
+\phi(\beta)-\phi(\beta/2)
+\ge\frac\beta2|P|-8|P|-2\beta|\mathrm{bd}|
+       -\frac32(F_n-|Q|)\log\beta-F_n\alpha-|Q|\zeta.
+\]
+Multiplication by $-2/\beta$ and addition of $|P|$ in \eqref{eq:conv} give, uniformly in $\omega$,
+\[
+\E_{\gamma_E(\cdot|\omega)}\sum_P(1-W_p)\le4|\mathrm{bd}|+\beta^{-1}\Bigl[16|P|+21(2n-1)^3\log\beta+2F_n\log\tfrac{3\pi^3}8+2|Q|\bigl(\tfrac32\log2+\log c_3'\bigr)\Bigr].
+\]
+Integrating against $\mu$ (DLR) gives the same bound for $\E_\mu$.
+For each orientation the $m^4$ plaquettes anchored at $x\in B_{n-1}$ are distinct and in $P$.
+Since $1-W_p\ge0$, translation invariance bounds the left side below by $m^4\bar e(\mu)$.
+The division by $m^4$ is completely explicit:
+\[
+\bar e(\mu)\le\frac{96}{m}+\frac1\beta\left[
+96\left(1+\frac1m\right)^2+\frac{21\log\beta}{m}
+ +2\left(3+\frac4m\right)\alpha+6\left(1-\frac1m\right)\zeta\right].
+\]
+At each fixed $\beta\ge2$, let $m=2n-1\to\infty$. Thus
+\[
+\begin{split}
+\beta\bar e(\mu)
+&\le96+6\log(3\pi^3/8)+6\left(\frac32\log2+\log\frac{\pi^{5/2}}{4\sqrt2}\right)\\
+&=96+6\left(\log3+\frac{11}{2}\log\pi-4\log2\right)
+ =96+6\log\frac{3\pi^{11/2}}{16}
+ =123.73\ldots<124.
+\end{split}
+\]
+For a rational certificate of the strict inequality, independent of this decimal, polynomial division and integration give
+\[
+0<\int_0^1\frac{x^4(1-x)^4}{1+x^2}\,dx=\frac{22}{7}-\pi.
+\]
+In particular $\sqrt\pi<9/5$, and
+\[
+\frac{3\pi^{11/2}}{16}
+ <\frac{27}{80}\left(\frac{22}{7}\right)^5
+ =\frac{139148064}{1344560}<104.
+\]
+The positive exponential series gives
+\[
+e^4>\sum_{j=0}^9\frac{4^j}{j!}=\frac{153527}{2835}>54,
+\qquad
+e^{2/3}>\sum_{j=0}^4\frac{(2/3)^j}{j!}=\frac{473}{243}>\frac{35}{18}.
+\]
+Hence $e^{14/3}=e^4e^{2/3}>105>104>3\pi^{11/2}/16$, proving
+$96+6\log(3\pi^{11/2}/16)<96+6(14/3)=124$.
+Finally each orientation's energy is nonnegative and at most $\bar e(\mu)$; no spatial rotation invariance is required.
+\end{proof}
+
+\begin{remark}
+No variational principle is used. For limits of tori an argument with the free energy per site $N^{-4}\log Z_N$,
+$Z_N=\int\exp(\beta\sum_pW_p)dU$, should also work; it is not written here and not used. The constant is crude: the value of
+$\beta\bar e$ in the free Gaussian field would be $6\cdot\frac12\cdot3\cdot\frac12=9/2$ \st{heuristic}.
+Translation invariance enters only in the last step, which converts the bound on the box sum into a bound for each plaquette.
+\end{remark}
+
+%=====================================================================================================================
+\section{The variational bound}\label{sec:V}
+
+\begin{lemma}\label{lem:V}
+Let $\mu\in\cG^{\mathrm{RP}}_\beta$ and let $X\in\mathcal A_+$ be real and depend only on spatial links of the slice $x_0=0$. If
+$\Gamma(t)=\Cov_\mu(X,\tau_tX)>0$, then $m(\mu)\le\frac1t\log\bigl(\Var_\mu(X)/\Gamma(t)\bigr)$.
+\end{lemma}
+\begin{proof}
+$\Th$ fixes each spatial link of the slice $0$ with its orientation, so $\Th X=X$. For $\psi=[X-\mu(X)]$: $\langle\Omega,\psi\rangle=0$,
+$\|\psi\|^2=\Var X$ and $\langle\psi,T^t\psi\rangle=\Cov(X,\tau_tX)$. $T$ is self-adjoint with $T\Omega=\Omega$, so it preserves
+$\Omega^\perp$ and $\Gamma(t)\le\|T|_{\Omega^\perp}\|^t\|\psi\|^2=e^{-m(\mu)t}\Var X$.
+\end{proof}
+Reflection positivity for the reflection through links (which makes $T\ge0$) is not needed.
+
+%=====================================================================================================================
+\section{Box gauge and tightness}\label{sec:box}
+
+Fix $n\ge8$. Let $T_S$ be a spanning tree of the connected graph $(S_n,\Sigma_n)$ with root $\rho\in S_n$, and $T_I\subset E_n$ a forest as
+in Lemma~\ref{lem:G} (extend $T_S$ to a spanning tree of $B_n$; the added links have an endpoint in $B_{n-1}$). Then $T=T_S\cup T_I$ is a
+spanning tree of $B_n$. With $h_x$ the holonomy along $T$ from $\rho$ to $x$, put $\Tg_{(x,y)}=h_xU_{(x,y)}h_y^{-1}$: the holonomy of the
+closed path $c_e=(\rho\to_Tx)\,e\,(y\to_T\rho)$. Thus $\Tg=1$ on $T$, and $\Tg_e$ depends only on $U_{\Sigma_n}$ when $e\in\Sigma_n$. The
+\emph{renormalised fields} $a=(a_e)_{e\in E_n\setminus T_I}$ and $b=(b_e)_{e\in\Sigma_n\setminus T_S}$ are the exponential coordinates of
+$\Tg$; $D=|E_n\setminus T_I|$.
+
+\begin{lemma}\label{lem:cond}
+For a Gibbs state $\mu$, conditionally on the configuration outside $E_n$, the law of $w=\Tg|_{E_n\setminus T_I}$ is
+$\tilde\gamma_\beta(dw\mid\Tg_{\Sigma_n})\propto\exp\bigl(\beta\sum_{p\in\cP(E_n)}W_p(w,1_{T_I},\Tg_{\Sigma_n})\bigr)\prod dw_e$; it depends
+on the outside only through $b$.
+\end{lemma}
+\begin{proof}
+By the DLR equation for $E_n$ the conditional law is $\gamma_{E_n}(\cdot|\omega)$, whose weight depends on $\omega$ only through
+$U_{\Sigma_n}$. The gauge transformation $(h_x)_{x\in S_n}$ is a function of $U_{T_S}$, hence fixed by the conditioning, and leaves the $W_p$
+and Haar measure invariant; then apply Lemma~\ref{lem:G} to $T_I$.
+\end{proof}
+
+\begin{lemma}[non-Abelian Stokes]\label{lem:stokes}
+For each link $e$ of $B_n$ there is a list of plaquettes $p_1,\dots,p_N$ of $B_n$, independent of the configuration, such that
+\[
+N\le A_n:=6(2n)^2\bigl[2(2n+1)^4-1\bigr],
+\qquad
+\delta(\Tg_e)\le\sum_{j=1}^N\delta(U_{p_j}).
+\]
+The list may contain repeated plaquettes, which are counted with multiplicity.
+\end{lemma}
+\begin{proof}
+Appendix~\ref{app:stokes} contracts the tree loop $c_e$ by explicit coordinate sweeps inside $B_n$ and writes its holonomy as a product
+of at most $A_n$ conjugates of plaquette holonomies or their inverses. Conjugation invariance, inversion invariance and subadditivity
+of $\delta$ give the inequality.
+\end{proof}
+
+\begin{corollary}[tightness]\label{cor:tight}
+For $\beta\ge2$, $\mu\in\cG^{\mathrm{TI}}_\beta$ and every link $e$ of $B_n$: $\E_\mu|a_e|^2,\ \E_\mu|b_e|^2\le\frac{\pi^2}2C_1A_n^2$.
+\end{corollary}
+\begin{proof}
+$|a_e|^2=\beta\delta(\Tg_e)^2\le\beta A_n\sum_j\delta(U_{p_j})^2\le\beta A_n\sum_j\frac{\pi^2}2(1-W_{p_j})$, and Lemma~\ref{lem:L1}.
+\end{proof}
+
+%=====================================================================================================================
+\section{The limiting box specification}\label{sec:S}
+
+Write $c=a\oplus0_T\oplus b$ for the $\R^3$-valued $1$-form on the links of $B_n$, $(dc)_p$ for its oriented sum around $p$, and, for given
+$b$, $N_b$ for the Gaussian measure on $\R^{3D}$ with density proportional to $\exp(-\frac12\sum_{p\in\cP(E_n)}|(dc)_p|^2)$.
+
+\begin{lemma}\label{lem:nondeg}
+The quadratic form $a\mapsto\sum_{p\in\cP(E_n)}|(d(a\oplus0\oplus0))_p|^2$ is positive definite, so $N_b$ is a non-degenerate Gaussian.
+\end{lemma}
+\begin{proof}
+If it vanishes, extend $a$ by zero on all other lattice links. Every plaquette meeting its support belongs to $\cP(E_n)$,
+so $da=0$ globally. The additive version of the square contraction in Appendix~\ref{app:stokes} shows that its integral around
+every finite closed path is zero: enclose that path in a finite box and apply the contraction, each square having integral zero.
+Path integration from a fixed boundary vertex therefore defines $\lambda$ with $a=d\lambda$.
+The set $\Z^4\setminus B_{n-1}$ is connected by lattice edges and $a$ vanishes on its edges, so take $\lambda=0$ there.
+On each component of $T_I$, $a=0$, so $\lambda$ is constant and equals its value zero at the root in $S_n$.
+These components cover $B_{n-1}$, whence $\lambda=0$ everywhere and $a=0$.
+\end{proof}
+
+\begin{lemma}\label{lem:S}
+Fix $n\ge8$, the vertex box $B_n=[-n,n]^4\cap\Z^4$, and the trees $T_S,T_I$ of \S\ref{sec:box}.
+Write $I=E_n\setminus T_I$, $J=\Sigma_n\setminus T_S$, $D=|I|$, $P=\cP(E_n)$ and $P_n=|P|$.
+For $g=2/\sqrt\beta$ and $b\in(\R^3)^J$, set the boundary links to
+$\exp(igb_e\cdot\sigma/2)$ on $J$ and to $1$ on $T_S$; set the links of $T_I$ to $1$.
+Let $\tilde\gamma_\beta(\cdot\mid b)$ be the probability measure on $SU(2)^I$ with density proportional to
+$\exp[-\beta\sum_{p\in P}(1-W_p)]$ with respect to product normalised Haar measure.
+No constraint is imposed on the boundary holonomies, and no values beyond $B_n$ enter this kernel.
+For every nonempty compact $\mathcal K\subset(\R^3)^J$,
+\[
+\sup_{b\in\mathcal K}
+\bigl\|\mathrm{Law}_{\tilde\gamma_\beta(\cdot\mid b)}(a)-N_b\bigr\|_{\mathrm{TV}}
+\longrightarrow0\qquad(\beta\to\infty),
+\]
+where $a_e$ are the principal coordinates, and $N_b$ has Lebesgue density proportional to
+$\exp[-\frac12\sum_{p\in P}|(d(a\oplus0_T\oplus b))_p|^2]$ on $(\R^3)^I$.
+Here $\|\rho-\rho'\|_{\mathrm{TV}}=\sup_A|\rho(A)-\rho'(A)|$, one half of the $L^1$ distance of densities.
+The boundary coordinates are principal for all sufficiently large $\beta$, uniformly on $\mathcal K$.
+\end{lemma}
+\begin{proof}
+Put $M_b=\sup_{b\in\mathcal K}\max_{e\in J}|b_e|$, with an empty maximum equal to zero, and define
+\[
+s_0=\max(1,M_b),\quad g_{\mathcal K}=s_0^{-1},\quad v_3=\frac{4\pi}{3},\quad
+\|a\|_{\mathrm{edge},\infty}=\max_{e\in I}|a_e|,\quad
+\mathcal B_g=\{a:|a_e|<2\pi/g\ (e\in I)\}.
+\]
+Throughout $0<g\le g_{\mathcal K}$, equivalently $\beta\ge4s_0^2$.
+In particular $g|b_e|/2\le1/2<\pi$, so these are valid boundary principal coordinates.
+
+\emph{(i) Change of variables.}
+Writing $c=a\oplus0_T\oplus b$ and $h_g=g^3/(16\pi^2)$, the principal exponential chart gives
+\[
+dw_e=h_g j_g(a_e)\,da_e,\qquad
+j_g(u)=\left(\frac{\sin(g|u|/2)}{g|u|/2}\right)^2,
+\qquad 0\le j_g\le1.
+\]
+The omitted point $-I$ in each free group variable has Haar measure zero and also has zero probability under this bounded-density
+finite-dimensional Gibbs measure. Define, on $\mathcal B_g$,
+$E_g(a,b)=(4/g^2)\sum_{p\in P}(1-W_p)$, and on all of $(\R^3)^I$ define
+\begin{equation*}\tag{S.1}\label{eq:S-density}
+\begin{aligned}
+q_g(a,b)&=\mathbf1_{\mathcal B_g}(a)e^{-E_g(a,b)}\prod_{e\in I}j_g(a_e),\\
+q_0(a,b)&=e^{-E_0(a,b)},\qquad E_0(a,b)=\frac12\sum_{p\in P}|(dc)_p|^2,\\
+I_g(b)&=\int q_g(a,b)\,da,\qquad I_0(b)=\int q_0(a,b)\,da.
+\end{aligned}
+\end{equation*}
+The expression for $q_g$ is understood as zero off its chart. Thus the two probability densities to compare are $q_g/I_g$ and
+$q_0/I_0$. The defect-action normaliser in group variables is exactly $\mathcal Z_g(b)=h_g^D I_g(b)$.
+
+\emph{(ii) Explicit local estimate.}
+We record a matrix estimate also used in Step~2 of Proposition~\ref{prop:Y}.
+For signed vectors $u_1,\ldots,u_\ell\in\R^3$, put
+$A=\sum_j|u_j|$, $s=\sum_j u_j$ and $Q(t)=\prod_{j=1}^\ell\exp(tig u_j\cdot\sigma/2)$ in this order.
+Each factor is unitary for real $t$; differentiating twice and using the operator norm gives
+\[
+\sup_{0\le t\le1}\|Q''(t)\|_{\mathrm{op}}
+\le\sum_j\frac{g^2|u_j|^2}{4}
+       +2\sum_{j<k}\frac{g^2|u_j||u_k|}{4}
+=\frac{g^2A^2}{4}.
+\]
+Taylor's formula with integral remainder therefore gives
+$\|Q(1)-I-ig s\cdot\sigma/2\|_{\mathrm{op}}\le g^2A^2/8$.
+For $V\in SU(2)$, its eigenvalues $e^{\pm i\delta(V)}$ give
+$\|V-I\|_{\mathrm{op}}^2=2(1-\frac12\tr V)$, while $\|is\cdot\sigma\|_{\mathrm{op}}=|s|$.
+Using $|\|X\|^2-\|Y\|^2|\le\|X-Y\|(2\|Y\|+\|X-Y\|)$, we obtain
+\begin{equation*}\tag{S.2}\label{eq:product-error}
+\left|2\beta\left(1-\frac12\tr Q(1)\right)-|s|^2\right|
+\le\frac{gA^2|s|}{2}+\frac{g^2A^4}{16},\qquad \beta=4/g^2.
+\end{equation*}
+This argument uses products of matrices directly and does not assume a logarithm of the product exists in a chosen chart.
+On $\|a\|_{\mathrm{edge},\infty}\le R$, put $s_R=\max(1,R,M_b)$ and suppose $gs_R\le1$.
+For a plaquette, $\ell=4$, $A\le4s_R$, $s=(dc)_p$ and $|s|\le4s_R$; dividing \eqref{eq:product-error} by two gives
+\[
+|E_g(a,b)-E_0(a,b)|\le P_n(16gs_R^3+8g^2s_R^4)\le24P_n gs_R^3.
+\]
+For $|t|\le1/2$, $\sin t/t=\int_0^1\cos(tu)\,du\ge1-t^2/6$ and is at most one, so
+$0\le1-(\sin t/t)^2\le t^2/3$. Thus $1-\prod_e j_g(a_e)\le\sum_e(1-j_g(a_e))\le Dg^2R^2/12$.
+Since $|e^{-x}-e^{-y}|\le|x-y|$ for $x,y\ge0$, it follows that
+\begin{equation*}\tag{S.3}\label{eq:S-local}
+\sup_{\substack{b\in\mathcal K\\\|a\|_{\mathrm{edge},\infty}\le R}}
+|q_g(a,b)-q_0(a,b)|\le\varepsilon_g(R):=24P_n gs_R^3+\frac{Dg^2R^2}{12}.
+\end{equation*}
+The whole set in this supremum is in the chart when $gs_R\le1$.
+
+\emph{(iii) Lower bounds on both normalisers.}
+On $|a_e|\le1$ for all $e\in I$, every link has distance at most $gs_0/2$ from $I$.
+Subadditivity gives $\delta(U_p)\le2gs_0$; hence
+$\beta(1-W_p)\le(4/g^2)(2gs_0)^2/2=8s_0^2$.
+Also $|(dc)_p|\le4s_0$, so $E_g,E_0\le8P_ns_0^2$ there.
+For each free link, $g|a_e|/2\le1/2$ and $\sin t/t\ge2/\pi$ on $[0,\pi/2]$, giving $j_g(a_e)\ge4/\pi^2$.
+Integrating over the product of $D$ unit balls, of volume $v_3^D$, yields
+\begin{equation*}\tag{S.4}\label{eq:S-normaliser}
+\begin{split}
+I_g(b)&\ge c_0:=v_3^D(4/\pi^2)^D e^{-8P_ns_0^2}>0,\\
+I_0(b)&\ge v_3^D e^{-8P_ns_0^2}\ge c_0,
+\qquad \mathcal Z_g(b)\ge c_0\left(\frac{g^3}{16\pi^2}\right)^D.
+\end{split}
+\end{equation*}
+All these inequalities are uniform in $b\in\mathcal K$ and $0<g\le g_{\mathcal K}$.
+
+\emph{(iv) Large fields, including after normalisation.}
+Let $C_n^2$ be all plaquettes contained in $B_n$. If $p\in P$, then
+$\delta(U_p)\le\pi\sqrt{E_g/(2\beta)}$ because $E_g\ge\beta(1-W_p)\ge(2\beta/\pi^2)\delta(U_p)^2$.
+If $p\in C_n^2\setminus P$, all its links lie in $\Sigma_n$, so $\delta(U_p)\le2gM_b$.
+Lemma~\ref{lem:stokes}, applied to each free tree loop, consequently implies
+\begin{equation*}\tag{S.5}\label{eq:S-sublevel}
+\|a\|_{\mathrm{edge},\infty}
+=\max_{e\in I}\frac2g\delta(\widetilde U_e)
+\le R(E_g),\qquad R(t):=A_n\left(\pi\sqrt{t/2}+4M_b\right).
+\end{equation*}
+The equality is outside the chart-null sets only, which suffices for all integrals.
+For the shell $\mathcal S_k=\{a\in\mathcal B_g:k\le E_g<k+1\}$, $k\ge0$, we have
+$\mathcal S_k\subset\{\|a\|_{\mathrm{edge},\infty}\le R(k+1)\}$.
+Put
+\[
+B_0=A_n(\pi/\sqrt2+4M_b),\qquad
+C_{\mathrm{sh}}=v_3^D B_0^{3D},\qquad \alpha_D=3D/2.
+\]
+Since $R(k+1)\le B_0\sqrt{k+1}$ and $\prod j_g\le1$,
+\[
+\int_{\mathcal S_k}q_g(a,b)\,da
+\le e^{-k}v_3^D R(k+1)^{3D}
+\le C_{\mathrm{sh}}e^{-k}(k+1)^{\alpha_D}.
+\]
+This is a coordinate-volume upper bound even when the product of balls extends beyond $\mathcal B_g$; no chart inclusion is
+required for large $k$. If $\|a\|_{\mathrm{edge},\infty}>R(L)$, \eqref{eq:S-sublevel} forces $E_g>L$.
+Thus, for every integer $L\ge1$, the unnormalised and normalised tails satisfy
+\begin{equation*}\tag{S.6}\label{eq:S-tail}
+\begin{split}
+\sup_{b\in\mathcal K}\int_{\{\|a\|_{\mathrm{edge},\infty}>R(L)\}}q_g(a,b)\,da
+ &\le C_{\mathrm{sh}}\sum_{k=L}^\infty e^{-k}(k+1)^{\alpha_D}
+ \le C_{\mathrm{tail}}e^{-L/2},\\
+\sup_{b\in\mathcal K}\tilde\gamma_\beta(\|a\|_{\mathrm{edge},\infty}>R(L)\mid b)
+ &\le\frac{C_{\mathrm{tail}}}{c_0}e^{-L/2},\\
+C_{\mathrm{tail}}
+ &:=\frac{C_{\mathrm{sh}}e^{1/2}(2\alpha_D/e)^{\alpha_D}}{1-e^{-1/2}}.
+\end{split}
+\end{equation*}
+For the last series bound, maximise $t^{\alpha_D}e^{-t/2}$ over $t>0$: its maximum is
+$(2\alpha_D/e)^{\alpha_D}$ at $t=2\alpha_D$. Taking $t=k+1$ bounds
+$(k+1)^{\alpha_D}e^{-k/2}$ by $e^{1/2}(2\alpha_D/e)^{\alpha_D}$, leaving a geometric series in $e^{-k/2}$.
+Here $D>0$ for our boxes. The Euclidean-coordinate tail follows as well, since
+$\|a\|_2\le\sqrt D\|a\|_{\mathrm{edge},\infty}$.
+
+\emph{(v) Uniform Gaussian tails.}
+Write the linear map $c\mapsto (dc)|_P$ as $\mathsf D a+\mathsf B b$.
+By Lemma~\ref{lem:nondeg}, $\lambda_n:=\lambda_{\min}(\mathsf D^\top\mathsf D)>0$.
+Each plaquette has four links, so $\|\mathsf B b\|_2^2\le16P_n M_b^2$ on $\mathcal K$.
+The inequality $2\langle u,v\rangle\ge-\frac12\|u\|^2-2\|v\|^2$ gives
+\[
+E_0=\tfrac12\|\mathsf D a+\mathsf B b\|_2^2
+\ge\tfrac14\|\mathsf D a\|_2^2-\tfrac12\|\mathsf B b\|_2^2
+\ge\frac{\lambda_n}{4}\|a\|_2^2-8P_nM_b^2.
+\]
+If $\|a\|_{\mathrm{edge},\infty}>R$, then $\|a\|_2>R$. Splitting the quadratic exponent into two equal halves yields
+\begin{equation*}\tag{S.7}\label{eq:S-Gaussian-tail}
+\sup_{b\in\mathcal K}\int_{\{\|a\|_{\mathrm{edge},\infty}>R\}}q_0(a,b)\,da
+\le T_0(R):=e^{8P_nM_b^2}\left(\frac{8\pi}{\lambda_n}\right)^{3D/2}e^{-\lambda_n R^2/8}.
+\end{equation*}
+
+\emph{(vi) Total variation and the order of the cutoffs.}
+Set $\delta_g=\sup_{b\in\mathcal K}\int|q_g(a,b)-q_0(a,b)|\,da$.
+Split this integral into $\|a\|_{\mathrm{edge},\infty}\le R(L)$ and its complement, using (ii), (iv) and (v):
+\begin{equation*}\tag{S.8}\label{eq:S-TV}
+\begin{split}
+\delta_g&\le v_3^D R(L)^{3D}\varepsilon_g(R(L))
+                  +C_{\mathrm{tail}}e^{-L/2}+T_0(R(L)),\\
+\sup_{b\in\mathcal K}\left\|\frac{q_g(\cdot,b)}{I_g(b)}-\frac{q_0(\cdot,b)}{I_0(b)}\right\|_{\mathrm{TV}}
+&\le\frac{\delta_g}{c_0}.
+\end{split}
+\end{equation*}
+Indeed $|I_g-I_0|\le\delta_g$, and adding and subtracting $q_0/I_g$ bounds the $L^1$ distance of the normalised densities by
+$\delta_g/I_g+|I_0-I_g|/I_g\le2\delta_g/c_0$.
+For each fixed $L$, (S.8) applies once $g\max(1,R(L),M_b)\le1$, and its first term tends to zero as $g\downarrow0$.
+Then let $L\to\infty$; $R(L)\to\infty$, and both remaining terms tend to zero.
+This proves the uniform total-variation convergence and also uniform convergence $I_g\to I_0$.
+
+The constants $D,P_n,A_n,\lambda_n$ depend on the fixed box and trees only.
+The constants $s_0,g_{\mathcal K},c_0,B_0,C_{\mathrm{sh}},C_{\mathrm{tail}}$ and the prefactor in $T_0$ may also depend on $M_b$;
+none depends on $\beta$. Only $g$, $h_g$, $\mathcal B_g$ and $\varepsilon_g$ vary with $\beta$.
+Compactness is used through the finite bound $M_b$: for a common chart, a common lower bound on $I_g$, control of the
+plaquettes outside $P$, and a common Gaussian tail. Bounded boundary-coordinate sets would suffice for these estimates.
+An arbitrary compact set of unscaled group-valued boundary data does not provide such a bound on $M_b$ as $g\to0$.
+No uniformity in growing boxes or unbounded rescaled boundary data is asserted.
+\end{proof}
+
+\begin{lemma}\label{lem:DLRlim}
+For $\mu_\beta\in\cG^{\mathrm{TI}}_\beta$ and every sequence $\beta_k\to\infty$ there is a subsequence along which the law of $(a,b)$ under
+$\mu_{\beta_k}$ converges weakly to a probability measure $\nu_n$; under $\nu_n$ the conditional law of $a$ given $b$ is $N_b$.
+\end{lemma}
+\begin{proof}
+Tightness (Corollary~\ref{cor:tight}) gives the subsequence. For bounded continuous functions $\varphi$ and $\psi$ we have
+$\E_{\mu_\beta}[\varphi(a)\psi(b)]=\E_{\mu_\beta}[\tilde\gamma_\beta(\varphi|b)\psi(b)]$ (Lemma~\ref{lem:cond});
+$\tilde\gamma_\beta(\varphi|b)-N_b(\varphi)\to0$ uniformly on compacts (Lemma~\ref{lem:S}), $b$ is tight, and $b\mapsto N_b(\varphi)$ is bounded and continuous.
+Explicitly, for $M\ge1$ let $\mathcal K_M=\{b:\max_e|b_e|\le M\}$, a compact set; then
+\[
+\bigl|\E_{\mu_\beta}[(\tilde\gamma_\beta(\varphi|b)-N_b(\varphi))\psi(b)]\bigr|
+\le\|\psi\|_\infty\sup_{b\in\mathcal K_M}\bigl|\tilde\gamma_\beta(\varphi|b)-N_b(\varphi)\bigr|
++2\|\varphi\|_\infty\|\psi\|_\infty\,\mu_\beta(b\notin\mathcal K_M),
+\]
+and by Markov's inequality and Corollary~\ref{cor:tight}, $\sup_{\beta\ge2}\mu_\beta(b\notin\mathcal K_M)\le|\Sigma_n|\tfrac{\pi^2}{2}C_1A_n^2/M^2$.
+The first term tends to $0$ as $\beta\to\infty$ at fixed $M$ (Lemma~\ref{lem:S}, uniform total variation over $\mathcal K_M$), and the second is small for large $M$, uniformly in $\beta$; no rate is needed.
+Since $\varphi(a)\psi(b)$ is bounded and continuous, $\E_{\mu_\beta}[\varphi(a)\psi(b)]\to\E_{\nu_n}[\varphi(a)\psi(b)]$ along the subsequence, and $b\mapsto N_b(\varphi)\psi(b)$ is bounded and continuous, so
+$\E_{\nu_n}[\varphi(a)\psi(b)]=\E_{\nu_n}[N_b(\varphi)\psi(b)]$.
+\end{proof}
+
+%=====================================================================================================================
+\section{Gaussian decomposition and the Hodge identity}\label{sec:H}
+
+\begin{lemma}[Hodge Laplacian of the cubic lattice]\label{lem:hodge}
+Identify a $k$-form $\omega$ on $\Z^4$ with the functions $x\mapsto\omega_I(x)$, $I$ an increasing multi-index, $\omega_I(x)$ its value on the
+cell $[x;I]$. Then $dd^*+d^*d$ acts on each component as the scalar Laplacian $(\Delta f)(x)=\sum_\mu(2f(x)-f(x+e_\mu)-f(x-e_\mu))$.
+\end{lemma}
+\begin{proof}
+$d=\sum_\mu\varepsilon_\mu\partial_\mu$, with $\partial_\mu f(x)=f(x+e_\mu)-f(x)$ and $\varepsilon_\mu=dx^\mu\wedge\cdot$ acting on the fibre
+$\Lambda\R^4$; this is the cubical coboundary. In $\ell^2$, $d^*=\sum_\mu\iota_\mu\partial_\mu^*$, $\iota_\mu=\varepsilon_\mu^*$,
+$\partial_\mu^*f(x)=f(x-e_\mu)-f(x)$. The differences commute with each other and with $\varepsilon,\iota$, so
+$dd^*+d^*d=\sum_{\mu,\nu}(\varepsilon_\mu\iota_\nu+\iota_\nu\varepsilon_\mu)\partial_\mu\partial_\nu^*=\sum_\mu\partial_\mu\partial_\mu^*=\Delta$.
+\end{proof}
+The identity was also checked exactly, in integers, on the tori $3^4$, $3\times4\times5\times3$, $4^4$, $5\times3\times4\times6$, for all
+degrees $0\le k\le4$, with a negative control \st{computed}.
+
+\begin{lemma}\label{lem:H}
+Let $C_n^2$ be the set of plaquettes contained in $B_n$.
+Write $c^0$ for the zero extension to all lattice links of $c=a\oplus0_T\oplus b$, and $b^0$ for the zero extension of
+$0\oplus0_T\oplus b$. Under $\nu_n$, define
+\[
+F:=\mathbf1_{C_n^2}\,d(c^0),
+\qquad
+f_b:=\mathbf1_{C_n^2}\,d(b^0),
+\qquad
+R_n:=d(1\text{-forms supported on }E_n)
+\subset\ell^2(\text{plaquettes of }\Z^4).
+\]
+Thus both $F$ and $f_b$ are restricted to the box plaquettes before being extended by zero.
+Let $\Pi_n$ be the orthogonal projection onto $R_n$, and put
+$H=(1-\Pi_n)f_b$ and $Z=F-H$. Then:
+\begin{enumerate}
+\item[(H1)] $Z$ is independent of $b$ and centred Gaussian with covariance $\Pi_n\otimes1_3$; $H$ is a function of $b$.
+\item[(H2)] $dH=0$ on the cubes of $B_n$ and $(d^*H)(e)=0$ for $e\in E_n$; hence each component $H^a_{\mu\nu}(\cdot)$ is harmonic at every $x$
+with $(x;\mu\nu)\subset B_{n-1}$, in particular on $B_{n-2}$.
+\item[(H3)] $\E|H_p|^2\le\E|F_p|^2\le C_2:=\frac{\pi^2}2C_1$ for every plaquette $p$ of $B_n$.
+\end{enumerate}
+\end{lemma}
+\begin{proof}
+(H1) Let $D:a\mapsto d((a\oplus0_T\oplus0)^0)$, where the superscript denotes zero extension on links.
+Its image is supported on $\cP(E_n)\subset C_n^2$, and globally $F=Da+f_b$.
+Moreover,
+\[
+\sum_{p\in\cP(E_n)}|(Da+f_b)_p|^2
+=
+\|Da+f_b\|_{\ell^2}^2
+-\sum_{p\in C_n^2\setminus\cP(E_n)}|(f_b)_p|^2.
+\]
+The last sum depends only on $b$, so it does not affect the conditional Gaussian law of $a$.
+Completing the square under $N_b$ gives, per colour,
+\[
+a=m(b)+\zeta,
+\qquad
+m(b)=-(D^\top D)^{-1}D^\top f_b,
+\qquad
+\zeta\sim N(0,(D^\top D)^{-1}).
+\]
+The conditional law of $\zeta$ does not depend on $b$, so $\zeta$ is independent of $b$.
+Consequently
+\[
+F=D\zeta+\bigl(1-D(D^\top D)^{-1}D^\top\bigr)f_b.
+\]
+The range of $D$ is $R_n$: for any $1$-form $\omega$ supported on $E_n$, construct $\lambda=0$ off $B_{n-1}$ recursively along $T_I$
+from its roots by $\lambda_y=\lambda_x+\omega_{x\to y}$.
+Then $\omega'=\omega-d\lambda$ is supported on $E_n\setminus T_I$ and $d\omega=d\omega'$.
+Hence $D(D^\top D)^{-1}D^\top=\Pi_n$, and
+$Z=D\zeta$, $H=(1-\Pi_n)f_b$.
+(H2) $H\perp R_n$ and $d1_e\in R_n$ for $e\in E_n$, so $(d^*H)(e)=\langle H,d1_e\rangle=0$; $dH=0$ on cubes of $B_n$ since $H=F-Z$ is a
+difference of exact forms there. For $p=(x;\mu\nu)\subset B_{n-1}$, $((dd^*+d^*d)H)_p$ involves $d^*H$ on the four links of $p$ (in $E_n$)
+and $dH$ on the cubes containing $p$ (in $B_n$), so it vanishes, and by Lemma~\ref{lem:hodge} it equals $(\Delta H_{\mu\nu})(x)$.
+(H3) $H=\E[F\mid b]$, so the first inequality is conditional Jensen. For the second, put $x_\beta=(2/g)\delta(U_p)\ge0$ and let $y_\beta=|(dc)_p|(a,b)\ge0$ be
+the continuous function of the coordinates $(a,b)$ whose law under $\nu_n$ is used here. Let $G_M$ be the event that all coordinates $a_e,b_e$ have norm at most $M$; by Corollary~\ref{cor:tight},
+Markov's inequality and a union bound, $\sup_{\beta\ge2}\mu_\beta(G_M^c)\to0$ as $M\to\infty$. On $G_M$ the plaquette holonomy $\Tg_p$, which is conjugate to $U_p$, is a product of four matrices
+$\exp(igu\cdot\sigma/2)$ with $|u|\le M$, so (S.2) gives $|2\beta(1-W_p)-y_\beta^2|\le C_Mg$, and $x_\beta^2=\beta\delta^2$ differs from $2\beta(1-W_p)=4\beta\sin^2(\delta/2)$ by at most
+$\beta\delta^4/12\le C_M'g^2$ because $\delta\le2gM$. Hence $|x_\beta^2-y_\beta^2|\le C_M''g$ on $G_M$, with constants depending only on $M$. Since
+$|x-y|^2\le|x^2-y^2|$ for $x,y\ge0$, $|x_\beta-y_\beta|\le(C_M''g)^{1/2}$ on $G_M$. Therefore
+$x_\beta-y_\beta\to0$ in probability as $\beta\to\infty$ along the subsequence. As $(a,b)$ converges in law to $\nu_n$, $y_\beta$ converges in law to
+$|(dc)_p|$ under $\nu_n$, and by Slutsky's lemma so does $x_\beta$. For the nonnegative continuous function $u\mapsto u^2$ the portmanteau theorem gives
+$\E_{\nu_n}|(dc)_p|^2\le\liminf_\beta\E x_\beta^2$, and
+$\E[x_\beta^2]=\beta\E\delta(U_p)^2\le\frac{\pi^2}2\beta\E(1-W_p)\le C_2$.
+\end{proof}
+
+%=====================================================================================================================
+\section{Proof of Proposition~\ref{prop:Y}}\label{sec:Y}
+
+\begin{lemma}[discrete Caccioppoli inequality]\label{lem:cacc}
+If $h:\Z^4\to\R$ is harmonic wherever $\eta\ne0$, $\eta:\Z^4\to[0,1]$ finitely supported, then
+$\sum_{x\sim y}\frac12(\eta_x^2+\eta_y^2)(h_x-h_y)^2\le2\sum_{x\sim y}(\eta_x-\eta_y)^2(h_x^2+h_y^2)$ (sums over unoriented edges).
+\end{lemma}
+\begin{proof}
+$0=\sum_x\eta_x^2h_x(\Delta h)_x=\sum_{x\sim y}(\eta_x^2h_x-\eta_y^2h_y)(h_x-h_y)$ and
+$\eta_x^2h_x-\eta_y^2h_y=\frac12(\eta_x^2+\eta_y^2)(h_x-h_y)+\frac12(\eta_x^2-\eta_y^2)(h_x+h_y)$. Calling $\mathsf T$ the left side,
+Cauchy--Schwarz and $(\eta_x+\eta_y)^2\le2(\eta_x^2+\eta_y^2)$ give
+$\mathsf T\le\frac12(4\mathsf T)^{1/2}\bigl(2\sum(\eta_x-\eta_y)^2(h_x^2+h_y^2)\bigr)^{1/2}$.
+If $\mathsf T=0$ the assertion is immediate; otherwise squaring and dividing by $\mathsf T$ gives exactly the stated factor $2$.
+\end{proof}
+
+\begin{proof}[Proof of Proposition~\ref{prop:Y}]
+It suffices that every sequence $\beta_k\to\infty$ have a subsequence along which the limit is $L_\infty:=\E\Phi(|Y_1|^2,\dots,|Y_r|^2)$.
+Fix $(\beta_k)$ and extract so that $\E_{\mu_{\beta_k}}[\Phi_\beta]\to L$, with $\Phi_\beta=\Phi((2\beta(1-\Xi_i))_i)$. Let $R$ be such that all
+plaquettes and links of the $\Xi_i$ lie in $B_R$; take $n\ge8(R+2)$ and $W_n=B_{\lfloor n/8\rfloor}$. For $w\in W_n$ the translated
+observables $\Phi_\beta^{(w)}$ involve plaquettes of $B_{n/4}$.
+
+\emph{Step 1.} Lemma~\ref{lem:DLRlim} gives a further subsequence and $\nu_n$; $L$ is unchanged.
+For each later choice of $n$ we may take a different further subsequence of the sequence defining $L$.
+No consistency of the measures $\nu_n$ as $n$ varies is needed: the same scalar limit $L$ survives all these extractions.
+
+\emph{Step 2 (identification).} For $w\in W_n$, $\E_{\mu_\beta}\Phi^{(w)}_\beta=\E_{\mu_\beta}\Phi_\beta\to L$ by translation invariance of
+$\mu_\beta$. Put $N_n=|E_n\setminus T_I|+|\Sigma_n\setminus T_S|$ and $K_n=C_2A_n^2$.
+For $M\ge1$ let $G_M$ be the event that every one of these $N_n$ vector coordinates has norm at most $M$.
+Corollary~\ref{cor:tight}, Markov's inequality and a union bound give the explicit estimate
+\begin{equation*}\tag{Y.1}\label{eq:Y-bad-event}
+\sup_{\beta\ge2}\mu_\beta(G_M^c)\le\frac{N_nK_n}{M^2}.
+\end{equation*}
+Here $n$ is fixed; no assertion uniform in $n$ is used.
+All principal-chart identities below hold off a null set. Indeed, for a non-tree edge $e$, condition on every original link
+except $U_e$: the tree holonomies are then fixed and $\widetilde U_e=h_xU_eh_y^{-1}$.
+The one-link DLR density is absolutely continuous with respect to Haar, so $\widetilde U_e=-I$ has probability zero.
+A finite union covers all $a$ and $b$ coordinates in this box.
+The loop defining $\Xi_i^{(w)}$ consists of four plaquette edges, a connector, four inverse plaquette edges and the reverse
+connector, hence ten factors. It is gauge invariant and may be computed with $\widetilde U$.
+On $G_M$, each signed vector in these ten exponentials has norm at most $M$.
+Their linear sum is $Y_i^{(w)}(a,b)=(dc)_{p_i+w}-(dc)_{p_i'+w}$, since the connector cancels to first order.
+Formula~\eqref{eq:product-error}, with $A\le10M$ and $|s|\le A$, therefore gives, for $gM\le1$,
+\begin{equation*}\tag{Y.2}\label{eq:Y-loop-error}
+\left|2\beta(1-\Xi_i^{(w)})-|Y_i^{(w)}(a,b)|^2\right|
+\le500gM^3+625g^2M^4\le1125gM^3.
+\end{equation*}
+Let $B_\Phi=\|\Phi\|_\infty$, and take $L_\Phi$ as a Lipschitz constant for the $\ell^1$ norm on $\R^r$.
+On $G_M$ use \eqref{eq:Y-loop-error}; on $G_M^c$ use boundedness of the two test values, without estimating either squared field.
+For every $w\in W_n$ this proves
+\begin{equation*}\tag{Y.3}\label{eq:Y-test-error}
+\left|\E_{\mu_\beta}\Phi_\beta^{(w)}
+ -\E_{\mu_\beta}\Phi\bigl((|Y_i^{(w)}(a,b)|^2)_{i\le r}\bigr)\right|
+\le1125rL_\Phi gM^3+2B_\Phi\frac{N_nK_n}{M^2}.
+\end{equation*}
+The function of $(a,b)$ inside the second expectation is bounded and continuous, so its expectation converges under the
+weak convergence of Step~1. First take $\beta\to\infty$ along that subsequence at fixed $n,M$; the first term in (Y.3) vanishes.
+Then take $M\to\infty$. We obtain
+$\E_{\nu_n}\Phi\bigl((|Y_i^{(w)}|^2)_i\bigr)=L$ for every $w\in W_n$.
+The set $W_n$ is finite and the estimates hold for all its elements, so no extra subsequence is needed for different $w$.
+This explains why neither the gauge, nor the tree, nor $n$ enters $L$.
+
+\emph{Step 3.} By Lemma~\ref{lem:H}, $Y^{(w)}_i=\Delta H^{(w)}_i+\Delta Z^{(w)}_i$ with $\Delta Z^{(w)}\sim N(0,\Sigma_n(w)\otimes1_3)$ independent of
+$\Delta H^{(w)}$, $\Sigma_n(w)_{ij}=\langle v^{(w)}_i,\Pi_nv^{(w)}_j\rangle$, $v^{(w)}_i=1_{p_i+w}-1_{p'_i+w}$.
+
+\emph{Step 4 (Caccioppoli and all edge counts).}
+For real $t\ge0$, $B_t$ means $\{x\in\Z^4:|x|_\infty\le t\}$.
+Take the explicit cutoff
+\[
+\eta_x=\min\bigl(1,\max(0,2-4|x|_\infty/n)\bigr).
+\]
+It is one on $B_{n/4}$, zero at $|x|_\infty\ge n/2$, and
+$|\eta_x-\eta_y|\le4/n$ on nearest-neighbour edges, since $||x|_\infty-|y|_\infty|\le1$.
+We have $n\ge8(R+2)\ge16$. Thus $B_{n/2+1}\subset B_{n-2}$, where all components are harmonic by (H2).
+Every edge with $\eta_x\ne\eta_y$ has both endpoints in the integer cube
+$C=B_{\lfloor n/2\rfloor+1}$, whose side is $q=2\lfloor n/2\rfloor+3\le n+3$.
+In a cube of side $q$, for each of four directions there are $q-1$ lower-endpoint choices in that direction and $q^3$ transverse
+choices. Thus its number of unoriented nearest-neighbour edges is
+\[
+4(q-1)q^3\le4(n+3)^4.
+\]
+For each fixed orientation $\mu<\nu$, apply Lemma~\ref{lem:cacc} to each of the three scalar colours and sum them.
+On edges with both endpoints in $B_{n/4}$ the left weight is exactly one.
+For $x,y\in C$, both plaquettes $(x;\mu\nu)$ and $(y;\mu\nu)$ are contained in $B_n$, so (H3) gives
+$\E(|H_{\mu\nu}(x)|^2+|H_{\mu\nu}(y)|^2)\le2C_2$.
+The norm here already sums all three colours, so there is no further factor of three.
+Summing over the six orientations gives
+\begin{equation*}\tag{Y.4}\label{eq:Y-caccioppoli-count}
+\begin{split}
+S_n^H&:=\sum_{\substack{\{x,y\}:x\sim y\\x,y\in B_{n/4}}}
+             \sum_{\mu<\nu}\E|H_{\mu\nu}(x)-H_{\mu\nu}(y)|^2\\
+&\le 6\cdot2\cdot\frac{16}{n^2}\cdot(2C_2)\cdot4(n+3)^4
+ =\frac{1536C_2}{n^2}(n+3)^4.
+\end{split}
+\end{equation*}
+For fixed $i$, the difference $\Delta H_i^{(w)}$ uses the edge from $x_i+w$ to $x_i+w+e_{\lambda_i}$ of the scalar-component
+base lattice, in orientation $(\mu_i,\nu_i)$ and with its three colours.
+Both anchors lie in $B_{n/4}$ by the choice of $R,n,W_n$.
+The map $w\mapsto\{x_i+w,x_i+w+e_{\lambda_i}\}$ is injective: its lower endpoint in direction $\lambda_i$ determines $w$.
+Consequently
+\[
+\sum_{w\in W_n}\E|\Delta H_i^{(w)}|^2\le S_n^H,
+\qquad
+\sum_{w\in W_n}\sum_{i=1}^r\E|\Delta H_i^{(w)}|^2\le rS_n^H.
+\]
+Edges belonging to different $i$ may coincide; the factor $r$ makes this harmless, including repeated observables.
+Finally
+\[
+|W_n|=(2\lfloor n/8\rfloor+1)^4\ge(n/4-1)^4,
+\qquad \frac{n+3}{n/4-1}\le\frac{19}{3}\quad(n\ge16).
+\]
+Choose $w_n$ with value at most the average. The fully specified constant and bound are
+\begin{equation*}\tag{Y.5}\label{eq:Y-harmonic-average}
+\begin{aligned}
+\sum_{i=1}^r\E|\Delta H_i^{(w_n)}|^2
+&\le\frac{1536rC_2}{n^2}\frac{(n+3)^4}{(n/4-1)^4}
+\le\frac{C_3r}{n^2},\\
+C_3&=1536(19/3)^4C_2.
+\end{aligned}
+\end{equation*}
+The centre $w_n$ is chosen from expectations, and is deterministic for the fixed limiting measure $\nu_n$.
+
+\emph{Step 5 (comparison).} The inequality
+$|\Phi((|y_i|^2)_i)-\Phi((|z_i|^2)_i)|\le L_\Phi\sum_i|y_i-z_i|(|y_i|+|z_i|)$
+follows from $||y_i|^2-|z_i|^2|\le|y_i-z_i|(|y_i|+|z_i|)$.
+By (H3), $\E|Y_i|^2\le2\E|F_{p_i+w_n}|^2+2\E|F_{p_i'+w_n}|^2\le4C_2$.
+Independence and centring of $\Delta Z_i$ give
+$\E|Y_i|^2=\E|\Delta H_i|^2+\E|\Delta Z_i|^2$, so $\E|\Delta Z_i|^2\le4C_2$.
+Writing $h_i=\E|\Delta H_i^{(w_n)}|^2$, two applications of Cauchy--Schwarz now yield
+\[
+\begin{split}
+|L-\E\Phi((|\Delta Z_i^{(w_n)}|^2)_i)|
+&\le L_\Phi\sum_i\sqrt{h_i}
+       \sqrt{2\E|Y_i|^2+2\E|\Delta Z_i|^2}\\
+&\le4L_\Phi\sqrt{C_2}\sum_i\sqrt{h_i}
+ \le4L_\Phi\sqrt{C_2}\sqrt{r\sum_i h_i}
+ \le\frac{4rL_\Phi\sqrt{C_2C_3}}{n}.
+\end{split}
+\]
+
+\emph{Step 6 (projections).} By translation, $\Sigma_n(w)_{ij}=\langle v_i,\Pi_{B_n-w}v_j\rangle$ with $v_i=v^{(0)}_i$. With
+$m_n=\lfloor7n/8\rfloor$, $B_{m_n-1}\subset B_{n-1}-w$, so $R_{m_n}\subset R(B_n-w)\subset R_\infty$ and $\Pi_{m_n}\le\Pi_{B_n-w}\le\Pi_\infty$.
+The increasing union of the $R_m$ is dense in $R_\infty$, so $\Pi_m\to\Pi_\infty$ strongly, and by polarisation $\Sigma_n(w_n)\to\Sigma_\infty$.
+Hence $\E\Phi(|\Delta Z^{(w_n)}|^2)\to L_\infty$. Since $L$ does not depend on $n$, $L=L_\infty$.
+\end{proof}
+
+\begin{remark}
+The harmonic part $H$ need not vanish: a random constant curvature (a ``tilt'') is invisible to differences, and this is why the
+statement is about differences. A boundary curvature growing linearly across the box would produce non-zero differences at the centre,
+but its size is limited by (H3) to $O(1/n)$; this is the content of Step~4. In the purely Gaussian part, the sandwich of Step~6 was
+checked numerically: $\langle v,\Pi_nv\rangle$ for $v=1_{(0;12)}-1_{(e_1;12)}$ equals $1.08438$, $1.13626$, $1.137646$, $1.1377326$,
+$1.1377449$ for $n=2,\dots,6$, increasing to $c(0)$ \st{computed}.
+\end{remark}
+
+\begin{remark}[other loops of the same shape \st{sketch}]\label{rem:loops}
+This remark is written at the level of an outline: the estimates are those of Step~2 applied to loops of a slightly different shape, and the details are not repeated.
+Corollary~\ref{cor:cubic} depends on it.
+Let $q$ be a plaquette, $\lambda$ a direction, $\epsilon\in\{-1,1\}$ and $q'=q+\epsilon e_\lambda$. Let $\gamma$ be the closed path that
+goes once around $q$, starting from one of its corners $y$ and in either orientation, then along the link from $y$ to $y+\epsilon e_\lambda$,
+once around $q'$ from $y+\epsilon e_\lambda$ in the opposite orientation, and back along the same link. Then $\frac12\tr\mathrm{Hol}(\gamma)$
+is gauge invariant, and Proposition~\ref{prop:Y} holds for any finite family of such loops (together with the $\Xi_i$), with limit
+$|\langle1_q-1_{q'},F\rangle|^2$. Indeed, the trace may be computed with $\Tg$; the holonomy of $\Tg$ around $q$ from $y$ is the conjugate,
+by a product of at most two link variables of $\Tg$, of the plaquette variable of $q$ computed with $\Tg$ or of its inverse, and similarly
+for $q'$; on $G_M$ the BCH formula therefore gives
+$|2\beta(1-\frac12\tr\mathrm{Hol}(\gamma))-|(dc)_q-(dc)_{q'}|^2|\le C_Mg$, which replaces Step~2. Steps~3--6 use only that the limiting
+variable is $\pm\langle1_q-1_{q'},F\rangle$, a nearest-neighbour difference of one component of $F$ (Step~4), whose Gaussian part has
+covariance $\langle1_q-1_{q'},\Pi_n(1_q-1_{q'})\rangle$ (Step~6). The images of the loop of $\Xi((0;12),1)$ under the lattice isometries of
+the spatial slice fixing the origin are loops of this shape.
+\end{remark}
+
+%=====================================================================================================================
+\section{The free field and the proof of Theorem~\ref{thm:A}}\label{sec:A}
+
+\begin{lemma}\label{lem:free}
+$\Pi_\infty=dd^*\Delta^{-1}$ in Fourier variables, the $(12,12)$ entry of $dd^*$ is $\hat k_1^2+\hat k_2^2$, and $\Cov(Y^1(0),Y^1(te_0))=c(t)$
+with $c$ as in \eqref{eq:c}. Moreover $c(t)\ge c_*t^{-6}$ for $t\ge1$, with $c_*=6\cdot10^{-5}$.
+\end{lemma}
+\begin{proof}
+There are no harmonic $\ell^2$ forms on $\Z^4$ ($\Delta=\hat k^2$ vanishes only at $k=0$); by Lemma~\ref{lem:hodge}, $dd^*\Delta^{-1}$ is
+self-adjoint, idempotent ($dd^*d^*d=0$) and the identity on $\mathrm{Ran}\,d$, hence equals $\Pi_\infty$. The symbol of
+$v=1_{(0;12)}-1_{(e_1;12)}$ has modulus squared $\hat k_1^2$; the $k_0$ integral uses
+$\int\frac{dk_0}{2\pi}e^{ik_0t}(2\cosh\omega-2\cos k_0)^{-1}=e^{-\omega|t|}/(2\sinh\omega)$. For the lower bound restrict \eqref{eq:c} to the
+$8$ cubes $[0,1/t]^3$ up to signs: there $\hat k_i\ge2k_i/\pi$, $\omega\le\sqrt3/t$, $2\sinh\omega\le2.65|k|$, and
+$\int_{[0,u]^3}k_1^2(k_1^2+k_2^2)=\frac{14}{45}u^7$; so $c(t)\ge8(2\pi)^{-3}(2/\pi)^4e^{-\sqrt3}\frac{14}{45}(2.65\sqrt3)^{-1}t^{-6}\ge6\cdot10^{-5}t^{-6}$.
+\end{proof}
+
+For $s=c(0)$, $c=c(t)$ and $f_K(y)=e^{-|y|^2/(2K)}$ on $\R^3$, Gaussian integration (each colour of $(Y(0),Y(te_0))$ has covariance
+$\bigl(\begin{smallmatrix}s&c\\c&s\end{smallmatrix}\bigr)$) gives
+\begin{equation}\label{eq:VG}
+\begin{aligned}
+V_K&:=\Var f_K(Y)=\bigl(1+\tfrac{2s}K\bigr)^{-3/2}-\bigl(1+\tfrac sK\bigr)^{-3},\\
+\Gamma_K(t)&:=\Cov\bigl(f_K(Y(0)),f_K(Y(te_0))\bigr)=\bigl(1+\tfrac sK\bigr)^{-3}\Bigl[\Bigl(1-\tfrac{c^2}{(K+s)^2}\Bigr)^{-3/2}-1\Bigr]>0,
+\end{aligned}
+\end{equation}
+and $(c/s)^2V_K/\Gamma_K(t)=1+\frac54(1-c^2/s^2)(s/K)^2+O(K^{-3})\to1$ as $K\to\infty$ (checked symbolically, by Monte Carlo and in
+high precision, where the ratio is decreasing in $K$ \st{computed}).
+
+\begin{proof}[Proof of Theorem~\ref{thm:A}]
+Let $\beta_k\to\infty$ realise the $\limsup$. Take $\Xi=\Xi((0;12),1)$: $p'=(e_1;12)$, $V=U_{0,1}$, all links spatial in the slice $0$. Then
+$X_\beta=\exp(-\frac\beta K(1-\Xi))\in\mathcal A_+$ is real and depends on the slice $0$ only. Proposition~\ref{prop:Y} with
+$\Phi(u)=e^{-u/(2K)}$, $e^{-u/K}$ and $\Phi(u_1,u_2)=e^{-(u_1+u_2)/(2K)}$ (for $\Xi$ and $\tau_t\Xi$) gives $\Var X_\beta\to V_K$ and
+$\Cov(X_\beta,\tau_tX_\beta)\to\Gamma_K(t)>0$. For large $k$ the covariance is positive and Lemma~\ref{lem:V} gives
+$m(\mu_{\beta_k})\le\frac1t\log(\Var/\Cov)\to\frac1t\log(V_K/\Gamma_K(t))$. This holds for every $K>0$; letting $K\to\infty$,
+$\limsup m\le B(t)$. Finally $B(t)\le\frac2t(\log(c(0)/c_*)+6\log t)\to0$ by Lemma~\ref{lem:free}.
+\end{proof}
+
+\begin{remark}[mechanism]\label{rem:mechanism}
+Suppose that $m(\mu_{\beta_k})\ge m_0>0$ along some sequence $\beta_k\to\infty$. The proof of Lemma~\ref{lem:V} gives
+$\Cov(X_{\beta_k},\tau_tX_{\beta_k})\le e^{-m_0t}\Var X_{\beta_k}$, and Proposition~\ref{prop:Y} turns this into
+$\Gamma_K(t)\le e^{-m_0t}V_K$ for all $t$ and $K$. Letting $K\to\infty$ gives $c(t)^2\le e^{-m_0t}c(0)^2$ for every $t$, which contradicts
+$c(t)\ge c_*t^{-6}$. The argument thus rests on exactly two inputs: the identification of the weak-coupling limit of bounded functions of
+curvature differences with the free Maxwell field, and the non-exponential decay of the free Maxwell correlation. If the limiting
+Gaussian field were massive, with $c(t)$ of order $e^{-Mt}$, the same steps would only give $\limsup m\le2M$ \st{heuristic}.
+\end{remark}
+
+\begin{remark}[which gap]\label{rem:whichgap}
+Let $\mu\in\cG^{\mathrm{RP}}_\beta$, and let $\nu_\psi$ denote the spectral measure of $T$ in a vector $\psi$.
+\begin{enumerate}
+\item[(i)] \emph{Gauge-invariant sector.} Let $\cH^{\mathrm{inv}}_\mu$ be the closure of the classes of functions in $\mathcal A_+$ that are
+invariant under all gauge transformations supported in $\{x_0\ge0\}$. If $F$ is such a function, $\tau_1F$ is again one: it depends on no
+link touching a site of the slice $x_0=0$. Hence $T\cH^{\mathrm{inv}}_\mu\subset\cH^{\mathrm{inv}}_\mu$, and $T$, being self-adjoint, is
+reduced by $\cH^{\mathrm{inv}}_\mu$. The vectors $\Omega$ and $\psi=[X-\mu(X)]$ of Lemma~\ref{lem:V}, with $X$ a function of traces of
+closed loops, lie in $\cH^{\mathrm{inv}}_\mu$. Therefore Lemma~\ref{lem:V}, and with it Theorem~\ref{thm:A} and
+Corollary~\ref{cor:cubic}, hold for $m^{\mathrm{inv}}(\mu):=-\log\|T|_{\cH^{\mathrm{inv}}_\mu\cap\Omega^\perp}\|\ge m(\mu)$.
+\item[(ii)] \emph{Positive spectrum.} Positivity of $T$ is neither assumed nor used here; Lemma~\ref{lem:OS} provides a self-adjoint
+contraction from site reflection positivity and time-translation invariance. Let
+$m_+(\mu):=-\log\sup\bigl(\sigma(T|_{\Omega^\perp})\cap[0,1]\bigr)$, with $m_+=\infty$ if the set is empty. For odd $t$ and $\psi$ as in
+Lemma~\ref{lem:V}, $\Gamma(t)=\int\lambda^t\,d\nu_\psi\le\int_{(0,1]}\lambda^t\,d\nu_\psi\le e^{-m_+(\mu)t}\|\psi\|^2$. Since
+$\Gamma_K(t)>0$ for every $t\ge1$, the proof of Theorem~\ref{thm:A} gives $\limsup_{\beta\to\infty}m_+(\mu_\beta)\le B(t)$ for every odd $t$,
+and $B(t)\to0$ along odd $t$. The vanishing of $m$ is therefore not caused by spectrum of $T$ near $-1$.
+\item[(iii)] \emph{Degenerate vacuum.} Let $\mu=\frac12(\mu_1+\mu_2)$ with $\mu_1\ne\mu_2$ in $\cG^{\mathrm{RP}}_\beta$; by translation
+invariance some real $X\in\mathcal A_+$ has $\mu_1(X)\ne\mu_2(X)$. The form of $\mu$ is the average of those of $\mu_1,\mu_2$, and in $\cH_{\mu_i}$
+the class of $X-\mu(X)$ is $[X-\mu_i(X)]+(\mu_i(X)-\mu(X))\Omega_i$, with the first term orthogonal to $\Omega_i$. Since $T_i$ fixes
+$\Omega_i$ and preserves its orthogonal complement, $\|T^j[X-\mu(X)]\|^2\ge\frac12\sum_i|\mu_i(X)-\mu(X)|^2=\frac14|\mu_1(X)-\mu_2(X)|^2$ for
+all $j$, so $m(\mu)=0$. To see that the vacuum is actually degenerate, put $\psi=[X-\mu(X)]$ and
+$A_N=N^{-1}\sum_{j=0}^{N-1}T^j$. In each $\cH_{\mu_i}$ the component of $A_N\psi$ along $\Omega_i$ is still $\mu_i(X)-\mu(X)$, so the same
+average-of-forms argument gives $\|A_N\psi\|^2\ge\frac14|\mu_1(X)-\mu_2(X)|^2$. On $[-1,1]$ the functions
+$N^{-1}\sum_{j=0}^{N-1}\lambda^j$ are bounded in absolute value by $1$ and converge to $\mathbf1_{\{1\}}(\lambda)$.
+Integration against the finite spectral measure of $\psi$ therefore gives
+$A_N\psi\to\mathbf1_{\{1\}}(T)\psi$ in norm. This limit is nonzero and orthogonal to $\Omega$, proving degeneracy.
+Although $m$ vanishes trivially for this mixture, Proposition~\ref{prop:reduced} proves that the same weak-coupling bound also holds
+after removal of the full eigenspaces at $+1$ and $-1$; no exchange of limits is needed.
+\item[(iv)] \emph{Time-zero observables.} For every real $X\in\mathcal A_+$ depending only on spatial links of the slice $x_0=0$,
+$\Th X=X$ and the proof of Lemma~\ref{lem:V} gives $|\Cov_\mu(X,\tau_tX)|\le e^{-m(\mu)t}\Var_\mu X$ for all $t\ge0$.
+The same estimate holds for complex $X$ with the sesquilinear covariance
+$\Cov_\mu(X,Y):=\E_\mu[\overline{X-\E_\mu X}(Y-\E_\mu Y)]$ and $\Var_\mu X:=\E_\mu|X-\E_\mu X|^2$.
+Thus $1/m(\mu)$ is an upper bound,
+not a lower bound, for the time-direction correlation length of every such observable, including $W_p$ for a spatial plaquette $p$ at
+time zero.
+\end{enumerate}
+\end{remark}
+
+\begin{proposition}[removing the full eigenspaces at $\pm1$]\label{prop:reduced}
+Let $\mu_\beta\in\cG^{\mathrm{RP}}_\beta$ and let $T_\beta$ be the one-step transfer operator of Lemma~\ref{lem:OS} on
+$\cH_\beta:=\cH_{\mu_\beta}$, constructed from all of $\mathcal A_+$. Define the orthogonal spectral projection and reducing subspace
+\[
+P_\beta:=\mathbf1_{\{-1,1\}}(T_\beta),\qquad
+\mathcal E_\beta:=\ker(T_\beta-I)\oplus\ker(T_\beta+I),\qquad
+\cH_{\beta,\mathrm{red}}:=\mathcal E_\beta^\perp=(I-P_\beta)\cH_\beta,
+\]
+and
+\[
+m_{\mathrm{red}}(\mu_\beta):=-\log\|T_\beta|_{\cH_{\beta,\mathrm{red}}}\|.
+\]
+The norm of a restriction to the zero space is taken to be zero, and $-\log0=\infty$. For every integer $t\ge1$,
+\[
+\limsup_{\beta\to\infty}m_{\mathrm{red}}(\mu_\beta)\le B(t),
+\qquad m_{\mathrm{red}}(\mu_\beta)\longrightarrow0.
+\]
+The same bound and limit hold in the gauge-invariant sector, with reducing subspace
+$\cH^{\mathrm{inv}}_{\mu_\beta}\cap\mathcal E_\beta^\perp$.
+Removing only $\ker(T_\beta-I)$ gives $m_{\mathrm{vac}}(\mu_\beta):=-\log\|T_\beta|_{\ker(T_\beta-I)^\perp}\|$, with
+$0\le m_{\mathrm{vac}}(\mu_\beta)\le m_{\mathrm{red}}(\mu_\beta)$, hence the same bound and limit.
+For the remaining positive spectrum, put
+\[
+\cH_{\beta,\mathrm{red},+}:=\mathbf1_{(0,1)}(T_\beta)\cH_\beta,
+\qquad
+m_{\mathrm{red},+}(\mu_\beta):=-\log\|T_\beta|_{\cH_{\beta,\mathrm{red},+}}\|.
+\]
+Then $\limsup_{\beta\to\infty}m_{\mathrm{red},+}(\mu_\beta)\le B(t)$ for every odd integer $t\ge1$, and
+$m_{\mathrm{red},+}(\mu_\beta)\to0$; this also holds in the gauge-invariant sector.
+\end{proposition}
+\begin{proof}
+\emph{The Hilbert space and spectral measure.}
+Site reflection positivity makes the OS form positive and permits its quotient and Hilbert completion.
+Together with time-translation invariance it gives the self-adjoint contraction $T_\beta$ by Lemma~\ref{lem:OS}.
+Self-adjointness supplies orthogonal spectral projections, positive scalar spectral measures supported on $[-1,1]$, and the reducing
+subspaces used below. Positivity of $T_\beta$ itself is not assumed.
+Fix $K>0$ and use the real time-zero observable
+\[
+X_{\beta,K}:=\exp\!\left(-\frac\beta K(1-\Xi((0;12),1))\right),\qquad
+\psi_\beta:=[X_{\beta,K}-\mu_\beta(X_{\beta,K})].
+\]
+Since reflection fixes its spatial links, $\Th X_{\beta,K}=X_{\beta,K}$; hence
+$\psi_\beta\perp\Omega_\beta$, $\|\psi_\beta\|^2=\Var_{\mu_\beta}X_{\beta,K}$, and its spectral measure $\nu_\beta$ satisfies
+\[
+\int\lambda^t\,d\nu_\beta(\lambda)
+=\langle\psi_\beta,T_\beta^t\psi_\beta\rangle
+=:\Gamma_{\beta,K}(t)
+=\Cov_{\mu_\beta}(X_{\beta,K},\tau_tX_{\beta,K}).
+\]
+Apply Proposition~\ref{prop:Y} with the bounded Lipschitz tests $u\mapsto e^{-u/(2K)}$, $u\mapsto e^{-u/K}$, and
+$(u,v)\mapsto e^{-(u+v)/(2K)}$ for the loop and its translate. They give
+\[
+\|\psi_\beta\|^2\longrightarrow V_K>0,\qquad
+\Gamma_{\beta,K}(t)\longrightarrow\Gamma_K(t)>0
+\quad\text{for each fixed integer }t\ge1,
+\]
+with $V_K,\Gamma_K$ as in \eqref{eq:VG}. In particular, $V_K>0$ because $s=c(0)>0$ and
+$(1+s/K)^2>1+2s/K$.
+
+\emph{The endpoint atoms vanish.}
+Let $a_\beta:=\|P_\beta\psi_\beta\|^2=\nu_\beta(\{-1,1\})$.
+For each integer $j\ge1$, the pointwise inequality
+$\mathbf1_{\{-1,1\}}(\lambda)\le\lambda^{2j}$ on $[-1,1]$ and positivity of $\nu_\beta$ imply
+\[
+0\le a_\beta\le\Gamma_{\beta,K}(2j),\qquad
+\limsup_{\beta\to\infty}a_\beta\le\Gamma_K(2j).
+\]
+In the three-dimensional integral \eqref{eq:c}, the nonnegative integrand at time $t$ is bounded by the integrable integrand at $0$;
+near $k=0$ the latter is $O(|k|^3)$, and away from $0$ it is bounded.
+Moreover $\omega(k)>0$ except at $k=0$, so dominated convergence gives $c(t)\to0$ as $t\to\infty$.
+Formula~\eqref{eq:VG} now gives $\Gamma_K(2j)\to0$ as $j\to\infty$.
+Thus $0\le\limsup_{\beta\to\infty}a_\beta\le\inf_{j\ge1}\Gamma_K(2j)=0$, and $a_\beta\to0$.
+Here the limit in $\beta$ is taken separately for every fixed $j$; no estimate uniform in $j$ and no exchange of limits is used.
+
+\emph{Projecting the test vector.}
+Put $\eta_\beta=(I-P_\beta)\psi_\beta\in\cH_{\beta,\mathrm{red}}$ and
+$a_\beta^+:=\nu_\beta(\{1\})$, $a_\beta^-:=\nu_\beta(\{-1\})$.
+Because $P_\beta$ is orthogonal and commutes with $T_\beta$, the mixed terms vanish and
+\[
+\|\eta_\beta\|^2=\|\psi_\beta\|^2-a_\beta\longrightarrow V_K>0,
+\qquad
+\langle\eta_\beta,T_\beta^t\eta_\beta\rangle
+=\Gamma_{\beta,K}(t)-a_\beta^+-(-1)^t a_\beta^-\longrightarrow\Gamma_K(t)>0
+\]
+for every fixed $t\ge1$, since $|a_\beta^++(-1)^t a_\beta^-|\le a_\beta$.
+Consequently $\eta_\beta$ and the restricted operator are nonzero for all sufficiently large $\beta$.
+On the reducing subspace $\cH_{\beta,\mathrm{red}}$, the operator norm gives
+\[
+0<\langle\eta_\beta,T_\beta^t\eta_\beta\rangle
+\le\|T_\beta|_{\cH_{\beta,\mathrm{red}}}\|^t\|\eta_\beta\|^2
+\]
+for sufficiently large $\beta$ at this fixed $K,t$. Taking logarithms and then the $\limsup$ in $\beta$ yields
+\[
+\limsup_{\beta\to\infty}m_{\mathrm{red}}(\mu_\beta)
+\le\frac1t\log\frac{V_K}{\Gamma_K(t)}.
+\]
+The left side is independent of $K$. At fixed $t$, formula~\eqref{eq:VG} gives
+$V_K=3c(0)^2/(2K^2)+O(K^{-3})$ and $\Gamma_K(t)=3c(t)^2/(2K^2)+O(K^{-3})$ as $K\to\infty$.
+Thus letting $K\to\infty$ gives exactly $B(t)$.
+Finally $B(t)\to0$ by Lemma~\ref{lem:free}, and $m_{\mathrm{red}}\ge0$, which proves the limit.
+The inclusion $\mathcal E_\beta^\perp\subset\ker(T_\beta-I)^\perp$ gives
+$\|T_\beta|_{\mathcal E_\beta^\perp}\|\le\|T_\beta|_{\ker(T_\beta-I)^\perp}\|$, proving the assertion for $m_{\mathrm{vac}}$.
+
+\emph{Gauge invariance and the positive spectrum.}
+Remark~\ref{rem:whichgap}(i) shows that $\cH^{\mathrm{inv}}_{\mu_\beta}$ reduces $T_\beta$ and contains $\psi_\beta$.
+Its orthogonal projection therefore commutes with the spectral projections of $T_\beta$, so it also contains $\eta_\beta$.
+The same argument, with the norm restricted to $\cH^{\mathrm{inv}}_{\mu_\beta}\cap\mathcal E_\beta^\perp$, proves the claimed bound there.
+For odd $t$, the negative part of the spectral measure of $\eta_\beta$ contributes a nonpositive moment, whence
+\[
+\langle\eta_\beta,T_\beta^t\eta_\beta\rangle
+\le\int_{(0,1)}\lambda^t\,d\nu_\beta(\lambda)
+\le\|T_\beta|_{\cH_{\beta,\mathrm{red},+}}\|^t\|\eta_\beta\|^2.
+\]
+The same limits give $B(t)$ at odd times and then $m_{\mathrm{red},+}\to0$.
+Since the positive spectral projection also preserves the gauge-invariant sector, the identical inequality with the norm restricted
+to its intersection with $\cH_{\beta,\mathrm{red},+}$ proves that version as well.
+\end{proof}
+Only eigenvectors at $\pm1$ have been removed; the restricted spectrum can still accumulate at either endpoint.
+The projected vectors need not be represented by local observables. This proposition gives no rate in $\beta$ (a rate for the gap is Theorem~\ref{thm:rate}), no positivity of any
+gap at a fixed $\beta$, no finite-volume assertion, and no decay-rate conclusion for the fixed plaquette observable $W_p$.
+
+\begin{corollary}[cubic sector, proof in outline through Remark~\ref{rem:loops}]\label{cor:cubic}
+If moreover each $\mu_\beta$ is invariant under the group $\cO$ of lattice isometries of the spatial slice fixing the origin, then the gap
+$m_\cO$ of $T$ on the $\cO$-invariant vectors orthogonal to $\Omega$ also tends to $0$.
+\end{corollary}
+\begin{proof}
+The spatial group $\cO$ commutes with $\Th$ and $\tau_1$.
+Its invariance under $\mu_\beta$ therefore gives a unitary action on $\cH_{\mu_\beta}$ commuting with $T$.
+Use
+\[
+X^\cO_{\beta,K}
+=\exp\!\left(-\frac\beta K\sum_{R\in\cO}(1-\Xi_R)\right),
+\]
+which is $\cO$-invariant and depends only on spatial links at time zero.
+
+Put $v=1_{(0;12)}-1_{(e_1;12)}$ and let $v_R=Rv$ be its image as a signed cellular $2$-cochain.
+Reflections can reverse plaquette orientations or connector directions and change base corners; the image loops are of the shape
+described in Remark~\ref{rem:loops}.
+By that remark, Proposition~\ref{prop:Y} applies to this finite family of loops and gives the limiting observable
+\[
+\exp\!\left(-\frac1{2K}\sum_{R\in\cO}|\langle v_R,F\rangle|^2\right).
+\]
+The group acts orthogonally on signed cochains, preserves $\Pi_\infty$ and commutes with time translation.
+
+Let $V^\cO_K$ and $\Gamma^\cO_K(t)$ be the limiting variance and covariance, and set
+\[
+S_{RR'}=\langle v_R,\Pi_\infty v_{R'}\rangle,
+\qquad
+(M_t)_{RR'}=\langle v_R,\Pi_\infty\tau_t v_{R'}\rangle.
+\]
+The Gaussian determinant expansion, using cross-covariance blocks $M_t$ and $M_t^\top$, gives
+\[
+V^\cO_K=\frac3{2K^2}\|S\|_F^2+O(K^{-3}),
+\qquad
+\Gamma^\cO_K(t)=\frac3{2K^2}\|M_t\|_F^2+O(K^{-3})
+\]
+for each fixed $t$. Also $\|M_t\|_F^2\ge |(M_t)_{\mathrm{id},\mathrm{id}}|^2=c(t)^2$.
+Apply the variational bound in the invariant sector, first take $\beta\to\infty$ at fixed $K,t$, and then let $K\to\infty$:
+\[
+\limsup_{\beta\to\infty}m_\cO(\mu_\beta)
+\le\frac1t\log\frac{\|S\|_F^2}{\|M_t\|_F^2}
+\le\frac1t\log\frac{\|S\|_F^2}{c(t)^2}.
+\]
+The last expression tends to zero as $t\to\infty$ by Lemma~\ref{lem:free}.
+\end{proof}
+
+\begin{corollary}[an explicit correlation length]\label{cor:obs}
+Let $\mu_\beta\in\cG^{\mathrm{RP}}_\beta$ and fix $K>0$.
+For
+\[
+X_{\beta,K}:=\exp\!\left(-\frac\beta K(1-\Xi((0;12),1))\right),
+\]
+the even-time decay rate
+\[
+m_{X_K}(\mu_\beta)
+:=-\lim_{j\to\infty}\frac1{2j}
+\log\Cov_{\mu_\beta}(X_{\beta,K},\tau_{2j}X_{\beta,K})
+\]
+exists in $[0,\infty]$, with $-\log0=\infty$.
+Writing $s=c(0)$ and
+\[
+a_K:=\frac32(1+s/K)^{-3}(K+s)^{-2}>0,
+\]
+one has, for every fixed even integer $t\ge2$,
+\[
+\limsup_{\beta\to\infty}m_{X_K}(\mu_\beta)
+\le\frac1t\log\frac{V_K}{\Gamma_K(t)}
+\le\frac{12\log t+\log\!\bigl(V_K/(a_Kc_*^2)\bigr)}{t}.
+\]
+Consequently $m_{X_K}(\mu_\beta)\to0$ for every fixed $K>0$.
+The corresponding correlation length along the time axis, defined through even separations, diverges,
+with $1/0=\infty$.
+\end{corollary}
+\begin{proof}
+For fixed $\beta,K$, put $\psi=[X_{\beta,K}-\mu_\beta(X_{\beta,K})]$.
+Its spectral measure $\nu_\psi$ for $T$ is supported on $[-1,1]$, and
+\[
+\Gamma_{\beta,K}(t)
+:=\Cov_{\mu_\beta}(X_{\beta,K},\tau_tX_{\beta,K})
+=\int\lambda^t\,d\nu_\psi(\lambda).
+\]
+For even $t=2j$, this is $\|T^j\psi\|^2\ge0$.
+If $r_{\beta,K}:=\sup\{|\lambda|:\lambda\in\mathrm{supp}\,\nu_\psi\}$,
+with $r_{\beta,K}=0$ when $\nu_\psi=0$, then
+\[
+\lim_{j\to\infty}\Gamma_{\beta,K}(2j)^{1/(2j)}=r_{\beta,K}.
+\]
+Thus the rate exists and equals $-\log r_{\beta,K}$.
+The spectral representation also gives
+\[
+|\Gamma_{\beta,K}(t)|
+\le r_{\beta,K}^{\,t}\Var_{\mu_\beta}(X_{\beta,K}).
+\]
+
+Keep $K$ fixed. Proposition~\ref{prop:Y} gives, for each fixed $t$,
+\[
+\Var_{\mu_\beta}(X_{\beta,K})\to V_K,
+\qquad
+\Gamma_{\beta,K}(t)\to\Gamma_K(t)>0.
+\]
+Hence
+\[
+\limsup_{\beta\to\infty}m_{X_K}(\mu_\beta)
+\le\frac1t\log\frac{V_K}{\Gamma_K(t)}.
+\]
+For $0\le u<1$, $(1-u)^{-3/2}-1\ge\frac32u$.
+Applying this to \eqref{eq:VG} yields
+\[
+\Gamma_K(t)\ge a_Kc(t)^2\ge a_Kc_*^2t^{-12}.
+\]
+This proves the displayed bound. Letting even $t\to\infty$, while keeping $K$ fixed, proves the conclusion.
+\end{proof}
+Since $m_{X_K}(\mu_\beta)\ge m(\mu_\beta)$, Corollary~\ref{cor:obs} with any fixed $K$ already implies $m(\mu_\beta)\to0$; the limit
+$K\to\infty$ in the proof of Theorem~\ref{thm:A} only sharpens the bound to $B(t)$. The observable $X_{\beta,K}$ depends on $\beta$; the
+corollary says nothing about a $\beta$-independent observable such as $W_p$ or $\Xi$.
+
+\begin{remark}[$U(1)$]\label{rem:U1}
+\st{sketch} For the $U(1)$ Wilson action $\beta\sum_p\cos\theta_p$ the same proof goes through with one colour; we list the changes but
+do not write them out. Write $U=e^{iga/2}$ with $|a|\le2\pi/g$, so that $\delta(U)=g|a|/2$ and $\beta(1-\cos\theta_p)=\frac12(dc)_p^2+O(g^2(dc)_p^4)$
+exactly, without BCH. In Lemma~\ref{lem:L1}, $\mathrm{Haar}\{\delta\le r\}=r/\pi$ and
+$I(\beta')=\frac1{2\pi}\int_{-\pi}^{\pi}e^{\beta'\cos\theta}d\theta\le e^{\beta'}\sqrt{\pi/8}\,\beta'^{-1/2}$; the same steps give
+$\bar e(\mu)\le(96+9\log\pi-6\log2)/\beta<103/\beta$. Lemma~\ref{lem:stokes} becomes the abelian identity $\theta_e=\sum\pm\theta_{p_j}$
+modulo $2\pi$. In Lemma~\ref{lem:S} the Haar density in the coordinate $a$ is the constant $g/(4\pi)$. In the Gaussian computation the
+exponents $-3/2$ and $-3$ become $-1/2$ and $-1$, and the limit of $V_K/\Gamma_K(t)$ is again $(c(0)/c(t))^2$, so the bound $B(t)$ is
+unchanged. For the Villain action, Fr\"ohlich and Spencer prove masslessness at sufficiently weak coupling \cite[\S2.11]{FS82}.
+This concerns a different action from the Wilson adaptation outlined here.
+\end{remark}
+
+%=====================================================================================================================
+\section{An explicit rate in $\beta$}\label{sec:rate}
+
+All constants below are explicit. $C_1=124$ (Lemma~\ref{lem:L1}), $C_2=\pi^2C_1/2\le612$, $c_*=6\cdot10^{-5}$ (Lemma~\ref{lem:free}),
+$\kappa=\sqrt{\pi/8}$. For a box $B_n$, $n\ge16$, we use the counts of \S\ref{sec:L1}: $D=(6n+1)(2n-1)^3\le48n^4$,
+$P_n=6(2n)^2(2n-1)^2\le96n^4$, $|C^2_n|=6(2n)^2(2n+1)^2\le103n^4$, $|W_n|\ge(3n/16)^4$.
+
+\begin{theorem}[rate]\label{thm:rate}
+For every integer $t\ge1$ put $\delta_t=c_*^2t^{-12}/3888$ and $n_t=\lceil\max(16,8(t+4),(4c_H/\delta_t)^{1/2})\rceil$ with
+$c_H=4C_1\cdot512\cdot65536\cdot103/81\le2.117\cdot10^{10}$. Let $N_*(n)=6n(10n+1)$, $H(n)=(2\pi^2+8\pi)C_1P_nN_*(n)^2$ and
+$\beta_1(t)=64\kappa^2H(n_t)^2/\delta_t^2$; then $\beta_1(t)\le10^{227.73}t^{120}$.
+For every $\beta\ge\beta_1(t)$ and every $\mu\in\cG^{\mathrm{RP}}_\beta$,
+\[
+m(\mu)\le m^{\mathrm{inv}}(\mu)\le\frac1t\log\Bigl(1+\frac{324\,t^{12}}{c_*^2}\Bigr)\le\frac{12\log t+25.23}{t},
+\]
+and the same bound holds for $m_+(\mu)$ when $t$ is odd. Consequently, for every $\beta\ge10^{228}$ and every $\mu\in\cG^{\mathrm{RP}}_\beta$,
+\[
+m(\mu)\le m^{\mathrm{inv}}(\mu)\le24\,\beta^{-1/120}\log\beta,\qquad m_+(\mu)\le36\,\beta^{-1/120}\log\beta .
+\]
+\st{proved}
+\end{theorem}
+\emph{Dependencies.} The proof of Theorem~\ref{thm:rate} uses only Lemmas~\ref{lem:V} (with Remark~\ref{rem:whichgap}), \ref{lem:G}, \ref{lem:cond}, \ref{lem:nondeg}, \ref{lem:L1}, \ref{lem:stokes} with Appendix~\ref{app:stokes}, \ref{lem:hodge}, \ref{lem:cacc} and \ref{lem:free}, the algebraic statements (H1) and (H2) of Lemma~\ref{lem:H}, and the proof of Corollary~\ref{cor:tight} with $N_*$ in place of $A_n$ (Lemma~\ref{lem:shorttree}); it does not use Lemma~\ref{lem:S}, Lemma~\ref{lem:DLRlim} nor Proposition~\ref{prop:Y}.
+(H1) and (H2) are identities valid for every fixed $b$; Lemma~\ref{lem:H} is stated under the limit measure $\nu_n$ of Lemma~\ref{lem:DLRlim} only in its wording and in (H3), which is not used here: below, $\nu$ is the law of $b$ under $\mu$ times $N_b$, and (H1), (H2) are applied to it.
+
+The exponent $1/120$ is very far from the expected exponential closing $m\approx e^{-(3\pi^2/11)\beta}$, and the threshold
+$10^{228}$ is far beyond any simulated coupling. The theorem is an upper bound; it holds verbatim for the four-dimensional $U(1)$
+Wilson action adaptation of Remark~\ref{rem:U1} \st{heuristic}, so it is compatible with a massless Coulomb phase and gives no
+information on confinement. Its interest is that it is quantitative for infinite-volume states, with no uniqueness assumption.
+
+\subsection{Short trees}
+\begin{lemma}\label{lem:shorttree}
+Let $T_I$ be the temporal forest of the proof of Lemma~\ref{lem:L1} and $T_S$ a breadth-first spanning tree of $(S_n,\Sigma_n)$ rooted at
+$\rho=(-n,0,0,0)$. Then $T=T_S\cup T_I$ is admissible in \S\ref{sec:box}, has depth at most $5n$, every tree loop $c_e$ has length at
+most $10n+1$, and the decomposition of Appendix~\ref{app:stokes} of $c_e$ uses at most $N_*=6n(10n+1)$ plaquettes, counted with
+multiplicity. In particular $\E_\mu|a_e|^2,\E_\mu|b_e|^2\le C_2N_*^2=:K$ for every $\mu\in\cG^{\mathrm{TI}}_\beta$, $\beta\ge2$. \st{proved}
+\end{lemma}
+\begin{proof}
+Each chain of $T_I$ lies in $E_n$, contains exactly one site of $S_n$ and the chains cover $B_{n-1}$; hence $T$ is a spanning tree of the
+required form. Shell distances from $\rho$: a point of the bottom face is reached within that face in at most $3n$ steps; a point with
+$|x_i|=n$ for a spatial $i$ is reached by $n$ steps to $(-n,x_ie_i)$, at most $2n$ temporal steps in the face $\{x_i=\pm n\}$ and at most
+$2n$ further steps in that face; a point of the top face with all spatial $|x_i|\le n-1$ is reached, with $i$ maximising $|x_i|$, in
+$4n+|x_j|+|x_k|-|x_i|\le5n-1$ steps. Interior points have depth at most $3(n-1)+(2n-1)$. Thus $\ell(c_e)\le10n+1$, and (St.2) with $L=2n$
+gives $N\le3L\ell\le N_*$. The moment bound is the proof of Corollary~\ref{cor:tight} with $N_*$ in place of $A_n$.
+\end{proof}
+Computed for $n=1,\dots,5$: depth $5n$, maximal loop length $10n$, maximal $N$ equal to $20n^2$ \st{computed}; compare $A_5=17\,568\,600$.
+
+\subsection{Comparison of the conditional laws by Stein's method}
+Write $\mathsf L=D_aF$ for the linear part of the affine map $a\mapsto(F_p)_{p\in P}$, $C=(\mathsf D^\top\mathsf D)^{-1}\otimes1_3$ the covariance of $N_b$ and
+$m=a^*(b)$ its mean (Lemma~\ref{lem:H}, (H1)), so that $\nabla_aE_0=C^{-1}(a-m)$. Identify $wI+iv\cdot\sigma$ with $(w,v)\in\R^4$; its operator
+norm is the Euclidean norm. Put $X_p=(2/g)(\Tg_p-I)$, $F_p=(0,(dc)_p)$ and $A_p=\sum_{e\in\partial p}|c_e|$.
+
+\begin{lemma}\label{lem:quat}
+For every configuration, $|X_p|^2=2\beta(1-W_p)$, $|X_p-F_p|\le gA_p^2/4$, and $|D_hX_p-D_hF_p|\le gA_p|h|/2$ for $h$ in the direction of
+one link of $p$ (a plaquette contains each of its links once). The first estimate holds also for a closed path of $\ell$ factors, with $A$ the sum of the norms of its $\ell$ vectors, repeated links counted with multiplicity; the second estimate is used for plaquettes only (for a path in which a link is repeated, the factor $|h|$ would be multiplied by the multiplicity). \st{proved}
+\end{lemma}
+\begin{proof}
+For skew-Hermitian $Z,K$, $De^Z[K]=\int_0^1e^{(1-s)Z}Ke^{sZ}ds$ has norm at most $\|K\|$, and $D^2e^Z[K,K']$ is a sum of two integrals over
+simplices of area $1/2$, of norm at most $\|K\|\|K'\|$. The Leibniz rule for the product of the four unitary factors gives
+$\|D^2Q[h,k]\|\le(\sum_jg|h_j|/2)(\sum_jg|k_j|/2)$. Since $F_p=(2/g)DQ(0)[c]$, Taylor's formula with integral remainder at $0$ gives both
+estimates; no small-field condition is used.
+\end{proof}
+
+\begin{lemma}[Stein comparison]\label{lem:stein}
+For $n\ge16$, $\beta\ge2$, $\mu\in\cG^{\mathrm{TI}}_\beta$ and the trees of Lemma~\ref{lem:shorttree},
+\[
+\E_\mu\bigl\|\tilde\gamma_\beta(\cdot\mid b)-N_b\bigr\|_{\mathrm{TV}}\le\kappa Hg+Bg^2+\kappa DN_*Kg^3,\qquad
+H=(2\pi^2+8\pi)C_1P_nN_*^2,\quad B=D\bigl(K+\kappa N_*\sqrt K/5\bigr).
+\]
+In particular $|\E_\mu\psi-\E_\nu\psi|$ obeys the same bound for every measurable $\psi(a,b)\in[0,1]$, where $\nu$ is the law of $b$ under
+$\mu$ times $N_b$. No lower bound on a normaliser and no eigenvalue of $\mathsf D^\top\mathsf D$ enter. \st{proved}
+\end{lemma}
+\begin{proof}
+Fix $b$, $P=\tilde\gamma_\beta(\cdot\mid b)$, $Q=N_b$; on the principal chart $P$ has density proportional to $e^{-V}$, $V=E_g-\sum_e\log j_g(a_e)$.
+For $f$ smooth with compact support and $0\le f\le1$, let $u=-\int_0^\infty(P_tf-Qf)\,dt$, where $P_t$ is the Ornstein--Uhlenbeck
+semigroup with invariant law $Q$; then $\mathcal Lu=f-Qf$ with $\mathcal L=\tr(C\nabla^2)-(a-m)\cdot\nabla$. Gaussian integration by parts gives
+$C^{1/2}\nabla P_tf=(e^{-t}/\sqrt{1-e^{-2t}})\,\E[f(\cdot)Z]$, and $|\E[f(\cdot)(v\cdot Z)]|\le\E(v\cdot Z)_+=(2\pi)^{-1/2}$ for $|v|=1$; integrating,
+$\|C^{1/2}\nabla u\|\le\kappa$, independently of the dimension.
+Let $\chi(a)=\prod_e\rho(g|a_e|)$ with $\rho=1$ on $[0,1]$, $2-s$ on $[1,2]$, $0$ beyond; its support lies in the chart. Integration by parts under $P$
+gives $P(\chi\mathcal Lu)=P[\chi\nabla u^\top C(\nabla V-\nabla E_0)]-P[\nabla u^\top C\nabla\chi]$, and $|\mathcal Lu|\le1$, so
+\[
+|Pf-Qf|\le P(1-\chi)+\kappa P\bigl[\chi\|C^{1/2}(\nabla E_g-\nabla E_0)\|\bigr]+\kappa P\bigl[\chi\|C^{1/2}\nabla\log j\|\bigr]+\kappa P\|C^{1/2}\nabla\chi\|,
+\]
+and the same bound holds for the total variation. The diagonal block $C_{ee}$ is the covariance of one colour of $\zeta_e$; by the additive
+version of Appendix~\ref{app:stokes}, $\zeta_e=\langle w_e,\mathsf D\zeta\rangle$ with $\|w_e\|^2\le N_*^2$, hence $\|C^{1/2}r\|\le N_*\sum_e|r_e|$.
+Also $\|C^{1/2}\mathsf L^\top\|=1$. Since $\nabla E_g-\nabla E_0=\mathsf L^\top(X-F)+(D_aX-\mathsf L)^\top X$, Lemma~\ref{lem:quat} gives
+$\|C^{1/2}(\nabla E_g-\nabla E_0)\|\le\frac g4\sum_PA_p^2+2gN_*\sum_PA_p|X_p|$. On the support of $\chi$, $|\nabla\log j_g(a_e)|\le g^2|a_e|/5$;
+$1-\chi\le\sum_e\mathbf1_{g|a_e|>1}$ and $\|C^{1/2}\nabla\chi\|\le N_*g\,\#\{e:g|a_e|>1\}$.
+Now average over $b$; by Lemma~\ref{lem:cond}, $\E_\mu P_b(h)=\E_\mu h$. Lemma~\ref{lem:shorttree}, Lemma~\ref{lem:L1} and Cauchy--Schwarz give
+$\E_\mu A_p^2\le16K$, $\E_\mu|X_p|^2\le2C_1$ and $\E_\mu A_p|X_p|\le4\sqrt{2C_1K}=4\pi C_1N_*$, whence the first term; Markov's inequality
+$\mu(|a_e|>1/g)\le Kg^2$ and $\E_\mu|a_e|\le\sqrt K$ give the others.
+\end{proof}
+This argument, and the observation that only second moments are needed, are due to GPT-6~Astra (see the statement on the use of AI);
+the author re-derived every inequality. A one-link check (one free link, six plaquettes, trivial staples) gives a Stein bound equal to
+$3.04$ times the exact total variation for $\beta=10,\dots,10^4$ \st{computed}.
+
+\subsection{The harmonic part to second order}
+\begin{lemma}\label{lem:H2}
+Let $Y_1=F_{(0;12)}-F_{(e_1;12)}$, $Y_2=\tau_tY_1$, $n\ge\max(16,8(t+4))$, and let $\phi$ be one of $e^{-|y|^2/2}$, $e^{-|y|^2}$ on $\R^3$ or
+$e^{-(|y_1|^2+|y_2|^2)/2}$ on $\R^6$. There is $w_n\in W_n$, the same for the three functions $\phi$ (it minimises $w\mapsto\E_\mu\min(1,X_w(b))$ with $X_w=\sum_i|\Delta h_i^{(w)}|^2$ over both observables, a quantity that does not involve $\phi$), such that
+\[
+\bigl|\E_\nu\phi(Y^{(w_n)})-\E\phi(\Delta Z^{(w_n)})\bigr|\le\frac{c_H}{n^2}+16gK\Bigl(\frac{512}{8|W_n|n^2}\Bigr)^{1/2}|C^2_n|,
+\]
+where $\Delta Z^{(w)}$ is centred Gaussian with covariance $\Sigma_n(w)\otimes1_3$. \st{proved}
+\end{lemma}
+\begin{proof}
+Under $\nu$, $Y^{(w)}=\Delta h^{(w)}(b)+\Delta Z^{(w)}$ with $\Delta Z^{(w)}$ independent of $b$ (Lemma~\ref{lem:H}). For fixed $b$, $\phi$ is even with
+Hessian of norm at most $2$ and $\Delta Z^{(w)}$ is symmetric, so the first-order term of Taylor's formula has mean zero and
+$|\E\phi(h+\Delta Z)-\E\phi(\Delta Z)|\le\min(1,|h|^2)$. The proof of (H2) is deterministic in $b$, so Lemma~\ref{lem:cacc} applies at fixed $b$
+with the cutoff of Step~4: $\sum_{w\in W_n}\sum_i|\Delta h_i^{(w)}(b)|^2\le(512/n^2)\|H(b)\|^2$. By concavity of $u\mapsto\min(1,u)$,
+the average over $w$ of $\E_\mu\min(1,\sum_i|\Delta h_i^{(w)}|^2)$ is at most $\E_\mu\min(1,c\|H(b)\|^2)$, $c=512/(|W_n|n^2)$, and
+$\|H(b)\|\le\|F(a,b)\|$ for every $a$. By Lemma~\ref{lem:quat}, $|F_p|^2\le2|X_p|^2+g^2A_p^4/8$; using $\min(1,y)\le\sqrt y$ for the second
+part and Lemma~\ref{lem:L1} for the first gives the bound. Choose $w_n$ minimising the expectation.
+\end{proof}
+The first-order bound of Step~5 gave an error of order $1/n$; here the symmetry of the centred Gaussian part gives $1/n^2$ for these even
+smooth test functions (not for arbitrary bounded Lipschitz ones).
+
+\subsection{A crude rate for the projections}
+\begin{lemma}\label{lem:projrate}
+If the interior of a translated box $B$ contains $B_{m-1}$, $m\ge8$, then $0\le\langle v,(\Pi_\infty-\Pi_B)v\rangle\le408/(m-4)^2$ for
+$v=1_{(0;12)}-1_{(e_1;12)}$. \st{proved}
+\end{lemma}
+\begin{proof}
+With $u=d^*\Delta^{-1}v$, $du=\Pi_\infty v=:f$ and $\|u\|^2\le\langle v,\Delta^{-1}v\rangle=1/4$. Let $\chi(x)=\min(1,\max(0,(m-2-|x|_\infty)/(m/2-2)))$;
+then $d(\chi u)\in R_B$ and
+$\|f-d(\chi u)\|^2\le2\sum_{|x|_\infty>m/2}|f(x)|^2+192\|u\|^2/(m-4)^2$. By Parseval, $\sum_x|x|^2|f(x)|^2=\sum_{\lambda=0}^3\int_{[-\pi,\pi]^4}|\partial_{k_\lambda}\hat f|^2\frac{d^4k}{(2\pi)^4}$, where $|\cdot|$ is the Euclidean norm on $\mathbb C^6$ (two-forms).
+We bound $\partial_\lambda\hat f$ pointwise. Put $\epsilon_\mu=e^{ik_\mu}-1$, $r=|\epsilon|$ (so $r^2=\hat k^2$), $q=\epsilon/r$ for $k\ne0$, and let $E_q:\mathbb C^4\to\mathbb C^6$ be $u\mapsto q\wedge u$. The Fourier multiplier of $d$ on one-forms is $E_\epsilon$; $E_q^*E_q=1-qq^*$ is a projector, so $E_q$ is a partial isometry
+and the multiplier of the orthogonal projection $\Pi_\infty$ onto the closure of the range of $d$ is $P(k)=E_qE_q^*$, $\|P\|=1$. With $\hat v=a\,e_{12}$, $a=1-e^{-ik_1}$, $|a|=|\epsilon_1|\le r$, $|\partial_\lambda a|=\delta_{\lambda1}$, we get $\hat f=a\,Pe_{12}$.
+\emph{(i)} $\epsilon$ has $|\partial_\lambda\epsilon|=1$, and $\partial_\lambda q=(\partial_\lambda\epsilon-q\,\partial_\lambda r)/r$ with $\partial_\lambda r=\mathrm{Re}\langle q,\partial_\lambda\epsilon\rangle$, whence $|\partial_\lambda q|^2=(1-(\partial_\lambda r)^2)/r^2\le r^{-2}$.
+\emph{(ii)} $\|E_w\|=|w|$ for every $w\in\mathbb C^4$ ($E_w^*E_w=|w|^2-ww^*$), so $\|\partial_\lambda P\|\le\|\partial_\lambda E_q\|+\|\partial_\lambda E_q^*\|\le2|\partial_\lambda q|\le2/r$.
+\emph{(iii)} Hence $|\partial_\lambda\hat f|\le|\partial_\lambda a|\,|Pe_{12}|+|a|\,\|\partial_\lambda P\|\le\delta_{\lambda1}+2$. The function $\hat f$ is periodic, continuous (it is bounded by $|a|\le r$, so it tends to $0$ at $k=0$) and Lipschitz away from the single point $k=0$, which has codimension four, so these pointwise derivatives are its weak derivatives.
+\emph{(iv)} Therefore $\sum_x|x|^2|f(x)|^2\le3\cdot2^2+3^2=21\le45$ (the measure $d^4k/(2\pi)^4$ has total mass $1$).
+\emph{(v)} The remaining inputs of the lemma are $\|u\|^2\le\langle\Delta^{-1}v,v\rangle=\int|a|^2/r^2=1/4$ (symmetry of the four directions) and the cutoff estimate above.
+Numerically \st{computed} (fine grids, difference quotients): $|\partial_\lambda\hat f|\le1.155$ for every $\lambda$; $r|\partial_\lambda q|\le1.0000$; $\sum_x|x|^2|f(x)|^2=1.2066$; $\int|a|^2/r^2=0.2500$; the explicit componentwise symbols $\hat f_{\mu\nu}$ agree with $aPe_{12}$ to $10^{-15}$. A review by another model derived, from the explicit symbols, the exact pointwise identity $\sum_\lambda|\partial_\lambda\hat f|^2=s+2a(2-s)$, with $s=(r_1+r_2)/\hat k^2$ and $a=r_1/\hat k^2$ ($r_\mu=|\epsilon_\mu|^2$), hence $\sum_x|x|^2|f(x)|^2\le3$; the identity was checked numerically to $10^{-9}$ and its maximum is $2.998$.
+\end{proof}
+Computed: $\sum_x|x|^2|f(x)|^2\approx1.21$, and $c(0)-\langle v,\Pi_mv\rangle$ for $m=2,\dots,12$ has local slopes decreasing to about $6.2$,
+consistent with an $m^{-6}$ decay \st{computed}; only the crude rate is used.
+
+\subsection{Step~2 at finite $\beta$ and proof of Theorem~\ref{thm:rate}}
+\begin{lemma}\label{lem:bch2}
+For $\lambda>0$ and each of $\Phi(u)=e^{-u/2}$, $e^{-u}$, $e^{-(u_1+u_2)/2}$,
+$|\E_\mu\Phi(2\beta(1-\Xi))-\E_\mu\Phi(|Y(a,b)|^2)|\le2[50gK(\lambda+1/2)+4C_2/\lambda^2]$. \st{proved}
+\end{lemma}
+\begin{proof}
+With $X_\ell=(2/g)(Q_\ell-I)$ for the ten-factor loop and $F_\ell=(0,Y)$, Lemma~\ref{lem:quat} gives
+$|2\beta(1-\Xi)-|Y|^2|\le\frac g2A_\ell^2|X_\ell|+\frac{g^2}{16}A_\ell^4$; truncate $\min(1,\cdot)$, use $\E_\mu A_\ell^2\le100K$,
+$\E_\mu|X_\ell|^2\le4C_2$ and Markov's inequality for $|X_\ell|>\lambda$.
+\end{proof}
+\begin{proof}[Proof of Theorem~\ref{thm:rate}]
+Fix $t$, $\delta=\delta_t$, $n=n_t$, $g\le\delta/(4\kappa H(n))$ and $X=e^{-\beta(1-\Xi)}$, $\Xi=\Xi((0;12),1)$. For each of the five
+expectations entering $\Var_\mu X$ and $\Cov_\mu(X,\tau_tX)$, translation invariance moves the loops to the centre $w_n$ of
+Lemma~\ref{lem:H2}; Lemmas~\ref{lem:bch2} ($\lambda=(96C_2/\delta)^{1/2}$), \ref{lem:stein} and \ref{lem:H2} replace it by the corresponding
+Gaussian expectation with covariance $\Sigma_n(w_n)$ up to $\delta'\le\delta$ in total (the displayed bounds of the lemmas give at most $0.59\,\delta$; keeping the exact counts in the energy term of Lemma~\ref{lem:H2} gives $0.41\,\delta$; only $\delta'\le\delta$ is needed, since $3\delta'\le\Gamma_G/2$ and $\Gamma_G\ge6\delta$) \st{proved; arithmetic also computed}. Here the moment constant is $K=C_2N_*^2$ of Lemma~\ref{lem:shorttree}, and the observable has width parameter $1$. For that Gaussian,
+$\Var\le1/4$, $s_i\le2$, $|c_n-c(t)|\le c(t)/2$ by Lemma~\ref{lem:projrate} ($m=\lfloor7n/8\rfloor-t\ge4+3688t^3$), and
+\[
+\Gamma_G=[(1+s_1)(1+s_2)]^{-3/2}\Bigl[\Bigl(1-\frac{c_n^2}{(1+s_1)(1+s_2)}\Bigr)^{-3/2}-1\Bigr]\ge\frac{c_n^2}{162}\ge\frac{c(t)^2}{648}\ge6\delta .
+\]
+Hence $\Cov_\mu(X,\tau_tX)\ge\Gamma_G/2>0$, $\Var_\mu X\le1/4+\Gamma_G/2$, and Lemma~\ref{lem:V} with Remark~\ref{rem:whichgap} gives
+$m^{\mathrm{inv}}\le t^{-1}\log(1+1/(2\Gamma_G))$. All errors increase with $g$, so the bound holds for all $\beta\ge\beta_1(t)$. For the
+corollary take $t=\lfloor x\rfloor\ge x/2$ (odd $t\ge x/3$ for $m_+$), $x=(\beta/10^{227.73})^{1/120}$.
+\end{proof}
+
+\begin{remark}[where the exponent is lost]\label{rem:exponent}
+$\beta_1\propto n^{16}\delta^{-2}$ with $n\propto\delta^{-1/2}$ and $\delta\propto t^{-12}$. The factor $t^{-12}$ is $c(t)^2$: the smallest
+gauge-invariant observable is quadratic in $Y$. The factor $n\propto\delta^{-1/2}$ comes from the harmonic part, about which only its
+$L^2$ norm is known. The factor $H\propto P_nN_*^2\propto n^8$ comes from summing the second-order errors over the box and from the length
+of the axial tree loops (for this tree some loops enclose an area of order $n^2$, so the count $N_*=O(n^2)$ is sharp up to constants).
+A tree with shorter loops in quadratic mean, observables built on second differences, or a lattice Uhlenbeck gauge
+would each improve the exponent; we have not written any of them \st{heuristic}.
+\end{remark}
+
+
+\begin{remark}[what the rate does and does not say]
+The bound of Theorem~\ref{thm:rate} is below $1$ only when $12\log t+25.23<t$, that is for $t\ge78$, hence for $\beta\ge\beta_1(78)\approx10^{455}$ (and the simplified form $24\beta^{-1/120}\log\beta$ is below $1$ only for $\beta\gtrsim10^{537}$); it is an asymptotic
+statement of order in $\beta$, as the Gaussian limit it quantifies. The proof gives $m\to0$ with a rate and uses nothing that is not in this note. It does not contradict a positive gap at
+every finite $\beta$ (the expected gap is exponentially small in $\beta$), and, being an upper bound valid also for the $U(1)$ adaptation of Remark~\ref{rem:U1}, it carries no information on confinement.
+\end{remark}
+\emph{Execution of Appendix~\ref{app:stokes}.} The appendix was executed literally on the boxes of side $2$ and $4$ (all closed paths of length at most $6$ from two base points, all tree loops of several spanning trees,
+$1000$ random closed paths, Haar-distributed $SU(2)$ links, and an exact integer version), with residuals below $3\cdot10^{-12}$ in double precision and below $10^{-15}$ in extended precision (two independent implementations), exact equality in the integer version, and the count of
+plaquettes equal to the formula \eqref{eq:St-count} on every loop \st{computed}; see \S\ref{sec:repro}. This led to the two corrections of wording in the appendix (the segment $t_r$ is never constant; the edges of a loop are $e_k=(v_{k-1},v_k)$).
+
+
+%=====================================================================================================================
+\section{Limits of tori}\label{sec:tori}
+
+\begin{proposition}\label{prop:tori}
+For even $N$ let $\mu_N$ be the Wilson measure on $(\Z/N\Z)^4$, lifted periodically. Every weak limit point of $(\mu_N)$ belongs to
+$\cG^{\mathrm{RP}}_\beta$ and is invariant under $\cO$.
+\end{proposition}
+\begin{proof}
+\emph{RP} \cite{OS78}: the reflection $t\mapsto-t$ of the torus fixes the slices $t=0$ and $t=N/2$; with $\Lambda_+=\{0\le t\le N/2\}$ the
+Boltzmann weight is $A\cdot\Th A$, $A=\exp(\beta\sum_{p\subset\Lambda_+,\,p\not\subset\text{fixed slices}}W_p+\frac\beta2\sum_{p\subset\text{fixed
+slices}}W_p)$, because $W_{\Th p}(U)=W_p(\Th U)$ is real; for $F$ supported in $\Lambda_+$,
+$\mu_N(\Th F\cdot F)=Z^{-1}\int dU_{\text{fixed}}\bigl|\int dU_{\Lambda_+\setminus\text{fixed}}AF\bigr|^2\ge0$, since $U\mapsto\Th U$ preserves Haar
+measure. A weak limit point $\mu$ (compactness) is translation and $\cO$ invariant, and RP (for $F\in\mathcal A_+$ supported in $t\le R$ and
+$N>2R$). It is Gibbs: for finite $E$ and $N$ larger than twice the diameter of the plaquettes of $\cP(E)$, the torus conditional law of $U_E$ given the other links is $\gamma_E$ (the plaquettes of $\cP(E)$ and their links
+are the same as in $\Z^4$), so that $\mu_N(fg)=\mu_N(\gamma_E(f)g)$ for continuous $f$ depending on $U_E$ only and bounded continuous $g$ that does not depend on $U_E$ (conditioning is understood on the torus, where $E$ and the supports of $f,g$ are fixed and $N$ is large). If $f$ and $g$ are local and continuous, then $\gamma_E(f|\cdot)$ is a continuous function of the finitely many links of
+$\cP(E)\setminus E$, because the weight in \eqref{eq:spec} is continuous in those links and $Z_E>0$; both sides are then expectations of local continuous functions and pass to the weak limit. By density (Stone--Weierstrass) of the linear span of products $fg$ of such functions
+in the continuous functions of the compact configuration space, $\mu\gamma_E=\mu$.
+\end{proof}
+
+%=====================================================================================================================
+\section{Discussion}\label{sec:discussion}
+
+\subsection{Comparison with Chatterjee's Problem~5.1}\label{sec:cha}
+\emph{Source} \st{read}: arXiv:1803.01950v1, LaTeX source and PDF. Chatterjee defines the lattice gauge theory on a finite set
+$\Lambda\subseteq\Z^n$ by the action $S_\Lambda(U)=\sum_{p\in P(\Lambda)}\mathrm{Re}(\mathrm{Tr}(I-U_p))$ and the measure
+$Z^{-1}e^{-\beta S_\Lambda(U)}d\sigma_\Lambda(U)$, and an infinite volume limit as ``a weak limit of the above probability measures as
+$\Lambda\uparrow\Z^n$'' \cite[\S3, p.~4]{Cha18}; in \S5 he takes it ``obtained by taking a weak limit of the theories on finite cubes''
+\cite[p.~9]{Cha18}. With $\mathrm{Tr}$ the full trace, his $\beta$ for $SU(2)$ is half of ours. On p.~9 he writes: ``The correlation between
+$W_{\gamma_1}$ and $W_{\gamma_2}$ is defined as the quantity $\langle W_{\gamma_1}W_{\gamma_2}\rangle-\langle W_{\gamma_1}\rangle\langle
+W_{\gamma_2}\rangle$. (5.1)'', where $W_\gamma$ is the trace of the holonomy of the loop $\gamma$, and calls $\xi$ the correlation length when
+the logarithm of this quantity behaves like $-d(\gamma_1,\gamma_2)/\xi$. The problem reads \cite[p.~9]{Cha18}:
+\begin{quote}\small
+Problem 5.1 (Mass gap). Take any compact non-Abelian Lie group $G\subseteq U(N)$ for some $N\ge2$ and consider any infinite volume
+limit of four-dimensional lattice gauge theory with gauge group $G$ at inverse coupling strength $\beta$. For each $x\in\R^4$, let $p_x$
+be the plaquette that is closest to $x$ (breaking ties by some arbitrary rule). Let $f_\beta(x)$ denote the correlation between $W_{p_0}$
+and $W_{p_x}$, as defined in (5.1). Show that for any $\beta>0$, there exists some $\xi(\beta)\in(0,\infty)$ such that
+$\lim_{|x|\to\infty}\frac{\log f_\beta(x)}{|x|}=-\frac1{\xi(\beta)}$. Moreover, prove that $\lim_{\beta\to\infty}\xi(\beta)=\infty$.
+\end{quote}
+
+\emph{What Theorem~\ref{thm:A} gives and does not give.}
+\begin{itemize}
+\item \emph{Group.} Only $SU(2)$ (and, in outline, $U(1)$, which the problem excludes).
+\item \emph{States.} Problem~5.1 concerns weak limits of the free-boundary measures on finite cubes. Such limits are Gibbs states.
+We do not establish here that every such limit is translation invariant and site-reflection-positive, as required by
+Theorem~\ref{thm:A}. Conversely, we do not establish that every state in our class can be obtained as a free-boundary cube limit.
+Different approximating boundary conditions do not imply that the sets of limiting states are disjoint or non-nested.
+Theorem~\ref{thm:A} applies to every family in the intersection of the two classes.
+\item \emph{Quantity.} The problem asks for the exact exponential rate of one fixed covariance, that of $W_{p_0}$ and $W_{p_x}$, in all
+directions of $x$. Theorem~\ref{thm:A} concerns $1/m(\mu_\beta)$, which by Remark~\ref{rem:whichgap}(iv) is an upper bound for the
+time-direction correlation length of every observable localised at time zero, the spatial plaquette included. Corollary~\ref{cor:obs}
+concerns the $\beta$-dependent observable $X_{\beta,K}$ along the time axis, through even separations.
+Proposition~\ref{prop:reduced} removes the eigenspaces at $\pm1$ but does not show that the fixed plaquette observable has spectral
+weight in the remaining slow modes.
+\item \emph{First assertion} (existence of a finite, strictly positive exact exponential decay rate for the specified plaquette
+covariance in all directions): not addressed. This observable-specific assertion is not identified here with positivity of the full
+transfer-operator gap.
+\item \emph{Second assertion} ($\xi(\beta)\to\infty$): not proved for the plaquette correlation. Its analogue for $1/m(\mu_\beta)$ is
+Theorem~\ref{thm:A}. Since the correlation length of a single observable may stay bounded while $1/m(\mu_\beta)\to\infty$, the analogue
+does not imply the second assertion.
+\end{itemize}
+The honest summary is therefore: \emph{Theorem~\ref{thm:A} proves, for $SU(2)$ and for translation-invariant site-reflection-positive
+Gibbs states, that the inverse transfer-operator gap diverges as $\beta\to\infty$; this is an analogue of the second assertion of
+Problem~5.1 with a weaker assertion about the transfer operator and with different state hypotheses, and it proves neither assertion
+of that problem.} No inclusion between the classes of states is established here, and the spectral strengthening of
+Proposition~\ref{prop:reduced} does not change this comparison.
+
+\subsection{What this note does not prove}\label{sec:notprove}
+\begin{itemize}
+\item \textbf{Nothing about confinement, and nothing that separates $SU(2)$ from $U(1)$.} An adaptation to the four-dimensional $U(1)$
+Wilson action is outlined in Remark~\ref{rem:U1}; for the different Villain action the photon is massless at weak coupling
+\cite[\S2.11]{FS82} \st{read}. The result is also compatible with the conjecture of Patrascioiu and Seiler that four-dimensional Yang--Mills
+theory, as a lattice system, has ``a critical point at a finite value of the lattice coupling strength'' \cite[\S1, p.~2]{Sei03}
+\st{read}: it gives no information at any finite $\beta$ and does not decide between that scenario and asymptotic freedom.
+\item \textbf{Nothing uniform in the volume at fixed coupling, and nothing at fixed lattice size.} The states are infinite-volume states from the start. No statement is made
+about transfer matrices on finite tori or cylinders, nor about a gap bound uniform in the volume at fixed $\beta$. The statement at a fixed lattice size, with a rate, is Theorem~7.59 of \cite{BB26} (\S\ref{sec:bb26}); we do not reprove it.
+\item \textbf{State hypotheses and degenerate vacua.} Without time-translation invariance, the transfer-operator construction of
+Lemma~\ref{lem:OS} is not available as stated. Without full translation invariance, the present arguments for the local energy bound
+and Proposition~\ref{prop:Y} do not apply. For states with a degenerate vacuum, $m=0$ trivially;
+Proposition~\ref{prop:reduced} additionally proves weak-coupling vanishing after removal of the full eigenspaces at $\pm1$.
+\item \textbf{Only a power-law rate, numerically empty in practice.}
+The bound $B(t)$ of Theorem~\ref{thm:A} is obtained after taking $\beta\to\infty$ at each fixed $t$, and Lemma~\ref{lem:S} is proved for each fixed box with constants depending on its size.
+Theorem~\ref{thm:rate} gives a rate by tracking the box size with $\beta$, and it is a power: $m\le24\beta^{-1/120}\log\beta$ for $\beta\ge10^{228}$. It does not give an exponential rate, although the expected
+gap is of order $e^{-c\beta}$; it is vacuous (the bound exceeds $1$) for $\beta\lesssim10^{455}$, and its simplified form $24\beta^{-1/120}\log\beta$ for $\beta\lesssim10^{537}$ and it says nothing at any coupling reachable by simulation.
+The exponent $1/120$ is not claimed to be optimal for the method (Remark~\ref{rem:exponent}). The constants of the earlier fixed-box estimates (for instance $c_0$ in \S\ref{sec:S}) are still not effective; Theorem~\ref{thm:rate} does not use them.
+\item \textbf{No assertion of a positive gap at finite $\beta$.}
+The argument does not establish $m(\mu)>0$ or $m_{\mathrm{red}}(\mu)>0$ at weak coupling for any fixed lattice spacing.
+That lattice question is distinct from constructing a nontrivial continuum Yang--Mills theory with a positive physical mass gap.
+\item \textbf{Not Problem~5.1 of \cite{Cha18}} (\S\ref{sec:cha}).
+A sufficient route to divergence of the plaquette correlation length along even time separations, for states in our class, would be a
+subexponential lower bound after $\beta\to\infty$ at each fixed even time for the plaquette covariance divided by its variance.
+More precisely, for a fixed spatial plaquette $p$ at time zero with $\Var_{\mu_\beta}W_p>0$, it would suffice to prove
+\[
+\liminf_{\beta\to\infty}
+\frac{\Cov_{\mu_\beta}(W_p,\tau_tW_p)}{\Var_{\mu_\beta}W_p}\ge h(t)>0
+\quad(t\ge2\text{ even}),\qquad
+\lim_{\substack{t\to\infty\\t\text{ even}}}\frac{-\log h(t)}t=0.
+\]
+Indeed, let $r_{W,\beta}$ be the radius of the support of the spectral measure of $[W_p-\mu_\beta(W_p)]$ for $T_\beta$.
+At even times the ratio is at most $r_{W,\beta}^t$. Its even-time decay rate exists by the same moment argument as in
+Corollary~\ref{cor:obs} and equals $m_W(\mu_\beta):=-\log r_{W,\beta}$.
+The proposed bounds would give $\limsup_{\beta\to\infty}m_W(\mu_\beta)\le-\log h(t)/t$, hence $m_W(\mu_\beta)\to0$.
+If the exact all-direction rate in the first assertion of Problem~5.1 were separately established for the same plaquette and its
+temporal translates in a family common to both classes, its even temporal subsequence would have this rate. The criterion would then
+imply the second assertion for that family. Neither the criterion nor the exact-rate assertion is proved here.
+
+Identifying individual plaquette curvatures with the pure Maxwell field would require eliminating the random harmonic contribution;
+this is one possible route, not a necessary condition for every proof of such a covariance bound. A centred random constant curvature
+cannot be discarded merely because its mean vanishes.
+
+For $S_{\beta,p}:=\beta(1-W_p)$, passing quadratic moments from weak convergence would also require actual uniform integrability of
+$S_{\beta,p}^2$, for example
+\[
+\lim_{M\to\infty}\sup_{\beta\ge2}
+\E_{\mu_\beta}\!\left[
+S_{\beta,p}^2\mathbf1_{\{S_{\beta,p}^2>M\}}
+\right]=0.
+\]
+The bound $\sup_\beta\E S_{\beta,p}^2<\infty$ alone does not imply this condition.
+A uniform $L^{2+\varepsilon}$ bound for $S_{\beta,p}$, for some $\varepsilon>0$, would suffice.
+Neither this pure-Maxwell identification nor the moment control sufficient to pass these quadratic correlations to the limit is
+proved here.
+Without reflection positivity, fixed-distance information alone does not control an exponential decay rate.
+\item \textbf{Further groups and dimensions.}
+Apart from the one-colour $U(1)$ adaptation (Remark~\ref{rem:U1}, \st{sketch}), no extension to other compact connected Lie groups or to
+other dimensions is proved here. Such extensions are plausible but require their own arguments.
+\item Appendix~\ref{app:stokes} gives an explicit, crude bound for $A_n$; Lemma~\ref{lem:shorttree} replaces it by a quadratic bound for a specific tree.
+No numerical value of $C_3$ is needed here; $C_1=124$ is explicit and crude.
+\end{itemize}
+
+\subsection{Where the hypotheses are used: candidate counterexamples}
+The following cases were examined to locate the hypotheses that the proof needs; the statements about the models themselves are
+\st{heuristic} unless a source is given.
+\begin{itemize}
+\item \emph{Finite gauge groups, e.g.\ $\Z_2$.} At weak coupling these theories are expected to have a gap that does not close; exponential
+decay of correlations of a wide class of gauge-invariant functions at weak coupling is proved for finite, possibly non-Abelian, groups in
+\cite{AC25} \st{abstract read}. The proof fails at its first Gaussian step: there is no Lie algebra and no principal chart, the variables
+$2\beta(1-\Xi)$ take values in a finite set and tend to $0$ in probability, $X_\beta\to1$, and $V_K=\Gamma_K(t)=0$ in the limit, so
+Lemma~\ref{lem:V} yields nothing. The hypothesis used is that $G$ is a Lie group of positive dimension, through Lemma~\ref{lem:S} and the
+non-degenerate limit $N_b$.
+\item \emph{Dimension two.} There is no plaquette in the spatial slice, so the time-zero observable does not exist, and the free curvature
+covariance is $\Pi_\infty=1$, so the analogue of $c(t)$ vanishes for $t\ge1$. The hypothesis $d=4$ enters through Lemma~\ref{lem:free}.
+\item \emph{Dimension three.} The argument is expected to adapt, with a polynomial lower bound for the analogue of $c(t)$; this is
+compatible with a positive gap at every finite $\beta$, since only a power-law rate in four dimensions is claimed, and nothing in dimension three (for three-dimensional $U(1)$, confinement at all couplings
+is due to G\"opfert and Mack \cite{GM82}, as reported in \cite[p.~8]{Cha18}). Not proved here.
+\item \emph{Massive limits.} If the weak-coupling limit were a massive Gaussian field, as in the presence of a Higgs field scaled with
+$\beta$ \cite{Cha24,RYZ26}, the bound would tend to twice the mass (Remark~\ref{rem:mechanism}). The conclusion rests on the
+masslessness of the limiting field, which the gauge invariance of Wilson's action enforces at quadratic order.
+\item \emph{Boundary conditions and degenerate states.} The invariance hypotheses and degenerate vacua are discussed in
+\S\ref{sec:notprove}. Theorem~\ref{thm:A} holds trivially when the vacuum is degenerate, while Proposition~\ref{prop:reduced} also
+controls the gap after removal of the eigenspaces at $\pm1$.
+\end{itemize}
+
+\subsection{Prior work}\label{sec:prior}
+Chatterjee's Problem~5.1 \cite{Cha18} concerns the stronger plaquette statement compared in \S\ref{sec:cha}.
+Its formulation does not by itself establish that the weaker transfer-operator conclusion of this note was independently open.
+The free-energy asymptotics in \cite{Cha16,Bre26}, the $U(1)$ scaling limits in \cite{Gro83,Dri87}, and the Higgs-field limits in
+\cite{Cha24,RYZ26} concern related but different statements. The closing of the gap at fixed lattice size is Theorem~7.59 of \cite{BB26}, discussed in \S\ref{sec:bb26}.
+
+The recorded searches inspected titles of works citing \cite{Cha18} (13 on INSPIRE and 40 on OpenAlex), together with selected
+abstracts and web results, and, on 11 November 2026, generic arXiv and web queries on the divergence of the correlation length, or the
+vanishing of the gap, of non-Abelian lattice gauge theories as $\beta\to\infty$. They found no statement of such a result; in particular they did not retrieve \cite{BB26}, whose
+version~5.0.0 has a Zenodo record created on 11 November 2026 at 23:29~UTC, and which we learned of on 12 November. Seiler's lecture
+notes (LNP~159, 1982) and the text of \cite{Sei78} were not read.
+This is not a systematic examination of the constructive gauge-theory literature, and it was shown to be incomplete by \cite{BB26}.
+The historical status of Theorem~\ref{thm:A} for infinite-volume states and of Proposition~\ref{prop:Y} remains \st{UNSURE}, and we claim no priority.
+Neither the search nor the cited surveys certify that these conclusions lack an earlier proof.
+
+\subsection{Reach}
+Theorem~\ref{thm:A} and Proposition~\ref{prop:reduced} exclude a positive lower bound independent of $\beta$ on the transfer-operator gap,
+including after removal of the eigenspaces at $\pm1$, along weak-coupling families in the stated class of Gibbs states.
+They say nothing about a lower bound uniform in the volume at fixed $\beta$. The mechanism, whose adaptation to the $U(1)$ Wilson
+action is outlined in Remark~\ref{rem:U1}, does not establish confinement or a positive continuum mass gap.
+Any application to finite-volume gap criteria requires an additional argument connecting those criteria to the infinite-volume operator
+quantity used here; for instance, the base-scale statement of Corollary~7.60 of \cite{BB26} concerns a finite-volume hypothesis and is not obtained or reproved here. The only rate in $\beta$ established here is the power-law bound of Theorem~\ref{thm:rate}; no box-size scale in the sense of \cite{BB26} is obtained.
+
+%=====================================================================================================================
+\section{Reproducibility}\label{sec:repro}
+The programs (Python~3 with NumPy, SciPy, SymPy, mpmath) were first run in a sandbox without network and without privileges (``qlab''). For
+version~1.0 they were run again, by an agent other than their author, on 11 November 2026, as a resource-limited job on a second machine (Python~3.14.4, NumPy~2.5.3, SciPy~1.18.1, SymPy~1.14.0, mpmath~1.3.0; the programs use no network), with the
+same source files (SHA-256 sums in the package); the replayed outputs are identical to the first ones, apart from the last digit of a few double-precision values and from the run times. Programs, first outputs
+and replayed outputs are in the folder \path{reproduction/} of the package.
+\begin{itemize}
+\item \path{hodge_check.py}: Lemma~\ref{lem:hodge}, exact integer check on four tori, all degrees, and a negative control.
+\item \path{ct_schwinger.py}: $c(t)$, $c_F(t)$ and $B(t)$ through the representation $1/\hat k^2=\int_0^\infty e^{-s\hat k^2}ds$ and the
+lattice heat kernel $e^{-2s}I_t(2s)$ (60 digits), independent of the three-dimensional formula \eqref{eq:c}. It gives
+$c(0)=1.1377494917$, $c(1)=0.1377494917$, $c(10)=9.490720\cdot10^{-7}$, $c(100)=8.117061\cdot10^{-13}$, $c(1000)=8.105808\cdot10^{-19}$,
+and the values of $c(t)t^6$ at $t=100,200,1000$ are consistent with $c(t)t^6=8/\pi^2+11.35/t^2+\dots$ (an observation, not a proof);
+$c_F(0)=1/2$. For $t\ge2000$ the double-precision Bessel branch of the script returns NaN, so no direct value of $c(t)$ or $B(t)$ is
+available there.
+\item \path{gauss_formules.py}, \path{gauss_forme_mp.py}: formulas \eqref{eq:VG}, symbolic and Monte Carlo checks, and the dependence on $K$
+in 50-digit arithmetic (a double-precision scan suffers from cancellation in $V_K$ and must not be used).
+\item \path{boite_projecteurs.py}: the sandwich of Step~6 in the Gaussian part (least squares in the boxes $B_n$, $n\le6$).
+\end{itemize}
+The explicit constants used in the proofs, $c_3'=\pi^{5/2}/(4\sqrt2)$, the value $123.73\ldots$ of the constant of Lemma~\ref{lem:L1} (so that
+$124$ is admissible) and $6.35\ldots\cdot10^{-5}\ge c_*=6\cdot10^{-5}$ of Lemma~\ref{lem:free}, are evaluations of closed-form expressions; they were
+recomputed with the program \path{constantes_verif.py} (30 digits) and are not inputs to any proof beyond the arithmetic written there.
+No statement of this note depends on a value labelled \st{computed}: Theorem~\ref{thm:A} needs only $c(t)\ge c_*t^{-6}$, which is proved by hand.
+The change from version~0.4 to version~1.0 involved no edit to a statement or a proof.
+Version~1.1 adds the proofs and rational arithmetic certificates described in \S\ref{sec:status}; no computation, compilation or
+network access was performed for that revision. The replay statements above describe version~1.0 only. Version~1.2 changes no program and no value.
+\emph{Version~1.3.} The six programs above were replayed on 12 November 2026 by an agent other than their author, in the sandbox, with unchanged sources; the outputs are in the package (folder \path{rejeu/}) and are compared there with the earlier ones.
+Programs for the new section, none of which is used in a proof: a test of Appendix~\ref{app:stokes} (exact integer version on all closed paths of length at most $6$ and on all tree loops of several spanning trees of boxes of side $2$ and $4$, then $SU(2)$ with Haar-distributed links, with negative controls),
+written twice independently (the second implementation from the text of the appendix alone); the tree counts for $n\le5$; the Stein bound on one link; the decay of $\langle v,(\Pi_\infty-\Pi_m)v\rangle$; the quadrature of the constant $W$ of Lemma~\ref{lem:projrate}; and an exact-arithmetic recomputation of every constant of Theorem~\ref{thm:rate}.
+
+%=====================================================================================================================
+\section*{Use of AI}\label{sec:ai}
+\addcontentsline{toc}{section}{Use of AI}
+The work reported here was carried out with AI models, under the author's direction.
+\begin{itemize}
+\item \emph{Claude Opus~5.5 (Anthropic)}, in three separate sessions. In the first it wrote the first version of the argument, its
+preregistration, a first numerical check and a first anteriority search. In the second, which was not the author of the first, it
+attempted to refute that version, repaired it (energy bound for general Gibbs states, written steps of the Gaussian limit, constants),
+rewrote the numerical checks in a sandbox, extended the anteriority search and wrote version~0.1 of this note. In the third, which had
+written neither earlier version, it reviewed version~0.2 line by line as an adversary, compared the statement word by word with
+Chatterjee's Problem~5.1, checked attributions against the texts available locally, and wrote version~0.3 (the scope
+statements, the attributions, \S\ref{sec:cha} and Remarks~\ref{rem:loops}, \ref{rem:mechanism}, \ref{rem:whichgap}, \ref{rem:U1});
+it ran no computation.
+\item \emph{Claude Fable~5.2 (Anthropic)} coordinated the sessions, commissioned the reviews listed below, read the first version
+once, decided which repairs to adopt and wrote the version~0.2 text of this statement. On 11 November 2026 it read the proof of
+Proposition~\ref{prop:reduced} line by line, as a reader who had not written it, and judged it correct under Proposition~\ref{prop:Y} and
+Lemma~\ref{lem:free} (points examined: bound on the mass of atoms by the even moments, the limit in $\beta$ at fixed $j$ followed by the infimum over $j$,
+projection on the reduced subspace, the limit $K\to\infty$, the gauge-invariant sector, odd times). Apart from that proposition it did not check the proofs line by line.
+\item \emph{Claude Sonnet (Anthropic)} read, for the anteriority record, a preprint claiming a lower bound on the gap, the abstract of
+\cite{Sei78} and the text of Problem~5.1 of \cite{Cha18}; none of these is used in a proof.
+\item \emph{Claude Sonnet~5.5 (Anthropic)}, in the last session, did not write the proofs. It checked the integration of version~0.4 against
+its change log and the two versions of the source, the cross-references and the bibliography, searched the text for overstatements, replayed
+the programs of \S\ref{sec:repro} in the sandbox, made the editorial changes of this version~1.0 and prepared the deposit package.
+\item \emph{Qwen3.8 (Qwen team), run locally}, reviewed the first version by reading and partial computation (it confirmed the main
+steps, recomputed $c(t)$ for small $t$ and found the correct value of $c(0)$, and listed the steps that were asserted rather than
+written), carried out an anteriority search, and then reviewed the rewritten proof: it recounted the constants of
+Lemma~\ref{lem:L1} (including an enumeration of the counts in small boxes with its own code) and of the lower bound on $c(t)$, checked
+the written Hodge algebra without rerunning the exact-integer computation, and asked for the injectivity range of the principal chart
+to be stated.
+\item \emph{DeepSeek~V4~Pro (DeepSeek)} reviewed the first version by reading; it reported a sign error in the energy bound, which was a
+reading of an undefined partition function with the opposite convention (the convention is now stated), and asked for the same written
+steps.
+\item \emph{GPT-6~Astra (OpenAI)} reviewed the complete rewritten proof by reading; it found no break in the main theorem and asked for
+the support convention of Lemma~\ref{lem:H} to be made explicit, for the fixed-$K$ form of the corollary on observables, and for the
+distinction between a bounded second moment and uniform integrability; it marked the historical novelty as unsure.
+It subsequently refereed version~0.3, requested the eight corrections integrated here, and derived the strengthening after removal of
+the full eigenspaces at $\pm1$.
+\item \emph{GPT-6.1~Sol (OpenAI)} reviewed the two lemmas flagged as fragile: it wrote the explicit proof of the non-abelian Stokes
+lemma given in Appendix~\ref{app:stokes}, asked for the principal chart and for the order ``tails and normalisers, then normalised
+convergence'' in the Gaussian-limit lemma, and recounted the two numerical constants. It then drafted the corrections of version~0.2
+from all the reports and applied them to the source of this note. It integrated version~0.4 from Astra's referee report on version~0.3,
+checking the proposed corrections against the note and re-deriving the spectral strengthening in Proposition~\ref{prop:reduced} with
+its complete proof. This revision used local reading only, without computation, compilation or network access.
+For version~1.1 it expanded the five proof details raised by DeepSeek, deriving an explicit matrix-product error bound, shell tails
+and normaliser bounds, the square-sweep induction, exact energy counts and the full Caccioppoli averaging constant.
+It re-read its own earlier arguments; this is an author-side mathematical audit, not an independent review or a formal verification.
+\item \emph{Claude Sonnet~5.5 (Anthropic)}, in a further session, prepared version~1.2: it read the replies of four model reviews of version~1.1 (two by Qwen3.8 on the proofs, one by Qwen3.8 and one by DeepSeek~V4~Pro on the relation to \cite{BB26}),
+sorted their objections, compared the statements with the extracts of \cite{BB26} cited in \S\ref{sec:bb26}, rewrote the title, abstract, introduction and prior-work statements, and wrote out the three short repairs listed in \S\ref{sec:status}.
+It did not write the proofs of the other sections, ran no program, and checked the three repairs by hand only.
+\item \emph{DeepSeek~V4~Pro (DeepSeek)} also read the changed parts of version~1.2 and was asked whether the paragraph on \cite{BB26} is accurate with respect to the extracts and whether the note still claims anything that is in \cite{BB26}.
+\item \emph{Version~1.3 (Section~\ref{sec:rate}).} The comparison of the conditional laws by Stein's method (Lemma~\ref{lem:stein}) and the observation that only second moments of the energy are needed come from
+\emph{GPT-6~Astra (OpenAI)}, asked blindly (without our proof) for a derivation of the comparison; \emph{Claude Opus~5.5 (Anthropic)}, in a fourth session, re-derived every inequality line by line,
+wrote the other lemmas of the section (short tree, Taylor expansion without small-field condition, second-order harmonic part, crude projector rate, second-moment version of the second step), the assembly and the constants, executed
+the test of Appendix~\ref{app:stokes} and the other numerical checks, and wrote the proposed section. In the same session \emph{GPT-6.1~Sol} (three calls) and \emph{DeepSeek~V4~Pro} (four calls, one of which re-derived the Stein lemma) read the drafts and the corrections they asked for were made;
+\emph{GPT-6~Astra} (a second call) proposed a better exponent ($1/56$) whose proof was not checked and which is \emph{not} in this note.
+\emph{Claude Sonnet~5.5 (Anthropic)}, in a further session which did not write the section or its lemmas, assembled version~1.3 from the proposed section, replayed the programs of Opus and of the note in the sandbox, wrote a second implementation of the test of Appendix~\ref{app:stokes} from the text of the appendix alone (before reading the first one),
+recomputed every constant of Theorem~\ref{thm:rate} in exact arithmetic, redid by hand the Taylor lemma, the Stein lemma, the second-moment lemma, the Gaussian lower bound and the assembly, searched the literature, obtained two reviews of the final text from GPT-6.1~Sol (one on the Stein lemma and the assembly, one on the weakest link of the whole note) and four from DeepSeek~V4~Pro (a re-derivation of the Stein lemma from its statement, an attack on the constants, and two on the Fourier estimate of Lemma~\ref{lem:projrate}, the first of which reported an invented numerical value and was discarded), treated their objections, and prepared the package.
+The pilot of the session (\emph{Claude Fable~5.2}) read Section~\ref{sec:rate} in full and redid on paper: Lemma~\ref{lem:quat}; the Stein comparison (the bound $\kappa=\sqrt{\pi/8}$ on $\|C^{1/2}\nabla u\|$, the integration by parts with the cutoff, the four error terms and the constants $H$ and $B$); Lemma~\ref{lem:H2} with the constant $c_H$; the Gaussian lower bound $\Gamma_G\ge c(t)^2/648$ and the relation $\Gamma_G\ge6\delta_t$; and the order of magnitude $\beta_1(t)\approx10^{227.7}t^{120}$. After the Fourier estimate of Lemma~\ref{lem:projrate} was written out, it also redid steps (i)--(iv) of that proof. It did not check Lemma~\ref{lem:L1}, the bound $c(t)\ge c_*t^{-6}$ of Lemma~\ref{lem:free}, the cutoff estimate of Lemma~\ref{lem:projrate}, Lemma~\ref{lem:bch2} beyond its statement, nor the sections taken over from the earlier internal versions. It is an AI model; this is not a refereeing.
+\end{itemize}
+Agreement between language models is not a proof and is not a substitute for
+refereeing: \textbf{no human has checked the proofs}. The human author read the final text of this note before its release; he did not verify the proofs, and no human expert has checked them. All reviews except those of Qwen, DeepSeek, Astra and Sol come from one model
+family (Anthropic); the proof of Proposition~\ref{prop:reduced} was derived by models of one family (OpenAI: Astra and Sol) and read by a model of
+another (Anthropic: Fable~5.2), whereas the other changes of version~0.4 were integrated and read within the OpenAI family only. The historical novelty of the main statement has not been established: the anteriority searches were bounded, one
+cited source (Seiler, 1978) could not be read, and the statement may be known to experts.
+
+\appendix
+\section{Proof of the non-abelian Stokes lemma}\label{app:stokes}
+
+We prove the claim for every finite closed nearest-neighbour edge path in the box, including paths with repeated vertices,
+repeated edges and self-intersections. This class contains every tree loop used in Lemma~\ref{lem:S} and
+Corollary~\ref{cor:tight}. All squares used are in the whole box; no boundary filling is asserted.
+Translate $B_n$ to $Q=[0,L]^4\cap\Z^4$, $L=2n$. Path multiplication is concatenation from left to right, and
+$U(\alpha)$ denotes the corresponding product of link matrices; $U(\alpha^{-1})=U(\alpha)^{-1}$.
+Constant paths are allowed and have holonomy $I$.
+
+\paragraph{One edge, with a specified order of squares.}
+For $j\in\{0,1,2,3\}$ let $\pi_j$ set coordinate $j$ equal to zero, and let $s_j(v)$ be the straight path from $v$ to $\pi_jv$
+in direction $-e_j$. The projection of an edge parallel to $j$ is constant; that of a transverse edge is its translated edge
+at coordinate $j=0$. We transform an oriented edge $e=(v,w)$ into
+$s_j(v)(\pi_je)s_j(w)^{-1}$, always retaining its endpoints.
+
+If $e$ is parallel to $j$, both paths lie on one coordinate line and have the same endpoints.
+Successive cancellation of a step immediately followed by its reverse reduces each to the unique monotone path between those
+endpoints. Thus their comparison uses no square. This covers both orientations, including the case where one endpoint has coordinate zero.
+
+If $e$ is in direction $\varepsilon e_i$, $i\ne j$, $\varepsilon\in\{-1,1\}$, put $h=v_j=w_j$.
+For $0\le r\le h$ set $v^{(r)}=v-re_j$, $w^{(r)}=w-re_j$, and
+$u_r=(v^{(r)},w^{(r)})$; for $1\le r\le h$ set
+$d_r^v=(v^{(r-1)},v^{(r)})$ and $d_r^w=(w^{(r-1)},w^{(r)})$.
+Starting with $P_0=u_0$, perform the squares in the order $r=1,2,\ldots,h$.
+At step $r$, replace the displayed middle edge in
+\[
+P_{r-1}=d_1^v\cdots d_{r-1}^v\,u_{r-1}\,(d_{r-1}^w)^{-1}\cdots(d_1^w)^{-1}
+\]
+by $d_r^v u_r(d_r^w)^{-1}$. The result is
+\[
+P_r=d_1^v\cdots d_r^v\,u_r\,(d_r^w)^{-1}\cdots(d_1^w)^{-1}.
+\]
+This proves by induction on $r$ both the endpoint identity and the order of replacements.
+At $r=h$, $P_h=s_j(v)(\pi_je)s_j(w)^{-1}$; for $h=0$ there is no replacement.
+Exactly $h$ unit squares have been used, counted with multiplicity.
+The $r$th square has vertices $v^{(r-1)},w^{(r-1)},w^{(r)},v^{(r)}$, all in $Q$.
+
+\paragraph{The exact conjugation at an elementary replacement.}
+In a current based loop, write the replacement as
+$\alpha u_{r-1}\zeta\mapsto\alpha d_r^v u_r(d_r^w)^{-1}\zeta$; the prefix $\alpha$ includes any previously inserted
+downward edges and all exterior paths left by earlier sweeps. The quotient of the two holonomies is exactly
+\begin{equation*}\tag{St.1}\label{eq:St-replacement}
+\begin{aligned}
+U(\gamma_{\mathrm{old}})U(\gamma_{\mathrm{new}})^{-1}
+&=U(\alpha)\,U(C_r)\,U(\alpha)^{-1},\\
+C_r&=u_{r-1}d_r^w u_r^{-1}(d_r^v)^{-1}.
+\end{aligned}
+\end{equation*}
+Indeed the common suffix cancels first, leaving this product without any commutation of matrices.
+Let $z_r$ be the lower corner of that square in the $i,j$ coordinates; the other coordinates are unchanged.
+Let $t_r$ be the initial segment of the four-edge path $C_r$ from $v^{(r-1)}$ to its first visit to $z_r$; it is never constant, and $t_r=u_{r-1}d_r^w$ ($2$ edges) if $\varepsilon=-1$, $t_r=u_{r-1}d_r^w u_r^{-1}$ ($3$ edges) if $\varepsilon=+1$.
+Rotating the boundary path to start at $z_r$ shows
+\[
+U(C_r)=U(t_r)U_{p_r}^{\epsilon_r}U(t_r)^{-1},\qquad
+\epsilon_r=\begin{cases}-\varepsilon,&i<j,\\ \varepsilon,&j<i,\end{cases}
+\]
+where $p_r$ has the usual increasing coordinate orientation and lower corner $z_r$.
+The sign follows by comparing the ordered directions $(\varepsilon e_i,-e_j)$ with the increasing pair.
+Thus the conjugating matrix in (St.1) is precisely $V_r=U(\alpha)U(t_r)$.
+This specifies all conjugations even for negatively oriented edges.
+Backtrack insertion or removal changes no holonomy, since $U_eU_e^{-1}=I$.
+
+\paragraph{A whole sweep, by induction on the edge index.}
+Let $\lambda=e_1\cdots e_q$ be a loop based at $v_0$, with successive vertices $v_0,\ldots,v_q=v_0$ and $e_k=(v_{k-1},v_k)$.
+Process its original edges in the order $1,\ldots,q$, using the preceding edge construction, and cancel connectors between
+successive processed edges. After processing $e_1,\ldots,e_k$, the path is
+\[
+s_j(v_0)(\pi_je_1)\cdots(\pi_je_k)s_j(v_k)^{-1}e_{k+1}\cdots e_q.
+\]
+This holds for $k=0$ after inserting the backtrack $s_j(v_0)s_j(v_0)^{-1}$.
+For the induction step, replace $e_{k+1}$ and cancel $s_j(v_k)^{-1}s_j(v_k)$.
+For $k=q$ it gives $s_j(v_0)(\pi_j\lambda)s_j(v_0)^{-1}$.
+The cost is the sum of the starting $j$-coordinates of the transverse edges, at most $L$ per such edge.
+Neither simplicity nor the absence of repeated edges was used.
+
+\paragraph{Four sweeps, by induction on the coordinate.}
+Set $\lambda_0=\gamma$, $v^{[0]}=v_0$ and $R_0$ equal to the constant path.
+After coordinates $0,\ldots,j-1$ have been swept, maintain the loop
+$R_j\lambda_j R_j^{-1}$, where
+\[
+\lambda_j=(\pi_{j-1}\cdots\pi_0)\gamma,\qquad
+v^{[j]}=(\pi_{j-1}\cdots\pi_0)v_0.
+\]
+Apply the preceding whole sweep to the inner loop only, leaving the exterior paths in place, and set
+$R_{j+1}=R_js_j(v^{[j]})$, $\lambda_{j+1}=\pi_j\lambda_j$.
+This proves the invariant at $j+1$ and keeps all paths in $Q$.
+For counting purposes retain projected edge occurrences even when they are backtracks, deleting only constant edges.
+An original edge in direction $i$ survives in the inner loop until sweep $i$, when it becomes constant.
+It can contribute squares only in the $i$ preceding sweeps $0,\ldots,i-1$.
+If $\ell_i$ is the original number of occurrences in direction $i$, in either orientation, the total cost is therefore
+\begin{equation*}\tag{St.2}\label{eq:St-count}
+\begin{aligned}
+N&=\sum_{j=0}^3\ \sum_{\substack{e\text{ an edge occurrence of }\lambda_j\\e\text{ transverse to }j}}
+          (\text{starting }j\text{-coordinate of }e)\\
+ &\le L\sum_{i=0}^3i\ell_i\le3L\ell,\qquad \ell=\sum_i\ell_i.
+\end{aligned}
+\end{equation*}
+After sweep $3$ the inner path is constant and the remaining path $R_4R_4^{-1}$ cancels by backtracks.
+The algorithm depends only on the original path and the fixed coordinate order.
+
+\paragraph{Telescoping the noncommutative identities and the tree bound.}
+List the square replacements in the order just specified as $s=1,\ldots,N$.
+Writing $V_s$ for the matrix $U(\alpha_s)U(t_s)$ associated with the current path at that step, (St.1) gives
+$U(\gamma_{s-1})=V_sU_{p_s}^{\epsilon_s}V_s^{-1}U(\gamma_s)$.
+Induction on $s$ gives the ordered product
+\[
+U(\gamma)=\left(\prod_{s=1}^N V_sU_{p_s}^{\epsilon_s}V_s^{-1}\right)U(\gamma_N)
+=\prod_{s=1}^N V_sU_{p_s}^{\epsilon_s}V_s^{-1}.
+\]
+The plaquette occurrences and signs are independent of the gauge field; the displayed conjugating matrices may depend on it.
+The empty product covers loops contracted by backtracks alone.
+
+For an arbitrary spanning tree $T$ of $B_n$, with any root $\rho$, each simple tree path has at most
+$V_n-1$ edges, $V_n=(L+1)^4$.
+Every link, with either orientation, therefore gives a closed tree loop
+$c_e=(\rho\to_Tx)e(y\to_T\rho)$ of length at most
+$(V_n-1)+1+(V_n-1)=2V_n-1$. This includes every interior and boundary link and does not require any special shape of $T$.
+Since $U(c_e)=\widetilde U_e$, (St.2) bounds its number of plaquettes by
+\[
+N\le3L(2V_n-1)\le6L^2(2V_n-1)
+=6(2n)^2\bigl[2(2n+1)^4-1\bigr]=A_n,
+\]
+where the second inequality holds for $L=2n\ge1$.
+Finally, successive use of subadditivity and conjugation and inversion invariance gives
+\[
+\delta(\widetilde U_e)
+\le\sum_{s=1}^N\delta(V_sU_{p_s}^{\epsilon_s}V_s^{-1})
+=\sum_{s=1}^N\delta(U_{p_s}).
+\]
+Every repeated square is retained in this sum. Translation back to $B_n$ proves Lemma~\ref{lem:stokes} for its entire stated class.
+The identical path contraction applies to additive edge values: backtracks contribute zero, and each square replacement changes
+the path integral by the signed plaquette curl. Thus a globally closed additive $1$-form has zero integral around every finite loop,
+as used in Lemma~\ref{lem:nondeg}.
+
+{\small
+\begin{thebibliography}{99}\setlength{\itemsep}{1pt}
+\bibitem{AC25} A.~Adhikari, S.~Cao, \emph{Correlation decay for finite lattice gauge theories at weak coupling}, Ann.\ Probab.\ 53
+(2025) 140--174, doi:10.1214/24-AOP1702, arXiv:2202.10375.
+\bibitem{BB26} D.~Bhattacharjee, U.~Bhattacharya, J.~M.~Lockwood, T.~Romanov, I.~J.~Sessford, S.~Singha Roy, \emph{The Yang--Mills mass gap from one bound
+at one scale}, version~5.0.0, Zenodo, doi:10.5281/zenodo.24147967 (record created 2026-11-11 23:29:13~UTC). Read only in part, see \S\ref{sec:bb26}. Earlier versions:
+version~4.47.1 (doi:10.5281/zenodo.24117822, record created 2026-11-10 18:49~UTC), partly consulted; release v4.44.0 (doi:10.5281/zenodo.24085959, record created
+2026-11-09 14:50~UTC), cited there and not opened by us.
+\bibitem{Bre26} C.~Brennecke, \emph{On the leading order term of the lattice Yang--Mills free energy}, J.\ Stat.\ Phys.\ 193 (2026),
+no.~7, art.~83, doi:10.1007/s10955-026-03649-4, arXiv:2511.07297.
+\bibitem{Cha16} S.~Chatterjee, \emph{The leading term of the Yang--Mills free energy}, J.\ Funct.\ Anal.\ 271 (2016) 2944--3005,
+doi:10.1016/j.jfa.2016.04.032, arXiv:1602.01222.
+\bibitem{Cha18} S.~Chatterjee, \emph{Yang--Mills for probabilists}, arXiv:1803.01950 (2018); in Probability and Analysis in Interacting
+Physical Systems, Springer Proc.\ Math.\ Stat.\ 283 (2019) 1--16, doi:10.1007/978-3-030-15338-0\_1.
+\bibitem{Cha24} S.~Chatterjee, \emph{A scaling limit of $SU(2)$ lattice Yang--Mills--Higgs theory}, Probab.\ Math.\ Phys.\ 7 (2026),
+no.~2, 339--381, doi:10.2140/pmp.2026.7.339, arXiv:2401.10507.
+\bibitem{Dri87} B.~K.~Driver, \emph{Convergence of the $U(1)_4$ lattice gauge theory to its continuum limit}, Commun.\ Math.\ Phys.\ 110
+(1987) 479--501, doi:10.1007/BF01212424.
+\bibitem{FS82} J.~Fr\"ohlich, T.~Spencer, \emph{Massless phases and symmetry restoration in abelian gauge theories and spin systems},
+Commun.\ Math.\ Phys.\ 83 (1982) 411--454, doi:10.1007/BF01213610.
+\bibitem{GM82} M.~G\"opfert, G.~Mack, \emph{Proof of confinement of static quarks in 3-dimensional $U(1)$ lattice gauge theory for all
+values of the coupling constant}, Commun.\ Math.\ Phys.\ 82 (1982) 545--606, doi:10.1007/BF01961240.
+\bibitem{Gro83} L.~Gross, \emph{Convergence of $U(1)_3$ lattice gauge theory to its continuum limit}, Commun.\ Math.\ Phys.\ 92 (1983)
+137--162, doi:10.1007/BF01210842.
+\bibitem{Gut80} A.~H.~Guth, \emph{Existence proof of a nonconfining phase in four-dimensional $U(1)$ lattice gauge theory}, Phys.\ Rev.\
+D 21 (1980) 2291--2307, doi:10.1103/PhysRevD.21.2291.
+\bibitem{Lus77} M.~L\"uscher, \emph{Construction of a selfadjoint, strictly positive transfer matrix for Euclidean lattice gauge
+theories}, Commun.\ Math.\ Phys.\ 54 (1977) 283--292, doi:10.1007/BF01614090.
+\bibitem{OS78} K.~Osterwalder, E.~Seiler, \emph{Gauge field theories on a lattice}, Ann.\ Phys.\ 110 (1978) 440--471,
+doi:10.1016/0003-4916(78)90039-8.
+\bibitem{RYZ26} F.~Rajasekaran, O.~Yakir, Y.~Zhou, \emph{Gaussian limits of lattice Higgs models with complete symmetry breaking},
+arXiv:2603.24555 (2026).
+\bibitem{Sei78} E.~Seiler, \emph{Upper bound on the color-confining potential}, Phys.\ Rev.\ D 18 (1978) 482--483,
+doi:10.1103/PhysRevD.18.482. Not read by us; cited through \cite[App.~A]{TY85}.
+\bibitem{Sei03} E.~Seiler, \emph{The case against asymptotic freedom}, lecture at RIMS, Kyoto (2003), arXiv:hep-th/0312015.
+\bibitem{TY85} E.~T.~Tomboulis, L.~G.~Yaffe, \emph{Finite temperature $SU(2)$ lattice gauge theory}, Commun.\ Math.\ Phys.\ 100 (1985)
+313--341, doi:10.1007/BF01206134.
+\end{thebibliography}}
+
+\end{document}

@@ -1,0 +1,1331 @@
+% An area law for four-dimensional SU(2) lattice gauge theory up to beta ~ 0.813.
+% Version 1.2, 12 November 2026 (literature situating only; no theorem, constant or certificate changed). The previous version is v1.1, doi:10.5281/zenodo.23877371. Compile: pdflatex, three passes.
+\documentclass[11pt,a4paper]{article}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern}
+\usepackage[english]{babel}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{booktabs,array}
+\usepackage{geometry}
+\geometry{margin=2.6cm}
+\usepackage[colorlinks=true,linkcolor=blue,citecolor=blue,urlcolor=blue]{hyperref}
+\usepackage{xurl}% \path{} for hashes and file names, breakable anywhere
+\setlength{\emergencystretch}{2em}% v1.1: paragraphs with long \texttt names break without overfull lines
+
+\hypersetup{pdftitle={An area law for four-dimensional SU(2) lattice gauge theory up to beta = 0.813},pdfauthor={K\'evin R\'emondi\`ere}}
+
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+\numberwithin{equation}{section}
+
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\E}{\mathbb{E}}
+\newcommand{\Tr}{\operatorname{Tr}}
+\newcommand{\ReTr}{\operatorname{Re}\operatorname{Tr}}
+\newcommand{\cT}{\mathcal{T}}
+\newcommand{\cH}{\mathcal{H}}
+\newcommand{\At}{\widetilde A}
+\newcommand{\rt}{\widetilde r}
+\newcommand{\rb}{\bar r}
+\newcommand{\Gt}{\widetilde G}
+\newcommand{\st}[1]{\textsf{[#1]}}
+\newcommand{\bs}{\boldsymbol}
+
+\title{An area law for four-dimensional $SU(2)$ lattice gauge theory\\ up to $\beta\approx0.813$}
+\author{K\'evin R\'emondi\`ere\thanks{Independent researcher, Oloron-Sainte-Marie, France. ORCID
+\href{https://orcid.org/0009-0008-2443-7166}{0009-0008-2443-7166}. The proof, the programs and this note were prepared with
+the assistance of AI models (Claude Opus~5.5, Anthropic; Kimi K3.1 Pro, Moonshot AI; DeepSeek V4 Pro, DeepSeek); their roles are
+described in the statement on the use of AI at the end of the note. For version~1.2, the passages on the literature were revised on 11 November 2026 with the assistance of GPT-6.1 Sol (OpenAI), after a review of the draft of 10 November 2026 by Qwen3.8 (Qwen team, run locally); the final text was then read against the sources by Claude (Anthropic) agents on 11 November 2026; no statement, proof, constant or certificate was modified since version~1.1.}}
+\date{Version 1.2, 12 November 2026 (version 1.1: 2 November 2026)}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+We consider the $SU(2)$ Wilson lattice gauge theory on the periodic torus $(\Z/L\Z)^4$, with action
+$\beta\sum_p(1-\tfrac12\ReTr U_p)$. We prove that for $0\le\beta\le0.81348$ every planar rectangular Wilson loop with sides
+$R\le L/2$ and $T\le L-1$ satisfies $|\langle W\rangle|\le C^T\theta^{RT}$, with explicit constants $\theta<1$ and $C$ independent
+of $L$; in particular the string tension is positive. The proof follows the method of Borgs and Seiler (1983, Appendix~B): the slab
+decomposition of Durhuus and Fr\"ohlich, a random-walk expansion of the slab $\sigma$-models and the positivity of the transfer
+matrix, which yields the range $\beta<12/17\approx0.7059$. We refine it in two ways. (I)~The ratio of slab partition
+functions is controlled by a strict operator inequality $\cT^{(\lambda)}\le c(\lambda)\,\cT$, where $c(\lambda)<1$ comes from the
+Peter--Weyl spectrum (the spin-$0$ mode is extremal), followed by a site-by-site Cauchy--Schwarz factorisation. (II)~The resulting
+weighted walks are counted with a memory of $11$ steps, through a transfer matrix on $7\,821\,056$ symmetry classes whose spectral
+radius is bounded by an integer Perron certificate. This refines the threshold of the Borgs--Seiler method from $12/17$ to
+$0.81348$ ($+15.2\%$), with bounds for each rectangle on tori. Every numerical inequality of the proof is verified in exact integer or rational
+arithmetic, and the certificate is re-verified by two further programs, one of them written separately for an adversarial
+verification. With memory $13$ the same argument gives
+$\beta\le0.81498$. The result is computer-assisted, holds on tori only, and has been checked by machine (independent programs,
+reviews by language models, and a partial formalisation in Lean that assumes the analytic reduction), not by a human referee. The value $0.81348$ lies between the estimate $4/5$ announced without proof by
+Fr\"ohlich (1980), in the reading discussed in \S\ref{sec:heur}, and the value $0.8222$ given by the non-backtracking heuristic
+$5\,I_2(\beta)/I_1(\beta)<1$, which we evaluate in \S\ref{sec:heur}. Version~1.1 adds a tilted form of the walk bound
+(Theorem~\ref{thm:tilted}): with the same threshold and five further integer certificates, the certified lower bound on the string
+tension at $\beta=0.81348$ rises from $7.05\cdot10^{-6}$ to $0.004989$, and to $0.2253$ for $\beta\le0.80$, with explicit constants on
+every torus.
+\end{abstract}
+
+\paragraph{Status labels.}
+\st{proved}: complete argument written in this note, or in the cited source at the location given;
+\st{certified}: inequality between explicit numbers, verified by a program in exact integer or rational arithmetic and re-verified by
+at least one other program (\S\ref{sec:cap});
+\st{numerical}: floating-point or extrapolated value, never used in a proof;
+\st{read}: statement read in the cited source, location given.
+
+\tableofcontents
+
+\section{Introduction}\label{sec:intro}
+
+\subsection{Context}
+Wilson's criterion \cite{Wil74} expresses the confinement of static quarks by the area law for Wilson loops. For lattice gauge
+theories with a compact gauge group, the area law at strong coupling was proved by Osterwalder and Seiler \cite[Thm.~5.1]{OS78} by
+a cluster expansion, in a range of small $\beta$ that is not made explicit. For the four-dimensional $SU(2)$ theory, explicit ranges
+come from the decomposition of Durhuus and Fr\"ohlich \cite{DF80}: conditionally on the horizontal links, the vertical links of each
+time slab form a three-dimensional $O(4)$ $\sigma$-model with random twists, and a rectangular Wilson loop factorises over the slabs.
+Table~\ref{tab:ranges} lists the explicit ranges we know, in the normalisation \eqref{eq:wilson} below.
+
+\begin{table}[ht]
+\centering\footnotesize
+\begin{tabular}{@{}>{\raggedright\arraybackslash}p{0.15\textwidth}>{\raggedright\arraybackslash}p{0.41\textwidth}%
+>{\raggedright\arraybackslash}p{0.18\textwidth}>{\raggedright\arraybackslash}p{0.15\textwidth}@{}}
+\toprule
+range of $\beta$ & setting & source & status \\
+\midrule
+small, not explicit & planar loops; cluster expansion & \cite[Thm.~5.1]{OS78} & proved \\
+$\lesssim1/8$ & refined cluster expansion of Guerra et al., as quoted in \cite{BS83} & \cite[p.~343]{BS83} & quoted \\
+$<1/6$ & tori, uniformly in $L$ & \cite[Thm.~1.6]{CNS25} & proved \\
+$<1/6$ & written argument of \cite{DF80}, after correction of a factor $2$\,$^{a}$ & \cite{DF80}, \cite[\S7.2]{D7} & proved \\
+$\approx0.2217$ & comparison with $\Z_2$ and Ising slabs \cite{Fro79}\,$^{b}$ & \cite[\S7.2]{D7} & not checked \\
+$<1/\sqrt3\approx0.577$ & tori; slab $\sigma$-model, geodesic one-link constant & \cite[Part~I, Cor.~6.5]{Raj26a} & \st{read}; proof not checked here \\
+$<2/3$ & tori, free boundary, every Gibbs measure; one-site Dobrushin & \cite[Thm.~7.1]{D7} & proved \\
+$<2/3$ & tori; slab model with the chordal one-link constant $\frac14$ & \cite[Part~II, Cor.~7.7(iii)]{Raj26a} & \st{read}; proof not checked here \\
+$<12/17\approx0.7059$ & Polyakov loops at nonzero temperature, uniformly in $L_0,J_M$\,$^{c}$ & \cite[(II.55), p.~343; App.~B, pp.~373--377]{BS83} & proved \\
+$\approx0.730$\,$^{e}$ & leading-order window of a decimated slab $\sigma$-model, ``$\sqrt{16/30}$'' & \cite[\S8, item (iv)]{Raj26b} & \st{read}; heuristic \\
+$<4/5$\,$^{d}$ & averaged (``in mean'') estimate, ``only a rough estimate'' & \cite{Fro80a,Fro80b} & heuristic \\
+$\le0.81348$ & tori, uniformly in $L$; memory $11$ & Theorem~\ref{thm:main} & proved, computer-assisted \\
+$\le0.81498$ & same; memory $13$ & Remark~\ref{rem:m13} & proved, computer-assisted \\
+$<0.8222$ & non-backtracking heuristic $5u(\beta)<1$ & \S\ref{sec:heur} & heuristic \\
+all $\beta$ (claim) & preprint; gaps discussed in \cite{IS08} & \cite{Tom07} & contested \\
+\bottomrule
+\end{tabular}
+\caption{Explicit ranges of the area law for four-dimensional $SU(2)$ in the Wilson normalisation $\beta=4/g^2$.
+$^{a}$~The literal statement of \cite{DF80} is $\beta<1/3$, and $\beta<2/3$ is announced there without proof.
+$^{b}$~Combined with the sharpness of the three-dimensional Ising transition and $K_c^{\mathrm{Ising}}(\Z^3)=0.221654626(5)$
+\cite{FXL18}, as described in \cite[\S7.2]{D7}; we have not seen it written out. $^{c}$~See Remark~\ref{rem:bs-statement}; the same method gives rectangular Wilson loops at zero temperature (\S\ref{sec:bs}).
+$^{d}$~In the reading of \S\ref{sec:heur}; the literal reading gives $8/5$.
+$^{e}$~This heuristic window concerns a decimated slab model; the numerical value $\approx0.730$ for improvement~(II) alone in \S1.2 concerns our finite-memory walk count. No identification between the two estimates is asserted.}
+\label{tab:ranges}
+\end{table}
+
+Two observations frame this note. First, an argument that proves exponential decay of the slab correlations \emph{uniformly in the
+twists} cannot go beyond the critical coupling of the untwisted $O(4)$ model on $\Z^3$, $\beta_c\approx0.936$ according to
+Monte Carlo estimates \cite{KK95,CH98}, since the twists may be trivial; the one-site Dobrushin criterion stops at $2/3$ exactly \cite[Remark~7.6]{D7}. In the same spirit, Proposition~7.1 of the second preprint of the record \cite{Raj26b} states a cap $\beta\le4G_3(0)$ for properties of the ungauged Wilson specification that imply uniqueness of the infinite-volume Gibbs measure and are inherited by fixing links. Its examples are the single-site Dobrushin condition and the strong-mixing form of complete analyticity, uniformly in all finite volumes and boundary conditions; its proof applies the infrared bound of Fr\"ohlich, Simon and Spencer to the three-dimensional $O(4)$ model of the time-like links (\st{read}).
+Second, Borgs and Seiler \cite[Appendix~B]{BS83} do not need uniformity in the twists: after a random-walk expansion of the slab
+correlations, the average over the horizontal links is taken inside a trace of products of transfer matrices, and only the positivity
+of the transfer matrix and a bound on a ratio of slab partition functions are used. Their bound on that ratio is $1$ (monotonicity in
+the coupling), and their count of walks only distinguishes an immediate return; the result is $J_E<(d-\frac16)^{-1}$, that is
+$\beta<12/17$ for $d=3$ space dimensions \cite[(II.55), p.~343, and p.~376]{BS83} \st{read}. They state it for correlations of Polyakov loops at
+nonzero temperature (Remark~\ref{rem:bs-statement}); the argument applies to rectangular Wilson loops at zero temperature
+(\S\ref{sec:bs}), and we call $\beta<12/17$ the \emph{threshold of the Borgs--Seiler method}.
+
+\subsection{Result}
+Theorem~\ref{thm:main} proves the area law on the tori $(\Z/L\Z)^4$, $L\ge3$, uniformly in $L$, for $0\le\beta\le0.81348$;
+Remark~\ref{rem:m13} records $\beta\le0.81498$ with a larger certificate. Relative to $12/17\approx0.70588$ the gain is $15.2\%$
+($15.5\%$). It comes from two refinements of the Borgs--Seiler argument, which can be used separately or together.
+\begin{itemize}
+\item[(I)] \emph{A strict operator inequality} (\S\ref{sec:I}). The transfer matrix $\cT^{(\lambda)}$ of a slab with the reduced
+couplings produced by the walk expansion satisfies $\cT^{(\lambda)}\le c(\lambda)\,\cT$, where $c(\lambda)$ is a product over links
+of ratios of the spin-$0$ eigenvalues of the one-link convolution operators; for $J>0$, $c(\lambda)<1$ as soon as
+$\lambda\not\equiv0$. Borgs
+and Seiler use $c\le1$. A Cauchy--Schwarz inequality turns $c(\lambda)$ into a product of factors attached to the sites of the walk,
+which lowers the weight of every visit.
+\item[(II)] \emph{Walks with memory} (\S\ref{sec:II}). The weighted walks are counted with the visits seen in a window of the last
+$m=11$ steps, through a transfer matrix on $6^{11}$ step sequences reduced by the $48$ symmetries of $\Z^3$; its spectral radius is
+bounded by an integer Perron vector, checked in $128$-bit integer arithmetic.
+\end{itemize}
+Separately, (I) gives about $0.782$ and (II) about $0.730$ \st{numerical}; together they give $0.81348$. A monotonicity property in
+the coupling (Lemma~\ref{lem:monotone}) lets a single certificate cover the whole interval $[0,0.81348]$.
+
+Version~1.1 adds a tilted form of the walk bound (\S\ref{sec:tilted}). Weighting each step of the walks by
+$e^{\eta\langle\hat e,d\rangle}$, where $\hat e$ is the direction of the side of length $R$, and using the parity of walks in $\Z^3$,
+Theorem~\ref{thm:tilted} keeps the threshold and, with five further memory-$11$ certificates, bounds the string tension below by
+$0.004989$ at $\beta_*$ instead of $7.05\cdot10^{-6}$, and by $0.2253$ for $\beta\le0.80$ (Table~\ref{tab:tilted}); at $\beta_*$ the bound
+becomes non-trivial from $R\approx3.1\cdot10^{3}$ on every torus ($2.8\cdot10^{3}$ in the weak limits) instead of $1.9\cdot10^{6}$.
+
+\subsection{What is new and what is not}
+To our knowledge, the widest explicit confinement range already published for the $SU(2)$ Wilson theory in four dimensions
+is $\beta<12/17\approx0.7059$, stated by Borgs and Seiler \cite[(II.55), p.~343]{BS83} and proved in their Appendix~B (pp.~373--377).
+It concerns correlations of Polyakov loops at every temperature and every magnetic coupling; Wilson's string tension is controlled through \cite[(II.50), p.~341]{BS83}, and the
+authors do not state a bound for each rectangular loop. Theorem~\ref{thm:main} is a refinement of the threshold of the Borgs--Seiler
+method, from $12/17$ to $0.81348$ ($+15.2\%$), with bounds for each rectangle on tori, uniform in the volume. It is not an independent
+method: the new ingredients are the strict inequality (I) with its site-by-site factorisation, its combination with finite-memory
+counting, and the certificate.
+
+Among the other public statements, Part~I of Rajabu \cite[Cor.~6.5]{Raj26a} states the area law on tori for $\beta<1/\sqrt3\approx0.577$ and Part~II \cite[Cor.~7.7(iii)]{Raj26a} for $\beta<2/3$, using the slab $\sigma$-model of \cite{DF80} and a Dobrushin contraction with the geodesic, resp.\ the chordal one-link constant. The Zenodo record was created on 27 October 2026, 13:09:49 UTC; we have not checked these proofs. Version~2.2 of his preprint \cite[\S8, item (iv)]{Raj26b} mentions, as a direction and not as a theorem, a leading-order window of about $0.730$ for a decimated slab $\sigma$-model. Its record has \texttt{publication\_date} 28 October 2026 and was created on 29 October 2026, 00:48 UTC. The range $2/3$ of \cite[Thm.~7.1]{D7} was published on 1 November 2026, after Rajabu's record of 27 October. No priority claim is made for any threshold. In this note's normalisation, $0.81348$ exceeds $2/3$ by $22.0\%$ and the threshold $12/17$ of \cite{BS83} by $15.2\%$; these are comparisons of ranges, with the settings specified in Table~\ref{tab:ranges}.
+
+Not new: the slab decomposition \cite{DF80}; the random-walk expansion of the slabs and the use of transfer-matrix positivity
+\cite{BS83}, which we follow closely and write out with the details we need (\S\ref{sec:bs}); and finite-state transfer-matrix bounds for the connective constant of
+self-avoiding walks \cite{PT00}. For related upper bounds, see also
+\cite{Alm93}. Improvement~(I) is natural (it only uses the Peter--Weyl decomposition of the one-link
+convolution operators), and we cannot exclude that it appears in work we have not seen. Borgs and Seiler themselves point out that
+their bound could be sharpened by the perimeter decay of the characters, without giving a number \cite[p.~377]{BS83}; we do not use
+this route. Tomboulis \cite{Tom07} claims confinement in four-dimensional $SU(2)$ lattice gauge theory for all values of the
+coupling; Ito and Seiler \cite{IS08} discuss gaps and open problems in its argument. We do
+not count it as an established range. The number itself is close to the
+heuristic values discussed in \S\ref{sec:heur}: it exceeds the estimate $4/5$ announced without proof by Fr\"ohlich
+\cite{Fro80a,Fro80b} in one reading of his normalisation, and it is below the value $0.8222$ obtained here from the non-backtracking
+heuristic, of which $4/5$ is the small-$\beta$ linearisation. Like every explicit strong-coupling range, the result says nothing about the weak-coupling regime
+relevant to the continuum limit.
+
+\subsection{Status of the proof}\label{sec:status}
+The analytic part (\S\S\ref{sec:bs}--\ref{sec:II}) is proved on paper. Its numerical inputs, namely rational enclosures of twelve
+one-dimensional integrals and the inequality $T_{11}H\le\rho'H$ on $7\,821\,056$ symmetry classes, are verified in exact rational and
+integer arithmetic and re-verified by other programs, written with independent implementation choices or in separate sessions
+(\S\ref{sec:cap}). The proof and the certificates have been
+checked by machine only: by independent programs, by adversarial reviews carried out by language models (see the statement on the
+use of AI) and, in part, in Lean; they have not been read by a human referee. The Lean formalisation (\S\ref{sec:repro}) covers the
+combinatorial part, the certificate checker and the final arithmetic; the analytic reduction of \S\S\ref{sec:bs}--\ref{sec:I}, the
+monotonicity of Lemma~\ref{lem:monotone} and the enclosures of the weights are assumed there. Theorem~\ref{thm:tilted}
+(version~1.1) uses the same analytic part and five further integer certificates, each checked by two programs
+(\S\ref{sec:tiltcap}); it is not formalised in Lean.
+
+\section{Setting and statement}\label{sec:statement}
+
+\subsection{Model and normalisation}
+Let $L\ge3$ and $\Lambda_L:=(\Z/L\Z)^4$. Each link $(z,\mu)$, $z\in\Lambda_L$, $\mu\in\{1,2,3,4\}$, carries $U_{z,\mu}\in SU(2)$.
+A plaquette is $p=(z;\mu,\nu)$ with $\mu<\nu$, each geometric plaquette being counted once, and
+$U_p:=U_{z,\mu}U_{z+e_\mu,\nu}U_{z+e_\nu,\mu}^{-1}U_{z,\nu}^{-1}$. For $\beta\ge0$ the Wilson measure is
+\begin{equation}\label{eq:wilson}
+\mu_{L,\beta}(dU)=\frac1Z\exp\Big(\beta\sum_p\tfrac12\ReTr U_p\Big)\prod_\ell dU_\ell ,
+\end{equation}
+with normalised Haar measure $dU_\ell$; up to a constant factor the weight is $\exp(-\beta\sum_p(1-\frac12\ReTr U_p))$. This is the
+Wilson normalisation, $\beta=4/g^2$. We write $\langle\cdot\rangle_{L,\beta}$ for the expectation and
+\begin{equation}\label{eq:J}
+J:=\beta/2
+\end{equation}
+for the coefficient of $\ReTr U_p$ in the exponent of \eqref{eq:wilson}. In other normalisations: the electric coupling $J_E$ of
+Borgs and Seiler \cite[(II.2)--(II.4), p.~332]{BS83} at isotropic lattice spacing is $J_E=2/g^2=J$ \st{read}; the coupling of
+\cite[(1.13)--(1.16)]{DF80} and of \cite{Fro79} (coefficient of $\operatorname{Re}\chi$, $\chi=\Tr$) is $J$; the 't~Hooft coupling of
+\cite{CNS25} is $\beta/4$.
+
+For a closed lattice path $\gamma$, $U_\gamma$ is the ordered product of its link variables and $W_\gamma:=\frac12\Tr U_\gamma\in
+[-1,1]$. A \emph{rectangular loop with sides $R$ along $e_\mu$ and $T$ along $e_\nu$} ($\mu\ne\nu$, $R,T\ge1$) is the boundary of a
+planar $R\times T$ rectangle of plaquettes.
+
+\subsection{Main result}
+
+\begin{theorem}[computer-assisted]\label{thm:main}
+Let
+\[
+J_*:=\frac{40674}{100000},\qquad \beta_*:=2J_*=0.81348,\qquad \rho'_*:=\frac{2639854083}{2^{30}},
+\]
+\[
+\theta_*:=J_*\rho'_*=\frac{53686712485971}{53687091200000}=1-7.0540\ldots\times10^{-6},
+\]
+and let $C_*:=K_0/(1-\theta_*)$, with $K_0$ defined in \eqref{eq:K0}; numerically $K_0=3.97805\ldots$ and
+$C_*=5.6393\ldots\times10^{5}$. For every $\beta\in[0,\beta_*]$, every $L\ge3$ and every rectangular loop $\gamma$ with sides $R$
+along $e_\mu$ and $T$ along $e_\nu$ such that $1\le R\le L/2$ and $1\le T\le L-1$,
+\begin{equation}\label{eq:main}
+|\langle W_\gamma\rangle_{L,\beta}|\ \le\ C_*^{\,T}\,\theta_*^{\,RT}.
+\end{equation}
+\end{theorem}
+\noindent Status: \st{proved} (\S\S\ref{sec:bs}--\ref{sec:II}), with two \st{certified} numerical inputs
+(Proposition~\ref{prop:cert}). The constants depend neither on $L$ nor on $\beta\in[0,\beta_*]$. By the symmetries of the lattice the
+two sides may be exchanged: \eqref{eq:main} with $R$ and $T$ exchanged holds when $T\le L/2$ and $R\le L-1$.
+
+\begin{corollary}[string tension]\label{cor:tension}
+Let $0<\beta\le\beta_*$. For all $R,T\ge1$ and $L\ge\max(2R,T+1)$,
+\begin{equation}\label{eq:sigma}
+-\frac1{RT}\log|\langle W_{R\times T}\rangle_{L,\beta}|\ \ge\ -\log\theta_*-\frac{\log C_*}{R}.
+\end{equation}
+Hence
+\[
+\sigma(\beta):=\liminf_{R\to\infty}\ \inf_{T\ge1}\ \inf_{L\ge\max(2R,T+1)}\Big(-\frac1{RT}\log|\langle W_{R\times T}\rangle_{L,\beta}|
+\Big)\ \ge\ -\log\theta_*=7.05\ldots\times10^{-6}>0,
+\]
+and any definition of the string tension by a limit in which $R\to\infty$ (with $T\to\infty$
+or not, for instance $\liminf_{R,T\to\infty}$) satisfies the same bound. The bound \eqref{eq:main} also holds for every weak limit point of $(\mu_{L,\beta})_{L}$ as
+$L\to\infty$.
+\end{corollary}
+\begin{proof}
+\eqref{eq:sigma} is \eqref{eq:main} rewritten. The limit $R\to\infty$ is needed to remove the term $(\log C_*)/R$. For a fixed loop,
+$W_\gamma$ is a bounded continuous function of finitely many links, so \eqref{eq:main} passes to weak limits.
+\end{proof}
+
+\begin{remark}[memory $13$]\label{rem:m13}
+The same proof with memory $m=13$ gives \eqref{eq:main} for $\beta\le\beta_*^{(13)}:=0.81498$, with
+\[
+J_*^{(13)}=\frac{40749}{100000},\qquad \rho'^{(13)}_*=\frac{2635005744}{2^{30}},\qquad
+\theta_*^{(13)}=\frac{6710865566391}{6710886400000}=1-3.1044\ldots\times10^{-6},
+\]
+$K_0^{(13)}=5.2781\ldots$ and $C_*^{(13)}=1.7002\ldots\times10^{6}$ \st{certified}. Its certificate has $276\,294\,656$ symmetry
+classes and $4.4$\,GB; it is identified by its SHA-256 in \S\ref{sec:repro} and can be regenerated. We state this improvement as a
+remark because the certificate is not part of the supplementary material.
+\end{remark}
+
+\begin{remark}[string-tension bounds]\label{rem:table}
+The same argument at $J=\beta_i/2$, with a certificate of memory $11$ for each $\beta_i$, gives \eqref{eq:main} for all
+$\beta\le\beta_i$ with the constants of Table~\ref{tab:tension} \st{certified}. For $\beta\le0.66$ the bound
+$\sigma\ge\operatorname{arcosh}(2/\beta-2)$ of \cite[Cor.~7.2]{D7} is better (for instance $0.795$ against $0.256$ at $\beta=0.6$); it
+tends to $0$ as $\beta\uparrow2/3$. Corollary~\ref{cor:tilted} (version~1.1) gives $\sigma\ge0.6080$ for all $\beta\le0.70588$, which is better than
+$\operatorname{arcosh}(2/\beta-2)$ for $\beta>0.627$. Without the tilt, the walk method is useful for the range rather than for the size of
+the tension.
+Near the threshold the bound \eqref{eq:main} is non-trivial only at large distances: $C^T\theta^{RT}<1$ if and only if
+$R>R_{\min}:=\log C/(-\log\theta)$. From the constants of Table~\ref{tab:tension}, $R_{\min}\approx12$ for $\beta\le0.60$,
+$143$ for $\beta\le0.78$, $430$ for $\beta\le0.80$, $2.1\cdot10^{3}$ for $\beta\le0.81$ and $1.9\cdot10^{6}$ for $\beta\le\beta_*$
+(with $C_*=5.6\cdot10^5$ and $-\log\theta_*=7.1\cdot10^{-6}$); at $\beta_*$ the bound is purely asymptotic. With Theorem~\ref{thm:tilted} (version~1.1), Table~\ref{tab:tilted} gives instead
+$R_{\min}\le8.5$, $36.5$, $85.5$ and $3\,107$ on every torus ($6.3$, $30.3$, $72.4$ and $2\,829$ in the weak limits) for $\beta\le0.70588$,
+$0.80$, $0.81$ and $\beta_*$.
+\end{remark}
+
+\begin{table}[ht]
+\centering\small
+\begin{tabular}{@{}llll@{}}
+\toprule
+$\beta_i$ & $\theta_i$ & $-\log\theta_i$ & $C_i$\\
+\midrule
+$0.60$ & $0.77398$ & $0.2562$ & $19.3$\\
+$0.66$ & $0.84102$ & $0.1731$ & $26.8$\\
+$0.70588$ & $0.89048$ & $0.1160$ & $38.2$\\
+$0.72$ & $0.90538$ & $0.0994$ & $43.9$\\
+$0.74$ & $0.92621$ & $0.0767$ & $55.8$\\
+$0.76$ & $0.94672$ & $0.0547$ & $76.6$\\
+$0.78$ & $0.96692$ & $0.0336$ & $122$\\
+$0.80$ & $0.98679$ & $0.0133$ & $303$\\
+$0.81$ & $0.99660$ & $0.0034$ & $1.2\cdot10^{3}$\\
+$0.81348$ & $0.9999929$ & $7.1\cdot10^{-6}$ & $5.6\cdot10^{5}$\\
+\bottomrule
+\end{tabular}
+\caption{Constants of \eqref{eq:main} valid for all $\beta\le\beta_i$ (memory $11$). Each row rests on its own weights and integer
+certificate, produced and checked as in \S\ref{sec:cap} and re-verified on all $6^{11}$ states by an independent program; only the
+last one is in the supplementary material, the others can be regenerated with the programs of \S\ref{sec:repro}. The weights files
+of the rows $0.70588$, $0.80$ and $0.81$ are in \texttt{supplement\_v1.1} (version~1.1).}
+\label{tab:tension}
+\end{table}
+
+\section{The method of Borgs and Seiler}\label{sec:bs}
+
+This section writes out, in our notation and for rectangular Wilson loops on tori, the argument of \cite[Appendix~B]{BS83}. We take
+$\nu=4$ (the side of length $T$ is vertical) and $\mu=1$; the general case follows by symmetry.
+
+\subsection{Slabs}
+Let $\iota:S^3\to SU(2)$, $\iota(q)=\begin{pmatrix}q^0+iq^3&-q^1+iq^2\\ q^1+iq^2&q^0-iq^3\end{pmatrix}$ (the parametrisation of
+\cite[(5.1)]{DF80}); it maps the normalised surface measure $\bar\sigma$ of $S^3\subset\R^4$ onto Haar measure, and
+$\frac12\ReTr(\iota(q)^{-1}\iota(r))=\langle q,r\rangle$. For $A,B\in SU(2)$ the map $r\mapsto\iota^{-1}(A\,\iota(r)B^{-1})$ is the
+restriction to $S^3$ of a matrix $O_{A,B}\in SO(4)$, with $O_{A,B}O_{A',B'}=O_{AA',BB'}$ and $O_{A,B}^{\mathsf T}=O_{A^{-1},B^{-1}}$.
+
+Let $X:=(\Z/L\Z)^3$, with its set $E_X$ of $3L^3$ nearest-neighbour edges; for $L\ge3$ it is a simple $6$-regular graph. The
+\emph{vertical} links are $Q^k_x:=U_{(x,k),4}$, $x\in X$, $k\in\Z/L\Z$, and $q^k_x:=\iota^{-1}(Q^k_x)$; the other links are
+\emph{horizontal}, and $\cH$ is the $\sigma$-algebra they generate. A vertical plaquette $p=((x,k);\mu,4)$, $\mu\le3$, has
+$U_p=A\,Q^k_{x+e_\mu}B^{-1}(Q^k_x)^{-1}$ with $A=U_{(x,k),\mu}$ (layer $k$) and $B=U_{(x,k+1),\mu}$ (layer $k+1$), so that
+$\frac12\ReTr U_p=\langle q^k_x,O_{A,B}\,q^k_{x+e_\mu}\rangle$.
+
+\begin{lemma}[slabs; {\cite[(1.17)--(1.19)]{DF80}}, {\cite[Lemma~7.4]{D7}}]\label{lem:slab}
+Conditionally on $\cH$, the families $(q^k_x)_{x\in X}$, $k\in\Z/L\Z$, are independent, and $(q^k_x)_x$ has the law
+\begin{equation}\label{eq:slab}
+\mu_k(dq)=\frac1{Z_k}\exp\Big(2J\sum_{x\in X,\,\mu\le3}\langle q_x,O^k_{x,x+e_\mu}\,q_{x+e_\mu}\rangle\Big)\prod_{x\in X}\bar\sigma(dq_x),
+\end{equation}
+with $O^k_{x,x+e_\mu}:=O_{U_{(x,k),\mu},\,U_{(x,k+1),\mu}}$.
+\end{lemma}
+\begin{proof}
+A horizontal plaquette contains no vertical link, and a vertical plaquette contains two vertical links of the same slab; the density
+\eqref{eq:wilson} therefore factorises over the slabs given $\cH$, and $\beta\cdot\frac12\ReTr U_p=2J\langle q_x,O\,q_{x+e_\mu}\rangle$.
+\end{proof}
+\noindent We write $O_{yx}:=O_{xy}^{\mathsf T}$ for the reversed edge, and $Z_k(\bs J)$ for the normalisation of \eqref{eq:slab} with
+the coupling $J$ of each edge $\ell$ replaced by $J_\ell$; it is a function of the horizontal links of layers $k$ and $k+1$.
+
+\subsection{Random-walk expansion of a slab}
+\begin{lemma}[integration by parts on a sphere]\label{lem:ipp}
+For $F\in C^1(\R^4)$, $c>0$ and $a\in\{0,1,2,3\}$,
+$\displaystyle\int s_aF(s)\,\delta(|s|^2-c)\,d^4s=\frac12\int_0^c dc'\int\partial_aF(s)\,\delta(|s|^2-c')\,d^4s$.
+\end{lemma}
+\begin{proof}
+Let $\Theta(c):=\int_{|s|^2\le c}\partial_aF\,d^4s$. By the divergence theorem $\Theta(c)=\int_{|s|=\sqrt c}F\,s_a/\sqrt c\,dS$; by the
+coarea formula $\int g\,\delta(|s|^2-c)\,d^4s=(2\sqrt c)^{-1}\int_{|s|=\sqrt c}g\,dS$ and $\Theta'(c)=\int\partial_aF\,\delta(|s|^2-c)\,
+d^4s$. Hence the left side equals $\Theta(c)/2=\frac12\int_0^c\Theta'$.
+\end{proof}
+\noindent The factor $\frac12$ does not appear in the printed form of \cite[Lemma~B.1(i), p.~374]{BS83}; it is compensated elsewhere in their
+computation, and the net weight per step is $J$ in both (an independent check of the normalisation is in \S\ref{sec:checks}).
+
+Let $G$ be a finite simple graph, $J\ge0$, $O_{xy}\in SO(4)$ for each ordered pair of neighbours with $O_{yx}=O_{xy}^{\mathsf T}$, and
+\[
+Z(\bs J):=\int\exp\Big(2\sum_{\{u,v\}\in E_G}J_{uv}\langle q_u,O_{uv}q_v\rangle\Big)\prod_{z\in G}\bar\sigma(dq_z)
+\qquad(\bs J=(J_{uv})_{\{u,v\}\in E_G}),
+\]
+and let $\mu$ be the corresponding probability measure for the constant couplings $J_{uv}\equiv J$.
+A \emph{walk} $\omega:x\to y$ is a sequence $\omega_0=x,\omega_1,\dots,\omega_{|\omega|}=y$ of sites with $\omega_{i+1}$ a neighbour
+of $\omega_i$; returns and self-intersections are allowed. Put $O_\omega:=O_{\omega_0\omega_1}\cdots O_{\omega_{|\omega|-1}
+\omega_{|\omega|}}$, $n_z(\omega):=\#\{i:\omega_i=z\}$, $V(\omega):=\{z:n_z(\omega)\ge1\}$,
+\begin{equation}\label{eq:fn}
+f_n(\lambda):=\frac{\lambda^{n-1}(1-\lambda)}{(n-1)!}\quad(n\ge1,\ \lambda\in[0,1]),\qquad F_\omega(\lambda):=\prod_{z\in V(\omega)}
+f_{n_z(\omega)}(\lambda_z),
+\end{equation}
+and, for $\lambda\in[0,1]^{V(\omega)}$ extended by $\lambda_u:=0$ for $u\notin V(\omega)$, the reduced couplings
+$J^\lambda_{uv}:=J\sqrt{(1-\lambda_u)(1-\lambda_v)}$.
+
+\begin{proposition}[walk representation; {\cite[(B.1)--(B.8), pp.~374--375]{BS83}}]\label{prop:walk}
+For $x\ne y$ in $G$ and $a,b\in\{0,\dots,3\}$,
+\begin{equation}\label{eq:walk}
+\E_\mu[q_{x,a}\,q_{y,b}]=\frac12\sum_{\omega:x\to y}J^{|\omega|}\,(O_\omega)_{ab}\int_{[0,1]^{V(\omega)}}F_\omega(\lambda)\,
+\frac{Z(\bs J^\lambda)}{Z(J)}\,d\lambda ,
+\end{equation}
+and the series converges absolutely.
+\end{proposition}
+\begin{proof}
+Write $\bar\sigma(dq)\propto\delta(|s|^2-1)\,d^4s$ (the constant cancels in the ratio) and $e^{H}$ for the weight, so that
+$\partial_{s_z,c}H=2J\sum_{u\sim z}(O_{zu}s_u)_c$.
+(i) Apply Lemma~\ref{lem:ipp} to the factor $s_{x,a}$: since $\frac12\,\partial_{x,a}e^H=J\sum_{u\sim x}(O_{xu}s_u)_ae^H$, this
+produces a step to a neighbour $u$ with weight $\frac12\cdot2J=J$, a new linear factor $(O_{xu}s_u)_a$, and replaces the constraint
+at $x$ by $\delta(|s_x|^2-(1-\lambda_x))$ with $\lambda_x\in[0,1]$.
+(ii) Repeat with the linear factor at the current site. When the current site is $y$, the derivative may also hit $s_{y,b}$; this
+gives $\frac12\delta_{cb}$ and ends the walk, which is the global factor $\frac12$ of \eqref{eq:walk}. The derivative of $H$ always
+carries the unreduced coupling $J$.
+(iii) At the $n$-th visit of a site $z$ the new parameter runs over $[\lambda_z^{(n-1)},1]$ and the integrand depends only on the last
+one; the ordered simplex gives $\lambda^{n-1}/(n-1)!$.
+(iv) At the end, the change of variables $s_z=\sqrt{1-\lambda_z}\,s'_z$ gives $\delta(|s_z|^2-(1-\lambda_z))\,d^4s_z=(1-\lambda_z)\,
+\delta(|s'_z|^2-1)\,d^4s'_z$ (this is where the dimension $4$ of $\R^4$ enters), and $2J\langle s_u,O\,s_v\rangle=2J^\lambda_{uv}
+\langle s'_u,O\,s'_v\rangle$; hence the factor $Z(\bs J^\lambda)/Z(J)$.
+(v) Convergence: after $N$ applications of Lemma~\ref{lem:ipp} the identity holds with a remainder that is a finite sum over the
+unfinished walks of length $N$. Each term still contains a linear factor of absolute value at most $1$ (all radii are at most $1$)
+and $s_{y,b}$, and is bounded by $e^{4J|E_G|}J^N\prod_z1/(n_z-1)!$. On a graph with $|G|$ sites,
+$\sum_z(n_z-1)\ge N+1-|G|$, so $\prod_z(n_z-1)!$ grows faster than any exponential of $N$, while there are at most $\Delta_G^N$ walks of
+length $N$ ($\Delta_G$ the maximal degree). The remainder tends to $0$, and the finished terms are dominated in the same way.
+\end{proof}
+
+\begin{corollary}[matrix elements]\label{cor:matrix}
+In slab $k$, for $x\ne y$, conditionally on $\cH$,
+\[
+\E\big[(Q^k_x)_{ij}\,((Q^k_y)^{-1})_{lk'}\,\big|\,\cH\big]=\sum_{\omega:x\to y}J^{|\omega|}\,(A_\omega)_{ik'}\,(B_\omega^{-1})_{lj}
+\int F_\omega(\lambda)\,\frac{Z_k(\bs J^\lambda)}{Z_k(J)}\,d\lambda ,
+\]
+where $A_\omega$ (resp.\ $B_\omega$) is the ordered product of the horizontal links along $\omega$ in layer $k$ (resp.\ $k+1$).
+\end{corollary}
+\begin{proof}
+Write $\iota(q)=\sum_aq_ae_a$ with $e_a\in M_2(\mathbb C)$. Then
+\[
+\sum_a(e_a)_{pq}\overline{(e_a)_{rs}}=2\delta_{pr}\delta_{qs},\qquad \sum_a(O_{A,B})_{ab}e_a=A\,e_bB^{-1},
+\]
+so $O_\omega=O_{A_\omega,B_\omega}$ and $\sum_{a,b}(O_\omega)_{ab}(e_a)_{ij}\overline{(e_b)_{k'l}}=2(A_\omega)_{ik'}
+(B_\omega^{-1})_{lj}$. Insert \eqref{eq:walk}; the factor $2$ cancels the $\frac12$.
+\end{proof}
+
+\subsection{The Wilson loop as a sum over sequences of walks}
+Let $\gamma$ have corners $(x,0)$, $(y,0)$, $(y,T)$, $(x,T)$ with $y=x+Re_1$; let $A$ be the product of the $R$ horizontal links from
+$x$ to $y$ in layer $0$ and $B$ that from $y$ to $x$ in layer $T$. Then
+$U_\gamma=A\,Q^0_y\cdots Q^{T-1}_y\,B\,(Q^{T-1}_x)^{-1}\cdots(Q^0_x)^{-1}$.
+
+\begin{proposition}\label{prop:loop}
+With walks $\omega_k:y\to x$ in $X$, one for each slab $k=0,\dots,T-1$,
+\begin{equation}\label{eq:loop}
+\langle W_\gamma\rangle_{L,\beta}=\frac12\sum_{\omega_0,\dots,\omega_{T-1}}\prod_{k<T}J^{|\omega_k|}\int\prod_{k<T}
+F_{\omega_k}(\lambda^{(k)})\,d\lambda^{(k)}\ \E\Big[\prod_{k<T}\frac{Z_k(\bs J^{\lambda^{(k)}})}{Z_k(J)}\prod_{m=0}^{T}\Tr U_{C_m}\Big],
+\end{equation}
+where $\E$ is the expectation of the horizontal links under $\mu_{L,\beta}$ and $C_m$ is a closed loop of layer $m$: $C_0$ is the
+bottom side ($x\to y$) followed by $\omega_0$ ($y\to x$); for $1\le m\le T-1$, $C_m$ is $\omega_{m-1}$ reversed ($x\to y$) followed by
+$\omega_m$; $C_T$ is $\omega_{T-1}$ reversed followed by the top side ($y\to x$).
+\end{proposition}
+\begin{proof}
+\emph{Contraction.} For matrices $P,N$ that do not depend on the vertical links of slab $k$, Corollary~\ref{cor:matrix} (walks from
+$y$ to $x$) gives, conditionally on $\cH$ and on the other slabs,
+\[
+\E_k\big[\Tr\big(P\,Q^k_yN\,(Q^k_x)^{-1}\big)\big]=\sum_\omega w_\omega\,\Tr(PA'_\omega)\,\Tr(B'^{-1}_\omega N),
+\]
+with $w_\omega$ the weight of $\omega$ and $A'_\omega,B'_\omega$ its holonomies from $y$ to $x$ in layers $k$ and $k+1$: expand
+$\Tr(PQ_yNQ_x^{-1})=\sum P_{ai}(Q_y)_{ij}N_{jl}(Q_x^{-1})_{la}$ and replace $(Q_y)_{ij}(Q_x^{-1})_{la}$ by
+$(A'_\omega)_{ia}(B'^{-1}_\omega)_{lj}$. Apply this to slab $0$ with $P=A$, which produces
+$\Tr U_{C_0}$ and leaves an expression of the same form with $P=B'^{-1}_{\omega_0}$; by induction over the slabs (independent given
+$\cH$, Lemma~\ref{lem:slab}) one obtains $\prod_{m=0}^T\Tr U_{C_m}$.
+\emph{Fubini.} For all $\lambda$ and all horizontal configurations, $0<Z_k(\bs J^\lambda)/Z_k(J)\le e^{12JL^3}$ (each of the $3L^3$
+edges changes the exponent by at most $2J$), $|F_\omega|\le\prod_z1/(n_z-1)!$ and $|\Tr U_C|\le2$; the series
+$\sum_\omega J^{|\omega|}\prod_z1/(n_z-1)!$ converges (proof of Proposition~\ref{prop:walk}). Sums, integrals and expectation may
+therefore be exchanged.
+\end{proof}
+
+\subsection{Transfer matrix}\label{sec:transfer}
+Let $\mathfrak h:=L^2(SU(2)^{E_X})$ with Haar measure. For $J\ge0$ let $t_J$ be the convolution operator
+$(t_Jf)(v)=\int e^{J\ReTr(vw^{-1})}f(w)\,dw$ on $L^2(SU(2))$, and for $\bs J=(J_\ell)_{\ell\in E_X}$ let $T_0(\bs J):=\bigotimes_\ell
+t_{J_\ell}$. Let $P_0$ be the average over gauge transformations $(u\cdot v)_{x,\mu}=u_xv_{x,\mu}u_{x+e_\mu}^{-1}$, $u\in SU(2)^X$
+(the orthogonal projection onto gauge-invariant functions), and $M$ the multiplication by $\exp(J\sum_p\ReTr v_p)$, the sum running
+over the $3L^3$ horizontal plaquettes of a layer. Then:
+\begin{itemize}
+\item $Z_k(\bs J)(v_k,v_{k+1})=\int\prod_xdu_x\prod_\ell e^{J_\ell\ReTr(v_{k,\ell}(u\cdot v_{k+1})_\ell^{-1})}$ is the kernel of
+$T_0(\bs J)P_0$ (the vertical links of slab $k$ act as a gauge transformation of layer $k+1$);
+\item $T_0(\bs J)$ commutes with gauge transformations (each $t_{J_\ell}$ is a convolution by a class function), hence with $P_0$;
+\item $M$ and the functions $v\mapsto\Tr U_C(v)$ of closed loops $C$ are gauge invariant, so the corresponding multiplication
+operators commute with $P_0$.
+\end{itemize}
+By Lemma~\ref{lem:pw} below, $t_J\ge0$ is trace class, and so is $T_0(\bs J)$. We put, for $\lambda\in[0,1]^{V(\omega)}$,
+\[
+\cT:=M^{1/2}P_0T_0(J)P_0M^{1/2}\ \ge0,\qquad \cT^{(\lambda)}:=M^{1/2}P_0T_0(\bs J^\lambda)P_0M^{1/2}\ \ge0 .
+\]
+
+\begin{proposition}[trace formula; {\cite[(B.10), p.~375]{BS83}}]\label{prop:trace}
+For walks $\omega_0,\dots,\omega_{T-1}$ and parameters $\lambda^{(k)}$,
+\begin{equation}\label{eq:trace}
+\E\Big[\prod_{k<T}\frac{Z_k(\bs J^{\lambda^{(k)}})}{Z_k(J)}\prod_{m=0}^{T}\Tr U_{C_m}\Big]=\frac{\Tr\big(\prod_{m=0}^{L-1}\chi_m\cT_m
+\big)}{\Tr\cT^L},
+\end{equation}
+where $\chi_m$ is the multiplication by $\Tr U_{C_m}$ for $m\le T$ and $\chi_m:=1$ for $m>T$, and $\cT_m:=\cT^{(\lambda^{(m)})}$ for
+$m<T$, $\cT_m:=\cT$ for $m\ge T$ (the product is ordered by increasing $m$).
+\end{proposition}
+\begin{proof}
+Each plaquette is either horizontal (in one layer) or vertical (in one slab), and the vertical links of slab $k$ are integrated in
+$Z_k$; hence the marginal law of the horizontal links is $Z^{-1}\prod_mM(v_m)\prod_kZ_k(J)(v_k,v_{k+1})\prod dv$, with
+$Z=\Tr\big((MT_0(J)P_0)^L\big)$. Multiplying by the ratios replaces the kernel of slab $k$ by that of $T_0(\bs J^{\lambda^{(k)}})P_0$,
+and the left side of \eqref{eq:trace} becomes $Z^{-1}\Tr\big(\prod_m\chi_mMT_0(\bs J^{(m)})P_0\big)$. Write $M=M^{1/2}M^{1/2}$ and
+$T_0P_0=P_0T_0P_0$; since $P_0$, $M^{1/2}$ and the $\chi_m$ commute, cyclicity of the trace gives $\Tr(\prod_m\chi_m\cT_m)$, and
+likewise $Z=\Tr\cT^L$.
+\end{proof}
+
+\subsection{The bound of Borgs and Seiler}\label{sec:bsbound}
+Borgs and Seiler note that $\cT^{(\lambda)}\le\cT$, since $\langle\varphi,\cT^{(\lambda)}\varphi\rangle$ is non-decreasing in each
+coupling by reflection positivity \cite[(B.11), p.~376]{BS83}; Hölder's inequality then bounds the right side of \eqref{eq:trace} by
+$2^{T+1}$ (Proposition~\ref{prop:holder} below with $c\le1$). Since $\int_0^1f_n=a_n:=1/(n+1)!$ \cite[(B.14), p.~376]{BS83}, \eqref{eq:loop}
+gives
+\begin{equation}\label{eq:bs}
+|\langle W_\gamma\rangle|\le2^TG(x,y)^T,\qquad G(x,y):=\sum_{\omega:y\to x}J^{|\omega|}\prod_{z\in V(\omega)}a_{n_z(\omega)} .
+\end{equation}
+Read along the walk, $\prod_za_{n_z(\omega)}=\prod_{j=0}^{|\omega|}r(N_j)$ with $N_j:=\#\{i\le j:\omega_i=\omega_j\}$, $r(1)=a_1=\frac12$
+and $r(N)=a_N/a_{N-1}=1/(N+1)$ for $N\ge2$. At each step after the first, the return to the previous site has $N\ge2$, so the six
+continuations contribute at most $J(5\cdot\frac12+\frac13)=\frac{17}6J$ \cite[p.~376]{BS83}. Hence $G(x,y)\le\frac32\sum_{n\ge R}
+J^n(\frac{17}6)^{n-1}$, and \eqref{eq:bs} gives the area law for $J<6/17$, i.e.\ $\beta<12/17$ \cite[p.~376]{BS83} \st{read}.
+
+\begin{remark}[what Borgs and Seiler state]\label{rem:bs-statement}
+Borgs and Seiler state the bound for the correlation of Polyakov loops at nonzero temperature: ``Irrespective of $J_M$ and
+temperature we are sure to have confinement for $J_E<\tilde J_c$'', with $\tilde J_c=(d-\frac16)^{-1}$ for $SU(2)$
+\cite[(II.55), p.~343]{BS83}, proved in their Appendix~B (pp.~373--377), uniformly in the number $L_0$ of time layers; they relate the Polyakov and
+Wilson string tensions in \cite[(II.48)--(II.50), p.~341]{BS83} \st{read}. The version for rectangular Wilson loops at zero
+temperature, with constants, is the adaptation written in \S\S\ref{sec:bs}--\ref{sec:bsbound}; in this note
+``the threshold of the Borgs--Seiler method'' refers to the resulting range $\beta<12/17$. Page numbers of \cite{BS83} refer to the
+journal version; the preprint MPI-PAE/PTh 16/83 has the same text and equation numbers in all the passages cited.
+\end{remark}
+
+\section{Improvement (I): a strict operator inequality}\label{sec:I}
+
+\begin{lemma}[Peter--Weyl spectrum]\label{lem:pw}
+On the span of the matrix coefficients of the spin-$j$ representation, $j\in\{0,\frac12,1,\dots\}$, the operator $t_J$ acts as
+multiplication by
+\[
+m_j(J)=\frac{I_{2j+1}(2J)}{J}=\sum_{k\ge0}\frac{J^{2k+2j}}{k!\,(k+2j+1)!}\quad(J>0),\qquad m_0(0)=1,\ m_j(0)=0\ (j\ge\tfrac12).
+\]
+In particular $t_J\ge0$ and $t_J$ is trace class. For $0<J\le1$ and $0\le t\le1$, $m_j(tJ)/m_j(J)\le m_0(tJ)/m_0(J)$ for every
+$j$.
+\end{lemma}
+\begin{proof}
+Convolution by the class function $\varphi(g)=e^{J\Tr g}$ acts on the spin-$j$ component by $c_j/(2j+1)$, $c_j:=\int\varphi\,\chi_j$.
+With $\Tr g=2\cos\vartheta$, $\chi_j=\sin((2j+1)\vartheta)/\sin\vartheta$ and Weyl's integration formula,
+$c_j=\frac2\pi\int_0^\pi e^{2J\cos\vartheta}\sin((2j+1)\vartheta)\sin\vartheta\,d\vartheta=I_{2j}(2J)-I_{2j+2}(2J)=(2j+1)I_{2j+1}(2J)/J$,
+and the series is that of $I_{2j+1}$. The eigenvalues are positive and $\sum_j(2j+1)^2m_j(J)<\infty$.
+For $j\ge\frac12$, termwise comparison gives $m_j(tJ)\le t^{2j}m_j(J)\le t\,m_j(J)$. For $j=0$, $m_0(tJ)/m_0(J)=\sum_kw_kt^{2k}$ with
+probability weights $w_k\propto J^{2k}/(k!(k+1)!)$; by Jensen's inequality this is at least $t^{2\langle k\rangle}$, and
+$2\langle k\rangle\le1$ because $\sum_{k\ge1}(2k-1)J^{2k}/(k!(k+1)!)\le\sum_{k\ge1}(2k-1)/(k!(k+1)!)<0.79$ for $J\le1$. Hence
+$m_0(tJ)/m_0(J)\ge t$. (For $t=0$ the left side vanishes for $j\ge\frac12$ and equals $1/m_0(J)$ for $j=0$.)
+\end{proof}
+
+For $s\in[0,1]$ put
+\begin{equation}\label{eq:rho}
+M_J(s):=\sum_{k\ge0}\frac{(J^2s)^k}{k!\,(k+1)!}=m_0(J\sqrt s),\qquad \rho_J(s):=\frac{M_J(s)}{M_J(1)}\in(0,1].
+\end{equation}
+
+\begin{proposition}[strict operator inequality]\label{prop:strict}
+Let $0<J\le1$, $\omega$ a walk in $X$ and $\lambda\in[0,1]^{V(\omega)}$. Then $0\le\cT^{(\lambda)}\le c(\lambda)\,\cT$ with
+\[
+c(\lambda):=\prod_{\{u,v\}\in E_X}\rho_J\big((1-\lambda_u)(1-\lambda_v)\big)\qquad(\lambda_u:=0\text{ for }u\notin V(\omega)).
+\]
+The constant is optimal link by link.
+\end{proposition}
+\begin{proof}
+$T_0(\bs J^\lambda)$ and $T_0(J)$ are diagonal in the product Peter--Weyl basis, with eigenvalues $\prod_\ell m_{j_\ell}(J^\lambda_\ell)$
+and $\prod_\ell m_{j_\ell}(J)$. Since $J^\lambda_\ell=J\sqrt{s_\ell}$ with $s_\ell=(1-\lambda_u)(1-\lambda_v)$, Lemma~\ref{lem:pw}
+gives $T_0(\bs J^\lambda)\le c(\lambda)T_0(J)$; conjugation by $M^{1/2}P_0$ preserves the order. The constant function (all
+$j_\ell=0$) is gauge invariant and gives equality for $T_0$.
+\end{proof}
+\noindent Borgs and Seiler use $\cT^{(\lambda)}\le\cT$, i.e.\ $c\le1$. Here $c(\lambda)<1$ as soon as $\lambda\not\equiv0$. This is
+improvement~(I). (For $J=0$ the operators $\cT^{(\lambda)}$ and $\cT$ coincide, $c\equiv1$ and $\langle W_\gamma\rangle=0$: the case is
+trivial, and it is excluded from the statements above, as in \S\ref{sec:proof}.)
+
+\begin{proposition}[Hölder bound]\label{prop:holder}
+In the setting of Proposition~\ref{prop:trace}, with $c_k:=c(\lambda^{(k)})$,
+\[
+\Big|\E\Big[\prod_{k<T}\frac{Z_k(\bs J^{\lambda^{(k)}})}{Z_k(J)}\prod_{m=0}^T\Tr U_{C_m}\Big]\Big|\le2^{T+1}\prod_{k<T}c_k .
+\]
+\end{proposition}
+\begin{proof}
+If $0\le A\le B$ are bounded operators, then $\|A^{1/2}f\|\le\|B^{1/2}f\|$, so there is a contraction $C$ with $A^{1/2}=CB^{1/2}$
+\cite{Dou66} and $A=B^{1/2}C^*CB^{1/2}$. With $A=\cT_k$ and $B=c_k\cT$ this gives $\cT_k=\cT^{1/2}Y_k\cT^{1/2}$ with $0\le Y_k$,
+$\|Y_k\|\le c_k$ (and $Y_m=I$ for $m\ge T$). By cyclicity, $\Tr(\prod_m\chi_m\cT_m)=\Tr(\prod_mX_mY_m)$ with
+$X_m:=\cT^{1/2}\chi_m\cT^{1/2}$. Hölder's inequality for Schatten norms, with $L$ factors of exponent $L$ and the $Y_m$ in operator
+norm, gives $|\Tr(\cdots)|\le\prod_m\|X_m\|_L\|Y_m\|$, and $\|X_m\|_L\le\|\chi_m\|_\infty\|\cT^{1/2}\|_{2L}^2=\|\chi_m\|_\infty
+(\Tr\cT^L)^{1/L}$. Conclude with $\|\chi_m\|_\infty\le2$ for $m\le T$, $=1$ otherwise, and \eqref{eq:trace}.
+\end{proof}
+
+\begin{lemma}[Cauchy--Schwarz]\label{lem:cs}
+For $a,b\in[0,1]$: $M_J(ab)^2\le M_J(a^2)M_J(b^2)$ and $M_J(a)\le M_J(a^2)^{1/2}M_J(1)^{1/2}$.
+\end{lemma}
+\begin{proof}
+Cauchy--Schwarz for $\sum_kc_k(a^k)(b^k)$ with $c_k=J^{2k}/(k!(k+1)!)\ge0$; the second inequality is the case $b=1$.
+\end{proof}
+
+\begin{corollary}[site-by-site factorisation]\label{cor:site}
+Let $L\ge3$, $\omega$ a walk in $X$ and $\lambda\in[0,1]^{V(\omega)}$. Then
+\[
+c(\lambda)\le\prod_{z\in V(\omega)}h_J(\lambda_z),\qquad h_J(\lambda):=\rho_J\big((1-\lambda)^2\big)^3 .
+\]
+\end{corollary}
+\begin{proof}
+Put $a_z:=1-\lambda_z$. By Lemma~\ref{lem:cs}, an edge $\{u,v\}\subset V(\omega)$ contributes $\rho(a_ua_v)\le\rho(a_u^2)^{1/2}
+\rho(a_v^2)^{1/2}$, an edge $\{u,w\}$ with $w\notin V(\omega)$ contributes $\rho(a_u)\le\rho(a_u^2)^{1/2}$, and the other edges
+contribute $1$. Every site of $X$ has exactly six incident edges, so every $z\in V(\omega)$ receives exactly six factors
+$\rho(a_z^2)^{1/2}$.
+\end{proof}
+\noindent The exponent $3$ uses that every site has exactly six edges, which holds on the torus with $L\ge3$. A site with $k<6$ edges
+(for instance on the boundary of a box) would receive $\rho(a_z^2)^{k/2}\ge\rho(a_z^2)^3$; this is why the theorem is stated on tori
+only (\S\ref{sec:scope}).
+
+\paragraph{New weights.} Let
+\begin{equation}\label{eq:At}
+\At_n(J):=\int_0^1f_n(\lambda)\,h_J(\lambda)\,d\lambda\ \le\ a_n=\frac1{(n+1)!},\qquad \rt(1):=\At_1,\quad \rt(N):=\frac{\At_N}{\At_{N-1}}\
+(N\ge2).
+\end{equation}
+Combining \eqref{eq:loop}, Proposition~\ref{prop:holder} and Corollary~\ref{cor:site} (all integrands are non-negative after the
+bound), and integrating site by site,
+\begin{equation}\label{eq:Gt}
+|\langle W_\gamma\rangle_{L,\beta}|\le2^T\,\Gt(x,y)^T,\qquad \Gt(x,y):=\sum_{\omega:y\to x}J^{|\omega|}\prod_{z\in V(\omega)}
+\At_{n_z(\omega)}=\sum_{\omega:y\to x}J^{|\omega|}\prod_{j=0}^{|\omega|}\rt(N_j),
+\end{equation}
+with $N_j=\#\{i\le j:\omega_i=\omega_j\}$ as in \S\ref{sec:bsbound}: the weight is read step by step.
+
+\begin{lemma}[revisits]\label{lem:revisit}
+$\rt(N)\le1/(N+1)$ for $N\ge2$.
+\end{lemma}
+\begin{proof}
+$\rt(N)=\E_\nu[\lambda]/(N-1)$ with $\nu\propto\lambda^{N-2}(1-\lambda)h_J(\lambda)\,d\lambda$. The function $h_J$ is non-increasing
+($\rho_J$ is non-decreasing and $(1-\lambda)^2$ decreasing). By Chebyshev's integral inequality for the positive measure
+$w=\lambda^{N-2}(1-\lambda)\,d\lambda$, the increasing function $\lambda$ and the non-increasing function $h_J$,
+$\E_\nu[\lambda]=\int w\lambda h_J/\int wh_J\le\int w\lambda/\int w=(N-1)/(N+1)$.
+\end{proof}
+
+\begin{remark}
+With the count of \S\ref{sec:bsbound} (memory $1$), (I) alone gives the range $\beta\lesssim0.7824$ \st{numerical}. At $J=J_*$ one
+has $\At_1=0.443739\ldots$ instead of $a_1=\frac12$.
+\end{remark}
+
+\section{Improvement (II): walks with memory, and proof of Theorem~\ref{thm:main}}\label{sec:II}
+
+\subsection{Monotonicity in the coupling}
+\begin{lemma}\label{lem:monotone}
+(M1) For every $\lambda$, $J\mapsto h_J(\lambda)$ is non-increasing on $(0,\infty)$. (M2) For $0<J\le0.44$, $J\mapsto J\,h_J(\lambda)$
+is non-decreasing. Consequently, for $0<J\le J'\le0.44$ and every $N\ge1$, $J\,\rt(N;J)\le J'\,\rt(N;J')$.
+\end{lemma}
+\begin{proof}
+Let $F(x):=\sum_kx^k/(k!(k+1)!)$ and $\varphi(x):=xF'(x)/F(x)$, the mean of $k$ under the weights $x^k/(k!(k+1)!)$, which is
+non-decreasing in $x$ (its logarithmic derivative is a variance). Then $\partial_J\log\rho_J(s)=\frac2J(\varphi(J^2s)-\varphi(J^2))\in
+[-\frac2J\varphi(J^2),0]$, so $\partial_J\log h_J\in[-\frac6J\varphi(J^2),0]$, which is (M1), and $\partial_J\log(Jh_J)\ge\frac1J
+(1-6\varphi(J^2))$. For $J\le0.44$, $J^2\le0.2$ and, since $F\ge1$,
+$\varphi(J^2)\le0.2\,F'(0.2)=\sum_{k\ge1}k\,(0.2)^k/(k!(k+1)!)=0.10683557\ldots<\frac16$: the first $40$ terms are summed in exact
+rational arithmetic, and the tail is at most $t_{41}/(1-0.2/(41\cdot43))<2.5\cdot10^{-128}$, where $t_k:=k(0.2)^k/(k!(k+1)!)$ satisfies
+$t_{k+1}/t_k=0.2/(k(k+2))$. This proves (M2). Hence $J\At_N(J)=\int f_N\cdot(Jh_J)$ is non-decreasing and $\At_{N-1}(J)$ is
+non-increasing, so $J\rt(N;J)$ is non-decreasing ($N=1$: $J\At_1$).
+\end{proof}
+
+\subsection{Counting with a finite memory}
+Let $D:=\{\pm e_1,\pm e_2,\pm e_3\}$ and write a walk through its steps $d_j:=\omega_j-\omega_{j-1}\in D$. Fix $m\ge1$. For $j\ge m+1$
+the \emph{state} before step $j$ is $s=(s_1,\dots,s_m):=(d_{j-1},\dots,d_{j-m})\in D^m$, and the \emph{window count} is
+\[
+N_j^{(m)}:=1+\#\{1\le i\le m:\ \omega_{j-1-i}=\omega_j\}=N(s,d_j),
+\]
+where $N(s,d):=1+\#\{1\le i\le m:\ -(s_1+\dots+s_i)=d\}$ (indeed $\omega_{j-1-i}-\omega_{j-1}=-(s_1+\dots+s_i)$),
+so that $N_j^{(m)}\le N_j$. Let $\rb:\N_{\ge1}\to(0,\infty)$ be non-increasing with $\rb(N)\ge\sup_{N'\ge N}\rt(N')$, and let $T_m$ be
+the operator on functions on $D^m$
+\[
+(T_mf)(s):=\sum_{d\in D}\rb\big(N(s,d)\big)\,f(d,s_1,\dots,s_{m-1}).
+\]
+
+\begin{lemma}[window]\label{lem:window}
+If $H:D^m\to(0,\infty)$ satisfies $T_mH\le\rho'H$ pointwise, then for every $n\ge m$ and every starting point,
+\[
+\sum_{|\omega|=n}\ \prod_{j=1}^{n}\rt(N_j)\ \le\ (6\,\rb(1))^m\,\frac{H_{\max}}{H_{\min}}\,\rho'^{\,n-m},
+\]
+the sum running over all walks of length $n$ in $\Z^3$ from that point.
+\end{lemma}
+\begin{proof}
+For $j\le m$ use $\rt(N_j)\le\rb(1)$; the $6^m$ choices of $(d_1,\dots,d_m)$ give $(6\rb(1))^m$ and run over all states. For $j>m$,
+$\rt(N_j)\le\sup_{N'\ge N_j^{(m)}}\rt(N')\le\rb(N(s,d_j))$. Summing the last $n-m$ steps gives $(T_m^{n-m}\mathbf 1)(s)\le
+(T_m^{n-m}H)(s)/H_{\min}\le\rho'^{\,n-m}H_{\max}/H_{\min}$, since $T_m$ has non-negative coefficients.
+\end{proof}
+
+The hyperoctahedral group $\mathfrak G$ (the $48$ signed permutations of the axes) acts on $D$ and diagonally on $D^m$; since
+$N(gs,gd)=N(s,d)$ and $(d,s_1,\dots,s_{m-1})$ is equivariant, $T_m$ commutes with $\mathfrak G$. For a $\mathfrak G$-invariant $H$
+the inequality $T_mH\le\rho'H$ holds everywhere as soon as it holds at one state of each orbit.
+
+\begin{lemma}[torus]\label{lem:torus}
+Let $L\ge3$. The walks of length $n$ in $X=(\Z/L\Z)^3$ from a site are in bijection with $D^n$, i.e.\ with the walks of length $n$ in
+$\Z^3$ from a lift of that site, and the visit counts on the torus, global and in windows, are at least those of the lift. Hence the
+bound of Lemma~\ref{lem:window} holds for walks on the torus. A walk from $y$ to $x=y-Re_1$ in $X$ has length at least $R$ when
+$R\le L/2$.
+\end{lemma}
+\begin{proof}
+Coincidences in $\Z^3$ project to coincidences in $X$. For $j>m$, $\rt(N_j^{X})\le\rb(N_j^{X,(m)})\le\rb(N_j^{\Z^3,(m)})$ because $\rb$
+is non-increasing. The torus distance of $x$ and $y$ is $\min(R,L-R)=R$.
+\end{proof}
+
+\subsection{The certificate}
+\begin{proposition}[certificate, $m=11$]\label{prop:cert}
+Let $J_*=40674/100000$ and let $p_1,\dots,p_{13}$ be the integers of the weights file of \S\ref{sec:repro}
+($p_1=487\,896\,913\,543$, \dots, $p_{13}=78\,536\,544\,842$); put $\rb_*(N):=p_{\min(N,13)}/2^{40}$. Then:
+\begin{enumerate}
+\item $\rb_*$ is non-increasing and $\rb_*(N)\ge\sup_{N'\ge N}\rt(N';J_*)$ for every $N\ge1$ \st{certified};
+\item there is a $\mathfrak G$-invariant $H:D^{11}\to\N$ with $H_{\min}=663\,930\,282\,413$ and $H_{\max}=2^{40}$ such that, for every
+$s\in D^{11}$,
+\begin{equation}\label{eq:cert}
+2^{30}\sum_{d\in D}p_{\min(N(s,d),13)}\,H(d,s_1,\dots,s_{10})\ \le\ 2639854083\cdot2^{40}\cdot H(s)
+\end{equation}
+\st{certified}, i.e.\ $T_{11}H\le\rho'_*H$ for the weights $\rb_*$;
+\item $\theta_*=J_*\rho'_*=53686712485971/53687091200000<1$ \st{certified}.
+\end{enumerate}
+\end{proposition}
+\noindent The computations and their verification are described in \S\ref{sec:cap}.
+
+\subsection{Proof of Theorem~\ref{thm:main}}\label{sec:proof}
+Let $\beta\in[0,\beta_*]$, so $J=\beta/2\le J_*\le0.44$; for $J=0$ the loop expectation vanishes, so let $J>0$. By \eqref{eq:Gt} it
+suffices to bound $\Gt(x,y)=\sum_nJ^nS_n$, $S_n:=\sum_{\omega:y\to x,\,|\omega|=n}\prod_{j=0}^n\rt(N_j;J)$. By
+Lemma~\ref{lem:monotone}, $J\rt(N;J)\le J_*\rt(N;J_*)$ for all $N$, so for every walk
+$J^n\prod_{j=0}^n\rt(N_j;J)\le\At_1(J)\prod_{j=1}^nJ_*\rt(N_j;J_*)$; only the exact weights are compared, never the rounded ones. By
+Lemmas~\ref{lem:window} and~\ref{lem:torus} with $\rt(\cdot;J_*)$, $\rb_*$, $H$ and $\rho'_*$ (Proposition~\ref{prop:cert}), for
+$n\ge m=11$,
+\[
+J^nS_n\le\At_1(J)\,(6J_*\rb_*(1))^m\,\frac{H_{\max}}{H_{\min}}\,(J_*\rho'_*)^{n-m}=\At_1(J)\,K_0\,\theta_*^{\,n},
+\]
+\begin{equation}\label{eq:K0}
+K_0:=\Big(\frac{6\,\rb_*(1)}{\rho'_*}\Big)^{11}\frac{H_{\max}}{H_{\min}}=3.978058961\ldots .
+\end{equation}
+For $n<m$, bounding each step by $6J_*\rb_*(1)$ gives $J^nS_n\le\At_1(J)(6\rb_*(1)/\rho'_*)^n\theta_*^n\le\At_1(J)K_0\theta_*^n$,
+because $6\rb_*(1)/\rho'_*=1.0829\ldots>1$ and $H_{\max}/H_{\min}\ge1$. Walks from $y$ to $x$ have length $n\ge R$
+(Lemma~\ref{lem:torus}) and $\At_1(J)\le a_1=\frac12$, so $\Gt(x,y)\le\frac12K_0\,\theta_*^R/(1-\theta_*)$, and \eqref{eq:Gt} gives
+$|\langle W_\gamma\rangle|\le(K_0/(1-\theta_*))^T\theta_*^{RT}$. \qed
+
+\begin{remark}[the two improvements separately, and the role of $m$]\label{rem:contrib}
+With the weights $r(N)$ of Borgs and Seiler, the same operators give the spectral radii $\rho_1=17/6$ (the bound of
+\S\ref{sec:bsbound}), $\rho_3=2.7869954984$, $\rho_5=2.7653748962$, $\rho_7=2.7528722513$, $\rho_9=2.7447464071$,
+$\rho_{11}=2.7390488353$; (II) alone therefore gives $\beta<2/\rho_{11}=0.73018$ \st{numerical}. With the weights of (I),
+Table~\ref{tab:memory} lists the thresholds; the increments decrease slowly with $m$ \st{numerical}.
+\end{remark}
+
+\begin{table}[ht]
+\centering\small
+\begin{tabular}{@{}rrllll@{}}
+\toprule
+$m$ & orbits & $J_*$ & $\beta_*$ & $\rho'_*$ & status\\
+\midrule
+$1$ & $1$ & & $0.7824$ & & numerical\\
+$3$ & $11$ & & $0.7972$ & & numerical\\
+$5$ & $236$ & & $0.8044$ & & numerical\\
+$7$ & $6\,896$ & $40432/10^5$ & $0.80864$ & $2655621200/2^{30}$ & certified\\
+$9$ & $226\,496$ & $40574/10^5$ & $0.81148$ & $2646370548/2^{30}$ & certified\\
+$11$ & $7\,821\,056$ & $40674/10^5$ & $0.81348$ & $2639854083/2^{30}$ & certified (Theorem~\ref{thm:main})\\
+$13$ & $276\,294\,656$ & $40749/10^5$ & $0.81498$ & $2635005744/2^{30}$ & certified (Remark~\ref{rem:m13})\\
+\bottomrule
+\end{tabular}
+\caption{Thresholds of the combined method as a function of the memory $m$. For each certified row, $J_*+10^{-5}$ fails the test
+$J\rho'<1$ of the dichotomy (grid $10^{-5}$ in $J$). The numbers of orbits are the Burnside counts $(6^m+3\cdot4^m+15\cdot2^m)/48$.}
+\label{tab:memory}
+\end{table}
+
+\subsection{A tilted bound (new in version~1.1)}\label{sec:tilted}
+The proof of Theorem~\ref{thm:main} bounds $\Gt(x,y)$ by a sum over \emph{all} walks of length $n\ge R$ from $y$, whatever their end
+point. Near the threshold this costs the factor $1/(1-\theta_*)$, and the rate obtained, $-\log\theta_*$, is of order $1-\theta_*$.
+Weighting each step by $e^{\eta\langle\hat e,d\rangle}$, where $\hat e$ is the direction from $y$ to $x$ (as for the tilted walk in the
+proof of \cite[Thm.~7.1]{D7}), keeps the threshold and gives a rate of order $\sqrt{1-\theta_*}$ \st{numerical}, as Table~\ref{tab:tilted}
+shows; the parity of walks in $\Z^3$ halves the constant on even tori. The weights, the window counts and Lemmas~\ref{lem:monotone},
+\ref{lem:window} and~\ref{lem:torus} are those of \S\ref{sec:II}; only the transfer operator and the certificate change. We write $\eta$
+for the tilt and $\sigma_\eta$ for the rate, to avoid confusion with the parameters $\lambda_z$ of the walk expansion and with the string
+tension $\sigma(\beta)$.
+
+For $\hat e\in D$ and $\eta\ge0$, let $T_m^{(\eta,\hat e)}$ act on functions on $D^m$ by
+\[
+(T_m^{(\eta,\hat e)}f)(s):=\sum_{d\in D}\rb\big(N(s,d)\big)\,e^{\eta\langle\hat e,d\rangle}\,f(d,s_1,\dots,s_{m-1}).
+\]
+Lemma~\ref{lem:window} holds for $T_m^{(\eta,\hat e)}$ with the same proof: if $T_m^{(\eta,\hat e)}H\le\rho'H$, the sum over the walks of
+length $n\ge m$ from a point of $\prod_{j=1}^{n}\rt(N_j)\,e^{\eta\langle\hat e,d_j\rangle}$ is at most
+$\big(\rb(1)(e^{\eta}+e^{-\eta}+4)\big)^m(H_{\max}/H_{\min})\,\rho'^{\,n-m}$, because $\sum_{d\in D}e^{\eta\langle\hat e,d\rangle}=e^\eta+e^{-\eta}+4$;
+and Lemma~\ref{lem:torus} transfers this bound to tori. For $g\in\mathfrak G$ one has $N(gs,gd)=N(s,d)$ ($N$ only involves the equalities
+$-(s_1+\dots+s_i)=d$, which the linear map $g$ preserves) and $\langle g\hat e,gd\rangle=\langle\hat e,d\rangle$; so $T_m^{(\eta,g\hat e)}$ is
+conjugate to $T_m^{(\eta,\hat e)}$ by $s\mapsto gs$, and if $T_m^{(\eta,e_1)}H\le\rho'H$ then $T_m^{(\eta,ge_1)}(H\circ g^{-1})\le
+\rho'\,H\circ g^{-1}$, with the same ratio $H_{\max}/H_{\min}$.
+
+\begin{theorem}[tilted bound]\label{thm:tilted}
+Let $m\ge1$ and $0<J_i\le0.44$; let $\rb$ be non-increasing with $\rb(N)\ge\sup_{N'\ge N}\rt(N';J_i)$ for all $N\ge1$; let $\eta\ge0$; and
+let $H:D^m\to(0,\infty)$ and $\rho'>0$ satisfy $T_m^{(\eta,e_1)}H\le\rho'H$. Put
+\[
+\theta:=J_i\rho',\qquad \sigma_\eta:=\eta-\log\theta,\qquad q:=\frac{\rb(1)\,(e^{\eta}+e^{-\eta}+4)}{\rho'},
+\]
+\[
+K_0^{(\eta)}:=\max(1,q)^{m}\,\frac{H_{\max}}{H_{\min}},\qquad C^{(\eta)}:=\frac{K_0^{(\eta)}}{1-\theta^{2}},\qquad
+C_{\rm odd}^{(\eta)}:=\frac{K_0^{(\eta)}}{1-\theta},
+\]
+and assume $\theta<1$. Let $0\le\beta\le2J_i$, and let $\gamma$ be a rectangular loop with sides $R$ along $e_\mu$ and $T$ along $e_\nu$.
+\begin{enumerate}
+\item On the torus $(\Z/L\Z)^4$ with $L$ even and $L\ge\max(4,2R,T+1)$:
+\[
+|\langle W_\gamma\rangle_{L,\beta}|\ \le\ \big[C^{(\eta)}\big(1+e^{-\sigma_\eta(L-2R)}\big)\big]^{T}e^{-\sigma_\eta RT}\ \le\
+\big(2C^{(\eta)}\big)^{T}e^{-\sigma_\eta RT}.
+\]
+\item On the torus with $L$ odd and $L\ge\max(3,2R+1,T+1)$: the same bound with $C_{\rm odd}^{(\eta)}$ in place of $C^{(\eta)}$.
+\item Every weak limit point of $(\mu_{L,\beta})$ along even $L\to\infty$ satisfies
+$|\langle W_\gamma\rangle|\le\big(C^{(\eta)}\big)^{T}e^{-\sigma_\eta RT}$.
+\end{enumerate}
+\end{theorem}
+\noindent Status: \st{proved}, given $H$ and $\rho'$; the instances of Table~\ref{tab:tilted} are \st{certified}
+(Proposition~\ref{prop:tiltcert}). Not formalised in Lean.
+
+\begin{proof}
+Let $J=\beta/2\in(0,J_i]$ (for $J=0$ the expectation vanishes), and let $\hat e\in D$ be the direction from $y$ to $x$ in \eqref{eq:Gt},
+so that $x=y+R\hat e$. As in \S\ref{sec:proof}, Lemma~\ref{lem:monotone} applied to the exact weights gives, for every walk of length $n$,
+$J^{n}\prod_{j=0}^{n}\rt(N_j;J)\le\At_1(J)\prod_{j=1}^{n}J_i\,\rt(N_j;J_i)$.
+
+\emph{Walks in $\Z^3$.} A walk from $y$ to $y+R\hat e$ satisfies $\prod_{j=1}^{n}e^{\eta\langle\hat e,d_j\rangle}=e^{\eta R}$, $n\ge R$ and
+$n\equiv R\pmod2$, since $\Z^3$ is bipartite. Multiplying each term by $e^{-\eta R}\prod_je^{\eta\langle\hat e,d_j\rangle}=1$ and dropping
+the constraint on the end point (all terms are non-negative),
+\begin{equation}\label{eq:tilt1}
+\sum_{\omega:y\to y+R\hat e}J^{|\omega|}\prod_{j=0}^{|\omega|}\rt(N_j;J)\ \le\ \At_1(J)\,e^{-\eta R}\sum_{\substack{n\ge R\\ n\equiv R\,(2)}}
+J_i^{\,n}\sum_{|\omega|=n}\ \prod_{j=1}^{n}\rt(N_j;J_i)\,e^{\eta\langle\hat e,d_j\rangle},
+\end{equation}
+the inner sum running over all walks of length $n$ from $y$. Write $\hat e=ge_1$ with $g\in\mathfrak G$. By the tilted form of
+Lemma~\ref{lem:window} with the vector $H\circ g^{-1}$, $J_i^{\,n}\sum_{|\omega|=n}\cdots\le J_i^{\,n}(q\rho')^m(H_{\max}/H_{\min})\rho'^{\,n-m}=
+q^m(H_{\max}/H_{\min})\,\theta^n\le K_0^{(\eta)}\theta^n$ for $n\ge m$. For $n<m$, bounding every step by $\rb(1)(e^\eta+e^{-\eta}+4)=q\rho'$
+gives $q^n\theta^n\le\max(1,q)^m\theta^n\le K_0^{(\eta)}\theta^n$. Summing the geometric series over $n\ge R$, $n\equiv R$, and using
+$\At_1\le\frac12$, the right side of \eqref{eq:tilt1} is at most $\frac12K_0^{(\eta)}e^{-\eta R}\theta^R/(1-\theta^2)=
+\frac12C^{(\eta)}e^{-\sigma_\eta R}$.
+
+\emph{Tori.} By Lemma~\ref{lem:torus}, a walk from $y$ to $x$ in $X=(\Z/L\Z)^3$ lifts to a unique walk in $\Z^3$ from a fixed lift of
+$y$, ending at a lift of $x$, i.e.\ with displacement $R\hat e+Lk$, $k\in\Z^3$, and the window bound applies with the visit counts of the
+lift (the counts on the torus are larger and $\rb$ is non-increasing). If $\langle\hat e,k\rangle\ge0$, the displacement along $\hat e$ is
+at least $R$, so $e^{-\eta R}\prod_je^{\eta\langle\hat e,d_j\rangle}\ge1$ and these walks are bounded as in \eqref{eq:tilt1}. If
+$\langle\hat e,k\rangle\le-1$, the displacement along $\hat e$ is $R+L\langle\hat e,k\rangle\le R-L\le-R$, so the length is at least $L-R$
+and $e^{-\eta(L-R)}\prod_je^{\eta\langle-\hat e,d_j\rangle}=e^{-\eta(L-R)-\eta(R+L\langle\hat e,k\rangle)}\ge1$; inserting this factor and using
+$T_m^{(\eta,-\hat e)}$, the same argument bounds these walks by $\frac12C^{(\eta)}e^{-\sigma_\eta(L-R)}$. For even $L$ the coordinates of
+$Lk$ are even, so $n\equiv R\pmod2$ for every lift and $L-R\equiv R$. Therefore $\Gt(x,y)\le\frac12C^{(\eta)}e^{-\sigma_\eta R}\big(1+
+e^{-\sigma_\eta(L-2R)}\big)$, and \eqref{eq:Gt} gives item~1. For odd $L$ the parity is not used, $\sum_{n\ge N}\theta^n=\theta^N/(1-\theta)$,
+and the same argument gives item~2. Item~3 follows from item~1, since $e^{-\sigma_\eta(L-2R)}\to0$ and $W_\gamma$ is a bounded continuous
+function of finitely many links.
+\end{proof}
+
+\begin{proposition}[tilted certificates, $m=11$]\label{prop:tiltcert}
+For each row of Table~\ref{tab:tilted}, with $J_i=\beta_i/2$, the weights $\rb(N)=p_{\min(N,13)}/2^{40}$ of the weights file at $J_i$
+(for $J_*$ that of Proposition~\ref{prop:cert}, for the other rows those of Table~\ref{tab:tension}), $e^\eta=a/b$ and the stated
+integer $P$, there is $H:D^{11}\to\N$ with $H_{\max}=2^{40}$ and the stated $H_{\min}$ such that, for every $s\in D^{11}$,
+\begin{equation}\label{eq:tiltcert}
+\sum_{d\in D}c_d\,p_{\min(N(s,d),13)}\,H(d,s_1,\dots,s_{10})\ \le\ P\cdot2^{10}\,ab\,H(s),
+\end{equation}
+where $c_{+e_1}=a^2$, $c_{-e_1}=b^2$ and $c_d=ab$ for the four other steps $d$; that is, $T_{11}^{(\eta,e_1)}H\le(P/2^{30})H$ \st{certified}; moreover $\theta=J_iP/2^{30}<1$ \st{certified}. Consequently
+Theorem~\ref{thm:tilted} holds with $\rho'=P/2^{30}$ and the constants of Table~\ref{tab:tilted}.
+\end{proposition}
+
+\begin{table}[ht]
+\centering\footnotesize\setlength{\tabcolsep}{3.5pt}
+\begin{tabular}{@{}lllllllll@{}}
+\toprule
+$\beta\le$ & $e^\eta$ & $P$ & $H_{\min}$ & $1-\theta$ & $\sigma_\eta\ge$ & $C^{(\eta)}\le$ & $R_{\min}^{\rm lim}\le$ & $R_{\min}^{\rm tor}\le$\\
+\midrule
+$0.81348$ & $201/200$ & $2\,639\,868\,799$ & $663\,255\,845\,757$ & $1.4795\cdot10^{-6}$ & $0.004989$ & $1.3457\cdot10^{6}$ & $2\,829$ & $3\,107$\\
+$0.81348$ & $251/250$ & $2\,639\,863\,512$ & $663\,389\,751\,364$ & $3.4823\cdot10^{-6}$ & $0.003995$ & $5.7164\cdot10^{5}$ & $3\,318$ & $3\,665$\\
+$0.81$ & $10/9$ & $2\,648\,763\,350$ & $647\,937\,564\,146$ & $9.2449\cdot10^{-4}$ & $0.1062$ & $2\,192.6$ & $72.4$ & $85.5$\\
+$0.80$ & $5/4$ & $2\,678\,382\,511$ & $632\,089\,802\,916$ & $2.2247\cdot10^{-3}$ & $0.2253$ & $915.6$ & $30.3$ & $36.5$\\
+$0.70588$ & $7/4$ & $2\,898\,427\,727$ & $568\,404\,757\,891$ & $4.7283\cdot10^{-2}$ & $0.6080$ & $43.8$ & $6.3$ & $8.5$\\
+\bottomrule
+\end{tabular}
+\caption{Tilted certificates with memory $11$ (full state space $D^{11}$, no symmetry reduction) and the constants of
+Theorem~\ref{thm:tilted}. The exact $\theta$ is the rational $J_iP/2^{30}$; $1-\theta$ and $\sigma_\eta$ are rounded down; $C^{(\eta)}$,
+$R_{\min}^{\rm lim}:=\log C^{(\eta)}/\sigma_\eta$ (weak limits) and $R_{\min}^{\rm tor}:=\log(2C_{\rm odd}^{(\eta)})/\sigma_\eta$ (every torus,
+even or odd) are rounded up; beyond these radii the bounds are below $1$. For comparison, Theorem~\ref{thm:main} and Table~\ref{tab:tension}
+give $\sigma\ge7.05\cdot10^{-6}$, $0.0034$, $0.0133$, $0.1159$ and $R_{\min}\approx1.9\cdot10^{6}$, $2.1\cdot10^{3}$, $430$, $31$ (every torus) for
+$\beta\le0.81348$, $0.81$, $0.80$, $0.70588$.}
+\label{tab:tilted}
+\end{table}
+
+\begin{corollary}[string tension, version~1.1]\label{cor:tilted}
+With $\sigma(\beta)$ as in Corollary~\ref{cor:tension}: $\sigma(\beta)\ge0.004989$ for $0<\beta\le\beta_*$, $\sigma(\beta)\ge0.1062$ for
+$0<\beta\le0.81$, $\sigma(\beta)\ge0.2253$ for $0<\beta\le0.80$, and $\sigma(\beta)\ge0.6080$ for $0<\beta\le0.70588$.
+\end{corollary}
+\begin{proof}
+Items~1 and~2 of Theorem~\ref{thm:tilted} cover every $L\ge\max(3,2R,T+1)$ (for odd $L$, $L\ge2R$ is the same as $L\ge2R+1$), with the
+constant $C':=2C_{\rm odd}^{(\eta)}\ge2C^{(\eta)}$, which depends neither on $L$ nor on $T$. Hence
+$-\frac1{RT}\log|\langle W_{R\times T}\rangle_{L,\beta}|\ge\sigma_\eta-(\log C')/R$; let $R\to\infty$ and use Table~\ref{tab:tilted}.
+\end{proof}
+
+\begin{remark}[scope]\label{rem:tiltscope}
+Like Theorem~\ref{thm:main}, Theorem~\ref{thm:tilted} is proved on tori and for weak limits of torus measures. Free spatial boundaries and
+a non-periodic cutting direction are treated neither for Theorem~\ref{thm:main} nor for Theorem~\ref{thm:tilted} (\S\ref{sec:scope}); for
+the tilted operator, the compensation at a free boundary that such an extension would need has not been worked out. The weights files
+are those of version~1.0 (Proposition~\ref{prop:cert} and Table~\ref{tab:tension}), used without recomputation;
+\texttt{c1\_poids\_exacts.py} regenerates them byte for byte.
+\end{remark}
+
+\section{The computer-assisted part}\label{sec:cap}
+
+\subsection{Exact enclosures of the weights}\label{sec:weights}
+Put $u:=1-\lambda$, so that $M_J(u^2)=\sum_kc_kJ^{2k}u^{2k}$, $c_k=1/(k!(k+1)!)$. Truncate at $K=10$: for $s\in[0,1]$,
+$0\le M_J(s)-M_{J,K}(s)\le\tau:=c_{11}J^{22}/(1-J^2/156)$, because $c_{k+1}J^2/c_k=J^2/((k+1)(k+2))\le J^2/156$ for $k\ge11$. Then
+\[
+\Big(\frac{M_{J,K}(u^2)}{M_{J,K}(1)+\tau}\Big)^3\le h_J(\lambda)\le\Big(\frac{M_{J,K}(u^2)+\tau}{M_{J,K}(1)}\Big)^3 .
+\]
+The cubes are polynomials in $u$ with rational coefficients, and $\int_0^1(1-u)^{n-1}u\cdot u^j\,du/(n-1)!=(j+1)!/(n+j+1)!$ exactly.
+This gives rationals $\At_n^{\inf}\le\At_n\le\At_n^{\sup}$ for $n\le12$ (relative width below $10^{-24}$ at $J_*$). Then
+$u_1:=\At_1^{\sup}$, $u_N:=\min(\At_N^{\sup}/\At_{N-1}^{\inf},1/(N+1))$ for $2\le N\le12$, $u_{13}:=1/14$ (which bounds $\rt(N)$ for all
+$N\ge13$ by Lemma~\ref{lem:revisit}), $\bar W_n:=\max(u_n,\dots,u_{13})$ and $p_n:=\lceil2^{40}\bar W_n\rceil$. By construction
+$\rb_*(N)=p_{\min(N,13)}/2^{40}\ge\sup_{N'\ge N}\rt(N')$, which is item~1 of Proposition~\ref{prop:cert}. Everything is computed with
+Python fractions (program \texttt{c1\_poids\_exacts.py}).
+
+\subsection{The integer Perron certificate}\label{sec:perron}
+The program \texttt{tm\_cert.c} enumerates one representative per orbit of $\mathfrak G$ on $D^m$ (canonical form, with $s_1$ the most recent step: $s_1=+e_1$;
+the first $s_i$ off the $e_1$-axis equal to $+e_2$; the first $s_i$ along the third axis equal to $+e_3$), computes the transitions and window
+counts, runs a floating-point power iteration, and rounds the approximate Perron vector to integers $H:=\max(1,\lfloor2^{40}h/
+h_{\max}\rfloor)$. It then sets $A:=\max_s\lceil2^{30}\sum_dp_{\min(N(s,d),13)}H(s'_d)/(2^{40}H(s))\rceil$ (exact integer division) and
+re-checks \eqref{eq:cert} for every representative in unsigned $128$-bit integer arithmetic; $\rho'=A/2^{30}$. Floating point only
+serves to find $H$; the inequality is checked exactly. For $m=11$ there are $7\,821\,056$ representatives and $A=2639854083$.
+
+\emph{Exhaustiveness of the representatives.} The table is closed under transitions (every successor state lies in a represented
+orbit), and from any state every state is reached in exactly $m$ transitions (choose the $m$ new steps); so a non-empty closed table
+meets every orbit. In addition, its size equals the Burnside count $(6^m+3\cdot4^m+15\cdot2^m)/48$ and no two entries lie in the same
+orbit.
+
+\subsection{Independent verifications}\label{sec:indep}
+\begin{itemize}
+\item \emph{Second program.} \texttt{verif\_cert.c}, written by the same author as \texttt{tm\_cert.c} but with independent
+implementation choices, re-verifies the certificate: an orbit is identified by
+the minimal base-$6$ code among its $48$ images under explicitly constructed group elements (not by the canonical form of
+\texttt{tm\_cert}); window counts are recomputed by explicit tracking of positions; it checks that the entries lie in distinct orbits,
+that every transition lands in a represented orbit, that $H\ge1$, and \eqref{eq:cert} in $128$-bit integers. Result for $m=11$: zero
+violations, zero missing transitions (also for $m=7,9,13$).
+\item \emph{Full state space, $m=11$.} A third program, written in a separate session for an adversarial verification without reusing \texttt{tm\_cert} or
+\texttt{verif\_cert}, extends $H$ to all $6^{11}=362\,797\,056$ raw states through orbit look-up and checks \eqref{eq:cert} state by
+state, with no symmetry argument: zero violations, largest ratio of the two sides $0.999999999788$. It also recomputes the Perron
+root on the raw states: $2.4585557007\ldots<\rho'_*$ \st{numerical}.
+\item \emph{Memory $13$.} \texttt{verif\_cert} (zero violations), the third program (all $276\,294\,656$ representatives and
+$2\cdot10^8$ random raw states), and a fourth program written by another reviewer (all representatives, $10^7$ random raw states, Burnside count,
+weights recomputed in exact rationals with bounded tails): no violation; largest ratio $0.9999999999166$.
+\item \emph{Weights.} The bounds $\rb_*(N)\ge\sup_{N'\ge N}\rt(N';J_*)$ were re-derived by a different method (ball arithmetic in Arb
+\cite{Joh17}: series of the cube in $(1-\lambda)^2$ with exactly known total sum, $M_J(1)$ from Arb's Bessel functions, and a
+rigorous comparison with $p_n/2^{40}$) for $m=11$, $m=13$ and all rows of Table~\ref{tab:tension}; and independent quadratures
+(tanh--sinh and Gauss--Legendre) reproduce $p_1,p_2,p_3$ after rounding \st{numerical}.
+\item \emph{Arithmetic of item~3.} $J_*\rho'_*<1$ is checked with exact fractions.
+\end{itemize}
+
+\subsection{A guard against silent truncation}\label{sec:guard}
+In python-flint, operations on power series (\texttt{arb\_series}) are silently truncated at the length \texttt{ctx.cap}, whose
+default is $10$, below the $61$ coefficients of the cube of a polynomial of degree $20$. The cross-check \texttt{c2\_poids\_flint.py}
+computes the enclosures of \S\ref{sec:weights} in Arb both with polynomials (no truncation) and with series for
+$\texttt{cap}\in\{10,30,60,61,80\}$, and requires that the large caps reproduce the polynomial computation and that $\texttt{cap}=10$
+differs from it: the relative deviation is $3.8\cdot10^{-7}$ at $\texttt{cap}=10$ (truncation detected) and $0$ at
+$\texttt{cap}\ge60$. The Arb balls (200 bits, relative radius below $8\cdot10^{-59}$) have centres within $10^{-14}$ of the exact
+rationals of \S\ref{sec:weights}; this is a cross-check, the certification being the exact rational computation. The independent Arb
+computation of \S\ref{sec:indep} fixes \texttt{ctx.cap} explicitly and detects the same truncation (a series of length $10$ instead of
+$40$).
+
+\subsection{Validation of the counting programs}
+With the weights of Borgs and Seiler, $r(1)=\frac12$, $r(N)=1/(N+1)$, the programs reproduce $\rho_1=17/6$, hence $12/17$, and the
+values $\rho_3,\dots,\rho_{11}$ of Remark~\ref{rem:contrib}; these values coincide with those of a program written independently
+(see the statement on the use of AI), and the numbers of orbits $1,3,11,48,236,1248,6896,39168,226496,1325568,7821056$ ($m=1,\dots,11$) are the Burnside
+counts.
+
+\subsection{Tilted certificates (version~1.1)}\label{sec:tiltcap}
+The program \texttt{cert\_incline11.c} works on the full state space $D^{m}$ ($6^{11}=362\,797\,056$ states for $m=11$, no symmetry
+reduction; base-$6$ code with the most recent step $s_1$ as leading digit). It computes the window counts, runs a floating-point power
+iteration for $T_m^{(\eta,e_1)}$ ($50$ to $57$ iterations for the runs of Table~\ref{tab:tilted}), rounds the vector up,
+$H:=\max(1,\lceil2^{40}h/h_{\max}\rceil)$, sets $P:=\lceil2^{30}\rho_{\rm fl}(1+10^{-9})\rceil+1$, where $\rho_{\rm fl}$ is the largest ratio
+$(T_mh)(s)/h(s)$ of the last iteration, and checks \eqref{eq:tiltcert} for every state in unsigned $128$-bit integers (both sides are
+below $2^{107}$ for $a,b\le4096$). For $m=11$ a run takes $34$ to $39$\,s on $8$ cores and about $11$\,GB of memory. With the weights of
+Borgs and Seiler and $\eta=0$ it reproduces $\rho_1=17/6$, $\rho_3$ and $\rho_5$ of Remark~\ref{rem:contrib}.
+
+A second program, \texttt{b7\_verif11.py}, re-checks each certificate on all states. It was written separately by the same author
+as \texttt{cert\_incline11.c}, but with independent implementation choices (as for \texttt{verif\_cert} in \S\ref{sec:indep}): the
+states are indexed with the opposite digit order and $H$ is read through the digit permutation; successors and window counts are recomputed from the
+digits, the counts by explicit tracking of positions; and \eqref{eq:tiltcert} is checked exactly with $22$-bit limbs in $64$-bit integers,
+without $128$-bit arithmetic. For the five certificates of Table~\ref{tab:tilted} it finds zero violations on all $362\,797\,056$ states;
+the smallest relative margins correspond to $4.05$ to $4.56$ units of $P$ (floating-point estimate), and with $P-5$ it reports violations
+for each of them; with $P$ lowered by $10^{-5}$ in relative terms it reports violations as well. The numbers $\theta$, $K_0^{(\eta)}$, $C^{(\eta)}$ and $C^{(\eta)}_{\rm odd}$ are computed in exact rationals, and
+$\sigma_\eta$ and the logarithms in Arb balls at $128$ and $256$ bits, which are required to overlap (\texttt{b7\_constantes.py}); a
+second program written separately during the review of this version (\texttt{checks/table4\_fractions.py}: exact fractions and
+$60$-digit decimal logarithms, without Arb) gives the same values.
+
+The six vectors $H$ ($2\,902\,376\,448$ bytes each: the five certificates of Table~\ref{tab:tilted} and the run at $\eta=0$ of
+Remark~\ref{rem:twocert}) are supplied, compressed with \texttt{xz}, in the Zenodo record of this version; they are too large for
+GitHub. \texttt{cert\_incline11} also regenerates them byte for byte, in about $40$\,s each on $8$ cores, on x86-64 with gcc and no
+machine-specific options (checked for all six: the regenerated vectors have the listed fingerprints); their SHA-256 are listed in
+\path{supplement_v1.1}. On another platform the floating-point iteration may round differently; a vector obtained in this way is again a
+valid certificate if it passes the exact check, but its $H_{\min}$, its $P$ and the constants of Table~\ref{tab:tilted} may then differ
+slightly.
+
+\begin{remark}[two certificates at $\eta=0$]\label{rem:twocert}
+Run with $\eta=0$ at $J_*$, \texttt{cert\_incline11} returns $P=2\,639\,854\,087$ and $H_{\min}=663\,930\,282\,414$, whereas
+Proposition~\ref{prop:cert} has $A=2\,639\,854\,083$ and $H_{\min}=663\,930\,282\,413$. The difference comes from the choice of the integer,
+not from the operator or the weights. The floating-point Perron root is $\rho_{\rm fl}=2.45855570066\ldots$, the value found on the raw
+states in \S\ref{sec:indep}; thus $2^{30}\rho_{\rm fl}=2\,639\,854\,082.44$, the relative margin of $10^{-9}$ gives
+$2\,639\,854\,085.08$, and rounding up and adding $1$ gives $P$. \texttt{tm\_cert} instead takes the smallest integer admissible for its
+vector (\S\ref{sec:perron}). With the vector of \texttt{cert\_incline11} the smallest admissible integer is also $A$:
+\texttt{b7\_verif11.py} finds zero violations on all $6^{11}$ states with $P=A$, and violations with $P=A-1$. The two vectors come from different floating-point iterations (on orbits in \texttt{tm\_cert}, on raw states here) and
+are rounded in opposite directions (down in \texttt{tm\_cert}, up here), hence the difference of one unit in $H_{\min}$. Both certificates are
+valid: the published one was re-checked for version~1.1 with \texttt{verif\_cert} (zero violations, ``CERTIFICAT VALIDE'';
+\path{supplement_v1.1/data/verif_cert_published_m11.log} records the command and the SHA-256 of the file checked), and the new one
+with \texttt{b7\_verif11.py} (zero violations on all $6^{11}$ states). Theorem~\ref{thm:main} uses the published certificate.
+\end{remark}
+
+\section{Consistency tests (not part of the proof)}\label{sec:checks}
+
+\subsection{One-dimensional slabs}
+On the chain $\Z$, a tree, the ratio of partition functions factorises exactly, $Z(\bs J^\lambda)/Z(J)=\prod_\ell\rho_J(s_\ell)$, so
+\eqref{eq:walk} with the exact factor must reproduce the exact correlation $\E[q_0\cdot q_R]=u^R$, $u:=I_2(2J)/I_1(2J)$; these chains
+are the slabs of the two-dimensional theory. For two sites this identity was checked analytically (the walks have length $2k+1$ and
+the sum reduces to $(J/I_1(2J))\sum_nJ^{2n+1}/(n!(n+2)!)=I_2(2J)/I_1(2J)$). For $R\le4$ and $J\in\{0.2,0.4,0.6\}$ the sum over
+\emph{all} walks, organised by edge-crossing numbers without truncation in length, agrees with $u^R$ to $9\cdot10^{-29}$,
+$4\cdot10^{-21}$ and $9\cdot10^{-17}$ respectively (truncation of the series in $\lambda$) \st{numerical}. With the Cauchy--Schwarz
+factor adapted to two edges per site, $h=\rho_J((1-\lambda)^2)$, the bound $2\Gt(R)$ exceeds $u^R$ by the factors of
+Table~\ref{tab:2d}: (I) is not too strong, and its loss is small in this case.
+
+\begin{table}[ht]
+\centering\small
+\begin{tabular}{@{}lllll@{}}
+\toprule
+$J\backslash R$ & $1$ & $2$ & $3$ & $4$\\
+\midrule
+$0.2$ & $1.00443$ & $1.00554$ & $1.00665$ & $1.00776$\\
+$0.4$ & $1.01755$ & $1.02196$ & $1.02639$ & $1.03083$\\
+$0.6$ & $1.03889$ & $1.04871$ & $1.05862$ & $1.06863$\\
+\bottomrule
+\end{tabular}
+\caption{Ratio $2\Gt(R)/u^R$ on the chain $\Z$, with the site-by-site factor $h=\rho_J((1-\lambda)^2)$ \st{numerical}.}
+\label{tab:2d}
+\end{table}
+
+\subsection{The \texorpdfstring{$O(4)$}{O(4)} model at order \texorpdfstring{$J^3$}{J\^{}3}: sensitivity of (I)}
+For the untwisted $O(4)$ model on $\Z^3$ with weight $\exp(2J\sum q_x\cdot q_y)$, the nearest-neighbour correlation is
+$\E[q_0\cdot q_{e_1}]=u+4u^3+O(J^5)=\frac J2+\frac5{12}J^3+O(J^5)$ (the four paths of length three that close a plaquette with the
+edge each contribute $u^3$; checked on a ring of four sites by a character expansion). Exact symbolic computation of the walk
+expansion at this order gives: with the exact factor $c(\lambda)$, $\frac J2+\frac5{12}J^3$ (equality); with the site-by-site factor
+$h=\rho^3$, $\frac J2+\frac{23}{36}J^3$, above the true value; with $h=\rho^k$ the coefficient is $\frac{25}{18}-\frac k4$, below the
+true value for $k>35/9$. An error of one whole edge per site in Corollary~\ref{cor:site} (e.g.\ $\rho^4$) would therefore be detected
+at this order; an error of half an edge would not.
+
+\subsection{The limit of infinite magnetic coupling}\label{sec:O4}
+In the finite-temperature setting of \cite{BS83} (electric and magnetic couplings $J_E,J_M$, $L_0$ time layers), the inequalities of
+\S\S\ref{sec:I}--\ref{sec:II} involve only the electric coupling and the positivity of the transfer matrix. For $L_0=1$ and
+$J_M\to\infty$ the horizontal links become pure gauge and a slab becomes the untwisted $O(4)$ model on $\Z^3$ with coupling
+$2J_E$ per edge ($2J=\beta$ in the isotropic case); the argument then asserts exponential decay of its two-point function for
+$2J_E<0.81348$ (or $0.81498$). This is consistent with the Monte Carlo estimates of the critical coupling of the $O(4)$ model on the
+simple cubic lattice with action $-\beta\sum s_x\cdot s_y$, $\beta_c=0.935861(8)$ (the Monte Carlo value retained in
+\cite[Tables~3--4]{CH98}) and $0.9360(1)$ \cite{KK95}: the margin is a factor $1.15$. This case is not a statement of this note; it is a sanity check,
+since no bound that is uniform in $J_M$ can hold beyond the critical coupling of the $O(4)$ model.
+
+\section{Discussion}\label{sec:discussion}
+
+\subsection{Scope and limitations}\label{sec:scope}
+\begin{itemize}
+\item \emph{Tori only.} Corollary~\ref{cor:site} uses that every site of the spatial torus has exactly six edges, and the trace
+formula \eqref{eq:trace} uses periodicity in the cutting direction. For other boundary conditions the factor $h$ must be adapted
+(sites with $k<6$ edges receive $\rho^{k/2}\ge\rho^3$), which we have not done. In infinite volume we only obtain the weak limit
+points of torus measures; by contrast the range $\beta<2/3$ of \cite[Thm.~7.1]{D7} holds for every Gibbs measure.
+\item \emph{Loops and constants.} Only planar rectangular loops are treated, with $R\le L/2$ and $T\le L-1$. The string tension of
+Theorem~\ref{thm:main} is tiny near the threshold ($7\cdot10^{-6}$ at $\beta_*$), and the bound is non-trivial only for
+$R>R_{\min}\approx1.9\cdot10^6$ there. Theorem~\ref{thm:tilted} (version~1.1) raises the lower bound on the tension at $\beta_*$ to $0.004989$
+and lowers $R_{\min}$ to about $3.1\cdot10^{3}$ on every torus ($2.8\cdot10^{3}$ in the weak limits); the method still gives a range rather than a good tension (Remark~\ref{rem:table}).
+\item \emph{Tilted bound.} Theorem~\ref{thm:tilted} is proved, like Theorem~\ref{thm:main}, on tori (even and odd) and for weak
+limits; free spatial boundaries and a non-periodic cutting direction are not treated (Remark~\ref{rem:tiltscope}). It is not formalised
+in Lean; its certificates ($2.9$\,GB each) are supplied in compressed form in the Zenodo record and can be regenerated
+(\S\ref{sec:tiltcap}).
+\item \emph{Verification.} The proof is computer-assisted and has been checked by machine only (\S\ref{sec:status}). The
+certificates for $m=11$ (Proposition~\ref{prop:cert} and the tilted ones) are supplied; the one for $m=13$ is described by its hash.
+\item \emph{Limits of the method} \st{numerical}. With the weights of Borgs and Seiler, an exact enumeration of the walks up to length
+$14$ and an extrapolation give a growth rate $\mu_\infty\approx2.726$--$2.731$, so that the count alone is limited to about $0.733$;
+with the weights of (I), the certified thresholds of Table~\ref{tab:memory} appear to converge slowly to about $0.82$. Memory $15$
+would require about $10^{10}$ orbits. Replacing the worst case of six visited neighbours in Corollary~\ref{cor:site} by the actual
+number would give $0.8060$ instead of $0.7824$ at memory $1$; this information is not local along the walk, and we have not found a
+finite-memory rule that uses it.
+\item \emph{Not used.} Borgs and Seiler remark that the perimeter decay of the characters $\Tr U_{C_m}$ could be used to sharpen
+their bound on $J$ \cite[second (B.14), p.~377]{BS83}; they give no number, and we do not use it. The improvements
+only involve the electric coupling and the positivity of the transfer matrix, so they should apply to the finite-temperature setting
+of \cite{BS83} as well; we have not written this out.
+\end{itemize}
+
+\subsection{Comparison with heuristic values}\label{sec:heur}
+Fr\"ohlich's lecture notes state, ``in mean'' \cite[p.~24, (6.14)--(6.16)]{Fro80a} or ``in measure'' \cite[p.~20,
+(34)--(35)]{Fro80b}, a decay estimate $F\lesssim e^{-\alpha|\gamma|}$ for the slab factors of a walk expansion, with
+$\alpha>-\ln[(2D-3)(D-1)(4D-4)^{-1}\beta_0]$, and conclude area decay for $\beta_0<4/5$ when $D=4$ \st{read}. \cite[p.~24]{Fro80a}
+adds that ``(6.14) is only a rough estimate''; \cite[p.~20]{Fro80b} attributes the estimate to the preprint of \cite{DF80}, whose refined
+estimates are stated with proofs announced to ``appear elsewhere'' \cite[preprint pp.~55, 57]{DF80}. We know of no proof, and treat
+$4/5$ as a heuristic value.
+
+For $D=4$ the condition reads $5\cdot\beta_0/4<1$. Here $5=2D-3$ is the number of non-backtracking continuations of a walk in
+$\Z^3$, and $\beta_0/4$ is the weight of a step to a new site in the walk expansion when $\beta_0$ is the coupling of the slab
+$\sigma$-model. In the true slab model this coupling is $\beta$ (Lemma~\ref{lem:slab}), as follows after correcting the factor $2$ of
+\cite{DF80} discussed in \cite[\S7.2]{D7}; in this reading the announced range is $\beta<4/5$. Read literally, with $\beta_0$ the
+coefficient of $\ReTr$ (\cite[p.~22]{Fro80b} writes $\beta\equiv2\beta_0$), it would be $\beta<8/5$.
+
+In the first reading, $5\beta/4<1$ is the small-$\beta$ linearisation of the following \emph{non-backtracking heuristic}, which we
+formulate here (we do not attribute it to a source)
+\[
+5\,u(\beta)<1,\qquad u(\beta):=\frac{I_2(\beta)}{I_1(\beta)}=\frac\beta4-\frac{\beta^3}{96}+O(\beta^5),
+\]
+where $u(\beta)$ is the exact correlation $\E[q_x\cdot q_y]$ across a single edge of coupling $\beta$; $5u(\beta)=1$ at
+$\beta=0.822225$ \st{numerical}. Our rigorous range $0.81348$ ($0.81498$ with memory $13$) lies above $4/5$ and below $0.8222$
+(at $\beta_*$, $5u(\beta_*)=0.9899$), and the thresholds of Table~\ref{tab:memory} seem to approach about $0.82$. The new number is
+therefore best read as a rigorous realisation of most of a known heuristic, rather than as an unexpected value.
+
+\section{Reproducibility}\label{sec:repro}
+The supplementary folder contains the programs and data below; comments and messages in the programs are in French. SHA-256
+fingerprints:
+
+\begin{center}\footnotesize
+\begin{tabular}{@{}l@{}}
+\toprule
+\path{certification/c1_poids_exacts.py}\\
+\quad{\scriptsize\texttt{8efd0508f3e21ef0db82df056cfc96b6154d8d14a255590feb4dab7a0b618396}}\\[2pt]
+\path{certification/c2_poids_flint.py}\\
+\quad{\scriptsize\texttt{6c82f6c30d24a2d993be06fbce6f219f5af4587a80756b94a9db6c1a33c3a939}}\\[2pt]
+\path{certification/c3_seuil.py}\\
+\quad{\scriptsize\texttt{6c1d5397fa2a5f4dd43b4f0f01437c65d8cf947d22871c988b2dc2af27a0fab1}}\\[2pt]
+\path{certification/tm_cert.c}\\
+\quad{\scriptsize\texttt{acf257f9344311e74f04540aff7f95cefb55fc8a8e34296e2080cb12fcc98749}}\\[2pt]
+\path{certification/verif_cert.c}\\
+\quad{\scriptsize\texttt{ebdfacb544f967480c8849da6fad8603f4afa1018dd740793a74a4f2bade33ca}}\\[2pt]
+\path{data/poids_m11_J40674_100000.txt}\\
+\quad{\scriptsize\texttt{28c789d9a8096a71bc46ba8a9a8bde25e360af4896e0e8f4c6964e9448419317}}\\[2pt]
+\path{data/certificat_h_m11_J40674_100000.bin.xz} (8\,780\,360 bytes, \texttt{xz -9e})\\
+\quad{\scriptsize\texttt{776f4f27be0aabb32ec81050883448b4004db11289b2a1cf338614e188bbc1e4}}\\[2pt]
+\path{data/certificat_h_m11_J40674_100000.bin} (125\,136\,920 bytes, unpacked)\\
+\quad{\scriptsize\texttt{b50d3769b0ea17d1da13f4e870a7786407192a9885ecceb390ef18cde50cf142}}\\[2pt]
+\path{data/poids_m13_J40749_100000.txt}\\
+\quad{\scriptsize\texttt{fcdc6bc36d8fd9de3da60bee15c421ca0a2b0e4119f403dbd39d21085b63c706}}\\[2pt]
+\path{certificat_h_m13_J40749_100000.bin} (4\,420\,714\,520 bytes, not supplied)\\
+\quad{\scriptsize\texttt{c8ad0deb4a5ec86f8fb3cc5802feaee9a3e1273cb8e14883ccf52ff4590082c7}}\\[2pt]
+\bottomrule
+\end{tabular}
+\end{center}
+
+\medskip
+\noindent\emph{The memory-$11$ certificate} is supplied in compressed form, as \path{data/certificat_h_m11_J40674_100000.bin.xz};
+running \texttt{xz -dk certificat\_h\_m11\_J40674\_100000.bin.xz} in \path{data/} recreates the file \path{data/certificat_h_m11_J40674_100000.bin}
+of the table (same SHA-256) and keeps the compressed file. The uncompressed file is also deposited on Zenodo, in the record of this note.
+
+\noindent\emph{Formats.} A weights file contains $2^{40}$, the number $13$, then $p_1,\dots,p_{13}$. A certificate file contains, in
+little-endian 64-bit words, the number $n$ of representatives, their $n$ codes $\sum_id_i6^{m-i}$ (directions $0{:}+e_1$, $1{:}-e_1$,
+\dots, $5{:}-e_3$, $d_1$ the most recent step), the $n$ values of $H$, then $A$ and $B=2^{30}$.
+
+\noindent\emph{Commands} (run in \path{supplement/}; \path{w.txt}, \path{c1.json}, \path{H.bin} are output files):
+{\footnotesize
+\begin{verbatim}
+python3 certification/c1_poids_exacts.py 40674 100000 12 10 w.txt c1.json
+python3 certification/c2_poids_flint.py 40674 100000 data/c1_J40674.json
+gcc -O3 -fopenmp -o certification/tm_cert certification/tm_cert.c -lm
+certification/tm_cert 11 w.txt H.bin
+gcc -O3 -fopenmp -o certification/verif_cert certification/verif_cert.c
+(cd data && xz -dk certificat_h_m11_J40674_100000.bin.xz)
+certification/verif_cert 11 data/poids_m11_J40674_100000.txt \
+                            data/certificat_h_m11_J40674_100000.bin
+\end{verbatim}}
+\noindent The first command recreates the weights file byte for byte; the second runs the Arb cross-check with the truncation guard
+(it needs a Python interpreter with python-flint installed); \texttt{tm\_cert} recreates a certificate, and \texttt{c3\_seuil.py} runs the dichotomy in $J$ by calling it;
+\texttt{xz -dk} unpacks the supplied certificate; the last command prints \texttt{CERTIFICAT VALIDE} (``certificate valid''). Item~3 of Proposition~\ref{prop:cert} is the
+Python test
+{\footnotesize
+\begin{verbatim}
+from fractions import Fraction; Fraction(40674,100000)*Fraction(2639854083,2**30) < 1
+\end{verbatim}}
+
+\noindent The folder \path{checks/} contains the programs and logs of the independent verifications of \S\S\ref{sec:indep} and
+\ref{sec:checks}. The runs used Python~3.14.4, python-flint~0.9.0, gcc~15.2.0 on x86-64. For $m=13$, \texttt{verif\_cert} took
+$2$\,min\,$36$\,s on $8$ cores with $10.8$\,GB of resident memory, and the certificate was generated in about $20$ minutes.
+
+\medskip
+\noindent\emph{Formalisation in Lean.} The folder \path{lean/} is a Lean~4 project (Lean~4.34.0, Mathlib v4.34.0) that states
+Theorem~\ref{thm:main} for the Wilson measure on the torus $(\Z/L\Z)^4$, with the normalised Haar measure on $SU(2)\cong S^3$, and proves
+part of its proof; the commands to rebuild it are in \path{supplement/README.md}. The statement is written for the rectangle with a
+corner at the origin in the plane of the first and fourth axes (the other loops follow by symmetries of the torus, which are not
+formalised), and the expectation is the quotient of the two Haar integrals (the integrability of the integrands, which is clear for bounded
+continuous functions on a compact space, is not formalised). Its status is as follows.
+\begin{itemize}
+\item \emph{Proved in the Lean kernel} (axioms \texttt{propext}, \texttt{Classical.choice} and \texttt{Quot.sound} only; no
+\texttt{sorry}, no \texttt{native\_decide}; the main theorems and their closure, $43\,458$ declarations, were also accepted by the
+independent kernel nanoda): the combinatorial part of the proof, namely the Perron-type bound on the weighted walk counts,
+Lemmas~\ref{lem:window} and~\ref{lem:torus}, the step-by-step reading $\prod_z\At_{n_z}=\prod_j\rt(N_j)$ of \eqref{eq:Gt}, the bound
+$|\omega|\ge R$ and the geometric series; the correctness of the certificate checker, for \emph{every} function $H$; the certificates of
+memory $m=3$, $4$ and $5$, by \texttt{decide +kernel} on the $6^m$ raw states (those of $m=3,4$ correspond to $\beta\le0.79718$, above
+$12/17$, and that of $m=5$ to $\beta\le0.80438$); the final arithmetic in exact rationals ($\theta_*<1$, $3.978<K_0<3.979$,
+$563\,935<C_*<563\,936$); the elementary facts $\At_n>0$ and $\At_1\le\frac12$; and the junction theorem
+\texttt{theoreme1\_de\_verifiePar}: for every function $H$ such that the checker returns \texttt{true} on the memory-$11$ data, and under
+the three hypotheses below, $|\langle W_\gamma\rangle|\le C_*^T\theta_*^{RT}$ for $\beta\le0.81348$.
+\item \emph{Established by compiled execution} (the trust is in the Lean and C compilers and in the runtime, not in the kernel): the
+memory-$11$ certificate, checked on all $6^{11}=362\,797\,056$ raw states by the very function whose correctness is proved above. The
+values of $H$ are read from the file of \texttt{tm\_cert}; since the correctness holds for every $H$, a faulty reading could give
+\texttt{true} only if the values read were themselves a valid certificate.
+\item \emph{Assumed}, as the three fields of the structure \texttt{HypothesesBS}: (i)~the reduction $|\langle W_\gamma\rangle|\le2^T\Gt^T$
+of \eqref{eq:Gt}, which gathers the slab decomposition, the walk representation, the trace formula, Lemma~\ref{lem:pw},
+Propositions~\ref{prop:strict} and~\ref{prop:holder} and Corollary~\ref{cor:site} (\S\S\ref{sec:bs}--\ref{sec:I}); (ii)~the monotonicity of
+Lemma~\ref{lem:monotone}; (iii)~the certified bounds on the weights, $\rt(N;J_*)\le p_{\min(N,13)}/2^{40}$
+(Proposition~\ref{prop:cert}(1); the rational enclosures of \S\ref{sec:weights} are not redone in Lean).
+\end{itemize}
+Thus the Lean theorem for $\beta\le0.80438$ (memory $5$, the three hypotheses taken at $J_*=40219/10^5$ with the corresponding weights)
+rests on these three hypotheses alone, and the theorem for $\beta\le0.81348$ rests on them and on the compiled execution.
+
+\medskip
+\noindent\emph{Version~1.1.} The folder \path{supplement_v1.1/} contains the programs of \S\ref{sec:tiltcap}, the weights files at
+$J=0.405$, $0.40$ and $0.35294$ (the one at $J_*$ is \path{data/poids_m11_J40674_100000.txt} of \path{supplement/}), the outputs of the
+runs, the re-check of the published certificate, and the SHA-256 of the vectors $H$ (\path{data/SHA256_H.txt}); see its
+\path{README.md}. SHA-256 fingerprints:
+
+\begin{center}\footnotesize
+\begin{tabular}{@{}l@{}}
+\toprule
+\path{certification/cert_incline11.c}\\
+\quad{\scriptsize\texttt{0dc2e7b0c881fee30d44e0bdbc942a0914e1afd4db520205e441b6cc38d3d0c1}}\\[2pt]
+\path{certification/b7_verif11.py}\\
+\quad{\scriptsize\texttt{38f063a2e49f2e6ef50ca3eb8f860607e818514434a16140e3c2f8d5992f8a07}}\\[2pt]
+\path{certification/b7_constantes.py}\\
+\quad{\scriptsize\texttt{c494a362d3e426203a3594848d70748076f962c37fd9ce1ab044671c7104f7c8}}\\[2pt]
+\path{data/poids_m11_J40500_100000.txt}\\
+\quad{\scriptsize\texttt{cc1eda638c4b6cce2c781ab96b067a712f3e9ba5b402480a4a00dd49071fc59c}}\\[2pt]
+\path{data/poids_m11_J40000_100000.txt}\\
+\quad{\scriptsize\texttt{cf8d8e869249f53512831b8df98c5051aad580912885d6f96bf271cd68ee6b83}}\\[2pt]
+\path{data/poids_m11_J35294_100000.txt}\\
+\quad{\scriptsize\texttt{17d23b03b618479f3f89cb2eab8757673edcd22454d779e177c1621dc9e0fab4}}\\[2pt]
+\path{checks/table4_fractions.py}\\
+\quad{\scriptsize\texttt{ccdc7486543c600dc591bd444be8706cbe867d2c4ad87fc6a0a00a9f64854678}}\\[2pt]
+\path{data/SHA256_H.txt} (fingerprints of the six vectors $H$, $2\,902\,376\,448$ bytes each, on Zenodo)\\
+\quad{\scriptsize\texttt{e0a76870a73d4745d4ae2f1fe02d661d68e081da8ac07f80631a365279436a39}}\\[2pt]
+\bottomrule
+\end{tabular}
+\end{center}
+
+\noindent\emph{Commands} (in \path{supplement_v1.1/}, after copying \path{poids_m11_J40674_100000.txt} from \path{supplement/data/} into
+\path{data/}; \path{H.bin} is an output file of $2.9$\,GB):
+{\footnotesize
+\begin{verbatim}
+gcc -O3 -fopenmp -o certification/cert_incline11 certification/cert_incline11.c -lm
+certification/cert_incline11 11 data/poids_m11_J40674_100000.txt 201 200 H.bin
+python3 certification/b7_verif11.py 11 data/poids_m11_J40674_100000.txt \
+        201 200 H.bin 2639868799
+sha256sum H.bin
+python3 certification/b7_constantes.py data data
+python3 checks/table4_fractions.py data
+\end{verbatim}}
+\noindent The second command prints the certificate of the first row of Table~\ref{tab:tilted} (zero violations), the third re-checks
+it, the fourth must give the fingerprint of \path{H_J40674_a201_b200.bin} in \path{data/SHA256_H.txt}, and the last two recompute the
+constants of Table~\ref{tab:tilted} with two separate programs (the first of them needs python-flint). The other rows are obtained with
+the weights files and the integers $a,b$ of the table. Instead of the second command, the vector can be unpacked from the file
+\path{H_J40674_a201_b200.bin.xz} of the Zenodo record (\texttt{xz -dk}), whose name then replaces \path{H.bin} in the next two commands.
+
+\section*{Use of AI}\label{sec:ai}
+\addcontentsline{toc}{section}{Use of AI}
+The work reported here was carried out with AI models, under the author's direction.
+\begin{itemize}
+\item \emph{Claude Opus~5.5 (Anthropic)} wrote the proof (\S\S\ref{sec:bs}--\ref{sec:II}), the certification programs
+(\texttt{c1}--\texttt{c3}, \texttt{tm\_cert}, \texttt{verif\_cert}) and this note; in a separate session it carried out an
+adversarial verification with programs written independently of the certification programs (\S\ref{sec:indep}, \S\ref{sec:checks}).
+\item \emph{Kimi K3.1 Pro (Moonshot AI)} wrote, independently, a program for the finite-memory operators with the weights of Borgs
+and Seiler, whose values coincide with ours; derived independently the inequality of Proposition~\ref{prop:strict}, with a weaker
+site factorisation; carried out an adversarial review of the proof, with recompilation and re-execution of the programs; audited
+the memory-$13$ certificate with its own program (\S\ref{sec:indep}); and reviewed a previous version of this note (before the
+journal page numbers of \cite{BS83} and the references \cite{Tom07,IS08} were added), regenerating the weights file and the
+memory-$11$ certificate byte for byte (no blocking defect; two minor corrections applied); it also reviewed the statement of the Lean
+formalisation, the boundary between what is proved, executed and assumed, and the arbitration of the objections (two corrections applied).
+\item \emph{DeepSeek V4 Pro (DeepSeek)} contributed exploratory derivations of other approaches and four adversarial reviews of the
+proof; their objections led to corrections of the write-up (the orientation of the loop $C_T$ in Proposition~\ref{prop:loop}, the
+comparison of exact rather than rounded weights in \S\ref{sec:proof}, and the constant $K_0$). In a last flaw hunt, ten independent
+adversarial instances (one per step of the proof) and seven cross-critiques raised eight objections (one of them withdrawn by its
+author); the arbitration, by derivation or computation, found no mathematical flaw (the two objections called fatal were refuted by an exact Haar integral and by a counting
+argument) and led to three changes of the write-up: the range $0<J\le1$ of Lemma~\ref{lem:pw}, the statement on the string tension
+(Corollary~\ref{cor:tension}) and the remark on the range of $R$ (Remark~\ref{rem:table}).
+\item \emph{Claude (Anthropic)}, in later sessions, wrote the Lean formalisation of \S\ref{sec:repro} and arbitrated the objections of
+the flaw hunt.
+\item \emph{Version~1.1.} Claude Opus~5.5 (Anthropic) wrote \S\ref{sec:tilted} and \S\ref{sec:tiltcap}, the three programs of
+\S\ref{sec:tiltcap} (\texttt{cert\_incline11.c}, \texttt{b7\_verif11.py} and \texttt{b7\_constantes.py}) and this revision; the use of a tilt and of the
+parity for the constants was also proposed, independently, by DeepSeek V4 Pro in an exploratory session. Kimi K3.1 Pro reviewed an
+internal write-up of the tilted bound and its programs (recompilation, re-execution at memory~$7$, negative control). The draft of
+version~1.1 was reviewed adversarially by DeepSeek V4 Pro (two reviews) and, Kimi being unavailable (quota), by a separate instance
+of Claude Opus~5.5 reading the PDF without prior context, which also wrote \texttt{checks/table4\_fractions.py}; see the section on
+the changes from version~1.0.
+\item \emph{Version~1.2.} The passages on the literature were revised on 11 November 2026 with the assistance of GPT-6.1 Sol (OpenAI), after a review of the draft of 10 November 2026 by Qwen3.8 (Qwen team, run locally); the final text was then read against the sources by Claude (Anthropic) agents on 11 November 2026; no statement, proof, constant or certificate was modified since version~1.1.
+\end{itemize}
+These reviews are not a substitute for refereeing: no human has checked the proof.
+
+\section*{Changes from version 1.1 (version 1.2)}
+\begin{itemize}
+\item Literature only: Table~\ref{tab:ranges} gains three rows (Rajabu \cite{Raj26a,Raj26b}) and a note distinguishing the two estimates near $0.730$; \S1.3 gains a paragraph comparing ranges, distinguishing record creation from publication dates, and explicitly making no priority claim; \S1.1 reports the pinning cap of \cite[Prop.~7.1, second preprint]{Raj26b} with its scope. Two bibliography entries are added relative to version~1.1. No statement, proof or constant of our results, certificate, program or file of the supplements is changed.
+\item The status of Tomboulis' preprint is no longer described (the words ``unpublished'' and ``has not been published'' are removed); the attribution of the finite-memory walk bound is limited to \cite{PT00}, with \cite{Alm93} cited for related upper bounds; footnote~$^e$ is added to Table~\ref{tab:ranges}; ``(draft of version 1.2)'' is removed from a section title.
+\end{itemize}
+
+\section*{Changes from version 1.0}\label{sec:changes}
+\addcontentsline{toc}{section}{Changes from version 1.0}
+\begin{itemize}
+\item New \S\ref{sec:tilted}: the tilted bound (Theorem~\ref{thm:tilted}), its memory-$11$ certificates
+(Proposition~\ref{prop:tiltcert}, Table~\ref{tab:tilted}), Corollary~\ref{cor:tilted} and Remark~\ref{rem:tiltscope}. At
+$\beta\le0.81348$ the certified lower bound on the string tension rises from $7.05\cdot10^{-6}$ to $0.004989$, and the radius beyond which
+the bound is non-trivial on every torus drops from $1.9\cdot10^{6}$ to $3.1\cdot10^{3}$; for $\beta\le0.80$, from $0.0133$ to $0.2253$ and from
+$430$ to $36.5$. The threshold, Theorem~\ref{thm:main}, its certificate and the Lean formalisation are unchanged; Theorem~\ref{thm:tilted}
+is not formalised.
+\item New \S\ref{sec:tiltcap} (programs and verification of the tilted certificates, Remark~\ref{rem:twocert} on the two certificates at
+$\eta=0$) and folder \path{supplement_v1.1/} (\S\ref{sec:repro}); the six vectors $H$ of the tilted certificates are deposited,
+compressed with \texttt{xz}, in the Zenodo record of this version. The files of version~1.0 are unchanged.
+\item Abstract, introduction (\S\S1.2 and~1.4), Remark~\ref{rem:table}, the caption of Table~\ref{tab:tension}, \S\ref{sec:scope} and the
+statement on the use of AI updated accordingly. The new Table~\ref{tab:tilted} shifts the former Table~4 to Table~5; section numbers
+are unchanged.
+\item Review of the draft of version~1.1: two adversarial reviews by DeepSeek V4 Pro (the two objections called blocking were a request
+for more explicit wording, now applied, and an arithmetic slip; the other objections were applied or refuted by computation) and a
+reading of the PDF without prior context by a separate instance of Claude Opus~5.5 (Kimi K3.1 Pro being unavailable), which found no
+mathematical flaw and recomputed Table~\ref{tab:tilted} with its own program; its corrections are included (comparison with
+\cite[Cor.~7.2]{D7} in Remark~\ref{rem:table}, rounding in the caption of Table~\ref{tab:tilted}, radii on every torus, scope of
+Remark~\ref{rem:tiltscope}, controls at the unit level and Remark~\ref{rem:twocert}). No human has refereed version~1.1.
+\end{itemize}
+
+
+\begin{thebibliography}{99}
+\bibitem{Alm93} S.~E.~Alm, \emph{Upper bounds for the connective constant of self-avoiding walks}, Combin.\ Probab.\ Comput.\ 2
+(1993) 115--136, doi:10.1017/S0963548300000547.
+\bibitem{BS83} C.~Borgs, E.~Seiler, \emph{Lattice Yang--Mills theory at nonzero temperature and the confinement problem}, Comm.\
+Math.\ Phys.\ 91 (1983) 329--380, doi:10.1007/BF01208780 (page numbers refer to this version); preprint MPI-PAE/PTh 16/83 (March
+1983), with the same text and equation numbers in the passages cited.
+\bibitem{CH98} M.~Caselle, M.~Hasenbusch, \emph{The stability of the $O(N)$ invariant fixed point in three dimensions}, J.\ Phys.\ A
+31 (1998) 4603--4617, doi:10.1088/0305-4470/31/20/004, arXiv:cond-mat/9711080.
+\bibitem{CNS25} S.~Cao, R.~Nissim, S.~Sheffield, \emph{Dynamical approach to area law for lattice Yang--Mills}, arXiv:2509.04688
+(2025).
+\bibitem{Dou66} R.~G.~Douglas, \emph{On majorization, factorization, and range inclusion of operators on Hilbert space}, Proc.\ Amer.\
+Math.\ Soc.\ 17 (1966) 413--415, doi:10.1090/S0002-9939-1966-0203464-1.
+\bibitem{DF80} B.~Durhuus, J.~Fr\"ohlich, \emph{A connection between $\nu$-dimensional Yang--Mills theory and $(\nu-1)$-dimensional,
+non-linear $\sigma$-models}, Comm.\ Math.\ Phys.\ 75 (1980) 103--151, doi:10.1007/BF01222514; preprint IHES/P/79/302 (1979), to which
+``preprint p.'' refers.
+\bibitem{FXL18} A.~M.~Ferrenberg, J.~Xu, D.~P.~Landau, \emph{Pushing the limits of Monte Carlo simulations for the three-dimensional
+Ising model}, Phys.\ Rev.\ E 97 (2018) 043301, doi:10.1103/PhysRevE.97.043301.
+\bibitem{Fro79} J.~Fr\"ohlich, \emph{Confinement in $Z_n$ lattice gauge theories implies confinement in $SU(n)$ lattice Higgs
+theories}, Phys.\ Lett.\ B 83 (1979) 195--198, doi:10.1016/0370-2693(79)90684-1.
+\bibitem{Fro80a} J.~Fr\"ohlich, \emph{Lectures on Yang--Mills theory}, preprint IHES/P/80/01, Institut des Hautes \'Etudes
+Scientifiques (1980).
+\bibitem{Fro80b} J.~Fr\"ohlich, \emph{Some comments on the crossover between strong and weak coupling in $SU(2)$ pure Yang--Mills
+theory}, Phys.\ Rep.\ 67 (1980) 137--149, doi:10.1016/0370-1573(80)90086-1; preprint IHES/P/80/20 (Les Houches lectures, February
+1980), to which page and equation numbers refer.
+\bibitem{IS08} K.~R.~Ito, E.~Seiler, \emph{Further discussion of Tomboulis' approach to the confinement problem}, arXiv:0803.3019
+(2008).
+\bibitem{Joh17} F.~Johansson, \emph{Arb: efficient arbitrary-precision midpoint-radius interval arithmetic}, IEEE Trans.\ Comput.\ 66
+(2017) 1281--1292, doi:10.1109/TC.2017.2690633.
+\bibitem{KK95} K.~Kanaya, S.~Kaya, \emph{Critical exponents of a three-dimensional $O(4)$ spin model}, Phys.\ Rev.\ D 51 (1995)
+2404--2410, doi:10.1103/PhysRevD.51.2404, arXiv:hep-lat/9409001.
+\bibitem{OS78} K.~Osterwalder, E.~Seiler, \emph{Gauge field theories on a lattice}, Ann.\ Phys.\ 110 (1978) 440--471,
+doi:10.1016/0003-4916(78)90039-8.
+\bibitem{PT00} A.~P\"onitz, P.~Tittmann, \emph{Improved upper bounds for self-avoiding walks in $\Z^d$}, Electron.\ J.\ Combin.\ 7
+(2000) R21, doi:10.37236/1499.
+\bibitem{D7} K.~R\'emondi\`ere, \emph{Dobrushin uniqueness for the four-dimensional $SU(2)$ Wilson lattice gauge measure for
+$\beta<2/9$, with interval/Lean certificates}, note v1.5 (1 November 2026; version 1.6 of 12 November 2026 has the same numbering of Section~7), Zenodo, doi:10.5281/zenodo.23856414; Section~7: area law
+for $\beta<2/3$.
+\bibitem{Raj26a} H.~T.~Rajabu, \emph{Explicit strong-coupling mass gap and a robust landing interface for four-dimensional SU(2) lattice Yang--Mills theory}, Zenodo, doi:10.5281/zenodo.23691339 (27 October 2026; concept doi:10.5281/zenodo.23691338); the archive contains the preprint and companion working notes, among them ``Part~I'' (``An explicit strong-coupling mass gap and area law for four-dimensional SU(2) lattice Yang--Mills: Kantorovich contraction, the sharp single-link constant, and a line gauge'') and ``Part~II'' (``Past the single-site ceiling by exact decimation and the chordal metric: explicit mass gap up to $\beta_W=0.393$ and area law up to $\beta_W=\frac23$ for four-dimensional SU(2) lattice Yang--Mills''), both dated 26 October 2026.
+\bibitem{Raj26b} H.~T.~Rajabu, same record title as \cite{Raj26a}, preprint version 2.2 and second preprint ``Multiscale covariance transfer and a conditional continuum mass gap for four-dimensional SU(2) lattice Yang--Mills theory'' (title as printed in that preprint, version 2.1), Zenodo, doi:10.5281/zenodo.23729328 (\texttt{publication\_date} 28 October 2026; record created 29 October 2026, 00:48 UTC; a new version of \cite{Raj26a}).
+\bibitem{Tom07} E.~T.~Tomboulis, \emph{Confinement for all values of the coupling in four-dimensional $SU(2)$ gauge theory},
+arXiv:0707.2179 (2007).
+\bibitem{Wil74} K.~G.~Wilson, \emph{Confinement of quarks}, Phys.\ Rev.\ D 10 (1974) 2445--2459, doi:10.1103/PhysRevD.10.2445.
+\end{thebibliography}
+
+\end{document}

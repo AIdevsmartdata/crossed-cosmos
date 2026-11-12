@@ -1,14 +1,14 @@
 # An area law for four-dimensional SU(2) lattice gauge theory up to β ≈ 0.813
 
-Version 1.1 (2 November 2026; version 1.0: 1 November 2026). Author: Kévin Rémondière (ORCID [0009-0008-2443-7166](https://orcid.org/0009-0008-2443-7166)).
+Version 1.2 (12 November 2026; literature situating only: no theorem, constant or certificate is changed; version 1.1: 2 November 2026; version 1.0: 1 November 2026). Author: Kévin Rémondière (ORCID [0009-0008-2443-7166](https://orcid.org/0009-0008-2443-7166)).
 
-This is a stand-alone note. It is deposited on Zenodo as its own record (version 1.1, a new version of the record of version 1.0), related to the crossed-cosmos programme record
+This is a stand-alone note. It is deposited on Zenodo as its own record (version 1.2, a new version of the record of version 1.1), related to the crossed-cosmos programme record
 [10.5281/zenodo.19686398](https://doi.org/10.5281/zenodo.19686398) by `isPartOf`; it is not a version of that record. A companion note
 of the same author, [10.5281/zenodo.23856414](https://doi.org/10.5281/zenodo.23856414) (Dobrushin uniqueness for β < 2/9; its
 Section 7 proves an area law for β < 2/3 by a different method), is cited in it.
 
 This folder is self-contained. It holds:
-- `note/`: the note, version 1.1 (`area_law_su2_4d_v1_1.pdf`, 26 pages, and its LaTeX source) and version 1.0 (unchanged);
+- `note/`: the note, version 1.2 (`area_law_su2_4d_v1_2.pdf`, 28 pages, and its LaTeX source), and versions 1.1 and 1.0 (unchanged);
 - `supplement/`: the supplementary material of version 1.0, unchanged: the programs of the proof, the weights, the outputs, the
   independent checks, the memory-11 certificate (compressed, see below) and a Lean 4 project (`supplement/lean/`, a partial
   formalisation, see below). `supplement/README.md` describes every file;
@@ -147,7 +147,7 @@ byte for byte with `cert_incline11` (about 40 s and 11 GB of memory each, on 8 c
 
 ```
 cd note
-pdflatex area_law_su2_4d_v1_1.tex        # three passes (version 1.0: area_law_su2_4d_v1_0.tex)
+pdflatex area_law_su2_4d_v1_2.tex        # three passes (versions 1.1, 1.0: area_law_su2_4d_v1_1.tex, area_law_su2_4d_v1_0.tex)
 ```
 
 ## License, citation, AI use

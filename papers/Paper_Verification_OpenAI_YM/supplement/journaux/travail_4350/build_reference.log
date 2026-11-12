@@ -1,0 +1,853 @@
+✔ [4/25] Built Batteries.Lean.TagAttribute (253ms)
+✔ [5/25] Built Batteries.Lean.Syntax (234ms)
+✔ [6/25] Built Batteries.Classes.RatCast (255ms)
+✔ [7/26] Built Batteries.Util.LibraryNote (396ms)
+✔ [8/26] Built Batteries.Tactic.Unreachable (380ms)
+✔ [9/27] Built Batteries.Tactic.SeqFocus (472ms)
+✔ [10/27] Built Batteries.Tactic.Lint.Basic (487ms)
+⚠ [11/35] Built Batteries.Lean.AttributeExtra (303ms)
+warning: Batteries/Lean/AttributeExtra.lean:17:5: Ambiguous namespace `Std`: it is interpreted as `_root_.Lean.Std` because this `open` occurs inside `namespace Lean`, while `_root_.Std` is silently not opened. Specify the namespace unambiguously, e.g. `_root_.Lean.Std`. The warning can sometimes also be addressed by moving the `open` outside of the surrounding `namespace`.
+
+Note: This linter can be disabled with `set_option linter.ambiguousOpen false`
+✔ [12/35] Built Batteries.Tactic.Init (590ms)
+✔ [13/35] Built Batteries.Lean.EStateM (352ms)
+✔ [14/35] Built Batteries.Lean.Except (299ms)
+✔ [15/35] Built Batteries.Classes.Cast (326ms)
+✔ [16/47] Built Batteries.Linter.UnreachableTactic (507ms)
+✔ [17/47] Built Batteries.Lean.Position (289ms)
+✔ [18/47] Built Batteries.Control.Lemmas (248ms)
+✔ [19/49] Built Batteries.Tactic.Lint.Misc (498ms)
+✔ [20/49] Built Batteries.CodeAction.Attr (485ms)
+✔ [21/51] Built Batteries.CodeAction.Deprecated (518ms)
+✔ [22/51] Built Batteries.Data.Array.Init.Lemmas (221ms)
+✔ [23/51] Built Batteries.Linter.UnnecessarySeqFocus (640ms)
+✖ [24/51] Building Batteries.Recycling.MonadSatisfying.Basic (491ms)
+trace: .> LEAN_PATH=/work/travail_4350/OpenAI-YM-20261028/.lake/packages/Cli/.lake/build/lib/lean:/work/travail_4350/OpenAI-YM-20261028/.lake/packages/batteries/.lake/build/lib/lean:/work/travail_4350/OpenAI-YM-20261028/.lake/packages/Qq/.lake/build/lib/lean:/work/travail_4350/OpenAI-YM-20261028/.lake/packages/aesop/.lake/build/lib/lean:/work/travail_4350/OpenAI-YM-20261028/.lake/packages/proofwidgets/.lake/build/lib/lean:/work/travail_4350/OpenAI-YM-20261028/.lake/packages/importGraph/.lake/build/lib/lean:/work/travail_4350/OpenAI-YM-20261028/.lake/packages/LeanSearchClient/.lake/build/lib/lean:/work/travail_4350/OpenAI-YM-20261028/.lake/packages/plausible/.lake/build/lib/lean:/work/travail_4350/OpenAI-YM-20261028/.lake/packages/mathlib/.lake/build/lib/lean:/work/travail_4350/OpenAI-YM-20261028/.lake/build/lib/lean /work/tc/4.35.0/bin/lean /work/travail_4350/OpenAI-YM-20261028/.lake/packages/batteries/Batteries/Recycling/MonadSatisfying/Basic.lean -o /work/travail_4350/OpenAI-YM-20261028/.lake/packages/batteries/.lake/build/lib/lean/Batteries/Recycling/MonadSatisfying/Basic.olean -i /work/travail_4350/OpenAI-YM-20261028/.lake/packages/batteries/.lake/build/lib/lean/Batteries/Recycling/MonadSatisfying/Basic.ilean -c /work/travail_4350/OpenAI-YM-20261028/.lake/packages/batteries/.lake/build/ir/Batteries/Recycling/MonadSatisfying/Basic.c --setup /work/travail_4350/OpenAI-YM-20261028/.lake/packages/batteries/.lake/build/ir/Batteries/Recycling/MonadSatisfying/Basic.setup.json --json
+error: Batteries/Recycling/MonadSatisfying/Basic.lean:188:10: Tactic `rewrite` failed: Did not find an occurrence of the pattern
+  (?f <$> ?x).run ?s
+in the target expression
+  (Subtype.val <$> fun s =>
+          match q : x.run s with
+          | EStateM.Result.ok a s' => EStateM.Result.ok ⟨a, ⋯⟩ s'
+          | EStateM.Result.error e s' => EStateM.Result.error e s').run
+      s =
+    x.run s
+
+case mpr.refine_2
+ε σ α✝ : Type u_1
+p : α✝ → Prop
+x : EStateM ε σ α✝
+w : ∀ (s : σ) (a : α✝) (s' : σ), x.run s = EStateM.Result.ok a s' → p a
+s : σ
+⊢ (Subtype.val <$> fun s =>
+          match q : x.run s with
+          | EStateM.Result.ok a s' => EStateM.Result.ok ⟨a, ⋯⟩ s'
+          | EStateM.Result.error e s' => EStateM.Result.error e s').run
+      s =
+    x.run s
+
+Note: The target expression is not type-correct under the `implicit` transparency level, which may have triggered the failure. This is usually caused by unfolding of semireducible definitions in prior tactic steps. Use `set_option linter.tacticCheckInstances true` to investigate the source of the issue.
+Full error:
+  Application type mismatch: The argument
+    fun s =>
+      match q : x.run s with
+      | EStateM.Result.ok a s' => EStateM.Result.ok ⟨a, ⋯⟩ s'
+      | EStateM.Result.error e s' => EStateM.Result.error e s'
+  has type
+    σ → EStateM.Result ε σ { a // p a }
+  but is expected to have type
+    EStateM ε σ { a // p a }
+  in the application
+    Subtype.val <$> fun s =>
+      match q : x.run s with
+      | EStateM.Result.ok a s' => EStateM.Result.ok ⟨a, ⋯⟩ s'
+      | EStateM.Result.error e s' => EStateM.Result.error e s'
+error: Batteries/Recycling/MonadSatisfying/Basic.lean:294:8: Tactic `rewrite` failed: Did not find an occurrence of the pattern
+  (?f <$> ?x).run ?s
+in the target expression
+  (Subtype.val <$>
+          have h' := ⋯;
+          fun s =>
+          match w : x.run s with
+          | EStateM.Result.ok a s' => EStateM.Result.ok ⟨a, ⋯⟩ s'
+          | EStateM.Result.error e s' => EStateM.Result.error e s').run
+      s =
+    x.run s
+
+ε σ α : Type ?u.6
+p : α → Prop
+x : EStateM ε σ α
+h : SatisfiesM p x
+s : σ
+⊢ (Subtype.val <$>
+          have h' := ⋯;
+          fun s =>
+          match w : x.run s with
+          | EStateM.Result.ok a s' => EStateM.Result.ok ⟨a, ⋯⟩ s'
+          | EStateM.Result.error e s' => EStateM.Result.error e s').run
+      s =
+    x.run s
+
+Note: The target expression is not type-correct under the `implicit` transparency level, which may have triggered the failure. This is usually caused by unfolding of semireducible definitions in prior tactic steps. Use `set_option linter.tacticCheckInstances true` to investigate the source of the issue.
+Full error:
+  Application type mismatch: The argument
+    have h' := ⋯;
+    fun s =>
+    match w : x.run s with
+    | EStateM.Result.ok a s' => EStateM.Result.ok ⟨a, ⋯⟩ s'
+    | EStateM.Result.error e s' => EStateM.Result.error e s'
+  has type
+    σ → EStateM.Result ε σ { a // p a }
+  but is expected to have type
+    EStateM ε σ { a // p a }
+  in the application
+    Subtype.val <$>
+      have h' := ⋯;
+      fun s =>
+      match w : x.run s with
+      | EStateM.Result.ok a s' => EStateM.Result.ok ⟨a, ⋯⟩ s'
+      | EStateM.Result.error e s' => EStateM.Result.error e s'
+error: Batteries/Recycling/MonadSatisfying/Basic.lean:286:0: (kernel) declaration has metavariables 'MonadSatisfying.instEStateM'
+✔ [25/51] Built Batteries.Control.ForInStep.Basic (265ms)
+✔ [26/53] Built Batteries.Control.LawfulMonadState (520ms)
+⚠ [28/54] Built Batteries.CodeAction.Basic (507ms)
+warning: Batteries/CodeAction/Basic.lean:10:0: 'Lean.Server.InfoUtils' has been deprecated: please replace this import by
+
+import Lean.Elab.InfoTree.Util
+✔ [29/54] Built Batteries.Control.ForInStep.Lemmas (257ms)
+✔ [32/60] Built Batteries.Data.Array.Match (427ms)
+✔ [33/64] Built Batteries.Linter (326ms)
+✔ [34/72] Built Batteries.Control.OptionT (307ms)
+✔ [35/72] Built Batteries.Control.ForInStep (228ms)
+✔ [36/72] Built Batteries.Data.Array.Merge (582ms)
+✖ [37/73] Building Batteries.Tactic.Alias (757ms)
+trace: .> LEAN_PATH=/work/travail_4350/OpenAI-YM-20261028/.lake/packages/Cli/.lake/build/lib/lean:/work/travail_4350/OpenAI-YM-20261028/.lake/packages/batteries/.lake/build/lib/lean:/work/travail_4350/OpenAI-YM-20261028/.lake/packages/Qq/.lake/build/lib/lean:/work/travail_4350/OpenAI-YM-20261028/.lake/packages/aesop/.lake/build/lib/lean:/work/travail_4350/OpenAI-YM-20261028/.lake/packages/proofwidgets/.lake/build/lib/lean:/work/travail_4350/OpenAI-YM-20261028/.lake/packages/importGraph/.lake/build/lib/lean:/work/travail_4350/OpenAI-YM-20261028/.lake/packages/LeanSearchClient/.lake/build/lib/lean:/work/travail_4350/OpenAI-YM-20261028/.lake/packages/plausible/.lake/build/lib/lean:/work/travail_4350/OpenAI-YM-20261028/.lake/packages/mathlib/.lake/build/lib/lean:/work/travail_4350/OpenAI-YM-20261028/.lake/build/lib/lean /work/tc/4.35.0/bin/lean /work/travail_4350/OpenAI-YM-20261028/.lake/packages/batteries/Batteries/Tactic/Alias.lean -o /work/travail_4350/OpenAI-YM-20261028/.lake/packages/batteries/.lake/build/lib/lean/Batteries/Tactic/Alias.olean -i /work/travail_4350/OpenAI-YM-20261028/.lake/packages/batteries/.lake/build/lib/lean/Batteries/Tactic/Alias.ilean -c /work/travail_4350/OpenAI-YM-20261028/.lake/packages/batteries/.lake/build/ir/Batteries/Tactic/Alias.c --setup /work/travail_4350/OpenAI-YM-20261028/.lake/packages/batteries/.lake/build/ir/Batteries/Tactic/Alias.setup.json --json
+error: Batteries/Tactic/Alias.lean:176:16: Application type mismatch: The argument
+  (doc, isVerso)
+has type
+  ?m.191 × ?m.192
+but is expected to have type
+  TSyntax `Lean.Parser.Command.docComment
+in the application
+  some (doc, isVerso)
+error: Batteries/Tactic/Alias.lean:208:14: Application type mismatch: The argument
+  (doc, isVerso)
+has type
+  ?m.17 × ?m.18
+but is expected to have type
+  TSyntax `Lean.Parser.Command.docComment
+in the application
+  some (doc, isVerso)
+✔ [43/73] Built Batteries.Data.BitVec.Basic (223ms)
+✔ [45/79] Built Batteries.Data.Bool (235ms)
+✔ [46/84] Built Batteries.Util.ProofWanted (956ms)
+✔ [47/84] Built Batteries.CodeAction.Misc (1.1s)
+✔ [49/84] Built Batteries.Data.Nat.Basic (297ms)
+✔ [56/90] Built Batteries.Control.AlternativeMonad (399ms)
+✔ [58/90] Built Batteries.Data.ByteSlice (285ms)
+✖ [61/91] Building Batteries.Data.ByteArray (384ms)
+trace: .> LEAN_PATH=/work/travail_4350/OpenAI-YM-20261028/.lake/packages/Cli/.lake/build/lib/lean:/work/travail_4350/OpenAI-YM-20261028/.lake/packages/batteries/.lake/build/lib/lean:/work/travail_4350/OpenAI-YM-20261028/.lake/packages/Qq/.lake/build/lib/lean:/work/travail_4350/OpenAI-YM-20261028/.lake/packages/aesop/.lake/build/lib/lean:/work/travail_4350/OpenAI-YM-20261028/.lake/packages/proofwidgets/.lake/build/lib/lean:/work/travail_4350/OpenAI-YM-20261028/.lake/packages/importGraph/.lake/build/lib/lean:/work/travail_4350/OpenAI-YM-20261028/.lake/packages/LeanSearchClient/.lake/build/lib/lean:/work/travail_4350/OpenAI-YM-20261028/.lake/packages/plausible/.lake/build/lib/lean:/work/travail_4350/OpenAI-YM-20261028/.lake/packages/mathlib/.lake/build/lib/lean:/work/travail_4350/OpenAI-YM-20261028/.lake/build/lib/lean /work/tc/4.35.0/bin/lean /work/travail_4350/OpenAI-YM-20261028/.lake/packages/batteries/Batteries/Data/ByteArray.lean -o /work/travail_4350/OpenAI-YM-20261028/.lake/packages/batteries/.lake/build/lib/lean/Batteries/Data/ByteArray.olean -i /work/travail_4350/OpenAI-YM-20261028/.lake/packages/batteries/.lake/build/lib/lean/Batteries/Data/ByteArray.ilean -c /work/travail_4350/OpenAI-YM-20261028/.lake/packages/batteries/.lake/build/ir/Batteries/Data/ByteArray.c --setup /work/travail_4350/OpenAI-YM-20261028/.lake/packages/batteries/.lake/build/ir/Batteries/Data/ByteArray.setup.json --json
+error: Batteries/Data/ByteArray.lean:81:34: No goals to be solved
+✔ [63/96] Built Batteries.Tactic.Basic (347ms)
+✖ [64/96] Building Batteries.Data.BinaryHeap.Basic (855ms)
+trace: .> LEAN_PATH=/work/travail_4350/OpenAI-YM-20261028/.lake/packages/Cli/.lake/build/lib/lean:/work/travail_4350/OpenAI-YM-20261028/.lake/packages/batteries/.lake/build/lib/lean:/work/travail_4350/OpenAI-YM-20261028/.lake/packages/Qq/.lake/build/lib/lean:/work/travail_4350/OpenAI-YM-20261028/.lake/packages/aesop/.lake/build/lib/lean:/work/travail_4350/OpenAI-YM-20261028/.lake/packages/proofwidgets/.lake/build/lib/lean:/work/travail_4350/OpenAI-YM-20261028/.lake/packages/importGraph/.lake/build/lib/lean:/work/travail_4350/OpenAI-YM-20261028/.lake/packages/LeanSearchClient/.lake/build/lib/lean:/work/travail_4350/OpenAI-YM-20261028/.lake/packages/plausible/.lake/build/lib/lean:/work/travail_4350/OpenAI-YM-20261028/.lake/packages/mathlib/.lake/build/lib/lean:/work/travail_4350/OpenAI-YM-20261028/.lake/build/lib/lean /work/tc/4.35.0/bin/lean /work/travail_4350/OpenAI-YM-20261028/.lake/packages/batteries/Batteries/Data/BinaryHeap/Basic.lean -o /work/travail_4350/OpenAI-YM-20261028/.lake/packages/batteries/.lake/build/lib/lean/Batteries/Data/BinaryHeap/Basic.olean -i /work/travail_4350/OpenAI-YM-20261028/.lake/packages/batteries/.lake/build/lib/lean/Batteries/Data/BinaryHeap/Basic.ilean -c /work/travail_4350/OpenAI-YM-20261028/.lake/packages/batteries/.lake/build/ir/Batteries/Data/BinaryHeap/Basic.c --setup /work/travail_4350/OpenAI-YM-20261028/.lake/packages/batteries/.lake/build/ir/Batteries/Data/BinaryHeap/Basic.setup.json --json
+error: Batteries/Data/BinaryHeap/Basic.lean:120:2: Tactic `split` failed: Could not split an `if` or `match` expression in the goal
+
+Hint: Use `set_option trace.split.failure true` to display additional diagnostic information
+
+α : Type u_1
+lt : α → α → Bool
+self : BinaryHeap α lt
+⊢ (if h0 : self.arr.size = 0 then self
+        else
+          if h : 0 < self.arr.size - 1 then
+            { arr := (heapifyDown lt (self.vector.swap 0 (self.arr.size - 1) ⋯ ⋯).pop ⟨0, h⟩).toArray }
+          else { arr := (self.vector.swap 0 (self.arr.size - 1) ⋯ ⋯).pop.toArray }).arr.size =
+    self.arr.size - 1
+✔ [66/96] Built Batteries.Tactic.Lint.TypeClass (369ms)
+✔ [67/98] Built Batteries.Data.FloatArray (231ms)
+✔ [69/99] Built Batteries.Tactic.OpenPrivate (583ms)
+✔ [70/105] Built Batteries.Data.MLList.Basic (508ms)
+✔ [71/105] Built Batteries.Lean.HashMap (253ms)
+✔ [74/105] Built Batteries.Data.List.ArrayMap (253ms)
+✔ [75/105] Built Batteries.Data.List.Init.Lemmas (217ms)
+⚠ [80/110] Built Batteries.Classes.Order (494ms)
+warning: Batteries/Classes/Order.lean:167:51: `if_neg` has been deprecated: Use `ite_eq_right` instead
+
+Hint: Replace the deprecated name:
+  i̵f̵_̵n̵e̵g̵i̲t̲e̲_̲e̲q̲_̲r̲i̲g̲h̲t̲
+✔ [83/110] Built Batteries.Tactic.Lint.Frontend (830ms)
+✔ [84/110] Built Batteries.Data.List.Matcher (264ms)
+✔ [85/110] Built Batteries.Data.MLList.Heartbeats (259ms)
+✔ [86/114] Built Batteries.Control.Nondet.Basic (394ms)
+✔ [88/114] Built Batteries.Tactic.Trans (904ms)
+✔ [89/117] Built Batteries.Data.List.Interleave (562ms)
+✔ [91/117] Built Batteries.Lean.System.IO (254ms)
+✔ [92/117] Built Batteries.Data.NameSet (263ms)
+✔ [94/117] Built Batteries.Tactic.Lint.Simp (624ms)
+✔ [95/120] Built Batteries.Data.MLList.IO (229ms)
+✔ [96/120] Built Batteries.Data.Nat.Bitwise.Lemmas (269ms)
+✖ [97/128] Building Batteries.Data.UInt (524ms)
+trace: .> LEAN_PATH=/work/travail_4350/OpenAI-YM-20261028/.lake/packages/Cli/.lake/build/lib/lean:/work/travail_4350/OpenAI-YM-20261028/.lake/packages/batteries/.lake/build/lib/lean:/work/travail_4350/OpenAI-YM-20261028/.lake/packages/Qq/.lake/build/lib/lean:/work/travail_4350/OpenAI-YM-20261028/.lake/packages/aesop/.lake/build/lib/lean:/work/travail_4350/OpenAI-YM-20261028/.lake/packages/proofwidgets/.lake/build/lib/lean:/work/travail_4350/OpenAI-YM-20261028/.lake/packages/importGraph/.lake/build/lib/lean:/work/travail_4350/OpenAI-YM-20261028/.lake/packages/LeanSearchClient/.lake/build/lib/lean:/work/travail_4350/OpenAI-YM-20261028/.lake/packages/plausible/.lake/build/lib/lean:/work/travail_4350/OpenAI-YM-20261028/.lake/packages/mathlib/.lake/build/lib/lean:/work/travail_4350/OpenAI-YM-20261028/.lake/build/lib/lean /work/tc/4.35.0/bin/lean /work/travail_4350/OpenAI-YM-20261028/.lake/packages/batteries/Batteries/Data/UInt.lean -o /work/travail_4350/OpenAI-YM-20261028/.lake/packages/batteries/.lake/build/lib/lean/Batteries/Data/UInt.olean -i /work/travail_4350/OpenAI-YM-20261028/.lake/packages/batteries/.lake/build/lib/lean/Batteries/Data/UInt.ilean -c /work/travail_4350/OpenAI-YM-20261028/.lake/packages/batteries/.lake/build/ir/Batteries/Data/UInt.c --setup /work/travail_4350/OpenAI-YM-20261028/.lake/packages/batteries/.lake/build/ir/Batteries/Data/UInt.setup.json --json
+error: Batteries/Data/UInt.lean:35:8: `UInt8.max_def` has already been declared
+error: Batteries/Data/UInt.lean:37:8: `UInt8.min_def` has already been declared
+error: Batteries/Data/UInt.lean:40:6: Unknown identifier `max_def`
+error: Batteries/Data/UInt.lean:39:81: unsolved goals
+x y : UInt8
+⊢ (max x y).toNat = max x.toNat y.toNat
+error: Batteries/Data/UInt.lean:50:6: Unknown identifier `min_def`
+error: Batteries/Data/UInt.lean:49:81: unsolved goals
+x y : UInt8
+⊢ (min x y).toNat = min x.toNat y.toNat
+error: Batteries/Data/UInt.lean:82:8: `UInt16.max_def` has already been declared
+error: Batteries/Data/UInt.lean:84:8: `UInt16.min_def` has already been declared
+error: Batteries/Data/UInt.lean:87:6: Unknown identifier `max_def`
+error: Batteries/Data/UInt.lean:86:83: unsolved goals
+x y : UInt16
+⊢ (max x y).toNat = max x.toNat y.toNat
+error: Batteries/Data/UInt.lean:97:6: Unknown identifier `min_def`
+error: Batteries/Data/UInt.lean:96:83: unsolved goals
+x y : UInt16
+⊢ (min x y).toNat = min x.toNat y.toNat
+error: Batteries/Data/UInt.lean:129:8: `UInt32.max_def` has already been declared
+error: Batteries/Data/UInt.lean:131:8: `UInt32.min_def` has already been declared
+error: Batteries/Data/UInt.lean:134:6: Unknown identifier `max_def`
+error: Batteries/Data/UInt.lean:133:83: unsolved goals
+x y : UInt32
+⊢ (max x y).toNat = max x.toNat y.toNat
+error: Batteries/Data/UInt.lean:144:6: Unknown identifier `min_def`
+error: Batteries/Data/UInt.lean:143:83: unsolved goals
+x y : UInt32
+⊢ (min x y).toNat = min x.toNat y.toNat
+error: Batteries/Data/UInt.lean:176:8: `UInt64.max_def` has already been declared
+error: Batteries/Data/UInt.lean:178:8: `UInt64.min_def` has already been declared
+error: Batteries/Data/UInt.lean:181:6: Unknown identifier `max_def`
+error: Batteries/Data/UInt.lean:180:83: unsolved goals
+x y : UInt64
+⊢ (max x y).toNat = max x.toNat y.toNat
+error: Batteries/Data/UInt.lean:191:6: Unknown identifier `min_def`
+error: Batteries/Data/UInt.lean:190:83: unsolved goals
+x y : UInt64
+⊢ (min x y).toNat = min x.toNat y.toNat
+✔ [101/134] Built Batteries.Data.Nat.Bitwise (223ms)
+✔ [104/135] Built Batteries.Tactic.Lint (359ms)
+✔ [107/135] Built Batteries.Data.MLList (270ms)
+✔ [108/135] Built Batteries.Data.PairingHeap (636ms)
+✔ [109/139] Built Batteries.Data.Nat.Bisect (769ms)
+✖ [111/139] Building Batteries.Lean.Float (295ms)
+trace: .> LEAN_PATH=/work/travail_4350/OpenAI-YM-20261028/.lake/packages/Cli/.lake/build/lib/lean:/work/travail_4350/OpenAI-YM-20261028/.lake/packages/batteries/.lake/build/lib/lean:/work/travail_4350/OpenAI-YM-20261028/.lake/packages/Qq/.lake/build/lib/lean:/work/travail_4350/OpenAI-YM-20261028/.lake/packages/aesop/.lake/build/lib/lean:/work/travail_4350/OpenAI-YM-20261028/.lake/packages/proofwidgets/.lake/build/lib/lean:/work/travail_4350/OpenAI-YM-20261028/.lake/packages/importGraph/.lake/build/lib/lean:/work/travail_4350/OpenAI-YM-20261028/.lake/packages/LeanSearchClient/.lake/build/lib/lean:/work/travail_4350/OpenAI-YM-20261028/.lake/packages/plausible/.lake/build/lib/lean:/work/travail_4350/OpenAI-YM-20261028/.lake/packages/mathlib/.lake/build/lib/lean:/work/travail_4350/OpenAI-YM-20261028/.lake/build/lib/lean /work/tc/4.35.0/bin/lean /work/travail_4350/OpenAI-YM-20261028/.lake/packages/batteries/Batteries/Lean/Float.lean -o /work/travail_4350/OpenAI-YM-20261028/.lake/packages/batteries/.lake/build/lib/lean/Batteries/Lean/Float.olean -i /work/travail_4350/OpenAI-YM-20261028/.lake/packages/batteries/.lake/build/lib/lean/Batteries/Lean/Float.ilean -c /work/travail_4350/OpenAI-YM-20261028/.lake/packages/batteries/.lake/build/ir/Batteries/Lean/Float.c --setup /work/travail_4350/OpenAI-YM-20261028/.lake/packages/batteries/.lake/build/ir/Batteries/Lean/Float.setup.json --json
+error: Batteries/Lean/Float.lean:16:4: `Float.inf` has already been declared
+error: Batteries/Lean/Float.lean:23:4: `Float.nan` has already been declared
+✔ [113/139] Built Batteries.Data.RunningStats (252ms)
+✔ [114/139] Built Batteries.Data.DList.Basic (388ms)
+✔ [116/152] Built Batteries.Data.Stream (301ms)
+✔ [117/152] Built Batteries.Data.String.AsciiCasing (216ms)
+✔ [123/153] Built Batteries.Data.Random.MersenneTwister (635ms)
+✔ [124/153] Built Batteries.Data.String.Basic (279ms)
+✔ [125/154] Built Batteries.Util.Panic (229ms)
+✔ [126/156] Built Batteries.Data.DList.Lemmas (375ms)
+✔ [127/156] Built Batteries.Recycling.RBTree.Basic (1.2s)
+✔ [128/156] Built Batteries.Data.Random (240ms)
+✔ [129/156] Built Batteries.Data.String.Legacy (526ms)
+✔ [130/156] Built Batteries.Lean.HashSet (279ms)
+✔ [132/156] Built Batteries.Lean.Expr (383ms)
+✔ [134/157] Built Batteries.Lean.IO.Process (262ms)
+⚠ [135/157] Built Batteries.Data.String.Matcher (269ms)
+warning: Batteries/Data/String/Matcher.lean:124:2: The updated constant has a different type:
+  {ρ : Type} →
+    {σ : Slice → Type} →
+      [inst : (s : Slice) → Std.Iterator (σ s) Id (Slice.Pattern.SearchStep s)] →
+        [(s : Slice) → Std.IteratorLoop (σ s) Id Id] →
+          String → (pat : ρ) → [Slice.Pattern.ToForwardSearcher pat σ] → Bool
+instead of
+  String → Substring.Raw → Bool
+
+This suggests that addressing the deprecation might be more involved than simply replacing the old name with the new name. This is often expected, but sometimes it indicates that the deprecation is in favor of the wrong declaration, or that there is a mistake in one of the statements.
+
+If the type difference is intentional, use `+typeChanged` to silence this warning.
+
+Hint: Add `+typeChanged`:
+  [apply] +typeChanged
+✔ [137/162] Built Batteries.Data.BinomialHeap.Basic (1.9s)
+✔ [138/162] Built Batteries.Data.DList (331ms)
+✔ [139/162] Built Batteries.Data.RBMap.Basic (352ms)
+✔ [140/162] Built Batteries.Lean.LawfulMonad (346ms)
+✖ [141/165] Building Batteries.Lean.LawfulMonadLift (367ms)
+trace: .> LEAN_PATH=/work/travail_4350/OpenAI-YM-20261028/.lake/packages/Cli/.lake/build/lib/lean:/work/travail_4350/OpenAI-YM-20261028/.lake/packages/batteries/.lake/build/lib/lean:/work/travail_4350/OpenAI-YM-20261028/.lake/packages/Qq/.lake/build/lib/lean:/work/travail_4350/OpenAI-YM-20261028/.lake/packages/aesop/.lake/build/lib/lean:/work/travail_4350/OpenAI-YM-20261028/.lake/packages/proofwidgets/.lake/build/lib/lean:/work/travail_4350/OpenAI-YM-20261028/.lake/packages/importGraph/.lake/build/lib/lean:/work/travail_4350/OpenAI-YM-20261028/.lake/packages/LeanSearchClient/.lake/build/lib/lean:/work/travail_4350/OpenAI-YM-20261028/.lake/packages/plausible/.lake/build/lib/lean:/work/travail_4350/OpenAI-YM-20261028/.lake/packages/mathlib/.lake/build/lib/lean:/work/travail_4350/OpenAI-YM-20261028/.lake/build/lib/lean /work/tc/4.35.0/bin/lean /work/travail_4350/OpenAI-YM-20261028/.lake/packages/batteries/Batteries/Lean/LawfulMonadLift.lean -o /work/travail_4350/OpenAI-YM-20261028/.lake/packages/batteries/.lake/build/lib/lean/Batteries/Lean/LawfulMonadLift.olean -i /work/travail_4350/OpenAI-YM-20261028/.lake/packages/batteries/.lake/build/lib/lean/Batteries/Lean/LawfulMonadLift.ilean -c /work/travail_4350/OpenAI-YM-20261028/.lake/packages/batteries/.lake/build/ir/Batteries/Lean/LawfulMonadLift.c --setup /work/travail_4350/OpenAI-YM-20261028/.lake/packages/batteries/.lake/build/ir/Batteries/Lean/LawfulMonadLift.setup.json --json
+error: Batteries/Lean/LawfulMonadLift.lean:42:78: unsolved goals
+ε₁ ε₂ α β : Type
+f : ε₁ → ε₂
+ma : EIO ε₁ α
+g : α → EIO ε₁ β
+⊢ (EST.bind (adapt f ma) fun a => adapt f (g a)) = EST.bind (adapt f ma) fun a => adapt f (g a)
+✔ [142/167] Built Batteries.Lean.Meta.Basic (349ms)
+✔ [143/167] Built Batteries.Lean.Meta.Expr (241ms)
+✔ [144/167] Built Batteries.Lean.PersistentHashMap (262ms)
+✔ [145/168] Built Batteries.Lean.Meta.Inaccessible (318ms)
+✔ [146/168] Built Batteries.Lean.MonadBacktrack (248ms)
+✔ [147/170] Built Batteries.Data.BinomialHeap.Lemmas (445ms)
+✔ [148/170] Built Batteries.Lean.Meta.InstantiateMVars (289ms)
+✔ [149/170] Built Batteries.Lean.Meta.UnusedNames (318ms)
+✔ [150/177] Built Batteries.Lean.Meta.DiscrTree (292ms)
+✔ [151/177] Built Batteries.Lean.Meta.Simp (526ms)
+✔ [152/177] Built Batteries.Lean.NameMapAttribute (322ms)
+✔ [153/177] Built Batteries.Lean.PersistentHashSet (269ms)
+⚠ [159/180] Built Batteries.Data.UnionFind.Basic (1.2s)
+warning: Batteries/Data/UnionFind/Basic.lean:34:37: `dif_pos` has been deprecated: Use `dite_eq_left` instead
+
+Hint: Replace the deprecated name:
+  d̵i̵f̵_̵p̵o̵s̵d̲i̲t̲e̲_̲e̲q̲_̲l̲e̲f̲t̲
+warning: Batteries/Data/UnionFind/Basic.lean:36:77: `dif_pos` has been deprecated: Use `dite_eq_left` instead
+
+Hint: Replace the deprecated name:
+  d̵i̵f̵_̵p̵o̵s̵d̲i̲t̲e̲_̲e̲q̲_̲l̲e̲f̲t̲
+warning: Batteries/Data/UnionFind/Basic.lean:38:66: `dif_neg` has been deprecated: Use `dite_eq_right` instead
+
+Hint: Replace the deprecated name:
+  d̵i̵f̵_̵n̵e̵g̵d̲i̲t̲e̲_̲e̲q̲_̲r̲i̲g̲h̲t̲
+warning: Batteries/Data/UnionFind/Basic.lean:218:16: `dif_pos` has been deprecated: Use `dite_eq_left` instead
+
+Hint: Replace the deprecated name:
+  d̵i̵f̵_̵p̵o̵s̵d̲i̲t̲e̲_̲e̲q̲_̲l̲e̲f̲t̲
+warning: Batteries/Data/UnionFind/Basic.lean:228:35: `dif_pos` has been deprecated: Use `dite_eq_left` instead
+
+Hint: Replace the deprecated name:
+  d̵i̵f̵_̵p̵o̵s̵d̲i̲t̲e̲_̲e̲q̲_̲l̲e̲f̲t̲
+warning: Batteries/Data/UnionFind/Basic.lean:296:10: `dif_pos` has been deprecated: Use `dite_eq_left` instead
+
+Hint: Replace the deprecated name:
+  d̵i̵f̵_̵p̵o̵s̵d̲i̲t̲e̲_̲e̲q̲_̲l̲e̲f̲t̲
+warning: Batteries/Data/UnionFind/Basic.lean:309:8: `dif_neg` has been deprecated: Use `dite_eq_right` instead
+
+Hint: Replace the deprecated name:
+  d̵i̵f̵_̵n̵e̵g̵d̲i̲t̲e̲_̲e̲q̲_̲r̲i̲g̲h̲t̲
+warning: Batteries/Data/UnionFind/Basic.lean:309:44: `dif_neg` has been deprecated: Use `dite_eq_right` instead
+
+Hint: Replace the deprecated name:
+  d̵i̵f̵_̵n̵e̵g̵d̲i̲t̲e̲_̲e̲q̲_̲r̲i̲g̲h̲t̲
+warning: Batteries/Data/UnionFind/Basic.lean:323:10: `if_neg` has been deprecated: Use `ite_eq_right` instead
+
+Hint: Replace the deprecated name:
+  i̵f̵_̵n̵e̵g̵i̲t̲e̲_̲e̲q̲_̲r̲i̲g̲h̲t̲
+warning: Batteries/Data/UnionFind/Basic.lean:324:19: `dif_neg` has been deprecated: Use `dite_eq_right` instead
+
+Hint: Replace the deprecated name:
+  d̵i̵f̵_̵n̵e̵g̵d̲i̲t̲e̲_̲e̲q̲_̲r̲i̲g̲h̲t̲
+warning: Batteries/Data/UnionFind/Basic.lean:338:19: `if_pos` has been deprecated: Use `ite_eq_left` instead
+
+Hint: Replace the deprecated name:
+  i̵f̵_̵p̵o̵s̵i̲t̲e̲_̲e̲q̲_̲l̲e̲f̲t̲
+warning: Batteries/Data/UnionFind/Basic.lean:351:19: `if_pos` has been deprecated: Use `ite_eq_left` instead
+
+Hint: Replace the deprecated name:
+  i̵f̵_̵p̵o̵s̵i̲t̲e̲_̲e̲q̲_̲l̲e̲f̲t̲
+warning: Batteries/Data/UnionFind/Basic.lean:366:19: `if_pos` has been deprecated: Use `ite_eq_left` instead
+
+Hint: Replace the deprecated name:
+  i̵f̵_̵p̵o̵s̵i̲t̲e̲_̲e̲q̲_̲l̲e̲f̲t̲
+warning: Batteries/Data/UnionFind/Basic.lean:416:23: `if_pos` has been deprecated: Use `ite_eq_left` instead
+
+Hint: Replace the deprecated name:
+  i̵f̵_̵p̵o̵s̵i̲t̲e̲_̲e̲q̲_̲l̲e̲f̲t̲
+✔ [160/180] Built Batteries.Lean.Meta.SavedState (300ms)
+✔ [161/181] Built Batteries.Data.BinomialHeap (353ms)
+✖ [162/183] Building Batteries.Recycling.RBTree.WF (1.3s)
+trace: .> LEAN_PATH=/work/travail_4350/OpenAI-YM-20261028/.lake/packages/Cli/.lake/build/lib/lean:/work/travail_4350/OpenAI-YM-20261028/.lake/packages/batteries/.lake/build/lib/lean:/work/travail_4350/OpenAI-YM-20261028/.lake/packages/Qq/.lake/build/lib/lean:/work/travail_4350/OpenAI-YM-20261028/.lake/packages/aesop/.lake/build/lib/lean:/work/travail_4350/OpenAI-YM-20261028/.lake/packages/proofwidgets/.lake/build/lib/lean:/work/travail_4350/OpenAI-YM-20261028/.lake/packages/importGraph/.lake/build/lib/lean:/work/travail_4350/OpenAI-YM-20261028/.lake/packages/LeanSearchClient/.lake/build/lib/lean:/work/travail_4350/OpenAI-YM-20261028/.lake/packages/plausible/.lake/build/lib/lean:/work/travail_4350/OpenAI-YM-20261028/.lake/packages/mathlib/.lake/build/lib/lean:/work/travail_4350/OpenAI-YM-20261028/.lake/build/lib/lean /work/tc/4.35.0/bin/lean /work/travail_4350/OpenAI-YM-20261028/.lake/packages/batteries/Batteries/Recycling/RBTree/WF.lean -o /work/travail_4350/OpenAI-YM-20261028/.lake/packages/batteries/.lake/build/lib/lean/Batteries/Recycling/RBTree/WF.olean -i /work/travail_4350/OpenAI-YM-20261028/.lake/packages/batteries/.lake/build/lib/lean/Batteries/Recycling/RBTree/WF.ilean -c /work/travail_4350/OpenAI-YM-20261028/.lake/packages/batteries/.lake/build/ir/Batteries/Recycling/RBTree/WF.c --setup /work/travail_4350/OpenAI-YM-20261028/.lake/packages/batteries/.lake/build/ir/Batteries/Recycling/RBTree/WF.setup.json --json
+error: Batteries/Recycling/RBTree/WF.lean:293:4: `grind` failed
+case grind
+α : Type u_1
+l : RBNode α
+v : α
+r' l' : RBNode α
+hl : l' = l.reverse
+a : RBNode α
+y : α
+b : RBNode α
+z : α
+c : RBNode α
+h : ∀ (a : RBNode α) (x : α) (b : RBNode α), l = node red a x b → False
+hr : r' = (node red (node black a y b) z c).reverse
+h_1 : ∀ (a : RBNode α) (x : α) (b : RBNode α), r' = node black a x b → False
+h_2 : ∀ (a : RBNode α) (x : α) (b : RBNode α) (y : α) (c : RBNode α), r' = node red a x (node black b y c) → False
+h_3 : ∀ (a : RBNode α) (x : α) (b : RBNode α), l' = node red a x b → False
+h_4 : ¬(node red (node black l v a) y (b.balance2 z c.setRed)).reverse = node red r' v l'
+⊢ False
+[grind] Goal diagnostics
+  [facts] Asserted facts
+    [prop] l' = l.reverse
+    [prop] ∀ (a : RBNode α) (x : α) (b : RBNode α), l = node red a x b → False
+    [prop] r' = (node red (node black a y b) z c).reverse
+    [prop] ∀ (a : RBNode α) (x : α) (b : RBNode α), r' = node black a x b → False
+    [prop] ∀ (a : RBNode α) (x : α) (b : RBNode α) (y : α) (c : RBNode α), r' = node red a x (node black b y c) → False
+    [prop] ∀ (a : RBNode α) (x : α) (b : RBNode α), l' = node red a x b → False
+    [prop] ¬(node red (node black l v a) y (b.balance2 z c.setRed)).reverse = node red r' v l'
+    [prop] (node red (node black l v a) y (b.balance2 z c.setRed)).reverse =
+          node red (b.balance2 z c.setRed).reverse y (node black l v a).reverse
+    [prop] (node red (node black a y b) z c).reverse = node red c.reverse z (node black a y b).reverse
+    [prop] (node red (node black l v a) y (b.balance2 z c.setRed)).reverse.reverse =
+          node red (node black l v a) y (b.balance2 z c.setRed)
+    [prop] (node red (node black a y b) z c).reverse.reverse = node red (node black a y b) z c
+    [prop] l.reverse.reverse = l
+    [prop] (b.balance2 z c.setRed).reverse = c.setRed.reverse.balance1 z b.reverse
+    [prop] c.setRed.reverse = c.reverse.setRed
+    [prop] (node red c.reverse z (node black a y b).reverse).reverse =
+          node red (node black a y b).reverse.reverse z c.reverse.reverse
+    [prop] (node red (b.balance2 z c.setRed).reverse y (node black l v a).reverse).reverse =
+          node red (node black l v a).reverse.reverse y (b.balance2 z c.setRed).reverse.reverse
+    [prop] (node black a y b).reverse = node black b.reverse y a.reverse
+    [prop] (node black l v a).reverse = node black a.reverse v l.reverse
+    [prop] b.reverse.reverse = b
+    [prop] c.setRed.reverse.reverse = c.setRed
+    [prop] l.reverse.reverse.reverse = l.reverse
+    [prop] (node red (node black a y b) z c).reverse.reverse.reverse = (node red (node black a y b) z c).reverse
+    [prop] (node red (node black l v a) y (b.balance2 z c.setRed)).reverse.reverse.reverse =
+          (node red (node black l v a) y (b.balance2 z c.setRed)).reverse
+    [prop] (node black a y b).reverse.reverse = node black a y b
+    [prop] c.reverse.reverse = c
+    [prop] (node black l v a).reverse.reverse = node black l v a
+    [prop] (b.balance2 z c.setRed).reverse.reverse = b.balance2 z c.setRed
+    [prop] c.reverse.setRed.reverse = c.reverse.reverse.setRed
+    [prop] (node black a.reverse v l.reverse).reverse = node black l.reverse.reverse v a.reverse.reverse
+    [prop] (node black b.reverse y a.reverse).reverse = node black a.reverse.reverse y b.reverse.reverse
+    [prop] c.setRed.reverse.reverse.reverse = c.setRed.reverse
+    [prop] b.reverse.reverse.reverse = b.reverse
+    [prop] a.reverse.reverse = a
+    [prop] (b.balance2 z c.setRed).reverse.reverse.reverse = (b.balance2 z c.setRed).reverse
+    [prop] (node black l v a).reverse.reverse.reverse = (node black l v a).reverse
+    [prop] c.reverse.reverse.reverse = c.reverse
+    [prop] (node black a y b).reverse.reverse.reverse = (node black a y b).reverse
+    [prop] a.reverse.reverse.reverse = a.reverse
+  [eqc] True propositions
+    [prop] ∀ (a : RBNode α) (x : α) (b : RBNode α) (y : α) (c : RBNode α), r' = node red a x (node black b y c) → False
+    [prop] ∀ (a : RBNode α) (x : α) (b : RBNode α), l = node red a x b → False
+    [prop] ∀ (a : RBNode α) (x : α) (b : RBNode α), r' = node black a x b → False
+    [prop] ∀ (a : RBNode α) (x : α) (b : RBNode α), l' = node red a x b → False
+    [prop] (fun x_0 =>
+            ∀ (a : RBNode α) (x : α) (b : RBNode α) (y : α) (c : RBNode α),
+              x_0 = node red a x (node black b y c) → False)
+          r'
+    [prop] (fun x_0 => ∀ (a : RBNode α) (x : α) (b : RBNode α), x_0 = node black a x b → False) r'
+    [prop] (fun x_0 => ∀ (a : RBNode α) (x : α) (b : RBNode α), x_0 = node red a x b → False) l
+    [prop] (fun x_0 => ∀ (a : RBNode α) (x : α) (b : RBNode α), x_0 = node red a x b → False) l'
+  [eqc] False propositions
+    [prop] (node red (node black l v a) y (b.balance2 z c.setRed)).reverse = node red r' v l'
+  [eqc] Equivalence classes
+    [eqc] {l, l.reverse.reverse}
+    [eqc] {r',
+        (node red (node black a y b) z c).reverse,
+        node red c.reverse z (node black a y b).reverse,
+        (node red (node black a y b) z c).reverse.reverse.reverse}
+    [eqc] {l', l.reverse, l.reverse.reverse.reverse}
+    [eqc] {a, a.reverse.reverse}
+    [eqc] {b, b.reverse.reverse}
+    [eqc] {c, c.reverse.reverse}
+    [eqc] {(node red (node black l v a) y (b.balance2 z c.setRed)).reverse,
+        node red (b.balance2 z c.setRed).reverse y (node black l v a).reverse,
+        (node red (node black l v a) y (b.balance2 z c.setRed)).reverse.reverse.reverse}
+    [eqc] {c.setRed, c.setRed.reverse.reverse, c.reverse.setRed.reverse, c.reverse.reverse.setRed}
+    [eqc] {b.balance2 z c.setRed, (b.balance2 z c.setRed).reverse.reverse}
+    [eqc] {node black l v a,
+        (node black l v a).reverse.reverse,
+        (node black a.reverse v l.reverse).reverse,
+        node black l.reverse.reverse v a.reverse.reverse}
+    [eqc] {node black a y b,
+        (node black a y b).reverse.reverse,
+        (node black b.reverse y a.reverse).reverse,
+        node black a.reverse.reverse y b.reverse.reverse}
+    [eqc] {node red (node black l v a) y (b.balance2 z c.setRed),
+        (node red (node black l v a) y (b.balance2 z c.setRed)).reverse.reverse,
+        (node red (b.balance2 z c.setRed).reverse y (node black l v a).reverse).reverse,
+        node red (node black l v a).reverse.reverse y (b.balance2 z c.setRed).reverse.reverse}
+    [eqc] {node red (node black a y b) z c,
+        (node red (node black a y b) z c).reverse.reverse,
+        (node red c.reverse z (node black a y b).reverse).reverse,
+        node red (node black a y b).reverse.reverse z c.reverse.reverse}
+    [eqc] {b.reverse, b.reverse.reverse.reverse}
+    [eqc] {c.reverse, c.reverse.reverse.reverse}
+    [eqc] {c.setRed.reverse, c.reverse.setRed, c.setRed.reverse.reverse.reverse}
+    [eqc] {(b.balance2 z c.setRed).reverse,
+        c.setRed.reverse.balance1 z b.reverse,
+        (b.balance2 z c.setRed).reverse.reverse.reverse}
+    [eqc] {(node black l v a).reverse, node black a.reverse v l.reverse, (node black l v a).reverse.reverse.reverse}
+    [eqc] {(node black a y b).reverse, node black b.reverse y a.reverse, (node black a y b).reverse.reverse.reverse}
+    [eqc] {a.reverse, a.reverse.reverse.reverse}
+  [ematch] E-matching patterns
+    [thm] reverse.eq_1: [@reverse #0 (@nil _)]
+    [thm] reverse.eq_2: [@reverse #4 (@node _ #3 #2 #1 #0)]
+    [thm] reverse_reverse: [@reverse #1 #0]
+    [thm] reverse_balance2: [@balance2 #3 #2 #1 #0]
+    [thm] reverse_setRed: [@setRed #1 #0]
+[grind] Diagnostics
+  [ematch] E-matching Diagnostics
+    [thm] Theorem Instance Count
+      [thm] reverse_reverse ↦ 20
+      [thm] reverse.eq_2 ↦ 8
+      [thm] reverse_setRed ↦ 2
+      [thm] reverse_balance2 ↦ 1
+error: Batteries/Recycling/RBTree/WF.lean:293:4: `grind` failed
+case grind
+α : Type u_1
+l : RBNode α
+v : α
+r l' : RBNode α
+hl : l' = l.reverse
+h : ∀ (a : RBNode α) (x : α) (b : RBNode α), l = node red a x b → False
+h_1 : ∀ (a : RBNode α) (y : α) (b : RBNode α), r = node black a y b → False
+h_2 : ∀ (a : RBNode α) (y : α) (b : RBNode α) (z : α) (c : RBNode α), r = node red (node black a y b) z c → False
+a : RBNode α
+x : α
+b : RBNode α
+y : α
+c : RBNode α
+hr : node red a x (node black b y c) = r.reverse
+h_3 : ∀ (a : RBNode α) (x : α) (b : RBNode α), l' = node red a x b → False
+h_4 : ¬(node red l v r).reverse = node red (a.setRed.balance1 x b) y (node black c v l')
+⊢ False
+[grind] Goal diagnostics
+  [facts] Asserted facts
+    [prop] l' = l.reverse
+    [prop] ∀ (a : RBNode α) (x : α) (b : RBNode α), l = node red a x b → False
+    [prop] ∀ (a : RBNode α) (y : α) (b : RBNode α), r = node black a y b → False
+    [prop] ∀ (a : RBNode α) (y : α) (b : RBNode α) (z : α) (c : RBNode α), r = node red (node black a y b) z c → False
+    [prop] node red a x (node black b y c) = r.reverse
+    [prop] ∀ (a : RBNode α) (x : α) (b : RBNode α), l' = node red a x b → False
+    [prop] ¬(node red l v r).reverse = node red (a.setRed.balance1 x b) y (node black c v l')
+    [prop] (node red l v r).reverse = node red r.reverse v l.reverse
+    [prop] (node red l v r).reverse.reverse = node red l v r
+    [prop] r.reverse.reverse = r
+    [prop] l.reverse.reverse = l
+    [prop] a.setRed.reverse = a.reverse.setRed
+    [prop] (node red a x (node black b y c)).reverse = node red (node black b y c).reverse x a.reverse
+    [prop] (node red r.reverse v l.reverse).reverse = node red l.reverse.reverse v r.reverse.reverse
+    [prop] a.reverse.reverse = a
+    [prop] a.setRed.reverse.reverse = a.setRed
+    [prop] l.reverse.reverse.reverse = l.reverse
+    [prop] r.reverse.reverse.reverse = r.reverse
+    [prop] (node red l v r).reverse.reverse.reverse = (node red l v r).reverse
+    [prop] a.reverse.setRed.reverse = a.reverse.reverse.setRed
+    [prop] (node black b y c).reverse = node black c.reverse y b.reverse
+    [prop] (node red (node black b y c).reverse x a.reverse).reverse =
+          node red a.reverse.reverse x (node black b y c).reverse.reverse
+    [prop] a.setRed.reverse.reverse.reverse = a.setRed.reverse
+    [prop] a.reverse.reverse.reverse = a.reverse
+    [prop] (node black b y c).reverse.reverse = node black b y c
+    [prop] (node black c.reverse y b.reverse).reverse = node black b.reverse.reverse y c.reverse.reverse
+    [prop] (node black b y c).reverse.reverse.reverse = (node black b y c).reverse
+    [prop] b.reverse.reverse = b
+    [prop] c.reverse.reverse = c
+    [prop] c.reverse.reverse.reverse = c.reverse
+    [prop] b.reverse.reverse.reverse = b.reverse
+  [eqc] True propositions
+    [prop] ∀ (a : RBNode α) (y : α) (b : RBNode α) (z : α) (c : RBNode α), r = node red (node black a y b) z c → False
+    [prop] ∀ (a : RBNode α) (x : α) (b : RBNode α), l = node red a x b → False
+    [prop] ∀ (a : RBNode α) (y : α) (b : RBNode α), r = node black a y b → False
+    [prop] ∀ (a : RBNode α) (x : α) (b : RBNode α), l' = node red a x b → False
+    [prop] (fun x_0 =>
+            ∀ (a : RBNode α) (y : α) (b : RBNode α) (z : α) (c : RBNode α),
+              x_0 = node red (node black a y b) z c → False)
+          r
+    [prop] (fun x_0 => ∀ (a : RBNode α) (y : α) (b : RBNode α), x_0 = node black a y b → False) r
+    [prop] (fun x_0 => ∀ (a : RBNode α) (x : α) (b : RBNode α), x_0 = node red a x b → False) l
+    [prop] (fun x_0 => ∀ (a : RBNode α) (x : α) (b : RBNode α), x_0 = node red a x b → False) l'
+  [eqc] False propositions
+    [prop] (node red l v r).reverse = node red (a.setRed.balance1 x b) y (node black c v l')
+  [eqc] Equivalence classes
+    [eqc] {l, l.reverse.reverse}
+    [eqc] {r,
+        r.reverse.reverse,
+        (node red a x (node black b y c)).reverse,
+        node red (node black b y c).reverse x a.reverse}
+    [eqc] {l', l.reverse, l.reverse.reverse.reverse}
+    [eqc] {a, a.reverse.reverse}
+    [eqc] {b, b.reverse.reverse}
+    [eqc] {c, c.reverse.reverse}
+    [eqc] {r.reverse,
+        node red a x (node black b y c),
+        r.reverse.reverse.reverse,
+        (node red (node black b y c).reverse x a.reverse).reverse,
+        node red a.reverse.reverse x (node black b y c).reverse.reverse}
+    [eqc] {(node red l v r).reverse, node red r.reverse v l.reverse, (node red l v r).reverse.reverse.reverse}
+    [eqc] {a.setRed, a.setRed.reverse.reverse, a.reverse.setRed.reverse, a.reverse.reverse.setRed}
+    [eqc] {node black b y c,
+        (node black b y c).reverse.reverse,
+        (node black c.reverse y b.reverse).reverse,
+        node black b.reverse.reverse y c.reverse.reverse}
+    [eqc] {node red l v r,
+        (node red l v r).reverse.reverse,
+        (node red r.reverse v l.reverse).reverse,
+        node red l.reverse.reverse v r.reverse.reverse}
+    [eqc] {a.reverse, a.reverse.reverse.reverse}
+    [eqc] {a.setRed.reverse, a.reverse.setRed, a.setRed.reverse.reverse.reverse}
+    [eqc] {(node black b y c).reverse, node black c.reverse y b.reverse, (node black b y c).reverse.reverse.reverse}
+    [eqc] {b.reverse, b.reverse.reverse.reverse}
+    [eqc] {c.reverse, c.reverse.reverse.reverse}
+  [ematch] E-matching patterns
+    [thm] reverse.eq_1: [@reverse #0 (@nil _)]
+    [thm] reverse.eq_2: [@reverse #4 (@node _ #3 #2 #1 #0)]
+    [thm] reverse_reverse: [@reverse #1 #0]
+    [thm] reverse_balance2: [@balance2 #3 #2 #1 #0]
+    [thm] reverse_setRed: [@setRed #1 #0]
+  [limits] Thresholds reached
+    [limit] maximum number of E-matching rounds has been reached, threshold: `(ematch := 5)`
+[grind] Diagnostics
+  [ematch] E-matching Diagnostics
+    [thm] Theorem Instance Count
+      [thm] reverse_reverse ↦ 16
+      [thm] reverse.eq_2 ↦ 6
+      [thm] reverse_setRed ↦ 2
+error: Batteries/Recycling/RBTree/WF.lean:357:2: unsolved goals
+case h_2
+α✝ : Type u_1
+p : α✝ → Prop
+x✝³ x✝² a✝ : RBNode α✝
+x✝¹ : α✝
+b✝ c✝ : RBNode α✝
+y✝ : α✝
+d✝ : RBNode α✝
+hx : p x✝¹
+ha : All p a✝
+hb : All p b✝
+hy : p y✝
+hc : All p c✝
+hd : All p d✝
+this : All p (b✝.append c✝)
+l✝ : RBNode α✝
+x✝ : ∀ (a : RBNode α✝) (x : α✝) (b : RBNode α✝), ¬b✝.append c✝ = node red a x b
+⊢ All p (a✝.balLeft x✝¹ (node black (b✝.append c✝) y✝ d✝))
+warning: Batteries/Recycling/RBTree/WF.lean:358:46: This simp argument is unused:
+  All.balLeft
+
+Hint: Omit it from the simp argument list.
+  [apply] simp_all
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+✔ [170/183] Built Batteries.Lean.Util.EnvSearch (307ms)
+⚠ [173/185] Built Batteries.Data.UnionFind.Lemmas (502ms)
+warning: Batteries/Data/UnionFind/Lemmas.lean:55:28: `if_neg` has been deprecated: Use `ite_eq_right` instead
+
+Hint: Replace the deprecated name:
+  i̵f̵_̵n̵e̵g̵i̲t̲e̲_̲e̲q̲_̲r̲i̲g̲h̲t̲
+warning: Batteries/Data/UnionFind/Lemmas.lean:75:61: `if_pos` has been deprecated: Use `ite_eq_left` instead
+
+Hint: Replace the deprecated name:
+  i̵f̵_̵p̵o̵s̵i̲t̲e̲_̲e̲q̲_̲l̲e̲f̲t̲
+warning: Batteries/Data/UnionFind/Lemmas.lean:87:14: `if_pos` has been deprecated: Use `ite_eq_left` instead
+
+Hint: Replace the deprecated name:
+  i̵f̵_̵p̵o̵s̵i̲t̲e̲_̲e̲q̲_̲l̲e̲f̲t̲
+✔ [174/185] Built Batteries.Tactic.Congr (551ms)
+✔ [175/186] Built Batteries.Tactic.Instances (486ms)
+✔ [176/186] Built Batteries.Tactic.Lemma (486ms)
+✔ [177/188] Built Batteries.Tactic.Case (786ms)
+✔ [178/188] Built Batteries.Tactic.NoMatch (507ms)
+✔ [179/190] Built Batteries.Data.UnionFind (313ms)
+✔ [180/190] Built Batteries.Tactic.PermuteGoals (397ms)
+✔ [181/192] Built Batteries.Tactic.HelpCmd (976ms)
+✔ [182/192] Built Batteries.Tactic.PrintDependents (509ms)
+✔ [183/196] Built Batteries.Tactic.PrintOpaques (459ms)
+✔ [184/224] Built Batteries.Tactic.GeneralizeProofs (1.2s)
+✔ [185/224] Built Batteries.Tactic.PrintPrefix (557ms)
+✔ [186/224] Built Batteries.Tactic.ShowUnused (521ms)
+✔ [187/224] Built Batteries.Util.Cache (362ms)
+✔ [188/224] Built Batteries.Util.Pickle (254ms)
+✔ [189/224] Built Batteries.Util.ExtendedBinder (446ms)
+✔ [192/320] Built Mathlib.Tactic.Linter.DirectoryDependency (676ms)
+✔ [193/320] Built ImportGraph.Lean.Environment (248ms)
+✔ [194/320] Built ImportGraph.Graph.TransitiveClosure (241ms)
+✔ [195/320] Built ImportGraph.Imports.ImportGraph (295ms)
+✔ [196/320] Built Batteries.Tactic.SqueezeScope (1.1s)
+✔ [200/328] Built ImportGraph.Imports.Redundant (292ms)
+✔ [201/332] Built ImportGraph.Imports.RequiredModules (418ms)
+✔ [202/332] Built ImportGraph.Tools.ImportDiff (456ms)
+✔ [203/334] Built Mathlib.Tactic.Linter.Header (661ms)
+✔ [204/334] Built Aesop.Script.Tactic (260ms)
+✔ [205/334] Built Aesop.Script.GoalWithMVars (289ms)
+✔ [206/334] Built Aesop.Nanos (294ms)
+✔ [207/337] Built Aesop.Util.UnorderedArraySet (347ms)
+✔ [208/337] Built Aesop.Index.DiscrTreeConfig (285ms)
+✔ [209/337] Built ImportGraph.Tools.RedundantImports (412ms)
+✔ [210/337] Built Aesop.Check (323ms)
+✔ [211/337] Built ImportGraph.Tools.MinImports (422ms)
+✔ [212/337] Built Aesop.Script.TacticState (359ms)
+✔ [213/337] Built Mathlib.Tactic.TypeStar (392ms)
+✔ [214/337] Built ImportGraph.Tools.FindHome (519ms)
+✔ [215/337] Built Mathlib.Tactic.MinImports (674ms)
+✔ [216/337] Built Mathlib.Util.ParseCommand (409ms)
+✔ [217/337] Built Mathlib.Tactic.DeclarationNames (415ms)
+✔ [218/337] Built Mathlib.Tactic.Linter.PrivateModule (426ms)
+✔ [219/337] Built Mathlib.Tactic.Linter.TacticDocumentation (408ms)
+✔ [220/337] Built Mathlib.Tactic.Linter.UnusedTacticExtension (479ms)
+✔ [221/337] Built Mathlib.Lean.Environment (370ms)
+✖ [222/337] Building Mathlib.Tactic.Linter.Whitespace (640ms)
+trace: .> LEAN_PATH=/work/travail_4350/OpenAI-YM-20261028/.lake/packages/Cli/.lake/build/lib/lean:/work/travail_4350/OpenAI-YM-20261028/.lake/packages/batteries/.lake/build/lib/lean:/work/travail_4350/OpenAI-YM-20261028/.lake/packages/Qq/.lake/build/lib/lean:/work/travail_4350/OpenAI-YM-20261028/.lake/packages/aesop/.lake/build/lib/lean:/work/travail_4350/OpenAI-YM-20261028/.lake/packages/proofwidgets/.lake/build/lib/lean:/work/travail_4350/OpenAI-YM-20261028/.lake/packages/importGraph/.lake/build/lib/lean:/work/travail_4350/OpenAI-YM-20261028/.lake/packages/LeanSearchClient/.lake/build/lib/lean:/work/travail_4350/OpenAI-YM-20261028/.lake/packages/plausible/.lake/build/lib/lean:/work/travail_4350/OpenAI-YM-20261028/.lake/packages/mathlib/.lake/build/lib/lean:/work/travail_4350/OpenAI-YM-20261028/.lake/build/lib/lean /work/tc/4.35.0/bin/lean /work/travail_4350/OpenAI-YM-20261028/.lake/packages/mathlib/Mathlib/Tactic/Linter/Whitespace.lean -o /work/travail_4350/OpenAI-YM-20261028/.lake/packages/mathlib/.lake/build/lib/lean/Mathlib/Tactic/Linter/Whitespace.olean -i /work/travail_4350/OpenAI-YM-20261028/.lake/packages/mathlib/.lake/build/lib/lean/Mathlib/Tactic/Linter/Whitespace.ilean -c /work/travail_4350/OpenAI-YM-20261028/.lake/packages/mathlib/.lake/build/ir/Mathlib/Tactic/Linter/Whitespace.c --setup /work/travail_4350/OpenAI-YM-20261028/.lake/packages/mathlib/.lake/build/ir/Mathlib/Tactic/Linter/Whitespace.setup.json --json
+error: Mathlib/Tactic/Linter/Whitespace.lean:49:2: do not set the `deprecation?` field directly; it is an internal implementation detail. Deprecate the option with a `@[deprecated "..." (since := "...")]` attribute instead
+✔ [223/337] Built Aesop.Util.EqualUpToIds (1.1s)
+✔ [224/337] Built Mathlib.Lean.Elab.Tactic.Meta (420ms)
+✔ [225/337] Built Mathlib.Tactic.Linter.OldObtain (431ms)
+✔ [226/337] Built Mathlib.Tactic.Linter.Multigoal (512ms)
+✔ [227/337] Built Mathlib.Lean.Expr.Basic (705ms)
+✔ [228/337] Built Mathlib.Tactic.Linter.GlobalAttributeIn (455ms)
+✔ [229/337] Built Mathlib.Tactic.Linter.HashCommandLinter (559ms)
+✔ [230/337] Built Mathlib.Tactic.Linter.EmptyLine (589ms)
+✔ [231/338] Built Mathlib.Tactic.Lemma (450ms)
+✔ [232/338] Built Mathlib.Tactic.Linter.AuxLemma (488ms)
+✔ [233/338] Built Mathlib.Tactic.Linter.DocString (718ms)
+⚠ [234/338] Built Mathlib.Tactic.Linter.FlexibleLinter (1.1s)
+warning: Mathlib/Tactic/Linter/FlexibleLinter.lean:11:0: 'Lean.Server.InfoUtils' has been deprecated: please replace this import by
+
+import Lean.Elab.InfoTree.Util
+✔ [235/339] Built Mathlib.Lean.Linter (426ms)
+✔ [236/339] Built Mathlib.Tactic.AdaptationNote (613ms)
+✔ [237/339] Built Mathlib.Tactic.Linter.DeprecatedSyntaxLinter (744ms)
+✔ [238/339] Built Mathlib.Tactic.Linter.DocPrime (769ms)
+✔ [239/339] Built ImportGraph.Tools (421ms)
+✔ [240/339] Built Aesop.Rule.Name (485ms)
+✔ [241/339] Built Aesop.Options.Public (429ms)
+✔ [242/339] Built Mathlib.Tactic.Linter.Lint (590ms)
+✔ [243/349] Built Mathlib.Tactic.Linter.UnusedTactic (681ms)
+✔ [244/349] Built Mathlib.Tactic.ExtractGoal (780ms)
+⚠ [245/349] Built Mathlib.Lean.Elab.InfoTree (528ms)
+warning: Mathlib/Lean/Elab/InfoTree.lean:9:0: 'Lean.Server.InfoUtils' has been deprecated: please replace this import by
+
+import Lean.Elab.InfoTree.Util
+✔ [246/349] Built Aesop.Script.OptimizeSyntax (520ms)
+✔ [247/349] Built Mathlib.Lean.ContextInfo (604ms)
+✔ [248/353] Built Aesop.Util.Basic (1.2s)
+✔ [249/353] Built Aesop.Options.Internal (350ms)
+✔ [250/360] Built Aesop.Forward.LevelIndex (332ms)
+✔ [251/360] Built Aesop.Forward.PremiseIndex (331ms)
+✔ [252/360] Built Aesop.Percent (349ms)
+⚠ [253/364] Built Mathlib.Tactic.Linter.Style (1.1s)
+warning: Mathlib/Tactic/Linter/Style.lean:9:0: 'Lean.Server.InfoUtils' has been deprecated: please replace this import by
+
+import Lean.Elab.InfoTree.Util
+✔ [254/366] Built Aesop.Script.Util (467ms)
+✔ [255/366] Built Aesop.Forward.SlotIndex (314ms)
+✔ [256/375] Built Aesop.Util.UnionFind (394ms)
+✔ [257/375] Built Aesop.RuleTac.RuleTerm (363ms)
+✔ [258/375] Built Mathlib.Tactic.Linter.UnusedInstancesInType (771ms)
+⚠ [259/377] Built Mathlib.Tactic.TacticAnalysis (787ms)
+warning: Mathlib/Tactic/TacticAnalysis.lean:9:0: 'Lean.Server.InfoUtils' has been deprecated: please replace this import by
+
+import Lean.Elab.InfoTree.Util
+✔ [260/377] Built Aesop.Tracing (703ms)
+✔ [261/377] Built Aesop.Forward.Substitution (708ms)
+✔ [262/377] Built Aesop.Script.CtorNames (519ms)
+✔ [263/377] Built Aesop.ElabM (428ms)
+✔ [264/377] Built Aesop.Util.Tactic (348ms)
+✔ [265/381] Built Aesop.Util.Unfold (537ms)
+✔ [266/381] Built Aesop.RuleTac.Forward.Basic (518ms)
+✔ [267/381] Built Aesop.Constants (279ms)
+✔ [268/381] Built Aesop.Util.Tactic.Ext (585ms)
+✔ [269/381] Built Aesop.RulePattern.Cache (356ms)
+✔ [270/381] Built Aesop.Script.Step (690ms)
+✔ [271/381] Built Aesop.Stats.Basic (788ms)
+✔ [272/381] Built Aesop.Index.Basic (479ms)
+✔ [273/385] Built Aesop.RuleTac.ElabRuleTerm (524ms)
+✔ [274/406] Built Mathlib.Tactic.Linter.OverlappingInstances (1.2s)
+✔ [275/406] Built Aesop.Util.Tactic.Unfold (569ms)
+✔ [276/412] Built Aesop.Script.UScript (419ms)
+✔ [277/412] Built Aesop.Script.SScript (449ms)
+✔ [278/412] Built Aesop.BaseM (435ms)
+✔ [279/412] Built Aesop.EMap (606ms)
+✔ [280/412] Built Aesop.Util.OrderedHashSet (349ms)
+✔ [281/412] Built Aesop.RuleSet.Name (274ms)
+✔ [282/413] Built Aesop.Search.Expansion.Simp (437ms)
+✔ [283/435] Built Mathlib.Tactic.TacticAnalysis.Declarations (1.5s)
+✔ [362/435] Built Aesop.Script.Check (448ms)
+✔ [363/439] Built Aesop.Script.ScriptM (453ms)
+✔ [364/439] Built Aesop.Exception (387ms)
+✔ [365/459] Built Aesop.Script.UScriptToSScript (755ms)
+✔ [366/459] Built Aesop.RuleTac.GoalDiff (699ms)
+✔ [367/459] Built Aesop.RuleSet.Filter (389ms)
+✔ [372/459] Built Aesop.Stats.Extension (426ms)
+✔ [373/459] Built Aesop.Frontend.Basic (354ms)
+✔ [374/459] Built Aesop.RulePattern (925ms)
+✔ [379/459] Built Aesop.Stats.File (454ms)
+✔ [382/464] Built Aesop.RuleTac.Basic (526ms)
+✔ [384/464] Built Aesop.Script.StructureStatic (669ms)
+✔ [385/465] Built Aesop.Stats.Report (630ms)
+✔ [389/470] Built Aesop.Index.RulePattern (640ms)
+✔ [400/470] Built Qq.ForLean.ToExpr (397ms)
+✔ [401/568] Built Aesop.Script.SpecificTactics (1.2s)
+✔ [406/568] Built Qq.ForLean.ReduceEval (444ms)
+✖ [407/568] Building Qq.Typ (406ms)
+trace: .> LEAN_PATH=/work/travail_4350/OpenAI-YM-20261028/.lake/packages/Cli/.lake/build/lib/lean:/work/travail_4350/OpenAI-YM-20261028/.lake/packages/batteries/.lake/build/lib/lean:/work/travail_4350/OpenAI-YM-20261028/.lake/packages/Qq/.lake/build/lib/lean:/work/travail_4350/OpenAI-YM-20261028/.lake/packages/aesop/.lake/build/lib/lean:/work/travail_4350/OpenAI-YM-20261028/.lake/packages/proofwidgets/.lake/build/lib/lean:/work/travail_4350/OpenAI-YM-20261028/.lake/packages/importGraph/.lake/build/lib/lean:/work/travail_4350/OpenAI-YM-20261028/.lake/packages/LeanSearchClient/.lake/build/lib/lean:/work/travail_4350/OpenAI-YM-20261028/.lake/packages/plausible/.lake/build/lib/lean:/work/travail_4350/OpenAI-YM-20261028/.lake/packages/mathlib/.lake/build/lib/lean:/work/travail_4350/OpenAI-YM-20261028/.lake/build/lib/lean /work/tc/4.35.0/bin/lean /work/travail_4350/OpenAI-YM-20261028/.lake/packages/Qq/Qq/Typ.lean -o /work/travail_4350/OpenAI-YM-20261028/.lake/packages/Qq/.lake/build/lib/lean/Qq/Typ.olean -i /work/travail_4350/OpenAI-YM-20261028/.lake/packages/Qq/.lake/build/lib/lean/Qq/Typ.ilean -c /work/travail_4350/OpenAI-YM-20261028/.lake/packages/Qq/.lake/build/ir/Qq/Typ.c --setup /work/travail_4350/OpenAI-YM-20261028/.lake/packages/Qq/.lake/build/ir/Qq/Typ.setup.json --json
+error: Qq/Typ.lean:71:17: failed to synthesize instance of type class
+  ToMessageData (Quoted α)
+
+Hint: Type class instance resolution failures can be inspected with the `set_option trace.Meta.synthInstance true` command.
+error: Qq/Typ.lean:71:27: failed to synthesize instance of type class
+  ToMessageData (Quoted α)
+
+Hint: Type class instance resolution failures can be inspected with the `set_option trace.Meta.synthInstance true` command.
+✔ [457/568] Built Aesop.Script.StructureDynamic (978ms)
+✔ [458/568] Built Aesop.Search.Expansion.Basic (485ms)
+✔ [469/568] Built Aesop.RuleTac.Tactic (565ms)
+✔ [482/568] Built Qq.SortLocalDecls (439ms)
+✔ [483/577] Built Qq.ForLean.Do (466ms)
+✔ [497/583] Built Aesop.RuleTac.Apply (522ms)
+✔ [498/583] Built Aesop.RuleTac.Preprocess (429ms)
+✔ [499/583] Built Aesop.RuleTac.Cases (661ms)
+⚠ [523/583] Built Mathlib.Tactic.Lift (781ms)
+warning: Mathlib/Tactic/Lift.lean:57:19: `dif_pos` has been deprecated: Use `dite_eq_left` instead
+
+Hint: Replace the deprecated name:
+  d̵i̵f̵_̵p̵o̵s̵d̲i̲t̲e̲_̲e̲q̲_̲l̲e̲f̲t̲
+✔ [524/583] Built Plausible.Attr (335ms)
+✔ [525/583] Built Aesop.Script.Main (526ms)
+✔ [569/583] Built Plausible.Random (452ms)
+✔ [570/583] Built Plausible.Shrinkable (398ms)
+✔ [589/605] Built LeanSearchClient.Basic (312ms)
+✔ [590/813] Built Plausible.Gen (527ms)
+✔ [801/953] Built Plausible.DeriveShrinkable (944ms)
+✔ [846/1232] Built Plausible.Arbitrary (452ms)
+✔ [847/1232] Built ProofWidgets.Compat (403ms)
+⚠ [933/1516] Built ProofWidgets.Util (510ms)
+warning: ProofWidgets/Util.lean:43:5: Ambiguous namespace `SubExpr`: it is interpreted as `_root_.Lean.PrettyPrinter.Delaborator.SubExpr` because this `open` occurs inside `namespace Lean.PrettyPrinter.Delaborator`, while `_root_.Lean.SubExpr` is silently not opened. Specify the namespace unambiguously, e.g. `_root_.Lean.PrettyPrinter.Delaborator.SubExpr`. The warning can sometimes also be addressed by moving the `open` outside of the surrounding `namespace`.
+
+Note: This linter can be disabled with `set_option linter.ambiguousOpen false`
+✔ [934/1516] Built Mathlib.Data.Ineq (420ms)
+✔ [1061/2494] Built Plausible.ArbitraryFueled (297ms)
+✔ [1082/2973] Built Mathlib.Tactic.Linter.MinImports (801ms)
+✔ [1084/2973] Built Mathlib.Util.PrintSorries (772ms)
+✔ [1140/3881] Built LeanSearchClient.Syntax (1.2s)
+✔ [1141/3881] Built ProofWidgets.Component.Basic (629ms)
+✔ [1149/3964] Built Plausible.Sampleable (630ms)
+✔ [1150/3964] Built ProofWidgets.Cancellable (630ms)
+✖ [1209/5987] Building ProofWidgets.Component.MakeEditLink (503ms)
+trace: .> LEAN_PATH=/work/travail_4350/OpenAI-YM-20261028/.lake/packages/Cli/.lake/build/lib/lean:/work/travail_4350/OpenAI-YM-20261028/.lake/packages/batteries/.lake/build/lib/lean:/work/travail_4350/OpenAI-YM-20261028/.lake/packages/Qq/.lake/build/lib/lean:/work/travail_4350/OpenAI-YM-20261028/.lake/packages/aesop/.lake/build/lib/lean:/work/travail_4350/OpenAI-YM-20261028/.lake/packages/proofwidgets/.lake/build/lib/lean:/work/travail_4350/OpenAI-YM-20261028/.lake/packages/importGraph/.lake/build/lib/lean:/work/travail_4350/OpenAI-YM-20261028/.lake/packages/LeanSearchClient/.lake/build/lib/lean:/work/travail_4350/OpenAI-YM-20261028/.lake/packages/plausible/.lake/build/lib/lean:/work/travail_4350/OpenAI-YM-20261028/.lake/packages/mathlib/.lake/build/lib/lean:/work/travail_4350/OpenAI-YM-20261028/.lake/build/lib/lean /work/tc/4.35.0/bin/lean /work/travail_4350/OpenAI-YM-20261028/.lake/packages/proofwidgets/ProofWidgets/Component/MakeEditLink.lean -o /work/travail_4350/OpenAI-YM-20261028/.lake/packages/proofwidgets/.lake/build/lib/lean/ProofWidgets/Component/MakeEditLink.olean -i /work/travail_4350/OpenAI-YM-20261028/.lake/packages/proofwidgets/.lake/build/lib/lean/ProofWidgets/Component/MakeEditLink.ilean -c /work/travail_4350/OpenAI-YM-20261028/.lake/packages/proofwidgets/.lake/build/ir/ProofWidgets/Component/MakeEditLink.c --setup /work/travail_4350/OpenAI-YM-20261028/.lake/packages/proofwidgets/.lake/build/ir/ProofWidgets/Component/MakeEditLink.setup.json --json
+error: ProofWidgets/Component/MakeEditLink.lean:12:64: Invalid field `utf16Size`: The environment does not contain `Char.utf16Size`, so it is not possible to project the field `utf16Size` from an expression
+  c
+of type `Char`
+✔ [1219/6613] Built Plausible.Functions (522ms)
+✔ [1220/6613] Built ProofWidgets.Component.Panel.Basic (575ms)
+✔ [1225/7093] Built Plausible.DeriveArbitrary (982ms)
+✔ [1291/8345] Built LeanSearchClient.LoogleSyntax (933ms)
+✔ [1292/8345] Built Mathlib.Data.List.SplitOn (286ms)
+✔ [1312/8666] Built Mathlib.Lean.Expr (322ms)
+✔ [1358/8666] Built Plausible.Testable (1.1s)
+✔ [1359/8666] Built Mathlib.MeasureTheory.Measure.Typeclasses.NoAtoms (284ms)
+✔ [1361/8666] Built LeanSearchClient (414ms)
+✔ [1362/8666] Built ProofWidgets.Data.Html (1.5s)
+✔ [1364/8666] Built Plausible.Tactic (585ms)
+✔ [1365/8666] Built ProofWidgets.Component.FilterDetails (530ms)
+✔ [1366/8666] Built ProofWidgets.Component.HtmlDisplay (543ms)
+✔ [1367/8666] Built ProofWidgets.Component.RefreshComponent (656ms)
+✔ [1376/8666] Built ProofWidgets.Component.OfRpcMethod (622ms)
+✔ [1383/8666] Built ProofWidgets.Component.PenroseDiagram (636ms)
+✔ [1385/8666] Built Plausible (418ms)
+✔ [7301/8666] Built ProofWidgets.Presentation.Expr (705ms)
+Some required targets logged failures:
+- Batteries.Recycling.MonadSatisfying.Basic
+- Batteries.Tactic.Alias
+- Batteries.Data.ByteArray
+- Batteries.Data.BinaryHeap.Basic
+- Batteries.Data.UInt
+- Batteries.Lean.Float
+- Batteries.Lean.LawfulMonadLift
+- Batteries.Recycling.RBTree.WF
+- Mathlib.Tactic.Linter.Whitespace
+- Qq.Typ
+- ProofWidgets.Component.MakeEditLink
+error: build failed

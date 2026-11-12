@@ -1,0 +1,18 @@
+#!/bin/bash
+# Modules lean4lean REPORTÉS (trop gros pour le lot borné) : un seul à la fois, 55 Go et 3 h au plus chacun (pilote, 11/11/2026).
+C=/work/lean4lean_essai/reportes; mkdir -p $C; cd $C
+export PATH=/work/tc/4.32.0/bin:/usr/bin:/bin HOME=/work/home; export LEAN_PATH=$(cat /work/lean4lean_essai/lean_path.txt)
+B=$(ls /work/lean4lean_essai/src/.lake/build/bin/lean4lean /work/lean4lean_essai/lean4lean 2>/dev/null | head -1)
+for m in YM.Work.F05 YM.RG08.Clef.Bravo YM.RemainderComparison.Valse.Pellets YM.RemainderComparison.Typeface.Press YM.RemainderComparison.Typeface.Cards YM.RemainderComparison.Solos.Hues YM.RemainderComparison.Flues.Hearth; do
+  [ -e $m.rc ] && continue
+  s=$(date +%s); echo "$(date -u +%FT%TZ) début $m" >> suivi.log
+  ( /usr/bin/time -v -o $m.time timeout 10800 nice -n 15 $B "$m" > $m.log 2>&1; echo "$? $(( $(date +%s)-s ))" > $m.rc.tmp; mv $m.rc.tmp $m.rc ) &
+  W=$!
+  while kill -0 $W 2>/dev/null; do
+    p=$(pgrep -u lean -f "lean4lean $m" | head -1)
+    if [ -n "$p" ]; then r=$(ps -o rss= -p $p 2>/dev/null | tr -d ' '); [ -n "$r" ] && [ "$r" -gt 55000000 ] && { echo "$(date -u +%FT%TZ) $m : mémoire $((r/1048576)) Go > 55 Go, arrêt" >> suivi.log; kill -TERM $p; }; fi
+    sleep 20
+  done
+  echo "$(date -u +%FT%TZ) fin $m : $(cat $m.rc) ; mémoire max $(grep 'Maximum resident' $m.time 2>/dev/null | awk '{printf "%.1f Go", $NF/1048576}')" >> suivi.log
+done
+echo "$(date -u +%FT%TZ) FIN des reportés" >> suivi.log

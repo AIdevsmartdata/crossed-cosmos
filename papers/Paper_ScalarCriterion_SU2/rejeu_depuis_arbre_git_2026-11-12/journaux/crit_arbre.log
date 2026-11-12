@@ -1,0 +1,115 @@
+[2026-11-11T20:03:58Z] DEBUT ; ulimit -n=1048576 ; charge: 106.01 115.07 128.95
+97cd82b6de42a33c00df86b5491324c463900c96fda73bd993de4340be01573c  crit_arbre.tar.gz
+44eb7a42e626bd45cedc8a3bcd8b67a7e7d1579c16b6845f56061deac1f933ba  echafaudage/PrintAxioms.lean
+6d89b3eaff88dad6f87f9d9d70bc70aa4ebdd6632f17ddc48093f165ef5c5fd6  echafaudage/lake-manifest.json
+09bb68ef0a40ef4638ed50c7eae095f79e137159740bfef3ecf69a8491b8ca1d  echafaudage/lakefile.toml
+8733782dc070a99b312039cda424f601b80f3be6f6f512627da5ba25adc27632  echafaudage/lean-toolchain
+[2026-11-11T20:03:58Z] CMD: rm -rf arbre proj
+[2026-11-11T20:03:58Z] RC=0 (0 s) :: rm -rf arbre proj
+[2026-11-11T20:03:58Z] CMD: mkdir arbre proj
+[2026-11-11T20:03:58Z] RC=0 (0 s) :: mkdir arbre proj
+[2026-11-11T20:03:58Z] CMD: tar xzf crit_arbre.tar.gz -C arbre
+[2026-11-11T20:03:58Z] RC=0 (0 s) :: tar xzf crit_arbre.tar.gz -C arbre
+[2026-11-11T20:03:58Z] CMD: bash -c cd arbre && find . -type f | wc -l
+64
+[2026-11-11T20:03:58Z] RC=0 (0 s) :: bash -c cd arbre && find . -type f | wc -l
+[2026-11-11T20:03:58Z] CMD: bash -c cd arbre/Paper_ScalarCriterion_SU2/lean && grep -E "^[0-9a-f]{64}" MANIFEST.txt | while read h f; do case $f in ClayYM/*) g=../ClayYM_v1_1_extrait/$f;; *) g=$f;; esac; echo "$h  $g"; done | sha256sum -c -
+CritereScalaire.lean: OK
+main.lean: OK
+assembler.sh: OK
+mutants.py: OK
+../ClayYM_v1_1_extrait/ClayYM/Basic.lean: OK
+../ClayYM_v1_1_extrait/ClayYM/OS.lean: OK
+../ClayYM_v1_1_extrait/ClayYM/Gap.lean: OK
+../ClayYM_v1_1_extrait/ClayYM/Fake/Trivial.lean: OK
+../ClayYM_v1_1_extrait/ClayYM/Transfer.lean: OK
+../ClayYM_v1_1_extrait/ClayYM/GapQ.lean: OK
+[2026-11-11T20:03:58Z] RC=0 (0 s) :: bash -c cd arbre/Paper_ScalarCriterion_SU2/lean && grep -E "^[0-9a-f]{64}" MANIFEST.txt | while read h f; do case $f in ClayYM/*) g=../ClayYM_v1_1_extrait/$f;; *) g=$f;; esac; echo "$h  $g"; done | sha256sum -c -
+[2026-11-11T20:03:58Z] CMD: cp echafaudage/lakefile.toml echafaudage/lean-toolchain echafaudage/lake-manifest.json echafaudage/PrintAxioms.lean proj/
+[2026-11-11T20:03:58Z] RC=0 (0 s) :: cp echafaudage/lakefile.toml echafaudage/lean-toolchain echafaudage/lake-manifest.json echafaudage/PrintAxioms.lean proj/
+[2026-11-11T20:03:58Z] CMD: cp arbre/Paper_ScalarCriterion_SU2/lean/main.lean proj/main.lean
+[2026-11-11T20:03:58Z] RC=0 (0 s) :: cp arbre/Paper_ScalarCriterion_SU2/lean/main.lean proj/main.lean
+[2026-11-11T20:03:58Z] CMD: sha256sum proj/main.lean
+944a99f6fc10f1696e6dfa5bc231b73dd9c57a101b48518c52e3e4ca944ef2c6  proj/main.lean
+[2026-11-11T20:03:58Z] RC=0 (0 s) :: sha256sum proj/main.lean
+[2026-11-11T20:03:58Z] CMD: mkdir -p proj/.lake
+[2026-11-11T20:03:58Z] RC=0 (0 s) :: mkdir -p proj/.lake
+[2026-11-11T20:03:58Z] CMD: cp -a /work/lean_nous/nous/crit_proj/.lake/packages proj/.lake/packages
+[2026-11-11T20:04:37Z] RC=0 (39 s) :: cp -a /work/lean_nous/nous/crit_proj/.lake/packages proj/.lake/packages
+[2026-11-11T20:04:37Z] CMD: bash -c ls proj/.lake; ls proj/.lake/build 2>&1 | head -2
+packages
+ls: cannot access 'proj/.lake/build': No such file or directory
+[2026-11-11T20:04:37Z] RC=0 (0 s) :: bash -c ls proj/.lake; ls proj/.lake/build 2>&1 | head -2
+[2026-11-11T20:04:37Z] CMD: lean --version
+Lean (version 4.34.0, x86_64-unknown-linux-gnu, commit 293d5d0c0c3f3dded4688b3ccd6a33939ac5102b, Release)
+[2026-11-11T20:04:37Z] RC=0 (0 s) :: lean --version
+[2026-11-11T20:04:37Z] CMD: lake --version
+Lake version 5.0.0-src+293d5d0 (Lean version 4.34.0)
+[2026-11-11T20:04:37Z] RC=0 (0 s) :: lake --version
+## grep sorry/admit/native_decide/axiom (docstrings seulement attendus)
+./main.lean:14:No hypothesis, no axiom, no `sorry` in this file: only concrete definitions built from
+./main.lean:325:`= ℂΩ`). Proved results (no `sorry`):
+./main.lean:497:No axiom, no `sorry`. The Osterwalder–Schrader reconstruction is NOT proved here: it enters only as
+./main.lean:1033:No axiom, no `sorry`. The Osterwalder–Schrader reconstruction is the NAMED HYPOTHESIS
+[2026-11-11T20:04:37Z] CMD: taskset -c 0-15 nice -n 10 lake exe cache get
+Current branch: HEAD
+Using cache from origin: (some leanprover-community/mathlib4)
+No files to download
+Already decompressed 8908 file(s)
+[2026-11-11T20:04:50Z] RC=0 (13 s) :: taskset -c 0-15 nice -n 10 lake exe cache get
+[2026-11-11T20:04:50Z] CMD: taskset -c 0-15 nice -n 10 lake build
+⚠ [8924/8925] Built main (28s)
+warning: main.lean:973:35: Variable name `hΩ` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _hΩ
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+warning: main.lean:2135:29: Variable name `hn` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _hn
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+Build completed successfully (8925 jobs).
+[2026-11-11T20:05:23Z] RC=0 (33 s) :: taskset -c 0-15 nice -n 10 lake build
+[2026-11-11T20:05:23Z] RC_build_final=0 ; duree build 46 s
+[2026-11-11T20:05:23Z] CMD: taskset -c 0-15 nice -n 10 lake env lean PrintAxioms.lean
+'CritereScalaire.summable_pow_mono' depends on axioms: [propext, Classical.choice, Quot.sound]
+'CritereScalaire.lemme_fin_tc' depends on axioms: [propext, Classical.choice, Quot.sound]
+'CritereScalaire.expm1_le' depends on axioms: [propext, Classical.choice, Quot.sound]
+'CritereScalaire.expm1_nonneg' depends on axioms: [propext, Classical.choice, Quot.sound]
+'CritereScalaire.f_le' depends on axioms: [propext, Classical.choice, Quot.sound]
+'CritereScalaire.pas_chaine' depends on axioms: [propext, Classical.choice, Quot.sound]
+'CritereScalaire.chaine_num_fin4' depends on axioms: [propext, Classical.choice, Quot.sound]
+'CritereScalaire.decomp_4d' depends on axioms: [propext, Classical.choice, Quot.sound]
+'CritereScalaire.doublement_fin_4d' depends on axioms: [propext, Classical.choice, Quot.sound]
+'CritereScalaire.iteration256' depends on axioms: [propext, Classical.choice, Quot.sound]
+'CritereScalaire.Q_eq_pT' depends on axioms: [propext, Classical.choice, Quot.sound]
+'CritereScalaire.hyp_of_specTC' depends on axioms: [propext, Classical.choice, Quot.sound]
+'CritereScalaire.gap_4d_fin' depends on axioms: [propext, Classical.choice, Quot.sound]
+'CritereScalaire.chaine_num_fin3' depends on axioms: [propext, Classical.choice, Quot.sound]
+'CritereScalaire.decomp_3d' depends on axioms: [propext, Classical.choice, Quot.sound]
+'CritereScalaire.dec3_eq' depends on axioms: [propext, Classical.choice, Quot.sound]
+'CritereScalaire.t13' depends on axioms: [propext, Classical.choice, Quot.sound]
+'CritereScalaire.doublement_fin_3d' depends on axioms: [propext, Classical.choice, Quot.sound]
+'CritereScalaire.iteration64' depends on axioms: [propext, Classical.choice, Quot.sound]
+'CritereScalaire.Q3_eq_pT' depends on axioms: [propext, Classical.choice, Quot.sound]
+'CritereScalaire.hyp_of_specTC3' depends on axioms: [propext, Classical.choice, Quot.sound]
+'CritereScalaire.gap_3d_fin' depends on axioms: [propext, Classical.choice, Quot.sound]
+'CritereScalaire.qGapOn_of_specLink' depends on axioms: [propext, Classical.choice, Quot.sound]
+'CritereScalaire.qGapOn_limite_4d' depends on axioms: [propext, Classical.choice, Quot.sound]
+'CritereScalaire.qGapOn_limite_3d' depends on axioms: [propext, Classical.choice, Quot.sound]
+'CritereScalaire.convergesOn_of_proche' depends on axioms: [propext, Classical.choice, Quot.sound]
+'CritereScalaire.log_deux_le' depends on axioms: [propext, Classical.choice, Quot.sound]
+'CritereScalaire.clay_trou_de_critere_4d' depends on axioms: [propext, Classical.choice, Quot.sound]
+'CritereScalaire.clay_trou_de_critere_3d' depends on axioms: [propext, Classical.choice, Quot.sound]
+'CritereScalaire.BR_bilin' depends on axioms: [propext, Classical.choice, Quot.sound]
+'CritereScalaire.zero_pow_fun' depends on axioms: [propext, Classical.choice, Quot.sound]
+'CritereScalaire.sT_zero' depends on axioms: [propext, Classical.choice, Quot.sound]
+'CritereScalaire.hypSpec_zero' depends on axioms: [propext, Classical.choice, Quot.sound]
+'CritereScalaire.specLink_zero' depends on axioms: [propext, Classical.choice, Quot.sound]
+'CritereScalaire.non_vacuite_4d' depends on axioms: [propext, Classical.choice, Quot.sound]
+[2026-11-11T20:05:32Z] RC=0 (9 s) :: taskset -c 0-15 nice -n 10 lake env lean PrintAxioms.lean
+[2026-11-11T20:05:32Z] RC_axiomes=0 ; lignes axiomes standard: 35 ; lignes 'does not depend': 0
+[2026-11-11T20:05:32Z] FIN_TOTALE 55 s

@@ -1,0 +1,1027 @@
+% A scalar finite-volume criterion for a continuum mass gap in SU(2) lattice gauge theory.
+% Version 1.0, 12 November 2026. Package prepared locally; not published, not deposited.
+% Compile: pdflatex, twice.
+\documentclass[11pt,a4paper]{article}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern}
+\usepackage[english]{babel}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{booktabs,array}
+\usepackage{geometry}
+\geometry{margin=2.2cm}
+\setlength{\emergencystretch}{2em}
+\usepackage[colorlinks=true,linkcolor=blue,citecolor=blue,urlcolor=blue]{hyperref}
+\usepackage{xurl}
+
+\hypersetup{pdftitle={A scalar finite-volume criterion for a continuum mass gap in SU(2) lattice gauge theory },pdfauthor={K\'evin R\'emondi\`ere}}
+
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\theoremstyle{definition}
+\newtheorem{example}[theorem]{Example}
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+\numberwithin{equation}{section}
+
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Tr}{\operatorname{Tr}}
+\newcommand{\Hinv}{\mathcal{H}_{\mathrm{inv}}}
+\newcommand{\Kh}{\widehat K}
+\newcommand{\st}[1]{\textsf{[#1]}}
+\newcommand{\cA}{\mathcal{A}}
+% --- numbers filled in from the sandbox outputs (paquet/instance, paquet/lean) ---
+\newcommand{\BETASTAR}{0.005}
+\newcommand{\DELTABOUND}{1.741\cdot10^{-3}}
+\newcommand{\BETARATIO}{38}
+\newcommand{\COUNTS}{the following. On $2^4$ (degree $18$): $c_m=0$ for $m\le3$ and for $m=5$, $c_4=1$, $c_6=4$, i.e.\ $N_4=24$ (the sheets) and $N_6=64$ (the unit cubes), and no other connected closed set of at most six plaquettes. On $4^4$ (degree $20$): no closed set of at most five plaquettes, and $N_6=1024$ (the unit cubes, $c_6=4$)}
+\newcommand{\REBUILDJOB}{20261111-005922-02de92}
+\newcommand{\MUTANTS}{All eight made the build fail (job identifiers in \path{lean/mutants_chantier/resultats.json}). They were
+run on the text of an intermediate build, before the non-vacuity guard was added, and we did not check that each failure is located in
+the targeted declaration. A re-run on the final text with localisation of the errors (\path{lean/mutants_paquet.py}) was started on
+11 November 2026 but could not run: the sandbox had no free slot.}
+\newcommand{\REVIEWSTATUS}{reviewed the assembly by reading, without running programs (11 November 2026): it confirmed by hand the constants of the chain, the torus--cylinder lemma, the diagonal choice, the bracket, the $\Z_2$ counterexample and the role of the factor $16$, pointed out the unlisted bilinearity hypothesis and the untreated compact $U(1)$ Coulomb phase (both now stated), and objected that (W2) assumes a simple $\lambda_0$; this objection is not retained, since degenerate eigenvalues are allowed as $r_i=1$, as a later reviewer (GPT-6.1 Sol) also found. A second, line-by-line review of an earlier draft by Qwen, again without running programs, found that the torus--cylinder lemma needs a positivity-preserving kernel (now hypothesis (W2$^+$)), that the rounded constants of the chain must be read as upper bounds (now stated), and left the numerical inputs of the strong-coupling instance and of the witnesses unchecked.}
+
+\title{A scalar finite-volume criterion for a continuum mass gap\\ in $SU(2)$ lattice gauge theory:\\ the doubling test in dimensions four and three,\\ its continuum assembly and its converse}
+\author{K\'evin R\'emondi\`ere\thanks{Independent researcher, Oloron-Sainte-Marie, France. ORCID
+\href{https://orcid.org/0009-0008-2443-7166}{0009-0008-2443-7166}. The proofs, the programs, the Lean files and this note were
+prepared with the assistance of AI models (Claude Opus~5.5, Claude Sonnet~5.5 and Claude Fable~5.2, Anthropic; Qwen3.8, Qwen team; GPT-6.1 Sol, OpenAI; DeepSeek V4 Pro, DeepSeek); their roles are described in the
+statement on the use of AI at the end of the note.}}
+\date{12 November 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+This technical note transposes the two-dimensional finite-volume doubling criterion of OpenAI (Proposition~2.2 of \emph{Sharp mass bounds
+for the two-dimensional $O(4)$ model}, 2026) to lattice gauge theories in dimensions four and three. It is predominantly a transposition,
+not a new mass-gap mechanism. For the $SU(2)$ Wilson theory on periodic tori set
+$\Delta_\beta(n)=16\log Z_\beta(n^4)-\log Z_\beta((2n)^4)$.
+(i)~Under hypercubic symmetry and a positive trace-class transfer representation (a standard hypothesis, not formalised),
+$\Delta_\beta(n)\le2^{-9}$ implies $\Delta_\beta(2n)\le256\,\Delta_\beta(n)^2$ and
+$(\lambda_i/\lambda_0)^n\le256\,\Delta_\beta(n)\le\frac12$ for every excited eigenvalue of the transfer operator on every spatial torus
+$(2^jn)^3$; in dimension three the threshold is $2^{-7}$ and the constant $64$.
+(ii)~Fix $\ell>0$ and $0<\eta\le2^{-9}$. Assume (W1)--(W3) and $\Delta_{\beta_k}(n_k)\le\eta$ for every $k$, at spacing $a_k=\ell/n_k$, and assume (W4): the lattice
+Osterwalder--Schrader forms converge, which is the existence of the continuum limit and is \emph{assumed}. Then the limit satisfies
+$\langle v,e^{-\ell H}v\rangle\le256\eta\|v\|^2$ on the complement of the vacuum, with the same constant for every $k$; given the
+Osterwalder--Schrader reconstruction (also assumed), it has a mass gap at least $-\log(256\eta)/\ell\ge(\log2)/\ell$ and a unique vacuum.
+This implication is formalised in Lean~4 against our own Lean statement of the problem (ClayYM v1.1), with the transfer representation, the
+convergence and the reconstruction as named hypotheses (in the Lean statement the hypothesis on the transfer structure, \texttt{SpecLink}, is weaker than (W3), and the specialisation to Wilson's partition function requires a symmetric extension to periods $1$ satisfying the spectral identities, which is an additional assumption, as stated under Table~\ref{tab:hyp}); the Lean sources were rebuilt on 11 November 2026 by non-authors on a clean
+machine, first from hashed copies of the sources and then from the git archive of the package tree (Appendix~\ref{app:lean}). For square tori the passage from cylinders uses a further hypothesis (W2$^+$) and is proved on paper for one
+diagonal choice of the volumes only.
+(iii)~$\Delta$ is bracketed by excited-state traces on spatial tori with sides in $\{\ell,2\ell\}$; a finite-volume gap including the
+electric-flux sectors, together with a trace bound, gives an explicit sufficient inequality for the criterion; examples show that the criterion can fail when either ingredient is missing, but the example for the flux sectors has a trivial local limit, and the example for the trace bound consists of decoupled copies of an abstract theory, so that strictness within non-trivial theories, or within pure $SU(2)$, is not established.
+(iv)~For a stipulated Maxwell spectrum (whose identification with a normalised Villain measure is not derived here) the defect exceeds the
+threshold at every size $n\ge3$ and every coupling; a massive free scalar passes numerically for $M\ell\ge11.47$.
+(v)~A single implementation reports the sufficient bound $\Delta_\beta(2)\le1.741\cdot10^{-3}$ for $\beta\le0.005$. This interval is conditional on the finite enumeration (ENC) and rational comparison (RAT), neither independently certified here.
+
+\emph{Relation to earlier public work.} Version~5.0.0 of the series of Bhattacharjee et al.\ \cite{BB26v5}, whose Zenodo record was
+created on 11 November 2026, before the release of this note, and which we read after this note was written, contains for four-dimensional
+tori the same doubling defect, its bracket by thermal traces, the purity reading, and a one-scale criterion whose hypothesis, a family of
+inequalities between partition functions of finite tori, implies ours and whose conclusion is wider. For the Wilson theory in dimension four,
+the gap statement of part~(i) is thus a variant of their criterion with a weaker hypothesis and a narrower conclusion, and the bracket of
+part~(iii) is in their text; no priority is claimed (\S\ref{sec:bb26v5}).
+
+\emph{What the note does not do.} It gives no estimate of $\Delta$ at weak coupling, no existence or non-triviality of the continuum limit,
+and no reconstruction. It does not apply as it stands to the formalised construction of OpenAI (Section~\ref{sec:openai-construction}).
+Reading $\Delta$ as a combination of R\'enyi-2 entropies of the thermal weights is a reformulation, not a result. The criterion is a sufficient
+condition; its equivalence with the Yang--Mills mass-gap problem is not claimed. The proofs have been checked by AI models only.
+\end{abstract}
+
+\paragraph{Status labels.}
+\st{proved}: complete argument written in this note; \st{Lean}: also checked by the Lean~4 kernel (Appendix~\ref{app:lean}), modulo
+the named hypotheses listed there; \st{computed}: floating-point or exact computation in the sandbox described in
+\S\ref{sec:repro}, never used in a proof unless stated; \st{read}: statement read in the cited source, location given;
+\st{hypothesis}: a named assumption, not proved here; \st{heuristic}.
+
+{\small\setcounter{tocdepth}{1}\tableofcontents}
+
+%=====================================================================================================================
+\section{Introduction}\label{sec:intro}
+
+\subsection{The doubling test and where it comes from}
+Let $Z(n_1,n_2)$ be the periodic partition function of a two-dimensional spin model whose transfer operator is self-adjoint, positive
+and trace class. OpenAI \cite[\S2]{OAI26} introduce the \emph{square-box test} $\Delta(n)=4\log Z(n,n)-\log Z(2n,2n)$, in which the
+coefficients cancel every term proportional to the area, and prove \cite[Prop.~2.2]{OAI26} \st{read}: if $n\ge4$ is even and
+$\Delta(n)\le\eta_*:=2^{-10}$, then the transfer operators on circumferences $2^kn$ satisfy $\lambda_2/\lambda_1\le e^{-(\log 2)/n}$,
+every local limit of the square tori of sides $2^kn$ has full gap at least $(\log2)/n$, and $m_{\mathrm{lat}}(\beta)\ge(\log 2)/n$ if
+the periodic infinite-plane state is unique. The mechanism has four parts: the identity $e^{-p}=\sum_it_i^2$ for the normalised trace
+weights and the squaring lemma \cite[Lemma~2.1]{OAI26}; the rectangle identity \cite[(2.7)]{OAI26}; the quadratic recursion
+$\Delta(2r)\le44\Delta(r)^2$ \cite[(2.12)]{OAI26}; and the comparison of square tori with infinite cylinders.
+
+\textbf{The present work is predominantly a transposition of this mechanism} to lattice gauge theories in dimensions $d=4$ and $d=3$,
+followed by a conditional continuum statement; it is not a new mass-gap mechanism. We claim no priority for the mechanism. The transposition
+to $d=4$ was first written in internal, unpublished work of the same project (25 October 2026: threshold $2^{-12}$, constant $512$, gap
+$(\log8)/n$; and 10 November 2026: all dimensions, constants in Table~\ref{tab:const}); the present note supersedes those notes.
+
+The identity $e^{-p}=\sum_it_i^2$ says that $p$ is the R\'enyi-2 entropy of the normalised thermal weights $t_i$; OpenAI already read it as
+a purity \cite[\S2]{OAI26}. Reading $\Delta_\beta$ as a combination of such R\'enyi-2 entropies of the transfer spectrum
+is a reformulation of the same quantities: it adds no hypothesis and no result (it was written in our internal notes of 25 October 2026),
+and nothing below depends on it. The same reading, as the purity $\Tr\rho^2$ of a thermal state, is made for four-dimensional tori in
+\cite[after Proposition~7.57]{BB26v5}.
+
+\subsection{Results}
+Let $F_\beta=\log Z_\beta$ on rectangular tori $\Lambda(\vec n)=\prod_{\mu=1}^4\Z/n_\mu\Z$ (\S\ref{sec:setting}) and
+\begin{equation}\label{eq:Delta}
+\Delta_\beta(n)=16\,F_\beta(n,n,n,n)-F_\beta(2n,2n,2n,2n),\qquad
+\Delta^{(3)}_\beta(n)=8\,F_\beta(n,n,n)-F_\beta(2n,2n,2n).
+\end{equation}
+\begin{itemize}
+\item \emph{Lattice part} (Theorem~\ref{thm:lattice}, \st{proved}, \st{Lean}). Under (W1)--(W2): $\Delta_\beta(n)\le2^{-9}$ implies
+$\Delta_\beta(2n)\le256\,\Delta_\beta(n)^2$ and, on every spatial torus $(2^jn)^3$, $(\lambda_i/\lambda_0)^n\le256\,\Delta_\beta(n)$ for
+every excited eigenvalue of the transfer operator. In $d=3$: threshold $2^{-7}$, constant $64$ (Theorem~\ref{thm:3d}).
+\item \emph{Conditional assembly} (Theorem~\ref{thm:main}, \st{proved}, \st{Lean} modulo (W2)--(W4), (W6)). If $0<\eta\le2^{-9}$ and
+$\Delta_{\beta_k}(n_k)\le\eta$ uniformly in $k$, with $a_k=\ell/n_k$, then every limit of the cylinder OS forms, in the sense of (W3)--(W4), has
+the $q$-form with $q=256\eta$. Under the reconstruction hypothesis (W6) its mass gap is at least $-\log(256\eta)/\ell\ge(\log2)/\ell$ and its
+vacuum is unique. For square tori the same conclusion needs (W5) for the family actually considered; Corollary~\ref{cor:tori} proves it for one
+diagonal choice of volumes, not for an arbitrary sequence $j_k\to\infty$.
+\item \emph{Thermal-trace converse} (Proposition~\ref{prop:bracket}, Corollary~\ref{cor:converse}, \st{proved}). $\Delta$ is bracketed,
+up to the factor $2(2^d-1)$, by the excited trace at time $\ell$ on $d$ spatial tori with sides in $\{\ell,2\ell\}$. A finite-volume gap
+(flux sectors included) and a trace bound give an explicit sufficient inequality for the criterion at a fixed physical size; eventual
+smallness as $\ell\to\infty$ needs control of the dependence of the trace bound on $\ell$. Examples~\ref{ex:copies} and~\ref{ex:z2} show that
+neither the finite-volume gap nor the trace bound can be dropped.
+\item \emph{Spectral witnesses} (\S\ref{sec:witness}). For the stipulated Maxwell (photon, rotor, flux) spectrum, whose identification
+with a normalised monopole-free Villain measure is not derived here, the defect exceeds the threshold by a factor $\ge90$ at every size $n\ge3$
+and every coupling \st{proved} given that spectrum (numerically by $\ge1.7\cdot10^4$ \st{computed}). A massive free scalar passes numerically
+for $M\ell\ge11.47$ ($d=4$) and $M\ell\ge8.47$ ($d=3$) \st{computed}; these crossings come from a truncated spectrum and carry no tail
+certificate.
+\item \emph{Reported computational instance} (Proposition~\ref{prop:instance}). Conditional on (ENC) and (RAT), $\Delta_\beta(2)\le1.741\cdot10^{-3}<2^{-9}$ for the $SU(2)$ Wilson theory and $0\le\beta\le0.005$. The analytic implication is proved on paper; the two computational inputs are reported from one implementation and remain uncertified here. The gap is already known in this regime.
+\end{itemize}
+
+\subsection{What is new and what is not}
+\emph{Not new.} The doubling mechanism, in $d=2$ for spins \cite{OAI26}. The positive, self-adjoint transfer operator of lattice gauge
+theories \cite{Lus77,OS78}. The closure lemma ``same $q$ along any filter'' and the passage from the $q$-form to a gap through a named
+reconstruction hypothesis, which are part of our archived Lean statement ClayYM v1.1 \cite{ClayYM}. The form of the result, ``a local
+hypothesis at a fixed physical scale $\ell$, uniform in the lattice spacing, plus existence of a limit, implies a gap of every limit'',
+which is that of Theorem~B of Bhattacharjee et al.\ \cite{BB26} and of Theorem~5.3 of Rajabu \cite{Raj26}, with different hypotheses
+(\S\ref{sec:compare}). The doubling defect of four-dimensional tori, its decomposition over the four directions, its bracket by thermal
+traces and a one-scale criterion with a gap conclusion, which are in version~5.0.0 of Bhattacharjee et al.\ \cite{BB26v5}
+(\S\ref{sec:bb26v5}). The unconditional squaring bound $p(2m)\le2(e^{p(m)}-1)^2$ (Lemma~\ref{lem:squaring}) is implicit in the chain of
+inequalities of \cite[proof of Lemma~2.1]{OAI26}.
+
+\emph{Incremental content.} The contribution is predominantly a routine transposition of the doubling mechanism of \cite{OAI26}.
+It consists of the higher-dimensional bookkeeping and the explicit bounds $256$ at $2^{-9}$ in $d=4$ and $64$ at $2^{-7}$ in $d=3$; the
+packaging of the conditional implication against the Clay-type $q$-form; an elementary thermal-trace converse with counterexamples to omitted
+hypotheses; and the witness analysis. The torus--cylinder comparison follows the insertion argument of \cite{OAI26}, with an additional
+diagonal qualification when renormalised lattice observables depend on the cutoff. The reported $SU(2)$ interval up to $\beta=0.005$ is conditional on a
+finite enumeration and a rational comparison that are not independently certified. We claim no new mass-gap mechanism, no optimality of the constants, and no
+exhaustive priority determination: the anteriority search of \S\ref{sec:compare} is limited and recorded. In \cite{OAI26} it found neither
+a converse nor a statement in dimension $d>2$. In \cite{BB26v5}, read on 12 November 2026 after this note was written, it found the
+four-dimensional defect, its bracket and a one-scale criterion; the part of the content listed above that is also there, and what we did
+not find there, are stated in \S\ref{sec:bb26v5}.
+
+\subsection{Relation to version 5.0.0 of Bhattacharjee et al.}\label{sec:bb26v5}
+Version~5.0.0 of the series of Bhattacharjee et al.\ \cite{BB26v5} has a Zenodo record created on 11 November 2026 at 23:29:13 UTC, before
+the release of this note. We read it on 12 November 2026, after the present note had been written, and only in its abstract, its
+introduction and its Sections~7.8 and~7.11. For a spatial torus $s$ write $\widehat Z_s(M)=\sum_{i\ge0}r_i^M$, where $1=r_0\ge r_1\ge\dots\ge0$
+are the eigenvalues of the transfer operator of $s$ divided by the largest one (their relative partition function, the thermal trace at
+time $M$), and $V(s)$ for the number of sites of $s$. Those passages contain the following \st{read}.
+\begin{itemize}
+\item[(a)] \emph{The object and its bracket} (their Lemma~7.33 and Proposition~7.34). For a four-dimensional torus $n=(n_1,\dots,n_4)$ with
+all sides at least $3$: the doubling defect $\delta(n)=16\log Z(n)-\log Z(2n)$, its invariance under $Z(n)\mapsto e^{a|n|}Z(n)$, its
+decomposition over the four directions with the weights $8,4,2,1$, and
+\begin{multline*}
+8\log\widehat Z_{(n_1,n_2,n_3)}(n_4)\ \le\ \delta(n)\ \le\ 16\log\widehat Z_{(n_1,n_2,n_3)}(n_4)+8\log\widehat Z_{(n_1,n_2,2n_4)}(n_3)\\
++4\log\widehat Z_{(n_1,2n_3,2n_4)}(n_2)+2\log\widehat Z_{(2n_2,2n_3,2n_4)}(n_1).
+\end{multline*}
+On cubic tori $\delta(n)$ is our $\Delta_\beta(n)$, the decomposition is \eqref{eq:decomp}, the upper bound is that of
+Proposition~\ref{prop:bracket}, and the lower bound is the first term of the lower bound of that proposition.
+\item[(b)] \emph{A one-scale criterion} (their Theorem~7.56 and Proposition~7.57). Hypothesis (B$^*$), for an integer $T_0\ge3$:
+$\log\widehat Z_s(T_0)\le\gamma V(s)$ for every spatial torus $s$ with all its sides in $[2T_0,48T_0)$, where $2\gamma(96T_0)^3\le\frac1{20}$.
+Conclusion: a doubly exponential decrease of these thermal traces along the times $2^iT_0$, and a gap at least $0.172/T_0$ for the transfer
+operator of every spatial torus whose smallest side $a$ is at least $2T_0$ and whose largest side is less than $24a$. Up to a factor $2$ in
+$\gamma$, (B$^*$) is the family of inequalities $Z(s,T_0)^2\le e^{\gamma V(s)}Z(s,2T_0)$ between partition functions of finite tori, which
+they read as near purity, $\Tr\rho^2\ge e^{-\gamma V(s)}$, of the thermal state.
+\item[(c)] \emph{Scope remarks and a continuum statement.} Such a hypothesis contains a lattice gap (their Proposition~7.58); a gap and
+the free energy per site do not control the doubling defect (their Proposition~7.35); and, for continuum families satisfying their
+hypothesis (W), which they describe as ``the shape of the conclusion claimed by the unrefereed Lean~4 construction'' (their references
+[45, 62]; their [45] is the Wilson Yang--Mills construction of OpenAI), (B$^*$) at one physical time extent $t_0$ gives a Hamiltonian with spectrum in $\{0\}\cup[0.172/t_0,\infty)$ and a simple eigenvalue $0$ (their Theorem~F).
+\end{itemize}
+
+\emph{What is theirs.} Items (a)--(c) are earlier than this note. They cover the object $\Delta$, the decomposition \eqref{eq:decomp}, the
+bracket of Proposition~\ref{prop:bracket} in $d=4$, the purity reading, the doubly exponential mechanism in $d=4$, and the observation that
+the criterion contains a finite-volume gap. We claim no priority for any of them; our internal notes \cite{internal} are unpublished and
+establish none.
+
+\emph{Their hypothesis implies ours.} Let $n=2T_0$. The four spatial tori that enter the upper bound of (a) for the cubic torus $n^4$ have
+sides in $\{2T_0,4T_0\}$, hence in the window of (B$^*$), and volumes $2^jn^3$, $j=0,\dots,3$. Since $M\mapsto\widehat Z_s(M)$ is
+non-increasing, (B$^*$) gives $\log\widehat Z_s(n)\le\log\widehat Z_s(T_0)\le\gamma V(s)$ for each of them, and
+\begin{equation}\label{eq:bb26implies}
+\Delta_\beta(2T_0)\ \le\ \gamma n^3\,(16+8\cdot2+4\cdot4+2\cdot8)\ =\ 512\,\gamma\,T_0^3\ \le\ \frac{512}{40\cdot96^3}\ =\ \frac1{69120}\ <\ 2^{-9}.
+\end{equation}
+\st{proved}, from the statements of \cite{BB26v5} as read. We do not know whether, conversely, $\Delta_\beta(n)\le2^{-9}$ implies (B$^*$) at
+some scale: by Proposition~\ref{prop:bracket} it bounds the thermal traces of four boxes only.
+
+\emph{What differs.} Our hypothesis is one inequality between the partition functions of the two cubic tori $n^4$ and $(2n)^4$; theirs is a
+family of inequalities, one for each spatial box with sides in a window. Their conclusion is wider than that of Theorem~\ref{thm:lattice}:
+every torus of bounded aspect ratio above the base scale, not only the dyadic cubes $(2^jn)^3$. For the Wilson theory in $d=4$, the gap
+statement \eqref{eq:gap} of Theorem~\ref{thm:lattice} is therefore a variant of that of their Theorem~7.56, with a weaker hypothesis and a
+narrower conclusion; their recursion is on normalised bounds of the thermal traces, $y_{i+1}=16(e^{y_i}-1)^2$, not on the defect. In the passages read
+we did not find: the recursion $\Delta(2n)\le256\,\Delta(n)^2$ for the cubic defect itself, and with it a gap on all dyadic sections from a
+single inequality; the three-dimensional statement (Theorem~\ref{thm:3d}); a Lean formalisation of such a criterion
+(Appendix~\ref{app:lean}); the witnesses of \S\ref{sec:witness}; the reported instance of Proposition~\ref{prop:instance}. Their continuum
+statement (c) and Theorem~\ref{thm:main} have different hypotheses, and we have not compared them.
+
+\emph{Limits of this comparison.} It was made by AI models (see ``Use of AI'') from the passages cited, on the day of the release; the rest
+of the 157 pages was searched by keywords only. We have not examined in which version of that series each item first appeared, and no human
+expert has checked the comparison.
+
+\subsection{Status of the proof}\label{sec:status}
+The abstract implication from $\Delta\le\eta$ to the $q$-form and, under the normalised reconstruction hypothesis, to \texttt{HasMassGap}
+of ClayYM is formalised in Lean~4 (35 declarations, standard axioms only) under the stated positive-period spectral hypotheses. The paper proof on periods at least $2$ does not require the extension to periods $1$ described under Table~\ref{tab:hyp}; its identification with that particular Lean instance is conditional on that extension. The build was reproduced on 11 November 2026 by non-authors on a
+clean machine, first from hashed copies of the sources and then from the git archive of the package tree (Appendix~\ref{app:lean}). The transfer-spectrum representation
+(W2)--(W3), its identification with the lattice OS forms, the convergence (W4) and the reconstruction (W6) are named hypotheses and are not
+formalised; (W4) is the existence of the continuum limit and is open. The insertion estimate and the quantitative torus--cylinder comparison
+are paper arguments (Lean assumes that the difference tends to zero); the converse is a paper argument. The Maxwell model identification is
+incomplete, the scalar crossings are numerical, and the strong-coupling interval is conditional on an enumeration and a rational comparison reported by one implementation. The original formalisation and draft were prepared within one model family. Read-only reviews by Qwen3.8 and GPT-6.1 Sol concerned the draft of 11 November, not this final text: they found the core implication sound subject to corrections and left the computational inputs uncertified; Claude Sonnet applied adaptations of their proposed corrections, and some proposed additions were not adopted. A read-only review of the first version of this text by GPT-6.1 Sol required sixteen corrections, which Claude Sonnet adapted. A further read-only check of this revision identified remaining corrections, recorded in \path{RELECTURE_SOL_TEXTE_CORRIGE.md} (one blocking and four non-blocking: the conditional status of Proposition~\ref{prop:instance} in the abstract and the list of results, the description of \texttt{SpecLink}, the concordance table, the attribution of the reviews, the wording of the rebuild descriptions); they are applied in this version. These reviews do not certify the computational inputs or endorse a subsequent revision. The text--Lean concordance was prepared within the author's model family. Appendix~\ref{app:lean} states, for each formalised statement, what the Lean declaration says exactly. No human has checked the proofs.
+
+%=====================================================================================================================
+\section{Setting, hypotheses and main theorem}\label{sec:setting}
+
+\subsection{Model}
+For $\vec n=(n_1,\dots,n_4)$ with $n_\mu\ge2$, let $\Lambda(\vec n)=\prod_\mu\Z/n_\mu\Z$, with links $(x,\mu)$ and plaquettes
+$p=(x;\mu,\nu)$, $\mu<\nu$; for $n_\mu\ge2$ every plaquette has four distinct links. The Wilson action and partition function are
+\begin{equation}\label{eq:wilson}
+S_\beta(U)=\beta\sum_p\bigl(1-\tfrac12\Tr U_p\bigr),\qquad Z_\beta(\vec n)=\int e^{-S_\beta(U)}\,dU,\qquad F_\beta(\vec n)=\log Z_\beta(\vec n),
+\end{equation}
+with $U_p=U_{x,\mu}U_{x+\mu,\nu}U_{x+\nu,\mu}^{-1}U_{x,\nu}^{-1}$, $dU$ the product of normalised Haar measures on $SU(2)$ and
+$\beta=4/g^2$; $Z_0=1$. At lattice spacing $a$, a period $n$ is a physical length $na$. The three-dimensional model is defined in the
+same way on $\prod_{\mu=1}^3\Z/n_\mu\Z$. For a profile $m$ (a multiset of four periods) we write $\tau_\mu m$ for the profile with the
+$\mu$-th period doubled and
+\begin{equation}\label{eq:p}
+p_\mu(m)=2F(m)-F(\tau_\mu m).
+\end{equation}
+
+\subsection{Hypotheses}\label{sec:hyp}
+Table~\ref{tab:hyp} lists every hypothesis used, with its status. The names (W1)--(W6) are used throughout, and in the Lean files.
+
+\begin{table}[ht]
+\centering\footnotesize
+\begin{tabular}{@{}>{\raggedright\arraybackslash}p{0.06\textwidth}>{\raggedright\arraybackslash}p{0.50\textwidth}%
+>{\raggedright\arraybackslash}p{0.36\textwidth}@{}}
+\toprule
+name & statement & status \\
+\midrule
+(W1) & $F_\beta$ is invariant under permutations of the four periods. & \st{proved}: the action and the Haar measure are invariant
+under the hypercubic group. Lean: hypotheses \texttt{hs12}, \texttt{hs23}, \texttt{hs34}.\\
+(W2) & For every spatial section $\sigma=(n_1,n_2,n_3)$ there is a self-adjoint, positive, trace-class operator $K_\sigma$ on the space
+$\Hinv(\sigma)$ of gauge-invariant $L^2$ functions of the spatial links, with $Z_\beta(\sigma,N)=\Tr K_\sigma^N$ for every $N\ge1$. &
+\st{hypothesis}, standard \cite{Lus77}, \cite[\S2.3, Thm.~2.1]{OS78}; sketch in Remark~\ref{rem:W2}. Not formalised. Lean:
+\texttt{HypSpecTC}.\\
+(W2$^+$) & In the configuration-space realisation, the normalised transfer is positivity preserving. After gauge projection, bounded
+gauge-invariant slab insertions satisfy $|\Kh_Xf|\le\|X\|_\infty\Kh^r|f|$. & \st{hypothesis}, used only for the torus comparison
+(Lemma~\ref{lem:torus}); an additional property of the path-integral realisation, not a consequence of positive semidefiniteness of an abstract
+operator. Not formalised.\\
+(W3) & The lattice OS form of the infinite cylinder $\Z\times\sigma$ is given by the same normalised operator $\Kh_\sigma=K_\sigma/\lambda_0$:
+$B(F,G,ma)=\langle\psi(F),\Kh_\sigma^m\psi(G)\rangle$ with $\psi$ linear and $\psi(\Omega)$ the Perron vector. & \st{hypothesis},
+standard (spectral theorem for the compact operator $\Kh_\sigma$ and transfer formula of the cylinder state). Not formalised. Lean:
+\texttt{SpecLink}, \texttt{LienTransfert4}, which assume only linear square-summable coordinates $c$, $c(\Omega)=\delta_0$, the mixed identity $B(\Omega,F,0)=c_0(F)$ and the diagonal identities for $B(F,F,0)$ and $B(F,F,na)$ (Remark~\ref{rem:W2}), not the full transfer representation at arbitrary times.\\
+(W4) & Along the specified non-trivial filter (sequence, subsequence; a double limit is an iterated limit, not the product filter), the
+lattice OS forms $B_k(F,G,t)$ converge to $\mathrm{rpForm}\,R\,S$ for $F,G\in\cA_0\cup\{\Omega\}$ and $t\in\{0,\ell\}$. This includes matching the
+lattice reflection convention to the continuum reflected form, including any vanishing one-step shifts. & \st{hypothesis}: the
+\emph{existence of the continuum limit} and the identification of the OS forms; open. Lean: \texttt{ConvergesOn}.\\
+(W5) & (Square tori.) For the family of square tori actually considered, the difference between its OS forms and those of the corresponding
+cylinders tends to zero on the same families and at the same times. & Paper estimate under (W2$^+$) for one diagonal choice
+$N_k=2^{j_k}n_k$ (Lemma~\ref{lem:torus}, Corollary~\ref{cor:tori}); for a previously specified family it is a separate obligation. Lean:
+\texttt{convergesOn\_of\_proche} \emph{assumes} the vanishing difference.\\
+(W6) & The limit admits the Osterwalder--Schrader reconstruction, and $S(\emptyset)=1$. & \st{hypothesis} of ClayYM
+(\texttt{OSReconstruction}) \cite{OS73,OS75,ClayYM}; not formalised.\\
+\bottomrule
+\end{tabular}
+\caption{Hypotheses. The paper argument uses periods at least $2$. The Lean declarations assume a single symmetric function on natural periods, with \texttt{HypSpecTC} for every positive spatial period and every positive integer time. Applying them to Wilson's partition function therefore requires a symmetric extension to periods $1$ satisfying those spectral identities; this extension is an additional assumption here, not a consequence proved in this note. Values at a zero period may be set to zero. The Lean hypotheses on the spectral data are, in places, weaker than the table (\texttt{SpecLink} assumes linear square-summable coordinates $c$, $c(\Omega)=\delta_0$, the mixed identity $B(\Omega,F,0)=c_0(F)$, and the diagonal identities for $B(F,F,0)$ and $B(F,F,\ell)$; it does not assume the full transfer representation at arbitrary times. \texttt{ConvergesOn} records the specified convergence of the lattice forms), but the hypothesis on the function $F$ is stronger. The Lean
+statement also assumes that the lattice forms are bilinear (\texttt{IsBilin}), which holds by construction for OS forms. (W2) does
+\emph{not} assume that $\lambda_0$ is simple: degenerate eigenvalues appear as $r_i=1$ (Example~\ref{ex:z2}). Not assumed anywhere: uniqueness of the Gibbs state or of the periodic limit, uniqueness of the continuum limit, reflection positivity of
+the limit as a separate hypothesis (it follows from (W3)--(W4)), $\beta_k\to\infty$.}
+\label{tab:hyp}
+\end{table}
+
+Under (W2), let $\lambda_0\ge\lambda_1\ge\lambda_2\ge\dots\ge0$ be the eigenvalues of $K_\sigma$ with multiplicity, $r_i=\lambda_i/\lambda_0\in[0,1]$
+($i\ge1$) and $s_\sigma(N)=\sum_{i\ge1}r_i^N$ (finite for $N\ge1$). Then
+\begin{equation}\label{eq:FN}
+F(\sigma,N)=N\log\lambda_0+\log\bigl(1+s_\sigma(N)\bigr).
+\end{equation}
+
+\begin{remark}[on (W2) and (W3)]\label{rem:W2}
+For $\beta>0$, the character expansion $e^{(\beta/2)\Tr g}=\sum_jc_j(\beta)\chi_j(g)$ has $c_j(\beta)=2(2j+1)I_{2j+1}(\beta)/\beta>0$ (at
+$\beta=0$ one uses the continuous limit); this gives the positive convolution factor of the usual temporal-gauge construction. Multiplication
+by the spatial plaquette weights and projection onto gauge-invariant functions (the Polyakov loops inserted by fixing the temporal gauge on
+$N-1$ slices) must then be combined with all per-slice scalar factors of \eqref{eq:wilson} to give the precise identity in (W2). Reflection
+positivity and the positive transfer operator: \cite{Lus77} is cited for the standard transfer construction, not re-derived here; \cite[\S2.3]{OS78} \st{read}. The present paragraph is a sketch, not a
+complete derivation of (W2)--(W3) with our conventions; for Lemma~\ref{lem:torus}, (W2$^+$) must also hold after gauge projection.
+The centre transformations on the links crossing a spatial hyperplane commute with $K$, so that $\Hinv=\bigoplus_{e\in\Z_2^3}\mathcal
+H_e$ (electric-flux sectors), and the periodic trace contains \emph{all} sectors. (W3) is the spectral theorem for the compact positive
+operator $\Kh_\sigma$ on $\Hinv(\sigma)$ (eigenbasis $e_0=\Omega,e_1,\dots$, kernel included), together with the formula
+$B(F,G,ma)=\langle\psi(F),\Kh^m\psi(G)\rangle$ for the reflected two-point function of the cylinder state; in coordinates
+$c_i(F)=\langle e_i,\psi(F)\rangle$ it reads $B(F,F,0)=\sum_ic_i(F)^2$, $B(F,F,na)=c_0(F)^2+\sum_{i\ge1}r_i^nc_i(F)^2$, $B(\Omega,F,0)=c_0(F)$,
+$c(\Omega)=\delta_0$. The spectrum $(r_i)$ is the same as in \eqref{eq:FN}.
+\end{remark}
+
+\subsection{Main theorem}
+ClayYM \cite{ClayYM} writes Euclidean Schwinger kernels $S$ for the $21$ components of $\Tr F_{\mu\nu}F_{\rho\sigma}$, their
+Osterwalder--Schrader form $\mathrm{rpForm}\,R\,S\,(F,G,t)=\langle F,e^{-tH}G\rangle$ on finite families $F,G$ of positive-time test
+functions, the truncation $v_A=A-\langle\Omega,A\rangle\Omega$, and
+\begin{equation}\label{eq:qgap}
+\mathrm{QGap}(R,S,\cA_0,\ell,q):\quad 0<\ell,\ 0<q<1,\ \text{and}\ \langle v_A,e^{-\ell H}v_A\rangle\le q\,\langle v_A,v_A\rangle\ \text{for every }A\in\cA_0.
+\end{equation}
+
+\begin{theorem}[assembly, $d=4$]\label{thm:main}
+Let $(\beta_k,n_k)_{k}$ be couplings and integers $n_k\ge2$, let $\ell>0$ and $a_k=\ell/n_k$, let $(j_k)$ be any integers $\ge0$, and
+let $B_k$ be the lattice OS form of the cylinder $\Z\times(2^{j_k}n_k)^3$ at spacing $a_k$ and coupling $\beta_k$. Assume (W1)--(W3)
+for every $k$, and
+\begin{equation}\label{eq:unif}
+\Delta_{\beta_k}(n_k)\le\eta\quad\text{for every }k,\qquad 0<\eta\le2^{-9}.
+\end{equation}
+If $B_k\to\mathrm{rpForm}\,R\,S$ along a non-trivial filter in the sense of (W4), with $\cA_0$ the set of all families, then
+\begin{enumerate}
+\item $\mathrm{QGap}(R,S,\text{all families},\ell,256\eta)$, with the same $q=256\eta\le\frac12$ for every $k$;
+\item under (W6), $S$ has a mass gap $-\log(256\eta)/\ell\ge(\log2)/\ell$ (\texttt{HasMassGap} of ClayYM), and every vector fixed by
+$e^{-\ell H}$ is a multiple of $\Omega$; if $\eta\le2^{-12}$, the gap is $\ge(\log16)/\ell$.
+\end{enumerate}
+The same conclusions hold for a convergent family of square-torus OS forms if (W5) holds for that family. Under (W2$^+$),
+Corollary~\ref{cor:tori} establishes (W5) for its specified diagonal choice of $N_k=2^{j_k}n_k$; this choice does not, by itself, preserve a
+continuum limit previously obtained along another volume sequence.
+\end{theorem}
+
+The physical time $\ell$ corresponds exactly to $n_k$ lattice steps. If $j_k\to\infty$, the spatial side $2^{j_k}\ell$ diverges, as
+required by the lattice sequences of ClayYM. The closure argument applies along any specified non-trivial filter for which the required
+convergence holds. An iterated limit (``volume, then spacing'') is not in general convergence along the product filter and the two must not
+be identified: for an iterated limit, apply Lemma~\ref{lem:closure} successively, with the same $q$ at both stages. The conclusion is
+compatible with a trivial limit: it proves neither the existence of a continuum limit nor a nonzero excited sector, and
+\textbf{non-triviality is not addressed}.
+
+%=====================================================================================================================
+\section{The lattice part}\label{sec:lattice}
+
+\begin{lemma}[squaring lemma]\label{lem:squaring}
+Let $r_i\in[0,1]$ with $s(N)=\sum_ir_i^N<\infty$ for $N\ge1$, and $p(N)=2\log(1+s(N))-\log(1+s(2N))$. Then
+(a)~$0\le\log(1+s(N))\le p(N)$, so that $r_i^N\le s(N)\le e^{p(N)}-1$; (b)~$p(2N)\le2\bigl(e^{p(N)}-1\bigr)^2$, without any smallness
+condition. \st{proved} \st{Lean: \texttt{lemme\_fin\_tc}}
+\end{lemma}
+\begin{proof}
+(a) $s(2N)=\sum_i(r_i^N)^2\le\sum_ir_i^N=s(N)$ since $r_i^N\le1$; hence $\log(1+s(2N))\le\log(1+s(N))$ and $p(N)\ge\log(1+s(N))\ge0$.
+(b) $p(2N)=2\log(1+s(2N))-\log(1+s(4N))\le2s(2N)\le2s(N)^2\le2(e^{p(N)}-1)^2$, using $\log(1+x)\le x$, $\log(1+s(4N))\ge0$ and
+$\sum_i(r_i^N)^2\le(\sum_ir_i^N)^2$.
+\end{proof}
+
+By (W1)--(W2) and \eqref{eq:FN}, every $p_\mu(m)$ is the quantity $p(N)$ of Lemma~\ref{lem:squaring} for the transfer operator in
+direction $\mu$ on the section formed by the other three periods of $m$, with $N$ the $\mu$-th period (the eigenvalue $\lambda_0$ cancels).
+In particular $p_\mu(m)\ge0$.
+
+\begin{lemma}[rectangle identity and decomposition]\label{lem:rect}
+For every function $F$ on profiles and $\mu\ne\nu$:
+(R)~$p_\mu(\tau_\nu m)=2p_\mu(m)-2p_\nu(m)+p_\nu(\tau_\mu m)$. If $F$ is symmetric (W1), then
+\begin{equation}\label{eq:decomp}
+\Delta(n)=8a_0(n)+4a_1(n)+2a_2(n)+a_3(n),
+\end{equation}
+where $a_j(n)$ is $p$ at the profile $((2n)^j,n^{4-j})$, doubling one period $n$.
+Under (W1)--(W2), $\Delta(n)\ge0$ and $a_j(n)\le\Delta(n)/2^{3-j}$. \st{proved} \st{Lean: \texttt{decomp\_4d}, which states $\Delta\ge0$, $a_0\le\Delta/8$ and $a_3\le\Delta$; the identities (R) and \eqref{eq:decomp} are steps inside the proofs of \texttt{decomp\_4d} and \texttt{doublement\_fin\_4d}}
+\end{lemma}
+\begin{proof}
+(R): compute $F(\tau_\mu\tau_\nu m)=2F(\tau_\nu m)-p_\mu(\tau_\nu m)=2F(\tau_\mu m)-p_\nu(\tau_\mu m)$ and substitute
+$F(\tau_\nu m)=2F(m)-p_\nu(m)$, $F(\tau_\mu m)=2F(m)-p_\mu(m)$. \eqref{eq:decomp}: double the four periods one after the other; the sum
+telescopes, and (W1) identifies each intermediate profile.
+\end{proof}
+
+For $j=0,\dots,3$ let $G_j$ be $p$ at the profile $(n,(4n)^j,(2n)^{3-j})$ doubling the period $n$, and $A_j$ be $p$ at the profile
+$(2n,(4n)^j,(2n)^{3-j})$ doubling one period $2n$ in the same direction. Then:
+\begin{enumerate}
+\item $G_0=a_3(n)\le\Delta(n)$;
+\item $A_j\le f(G_j)$, $f(x)=2(e^x-1)^2$: Lemma~\ref{lem:squaring}(b) in the direction of the period $n$ of $G_j$;
+\item $G_{j+1}\le2G_j+A_j$: (R) with $m=(n[\mu],2n[\nu],(4n)^j,(2n)^{2-j})$ gives $G_{j+1}=2G_j-2p_\nu(m)+A_j$, and $p_\nu(m)\ge0$;
+\item $\Delta(2n)=8A_0+4A_1+2A_2+A_3$: \eqref{eq:decomp} at level $2n$.
+\end{enumerate}
+
+\begin{proposition}[doubling, $d=4$]\label{prop:doubling}
+Under (W1)--(W2), if $\Delta(n)\le2^{-9}$ then $\Delta(2n)\le256\,\Delta(n)^2$. \st{proved} \st{Lean: \texttt{doublement\_fin\_4d}, \texttt{chaine\_num\_fin4}; the Lean theorem takes as hypotheses the two consequences of (W2) that the proof uses (positivity of $p$ and the squaring bound, from \texttt{hyp\_of\_specTC})}
+\end{proposition}
+\begin{proof}
+Put $D=\Delta(n)\le2^{-9}$. On $[0,1]$, $e^x-1\le x+x^2$ (Mathlib: $|e^x-1-x|\le x^2$ for $|x|\le1$), so $f(x)\le2x^2(1+x)^2$. By items
+1--3, $G_0\le D$, $G_1\le2D+2D^2(1+D)^2\le2.004\,D$, $G_2\le4.024\,D$, $G_3\le8.113\,D$, and by item~4
+\begin{align*}
+\Delta(2n)&\le8f(G_0)+4f(G_1)+2f(G_2)+f(G_3)\\
+&\le(16.064+32.384+65.8+135.9)\,D^2=250.148\,D^2\le250.15\,D^2\le256\,D^2.
+\end{align*}
+\end{proof}
+The coefficients above are rounded upward; the exact rational polynomial expression, evaluated at $D=2^{-9}$, is approximately $250.018080$; with the exact exponential the constant is $247.23$, and its limit
+as $D\to0$ is $2^d(2^d-1)=240$ (Table~\ref{tab:const}).
+
+\begin{theorem}[transfer gap on all sections]\label{thm:lattice}
+Under (W1)--(W2), if $\Delta(n)\le2^{-9}$ then, for every $k\ge0$, $256\,\Delta(2^kn)\le(256\,\Delta(n))^{2^k}$, and for every $j\ge0$
+every excited eigenvalue of the transfer operator on the section $(2^jn)^3$ satisfies
+\begin{equation}\label{eq:gap}
+(\lambda_i/\lambda_0)^n\le256\,\Delta(n)\le\tfrac12.
+\end{equation}
+If $\Delta(n)>0$ and $\lambda_i>0$ this gives $-\log(\lambda_i/\lambda_0)\ge-\log(256\Delta(n))/n\ge(\log2)/n$; zero eigenvalues satisfy the ratio
+estimate directly, and if $\Delta(n)=0$ every excited ratio is zero. In particular $\lambda_0$ is simple. \st{proved} \st{Lean:
+\texttt{iteration256}, \texttt{gap\_4d\_fin}, which states $r_i^n\le256\,\Delta(n)$; the bound $\le\frac12$, the logarithmic form and the
+simplicity are immediate consequences not restated in Lean}
+\end{theorem}
+\begin{proof}
+If $d_k:=\Delta(2^kn)\le2^{-9}$ then $256d_k\le\frac12$ and $d_{k+1}\le256d_k^2\le d_k/2$; by induction $256d_k\le(256d_0)^{2^k}$. On the
+section $(2^jn)^3$ at time $2^jn$, Lemma~\ref{lem:squaring}(a) and \eqref{eq:decomp} give (with $a_0\le\Delta/8\le2^{-12}\le1$, so that $e^x-1\le2x$ applies) $r_i^{2^jn}\le e^{a_0(2^jn)}-1\le2a_0(2^jn)\le
+\Delta(2^jn)/4\le(256\Delta(n))^{2^j}$; take the $2^j$-th root.
+\end{proof}
+
+\begin{theorem}[$d=3$]\label{thm:3d}
+For the three-dimensional theory under the analogues of (W1)--(W2), $\Delta^{(3)}(n)=4a_0+2a_1+a_2$; if $\Delta^{(3)}(n)\le2^{-7}$ then
+$\Delta^{(3)}(2n)\le64\,\Delta^{(3)}(n)^2$ and $(\lambda_i/\lambda_0)^n\le64\,\Delta^{(3)}(n)\le\frac12$ on every section $(2^jn)^2$.
+\st{proved} \st{Lean: \texttt{doublement\_fin\_3d}, \texttt{gap\_3d\_fin} (conclusion $r_i^n\le64\,\Delta^{(3)}(n)$)}
+\end{theorem}
+\begin{proof}
+Same chain with $G_0\le D\le2^{-7}$, $G_1\le2.016D$, $G_2\le4.098D$ and $4f(G_0)+2f(G_1)+f(G_2)\le60.68\,D^2\le64D^2$ (the polynomial expression evaluates numerically to approximately $60.655245$); on the section $(2^jn)^2$, $r_i^{2^jn}\le2a_0(2^jn)\le\Delta^{(3)}(2^jn)/2\le(64\Delta^{(3)}(n))^{2^j}$.
+\end{proof}
+
+\begin{table}[ht]
+\centering\footnotesize
+\begin{tabular}{@{}cccccc@{}}
+\toprule
+$d$ & threshold & constant used & polynomial chain & exact exponential \cite{internal} & $\lim_{D\to0}$ \\
+\midrule
+$2$ & $2^{-5}$ & $16$ & $13.93$ & $13.22$ & $12$ \\
+$3$ & $2^{-7}$ & $64$ & $60.655$ & $59.22$ & $56$ \\
+$4$ & $2^{-9}$ & $256$ & $250.018$ & $247.23$ & $240$ \\
+$4$ & $2^{-12}$ & $256$ & $241.216$ & --- & $240$ \\
+\bottomrule
+\end{tabular}
+\caption{Constants $C_d$ with $\Delta(2n)\le C_d\Delta(n)^2$ below the threshold. ``Polynomial chain'': $e^x-1\le x+x^2$, computed
+with rational arithmetic (\texttt{reproduction/resultats/constantes\_poly.json}). Displayed decimal values are approximations to the computed expressions, not certified outward-rounded bounds; the proof uses the rational bounds $256$ and $64$. ``Exact exponential'': interval arithmetic, internal note of 10 November 2026. For
+comparison, \cite[(2.12)]{OAI26} has $44$ (and $64$) at $2^{-10}$ in $d=2$, with the squaring bound $p(2n)\le4p^2$ valid for
+$p\le1/4$.}
+\label{tab:const}
+\end{table}
+
+%=====================================================================================================================
+\section{Assembly}\label{sec:assembly}
+
+\begin{lemma}[$q$-form of each lattice form]\label{lem:qform}
+If $B$ has the representation (W3) at time $\ell=na>0$ and $r_i^n\le q<1$ for every $i\ge1$, then $B(v_A,v_A,\ell)\le q\,B(v_A,v_A,0)$ for
+every $A$, where $v_A=A-B(\Omega,A,0)\Omega$ (and $q>0$). \st{proved} \st{Lean: \texttt{qGapOn\_of\_specLink}}
+\end{lemma}
+\begin{proof}
+By linearity and $c(\Omega)=\delta_0$, $c_0(v_A)=c_0(A)-B(\Omega,A,0)=0$. Hence $B(v_A,v_A,\ell)=\sum_{i\ge1}r_i^nc_i(v_A)^2\le
+q\sum_{i\ge1}c_i(v_A)^2=q\,B(v_A,v_A,0)$.
+\end{proof}
+
+\begin{lemma}[closure {\cite[\texttt{QGapOn.of\_tendsto}]{ClayYM}}]\label{lem:closure}
+Let $B_k$, $B$ be bilinear forms such that $B_k(F,G,t)\to B(F,G,t)$ along a non-trivial filter for $F,G\in\cA_0\cup\{\Omega\}$ and
+$t\in\{0,\ell\}$. If eventually every $B_k$ satisfies the $q$-form on $\cA_0$ at time $\ell$ with the same $q$, so does $B$.
+\st{proved} \st{Lean, in ClayYM v1.1}
+\end{lemma}
+\begin{proof}
+By bilinearity $B_k(v^{(k)}_A,v^{(k)}_A,t)=B_k(A,A,t)-c_kB_k(A,\Omega,t)-c_kB_k(\Omega,A,t)+c_k^2B_k(\Omega,\Omega,t)$ with
+$c_k=B_k(\Omega,A,0)$: every term converges, and a non-strict inequality passes to the limit.
+\end{proof}
+
+\begin{proof}[Proof of Theorem~\ref{thm:main}]
+For each $k$, Theorem~\ref{thm:lattice} on the section $(2^{j_k}n_k)^3$ gives $r_i^{n_k}\le256\Delta_{\beta_k}(n_k)\le256\eta\le\frac12$;
+Lemma~\ref{lem:qform}, with (W3) at time $\ell=n_ka_k$, gives the $q$-form of $B_k$ with $q=256\eta$; Lemma~\ref{lem:closure} with (W4)
+gives $\mathrm{QGap}(R,S,\text{all},\ell,256\eta)$. Under (W6), the $q$-form on a set whose truncated classes are dense in
+$\Omega^\perp$ (automatic for all families) gives $\|e^{-\ell H}(1-P_\Omega)\|\le q$, hence the gap $-\log q/\ell$ and the uniqueness of
+the vacuum \cite[\texttt{QGap.hasMassGap\_univ}, \texttt{QGap.vacuum\_unique}]{ClayYM}; $-\log(256\eta)\ge\log2$ since $256\eta\le\frac12$.
+The Lean statement is \texttt{clay\_trou\_de\_critere\_4d} (Appendix~\ref{app:lean}). The positivity of the limit form is not assumed:
+$B(F,F,0)=\lim_k\sum_ic_i^{(k)}(F)^2\ge0$.
+\end{proof}
+
+The $d=3$ version (\texttt{clay\_trou\_de\_critere\_3d}): under the three-dimensional counterparts of the hypotheses, $\ell>0$ and $\Delta^{(3)}_{\beta_k}(n_k)\le\eta$ for every $k$ with $0<\eta\le2^{-7}$, one gets $q=64\eta$ and the
+gap $-\log(64\eta)/\ell$ (Lean), which is $\ge(\log2)/\ell$ since $64\eta\le\frac12$ (arithmetic not restated in Lean in $d=3$) for a limit $S$ of the three-dimensional theory (the layer \texttt{Gap}/\texttt{GapQ} of ClayYM is
+generic in $d$; the Clay problem itself is four-dimensional). In $d=3$, $\beta_k=4/(g_3^2a_k)$ at fixed $g_3^2$ (super-renormalisable).
+
+\begin{lemma}[torus versus cylinder]\label{lem:torus}
+Let $N=2^jn$ with $j\ge1$, $\sigma=N^3$, and let $X$ be a bounded gauge-invariant observable supported in $r\le N/2$ consecutive time
+slices. Let $\omega_N$ be the periodic torus state and $\omega_\infty$ the Perron-cylinder state on $\Z\times\sigma$. Assume (W1)--(W2),
+the insertion property (W2$^+$), and $\Delta(n)\le2^{-9}$. Then
+\[
+|\omega_N(X)-\omega_\infty(X)|\le2\|X\|_\infty\bigl(e^{\Delta(N/2)}-1\bigr),\qquad \Delta(N/2)\le\tfrac1{256}(256\Delta(n))^{2^{j-1}}.
+\]
+\st{proved} on paper under (W2$^+$); not in Lean
+\end{lemma}
+\begin{proof}
+Let $\Kh_X$ be the normalised insertion operator across the $r$ slices. By (W2$^+$), on the gauge-invariant configuration-space realisation,
+$|\Kh_Xf|\le\|X\|_\infty\Kh^r|f|$; since $\|\Kh^r\|=1$ and $\||f|\|_2=\|f\|_2$, we get $\|\Kh_X\|\le\|X\|_\infty$. This step uses positivity
+preservation and insertion domination, in addition to positive semidefiniteness; it is the insertion argument of \cite[proof of Prop.~2.2]{OAI26}.
+In the eigenbasis of $\Kh$ on $\Hinv(\sigma)$, with $\mu_0=1$, $\mu_i=r_i$,
+\[
+\omega_N(X)=\frac{\Tr(\Kh^{N-r}\Kh_X)}{\Tr\Kh^N}=\frac{\langle\Omega,\Kh_X\Omega\rangle+\sum_{i\ge1}\mu_i^{N-r}\langle e_i,\Kh_Xe_i\rangle}{1+s_\sigma(N)},
+\qquad\omega_\infty(X)=\langle\Omega,\Kh_X\Omega\rangle,
+\]
+where $\lambda_0$ is simple by Theorem~\ref{thm:lattice}, so that the cylinder state is the Perron vector state, and the gauge
+projector commutes with $\Kh$ and $\Kh_X$ ($X$ is gauge invariant). Hence
+$|\omega_N(X)-\omega_\infty(X)|\le\|X\|_\infty(s_\sigma(N-r)+s_\sigma(N))\le2\|X\|_\infty s_\sigma(N/2)$. By Lemma~\ref{lem:squaring}(a),
+$s_\sigma(N/2)\le e^{p}-1$ with $p$ the doubling of the period $N/2$ at the profile $(N^3,N/2)$, which is $a_3(N/2)\le\Delta(N/2)$; the
+last bound is Theorem~\ref{thm:lattice}.
+\end{proof}
+
+\begin{corollary}[a diagonal family of square tori, (W5)]\label{cor:tori}
+Assume the hypotheses of Lemma~\ref{lem:torus} at each cutoff. Suppose that the lattice OS forms of a pair of families $(F,G)$ are finite
+combinations of expectations of products of at most $D(F)+D(G)$ renormalised plaquette fields, each bounded by a constant $c_k<\infty$ at step
+$k$ (the group is compact), the sum of the sup-norm bounds being at most $C(F)C(G)\max(1,c_k)^{D(F)+D(G)}$, and that for fixed $k$ these
+bounds do not depend on the subsequently chosen spatial size. Set $N_k=2^{j_k}n_k$ and choose $j_k\ge1$ such that
+$2(e^{\Delta_{\beta_k}(N_k/2)}-1)\max(1,c_k)^{2k}\le1/k$ and $N_ka_k\ge k\ell$. Then, for fixed $F,G$ and $t\in\{0,\ell\}$, the difference between the
+forms of the tori $N_k^4$ and of the cylinders $\Z\times N_k^3$ is at most $C(F)C(G)/k$ from some $k$ on. Consequently either family of forms
+converges to a specified form $B$ if and only if the other does, along this selected diagonal. \st{proved} on paper; the Lean reduction
+\texttt{convergesOn\_of\_proche} \emph{assumes} the vanishing difference.
+\end{corollary}
+\begin{proof}
+For fixed $F,G$, eventually $D(F)+D(G)\le2k$ and the fixed physical supports fit within half the temporal period; apply
+Lemma~\ref{lem:torus} term by term. The choice of $j_k$ is possible because the upper bound for $\Delta_{\beta_k}(N_k/2)$ decreases doubly
+exponentially in $j_k$. This construction does not show that an arbitrarily prescribed $j_k\to\infty$ suffices, nor that changing a previously
+specified volume sequence preserves its limit.
+\end{proof}
+
+\begin{remark}[the meaning of (W4)]\label{rem:W4}
+(W4) is the precise sense of ``the Schwinger functions converge'' used here: pointwise convergence of the OS forms of smeared families at
+the two times $0$ and $\ell$, not convergence of kernels. It is the role of hypothesis (E) of \cite{BB26}. One technical point: the
+plaquette field of ClayYM (\texttt{plaqObs}, plaquette based at the site $x$) is not exactly covariant under the site reflection of the
+lattice (temporal plaquettes are shifted by one step); with the lattice sequences of ClayYM, (W4) therefore also requires that this
+$O(a)$ shift disappear in the limit (true for locally uniform convergence, or with the clover field, which is exactly covariant). We
+include it in (W4).
+\end{remark}
+
+%=====================================================================================================================
+\section{The converse and why it needs a finite-volume gap}\label{sec:converse}
+
+For $j=0,\dots,d-1$ let $\sigma_j=((2n)^j,n^{d-1-j})$ and $s_j(n)=\Tr'\Kh_{\sigma_j}^n=\sum_{i\ge1}r_i(\sigma_j)^n$ (excited trace). In
+physical units these are the spatial tori with sides in $\{\ell,2\ell\}$, at Euclidean time $\ell$.
+
+\begin{proposition}[bracket]\label{prop:bracket}
+Under (W1)--(W2), for every $n$,
+\[
+\sum_{j=0}^{d-1}2^{d-1-j}\log\bigl(1+s_j(n)\bigr)\ \le\ \Delta_d(n)\ \le\ 2\sum_{j=0}^{d-1}2^{d-1-j}\log\bigl(1+s_j(n)\bigr)\ \le\ 2\sum_{j=0}^{d-1}2^{d-1-j}s_j(n).
+\]
+Consequently $\Delta_d(n)\le\eta$ implies $s_j(n)\le e^\eta-1$ for every $j$, and $\max_js_j(n)\le\eta/(2(2^d-1))$ implies
+$\Delta_d(n)\le\eta$ (the constant is $30$ in $d=4$, $14$ in $d=3$). \st{proved}
+\end{proposition}
+\begin{proof}
+$a_j=2\log(1+s_j(n))-\log(1+s_j(2n))$ with $0\le s_j(2n)\le s_j(n)$, so $\log(1+s_j(n))\le a_j\le2\log(1+s_j(n))$; sum with the weights of
+\eqref{eq:decomp}.
+\end{proof}
+Thus \emph{the scalar criterion is, up to the factor $2(2^d-1)$, the smallness of the excited trace at time $\ell$ on $d$ spatial tori with
+sides in $\{\ell,2\ell\}$.}
+
+\begin{corollary}[a sufficient converse estimate]\label{cor:converse}
+Fix $\ell>t_0>0$, $m>0$ and $B<\infty$, and let $n_ka_k=\ell$. Suppose that, uniformly in $k$ and on the $d$ sections $\sigma_j(n_k)$:
+\begin{itemize}
+\item[(G$_{\mathrm{fv}}$)] \emph{finite-volume gap, flux sectors included}: $r_i(\sigma_j)\le e^{-ma_k}$ for every $i\ge1$;
+\item[(T)] \emph{trace bound at a time $t_0<\ell$}: $\Tr'\Kh_{\sigma_j}^{n_0}\le B$, with $n_0=\lceil t_0/a_k\rceil$.
+\end{itemize}
+Then $s_j(n_k)\le Be^{-m(\ell-t_0-a_k)}$ and $\Delta_d(n_k)\le2(2^d-1)\,B\,e^{-m(\ell-t_0-a_k)}$; hence $\Delta_d(n_k)\le\eta$ as soon as the right-hand
+side is at most $\eta$. If $a_k\le a_*$, the condition $2(2^d-1)Be^{-m(\ell-t_0-a_*)}\le\eta$ is sufficient uniformly in $k$; if $a_k\to0$, the strict
+inequality $2(2^d-1)Be^{-m(\ell-t_0)}<\eta$ suffices for $k$ large. \st{proved}
+\end{corollary}
+\begin{proof}
+Since $t_0<\ell=n_ka_k$, $n_0\le n_k$ and $a_k(n_k-n_0)\ge\ell-t_0-a_k$. Hence $r_i^{n_k}=r_i^{n_0}r_i^{n_k-n_0}\le r_i^{n_0}e^{-ma_k(n_k-n_0)}$; sum over $i$ and
+apply Proposition~\ref{prop:bracket}.
+\end{proof}
+This is a statement at a fixed physical size: if $\ell$ varies, $B$, $m$ and $t_0$ may vary with it, and eventual smallness as $\ell\to\infty$
+requires, for instance, $\log B(\ell)-m(\ell-t_0(\ell)-a_*(\ell))\to-\infty$; uniformity in the cutoff alone does not give this.
+An independent derivation by another model family (Qwen; see the statement on the use of AI) gives the same statement in the form
+$\Delta_4(n)\le30A_0e^{m_0r_0}e^{-m_0n}$ under a uniform gap $(\lambda_2/\lambda_1)^r\le e^{-m_0(r-r_0)}$ and a trace bound $A_0$.
+
+Neither hypothesis can be dropped.
+\begin{example}[decoupled copies: (T) is needed]\label{ex:copies}
+$N$ decoupled copies of a theory satisfying (W1)--(W2) have the same transfer gap and $\log Z$ multiplied by $N$, so
+$\Delta^{(N)}=N\Delta^{(1)}$, unbounded in $N$. (T) says that the weighted number of states of the box below energy $\sim1/t_0$ is bounded
+uniformly in the spacing: the convergence, at fixed physical size and temperature $1/t_0$, of the finite-volume free energy normalised by
+the vacuum. This is physically reasonable but not proved for Yang--Mills (the same difficulty as (W4), in finite volume). \st{proved}
+\end{example}
+
+\begin{example}[$\Z_2$ gauge theory at $\beta=\infty$: a gap of the limit is not enough]\label{ex:z2}
+For the four-dimensional $\Z_2$ gauge theory at $\beta=\infty$, only flat configurations contribute; their number on a torus with $V$
+sites is $|B^1|\cdot|H^1(T^4;\Z_2)|=2^{V-1}\cdot2^4$. Hence $F(\vec n)=cV+3\log2$ on every rectangular torus, every $p$ equals $3\log2$,
+and
+\[
+\Delta_4(n)=15\times3\log2=45\log2\approx31.19\qquad\text{for every }n.
+\]
+(W1)--(W2) hold: $K$ is a positive scalar multiple (depending on the spatial volume) of the rank-$8$ projector onto the holonomy sectors $H^1(T^3;\Z_2)$, so that $\Kh=K/\lambda_0$ is that projector. Every local gauge-invariant observable is
+constant (all contractible loops equal $1$), so the local limit is the trivial theory: unique vacuum and infinite gap. The criterion
+fails at every $n$ although the limit is gapped; it fails because (G$_{\mathrm{fv}}$) fails (seven exactly degenerate sectors) \st{proved}. The
+limit is trivial, hence excluded by \texttt{FiniteMass} of ClayYM; the analogous phenomenon at large finite $\beta$ (deconfined gapped
+phase with eight quasi-vacua split by tunnelling) is a conjecture here, not proved.
+\end{example}
+
+\begin{example}[two-dimensional Ising model below $T_c$]\label{ex:ising}
+For the Ising model at $K=0.5$ (two coexisting phases), $\Delta_2(n)\to3\log2=(2^2-1)\log2$ \st{computed}, from Kaufman's exact solution
+\cite{Kau49} checked against dense transfer matrices (internal note of 10 November 2026). This is the value given by a phase-coexistence
+expansion of periodic partition functions of the type studied by Borgs and Koteck\'y \cite{BK90}, $\Delta_d\to(2^d-1)\log(\#\text{phases})$
+(our reading; \cite{BK90} do not state it). The periodic limit is a mixture without unique vacuum, so this is not a counterexample in the
+sense of ClayYM, but it shows again that (G$_{\mathrm{fv}}$) fails when two quasi-degenerate states exist in finite volume. The same
+example was obtained independently by Qwen.
+\end{example}
+
+\begin{remark}[what the criterion encodes]\label{rem:flux}
+The periodic trace tests every electric-flux sector $e\in\Z_2^3$ (Remark~\ref{rem:W2}), not only the states visible to local observables in
+an infinite-volume limit; the bracket therefore controls both excited energies and their thermal multiplicities on the specified finite
+boxes. Example~\ref{ex:z2} shows that a gapped local limit, in a broader class of lattice theories, need not imply this finite-volume
+criterion; its local limit is trivial, so it does not establish strictness within the full non-trivial Clay class or within pure $SU(2)$
+Yang--Mills theory, and no such strictness theorem is claimed. In a torelon model with energy $\approx\sigma L$ the criterion would also constrain
+$\sigma\ell^2$; this interpretation, and the estimate $n\approx10$ ($\ell\sqrt\sigma\approx3.7$) obtained at $\beta=2.2986$ from the string tension
+and glueball masses of \cite{AT21} with a free-particle and Nambu--Goto torelon model, are \st{heuristic}, not consequences proved for the
+Wilson theory.
+\end{remark}
+
+%=====================================================================================================================
+\section{Witnesses}\label{sec:witness}
+
+\begin{proposition}[universal lower bound]\label{prop:lower}
+Under (W1)--(W2), if the section $n^{d-1}$ carries $M$ excited states with $(\lambda/\lambda_0)^n\ge e^{-c}$, then
+$\Delta_d(n)\ge2^{d-1}a_0(n)\ge2^{d-1}\log(1+Me^{-c})$. \st{proved}
+\end{proposition}
+\begin{proof}
+Lemma~\ref{lem:squaring}(a) and \eqref{eq:decomp}.
+\end{proof}
+
+\paragraph{A photon spectral witness, conditional on its model identification.} Consider the transfer spectrum consisting of two photon
+oscillators for each nonzero spatial momentum, three electric rotors (energies $k^2L_i^2/(2\beta V_s)$ per step) and three magnetic-flux energies
+$2\pi^2\beta m^2L_l/(L_iL_j)$, $\beta>0$. This is the spectrum of the $U(1)$ Villain model \emph{without monopoles} (Gaussian gauge field with
+compact holonomies, all integer fluxes) if the Euclidean partition function of that model equals $\Tr K^N$ for it with a trace constant equal
+to zero, so that (W1)--(W2) hold. \emph{We do not derive this identification} from a fully specified Euclidean measure: the treatment of compact
+holonomies, harmonic fluxes, gauge-orbit factors and the absolute trace normalisation is supplied only in a summary (Poisson summation over the
+three temporal fluxes). A numerical check---the Euclidean formula and the transfer formula agree to $7\cdot10^{-16}$ relative on $12$ four-dimensional
+tori, and the method reproduces the exact two-dimensional Villain partition function to $2\cdot10^{-41}$ \st{computed}---is a consistency
+check, not a derivation. Given the identification, the lowest photon frequency on the section $n^3$ is $\omega_1=2\operatorname{arcsinh}(\sin(\pi/n))\le
+2\pi/n$, independent of $\beta$; for $n\ge3$ the $6$ lowest nonzero momenta are distinct and, with $2$ polarisations, give twelve one-photon
+states, so that Proposition~\ref{prop:lower} gives, for every $n\ge3$ and every $\beta>0$,
+\[
+\Delta_4(n)\ge8\log(1+12e^{-2\pi})=0.1773\approx90\times2^{-9}\qquad\text{\st{proved}, given the spectrum}.
+\]
+The exact values (Table~\ref{tab:maxwell}) are numerical; they are much larger, minimal at the self-dual point $\beta=1/(2\pi)$ (electric--magnetic
+duality $\beta\leftrightarrow1/(4\pi^2\beta)$), and grow at both ends (quasi-degenerate electric fluxes at large $\beta$, magnetic fluxes at small
+$\beta$). Under the stated identification, Maxwell theory never satisfies the criterion. The compact boson without vortices has the same
+qualification ($\Delta_4\ge8\log(1+6e^{-2\pi})=0.0891$; numerically $\Delta_4\to25.9$--$42.4$).
+
+\begin{table}[ht]
+\centering\footnotesize
+\begin{tabular}{@{}lcccccc@{}}
+\toprule
+$\beta$ & $0.02$ & $0.1$ & $1/(2\pi)$ & $0.5$ & $1$ & $5$\\
+\midrule
+$\Delta_4(4)$ & $77.4$ & $42.4$ & $38.2$ & $56.5$ & $72.1$ & $108.3$\\
+$\Delta_4(32)$ & $72.2$ & $37.2$ & $33.0$ & $51.3$ & $66.9$ & $103.1$\\
+\bottomrule
+\end{tabular}
+\caption{Numerical evaluation of the stipulated photon, rotor and flux spectrum, $\Delta_4(n;\beta)$ \st{computed}; the limit is reached to
+$10^{-2}$ at $n=16$. Its identification with a fully normalised monopole-free Villain measure is an additional unproved input, and no uniform
+error certificate is asserted.}
+\label{tab:maxwell}
+\end{table}
+
+\paragraph{Massive free scalar at fixed physical size.} With $x=M\ell$, lattice mass $x/n$, and ``continuum'' values from the spectrum
+$\sqrt{M^2+k^2}$ on the tori of sides $\ell$ and $2\ell$ \st{computed}:
+\begin{center}\footnotesize
+\begin{tabular}{@{}lccccc@{}}
+\toprule
+$x=M\ell$ & $0.1$ & $1$ & $5$ & $10$ & $15$\\
+\midrule
+$\Delta_4$, $n=8$ & $48.4$ & $14.7$ & $0.653$ & $0.0204$ & $9.8\cdot10^{-4}$\\
+$\Delta_4$, $n=64$ & $48.0$ & $14.27$ & $0.506$ & $0.00724$ & $8.6\cdot10^{-5}$\\
+$\Delta_4$, continuum & $48.0$ & $14.26$ & $0.504$ & $0.00711$ & $8.2\cdot10^{-5}$\\
+$\Delta_3$, continuum & $21.9$ & $6.21$ & $0.175$ & $0.00194$ & $1.9\cdot10^{-5}$\\
+\bottomrule
+\end{tabular}
+\end{center}
+Numerically, the massive scalar passes: $\Delta_4^{\mathrm{cont}}(x)\le2^{-9}$ for $x\ge x_4^*=11.47$ ($2^{-12}$: $13.79$), and
+$\Delta_3^{\mathrm{cont}}\le2^{-7}$ for $x\ge x_3^*=8.47$. These crossings are numerical: the spectrum is truncated (frequencies below $80$ in the
+script \path{reproduction/scripts/temoins.py}) and no tail certificate is given. At $x=x_4^*$ Theorem~\ref{thm:lattice} gives a gap $\ge(\log2)/\ell=M/16.5$: the
+bound is a minorant, loose by a factor $\approx16$. In the massless limit $\Delta^{\mathrm{cont}}(x)\approx-(2^d-1)\log x+\mathrm{const}$
+(from $x=0.1$ to $0.01$ the increase is $34.53=15\ln10$ in $d=4$ and $16.11=7\ln10$ in $d=3$).
+
+\emph{Not treated:} the compact $U(1)$ theory (Villain or Wilson, with monopoles) in its four-dimensional Coulomb phase, and
+weakly coupled $SU(2)$ in five dimensions; the criterion is expected to fail there for the same reason (massless photons), but we have
+no computation.
+
+\paragraph{A non-admissible witness.} The massless \emph{non-compact} scalar violates (W2) (its spatial zero mode has continuous
+spectrum). With the convention ``four-dimensional zero mode removed'', $\Delta_4(n)=10.46,\ 1.81,\ -4.74,\ -12.5,\ -17.3,\ -23.6,\
+-28.0$ for $n=2,3,4,6,8,12,16$ \st{computed}: negative values, impossible under (W1)--(W2) since $\Delta$ is a positive combination of
+$p$'s. Prescriptions that remove zero modes therefore test models outside the hypotheses.
+
+\paragraph{Dimension three.} For the same kind of Gaussian transfer spectrum, assuming its identification with the periodic partition function,
+the four distinct lowest photon momenta give, for $n\ge3$ and $\beta>0$, $\Delta_3(n)\ge4\log(1+4e^{-2\pi})=0.0298\approx3.8\times2^{-7}$ \st{proved}
+given the spectrum; numerically $\Delta_3\ge6.46$ (minimum at $e^2\ell\approx8.0$, $n=32$) \st{computed}. This Gaussian calculation is not a
+calculation of the compact three-dimensional $U(1)$ theory with monopoles; reference \cite{GM82} concerns the confinement of static charges, and
+no further spectral statement from that paper is asserted here.
+
+%=====================================================================================================================
+\section{Strong coupling and a reported computational instance}\label{sec:strong}
+
+\paragraph{Thermodynamic integration.} Since $\partial_\beta F_\beta(\vec n)=-\sum_p\langle1-\frac12\Tr U_p\rangle=-6|\Lambda|(1-\langle
+P\rangle_{\vec n})$ with $\langle P\rangle$ the mean plaquette and $F_0=0$,
+\begin{equation}\label{eq:thermo}
+\Delta_\beta(n)=96\,n^4\int_0^\beta\bigl(\langle P\rangle_{n^4}-\langle P\rangle_{(2n)^4}\bigr)\,d\beta'\qquad\text{\st{proved}}.
+\end{equation}
+
+\paragraph{Leading terms.} With $t=I_2(\beta)/I_1(\beta)\approx\beta/4$, the $6n^2$ flat wrapping sheets and the $12n^3$ unit-cross-section wrapping
+tubes have fundamental weights $t^{n^2}$ and $t^{4n}$ (a sheet is a full $2$-torus of $n^2$ plaquettes with Euler characteristic $0$; a tube has $4n$ plaquettes). Their
+contributions to $16\log Z(n^4)$ are respectively $96\,n^2t^{n^2}$ and $192\,n^3t^{4n}$. At $n=2$ the sheets contribute $384\,t^4$ and the tubes contribute $1536\,t^8$;
+the latter is not the complete coefficient of $t^8$ in $\Delta_4(2)$, which is not determined here. At $n=4$ these two families together contribute $13\,824\,t^{16}$.
+Establishing the complete Taylor coefficients and the stated remainder orders requires the classification of the remaining graphs, representations and logarithmic
+cluster contributions; that derivation is not supplied here. A Monte Carlo computation of \eqref{eq:thermo} on $2^4$ and $4^4$ for $\beta\le1.5$ is consistent with the
+leading coefficient $384$ to $2.5\%$ (fitted $A=0.997\pm0.025$ in $\Delta_4(2)/(384t^4)=A+O(t^4)$) \st{computed, internal note of 10 November 2026}; it does not
+determine a Taylor coefficient. At leading order, $n=2$ would suffice for $\beta\le0.190$ and $n=4$ up to $\beta\approx1.65$; but the leading term underestimates
+$\Delta_4(2)$ by $14\%$ at $\beta=1$ and $72\%$ at $\beta=1.5$, so these values are \st{heuristic}. A Monte Carlo estimate never certifies the criterion: at weak coupling it
+would require the plaquette to a relative accuracy of order $10^{-13}$.
+
+\paragraph{A reported computational instance.} Assuming the two computational inputs specified below, the following analytic argument gives an interval on which the scalar hypothesis holds for the $SU(2)$ Wilson partition function.
+
+\begin{proposition}[reported computational instance, $n=2$]\label{prop:instance}
+Assume the reported finite combinatorial input (ENC): the complete counts of connected closed plaquette supports through size six, as listed in the proof. Assume also
+the exact rational comparison (RAT) specified after the proof. Then, for the four-dimensional $SU(2)$ Wilson theory and $0\le\beta\le\beta_*=\BETASTAR$,
+$\Delta_\beta(2)\le\DELTABOUND<2^{-9}$. Under (W1)--(W2), the transfer-ratio consequence follows from Theorem~\ref{thm:lattice}: on every spatial torus $(2^{j+1})^3$,
+$(\lambda_i/\lambda_0)^2\le256\,\Delta_\beta(2)$ for $\beta\le\beta_*$. The analytic estimate is proved below conditionally on (ENC) and (RAT); these computational inputs
+are reported from one implementation and are not independently certified in this note. \st{proved} conditionally on \st{computed} inputs
+\end{proposition}
+\begin{proof}
+Write $e^{(\beta/2)\Tr U}=c_0(1+f(U))$ with $c_0=\int e^{(\beta/2)\Tr U}dU$. Since the tori $2^4$ and $4^4$ have $96$ and $1536=16\cdot96$
+plaquettes, the constants $c_0$ and $e^{-\beta N_p}$ cancel in $\Delta$, and $\Delta_\beta(2)=16\log\widehat Z(2^4)-\log\widehat Z(4^4)$,
+with $\widehat Z(\Lambda)=\sum_{P}w(P)$ over sets $P$ of plaquettes and $w(P)=\int\prod_{p\in P}f(U_p)\,dU$.
+
+\emph{Activity.} Under Haar measure $X=\frac12\Tr U$ has a symmetric law on $[-1,1]$, and $(\beta/2)\Tr U=\beta X$. Jensen's inequality
+gives $c_0=\mathbb E\,e^{\beta X}\ge1$, and the convexity bound $e^{\beta x}\le\cosh\beta+x\sinh\beta$ on $[-1,1]$ gives $c_0\le\cosh\beta$.
+Hence $f\le e^\beta/c_0-1\le e^\beta-1$ and $f\ge e^{-\beta}/c_0-1\ge e^{-\beta}/\cosh\beta-1=-\tanh\beta\ge-\beta$, so that
+$|f|\le\varepsilon:=e^\beta-1\le\beta+\beta^2$ for $0\le\beta\le1$, and $|w(P)|\le\varepsilon^{|P|}$.
+
+\emph{Closed sets.} If a link of $P$ belongs to only one plaquette $p\in P$, integrating that link first gives $\int f(U_lA)\,dU_l=\int
+f=0$ by invariance of the Haar measure (the four links of $p$ are distinct). Hence $w(P)=0$ unless $P$ is
+\emph{closed} (every link of $P$ in at least two plaquettes of $P$). A closed $P$ is the disjoint union, in links, of its connected
+components $\gamma$ (connected through shared links), each closed, and $w(P)=\prod_\gamma w(\gamma)$. Therefore, with
+$S_\Lambda=\sum_\gamma\varepsilon^{|\gamma|}$ over connected closed sets,
+\[
+\sum_{P\ne\emptyset}|w(P)|\le\sum_{r\ge1}\frac{S_\Lambda^r}{r!}=e^{S_\Lambda}-1,\qquad\log\widehat Z(2^4)\le S_{2^4},\qquad
+\widehat Z(4^4)\ge2-e^{S_{4^4}}.
+\]
+\emph{Counting.} Let $N_m(\Lambda)$ be the number of connected closed sets of $m$ plaquettes. By translation and axis permutations every
+plaquette is equivalent to a fixed root, so $N_m=|\mathcal P|\,c_m/m$ with $c_m$ the number of such sets containing the root. An exact
+enumeration (Redelmeier's algorithm on the plaquette adjacency graph, with a pruning that is exact for closed sets; \S\ref{sec:repro})
+gives \COUNTS. For larger $m$ we use, on $2^4$, $N_m\le\binom{96}{m}$, and on $4^4$, $N_m\le\frac{1536}{m}\binom{20m}{m-1}\le
+\frac{1536}{m}\,e\,(20e)^{m-1}$: the adjacency graph has degree $20$, and a connected set of size $m$ containing the root is determined
+by the $0/1$ string, of length at most $20m$ with $m-1$ ones, that records which neighbour slots are new members in a breadth-first
+exploration. The numbers listed above, including the absence of all other supports of size at most six, are the input (ENC), not a classification proved on paper here. ``Closed'' means that every incident link belongs to at least two selected plaquettes, allowing branched supports.
+
+\emph{Conclusion.} With $y=e^{S_{4^4}}-1\le S_{4^4}+S_{4^4}^2$ and $-\log(1-y)\le y/(1-y)$,
+\[
+\Delta_\beta(2)\le16\,S_{2^4}+\frac{y}{1-y},
+\]
+and, for $0\le\beta\le1/200$, $\varepsilon\le u$. The counting bounds give $S_{2^4}\le A$ and $S_{4^4}\le B$, with $A$ and $B$ defined in (RAT). Assuming (RAT), $B\le1$ and $e^{S_{4^4}}-1\le B+B^2=Y<1$. Thus $\Delta_\beta(2)\le16A+Y/(1-Y)=R\le1741/10^6<1/512$. Under (W1)--(W2), $\Delta\ge0$ by Lemma~\ref{lem:rect}.
+\end{proof}
+\noindent\textbf{(RAT).} With $u=201/40000$ ($=\beta+\beta^2$ at $\beta=1/200$) and $E=2719/1000$, put
+\begin{align*}
+A&=24u^4+64u^6+\sum_{m=7}^{96}\binom{96}{m}u^m,\qquad B=1024u^6+\frac{1536}{7}\,E(20E)^6\frac{u^7}{1-20Eu},\\
+Y&=B+B^2,\qquad R=16A+\frac{Y}{1-Y}.
+\end{align*}
+The comparison to be certified in exact rational arithmetic is $B\le1$, $Y<1$ and $R\le1741/10^6$. The program reports $R\approx0.0017400504$, $A\approx1.0362\cdot10^{-6}$ and
+$B\approx0.0017176$; but the stored output does not contain the exact fraction (the field is empty), and these decimals are not the certificate. (ENC) and (RAT) are the two
+computational inputs of Proposition~\ref{prop:instance}. The same implementation also reports that this upper bound exceeds $2^{-9}$ at $\beta=0.0051$, and reports $\Delta_\beta(2)\le2^{-12}$ for $\beta\le0.0038$ \st{computed}; these additional computations are not certified by the stated input (RAT).
+
+\begin{remark}
+The exact counts $c_m$ for $m\le6$ and the exact rational evaluation come from a single program (\path{reproduction/instance/instance_n2_M6.py}) and
+have not been independently recounted. The bound is crude: the activity $\varepsilon\approx\beta$ is four times the true expansion parameter $t\approx\beta/4$, and no
+cancellation between the two tori is used, so $\beta_*$ is about \BETARATIO{} times smaller than the leading-order value $0.190$. A
+cluster expansion with the true activities and the cancellation of non-winding clusters should reach $\beta\approx0.1$--$0.2$ for $n=2$ \st{heuristic},
+and $n=4$ up to $\beta\approx1$ would require a computer-assisted expansion with rigorous tails; we have not done either. In this regime
+exponential decay and a lattice mass gap are already known from the cluster expansion of Osterwalder and Seiler \cite{OS78}, with better
+bounds: Proposition~\ref{prop:instance} is a reported check conditional on (ENC) and (RAT), not a new result on the gap.
+\end{remark}
+
+%=====================================================================================================================
+\section{Discussion}\label{sec:discussion}
+
+\subsection{What this note does not prove}\label{sec:notprove}
+\begin{itemize}
+\item \textbf{No weak-coupling estimate.} The theorem requires a scalar bound at some fixed physical size (of order $\ell\sim2$\,fm
+for the physical theory), uniformly along the chosen cutoff trajectory. No estimate here establishes this uniform scalar hypothesis along a weak-coupling continuum trajectory (the ``desert'' between strong and weak coupling); establishing it remains an open sufficient route, and equivalence with the Yang--Mills existence and mass-gap problem is not proved. The strong-coupling interval reported in Proposition~\ref{prop:instance}, conditional on (ENC) and (RAT), lies in a regime where the gap is already known.
+\item \textbf{No existence and no non-triviality of the continuum limit.} (W4) is assumed; a trivial limit satisfies the conclusion
+for every $q$.
+\item \textbf{No reconstruction.} (W6) is assumed, as in ClayYM.
+\item \textbf{The criterion contains additional finite-volume information.} It controls excited thermal traces, including flux
+sectors, which are not determined by the local infinite-volume gap alone in the broader class illustrated by Example~\ref{ex:z2}. That example
+has a trivial local limit: strictness within the full Clay class or within pure $SU(2)$ is not established.
+\item \textbf{The transfer structure (W2)--(W3) is not formalised} (it would require Haar integration on $SU(2)^{\text{links}}$ and the
+compact spectral theorem in Lean), and the comparison of tori and cylinders is on paper only.
+\item \textbf{The relation with hypothesis (D) of \cite{BB26} is not established in either direction.} In particular, (D) does not
+obviously give (G$_{\mathrm{fv}}$) on the flux sectors. Hypothesis (D) is that of version~4.45.0. For hypothesis (B$^*$) of version~5.0.0
+\cite{BB26v5} the relation is one-sided: (B$^*$) implies $\Delta_\beta(2T_0)\le2^{-9}$ by \eqref{eq:bb26implies}, and we do not know the
+converse (\S\ref{sec:bb26v5}).
+\item The gap bound $(\log2)/\ell$ is a sufficient lower bound, not an optimal estimate; the comparison with the massive scalar (a factor
+$\approx16$) uses the uncertified numerical crossing and is only illustrative.
+\end{itemize}
+
+\subsection{Comparison with related conditional statements}\label{sec:compare}
+\begin{itemize}
+\item \emph{OpenAI's two-dimensional criterion \cite{OAI26}} \st{read} (Lemma~2.1, Proposition~2.2 and the rectangle identity, in
+\path{sections/finite-volume.tex} of the repository). Two-dimensional spin models with a positive, self-adjoint, trace-class transfer operator,
+threshold $2^{-10}$, recursion $44\Delta^2\le64\Delta^2$, gap $(\log2)/n$ of every local limit of square tori, and of the lattice theory if the
+periodic state is unique; the finite-volume section supplies the excited-trace estimate, the rectangle identity, the quadratic iteration and
+the insertion comparison between square tori and cylinders. Theorem~\ref{thm:lattice} transposes this argument to $d=4$ and $d=3$, using the
+weights $2^{d-1-j}$ of \eqref{eq:decomp} and the full gauge-invariant trace, flux sectors included. The explicit constants and the Lean packaging
+are incremental additions; the continuum passage is a conditional closure of the $q$-form, and the converse is an elementary thermal-trace
+estimate. We found no converse and no $d>2$ statement in the passages of \cite{OAI26} that were read (the passages of the finite-volume section and introduction recorded in the anteriority audit, lines 36--135 and 222--262 respectively, together with bounded keyword searches elsewhere in the source).
+These additions do not constitute a substantially new mass-gap mechanism, and the priority assessment is limited to the sources and passages
+actually read.
+\item \emph{Bhattacharjee et al., Theorem~B \cite{BB26}} \st{read}. ``Let $a_k\to0$ and $\beta_k\ge0$ be couplings, and suppose that there
+are $\varpi>0$, $\ell>0$ and integers $n_k\ge2$ with $n_ka_k\le\ell$ such that $\mathrm{BP}(n_k,\varpi)$ holds for the Wilson measure at
+$\beta_k$ on all large tori. Then every continuum limit [\dots] has Hamiltonian $H$ with $\sigma(H)\subset\{0\}\cup[\Delta,\infty)$,
+$\Delta=16\varpi/(625e^2\ell)$'' (v4.45.0, \texttt{p1\_intro.tex}). $\mathrm{BP}(n,\varpi)$ is a variance (Poincar\'e) inequality for the
+dynamics that resamples cubes of side $n$, on all large tori. Same form as Theorem~\ref{thm:main}; the hypothesis is a spectral gap of a
+dynamics, not an inequality between two partition functions, and the limit is a separate hypothesis (E). Neither hypothesis is known to
+imply the other.
+\item \emph{Bhattacharjee et al., version~5.0.0, Theorem~7.56 and Theorem~F \cite{BB26v5}} \st{read} (abstract, introduction, Sections~7.8
+and~7.11 only). The hypothesis is no longer a spectral gap of a dynamics: it is a family of inequalities between partition functions of
+finite tori, on the same doubling defect as ours. Their record is earlier than this note; their hypothesis implies ours and their conclusion
+is wider (\S\ref{sec:bb26v5}).
+\item \emph{Rajabu, Theorem~5.3 \cite{Raj26}}, as summarised in the project's earlier reading note (the primary text was not re-read in the anteriority audit for this version). A gauge-covariant block hierarchy (H1)--(H3), weighted Lipschitz covariance and
+transfer bounds at every fixed physical scale (C1), a landing bound (C2), time continuity (C3) and a non-zero excited sector (C4) give a
+gap $\ge w$ for the transfer operators of limits of block observables. Four multi-scale hypotheses against one scalar inequality; none of
+them is discharged here, and (C3)--(C4) have no counterpart (non-triviality is not treated here).
+\item \emph{Knabe-type criteria} \cite{Kna88,GM16,Lem19}. Finite-size gap criteria for frustration-free quantum Hamiltonians: a local
+gap above a threshold on a finite subsystem implies a global gap. Same logical form, different objects: local Hamiltonian gaps, no
+partition functions, no reflection positivity, no continuum limit, one direction only.
+\item \emph{Borgs--Koteck\'y} \cite{BK90}. A finite-size scaling theory of periodic partition functions at first-order transitions. With
+such an expansion $\Delta_d\to(2^d-1)\log(\#\text{phases})$ (Example~\ref{ex:ising}): the test counts phases. This is our reading, not
+a statement of \cite{BK90}, whose text we have not re-read.
+\end{itemize}
+
+\subsection{Reach}
+The note supplies a higher-dimensional version of an existing finite-volume sufficient criterion and packages its conditional continuum
+implication. It does not establish the scalar bound along a weak-coupling trajectory, construct the continuum limit, or identify an existing
+construction with all the objects required by the criterion (Section~\ref{sec:openai-construction}). For square tori, the comparison must hold along
+the actual convergent family. Under exact blocking, $Z_{\mathrm{block}}(n)=Z(bn)$ gives $\Delta_{\mathrm{block}}(n)=\Delta(bn)$: this covariance is
+an identity, not a quantitative estimate that makes the missing smallness hypothesis easier.
+
+%=====================================================================================================================
+\section{Relation to the OpenAI construction}\label{sec:openai-construction}
+\begingroup\small
+OpenAI have released a Lean-formalised construction for four-dimensional $SU(2)$ lattice Yang--Mills theory. This comparison concerns the local
+snapshot of that repository held by the author (folder dated 28 October 2026), inspected on 11 November 2026; file references are relative to it.
+\textbf{The criterion does not apply to that construction as it stands}, for three reasons, and a fourth point limits what can be said.
+\begin{enumerate}
+\item \emph{The bare coupling may depend on the volume.} \path{YM/Source/Construction.lean:38} defines \verb|abbrev beta (N p) := C.path.beta N p N|.
+The scalar test must then be evaluated at the common coupling $\beta_{N,p}$ of the target volume, $\Delta_{\beta_{N,p}}(n_N)$ with $n_N=\ell/a_N$;
+a difference of two separately tuned couplings is not the defect controlled by the doubling argument. A volume-dependent coupling is not a
+logical obstruction, but the required same-coupling estimate is an additional hypothesis.
+\item \emph{The dyadic volumes are not exported.} \path{PublicWilson.lean:38} exports only the field \texttt{periodStrict} (a \texttt{StrictMono} statement on \texttt{(period p).val}).
+The internal recipe contains \verb|4*(M+1)| and \verb|period i := page (M+i)| (\path{YM/Price/Waits.lean:87,102}), but the exported refinement
+(\path{ChallengeSpec.lean:188}, \verb|T.Properties|) does not supply the hypothesis $L_{p_k}=2^{j_k}\ell$, $j_k\to\infty$ that our torus comparison uses.
+\item \emph{The order of limits differs.} The fixed-volume limit uses \verb|C.smear N p v t| (\path{PublicWilson.lean:89}); the subsequent volume limit
+uses \verb|row (volumeOrder k)| (line 90): first the mesh limit at fixed physical volume, then the volume limit. Our torus--cylinder estimate
+(a diagonal choice of volumes as a function of the cutoff, Corollary~\ref{cor:tori}) changes the family and does not identify its limit with this
+iterated limit.
+\item \emph{Partition-function control exists but does not bound the defect.} \path{YM/FullVolume/Scalar.lean} contains the one-volume bound
+\verb|partition G n b <= q^(3*Fintype.card (Site n)-3)| (line 46), \verb|raw_lost| (line 68) and a positive lower bound for \verb|stripped A N p m|
+(line 98). These estimates do not give the same-coupling two-volume bound $\Delta\le\eta$ that the criterion requires; we assert no absence of
+control of $\log Z$.
+\end{enumerate}
+An initial internal repair used an additional energy-bound hypothesis (EB). Later internal work reports a conditional four-copy transport estimate avoiding (EB), using moment bounds already available in the construction. These repairs are outside this note and do not establish the same-coupling scalar estimate or a complete identification with the objects used here; the present criterion therefore does not plug into that construction as it stands. Our searches in that repository for a bridge to our Lean objects (\texttt{ClayYM}, \texttt{rpForm}, \texttt{OSReconstruction}, \texttt{QGap}),
+for a finite-volume spectral decomposition, and for a bound on $\Delta$ were bounded textual searches and found none; they are not an exhaustive audit.
+\endgroup
+
+%=====================================================================================================================
+\section{Reproducibility}\label{sec:repro}
+The package accompanying this note contains:
+\begin{itemize}
+\item \path{lean/CritereScalaire.lean} (this work) and \path{ClayYM_v1_1_extrait/ClayYM/} (six files of ClayYM v1.1, verbatim);
+\path{lean/assembler_paquet.sh} builds the single file \path{main.lean} = \texttt{import Mathlib} + the six ClayYM files (imports
+removed, each wrapped in a \texttt{section}) + \path{CritereScalaire.lean}; the SHA-256 of \path{lean/main.lean} is that of the original build
+(\path{lean/MANIFEST.txt});
+\item \path{lean/build_rejeu_2026-11-11.json}: the output of the recompilation from a clean copy by the author's side (\S\ref{app:lean}), 
+\path{lean/reconstruction_non_auteur_2026-11-11/}: the log and project files of reconstruction (b), and \path{rejeu_depuis_arbre_git_2026-11-12/}: the script, scaffolding and log of reconstruction (c);
+\item \path{reproduction/scripts/constantes_poly.py} (constants of Table~\ref{tab:const}), \path{reproduction/scripts/temoins.py} (witnesses), with their
+outputs in \path{reproduction/resultats/};
+\item \path{reproduction/instance/instance_n2.py} (Proposition~\ref{prop:instance}); the file actually run, \path{instance_n2_M6.py}, differs
+only by fixing the maximal exact size to $6$; its output is \path{sortie_bac_M6_job_20261111-011302-d9004d.json} ($0.4$\,s);
+\item \path{SHA256SUMS}.
+\end{itemize}
+All programs ran in a sandbox without network and without privileges (``qlab'', Python~3, Lean~4 v4.34.0 with Mathlib commit
+\texttt{5ed2965}, tag v4.34.0). The command used for Lean is
+{\footnotesize
+\begin{verbatim}
+bash lean/assembler_paquet.sh /path/to/main.lean
+<sandbox runner> --kind lean --timeout 1200 /path/to/main.lean
+\end{verbatim}}
+\noindent and, for Python, the same runner with \texttt{--kind python --timeout S FILE}. Outside this sandbox, any Lean~4 v4.34.0 project with
+Mathlib at that commit compiles \path{main.lean} with \texttt{lake env lean main.lean}.
+
+%=====================================================================================================================
+\appendix
+\section{The Lean formalisation}\label{app:lean}
+\paragraph{Files and build.} \path{main.lean} (2175 lines), SHA-256\\
+{\footnotesize\texttt{944a99f6fc10f1696e6dfa5bc231b73dd9c57a101b48518c52e3e4ca944ef2c6}},\\
+is assembled from \path{CritereScalaire.lean}, SHA-256\\
+{\footnotesize\texttt{0c4264a7c3f665346d1e479f6ed99e8b531b3b23960efcc718095d4ed4fe8496}},\\
+and the ClayYM v1.1 files \texttt{Basic}, \texttt{OS}, \texttt{Gap}, \texttt{Fake/Trivial}, \texttt{Transfer}, \texttt{GapQ} (commit
+\texttt{93ac204}). Toolchain: Lean~4 v4.34.0, Mathlib \texttt{5ed2965}. No \texttt{axiom} is declared; the hypotheses are explicit arguments.
+The following build checks, all on 11 November 2026. (a) On the author's side, in the sandbox (final build \texttt{build4}, job \texttt{20261111-002010-32231f}) and again
+from a clean copy of the package (job \texttt{\REBUILDJOB}): return code $0$, $0$ errors, no \texttt{sorry}; the $35$ declarations of the namespace
+\texttt{CritereScalaire} depend only on \texttt{propext}, \texttt{Classical.choice}, \texttt{Quot.sound}. (b) By a non-author (an AI agent, Claude
+Sonnet~5.5, not the author of the Lean files), about 15:20 UTC, on a clean rented machine with the official Lean~4.34.0 toolchain and the
+official Mathlib cache: \texttt{lake build} return code $0$ (8925 jobs; $187$\,s for \texttt{lake build}, following a $25$\,s cache check) on the file \path{main.lean} of the hash above, and the same $35$
+declarations with standard axioms; this one started from hashed copies of the sources, not from a git archive.
+(c) By a non-author (Claude Sonnet~5.5, not the author of the Lean files), from the \emph{git archive of the package}: the package directory
+\path{papers/Paper_ScalarCriterion_SU2} was added to a scratch git repository (no commit in the public repository), its tree computed, and
+\texttt{git archive} of that tree copied to the rented machine (archive sha256 \texttt{97cd82b6\dots01573c}; git tree \texttt{16d2a27b\dots} of the package at
+that moment). The subtrees used, \path{lean/} (git id \texttt{0bc5d1f1\dots}) and \path{ClayYM_v1_1_extrait/} (\texttt{f6c358cb\dots}), are those of the final package; the
+note, the metadata and the logs, which differ, are not used by the build. On the machine, in a new directory, under the unprivileged user, at
+$20{:}03$--$20{:}05$ UTC, with Lean~4.34.0 and Mathlib \texttt{5ed2965}: the ten hashes of \path{lean/MANIFEST.txt} were checked on the extracted files (all OK);
+the lake scaffolding (\texttt{lakefile.toml}, \texttt{lake-manifest.json}, \texttt{lean-toolchain}, a file of \texttt{\#print axioms}) is not in the archive and was taken from
+reconstruction (b); the Mathlib package directory was copied from reconstruction (b) (official cache: ``no files to download''), but no build artefact of the note was
+copied, and \path{main.lean} was taken from the archive (sha256 \texttt{944a99f6\dots}); \texttt{lake build} return code $0$ (8925 jobs, \texttt{main} built in $28$\,s; $33$\,s for \texttt{lake build}, following a $13$\,s cache check), the
+same two linter warnings as before, and the same $35$ declarations with axioms \texttt{propext}, \texttt{Classical.choice}, \texttt{Quot.sound}, the list being identical to that of \texttt{build4}. The logs are
+in the package (\path{rejeu_depuis_arbre_git_2026-11-12/}). Rebuilds (b) and (c) compiled the already assembled \path{main.lean}; they did not rerun the assembler from the component sources. They used the standard Lean kernel, not an independent kernel. The complete tree of the final package, which differs from the archived one only outside the two subtrees above, was not itself rebuilt. The Lean sources are not yet in the public repository. An independent kernel check (nanoda) has not been run for this project.
+
+
+\begin{center}\footnotesize
+\begin{tabular}{@{}>{\raggedright\arraybackslash}p{0.30\textwidth}>{\raggedright\arraybackslash}p{0.63\textwidth}@{}}
+\toprule
+declaration & what it states, relative to the text\\
+\midrule
+\texttt{lemme\_fin\_tc} (l.\,42) & Lemma~\ref{lem:squaring}: $p\ge0$, $s\le e^p-1$, $r_i^n\le s$, $p(2n)\le2(e^p-1)^2$ (countable spectrum, $r_i\in[0,1]$, $s(n)<\infty$)\\
+\texttt{decomp\_4d} (l.\,156) & $\Delta\ge0$, $a_0\le\Delta/8$, $a_3\le\Delta$, from symmetry and positivity of $p$; not the full identity \eqref{eq:decomp} nor $a_1,a_2$\\
+\texttt{doublement\_fin\_4d} (l.\,186), \texttt{chaine\_num\_fin4} (l.\,125) & Proposition~\ref{prop:doubling}, with positivity and squaring bound of $p$ as hypotheses (supplied by \texttt{hyp\_of\_specTC} from \texttt{HypSpecTC})\\
+\texttt{iteration256} (l.\,248), \texttt{gap\_4d\_fin} (l.\,299) & Theorem~\ref{thm:lattice}: $r_i^n\le256\,\Delta(n)$ on the section $(2^kn)^3$ given its spectral data; no simplicity, no logarithmic form\\
+\texttt{doublement\_fin\_3d} (l.\,418), \texttt{gap\_3d\_fin} (l.\,513) & Theorem~\ref{thm:3d}\\
+\texttt{SpecLink} (l.\,570), \texttt{qGapOn\_of\_specLink} (l.\,581) & (W3) in coordinates (linear square-summable $c$, $c(\Omega)=\delta_0$, $B(\Omega,F,0)=c_0(F)$, diagonal identities at times $0$ and $\ell$) and Lemma~\ref{lem:qform}\\
+\texttt{LienTransfert4} (l.\,611), \texttt{qGapOn\_limite\_4d} (l.\,628) & abstract form of Theorem~\ref{thm:main}, any filter; no $a_k$ or equality of spacings appears in Lean: \texttt{SpecLink} relates the integer exponent $n_k$ to the real time $\ell$, and $\ell=n_ka_k$ is the assumed physical identification\\
+\texttt{convergesOn\_of\_proche} (l.\,672) & transfer of convergence \emph{assuming} that the torus--cylinder difference tends to zero; the estimate and the diagonal choice are not formalised\\
+\texttt{clay\_trou\_de\_critere\_4d} (l.\,700), \texttt{\_3d} (l.\,722) & Theorem~\ref{thm:main} with \texttt{QGap}, \texttt{HasMassGap} of ClayYM and, in $d=4$, $(\log2)/\ell\le-\log(256\eta)/\ell$; vacuum uniqueness is \texttt{QGap.vacuum\_unique} of ClayYM, the case $\eta\le2^{-12}$ is not restated\\
+\texttt{non\_vacuite\_4d} (l.\,802) & the hypotheses of \texttt{qGapOn\_limite\_4d} hold simultaneously for the trivial theory\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\paragraph{Named hypotheses in Lean.} Symmetry \texttt{hs12}, \texttt{hs23}, \texttt{hs34} (W1); \texttt{HypSpecTC} (W2), for all
+positive sizes; bilinearity \texttt{IsBilin} of the lattice forms; \texttt{LienTransfert4}/\texttt{SpecLink} (W3); \texttt{ConvergesOn} (W4); \texttt{OSReconstruction R S} and
+\texttt{S [] = 1} (W6). The guard \texttt{non\_vacuite\_4d} instantiates the hypotheses of the abstract theorem \texttt{qGapOn\_limite\_4d} with $V=\R$ and $B(F,G,t)=FG$. It does not instantiate the reconstruction hypothesis, and it does not show that the hypotheses hold for Wilson's $SU(2)$ theory.
+
+\paragraph{Mutation tests.} Eight mutants of \path{CritereScalaire.lean} must each make the build fail: constant $256\to200$; threshold
+$2^{-9}\to2^{-7}$; a wrong symmetry in \texttt{decomp\_4d}; vacuum coordinate $c(\Omega)\equiv1$; a poisoned theorem $0=1$; constant $64\to56$ in
+$d=3$; conclusion $q=128\eta$; spectral link without the weights $r_i^n$. \MUTANTS
+
+%=====================================================================================================================
+\section*{Use of AI}\label{sec:ai}
+\addcontentsline{toc}{section}{Use of AI}
+The work reported here was carried out with AI models, under the author's direction. The roles below are those recorded in the working
+files of the project.
+\begin{itemize}
+\item \emph{Claude Opus~5.5 (Anthropic)} wrote, in several sessions on 10 and 11 November 2026, the transposition of the doubling mechanism to
+$d=4$ and $d=3$, the chain of constants, the assembly with ClayYM, the converse and its examples, the witness programs, the Lean files, the
+instance of Proposition~\ref{prop:instance} and the first draft of this note.
+\item \emph{Qwen3.8 (Qwen team), run locally}, carried out the anteriority search of \S\ref{sec:compare} (sources read and not read are
+recorded in the project files), derived independently the converse bound $\Delta_4(n)\le30A_0e^{m_0r_0}e^{-m_0n}$ and the Ising
+counterexample, and \REVIEWSTATUS
+\item \emph{GPT-6.1 Sol (OpenAI)} reviewed the draft of 11 November 2026 by reading, without running programs, and proposed scope and status
+corrections, adapted and incorporated in this version (the hypotheses (W2$^+$), (W5), the qualification of the torus and filter statements, the
+conditional status of the Maxwell witness, the formulation of the converse, the novelty and strictness claims, and the comparison with the OpenAI
+construction); Sol also recommended that this material be folded into a broader note rather than stand alone; publishing it as a stand-alone note is the author's decision. On 12 November 2026 Sol reviewed, again by reading and without running programs, the first version of this text and required sixteen corrections (three blocking: the domain of the Lean specialisation, the status of Proposition~\ref{prop:instance}, and the order-eight coefficients), which Claude Sonnet adapted; a second read-only check of 12 November 2026 (\path{RELECTURE_SOL_TEXTE_CORRIGE.md}) found partial applications and asked for one blocking and four non-blocking corrections (the conditional status of Proposition~\ref{prop:instance} in the abstract and the list of results, the description of \texttt{SpecLink}, the concordance table, the attribution of the reviews and the wording of the rebuild descriptions), which are applied in this version; Sol has not re-read this version. These reviews do not certify the computational inputs or endorse a subsequent revision.
+\item \emph{Claude Fable~5.2 (Anthropic)} acted as the project's pilot: it directed and arbitrated the work (the arbitrations are recorded in the project's registry). It wrote none of the proofs of this note, with one exception: on 12 November 2026 it wrote \S\ref{sec:bb26v5}, including the derivation \eqref{eq:bb26implies}, and the other sentences of this version that refer to \cite{BB26v5}, and it ran the final \texttt{pdflatex} compilation. That subsection was written after two independent readings of the same passages of \cite{BB26v5}, by \emph{DeepSeek V4 Pro (DeepSeek)} and by Qwen3.8, both without running programs. DeepSeek V4 Pro then checked the text of that subsection against the same passages (12 November 2026, without running programs): it confirmed the derivation \eqref{eq:bb26implies} and asked for two changes of wording (a literal quotation for hypothesis (W), and ``narrower'' instead of ``weaker'' for our conclusion), which are applied; it has not re-read the final wording.
+\item \emph{GPT-6 Astra (OpenAI)} examined, blind, the electric-flux sectors under a scalar hypothesis (registry, 11 November 2026); that material is not part of this note.
+\item \emph{Claude Sonnet~5.5 (Anthropic)} prepared this version of 12 November 2026: it compared each formalised statement with the Lean
+declarations, applied the corrections above to the text (no statement, proof, constant or Lean file was otherwise modified), ran the
+\texttt{pdflatex} compilation, and ran reconstruction (c) of Appendix~\ref{app:lean} from the git archive of the package. Another instance of Claude Sonnet~5.5 performed
+reconstruction (b) of that appendix.
+\end{itemize}
+These checks are not a substitute for refereeing: no human has checked the proofs.
+The human author read the final text of this note before its release; he did not verify the proofs, and no human expert has checked them.
+
+{\small
+\begin{thebibliography}{99}\setlength{\itemsep}{1pt}
+\bibitem{AT21} A.~Athenodorou, M.~Teper, \emph{SU(N) gauge theories in 3+1 dimensions: glueball spectrum, string tensions and
+topology}, J.\ High Energy Phys.\ 2021, no.~12, 082, doi:10.1007/JHEP12(2021)082, arXiv:2106.00364.
+\bibitem{BB26} D.~Bhattacharjee, U.~Bhattacharya, J.~M.~Lockwood, T.~Romanov, S.~Singha Roy, \emph{Yang--Mills theory and the mass
+gap}, version 4.45.0 (10 November 2026), Zenodo, doi:10.5281/zenodo.24111624.
+\bibitem{BB26v5} D.~Bhattacharjee, U.~Bhattacharya, J.~M.~Lockwood, T.~Romanov, I.~J.~Sessford, S.~Singha Roy, \emph{The Yang--Mills Mass
+Gap from One Bound at One Scale}, version 5.0.0, Zenodo, doi:10.5281/zenodo.24147967 (record created on 11 November 2026 at 23:29:13 UTC;
+publication date 12 November 2026; paper of 157 pages in the archive \path{creelie/4Y-M-v5.0.0.zip}). Read on 12 November 2026: abstract,
+introduction, Sections~7.8 and~7.11; keyword searches elsewhere.
+\bibitem{BK90} C.~Borgs, R.~Koteck\'y, \emph{A rigorous theory of finite-size scaling at first-order phase transitions}, J.\ Stat.\
+Phys.\ 61 (1990) 79--119, doi:10.1007/BF01013955.
+\bibitem{GM82} M.~G\"opfert, G.~Mack, \emph{Proof of confinement of static quarks in 3-dimensional $U(1)$ lattice gauge theory for all
+values of the coupling constant}, Commun.\ Math.\ Phys.\ 82 (1982) 545--606, doi:10.1007/BF01961240.
+\bibitem{GM16} D.~Gosset, E.~Mozgunov, \emph{Local gap threshold for frustration-free spin systems}, J.\ Math.\ Phys.\ 57 (2016)
+091901, doi:10.1063/1.4962337, arXiv:1512.00088.
+\bibitem{Kau49} B.~Kaufman, \emph{Crystal statistics. II. Partition function evaluated by spinor analysis}, Phys.\ Rev.\ 76 (1949)
+1232--1243, doi:10.1103/PhysRev.76.1232.
+\bibitem{Kna88} S.~Knabe, \emph{Energy gaps and elementary excitations for certain VBS-quantum antiferromagnets}, J.\ Stat.\ Phys.\ 52
+(1988) 627--638, doi:10.1007/BF01019721.
+\bibitem{Lem19} M.~Lemm, \emph{Finite-size criteria for spectral gaps in $D$-dimensional quantum spin systems}, arXiv:1902.07141 (2019).
+\bibitem{Lus77} M.~L\"uscher, \emph{Construction of a selfadjoint, strictly positive transfer matrix for Euclidean lattice gauge
+theories}, Commun.\ Math.\ Phys.\ 54 (1977) 283--292, doi:10.1007/BF01614090.
+\bibitem{OAI26} OpenAI, \emph{Sharp mass bounds for the two-dimensional $O(4)$ model}, preprint dated 23 September 2026, repository
+\url{https://github.com/openai/math} (family 215, preprint directory \path{Sharp-mass-bounds-for-the-two-dimensional-O4-model-September-23-2026},
+\path{sections/finite-volume.tex}); read from a local copy of the sources, not re-fetched on 12 November 2026.
+\bibitem{OS73} K.~Osterwalder, R.~Schrader, \emph{Axioms for Euclidean Green's functions}, Commun.\ Math.\ Phys.\ 31 (1973) 83--112,
+doi:10.1007/BF01645738.
+\bibitem{OS75} K.~Osterwalder, R.~Schrader, \emph{Axioms for Euclidean Green's functions II}, Commun.\ Math.\ Phys.\ 42 (1975)
+281--305, doi:10.1007/BF01608978.
+\bibitem{OS78} K.~Osterwalder, E.~Seiler, \emph{Gauge field theories on a lattice}, Ann.\ Phys.\ 110 (1978) 440--471,
+doi:10.1016/0003-4916(78)90039-8.
+\bibitem{Raj26} H.~T.~Rajabu, \emph{Multiscale covariance transfer and a conditional continuum mass gap for four-dimensional $SU(2)$
+lattice Yang--Mills theory}, version 2.1 (29 October 2026), in the Zenodo record doi:10.5281/zenodo.23729328.
+\bibitem{ClayYM} K.~R\'emondi\`ere, \emph{ClayYM: a candidate Lean~4 statement of the Yang--Mills existence and mass gap problem, with
+compiled guards against fake models}, version 1.1.0 (25 October 2026), Zenodo, doi:10.5281/zenodo.23644079 (all versions).
+\bibitem{internal} Internal notes of the project, 25 October and 10 November 2026 (unpublished).
+\end{thebibliography}}
+
+\end{document}

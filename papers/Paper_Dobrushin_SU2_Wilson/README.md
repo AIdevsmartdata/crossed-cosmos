@@ -1,6 +1,6 @@
 # Dobrushin uniqueness for the 4D SU(2) Wilson lattice gauge measure for β < 2/9
 
-Version 1.5 (1 November 2026). The previous version is v1.4 (28 October 2026, DOI [10.5281/zenodo.23712954](https://doi.org/10.5281/zenodo.23712954)); v1.3 of 28 September 2026 was not publicly released.
+Version 1.6 (12 November 2026; literature corrections only: no statement, proof, constant or certificate of the note is changed). The previous versions are v1.5 (1 November 2026, DOI [10.5281/zenodo.23856414](https://doi.org/10.5281/zenodo.23856414)) and v1.4 (28 October 2026, DOI [10.5281/zenodo.23712954](https://doi.org/10.5281/zenodo.23712954)); v1.3 of 28 September 2026 was not publicly released.
 Author: Kévin Rémondière (ORCID [0009-0008-2443-7166](https://orcid.org/0009-0008-2443-7166)).
 
 This folder is self-contained. It holds:
@@ -24,7 +24,7 @@ This folder is self-contained. It holds:
 - **New Section 7 and Appendix B (application: Wilson's area law for β < 2/3).** The chordal coefficient (Theorem 6, via Corollary 14(b)) is applied to the Durhuus–Fröhlich slab σ-models.
   Dobrushin's comparison (Wasserstein form, proved in Appendix B), a count of walks and an elementary Doeblin bound give
   |⟨W_γ⟩| ≤ min{C_λ^T e^{−λRT}, (1 − e^{−12β})^T} for every rectangular loop, on tori uniformly in the volume, in boxes with free boundary conditions and for **every Gibbs measure** on Z⁴. Hence the string tension is ≥ arcosh(2/β − 2).
-  **The range is not new**: Borgs and Seiler (1983; Appendix B of the preprint MPI-PAE/PTh 16/83, read; the CMP version was not consulted) prove confinement for β_W < 12/17 ≈ 0.706 by a transfer-matrix argument.
+  **The range is not new**: Borgs and Seiler (1983; Appendix B of the preprint MPI-PAE/PTh 16/83, read; the CMP version was compared with it on the passages cited in the note, see the note) prove confinement for β_W < 12/17 ≈ 0.706 by a transfer-matrix argument.
   **No priority is claimed for any threshold**; the contribution is an independent proof with explicit constants.
   Durhuus–Fröhlich (1980) announced β_W < 2/3 (literal reading) without proof; their written argument covers β_W < 1/6 once a factor 2 is corrected.
   Other ranges cited: Fröhlich 1979 + Aizenman–Barsky–Fernández 1987 (≈ 0.2217, not checked), Cao–Nissim–Sheffield 2025 (1/6), Osterwalder–Seiler 1978 (small β).
@@ -79,13 +79,13 @@ The proof is not formalised in Lean.
 | cross-checks of the new identity (exact power series to κ³⁹, Arb at 90 digits, interval certificates for Ξ < 0 on [4/3, 20] and Δ > 0 on [1/5, 10⁴], optimal transport) | exact / numerical / interval-certified; **not used in the proof** |
 | Corollary 20 (Poincaré) | proved from Wu 2006, Thm 2.1 (read) and BB26 Lemma 4 (read) |
 | Theorem 7.1, Corollary 7.2, Proposition 7.7 + Appendix B (area law) | proved on paper from Theorem 6 (Cor. 14(b)); **not** formalised in Lean; read by the same reviewer (language model); not refereed; numerical checks of the normalisations, of the walk count and of the string-tension bound in `verif_loi_aire/` (not part of the proof) |
-| Borgs–Seiler threshold 12/17 (prior art, cited) | read in the **preprint** only (pp. 4–5, 19–22, B1–B6); journal version not consulted |
+| Borgs–Seiler threshold 12/17 (prior art, cited) | read in the **preprint**; journal version compared on the passages cited (see the note, §areaprior) |
 
 ## Contents
 
 | path | what it is |
 |---|---|
-| `note/dobrushin_su2_wilson_v1_5.pdf`, `.tex` | the note (40 pages, of which Section 7 and Appendix B ≈ 7.5; pdflatex, three passes) |
+| `note/dobrushin_su2_wilson_v1_6.pdf`, `.tex` | the note (43 pages, of which Section 7 and Appendix B ≈ 7.5; pdflatex, three passes) |
 | `identity_all_kappa/` | scripts, logs and results of the cross-checks of §4.9 of the note; `reproduce_light.sh` (about 1 minute), `reproduce_heavy.sh` (about 40 minutes on 8 cores), `SHA256SUMS` (see below) |
 | `verif_loi_aire/` | scripts and results cited in Section 7 (see below) |
 | `certificate_chordal/` | the certificate of the v1.4 proof on κ ≤ 4/3 (Appendix A of the note) |
@@ -222,7 +222,7 @@ The shipped log `lean/logs/build_from_zero.log` comes from `build.sh`, run from 
 **5. The note** (pdflatex, three passes, in `note/`; the packages `lmodern`, `cm-super` (T2A Type 1 fonts for the Cyrillic quotations), `babel` with `russian` and `english`, `hyperref`, `xurl`, `tabularx`, `booktabs`, `amsmath`, `amssymb`, `amsthm`, `mathrsfs`, `geometry`):
 
 ```bash
-cd note && for i in 1 2 3; do pdflatex -interaction=nonstopmode dobrushin_su2_wilson_v1_5.tex; done
+cd note && for i in 1 2 3; do pdflatex -interaction=nonstopmode dobrushin_su2_wilson_v1_6.tex; done
 ```
 
 ## What the Lean part covers, exactly
@@ -238,7 +238,7 @@ For the **geodesic** part, Lean proves:
 - the implication `certificat_boites`;
 - the threshold arithmetic for π/16.
 
-**The analytic proof of the chordal identity for all κ (Theorem 6 of v1.5) is not formalised.** Lean does **not** cover:
+**The analytic proof of the chordal identity for all κ (Theorem 6 of v1.6) is not formalised.** Lean does **not** cover:
 - that proof, nor the area-law section of Section 7 and Appendix B, nor Corollary 20;
 - the flux bound, the explicit field and the elimination of the direction of Appendix A (proved on paper);
 - the reduction of §5.1 (geodesic, proved on paper);
@@ -254,7 +254,7 @@ For the **geodesic** part, Lean proves:
 4. **Prior art; limitation of the literature search.**
    - BB26 prove the bound 1/4 for all fields, β < 2/9 and the exactness of β/4 before this note; Levin, Royer, Gross, Simon and Wu are cited.
    - **Not consulted:** Seiler's monograph (LNP 159), the content of Georgii's book (only the table of contents was read), and Simon's book *The Statistical Mechanics of Lattice Gases* (1993).
-   - Area law (Section 7): the Borgs–Seiler threshold (12/17) is read in the preprint only; Brydges–Giffen–Durhuus–Fröhlich (1986) was not consulted beyond its abstract; MathSciNet was not queried; Fröhlich 1979 + ABF 1987 (≈ 0.2217) is an unchecked combination of published ingredients.
+   - Area law (Section 7): the Borgs–Seiler threshold (12/17) is read in the preprint and compared with the journal version (CMP 91) on the passages cited (pp. 332, 341, 343, 373–377; no difference found; the comparison rests on a local record, not on a refereed check); Brydges–Giffen–Durhuus–Fröhlich (1986) was not consulted beyond its abstract; MathSciNet was not queried; Fröhlich 1979 + ABF 1987 (≈ 0.2217) is an unchecked combination of published ingredients.
 5. **Range.** Levin's conjecture for N ≠ 4 is not addressed; the geodesic bound is certified only for κ ≤ 59/50.
 6. **Scope of physics.** A strong-coupling statement; nothing about the continuum limit or the Yang–Mills mass gap problem.
 
@@ -280,6 +280,6 @@ For the **geodesic** part, Lean proves:
 
 - **License.** CC BY 4.0.
 - **Citation.** See `CITATION.cff`.
-- **Archive.** The note is archived on Zenodo as a new version (1.5) of the record 10.5281/zenodo.23712954 (concept DOI 10.5281/zenodo.23712953). It is related by `isPartOf` to the concept record 10.5281/zenodo.19686398 of the earlier crossed-cosmos releases; it is not a version of that concept. The code is tagged `v7.7.0` in the GitHub repository `AIdevsmartdata/crossed-cosmos`.
+- **Archive.** The note is archived on Zenodo as a new version (1.6) of the record 10.5281/zenodo.23856414 (version 1.5; concept DOI 10.5281/zenodo.23712953). It is related by `isPartOf` to the concept record 10.5281/zenodo.19686398 of the earlier crossed-cosmos releases; it is not a version of that concept. The code is tagged `v7.10.0` in the GitHub repository `AIdevsmartdata/crossed-cosmos`.
 - **AI use.** The note, the certificate code and the Lean files were prepared with the assistance of Claude (Anthropic); the analytic proof of Theorem 6 and the area-law section were read by Kimi K3.1 Pro (Moonshot AI).
   - Every claim in the note carries a status label.

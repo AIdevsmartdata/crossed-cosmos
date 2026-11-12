@@ -1,7 +1,7 @@
 % A scalar finite-volume criterion for a continuum mass gap in SU(2) lattice gauge theory.
-% Version 1.1, 12 November 2026: literature corrections only (Section 1.3, Section 8.2 comparison, bibliography, Use of AI, status statements).
-% Version 1.0 (doi:10.5281/zenodo.24150807) is unchanged as a record. No statement, proof, constant or Lean file is changed.
-% Compile: pdflatex, twice.
+% Version 1.2, 12 November 2026: adds the reverse implication (Section 4, Theorem R), a conditional bridge corollary, a second Lean file, and rewrites the comparison with version 5.0.0 of Bhattacharjee et al.
+% Version 1.1 (doi:10.5281/zenodo.24152406) and version 1.0 (doi:10.5281/zenodo.24150807) are unchanged as records. CritereScalaire.lean and main.lean are byte for byte those of version 1.0.
+% Compile: pdflatex, three passes.
 \documentclass[11pt,a4paper]{article}
 \usepackage[T1]{fontenc}
 \usepackage[utf8]{inputenc}
@@ -51,9 +51,9 @@ the targeted declaration. A re-run on the final text with localisation of the er
 \title{A scalar finite-volume criterion for a continuum mass gap\\ in $SU(2)$ lattice gauge theory:\\ the doubling test in dimensions four and three,\\ its continuum assembly and its converse}
 \author{K\'evin R\'emondi\`ere\thanks{Independent researcher, Oloron-Sainte-Marie, France. ORCID
 \href{https://orcid.org/0009-0008-2443-7166}{0009-0008-2443-7166}. The proofs, the programs, the Lean files and this note were
-prepared with the assistance of AI models (Claude Opus~5.5, Claude Sonnet~5.5 and Claude Fable~5.2, Anthropic; Qwen3.8, Qwen team; GPT-6.1 Sol, OpenAI; DeepSeek V4 Pro, DeepSeek); their roles are described in the
+prepared with the assistance of AI models (Claude Opus~5.5, Claude Sonnet~5.5 and Claude Fable~5.2, Anthropic; Qwen3.8, Qwen team; GPT-6 Astra and GPT-6.1 Sol, OpenAI; DeepSeek V4 Pro, DeepSeek); their roles are described in the
 statement on the use of AI at the end of the note.}}
-\date{12 November 2026 (version 1.1)}
+\date{12 November 2026 (version 1.2)}
 
 \begin{document}
 \maketitle
@@ -82,18 +82,22 @@ threshold at every size $n\ge3$ and every coupling; a massive free scalar passes
 (v)~A single implementation reports the sufficient bound $\Delta_\beta(2)\le1.741\cdot10^{-3}$ for $\beta\le0.005$. This interval is conditional on the finite enumeration (ENC) and rational comparison (RAT), neither independently certified here.
 
 \emph{Relation to earlier public work.} Version~5.0.0 of the series of Bhattacharjee et al.\ \cite{BB26v5}, whose Zenodo record was
-created on 11 November 2026, before the release of this note, and which we read after this note was written, contains for four-dimensional
-tori the same doubling defect, its bracket by thermal traces, the purity reading, and a one-scale criterion whose hypothesis, a family of
-inequalities between partition functions of finite tori, implies ours and whose conclusion is wider. For the Wilson theory in dimension four,
-the gap statement of part~(i) is thus a variant of their criterion with a weaker hypothesis and a narrower conclusion, and the bracket of
-part~(iii) is in their text; no priority is claimed (\S\ref{sec:bb26v5}).
+created on 11 November 2026, before the release of version 1.0 of this note, and which we read after that version was written, contains for four-dimensional
+tori the same doubling defect, its bracket by thermal traces, the purity reading, and a one-scale criterion whose hypothesis (B$^*$), a family of
+inequalities between partition functions of finite tori, implies ours (\S\ref{sec:bb26v5}). \emph{Version~1.2 proves the reverse implication} (Theorem~\ref{thm:R}):
+under symmetry and a positive transfer representation, $\Delta_\beta(n)\le2^{-9}$ implies (B$^*$) at the scale $16n$, and the gap
+$(\log2)/n$ on every integer cube of side $N\ge n$. The two criteria are therefore equivalent up to a change of scale: the reverse implication loses a factor $16$ (not optimal), and a round trip, (B$^*$) at $T_0$ $\Rightarrow$ $\Delta(2T_0)\le2^{-9}$ $\Rightarrow$ (B$^*$) at $32T_0$, a factor $32$. The proof is paper-only for the aspect-ratio statement, and the main steps are checked by the Lean kernel in an abstract form (Appendix~\ref{app:lean}).
+This does not answer a question left open in \cite{BB26v5}, whose data differ from ours, and it is not a proof of the mass gap. A corollary linking our criterion to their
+Theorem~F is stated as conditional on their hypothesis (W) and their Theorem~F as we read them. No priority is claimed for the one-scale criterion, the defect or the monotonicity of the free energy in a period (\S\ref{sec:bb26v5}).
 
 \emph{What the note does not do.} It gives no estimate of $\Delta$ at weak coupling, no existence or non-triviality of the continuum limit,
 and no reconstruction. It does not apply as it stands to the formalised construction of OpenAI (Section~\ref{sec:openai-construction}).
 Reading $\Delta$ as a combination of R\'enyi-2 entropies of the thermal weights is a reformulation, not a result. The criterion is a sufficient
 condition; its equivalence with the Yang--Mills mass-gap problem is not claimed. The proofs have been checked by AI models only.
 
-\emph{Version 1.1 (12 November 2026): literature corrections only; no statement, proof, constant or Lean file is changed.} Two additions: the principle that an inequality between partition functions of finite periodic tori (twisted against untwisted) implies decay is classical (Tomboulis--Yaffe, Kov\'acs--Tomboulis, Kanazawa), and the comparison with these papers is recorded in \S\ref{sec:compare}.
+\emph{Version 1.1 (12 November 2026): literature corrections only.} The principle that an inequality between partition functions of finite periodic tori (twisted against untwisted) implies decay is classical (Tomboulis--Yaffe, Kov\'acs--Tomboulis, Kanazawa), and the comparison with these papers is recorded in \S\ref{sec:compare}.
+
+\emph{Version 1.2 (12 November 2026).} Adds Section~\ref{sec:reverse} (Theorem~\ref{thm:R}, its remarks and the conditional Corollary~\ref{cor:bridge}), the second Lean file \path{lean/Reciproque.lean} and its combination with the published file \path{lean/main_v1_2.lean}, an example showing that positivity of the transfer operator cannot be dropped (Remark~\ref{rem:Rused}), and rewrites \S\ref{sec:bb26v5} and the related statements. The statements, proofs and Lean files of versions 1.0 and 1.1 are not changed: \path{lean/CritereScalaire.lean} and \path{lean/main.lean} are byte for byte those of version 1.0.
 \end{abstract}
 
 \paragraph{Status labels.}
@@ -138,6 +142,7 @@ Let $F_\beta=\log Z_\beta$ on rectangular tori $\Lambda(\vec n)=\prod_{\mu=1}^4\
 \item \emph{Lattice part} (Theorem~\ref{thm:lattice}, \st{proved}, \st{Lean}). Under (W1)--(W2): $\Delta_\beta(n)\le2^{-9}$ implies
 $\Delta_\beta(2n)\le256\,\Delta_\beta(n)^2$ and, on every spatial torus $(2^jn)^3$, $(\lambda_i/\lambda_0)^n\le256\,\Delta_\beta(n)$ for
 every excited eigenvalue of the transfer operator. In $d=3$: threshold $2^{-7}$, constant $64$ (Theorem~\ref{thm:3d}).
+\item \emph{Reverse implication} (Theorem~\ref{thm:R}, \st{proved}, \st{Lean} for its main steps in abstract form). $\Delta_\beta(n)\le2^{-9}$ implies the one-scale bound (B$^*$) of \cite{BB26v5} at the scale $16n$, and the gap $(\log 2)/n$ on every integer cube of side $N\ge n$ (hence not only the dyadic cubes). Positivity of the transfer operator is used and cannot be dropped. A corollary linking the criterion to Theorem~F of \cite{BB26v5} is \emph{conditional on their hypothesis (W) and their Theorem~F as we read them, and not verified by us}.
 \item \emph{Conditional assembly} (Theorem~\ref{thm:main}, \st{proved}, \st{Lean} modulo (W2)--(W4), (W6)). If $0<\eta\le2^{-9}$ and
 $\Delta_{\beta_k}(n_k)\le\eta$ uniformly in $k$, with $a_k=\ell/n_k$, then every limit of the cylinder OS forms, in the sense of (W3)--(W4), has
 the $q$-form with $q=256\eta$. Under the reconstruction hypothesis (W6) its mass gap is at least $-\log(256\eta)/\ell\ge(\log2)/\ell$ and its
@@ -165,7 +170,7 @@ which is that of Theorem~B of Bhattacharjee et al.\ \cite{BB26} and of Theorem~5
 (\S\ref{sec:compare}). The doubling defect of four-dimensional tori, its decomposition over the four directions, its bracket by thermal
 traces and a one-scale criterion with a gap conclusion, which are in version~5.0.0 of Bhattacharjee et al.\ \cite{BB26v5}
 (\S\ref{sec:bb26v5}). The unconditional squaring bound $p(2m)\le2(e^{p(m)}-1)^2$ (Lemma~\ref{lem:squaring}) is implicit in the chain of
-inequalities of \cite[proof of Lemma~2.1]{OAI26}.
+inequalities of \cite[proof of Lemma~2.1]{OAI26}. Step~1 of the proof of Theorem~\ref{thm:R} rests on the elementary monotonicity of the counting-measure $\ell^p$ norms: for $0<L\le L'$, whenever the traces are finite, $(\Tr T^{L'})^{1/L'}\le(\Tr T^{L})^{1/L}$ for a positive operator $T$. Lemmas~7.12 and~7.44 of \cite{BB26v5} contain related monotonicity statements (of the thermal trace in the time, and of the tube energy in a side); the precise statement on the pressure used here follows from the spectral representation. The same concavity argument, with dyadic enlargement in every direction, is used long before by Brydges, Fr\"ohlich and Seiler \cite[proof of (2), p.~38 of the preprint]{BFS79}, to bound a lattice gauge partition function below by a fractional power of its value on larger periodic rectangles: $\Tr(T^{L_0})\ge\bigl(\Tr T^{2^{m_0}}\bigr)^{L_0/2^{m_0}}$ for a positive semi-definite transfer matrix $T$ and $2^{m_0}\ge L_0$, then the same in the other directions, which gives $\langle e^{-A_\Lambda}\rangle_0\ge\langle e^{-A_{\widetilde\Lambda}}\rangle_0^{|\Lambda|/|\widetilde\Lambda|}$ in their notation (read on the image of the page; the optical character recognition of our copy garbles the exponents). We claim no novelty for the monotonicity.
 
 The principle that an inequality between the partition functions of finite periodic tori, twisted against untwisted, implies a decay: for Wilson loops of $SU(2)$, $\langle W[C]\rangle\le2(e^{-F_{\mathrm{el}}})^{|A_C|/|A_{12}|}$ with $e^{-F_{\mathrm{el}}}=\langle\frac12(1-\mathcal O[\mathcal V])\rangle$, in Kov\'acs and Tomboulis \cite[eqs.~(6) and~(11), pp.~4--5]{KT02}, and restated as Theorem~1 of Kanazawa \cite[p.~5]{Kan}, who attributes it to Tomboulis and Yaffe \cite{TY85} and to \cite{KT02}; for $SU(N)$ and $\mathbb Z_N$ fluxes, in Kanazawa \cite[Theorem~2, p.~7]{Kan}; and, for correlations of classical spin systems, in Kanazawa \cite[Theorem~5, p.~17]{Kan}, for $L_\mu=2^kn$: $|\langle\Gamma_\mu(x;n)\rangle|/\langle\Gamma_\mu(x;0)\rangle\le2\{\langle\Gamma_\mu(x;0)^2\rangle/\langle\Gamma_\mu(x;0)\rangle^2\}^{n/L_\mu}\{1-\int dg\,\langle\mathcal O(g)[\mathcal V]\rangle\}^{n/L_\mu}$. His abstract (p.~1) states: ``Basically the inequalities guarantee that a system in a box that is sufficiently insensitive to boundary conditions has a non-zero mass gap.'' The hypothesis there is a ratio of twisted to untwisted partition functions, not the doubling defect, and the conclusion is a decay in a box of period $L$, not a bound on the transfer matrix of every spatial torus (\S\ref{sec:compare}); the family of the argument (reflection positivity, Schwarz inequality, doublings) is the same as ours. The absence of these papers from the list of version~1.0 was a gap of the anteriority search.
 
@@ -176,14 +181,14 @@ hypotheses; and the witness analysis. The torus--cylinder comparison follows the
 diagonal qualification when renormalised lattice observables depend on the cutoff. The reported $SU(2)$ interval up to $\beta=0.005$ is conditional on a
 finite enumeration and a rational comparison that are not independently certified. We claim no new mass-gap mechanism, no optimality of the constants, and no
 exhaustive priority determination: the anteriority search of \S\ref{sec:compare} is limited and recorded. In \cite{OAI26} it found neither
-a converse nor a statement in dimension $d>2$. In \cite{BB26v5}, read on 12 November 2026 after this note was written, it found the
+a converse nor a statement in dimension $d>2$. In \cite{BB26v5}, read on 12 November 2026 after the first draft of version~1.0 had been written, it found the
 four-dimensional defect, its bracket and a one-scale criterion; the part of the content listed above that is also there, and what we did
 not find there, are stated in \S\ref{sec:bb26v5}.
 
 \subsection{Relation to version 5.0.0 of Bhattacharjee et al.}\label{sec:bb26v5}
 Version~5.0.0 of the series of Bhattacharjee et al.\ \cite{BB26v5} has a Zenodo record created on 11 November 2026 at 23:29:13 UTC, before
-the release of this note. We read it on 12 November 2026, after the present note had been written, and only in its abstract, its
-introduction and its Sections~7.8 and~7.11. For a spatial torus $s$ write $\widehat Z_s(M)=\sum_{i\ge0}r_i^M$, where $1=r_0\ge r_1\ge\dots\ge0$
+the release of this note. We read it on 12 November 2026, after the first draft of version~1.0 had been written, in its abstract, its
+introduction and its Sections~7.8 and~7.11; for version~1.2 we also read the lemmas and propositions cited in Section~\ref{sec:reverse} and here (7.3, 7.12, 7.27, 7.33, 7.44, 7.45, 7.48, 7.51, 7.56, 7.57, 7.59) and searched the whole text by keywords. For a spatial torus $s$ write $\widehat Z_s(M)=\sum_{i\ge0}r_i^M$, where $1=r_0\ge r_1\ge\dots\ge0$
 are the eigenvalues of the transfer operator of $s$ divided by the largest one (their relative partition function, the thermal trace at
 time $M$), and $V(s)$ for the number of sites of $s$. Those passages contain the following \st{read}.
 \begin{itemize}
@@ -219,20 +224,18 @@ non-increasing, (B$^*$) gives $\log\widehat Z_s(n)\le\log\widehat Z_s(T_0)\le\ga
 \begin{equation}\label{eq:bb26implies}
 \Delta_\beta(2T_0)\ \le\ \gamma n^3\,(16+8\cdot2+4\cdot4+2\cdot8)\ =\ 512\,\gamma\,T_0^3\ \le\ \frac{512}{40\cdot96^3}\ =\ \frac1{69120}\ <\ 2^{-9}.
 \end{equation}
-\st{proved}, from the statements of \cite{BB26v5} as read. We do not know whether, conversely, $\Delta_\beta(n)\le2^{-9}$ implies (B$^*$) at
-some scale: by Proposition~\ref{prop:bracket} it bounds the thermal traces of four boxes only.
+\st{proved}, from the statements of \cite{BB26v5} as read. \emph{Conversely}, under (W1)--(W2), $\Delta_\beta(n)\le2^{-9}$ implies (B$^*$) at $T_0=16n$ with $\gamma=1/(31\cdot2^{23}T_0^3)$ (Theorem~\ref{thm:R}, Section~\ref{sec:reverse}). Version 1.0 and 1.1 of this note said that we did not know this; the proof was found on 12 November 2026. Hence, up to a change of scale (a factor $16$ in the reverse direction, not optimal; $32$ for a round trip), the two criteria are equivalent. Note that by Proposition~\ref{prop:bracket} alone the defect bounds the thermal traces of four boxes only; the extension to all tori of the window is obtained from the monotonicity of the pressure in each period (Step~1 of Theorem~\ref{thm:R}).
 
 \emph{What differs.} Our hypothesis is one inequality between the partition functions of the two cubic tori $n^4$ and $(2n)^4$; theirs is a
 family of inequalities, one for each spatial box with sides in a window. Their conclusion is wider than that of Theorem~\ref{thm:lattice}:
-every torus of bounded aspect ratio above the base scale, not only the dyadic cubes $(2^jn)^3$. For the Wilson theory in $d=4$, the gap
-statement \eqref{eq:gap} of Theorem~\ref{thm:lattice} is therefore a variant of that of their Theorem~7.56, with a weaker hypothesis and a
-narrower conclusion; their recursion is on normalised bounds of the thermal traces, $y_{i+1}=16(e^{y_i}-1)^2$, not on the defect. In the passages read
+every torus of bounded aspect ratio above the base scale, not only the dyadic cubes $(2^jn)^3$. Theorem~\ref{thm:R} shows that this difference is one of scale, not of substance: the two hypotheses are equivalent up to a change of scale (a factor $16$ in the reverse direction, $32$ for a round trip), and the conclusion of Theorem~\ref{thm:lattice} extends to all integer cubes of side $\ge n$ and, with a worse constant, to all spatial tori with $\min_it_i\ge n$ and $\max_it_i\le24\min_it_i$. For the Wilson theory in $d=4$, the gap
+statement \eqref{eq:gap} of Theorem~\ref{thm:lattice} is thus a variant of that of their Theorem~7.56; their recursion is on normalised bounds of the thermal traces, $y_{i+1}=16(e^{y_i}-1)^2$, not on the defect. In the passages read
 we did not find: the recursion $\Delta(2n)\le256\,\Delta(n)^2$ for the cubic defect itself, and with it a gap on all dyadic sections from a
 single inequality; the three-dimensional statement (Theorem~\ref{thm:3d}); a Lean formalisation of such a criterion
-(Appendix~\ref{app:lean}); the witnesses of \S\ref{sec:witness}; the reported instance of Proposition~\ref{prop:instance}. Their continuum
-statement (c) and Theorem~\ref{thm:main} have different hypotheses, and we have not compared them.
+(Appendix~\ref{app:lean}); the witnesses of \S\ref{sec:witness}; the reported instance of Proposition~\ref{prop:instance}; and, by the complete reading and keyword search of 12 November 2026, the implication from a small defect at one size to (B$^*$) (Theorem~\ref{thm:R}), the comparison of $f(m^4)$ with the limiting pressure of a torus by telescoping the pressure differences along $m_j=2^jn$ (with the constant $2/31$), and the passage from a small $\Delta(n)$ at one size $n$ to a gap on all cubes of side $N\ge n$. This is not a proof of absence. What \emph{is} in \cite{BB26v5} and bears on this: the telescoping $\log\widehat Z(M)=\sum_{k\ge0}2^{-k-1}\psi(2^kM)$ for one transfer operator (their Lemma~7.33, a different telescoping, in the time), and, from Proposition~7.34(ii), the fact that a small defect $\delta(n)$ of the torus $n$ \emph{itself}, dyadic or not, bounds the thermal trace of its spatial torus $(n_1,n_2,n_3)$ at the time $n_4$ (our bracket, Proposition~\ref{prop:bracket}). So the quantity $\Delta$ and the non-dyadic case at the size where the defect is small are theirs; the new points are the implication to (B$^*$) (and (B$^{**}$), Remark~\ref{rem:Bss}) and the extension to all sizes $N\ge n$ from one size $n$. Their continuum
+statement (c) and Theorem~\ref{thm:main} have different hypotheses, and we have not compared them; Corollary~\ref{cor:bridge} is conditional on (c) as we read it.
 
-\emph{Limits of this comparison.} It was made by AI models (see ``Use of AI'') from the passages cited, on the day of the release; the rest
+\emph{Limits of this comparison.} It was made by AI models (see ``Use of AI'') from the passages cited, on 12 November 2026; the rest
 of the 157 pages was searched by keywords only. We have not examined in which version of that series each item first appeared, and no human
 expert has checked the comparison.
 
@@ -242,7 +245,7 @@ of ClayYM is formalised in Lean~4 (35 declarations, standard axioms only) under 
 clean machine, first from hashed copies of the sources and then from the git archive of the package tree (Appendix~\ref{app:lean}). The transfer-spectrum representation
 (W2)--(W3), its identification with the lattice OS forms, the convergence (W4) and the reconstruction (W6) are named hypotheses and are not
 formalised; (W4) is the existence of the continuum limit and is open. The insertion estimate and the quantitative torus--cylinder comparison
-are paper arguments (Lean assumes that the difference tends to zero); the converse is a paper argument. The Maxwell model identification is
+are paper arguments (Lean assumes that the difference tends to zero); the thermal-trace converse of Section~\ref{sec:converse} is a paper argument. The reverse implication of Section~\ref{sec:reverse} is a paper argument whose steps (a), (b) and the first half of (c) are also checked by the Lean kernel in an abstract form, with the symmetry, the spectral representation and the published doubling recursion as named hypotheses; the aspect-ratio statement (d), the logarithmic form of (c), the formula of Corollary~\ref{cor:bridge} and its link with \cite{BB26v5} are not formalised. The Maxwell model identification is
 incomplete, the scalar crossings are numerical, and the strong-coupling interval is conditional on an enumeration and a rational comparison reported by one implementation. The original formalisation and draft were prepared within one model family. Read-only reviews by Qwen3.8 and GPT-6.1 Sol concerned the draft of 11 November, not this final text: they found the core implication sound subject to corrections and left the computational inputs uncertified; Claude Sonnet applied adaptations of their proposed corrections, and some proposed additions were not adopted. A read-only review of the first version of this text by GPT-6.1 Sol required sixteen corrections, which Claude Sonnet adapted. A further read-only check of this revision identified remaining corrections, recorded in \path{RELECTURE_SOL_TEXTE_CORRIGE.md} (one blocking and four non-blocking: the conditional status of Proposition~\ref{prop:instance} in the abstract and the list of results, the description of \texttt{SpecLink}, the concordance table, the attribution of the reviews, the wording of the rebuild descriptions); they are applied in this version. These reviews do not certify the computational inputs or endorse a subsequent revision. The text--Lean concordance was prepared within the author's model family. Appendix~\ref{app:lean} states, for each formalised statement, what the Lean declaration says exactly. No human has checked the proofs.
 
 %=====================================================================================================================
@@ -275,9 +278,9 @@ name & statement & status \\
 (W1) & $F_\beta$ is invariant under permutations of the four periods. & \st{proved}: the action and the Haar measure are invariant
 under the hypercubic group. Lean: hypotheses \texttt{hs12}, \texttt{hs23}, \texttt{hs34}.\\
 (W2) & For every spatial section $\sigma=(n_1,n_2,n_3)$ there is a self-adjoint, positive, trace-class operator $K_\sigma$ on the space
-$\Hinv(\sigma)$ of gauge-invariant $L^2$ functions of the spatial links, with $Z_\beta(\sigma,N)=\Tr K_\sigma^N$ for every $N\ge1$. &
+$\Hinv(\sigma)$ of gauge-invariant $L^2$ functions of the spatial links, with $Z_\beta(\sigma,N)=\Tr K_\sigma^N$ for every $N\ge2$ (Section~\ref{sec:reverse} uses this only for spatial periods and times at least $3$). &
 \st{hypothesis}, standard \cite{Lus77}, \cite[\S2.3, Thm.~2.1]{OS78}; sketch in Remark~\ref{rem:W2}. Not formalised. Lean:
-\texttt{HypSpecTC}.\\
+\texttt{HypSpecTC}. \emph{Positivity of $K_\sigma$ is indispensable} for Theorem~\ref{thm:R} (and for $\Delta\ge0$): without it $\Delta$ can be negative (Remark~\ref{rem:Rused}).\\
 (W2$^+$) & In the configuration-space realisation, the normalised transfer is positivity preserving. After gauge projection, bounded
 gauge-invariant slab insertions satisfy $|\Kh_Xf|\le\|X\|_\infty\Kh^r|f|$. & \st{hypothesis}, used only for the torus comparison
 (Lemma~\ref{lem:torus}); an additional property of the path-integral realisation, not a consequence of positive semidefiniteness of an abstract
@@ -298,7 +301,7 @@ $N_k=2^{j_k}n_k$ (Lemma~\ref{lem:torus}, Corollary~\ref{cor:tori}); for a previo
 (\texttt{OSReconstruction}) \cite{OS73,OS75,ClayYM}; not formalised.\\
 \bottomrule
 \end{tabular}
-\caption{Hypotheses. The paper argument uses periods at least $2$. The Lean declarations assume a single symmetric function on natural periods, with \texttt{HypSpecTC} for every positive spatial period and every positive integer time. Applying them to Wilson's partition function therefore requires a symmetric extension to periods $1$ satisfying those spectral identities; this extension is an additional assumption here, not a consequence proved in this note. Values at a zero period may be set to zero. The Lean hypotheses on the spectral data are, in places, weaker than the table (\texttt{SpecLink} assumes linear square-summable coordinates $c$, $c(\Omega)=\delta_0$, the mixed identity $B(\Omega,F,0)=c_0(F)$, and the diagonal identities for $B(F,F,0)$ and $B(F,F,\ell)$; it does not assume the full transfer representation at arbitrary times. \texttt{ConvergesOn} records the specified convergence of the lattice forms), but the hypothesis on the function $F$ is stronger. The Lean
+\caption{Hypotheses. The paper arguments of Sections~\ref{sec:lattice} and later use periods at least $2$, and Section~\ref{sec:reverse} uses (W2) for spatial periods and times at least $3$ only. The Lean declarations assume a single symmetric function on natural periods, with \texttt{HypSpecTC} for every positive spatial period and every positive integer time. Applying them to Wilson's partition function therefore requires a symmetric extension to periods $1$ satisfying those spectral identities; this extension is an additional assumption here, not a consequence proved in this note. Values at a zero period may be set to zero. The Lean hypotheses on the spectral data are, in places, weaker than the table (\texttt{SpecLink} assumes linear square-summable coordinates $c$, $c(\Omega)=\delta_0$, the mixed identity $B(\Omega,F,0)=c_0(F)$, and the diagonal identities for $B(F,F,0)$ and $B(F,F,\ell)$; it does not assume the full transfer representation at arbitrary times. \texttt{ConvergesOn} records the specified convergence of the lattice forms), but the hypothesis on the function $F$ is stronger. The Lean
 statement also assumes that the lattice forms are bilinear (\texttt{IsBilin}), which holds by construction for OS forms. (W2) does
 \emph{not} assume that $\lambda_0$ is simple: degenerate eigenvalues appear as $r_i=1$ (Example~\ref{ex:z2}). Not assumed anywhere: uniqueness of the Gibbs state or of the periodic limit, uniqueness of the continuum limit, reflection positivity of
 the limit as a separate hypothesis (it follows from (W3)--(W4)), $\beta_k\to\infty$.}
@@ -459,6 +462,88 @@ comparison, \cite[(2.12)]{OAI26} has $44$ (and $64$) at $2^{-10}$ in $d=2$, with
 $p\le1/4$.}
 \label{tab:const}
 \end{table}
+
+%=====================================================================================================================
+\section{The reverse implication: from the doubling test to a bound at one scale}\label{sec:reverse}
+
+Section~\ref{sec:bb26v5} shows that the one-scale hypothesis (B$^*$) of \cite{BB26v5} implies $\Delta_\beta(2T_0)\le2^{-9}$. This section
+proves the reverse implication, at a larger scale. We use the notation of \S\ref{sec:setting}. For a spatial torus $t=(t_1,t_2,t_3)$ with all sides at least $3$ put
+$V(t)=t_1t_2t_3$, $s_t(M)=\sum_{i\ge1}r_i^M$ for the excited ratios $r_i=\lambda_i/\lambda_0$ of the transfer operator $K_t$ of (W2), and
+\[
+h_t(M)=\log\bigl(1+s_t(M)\bigr)=\log\frac{Z(t,M)}{\lambda_0(t)^M}\ \ge0,
+\]
+which is the logarithm of the relative partition function $\widehat Z_t(M)$ of \S\ref{sec:bb26v5}. Hypothesis (B$^*$) at $T_0$ with constant $\gamma$ reads
+$h_t(T_0)\le\gamma V(t)$ for all $t$ with sides in $[2T_0,48T_0)$ and $2\gamma(96T_0)^3\le\frac1{20}$. Throughout this section, (W1) and (W2) are
+assumed for all periods at least $3$, and, as everywhere in this note, \emph{positivity} of $K_t$ is part of (W2).
+
+\begin{theorem}[reverse implication]\label{thm:R}
+Assume (W1)--(W2). Let $n\ge3$ with $\Delta(n)\le2^{-9}$, put $q=256\,\Delta(n)\le\frac12$ and $m_j=2^jn$.
+\begin{enumerate}
+\item[(a)] (The condition $\Delta(m_j)\le2^{-9}$ needed to apply Proposition~\ref{prop:doubling} at each base is part of the induction of Step~2.) For every $j\ge0$ and every spatial torus $t$ with $\min_it_i\ge m_j$:
+\[
+h_t(m_j)\ \le\ \frac{2\,\Delta(m_j)}{31\,m_j^3}\,V(t),\qquad\text{and}\qquad \Delta(m_j)\le\frac{q^{2^j}}{256}.
+\]
+\item[(b)] (B$^*$) holds at $T_0=16n$ with $\gamma=1/(31\cdot2^{23}T_0^3)$, for all spatial tori with all sides at least $T_0$, hence in particular for those with sides in $[2T_0,48T_0)$. Here
+$2\gamma(96T_0)^3=\frac{27}{3968}<\frac1{20}$.
+\item[(c)] For every integer $N\ge n$, every excited ratio $r$ of the transfer operator of the cube $(N,N,N)$ satisfies $r^n\le q\le\frac12$; if $r>0$ the gap is at least
+$\log(1/q)/n\ge(\log2)/n$.
+\item[(d)] For every spatial torus with $\min_it_i\ge n$ and $\max_it_i\le24\min_it_i$, every excited ratio $r$ satisfies $r^n\le\theta:=e^{18/31}-1\approx0.787$, so the gap is at least $-\log\theta/n\approx0.2393/n$.
+\end{enumerate}
+\st{proved} on paper. \st{Lean}: (a), first inequality (statement \texttt{interpolation}), (b) (\texttt{reciproque\_Bstar}) and the first half of (c) ($r^n\le256\Delta(n)$, \texttt{trou\_cubes}), in the abstract form of Appendix~\ref{app:lean}; not (d), not the logarithmic form of (c), and not the passage from periods $\ge1$ to periods $\ge3$.
+\end{theorem}
+
+\begin{proof}
+\emph{Step 1: monotonicity of the pressure.} Let $f(x)=\log Z(x)/|x|$ for $x\in\{3,4,\dots\}^4$, $|x|=x_1x_2x_3x_4$. Fix a spatial torus $t$ and write $f(t,M)=f(t_1,t_2,t_3,M)$. By \eqref{eq:FN},
+$\log Z(t,M)=M\log\lambda_0+h_t(M)$, so
+\[
+f(t,M)=\frac{\log\lambda_0(t)}{V(t)}+\frac{h_t(M)}{M\,V(t)}.
+\]
+Since $0\le r_i\le1$ (this is where positivity of $K_t$ is used), $M\mapsto s_t(M)=\sum_{i\ge1}r_i^M$ is non-negative and non-increasing, hence so is $h_t$; and $M\mapsto1/M$ is positive and decreasing. The product of two non-negative non-increasing functions is non-increasing, so $M\mapsto f(t,M)$ is non-increasing. By (W1) the same holds in each of the four coordinates: \emph{$f$ is non-increasing in each period}, with the other three held fixed, with no divisibility condition. Moreover $0\le h_t(M)\le h_t(3)<\infty$, so $h_t(M)/M\to0$ and $f(t,M)\to\log\lambda_0(t)/V(t)$ as $M\to\infty$.
+
+\emph{Step 2: the recursion at every base.} Since $f(m^4)-f((2m)^4)=\Delta(m)/(16m^4)$ by direct computation, and $(2m)^4$ is reached from $m^4$ by raising the four periods one after the other, Step 1 gives $\Delta(m)\ge0$ for all $m\ge3$. Write $\Delta_j=\Delta(m_j)$. By Proposition~\ref{prop:doubling}, applied at \emph{each} base $m_j$: if $\Delta_j\le2^{-9}$ then $\Delta_{j+1}\le256\Delta_j^2=(256\Delta_j)\Delta_j\le\Delta_j/2$. Since $\Delta_0\le2^{-9}$, induction gives $\Delta_j\le2^{-j}\Delta_0\le2^{-9}$ for all $j$, and $256\Delta_{j+1}\le(256\Delta_j)^2$, whence $256\Delta_j\le q^{2^j}$. This is the second inequality of (a).
+
+\emph{Step 3: telescoping.} Fix $j$ and $J>j$. Since $m_i^4=16^{i-j}m_j^4$ and $\Delta_i\le2^{-(i-j)}\Delta_j$,
+\[
+f(m_j^4)-f(m_J^4)=\sum_{i=j}^{J-1}\frac{\Delta_i}{16\,m_i^4}\le\frac{\Delta_j}{16\,m_j^4}\sum_{k\ge0}32^{-k}=\frac{2\,\Delta_j}{31\,m_j^4}.
+\]
+
+\emph{Step 4: the pressure of a torus against the diagonal.} Let $t$ have $\min_it_i\ge m:=m_j$, and let $M\ge3$ be arbitrary. Choose $J\ge j$ with $t_1,t_2,t_3,M\le m_J$. By Step~1, $f(t,M)\ge f(m_J^4)$, and by Step~3, $f(m_J^4)\ge f(m^4)-2\Delta(m)/(31m^4)$. Hence
+$\log\lambda_0(t)/V(t)+h_t(M)/(MV(t))\ge f(m^4)-2\Delta(m)/(31m^4)$ for every $M$; letting $M\to\infty$ (Step~1),
+$\log\lambda_0(t)/V(t)\ge f(m^4)-2\Delta(m)/(31m^4)$. On the other hand $f(t,m)\le f(m^4)$ by Step~1, because $t_i\ge m$. Subtracting,
+\[
+\frac{h_t(m)}{m\,V(t)}=f(t,m)-\frac{\log\lambda_0(t)}{V(t)}\le\frac{2\,\Delta(m)}{31\,m^4},
+\]
+which is the first inequality of (a). No limit of free energies is interchanged with another, and no bound on the aspect ratio is used.
+
+\emph{(b).} By Step~2, $\Delta_4=\Delta(16n)\le2^{-24}$ (the bounds $2^{-9}\to2^{-10}\to2^{-12}\to2^{-16}\to2^{-24}$, each step being $256u^2$). Apply (a) with $m=16n=T_0$: $h_t(T_0)\le2\cdot2^{-24}V(t)/(31T_0^3)=\gamma V(t)$. And $2\gamma(96T_0)^3=2\cdot96^3/(31\cdot2^{23})=27/3968$.
+
+\emph{(c).} Choose $j$ with $m=m_j\le N<2m$, and put $p=2^j$, so $m=pn$. The cube has $V<8m^3$; by (a), $h\le16\Delta(m)/31\le q^p/496$, with $h=h_{(N,N,N)}(m)$. Every excited ratio satisfies $r^m\le s(m)=e^h-1\le2h\le q^p/248$ (as $h\le1$). Since $r^m=(r^n)^p$, this gives $r^n\le q$.
+
+\emph{(d).} With $a=\min_it_i$ and $m=m_j\le a<2m$, $V(t)\le a\,(24a)^2=576a^3<4608\,m^3$. By (a), $h\le9216\Delta(m)/31\le\frac{36}{31}q^p\le\frac{18}{31}2^{1-p}$, using $q\le\frac12$. For $\alpha=2^{1-p}\in(0,1]$ convexity gives $e^{\alpha x}-1\le\alpha(e^x-1)$, so $s_t(m)\le2^{1-p}\theta$ with $\theta=e^{18/31}-1\in(\frac12,1)$. As $\theta\ge\frac12$, $2^{1-p}\le\theta^{p-1}$, so $r^m\le\theta^p$ and $r^n\le\theta$.
+\end{proof}
+
+\begin{remark}[what is used, what is not]\label{rem:Rused}
+(i)~\emph{Positivity of $K_t$ is indispensable.} It gives $r_i\in[0,1]$ and hence Step~1. Without it $\Delta(n)$ can be negative, and the statement is empty or false. Example: $Z(x)=\prod_{\mu=1}^4(1+\rho^{x_\mu})^{|x|/x_\mu}$ with $\rho=-r$, $0<r<1$, is symmetric, and for each section $t$ equals $\operatorname{Tr}K_t^M$ for the self-adjoint trace-class operator $K_t=c_t\,(1\oplus\rho)^{\otimes V(t)}$ with a positive constant $c_t$ (all factors with $x_\mu\neq M$ are exponentials in $M$), which has an eigenvalue $-r\lambda_0$. For odd $n$, $\Delta(n)=64n^3\log(1-r^n)-32n^3\log(1+r^{2n})<0$. (ii)~The simplicity of $\lambda_0$ is not assumed: degenerate eigenvalues would be ratios $r_i=1$. It follows from the conclusions: for the cubes of (c), $r_i^n\le q\le\frac12$, and for the tori of (d), $r_i^n\le\theta<1$; for other sections the argument does not assert it. (iii)~The proof assumes (W1) and (W2), with positivity, for all integer periods at least $3$, with no upper cutoff: the recursion of Step~2 and the comparison of Step~4 use arbitrarily large dyadic cubes and rectangles. No parity restriction is imposed. For Wilson's $SU(2)$ theory, positivity of the transfer operator at all spatial sides is the point on which the application rests: Lemma~7.3(vii) of \cite{BB26v5} states $T\ge0$ for $\beta\ge0$; we read this statement, and have not checked its proof or its validity for odd sides. (iv)~The Lean version (Appendix~\ref{app:lean}) asks the spectral representation at all times $d\ge1$ and all sides $\ge1$, as the already published \texttt{HypSpecTC}; the paper argument uses only $d,\ t_i\ge3$ (replace $h(1)$ by $h(3)$ in Step~1).
+\end{remark}
+
+\begin{remark}[the factor 16 is not optimal]\label{rem:16}
+With $T_0=8n$ the same proof would give $y_0=2\gamma(96T_0)^3=54/31>\frac1{20}$, so $16$ is the first dyadic factor that this proof allows. It is not optimal. On product-of-rings models the smallest ratio $T_0/n$ at which $\Delta(n)\le2^{-9}$ implies (B$^*$) lies, numerically, between $1.17$ and $1.75$ (the minimum depends on $n$ and on the family); this is a minimum over those models and not a bound. For massive free scalar fields at the threshold mass, a sufficient (not necessary) test certifies the ratios $1.85$, $2.05$ and $2.3$ at $n=6,8,12$; these are upper bounds on the smallest admissible ratio, not its value (\path{reproduction/reciproque/}). We do not know the optimal factor.
+\end{remark}
+
+\begin{remark}[the finite form (B$^{**}$)]\label{rem:Bss}
+Proposition~7.57 of \cite{BB26v5} states that (B$^*$) with $\gamma$ implies the inequality (B$^{**}$): $2\log Z(s,T_0)-\log Z(s,2T_0)\le\gamma V(s)$ for all $s$ in the window, and that (B$^{**}$) with $\gamma$ implies (B$^*$) with $\gamma$ (their $\psi_s(T_0)$ is a defect of the doubling of the time only, for tori $(s,T_0)$ of all shapes in the window; ours doubles the four periods of a cube). By Theorem~\ref{thm:R}(b), $\Delta(n)\le2^{-9}$ gives (B$^*$) at $16n$, hence (B$^{**}$) at $16n$ with $2\gamma=2/(31\cdot2^{23}T_0^3)$: indeed $2h_s(T_0)-h_s(2T_0)\le2h_s(T_0)$ since $h_s\ge0$. Conversely (B$^*$), hence (B$^{**}$) up to the factor $2$ in $\gamma$, implies $\Delta(2T_0)\le2^{-9}$ by \eqref{eq:bb26implies}. So our cubic defect at one size controls their window-wide defect at $16$ times that size, and conversely.
+\end{remark}
+
+\begin{remark}[numerical checks, \st{computed}]\label{rem:Rnum}
+Nothing in the proof depends on these. For massive free scalar fields on tori, on about $1.6\cdot10^5$ product-of-rings models (and direct sums of two of them) and on a pre-registered list of cubes and elongated tori, the inequality (a) and (B$^*$) at $16n$ were evaluated with $\Delta(n)\le2^{-9}$ computed exactly: no violation; the largest ratio of the left to the right side of (a) is $0.245$ (files in \path{reproduction/reciproque/}). These models are not general transfer matrices.
+\end{remark}
+
+\begin{corollary}[bridge to Theorem~F of \cite{BB26v5}; \emph{conditional on hypothesis (W) and Theorem F of \cite{BB26v5} as we read them; not verified by us}]\label{cor:bridge}
+Let a continuum family in the sense of \cite[Definition~7.1]{BB26v5} for $G=SU(2)$ satisfy their hypothesis (W). Suppose there are $t_0>0$, $p_0$ and $N_0(p)$ such that for all $p\ge p_0$ and $N\ge N_0(p)$ there is an integer $n=n_{N,p}\ge3$ with $16n\le Nt_0$ and $\Delta_{\beta_{N,p}}(n)\le2^{-9}$, where both partition functions in $\Delta$ are taken at the \emph{same} coupling of the family at $(N,p)$, on periodic tori $n^4$ and $(2n)^4$, and (B$^*$) below is taken at that same physical coupling. \emph{Normalisation:} $\beta_{N,p}$ denotes the coupling of the family in the normalisation of \cite{BB26v5}, in which, for $SU(2)$, the Wilson coupling is $\beta_W=4\beta$ (their introduction, footnote on the unit quaternions); the defect $\Delta$ of this note is taken at $\beta_W=4\beta_{N,p}$. No numerical constant of \cite{BB26v5} that depends on $\beta$ is used in this note, and the statements of versions 1.0 and 1.1 contain no numerical comparison involving their $\beta$. Then, by Theorem~\ref{thm:R}(b), their hypothesis (B$^*$) holds at that coupling with $T_0=16n_{N,p}$, $3\le T_0\le Nt_0$, and $y_0=27/3968\le\frac1{20}$, $\gamma=y_0/(2(96T_0)^3)$; their Theorem~F then gives $\sigma(H)\subset\{0\}\cup[\Delta_{\mathrm{phys}},\infty)$ with $0$ simple and $\Delta_{\mathrm{phys}}\ge0.172/t_0$.
+\end{corollary}
+\noindent\emph{Comment.} We read in \cite{BB26v5} that Theorem~F asks for (W), $t_0>0$, $y_0\le\frac1{20}$, $p_0$, $N_0(p)$ and, for all $p\ge p_0$, $N\ge N_0(p)$, an integer $T_0$ with $3\le T_0\le Nt_0$ such that (B$^*$) holds at $\beta_{N,p}$ with $\gamma=y_0/(2(96T_0)^3)$; (B$^*$) concerns the tori with sides in $[2T_0,48T_0)$, for which Theorem~\ref{thm:R}(b) gives the bound, and (W) is a double limit that this corollary does not touch. The corollary says nothing about the truth of the hypothesis $\Delta\le2^{-9}$ along a family, in particular for the construction of OpenAI, and it is not a proof of the mass gap.
+
+\medskip\noindent\emph{Consequence.} Under (W1)--(W2), the two one-scale criteria are equivalent up to a change of scale (a factor $32$ for a round trip, (B$^*$) at $T_0$ $\Rightarrow$ (B$^*$) at $32T_0$): (B$^*$) at $T_0$ implies $\Delta(2T_0)\le2^{-9}$ (\eqref{eq:bb26implies}); $\Delta(n)\le2^{-9}$ implies (B$^*$) at $16n$. In particular the conclusion of Theorem~\ref{thm:lattice} extends from the dyadic cubes $(2^jn)^3$ to all integer cubes $N\ge n$ and, with a worse constant, to all spatial tori with $\min_it_i\ge n$ and $\max_it_i\le24\min_it_i$. This does not answer the question left open in \cite{BB26v5} (their data there are a gap plus a bound $X_J\le\frac1{10}$, which is not our hypothesis $\Delta\le2^{-9}$).
 
 %=====================================================================================================================
 \section{Assembly}\label{sec:assembly}
@@ -808,8 +893,7 @@ has a trivial local limit: strictness within the full Clay class or within pure 
 compact spectral theorem in Lean), and the comparison of tori and cylinders is on paper only.
 \item \textbf{The relation with hypothesis (D) of \cite{BB26} is not established in either direction.} In particular, (D) does not
 obviously give (G$_{\mathrm{fv}}$) on the flux sectors. Hypothesis (D) is that of version~4.45.0. For hypothesis (B$^*$) of version~5.0.0
-\cite{BB26v5} the relation is one-sided: (B$^*$) implies $\Delta_\beta(2T_0)\le2^{-9}$ by \eqref{eq:bb26implies}, and we do not know the
-converse (\S\ref{sec:bb26v5}).
+\cite{BB26v5} the two criteria are equivalent up to the scale: (B$^*$) at $T_0$ implies $\Delta_\beta(2T_0)\le2^{-9}$ by \eqref{eq:bb26implies}, and $\Delta_\beta(n)\le2^{-9}$ implies (B$^*$) at $16n$ (Theorem~\ref{thm:R}). Neither implies that the hypothesis holds along a weak-coupling trajectory, and Corollary~\ref{cor:bridge} is conditional and unverified by us.
 \item The gap bound $(\log2)/\ell$ is a sufficient lower bound, not an optimal estimate; the comparison with the massive scalar (a factor
 $\approx16$) uses the uncertified numerical crossing and is only illustrative.
 \end{itemize}
@@ -835,8 +919,7 @@ dynamics, not an inequality between two partition functions, and the limit is a 
 imply the other.
 \item \emph{Bhattacharjee et al., version~5.0.0, Theorem~7.56 and Theorem~F \cite{BB26v5}} \st{read} (abstract, introduction, Sections~7.8
 and~7.11 only). The hypothesis is no longer a spectral gap of a dynamics: it is a family of inequalities between partition functions of
-finite tori, on the same doubling defect as ours. Their record is earlier than this note; their hypothesis implies ours and their conclusion
-is wider (\S\ref{sec:bb26v5}).
+finite tori, on the same doubling defect as ours. Their record is earlier than version~1.0 of this note; their hypothesis implies ours, and ours implies theirs at a scale $16$ times larger (Theorem~\ref{thm:R}); their conclusion extends beyond the dyadic-cubes conclusion of Theorem~\ref{thm:lattice}, and Theorem~\ref{thm:R} supplies our extension to arbitrary integer cubes and bounded-aspect-ratio tori (\S\ref{sec:bb26v5}).
 \item \emph{Rajabu, Theorem~5.3 \cite{Raj26}}, as summarised in the project's earlier reading note (the primary text was not re-read in the anteriority audit for this version). A gauge-covariant block hierarchy (H1)--(H3), weighted Lipschitz covariance and
 transfer bounds at every fixed physical scale (C1), a landing bound (C2), time continuity (C3) and a non-zero excited sector (C4) give a
 gap $\ge w$ for the transfer operators of limits of block observables. Four multi-scale hypotheses against one scalar inequality; none of
@@ -898,6 +981,7 @@ removed, each wrapped in a \texttt{section}) + \path{CritereScalaire.lean}; the 
 outputs in \path{reproduction/resultats/};
 \item \path{reproduction/instance/instance_n2.py} (Proposition~\ref{prop:instance}); the file actually run, \path{instance_n2_M6.py}, differs
 only by fixing the maximal exact size to $6$; its output is \path{sortie_bac_M6_job_20261111-011302-d9004d.json} ($0.4$\,s);
+\item \path{lean/Reciproque.lean} (Theorem~\ref{thm:R}, abstract form), \path{lean/main_v1_2.lean} (the published \path{main.lean} followed by the new file, byte for byte), \path{lean/reciproque/} (frozen statements, comparison script, mutants, certificate), and \path{reproduction/reciproque/} (the numerical checks of Remark~\ref{rem:Rnum}, with outputs);
 \item \path{SHA256SUMS}.
 \end{itemize}
 All programs ran in a sandbox without network and without privileges (``qlab'', Python~3, Lean~4 v4.34.0 with Mathlib commit
@@ -935,7 +1019,25 @@ the lake scaffolding (\texttt{lakefile.toml}, \texttt{lake-manifest.json}, \text
 reconstruction (b); the Mathlib package directory was copied from reconstruction (b) (official cache: ``no files to download''), but no build artefact of the note was
 copied, and \path{main.lean} was taken from the archive (sha256 \texttt{944a99f6\dots}); \texttt{lake build} return code $0$ (8925 jobs, \texttt{main} built in $28$\,s; $33$\,s for \texttt{lake build}, following a $13$\,s cache check), the
 same two linter warnings as before, and the same $35$ declarations with axioms \texttt{propext}, \texttt{Classical.choice}, \texttt{Quot.sound}, the list being identical to that of \texttt{build4}. The logs are
-in the package (\path{rejeu_depuis_arbre_git_2026-11-12/}). Rebuilds (b) and (c) compiled the already assembled \path{main.lean}; they did not rerun the assembler from the component sources. They used the standard Lean kernel, not an independent kernel. The complete tree of the final package, which differs from the archived one only outside the two subtrees above, was not itself rebuilt. Version~1.1 (12 November 2026) changes the note, the README and the metadata files only: \path{lean/}, \path{ClayYM_v1_1_extrait/}, \path{reproduction/} and \path{rejeu_depuis_arbre_git_2026-11-12/} are byte for byte those of version~1.0. The Lean sources are not yet in the public repository. An independent kernel check (nanoda) has not been run for this project.
+in the package (\path{rejeu_depuis_arbre_git_2026-11-12/}). These descriptions of rebuilds (a)--(c) concern version~1.0; version~1.2 adds separate Lean files, whose rebuilds are described below. Rebuilds (b) and (c) compiled the already assembled \path{main.lean}; they did not rerun the assembler from the component sources. They used the standard Lean kernel, not an independent kernel. The complete tree of the final package, which differs from the archived one only outside the two subtrees above, was not itself rebuilt. Version~1.1 (12 November 2026) changed the note, the README and the metadata files only. Version~1.2 adds files (below) and changes the note; \path{lean/CritereScalaire.lean}, \path{lean/main.lean}, \path{ClayYM_v1_1_extrait/} and \path{rejeu_depuis_arbre_git_2026-11-12/} are byte for byte those of version~1.0. An independent kernel check (nanoda) has \emph{not} been run for \path{main.lean}; it was run for the new file, as described next.
+
+\paragraph{Version 1.2: the reverse implication in Lean.}
+\path{lean/Reciproque.lean} (474 lines, SHA-256 \texttt{efa8870dc236ef5d5a35d92e45e7cd7408573b2229e18d633404c017ab9d4dbb}) contains four principal theorem statements of the namespace \texttt{Reciproque} together with auxiliary lemmas and proof theorems (seven declarations introduced by \texttt{theorem}); the four principal statements were frozen on 12 November 2026 before their Lean proofs were written (file \path{lean/reciproque/ENONCES.lean}, SHA-256 \texttt{6a2c0e9f\dots ec120af8}); a script of the package (\path{lean/reciproque/verif_statique.py}) checks that the four statements and the definitions \texttt{sT}, \texttt{Delta}, \texttt{Rep}, \texttt{HypSpec}, \texttt{HypRec} are identical, character for character after whitespace normalisation, to the frozen ones. The abstract setting: a function $F$ on four periods, symmetric (\texttt{hs12}, \texttt{hs23}, \texttt{hs34}); \texttt{Rep}: for each section $(a,b,c)$ with positive sides, ratios $r_i\in[0,1]$ with $\sum_ir_i^d<\infty$ and $F(a,b,c,d)=dL+\log(1+\sum_ir_i^d)$ for every $d\ge1$ (this is the already published \texttt{HypSpecTC}, with the positivity $r_i\ge0$ in it); \texttt{HypRec}: the published recursion, $\Delta(m)\le2^{-9}\Rightarrow\Delta(2m)\le256\Delta(m)^2$, as a named hypothesis. The file \path{lean/main_v1_2.lean} is the published \path{main.lean} followed by this file inside a \texttt{section}, plus the theorem \texttt{Reciproque.reciproque\_publie}, which \emph{derives} \texttt{HypRec} from the published theorem \texttt{CritereScalaire.doublement\_fin\_4d} for any $F$ with \texttt{CritereScalaire.HypSpecTC}; its first 114\,899 bytes are \path{main.lean} (checked by comparison). \path{CritereScalaire.lean} and \path{main.lean} are thus unchanged, and the new content is separate and checkable.
+\begin{center}\footnotesize
+\begin{tabular}{@{}>{\raggedright\arraybackslash}p{0.30\textwidth}>{\raggedright\arraybackslash}p{0.63\textwidth}@{}}
+\toprule
+declaration & what it states\\
+\midrule
+\texttt{Reciproque.facile} & the easy direction of \S\ref{sec:bb26v5} in abstract form: from $a_j\le\gamma2^jn^3$ ($n=2T_0$) and $\Delta\le16a_0+8a_1+4a_2+2a_3$, $2\gamma(96T_0)^3\le\frac1{20}$: $\Delta\le512\gamma T_0^3\le1/69120<2^{-9}$\\
+\texttt{Reciproque.interpolation} & Theorem~\ref{thm:R}(a), first inequality: $\log(1+s_t(m))\le2\Delta(m)V(t)/(31m^3)$ for $t$ with sides $\ge m$, given $\Delta(m)\le2^{-9}$\\
+\texttt{Reciproque.reciproque\_Bstar} & Theorem~\ref{thm:R}(b): $2\gamma(96T_0)^3\le\frac1{20}$ and $\log(1+s_t(16n))\le\gamma V(t)$ for all sides $\ge16n$, $\gamma=1/(31\cdot2^{23}T_0^3)$\\
+\texttt{Reciproque.trou\_cubes} & Theorem~\ref{thm:R}(c), first half: $r_i^n\le256\Delta(n)$ for the cube $(N,N,N)$, every $N\ge n$\\
+\texttt{Reciproque.reciproque\_publie} (in \path{main\_v1_2.lean} only) & \texttt{reciproque\_Bstar} for $F$ with \texttt{CritereScalaire.HypSpecTC}, symmetric, with $\texttt{CritereScalaire.Delta}\le\frac1{512}$ at $n$\\
+\bottomrule
+\end{tabular}
+\end{center}
+\emph{Not formalised}: (d) of Theorem~\ref{thm:R} (aspect ratio $\le24$, the constant $e^{18/31}-1$); the logarithmic form of (c); the Casimir-type bounds; the passage from sides $\ge3$ (paper) to sides $\ge1$ (Lean hypothesis, stronger); Corollary~\ref{cor:bridge}; the verification of (W2) for Wilson's theory.
+\paragraph{Rebuilds of the new files (12 November 2026, by a non-author).} (1) Sandbox, Lean 4 v4.34.0, Mathlib \texttt{5ed2965}: \path{Reciproque.lean} (job \texttt{20261112-070619-0a612c}) and \path{main\_v1\_2.lean} (job \texttt{20261112-070619-f382b1}, with one extra \texttt{\#print axioms} line for \texttt{interpolation}): return code $0$, $0$ errors, no \texttt{sorry}; the four theorems, their auxiliary lemmas and \texttt{reciproque\_publie} depend only on \texttt{propext}, \texttt{Classical.choice}, \texttt{Quot.sound}; the sandbox reports no axiom outside these. The same two files were compiled a second time in the second sandbox (same toolchain, other machine; jobs \texttt{20261112-072756-20ad77} and \texttt{20261112-072756-55f333}): return code $0$, $0$ errors, standard axioms only. (2) Rented machine, \emph{Lean 4.32.0, Mathlib v4.32.0} (not the version of the sandbox), unprivileged user: Lean 4.32.0 (commit \texttt{8c9756b2}) with the Mathlib v4.32.0 of a project present on the machine, \texttt{lake env lean}, \texttt{nice 10}: both files, unmodified (same SHA-256), compile with return code $0$ and no error (linter warnings on unused variables only), and give the same standard-axiom lines. The statements were not adapted for this version. (3) Independent kernel \emph{nanoda}: for each file, the closure of the declarations (the four theorems; for \path{main\_v1\_2.lean} also \texttt{reciproque\_publie} and \texttt{CritereScalaire.doublement\_fin\_4d}) was exported by \texttt{lean4export} (binary SHA-256 \texttt{e5736998\dots}) and replayed by the independent kernel nanoda (binary \texttt{ce46eaff\dots}, unmodified, only the three standard axioms permitted, any other an error): \path{Reciproque.lean}, 1\,377\,205 export lines, ``Checked 16949 declarations with no errors''; \path{main\_v1\_2.lean}, 1\,433\,069 lines, ``Checked 17156 declarations with no errors''. This is the first nanoda check of any Lean file of this note; \path{main.lean} alone was not replayed, but \texttt{doublement\_fin\_4d} and its dependencies are in the second export. (4) Mutants of \path{Reciproque.lean}: constant $31\to30$ in the statement of \texttt{reciproque\_Bstar}; factor $16\to8$ in its window; the positivity $r_i\ge0$ removed from \texttt{Rep}; the threshold $\frac1{512}\to\frac1{256}$ in the hypothesis of \texttt{reciproque\_Bstar}: all four make the build fail (errors located inside the targeted declarations or their users; \path{lean/reciproque/mutants/RESULTATS.txt}). The rebuilder is an instance of Claude Sonnet~5.5 that did not write the proofs; it also wrote the comparison script.
 
 
 \begin{center}\footnotesize
@@ -980,11 +1082,12 @@ counterexample, and \REVIEWSTATUS
 \item \emph{GPT-6.1 Sol (OpenAI)} reviewed the draft of 11 November 2026 by reading, without running programs, and proposed scope and status
 corrections, adapted and incorporated in this version (the hypotheses (W2$^+$), (W5), the qualification of the torus and filter statements, the
 conditional status of the Maxwell witness, the formulation of the converse, the novelty and strictness claims, and the comparison with the OpenAI
-construction); Sol also recommended that this material be folded into a broader note rather than stand alone; publishing it as a stand-alone note is the author's decision. On 12 November 2026 Sol reviewed, again by reading and without running programs, the first version of this text and required sixteen corrections (three blocking: the domain of the Lean specialisation, the status of Proposition~\ref{prop:instance}, and the order-eight coefficients), which Claude Sonnet adapted; a second read-only check of 12 November 2026 (\path{RELECTURE_SOL_TEXTE_CORRIGE.md}) found partial applications and asked for one blocking and four non-blocking corrections (the conditional status of Proposition~\ref{prop:instance} in the abstract and the list of results, the description of \texttt{SpecLink}, the concordance table, the attribution of the reviews and the wording of the rebuild descriptions), which are applied in this version; Sol has not re-read this version. These reviews do not certify the computational inputs or endorse a subsequent revision.
+construction); Sol also recommended that this material be folded into a broader note rather than stand alone; publishing it as a stand-alone note is the author's decision. On 12 November 2026 Sol reviewed, again by reading and without running programs, the first version of this text and required sixteen corrections (three blocking: the domain of the Lean specialisation, the status of Proposition~\ref{prop:instance}, and the order-eight coefficients), which Claude Sonnet adapted; a second read-only check of 12 November 2026 (\path{RELECTURE_SOL_TEXTE_CORRIGE.md}) found partial applications and asked for one blocking and four non-blocking corrections (the conditional status of Proposition~\ref{prop:instance} in the abstract and the list of results, the description of \texttt{SpecLink}, the concordance table, the attribution of the reviews and the wording of the rebuild descriptions), which are applied in this version; those earlier reports of Sol concerned the earlier texts; its review of version~1.2 is described below. These reviews do not certify the computational inputs or endorse a subsequent revision.
 \item \emph{Claude Fable~5.2 (Anthropic)} acted as the project's pilot: it directed and arbitrated the work (the arbitrations are recorded in the project's registry). It wrote none of the proofs of this note, with one exception: on 12 November 2026 it wrote \S\ref{sec:bb26v5}, including the derivation \eqref{eq:bb26implies}, and the other sentences of this version that refer to \cite{BB26v5}, and it ran the final \texttt{pdflatex} compilation. That subsection was written after two independent readings of the same passages of \cite{BB26v5}, by \emph{DeepSeek V4 Pro (DeepSeek)} and by Qwen3.8, both without running programs. DeepSeek V4 Pro then checked the text of that subsection against the same passages (12 November 2026, without running programs): it confirmed the derivation \eqref{eq:bb26implies} and asked for two changes of wording (a literal quotation for hypothesis (W), and ``narrower'' instead of ``weaker'' for our conclusion), which are applied; it has not re-read the final wording.
 \item \emph{Version 1.1 (12 November 2026).} A literature search was made on 12 November 2026, after the publication of version~1.0, by Claude Sonnet~5.5, which read the texts it obtained (scanned copies and arXiv files); the equation numbers and pages cited above for \cite{TY85,KT02,Kan} were checked on images of the pages. In the same search DeepSeek V4 Pro, without tools, compared excerpts of those sources with statements of the companion note on the twist ratio (not of the present note). The corrections of this version (Section~\ref{sec:intro}, \S\ref{sec:compare}, the bibliography and the status statements) were written by Claude Sonnet~5.5. One further review of this version by DeepSeek V4 Pro, without tools, on the text of the note and excerpts of the sources, is described in the file \texttt{RELECTURES.md} of the package. No statement, proof, constant or Lean file was changed.
-\item \emph{GPT-6 Astra (OpenAI)} examined, blind, the electric-flux sectors under a scalar hypothesis (registry, 11 November 2026); that material is not part of this note.
-\item \emph{Claude Sonnet~5.5 (Anthropic)} prepared this version of 12 November 2026: it compared each formalised statement with the Lean
+\item \emph{GPT-6 Astra (OpenAI)} examined, blind, the electric-flux sectors under a scalar hypothesis (registry, 11 November 2026); that material is not part of this note. On 12 November 2026 GPT-6 Astra found the paper proof of the reverse implication (Theorem~\ref{thm:R}); GPT-6.1 Sol, DeepSeek V4 Pro and Claude Opus~5.5 read it the same day and reported no error (Sol with reservations on the wording of the statement, which are taken into account here); a first instance of Claude Sonnet~5.5 then checked each inequality, recomputed the constants, froze the four Lean statements and afterwards wrote their Lean proofs; the pilot (Claude Fable~5.2) redid the paper proof line by line and compared the frozen Lean statements with the theorem. The instance that prepared this version is a different one.
+\item \emph{Version 1.2 (12 November 2026).} Claude Sonnet~5.5 prepared this version: it rebuilt the Lean files of the reverse implication as a non-author, on two toolchains and with an independent kernel, ran the mutants, wrote the section of Theorem~\ref{thm:R} from the paper proof (corrected where indicated in \path{RELECTURES.md}), rewrote \S\ref{sec:bb26v5}, ran a priority check against the current record of \cite{BB26v5} and the literature, and compiled the note. Two reviewers of other model families tried to break the final text, proof included, on 12 November 2026, in two rounds each: GPT-6.1 Sol (OpenAI), read-only, with file-reading tools (it ran no build, script or network request), and DeepSeek V4 Pro (DeepSeek), without tools. Neither found an error in Theorem R or in its constants; both asked for wording corrections (the minimum-side restriction in two summaries, the domains of (W2), the remark on degenerate eigenvalues, the round-trip factor, the attribution of the monotonicity, the provenance statements of this section), which are applied; their reports, and the answer to each objection, are in \path{RELECTURES.md}. These reviews concern the text of 12 November 2026, 07h--08h, not later revisions. In addition, a complete reading of the text of \cite{BB26v5} by DeepSeek V4 Pro, with quotations checked against the text by the preparer, was used for the comparison. These reviews do not certify later revisions. After these reviews, on 12 November 2026, the pilot (Claude Fable~5.2) corrected the description of who froze the Lean statements and who wrote the Lean proofs, removed a sentence about the public repository that was false, removed a conjecture on the optimal factor that our numerical checks do not support (Remark~\ref{rem:16}), added the output of the corresponding check (\path{reproduction/reciproque/t5.out}, rerun in a sandbox), and verified the reference \cite{BFS79} on the image of the page and its bibliographic data in Crossref; these last corrections were not reviewed by another model. No human has checked the proofs.
+\item \emph{Claude Sonnet~5.5 (Anthropic)} prepared version~1.0 of 12 November 2026 (this and the preceding paragraphs on the pilot and on the rebuilds of Appendix~\ref{app:lean} concern version~1.0; version~1.2 is described in the last paragraph of this list): it compared each formalised statement with the Lean
 declarations, applied the corrections above to the text (no statement, proof, constant or Lean file was otherwise modified), ran the
 \texttt{pdflatex} compilation, and ran reconstruction (c) of Appendix~\ref{app:lean} from the git archive of the package. Another instance of Claude Sonnet~5.5 performed
 reconstruction (b) of that appendix.
@@ -1000,8 +1103,8 @@ topology}, J.\ High Energy Phys.\ 2021, no.~12, 082, doi:10.1007/JHEP12(2021)082
 gap}, version 4.45.0 (10 November 2026), Zenodo, doi:10.5281/zenodo.24111624.
 \bibitem{BB26v5} D.~Bhattacharjee, U.~Bhattacharya, J.~M.~Lockwood, T.~Romanov, I.~J.~Sessford, S.~Singha Roy, \emph{The Yang--Mills Mass
 Gap from One Bound at One Scale}, version 5.0.0, Zenodo, doi:10.5281/zenodo.24147967 (record created on 11 November 2026 at 23:29:13 UTC;
-publication date 12 November 2026; paper of 157 pages in the archive \path{creelie/4Y-M-v5.0.0.zip}). Read on 12 November 2026: abstract,
-introduction, Sections~7.8 and~7.11; keyword searches elsewhere.
+publication date 12 November 2026; paper of 157 pages in the archive \path{creelie/4Y-M-v5.0.0.zip}). Read on 12 November 2026: the passages listed in \S\ref{sec:bb26v5}, the whole text by keyword searches, and (for version~1.2) a complete reading by DeepSeek V4 Pro with quotations checked against the text.
+\bibitem{BFS79} D.~Brydges, J.~Fr\"ohlich, E.~Seiler, \emph{On the construction of quantized gauge fields. I. General results}, Ann.\ Phys.\ 121 (1979) 227--284 doi:10.1016/0003-4916(79)90098-8 (our scanned copy is the preprint IHES/P/78/237, June 1978; the argument cited is on its p.~38, page 39 of the scan).
 \bibitem{BK90} C.~Borgs, R.~Koteck\'y, \emph{A rigorous theory of finite-size scaling at first-order phase transitions}, J.\ Stat.\
 Phys.\ 61 (1990) 79--119, doi:10.1007/BF01013955.
 \bibitem{GM82} M.~G\"opfert, G.~Mack, \emph{Proof of confinement of static quarks in 3-dimensional $U(1)$ lattice gauge theory for all
